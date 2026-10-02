@@ -1,4 +1,5 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
+pub mod commerce;
 pub mod robots;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
@@ -113,11 +114,11 @@ fn money(value: &Value, currency: &str) -> Option<i64> {
         .checked_mul(factor)?
         .checked_add(fraction)
 }
-fn products(value: &Value, out: &mut Vec<Value>) {
+fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
     match value {
         Value::Array(a) => {
-            for v in a {
-                products(v, out)
+            for (i, v) in a.iter().enumerate() {
+                products(v, out, &format!("{pointer}/{i}"))
             }
         }
         Value::Object(o) => {
@@ -159,11 +160,15 @@ fn products(value: &Value, out: &mut Vec<Value>) {
                     None
                 };
                 let offer = raw_offers.first().copied().unwrap_or(&Value::Null);
-                out.push(json!({"kind":"PRODUCT","title":value["name"],"sku":value["sku"],"brand":value["brand"],"currency":if currency.is_empty(){Value::Null}else{json!(currency)},"price_minor":price,"price_status":if price.is_some(){"OBSERVED"}else if prices.len()>1{"CONFLICT"}else{"UNKNOWN"},"observed_offers":observed_offers,"price_range":if currency.is_empty(){Value::Null}else{json!({"min_minor":prices.first(),"max_minor":prices.last(),"currency":currency,"status":"OBSERVED_OFFER_RANGE"})},"availability":offer["availability"],"seller":offer["seller"],"weight_g":null,"sales":null,"sales_status":"UNKNOWN","supplier_moq":null,"supplier_capacity":null,"shipping_cost":null,"search_volume":null}));
+                out.push(json!({"raw_json_ld":value,"json_pointer":pointer,"kind":"PRODUCT","title":value["name"],"sku":value["sku"],"brand":value["brand"],"currency":if currency.is_empty(){Value::Null}else{json!(currency)},"price_minor":price,"price_status":if price.is_some(){"OBSERVED"}else if prices.len()>1{"CONFLICT"}else{"UNKNOWN"},"observed_offers":observed_offers,"price_range":if currency.is_empty(){Value::Null}else{json!({"min_minor":prices.first(),"max_minor":prices.last(),"currency":currency,"status":"OBSERVED_OFFER_RANGE"})},"availability":offer["availability"],"seller":offer["seller"],"weight_g":null,"sales":null,"sales_status":"UNKNOWN","supplier_moq":null,"supplier_capacity":null,"shipping_cost":null,"search_volume":null}));
             }
-            for v in o.values() {
+            for (key, v) in o {
                 if v.is_array() || v.is_object() {
-                    products(v, out);
+                    products(
+                        v,
+                        out,
+                        &format!("{pointer}/{}", key.replace('~', "~0").replace('/', "~1")),
+                    );
                 }
             }
         }
@@ -173,6 +178,8 @@ fn products(value: &Value, out: &mut Vec<Value>) {
 pub fn extract(html: &str, source: &str) -> Result<Value, String> {
     let base = Url::parse(&normalize_url(source)?).map_err(|_| "INVALID_URL")?;
     let doc = Html::parse_document(html);
+    let hash = format!("{:x}", Sha256::digest(html.as_bytes()));
+    let mut structured_data = vec![];
     let mut found = vec![];
     let mut errors = vec![];
     for (script_number, script) in doc
@@ -181,9 +188,11 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
     {
         match serde_json::from_str::<Value>(&script.inner_html()) {
             Ok(v) => {
+                structured_data.push(json!({"script_index":script_number,"value":v}));
                 let start = found.len();
-                products(&v, &mut found);
+                products(&v, &mut found, "");
                 for product in &mut found[start..] {
+                    commerce::annotate(product, source, script_number, &hash);
                     product["provenance"] = json!({"source":"JSON_LD","page":source,"script_index":script_number,"raw_capture_sha256":format!("{:x}",Sha256::digest(html.as_bytes())),"identity_assertions":{"title":product["title"],"sku":product["sku"]},"price_derivation":"Exact minor-unit conversion; conflicting offers retained, no selected price"});
                 }
             }
@@ -204,8 +213,9 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
         .select(&Selector::parse("title").unwrap())
         .next()
         .map(|n| n.text().collect::<String>());
+    let page_metadata = commerce::page_metadata(&doc, &base, &found, &hash);
     Ok(
-        json!({"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_JSON_LD_V1","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
+        json!({"page_metadata":page_metadata,"structured_data":structured_data,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_JSON_LD_V2","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
     )
 }
 impl Web {

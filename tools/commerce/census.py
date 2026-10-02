@@ -11,8 +11,10 @@ SEEDS = ['mrkooblu/semrush-mcp', 'purahmanian/keepa-mcp',
  'aws-samples/sample-amazon-spapi-mcp-server', 'microsoft/playwright-mcp',
  'firecrawl/firecrawl-mcp-server', 'apify/apify-mcp-server']
 LANG = {'.py':'python','.js':'javascript','.mjs':'javascript','.cjs':'javascript','.jsx':'javascript','.ts':'typescript',
- '.tsx':'tsx','.rs':'rust','.go':'go','.java':'java','.cs':'c_sharp',
- '.sh':'bash','.c':'c','.h':'c','.cpp':'cpp','.rb':'ruby','.php':'php','.css':'css','.html':'html','.scss':'scss'}
+ '.tsx':'tsx','.rs':'rust','.go':'go','.java':'java','.cs':'csharp',
+ '.sh':'bash','.c':'c','.h':'c','.cpp':'cpp','.rb':'ruby','.php':'php','.css':'css','.html':'html','.scss':'scss',
+ '.mts':'typescript','.pyi':'python','.ex':'elixir','.exs':'elixir','.jsm':'javascript','.bash':'bash',
+ '.ps1':'powershell','.m':'objc','.graphql':'graphql','.sql':'sql'}
 MANIFESTS = {'package.json','package-lock.json','pnpm-lock.yaml','yarn.lock',
  'Cargo.toml','Cargo.lock','pyproject.toml','poetry.lock','uv.lock','requirements.txt',
  'go.mod','go.sum','pom.xml','build.gradle','Dockerfile','Makefile'}
@@ -50,6 +52,13 @@ def classify(path, data):
  if name.startswith(('test_','test.')) or '.test.' in name or '.spec.' in name or name.endswith('_test.go') or any(p in {'test','tests','__tests__'} for p in parts): return 'TEST'
  if name in {x.lower() for x in MANIFESTS} or name.startswith(('docker-compose','requirements','dockerfile')) or '.github' in parts or '.husky' in parts: return 'BUILD'
  if suffix in LANG: return 'FIRST_PARTY_SOURCE'
+ if data.startswith(b'#!') or name.endswith(('_bash_completion','_zsh_completion')): return 'FIRST_PARTY_SOURCE'
+ if suffix in {'.pxd','.pyx','.idl','.pch','.fish'}: return 'FIRST_PARTY_SOURCE'
+ if name in {'gemfile','rakefile','vagrantfile','pkgbuild','portfile','gradlew'}: return 'BUILD'
+ if suffix in {'.gemspec','.kts','.nuspec','.mn','.pbxproj','.xcscheme','.vcxproj','.filters','.user','.diff','.bat','.tpl','.jinja2'}: return 'BUILD'
+ if name in {'cname','version','build_number','expected_builds','procfile'} or suffix in {'.dist','.pro','.webmanifest','.types'}: return 'CONFIG'
+ if name in {'authors','news'} or suffix in {'.license','.cff'}: return 'DOC'
+ if suffix in {'.excalidraw','.xib','.rtf','.jp2'}: return 'ASSET'
  if 'schema' in name and suffix in {'.json','.yaml','.yml'}: return 'SCHEMA'
  if suffix in {'.md','.mdx','.rst','.txt','.toc','.todo','.1'} or name.startswith(('license','copying','notice')): return 'DOC'
  if suffix in {'.mustache','.tmpl','.csproj','.sln','.build','.xcconfig','.gradle'}: return 'BUILD'
@@ -62,8 +71,18 @@ def classify(path, data):
  if suffix in {'.css','.scss','.html','.svelte','.vue','.sql'}: return 'FIRST_PARTY_SOURCE'
  return 'UNKNOWN'
 
+def source_language(path, content):
+ language=LANG.get(pathlib.Path(path).suffix)
+ if language is None:
+  first=content.split(b'\n',1)[0].decode('utf-8','replace')
+  if first.startswith('#!'):
+   if re.search(r'\bpython[0-9.]*\b',first):language='python'
+   elif re.search(r'\b(?:bash|sh|zsh)\b',first):language='bash'
+  if path.endswith(('_bash_completion','_zsh_completion')):language='bash'
+ return language
+
 def parse_source(path, content):
- language=LANG.get(pathlib.Path(path).suffix); symbols=[]; imports=[]
+ language=source_language(path,content); symbols=[]; imports=[]
  if language is None: return 'PARSE_UNKNOWN',symbols,imports
  try:
   from tree_sitter_language_pack import get_parser

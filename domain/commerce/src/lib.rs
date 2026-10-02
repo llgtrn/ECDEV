@@ -1,9 +1,12 @@
 pub mod domain;
 pub mod economics;
 pub mod frontier;
+pub mod intelligence;
 pub mod marketplace;
 pub mod planner;
 pub mod provider;
 pub mod research;
+pub mod resolution;
 pub mod service;
+pub mod uncertainty;
 pub use service::Engine;
