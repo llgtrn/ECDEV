@@ -1,11 +1,161 @@
 use ecdev_core::frontier::{CrawlLimits, Frontier, UrlPolicy, canonicalize};
 use serde_json::json;
 use std::{
+    collections::BTreeMap,
     fs,
     path::PathBuf,
     process::{Command, Stdio},
     time::{Duration, Instant},
 };
+
+#[test]
+fn locked_crawlee_queue_oracle() {
+    let oracle: serde_json::Value =
+        serde_json::from_str(include_str!("fixtures/crawlee-frontier.json")).unwrap();
+    assert_eq!(
+        oracle["commit_sha"],
+        "438e3419626bd070f8984566bfb86ab9355f55d6"
+    );
+    assert_eq!(
+        oracle["oracle"],
+        "LOCKED_REQUEST_QUEUE_BACKEND_WITH_PINNED_NATIVE_BINARY"
+    );
+    assert_eq!(oracle["cases"].as_array().unwrap().len(), 46);
+    for case in oracle["cases"].as_array().unwrap() {
+        let database = path();
+        let mut frontier = Frontier::open(&database).unwrap();
+        let mut config = limits();
+        config.max_pages = 1000;
+        config.max_urls = 1000;
+        config.global_concurrency = 100;
+        config.per_origin_concurrency = 100;
+        config.lease_ms = 180_000;
+        config.max_retries = 20;
+        config.backoff_ms = 0;
+        config.deadline_ms = 1_000_000;
+        frontier.create_run("oracle", &config).unwrap();
+        let mut now = 1;
+        let mut front_rank = 0;
+        let mut priorities = BTreeMap::<String, i64>::new();
+        let mut leases = BTreeMap::new();
+        let mut actual = Vec::new();
+        // The donor boolean forefront maps to positive native priority ranks, LIFO.
+        // Normal items use priority zero. Canonical URL is an explicit donor uniqueKey.
+        for step in case["steps"].as_array().unwrap() {
+            now += 10;
+            let address = format!(
+                "https://queue.example/{}",
+                step["key"].as_str().unwrap_or("")
+            );
+            let result = match step["op"].as_str().unwrap() {
+                "add" => {
+                    let priority = if step["forefront"] == true {
+                        front_rank += 1;
+                        front_rank
+                    } else {
+                        0
+                    };
+                    let identity =
+                        canonicalize(&address, None, &UrlPolicy::default(), now).unwrap();
+                    let added = frontier.enqueue("oracle", &identity, 0, priority).unwrap();
+                    if added {
+                        priorities.insert(address.clone(), priority);
+                    }
+                    let handled = frontier
+                        .captures("oracle")
+                        .unwrap()
+                        .iter()
+                        .any(|p| p["url"] == address);
+                    json!({"added":added,"handled":handled})
+                }
+                "fetch" => match frontier.lease("oracle", now).unwrap() {
+                    Some(lease) => {
+                        let address = lease.canonical_url.clone();
+                        leases.insert(address.clone(), lease);
+                        json!(address)
+                    }
+                    None => serde_json::Value::Null,
+                },
+                "handle" => json!(
+                    frontier
+                        .complete(leases.get(&address).unwrap(), now, &json!({"url":address}))
+                        .is_ok()
+                ),
+                "reclaim" => {
+                    let current = priorities[&address];
+                    let priority = if step["forefront"] == true {
+                        if current > 0 {
+                            current
+                        } else {
+                            front_rank += 1;
+                            front_rank
+                        }
+                    } else {
+                        0
+                    };
+                    let success = frontier
+                        .reclaim(leases.get(&address).unwrap(), now, Some(priority))
+                        .is_ok();
+                    if success {
+                        priorities.insert(address, priority);
+                    }
+                    json!(success)
+                }
+                "advance" => {
+                    now += step["millis"].as_i64().unwrap();
+                    serde_json::Value::Null
+                }
+                "reopen" => {
+                    frontier = Frontier::open(&database).unwrap();
+                    serde_json::Value::Null
+                }
+                "status" => {
+                    let status = frontier.status("oracle").unwrap();
+                    let states = &status["states"];
+                    let total: u64 = states
+                        .as_object()
+                        .unwrap()
+                        .values()
+                        .map(|n| n.as_u64().unwrap())
+                        .sum();
+                    let handled = states["HANDLED"].as_u64().unwrap();
+                    json!({"total":total,"handled":handled,"pending":total-handled,"empty":states["PENDING"]==0&&states["RETRYABLE"]==0,"finished":total==handled})
+                }
+                other => panic!("unknown oracle operation {other}"),
+            };
+            actual.push(result);
+        }
+        assert_eq!(
+            json!(actual),
+            case["expected"],
+            "donor trace {}",
+            case["name"]
+        );
+    }
+}
+
+#[test]
+fn reclaim_is_fenced_and_cannot_evade_retry_exhaustion() {
+    let mut f = Frontier::open(&path()).unwrap();
+    let mut config = limits();
+    config.max_retries = 1;
+    f.create_run("reclaim", &config).unwrap();
+    f.enqueue("reclaim", &url("https://example.org/a"), 0, 0)
+        .unwrap();
+    f.enqueue("reclaim", &url("https://example.org/b"), 0, 0)
+        .unwrap();
+    let a = f.lease("reclaim", 2).unwrap().unwrap();
+    f.reclaim(&a, 3, None).unwrap();
+    assert!(f.reclaim(&a, 3, Some(100)).is_err());
+    let b = f.lease("reclaim", 4).unwrap().unwrap();
+    assert!(b.canonical_url.ends_with("/b"));
+    f.complete(&b, 5, &json!({})).unwrap();
+    let retry = f.lease("reclaim", 6).unwrap().unwrap();
+    assert_eq!(retry.attempts, 2);
+    f.reclaim(&retry, 7, None).unwrap();
+    assert_eq!(f.status("reclaim").unwrap()["states"]["FAILED"], 1);
+    assert!(f.lease("reclaim", 8).unwrap().is_none());
+}
 
 fn limits() -> CrawlLimits {
     CrawlLimits {
@@ -139,7 +289,9 @@ fn independent_workers_fenced_origin_global_limits_cancellation_and_deadline() {
         "https://b.example/1",
         "https://c.example/1",
     ] {
-        f.enqueue("a", &url(s), 0, 0).unwrap();
+        // Pin the lease whose fencing is inspected; equal-priority retries now join the tail.
+        let priority = i64::from(s == "https://a.example/1");
+        f.enqueue("a", &url(s), 0, priority).unwrap();
     }
     let mut other = Frontier::open(&p).unwrap();
     let a = f.lease("a", 2).unwrap().unwrap();

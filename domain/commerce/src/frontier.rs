@@ -157,6 +157,13 @@ pub struct Lease {
 pub struct Frontier {
     db: Connection,
 }
+struct Transition<'a> {
+    state: &'a str,
+    next: i64,
+    payload: Option<&'a Value>,
+    reason: Option<&'a str>,
+    priority: Option<i64>,
+}
 impl Frontier {
     pub fn open(path: &Path) -> Result<Self, String> {
         let db = Connection::open(path).map_err(err)?;
@@ -264,7 +271,7 @@ impl Frontier {
             tx.commit().map_err(err)?;
             return Ok(None);
         }
-        let row:Option<(String,String,u32,u32,String)>=tx.query_row("SELECT u.identity_hash,u.canonical_url,u.depth,u.attempts,u.origin FROM crawl_urls u LEFT JOIN crawl_origins o ON o.run_id=u.run_id AND o.origin=u.origin WHERE u.run_id=?1 AND u.state IN ('PENDING','RETRYABLE') AND u.next_at<=?2 AND COALESCE(o.next_at,0)<=?2 AND (SELECT count(*) FROM crawl_urls l WHERE l.run_id=u.run_id AND l.origin=u.origin AND l.state='LEASED')<?3 ORDER BY u.priority DESC,u.discovered_at,u.rowid LIMIT 1",params![run,now,limits.per_origin_concurrency],|r|Ok((r.get(0)?,r.get(1)?,r.get(2)?,r.get(3)?,r.get(4)?))).optional().map_err(err)?;
+        let row:Option<(String,String,u32,u32,String)>=tx.query_row("SELECT u.identity_hash,u.canonical_url,u.depth,u.attempts,u.origin FROM crawl_urls u LEFT JOIN crawl_origins o ON o.run_id=u.run_id AND o.origin=u.origin WHERE u.run_id=?1 AND u.state IN ('PENDING','RETRYABLE') AND u.next_at<=?2 AND COALESCE(o.next_at,0)<=?2 AND (SELECT count(*) FROM crawl_urls l WHERE l.run_id=u.run_id AND l.origin=u.origin AND l.state='LEASED')<?3 ORDER BY u.priority DESC,u.next_at,u.discovered_at,u.rowid LIMIT 1",params![run,now,limits.per_origin_concurrency],|r|Ok((r.get(0)?,r.get(1)?,r.get(2)?,r.get(3)?,r.get(4)?))).optional().map_err(err)?;
         let Some((hash, url, depth, attempts, origin)) = row else {
             tx.commit().map_err(err)?;
             return Ok(None);
@@ -304,7 +311,17 @@ impl Frontier {
         }))
     }
     pub fn complete(&mut self, lease: &Lease, now: i64, payload: &Value) -> Result<(), String> {
-        self.transition(lease, now, "HANDLED", now, Some(payload), None)
+        self.transition(
+            lease,
+            now,
+            Transition {
+                state: "HANDLED",
+                next: now,
+                payload: Some(payload),
+                reason: None,
+                priority: None,
+            },
+        )
     }
     pub fn fail(
         &mut self,
@@ -331,30 +348,72 @@ impl Frontier {
         self.transition(
             lease,
             now,
-            if retryable && lease.attempts <= limits.max_retries {
-                "RETRYABLE"
-            } else {
-                "FAILED"
+            Transition {
+                state: if retryable && lease.attempts <= limits.max_retries {
+                    "RETRYABLE"
+                } else {
+                    "FAILED"
+                },
+                next: now.checked_add(delay).ok_or("TIME_OVERFLOW")?,
+                payload: None,
+                reason: Some(reason),
+                priority: None,
             },
-            now.checked_add(delay).ok_or("TIME_OVERFLOW")?,
-            None,
-            Some(reason),
+        )
+    }
+    /// Release a live lease for retry without delay; an explicit priority can promote it.
+    /// Lease fencing, acquisition budget and retry exhaustion still apply.
+    /// `fail` remains the route for exponential backoff and Retry-After.
+    pub fn reclaim(
+        &mut self,
+        lease: &Lease,
+        now: i64,
+        priority: Option<i64>,
+    ) -> Result<(), String> {
+        let text: String = self
+            .db
+            .query_row(
+                "SELECT limits FROM crawl_runs WHERE id=?1",
+                [&lease.run_id],
+                |r| r.get(0),
+            )
+            .map_err(err)?;
+        let limits: CrawlLimits = serde_json::from_str(&text).map_err(err)?;
+        let state = if lease.attempts <= limits.max_retries {
+            "RETRYABLE"
+        } else {
+            "FAILED"
+        };
+        self.transition(
+            lease,
+            now,
+            Transition {
+                state,
+                next: now,
+                payload: None,
+                reason: Some("RECLAIM"),
+                priority,
+            },
         )
     }
     fn transition(
         &mut self,
         lease: &Lease,
         now: i64,
-        state: &str,
-        next: i64,
-        payload: Option<&Value>,
-        reason: Option<&str>,
+        change: Transition<'_>,
     ) -> Result<(), String> {
+        let Transition {
+            state,
+            next,
+            payload,
+            reason,
+            priority,
+        } = change;
         let tx = self
             .db
             .transaction_with_behavior(TransactionBehavior::Immediate)
             .map_err(err)?;
-        let n=tx.execute("UPDATE crawl_urls SET state=?4,next_at=?5,payload=?6,last_error=?7,lease_token=NULL,lease_until=NULL WHERE run_id=?1 AND identity_hash=?2 AND lease_token=?3 AND state='LEASED' AND lease_until>?8 AND EXISTS(SELECT 1 FROM crawl_runs WHERE id=?1 AND cancelled=0)", params![lease.run_id,lease.identity_hash,lease.token,state,next,payload.map(Value::to_string),reason,now]).map_err(err)?;
+        let n=tx.execute("UPDATE crawl_urls SET state=?4,next_at=?5,payload=?6,last_error=?7,priority=COALESCE(?9,priority),lease_token=NULL,lease_until=NULL WHERE run_id=?1 AND identity_hash=?2 AND lease_token=?3 AND state='LEASED' AND lease_until>?8 AND EXISTS(SELECT 1 FROM crawl_runs WHERE id=?1 AND cancelled=0)", params![lease.run_id,lease.identity_hash,lease.token,state,next,payload.map(Value::to_string),reason,now,priority]).map_err(err)?;
         if n != 1 {
             return Err("STALE_OR_CANCELLED_LEASE".into());
         }

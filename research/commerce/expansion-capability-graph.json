@@ -11,11 +11,11 @@
       "symbol": "addRequest",
       "line_start": 229,
       "line_end": 279,
-      "behavior_contract": "uniqueKey request cache avoids duplicate backend writes; backend state and deferred transactions exist. ECDEV implements only bounded run-local normalized-URL deduplication.",
+      "behavior_contract": "Core uniqueKey cache deduplicates additions; native ECDEV persists URL identity, leasing, handled records and retry state. A separately bounded queue backend oracle matches 46 traces; deferred storage transactions remain unabsorbed.",
       "native_node": "commerce",
       "oracle_parity": "NOT_CLAIMED",
       "native_lifecycle": "EXPERIMENTAL",
-      "license": "UNVERIFIED"
+      "license": "Apache-2.0"
     },
     {
       "capability": "extract.structured_data",
@@ -113,6 +113,23 @@
       "native_lifecycle": "EXPERIMENTAL",
       "license": "BSD-3-Clause",
       "evidence": "research/commerce/capabilities.json"
+    },
+    {
+      "capability": "crawl.frontier",
+      "status": "STUDIED_ORACLE_COMPARED",
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/core/src/storages/request_queue.ts",
+      "blob_hash": "fe80bd0a09cac350b388f75264625df30806cf32",
+      "symbol": "reclaimRequest",
+      "line_start": 780,
+      "line_end": 810,
+      "behavior_contract": "Deduplication, handled-state retention, leased exclusion, FIFO/forefront ordering, reclaim retry, expiration and shared reopen recovery; this is the queue backend, not the complete Crawlee crawler.",
+      "native_node": "commerce",
+      "oracle_parity": "46_TRACES_564_OPERATIONS_MATCHED",
+      "native_lifecycle": "EXPERIMENTAL",
+      "license": "Apache-2.0",
+      "evidence": "research/commerce/frontier-source-review.json"
     }
   ],
   "edges": [
@@ -130,11 +147,11 @@
         "symbol": "addRequest",
         "line_start": 229,
         "line_end": 279,
-        "behavior_contract": "uniqueKey request cache avoids duplicate backend writes; backend state and deferred transactions exist. ECDEV implements only bounded run-local normalized-URL deduplication.",
+        "behavior_contract": "Core uniqueKey cache deduplicates additions; native ECDEV persists URL identity, leasing, handled records and retry state. A separately bounded queue backend oracle matches 46 traces; deferred storage transactions remain unabsorbed.",
         "native_node": "commerce",
         "oracle_parity": "NOT_CLAIMED",
         "native_lifecycle": "EXPERIMENTAL",
-        "license": "UNVERIFIED"
+        "license": "Apache-2.0"
       }
     },
     {
@@ -262,6 +279,28 @@
         "native_lifecycle": "EXPERIMENTAL",
         "license": "BSD-3-Clause",
         "evidence": "research/commerce/capabilities.json"
+      }
+    },
+    {
+      "from": "apify--crawlee",
+      "relation": "SOURCE_REVIEWED_FOR",
+      "to": "crawl.frontier",
+      "evidence": {
+        "capability": "crawl.frontier",
+        "status": "STUDIED_ORACLE_COMPARED",
+        "donor_id": "apify--crawlee",
+        "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+        "source_path": "packages/core/src/storages/request_queue.ts",
+        "blob_hash": "fe80bd0a09cac350b388f75264625df30806cf32",
+        "symbol": "reclaimRequest",
+        "line_start": 780,
+        "line_end": 810,
+        "behavior_contract": "Deduplication, handled-state retention, leased exclusion, FIFO/forefront ordering, reclaim retry, expiration and shared reopen recovery; this is the queue backend, not the complete Crawlee crawler.",
+        "native_node": "commerce",
+        "oracle_parity": "46_TRACES_564_OPERATIONS_MATCHED",
+        "native_lifecycle": "EXPERIMENTAL",
+        "license": "Apache-2.0",
+        "evidence": "research/commerce/frontier-source-review.json"
       }
     }
   ],
