@@ -1,0 +1,373 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## Metric B — Negative Testing (429 + Backoff)"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Requirement:** Rate limit handling with exponential backoff."
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Runs 100 iterations through `RateLimitRegistry.call_with_backoff` (instant sleep in test)"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Asserts `throttled >= 2`, `backoff_sleeps >= 2`, `hard_failures == 0`"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Pass:** `B-RESULT: PASS (429 intercepted, exponential backoff, 100/100 survived)`"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "> \"I've built an MCP server with LWA OAuth, SP-API + Ads clients, token-bucket pacing, and 429 exponential backoff. Run `./scripts/run_acceptance.sh` for contract + stress tests; Claude Desktop validates end-to-end inventory query.\""
+    },
+    {
+      "source_path": "Dockerfile",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "cef80d06a862a941001ed65ad960cb59a71d85e3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \\"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"ads:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"ads:POST:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"ads:PUT:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_after = float(resp.headers.get(\"Retry-After\", \"1\") or 1)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise RateLimitError(f\"HTTP 429 Too Many Requests\", retry_after=retry_after)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"Map sp_api call_with_backoff keys to limit category.\"\"\""
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def __init__(self, message: str = \"rate limited\", *, retry_after: float = 1.0) -> None:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.retry_after = retry_after"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    backoff_sleeps: int = 0"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    total_backoff_s: float = 0.0"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 113,
+      "line_end": 113,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def call_with_backoff("
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Acquire token, execute fn; on RateLimitError exponential backoff + retry.\"\"\""
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                delay = max(delay, exc.retry_after)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 136,
+      "line_end": 136,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                self.stats.backoff_sleeps += 1"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 137,
+      "line_end": 137,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                self.stats.total_backoff_s += delay"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 312,
+      "line_end": 312,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"sp:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 325,
+      "line_end": 325,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"sp:POST:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 339,
+      "line_end": 339,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"sp:DELETE:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 353,
+      "line_end": 353,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return await self.limits.call_with_backoff(f\"sp:PATCH:{path}\", _do)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "0b547917c3de88f91596d6658bbc0ef7c2b82dae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            \"backoff_sleeps\": rate_stats.backoff_sleeps,"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "0b547917c3de88f91596d6658bbc0ef7c2b82dae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            \"total_backoff_s\": round(rate_stats.total_backoff_s, 3),"
+    },
+    {
+      "source_path": "docker-compose.yml",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "339ef989f3dffd5511c6c9f60f2ebc70d30805ad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      retries: 3"
+    },
+    {
+      "source_path": "docs/PRIVACY_POLICY.md",
+      "line_start": 116,
+      "line_end": 116,
+      "blob_hash": "75ded667df55d2a33883001691cfebb5c17ad8a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limiting / 429 exponential backoff to protect Amazon API quotas."
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Review logs for `429` and backoff retries"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "1. **Wait** — client implements exponential backoff (acceptance B validates this)."
+    },
+    {
+      "source_path": "docs/TOS.md",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "a1f25f9db6375301fd09548e8b68d8433791d058",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| API quotas | Accept Amazon rate limits; we implement backoff but cannot guarantee unlimited throughput |"
+    },
+    {
+      "source_path": "scripts/run_acceptance.sh",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "35f359b68e0faf27ef7d212843dea047b5f27d07",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "echo \"[acceptance] B — 429 backoff stress\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Acceptance B — Negative Testing: 429 storm with exponential backoff, no crash.\"\"\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def stress_429_backoff(*, iterations: int = 100) -> dict:"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RateLimitError(\"HTTP 429 Too Many Requests\", retry_after=0.05)"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                await registry.call_with_backoff("
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(\"=== Acceptance B: Rate Limit / 429 Backoff ===\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    out = asyncio.run(stress_429_backoff(iterations=100))"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"  requests={st.requests} throttled={st.throttled} backoff_sleeps={st.backoff_sleeps}\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"  total_backoff_s={st.total_backoff_s:.2f}s hard_failures={out['hard_failures']}\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert st.backoff_sleeps > 0, \"expected exponential backoff sleeps\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(\"\\nB-RESULT: PASS (429 intercepted, exponential backoff, 100/100 survived)\")"
+    }
+  ]
+}

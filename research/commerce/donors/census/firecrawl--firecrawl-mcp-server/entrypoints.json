@@ -1,0 +1,23 @@
+{
+  "status": "PARTIAL",
+  "candidates": [
+    {
+      "source_path": "package.json",
+      "bin": {
+        "firecrawl-mcp": "dist/index.js"
+      },
+      "scripts": {
+        "build": "rm -rf dist && tsup && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+        "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs",
+        "start": "node dist/index.js",
+        "start:cloud": "CLOUD_SERVICE=true node dist/index.js",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "format": "prettier --write .",
+        "prepare": "npm run build",
+        "publish-prod": "npm run build && npm publish",
+        "publish-beta": "npm run build && npm publish --tag beta"
+      }
+    }
+  ]
+}

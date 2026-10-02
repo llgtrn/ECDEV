@@ -1,0 +1,157 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".env.example",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "01c733f45259aa0ee50bc08b027ef02124a3bbe1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# AMAZON_MCP_TRANSPORT=stdio"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "3b4f067fd8f4830f0ca3d40c0ee9c963d51d32a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "python -m amazon_mcp            # stdio → Claude Desktop / Cursor"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 175,
+      "line_end": 175,
+      "blob_hash": "3b4f067fd8f4830f0ca3d40c0ee9c963d51d32a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `AMAZON_MCP_TRANSPORT` | `stdio` \\| `streamable-http` \\| `sse` |"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "284cfbdea9424d708219b90207a6d0e1223c2070",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def _run_phase_exec(self, operation: str, params: dict) -> dict:"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "284cfbdea9424d708219b90207a6d0e1223c2070",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    result = await self._run_phase_exec(operation, params)"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line_start": 565,
+      "line_end": 565,
+      "blob_hash": "16671cbf7d89e52ec788df0d2d3e7973bae87a53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    transport = os.environ.get(\"AMAZON_MCP_TRANSPORT\", \"stdio\").strip().lower()"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line_start": 575,
+      "line_end": 575,
+      "blob_hash": "16671cbf7d89e52ec788df0d2d3e7973bae87a53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        mcp.run(transport=\"stdio\")"
+    },
+    {
+      "source_path": "claude_desktop_config.example.json",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "4b4936e51cb76d24e6f9dfbf61eafb9962d44db0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"_comment\": \"Set AMAZON_MCP_API_KEY in server .env. For stdio/dry-run see README.\""
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "> **Quick health:** `AMAZON_MCP_DRY_RUN=1 python -m amazon_mcp` (stdio) or `curl -s http://127.0.0.1:8780/health` (if HTTP health exposed)"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| MCP server | `python -m amazon_mcp` | stdio (Cursor/Claude) or `AMAZON_MCP_TRANSPORT=streamable-http` |"
+    },
+    {
+      "source_path": "run_mcp.sh",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "af328b03bc7c168aca1c6175a91d1c60492d6a3a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Amazon MCP — stdio server for Claude Desktop / Cursor MCP"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "96548be79f7512452be4a4a74e5b0abcf4216331",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Acceptance C (Cursor) — wire-level MCP stdio probe for amazon-sp.\"\"\""
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "96548be79f7512452be4a4a74e5b0abcf4216331",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from mcp.client.stdio import StdioServerParameters, stdio_client"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "96548be79f7512452be4a4a74e5b0abcf4216331",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _server_params() -> StdioServerParameters:"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "96548be79f7512452be4a4a74e5b0abcf4216331",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return StdioServerParameters("
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "96548be79f7512452be4a4a74e5b0abcf4216331",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async with stdio_client(_server_params()) as (read, write):"
+    },
+    {
+      "source_path": "scripts/verify_install.sh",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "20e3b3243fd7b8b8572c102cffa018bfcea2fdd6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "TRANSPORT=\"${AMAZON_MCP_TRANSPORT:-stdio}\""
+    },
+    {
+      "source_path": "scripts/verify_install.sh",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "20e3b3243fd7b8b8572c102cffa018bfcea2fdd6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  echo \"[verify] transport=${TRANSPORT} — skipping HTTP health (stdio mode OK)\""
+    },
+    {
+      "source_path": "scripts/verify_install.sh",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "20e3b3243fd7b8b8572c102cffa018bfcea2fdd6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  echo \"[verify] PASS (stdio)\""
+    }
+  ]
+}

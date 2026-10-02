@@ -1,0 +1,276 @@
+{
+  "status": "VERIFIED",
+  "transports": [
+    "stdio"
+  ],
+  "tools": [
+    {
+      "capability_id": "keepa.get_product",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/get-product.ts",
+          "blob_hash": "e4c20d9bf60821060bd99d63a3a206fcc388d068",
+          "symbol": "runGetProduct",
+          "line_start": 99,
+          "line_end": 109,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "Product summary; stats.current then CSV tail, then current then legacy; USD text output; no stats means fallback",
+      "endpoint": "/product",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/get-product.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    },
+    {
+      "capability_id": "keepa.get_price_history",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/get-price-history.ts",
+          "blob_hash": "60bf82563befdc4ddea86f6abdb7a84a02c47a6e",
+          "symbol": "runGetPriceHistory",
+          "line_start": 57,
+          "line_end": 81,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "Price slots 0,1,2,18; pairs except buybox triplets; exclude negative samples; date range; maximum 60 evenly sampled points; USD formatter",
+      "endpoint": "/product",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/get-price-history.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    },
+    {
+      "capability_id": "keepa.get_sales_rank_history",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/get-sales-rank-history.ts",
+          "blob_hash": "72f62c81c0fa665f77de8b16594b69fc1e733949",
+          "symbol": "runGetSalesRankHistory",
+          "line_start": 55,
+          "line_end": 78,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "Slot 3 history; first/last heuristic trend; rank is not measured sales",
+      "endpoint": "/product",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/get-sales-rank-history.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    },
+    {
+      "capability_id": "keepa.search_products",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/search-products.ts",
+          "blob_hash": "1cf2beb18f6656a95aec7b71a9fcb51016c4442a",
+          "symbol": "runSearchProducts",
+          "line_start": 31,
+          "line_end": 58,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "GET domain,type=product,term,optional catid; asinList; missing list becomes empty",
+      "endpoint": "/search",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/search-products.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    },
+    {
+      "capability_id": "keepa.get_best_sellers",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/get-best-sellers.ts",
+          "blob_hash": "8781a28162061915a7465cb8487948a9c7b27664",
+          "symbol": "runGetBestSellers",
+          "line_start": 26,
+          "line_end": 51,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "GET domain,category; bestSellersList.asinList; output first 100",
+      "endpoint": "/bestsellers",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/get-best-sellers.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    },
+    {
+      "capability_id": "keepa.get_deals",
+      "donor_id": "purahmanian--keepa-mcp",
+      "status": "VERIFIED",
+      "evidence": [
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/tools/get-deals.ts",
+          "blob_hash": "223d1b3762a48306baae60440e57605d14ced675",
+          "symbol": "runGetDeals",
+          "line_start": 66,
+          "line_end": 95,
+          "evidence_type": "SOURCE_IMPLEMENTATION",
+          "confidence": 1.0
+        },
+        {
+          "donor_id": "purahmanian--keepa-mcp",
+          "repository_url": "https://github.com/purahmanian/keepa-mcp",
+          "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+          "source_path": "src/index.ts",
+          "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+          "symbol": null,
+          "line_start": 1,
+          "line_end": 316,
+          "evidence_type": "TOOL_REGISTRATION",
+          "confidence": 1.0
+        }
+      ],
+      "behavior_contract": "JSON selection with page,domainId,priceTypes=[0],dateRange=0,isRangeEnabled=true,deltaPercentRange=[threshold,2147483647],minRating; uses dr[].current indexed slots",
+      "endpoint": "/deal",
+      "external_service": "Keepa API (TYPE_B)",
+      "input_schema_source": "src/tools/get-deals.ts",
+      "test_map": [
+        "tests/tools.test.ts"
+      ],
+      "tests_executed": false,
+      "native_implementation": null,
+      "oracle_status": "NOT_STARTED",
+      "absorption_status": "NOT_STARTED"
+    }
+  ],
+  "resources": [],
+  "prompts": [],
+  "evidence": [
+    {
+      "donor_id": "purahmanian--keepa-mcp",
+      "repository_url": "https://github.com/purahmanian/keepa-mcp",
+      "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+      "source_path": "src/index.ts",
+      "blob_hash": "6cbf219d81399c469182f376eec234bdbbb01d77",
+      "symbol": null,
+      "line_start": 1,
+      "line_end": 316,
+      "evidence_type": "TOOL_REGISTRATION",
+      "confidence": 1.0
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+[
+  {
+    "source_path": "pyproject.toml",
+    "blob_hash": "a1181bced49bff112d5c34cf0668f11e4cd961e1",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "build-system": {
+        "requires": [
+          "hatchling>=1.27.0"
+        ],
+        "build-backend": "hatchling.build"
+      },
+      "project": {
+        "name": "price-parser",
+        "version": "0.5.1",
+        "description": "Extract price and currency from a raw string",
+        "readme": "README.rst",
+        "license": "BSD-3-Clause",
+        "license-files": [
+          "LICENSE"
+        ],
+        "authors": [
+          {
+            "name": "Mikhail Korobov",
+            "email": "kmike84@gmail.com"
+          }
+        ],
+        "classifiers": [
+          "Development Status :: 4 - Beta",
+          "Intended Audience :: Developers",
+          "Natural Language :: English",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.9",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14"
+        ],
+        "dependencies": [
+          "attrs >= 17.3.0"
+        ],
+        "requires-python": ">=3.9",
+        "urls": {
+          "Homepage": "https://github.com/scrapinghub/price-parser",
+          "Source": "https://github.com/scrapinghub/price-parser",
+          "Tracker": "https://github.com/scrapinghub/price-parser/issues"
+        }
+      },
+      "tool": {
+        "bumpversion": {
+          "commit": true,
+          "tag": true,
+          "tag_name": "{new_version}",
+          "files": [
+            {
+              "filename": "CHANGES.rst",
+              "search": "\\(unreleased\\)$",
+              "replace": "({now:%Y-%m-%d})",
+              "regex": true
+            }
+          ]
+        },
+        "coverage": {
+          "run": {
+            "branch": true
+          }
+        },
+        "hatch": {
+          "build": {
+            "targets": {
+              "sdist": {
+                "include": [
+                  "/price_parser",
+                  "/tests",
+                  "/CHANGES.rst",
+                  "/tox.ini"
+                ]
+              }
+            }
+          }
+        },
+        "mypy": {
+          "strict": true
+        },
+        "ruff": {
+          "lint": {
+            "extend-select": [
+              "A",
+              "ASYNC",
+              "B",
+              "C4",
+              "COM",
+              "D",
+              "FA",
+              "FLY",
+              "FURB",
+              "I",
+              "ISC",
+              "LOG",
+              "PERF",
+              "PGH",
+              "PIE",
+              "PL",
+              "PT",
+              "PTH",
+              "PYI",
+              "Q",
+              "RET",
+              "RSE",
+              "RUF",
+              "S",
+              "SIM",
+              "SLOT",
+              "T10",
+              "TC",
+              "UP",
+              "W",
+              "YTT"
+            ],
+            "ignore": [
+              "COM812",
+              "D100",
+              "D101",
+              "D102",
+              "D103",
+              "D104",
+              "D105",
+              "D106",
+              "D107",
+              "D200",
+              "D202",
+              "D205",
+              "D209",
+              "D400",
+              "D401",
+              "D402",
+              "D403",
+              "D412",
+              "PLE2502",
+              "PLR0911",
+              "PLR0912",
+              "PLR0913",
+              "PLR0915",
+              "PLR2004",
+              "RUF001",
+              "RUF002",
+              "RUF003",
+              "RUF012",
+              "S101"
+            ],
+            "flake8-type-checking": {
+              "runtime-evaluated-decorators": [
+                "attr.s"
+              ]
+            },
+            "isort": {
+              "split-on-trailing-comma": false
+            },
+            "per-file-ignores": {
+              "price_parser/parser.py": [
+                "FA100"
+              ]
+            },
+            "pydocstyle": {
+              "convention": "pep257"
+            }
+          }
+        }
+      }
+    }
+  }
+]

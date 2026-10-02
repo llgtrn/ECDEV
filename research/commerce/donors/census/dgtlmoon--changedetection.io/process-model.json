@@ -1,0 +1,853 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "changedetectionio/content_fetchers/playwright.py",
+      "line_start": 113,
+      "line_end": 113,
+      "blob_hash": "e21df27ba1735d22d4b342d9443e64c0c716572f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Always use spawn subprocess for ANY stitching (2+ chunks)"
+    },
+    {
+      "source_path": "changedetectionio/content_fetchers/playwright.py",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "e21df27ba1735d22d4b342d9443e64c0c716572f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # PIL allocates at C level and Python GC never releases it - subprocess exit forces OS to reclaim"
+    },
+    {
+      "source_path": "changedetectionio/content_fetchers/puppeteer.py",
+      "line_start": 137,
+      "line_end": 137,
+      "blob_hash": "f7e68e0849db8b68bcb3048467d4b19c9bd6f5bd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Always use spawn subprocess for ANY stitching (2+ chunks)"
+    },
+    {
+      "source_path": "changedetectionio/content_fetchers/puppeteer.py",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "f7e68e0849db8b68bcb3048467d4b19c9bd6f5bd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # PIL allocates at C level and Python GC never releases it - subprocess exit forces OS to reclaim"
+    },
+    {
+      "source_path": "changedetectionio/content_fetchers/screenshot_handler.py",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "6451f269b5aa9d47f6b8870f6e65cf47bb57420e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    When the subprocess exits, the OS reclaims ALL memory including C-level allocations"
+    },
+    {
+      "source_path": "changedetectionio/content_fetchers/screenshot_handler.py",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "6451f269b5aa9d47f6b8870f6e65cf47bb57420e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Trade-off: Adds 35MB resource_tracker subprocess, but prevents 500MB+ memory leak"
+    },
+    {
+      "source_path": "changedetectionio/llm/summary_jobs.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "4e4adf05f64953a7731217d9a167b5489eb2f8ef",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        and would be inherited by any subprocess the restock processor spawns."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/__init__.py",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "15072e00a69dacdce9d9ec2d433be28622335605",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Subprocess timeout settings"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/__init__.py",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "15072e00a69dacdce9d9ec2d433be28622335605",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Maximum time to wait for subprocess operations (seconds)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/__init__.py",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "15072e00a69dacdce9d9ec2d433be28622335605",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "POLL_TIMEOUT_ABSOLUTE = int(os.getenv('OPENCV_SUBPROCESS_TIMEOUT', '20'))"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# All image operations now use OpenCV via isolated_opencv subprocess handler"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# No direct handler imports needed - subprocess isolation handles everything"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Generate diff in isolated subprocess to prevent memory leaks"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Subprocess provides complete memory isolation"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Generate diff in isolated subprocess (async-safe)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                logger.error(\"Failed to generate diff in subprocess\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Uses isolated subprocess to prevent memory leaks from large images."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Use isolated subprocess to prevent memory leaks from large images"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 296,
+      "line_end": 296,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Return result or original if subprocess failed"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/difference.py",
+      "line_start": 366,
+      "line_end": 366,
+      "blob_hash": "aa800cdce37fdf7cc2332a9b8fcbf4409a2fd513",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Calculate change percentage using isolated subprocess to prevent memory leaks (async-safe)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Subprocess-isolated image operations for memory leak prevention."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "reclaimed by Python's GC or libvips cache management. Using subprocess isolation"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Worker: Generate diff visualization using LibvipsImageDiffHandler in isolated subprocess."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Generate diff visualization in isolated subprocess for memory leak prevention."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Calculate change percentage in isolated subprocess using handler."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 219,
+      "line_end": 219,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Compare images in isolated subprocess for change detection."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 232,
+      "line_end": 232,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[Parent] Starting compare_images_isolated subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 273,
+      "line_end": 273,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # NOTE: gaussblur can hang in forked subprocesses due to LibVIPS threading"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 303,
+      "line_end": 303,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[Parent] Starting subprocess (pid will be assigned)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 305,
+      "line_end": 305,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[Parent] Subprocess started (pid={p.pid}), waiting for result (30s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 326,
+      "line_end": 326,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[Parent] Waiting for subprocess to exit (5s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+      "line_start": 349,
+      "line_end": 349,
+      "blob_hash": "d0b55507dcc2c186e81c5bdf03d674ec6d4928d1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[Parent] Subprocess cleanup complete, returning result\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "OpenCV-based subprocess isolation for image comparison."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # With multiprocessing, each subprocess would otherwise spawn threads equal to CPU cores"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 111,
+      "line_end": 111,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Compare images in isolated subprocess using OpenCV (async-safe)."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting OpenCV comparison subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 136,
+      "line_end": 136,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Subprocess started (pid={p.pid}), waiting for result ({POLL_TIMEOUT_ABSOLUTE}s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.critical(f\"[OpenCV subprocess] Timeout waiting for compare_images result after {POLL_TIMEOUT_ABSOLUTE}s (subprocess may be hung)\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise TimeoutError(f\"Image comparison subprocess timeout after {POLL_TIMEOUT_ABSOLUTE}s\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Waiting for subprocess to exit (5s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Subprocess cleanup complete, returning result\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 275,
+      "line_end": 275,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Generate visual diff with red overlay in isolated subprocess (async-safe)."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting generate_diff subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 292,
+      "line_end": 292,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 294,
+      "line_end": 294,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Subprocess started (pid={p.pid}), waiting for result ({POLL_TIMEOUT_ABSOLUTE}s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 314,
+      "line_end": 314,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.critical(f\"[OpenCV subprocess] Timeout waiting for generate_diff result after {POLL_TIMEOUT_ABSOLUTE}s (subprocess may be hung)\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 316,
+      "line_end": 316,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise TimeoutError(f\"Generate diff subprocess timeout after {POLL_TIMEOUT_ABSOLUTE}s\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 328,
+      "line_end": 328,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Waiting for subprocess to exit (5s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 350,
+      "line_end": 350,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Subprocess cleanup complete, returning result\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 395,
+      "line_end": 395,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Draw bounding box on image in isolated subprocess (async-safe)."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 411,
+      "line_end": 411,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting draw_bounding_box subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 421,
+      "line_end": 421,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 423,
+      "line_end": 423,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Subprocess started (pid={p.pid}), waiting for result ({POLL_TIMEOUT_ABSOLUTE}s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 445,
+      "line_end": 445,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.critical(f\"[OpenCV subprocess] Timeout waiting for draw_bounding_box result after {POLL_TIMEOUT_ABSOLUTE}s (subprocess may be hung)\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 447,
+      "line_end": 447,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise TimeoutError(f\"Draw bounding box subprocess timeout after {POLL_TIMEOUT_ABSOLUTE}s\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 459,
+      "line_end": 459,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Waiting for subprocess to exit (3s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 481,
+      "line_end": 481,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Subprocess cleanup complete, returning result\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 550,
+      "line_end": 550,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Calculate change percentage in isolated subprocess (async-safe)."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 557,
+      "line_end": 557,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting calculate_percentage subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 567,
+      "line_end": 567,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Starting subprocess\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 569,
+      "line_end": 569,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"[{time.time():.3f}] [Parent] Subprocess started (pid={p.pid}), waiting for result ({POLL_TIMEOUT_ABSOLUTE}s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 589,
+      "line_end": 589,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.critical(f\"[OpenCV subprocess] Timeout waiting for calculate_change_percentage result after {POLL_TIMEOUT_ABSOLUTE}s (subprocess may be hung)\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 591,
+      "line_end": 591,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise TimeoutError(f\"Calculate change percentage subprocess timeout after {POLL_TIMEOUT_ABSOLUTE}s\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 603,
+      "line_end": 603,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Waiting for subprocess to exit (5s timeout)\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+      "line_start": 625,
+      "line_end": 625,
+      "blob_hash": "803a0a290b58c20db9fb8a921330556b143ae1ff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        print(f\"[{time.time():.3f}] [Parent] Subprocess cleanup complete, returning result\", flush=True)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Uses OpenCV with subprocess isolation for high-performance, low-memory"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "image processing. All operations run in isolated subprocesses for complete"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# All image operations now use OpenCV via isolated_opencv subprocess handler"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        Perform screenshot comparison using OpenCV subprocess handler."
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Perform comparison in isolated subprocess to prevent memory leaks"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 177,
+      "line_end": 177,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.debug(f\"UUID: {watch.get('uuid')} - Starting isolated subprocess comparison (crop_region={crop_region})\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Compare using isolated subprocess with OpenCV (async-safe to avoid blocking event loop)"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 180,
+      "line_end": 180,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Pass raw bytes and crop region - subprocess handles all image operations"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 214,
+      "line_end": 214,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Subprocess returns only the change score - we decide if it's a \"change\""
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/processor.py",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "422ca1aab3828d12af3f7878b37674d5864443e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise RuntimeError(\"Image comparison subprocess returned no result\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/image_ssim_diff/util.py",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "2ec52759915df78924d2ef660ab6eb78220b5e3f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Faster (no subprocess overhead)"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# When a subprocess exits, the OS forcibly reclaims ALL memory including C-level"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# - Without subprocess: memory grows by ~50-500MB per parse and lingers"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# - With subprocess: ~35MB overhead but forces full cleanup after each run"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 121,
+      "line_end": 121,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "#   - No subprocess overhead needed"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 129,
+      "line_end": 129,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# For now, the subprocess approach is safer and leverages existing extruct code."
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Subprocess worker for itemprop extraction (Linux memory management)."
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    When the subprocess exits, the OS reclaims ALL memory including lxml's"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 159,
+      "line_end": 159,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Perform extraction in subprocess (uses extruct/lxml)"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 191,
+      "line_end": 191,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Final cleanup before subprocess exits"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 211,
+      "line_end": 211,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    2. Fall back to extruct with subprocess isolation on Linux for complex cases"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 246,
+      "line_end": 246,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Step 2: Fall back to extruct (uses lxml, needs subprocess on Linux)"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 247,
+      "line_end": 247,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    logger.trace(\"Falling back to extruct (lxml-based) with subprocess isolation\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 249,
+      "line_end": 249,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Only use subprocess isolation on Linux"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 274,
+      "line_end": 274,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Wait for subprocess to complete"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 281,
+      "line_end": 281,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Clean up all subprocess-related objects"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 294,
+      "line_end": 294,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                # Re-raise the exception that occurred in subprocess"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 307,
+      "line_end": 307,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            logger.warning(f\"Subprocess extraction failed: {e}, falling back to direct call\")"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 311,
+      "line_end": 311,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Non-Linux: direct call (no subprocess overhead needed)"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/processor.py",
+      "line_start": 487,
+      "line_end": 487,
+      "blob_hash": "613e2e581b69c4b9e0ba95f6acb4219e7047d551",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # On Linux, this runs in a subprocess to prevent lxml/extruct memory leaks"
+    },
+    {
+      "source_path": "changedetectionio/processors/restock_diff/pure_python_extractor.py",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "d7d7cf6b1e81841332f0dece4d802e8797c0b8e5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "extruct (with subprocess isolation on Linux)."
+    },
+    {
+      "source_path": "changedetectionio/processors/text_json_diff/processor.py",
+      "line_start": 301,
+      "line_end": 301,
+      "blob_hash": "13de489e29f57a731615fe6a3f418c187aafca7b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        import subprocess"
+    },
+    {
+      "source_path": "changedetectionio/processors/text_json_diff/processor.py",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "13de489e29f57a731615fe6a3f418c187aafca7b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        proc = subprocess.Popen("
+    },
+    {
+      "source_path": "changedetectionio/processors/text_json_diff/processor.py",
+      "line_start": 304,
+      "line_end": 304,
+      "blob_hash": "13de489e29f57a731615fe6a3f418c187aafca7b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            stdout=subprocess.PIPE,"
+    },
+    {
+      "source_path": "changedetectionio/processors/text_json_diff/processor.py",
+      "line_start": 305,
+      "line_end": 305,
+      "blob_hash": "13de489e29f57a731615fe6a3f418c187aafca7b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            stdin=subprocess.PIPE"
+    },
+    {
+      "source_path": "changedetectionio/tests/test_translation_overlay.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "fefb52d9bb43abbadbf2d9f61097ac58a5883c7e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import subprocess"
+    },
+    {
+      "source_path": "changedetectionio/tests/test_translation_overlay.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "fefb52d9bb43abbadbf2d9f61097ac58a5883c7e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"Import flask_app in a clean subprocess and report its BABEL_TRANSLATION_DIRECTORIES."
+    },
+    {
+      "source_path": "changedetectionio/tests/test_translation_overlay.py",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "fefb52d9bb43abbadbf2d9f61097ac58a5883c7e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Has to be a subprocess: the config is built at module import time, so it cannot be re-evaluated"
+    },
+    {
+      "source_path": "changedetectionio/tests/test_translation_overlay.py",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "fefb52d9bb43abbadbf2d9f61097ac58a5883c7e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    result = subprocess.run("
+    },
+    {
+      "source_path": "changedetectionio/tests/test_translation_overlay.py",
+      "line_start": 92,
+      "line_end": 92,
+      "blob_hash": "fefb52d9bb43abbadbf2d9f61097ac58a5883c7e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    result = subprocess.run([sys.executable, MANAGE, 'check'], capture_output=True, text=True)"
+    }
+  ]
+}

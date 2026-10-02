@@ -1,0 +1,4286 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 10,
+      "text": "from copy import deepcopy"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 11,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 13,
+      "text": "from subprocess import check_output"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 14,
+      "text": "from time import sleep"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 15,
+      "text": "from typing import Any, Dict, Optional, Set"
+    },
+    {
+      "source_path": "docs/contributors/fetch.py",
+      "line": 17,
+      "text": "import requests"
+    },
+    {
+      "source_path": "docs/contributors/generate.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "docs/contributors/generate.py",
+      "line": 6,
+      "text": "from jinja2 import Template"
+    },
+    {
+      "source_path": "docs/contributors/generate.py",
+      "line": 8,
+      "text": "from fetch import HERE, load_awesome_people"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 4,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 6,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "docs/installation/generate.py",
+      "line": 7,
+      "text": "from jinja2 import Template"
+    },
+    {
+      "source_path": "extras/packaging/linux/build.py",
+      "line": 1,
+      "text": "import stat"
+    },
+    {
+      "source_path": "extras/packaging/linux/build.py",
+      "line": 2,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "extras/packaging/linux/build.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "extras/packaging/linux/build.py",
+      "line": 4,
+      "text": "from typing import Iterator, Tuple"
+    },
+    {
+      "source_path": "extras/packaging/linux/build.py",
+      "line": 48,
+      "text": "import httpie"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/hooks/hook-pip.py",
+      "line": 1,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/hooks/hook-pip.py",
+      "line": 2,
+      "text": "from PyInstaller.utils.hooks import collect_all"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/http_cli.py",
+      "line": 1,
+      "text": "from httpie.__main__ import main"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/http_cli.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/httpie_cli.py",
+      "line": 1,
+      "text": "from httpie.manager.__main__ import main"
+    },
+    {
+      "source_path": "extras/packaging/linux/scripts/httpie_cli.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 36,
+      "text": "import os"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 37,
+      "text": "import shlex"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 38,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 39,
+      "text": "import sys"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 40,
+      "text": "import threading"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 41,
+      "text": "from contextlib import ExitStack, contextmanager"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 42,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 43,
+      "text": "from functools import cached_property, partial"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 44,
+      "text": "from http.server import HTTPServer, SimpleHTTPRequestHandler"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 45,
+      "text": "from tempfile import TemporaryDirectory"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 46,
+      "text": "from typing import ClassVar, Final, List"
+    },
+    {
+      "source_path": "extras/profiling/benchmarks.py",
+      "line": 48,
+      "text": "import pyperf"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 37,
+      "text": "import dataclasses"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 38,
+      "text": "import shlex"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 39,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 40,
+      "text": "import sys"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 41,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 42,
+      "text": "import venv"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 43,
+      "text": "from argparse import ArgumentParser, FileType"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 44,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 45,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 46,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "extras/profiling/run.py",
+      "line": 47,
+      "text": "from typing import (IO, Dict, Generator, Iterable, List, Optional,\n                    Tuple)"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 3,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 4,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 5,
+      "text": "from typing import Optional, Iterator, Iterable"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 11,
+      "text": "import httpie"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 12,
+      "text": "from httpie.cli.definition import options as core_options, IS_MAN_PAGE"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 13,
+      "text": "from httpie.cli.options import ParserSpec"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 14,
+      "text": "from httpie.manager.cli import options as manager_options"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 15,
+      "text": "from httpie.output.ui.rich_help import OptionsHighlighter, to_usage"
+    },
+    {
+      "source_path": "extras/scripts/generate_man_pages.py",
+      "line": 16,
+      "text": "from httpie.output.ui.rich_utils import render_as_string"
+    },
+    {
+      "source_path": "httpie/__main__.py",
+      "line": 8,
+      "text": "from httpie.core import main"
+    },
+    {
+      "source_path": "httpie/__main__.py",
+      "line": 11,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/__main__.py",
+      "line": 18,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/adapters.py",
+      "line": 1,
+      "text": "from httpie.cli.dicts import HTTPHeadersDict"
+    },
+    {
+      "source_path": "httpie/adapters.py",
+      "line": 2,
+      "text": "from requests.adapters import HTTPAdapter"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 2,
+      "text": "import errno"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 6,
+      "text": "from argparse import RawDescriptionHelpFormatter"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 7,
+      "text": "from textwrap import dedent"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 8,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 10,
+      "text": "from requests.utils import get_netrc_auth"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 12,
+      "text": "from .argtypes import (\n    AuthCredentials, SSLCredentials, KeyValueArgType,\n    PARSED_DEFAULT_FORMAT_OPTIONS,\n    parse_auth,\n    parse_format_options,\n)"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 18,
+      "text": "from .constants import (\n    HTTP_GET, HTTP_POST, BASE_OUTPUT_OPTIONS, OUTPUT_OPTIONS, OUTPUT_OPTIONS_DEFAULT,\n    OUTPUT_OPTIONS_DEFAULT_OFFLINE, OUTPUT_OPTIONS_DEFAULT_STDOUT_REDIRECTED,\n    OUT_RESP_BODY, PRETTY_MAP, PRETTY_STDOUT_TTY_ONLY, RequestType,\n    SEPARATOR_CREDENTIALS,\n    SEPARATOR_GROUP_ALL_ITEMS, SEPARATOR_GROUP_DATA_ITEMS, URL_SCHEME_RE,\n)"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 25,
+      "text": "from .exceptions import ParseError"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 26,
+      "text": "from .requestitems import RequestItems"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 27,
+      "text": "from ..context import Environment"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 28,
+      "text": "from ..plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 29,
+      "text": "from ..utils import ExplicitNullAuth, get_content_type"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 270,
+      "text": "from httpie.ssl_ import _is_key_file_encrypted"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 562,
+      "text": "from httpie.output.ui import man_pages"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 576,
+      "text": "from rich.text import Text"
+    },
+    {
+      "source_path": "httpie/cli/argparser.py",
+      "line": 577,
+      "text": "from httpie.output.ui import rich_help"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 2,
+      "text": "import getpass"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 5,
+      "text": "from copy import deepcopy"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 6,
+      "text": "from typing import List, Optional, Union"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 8,
+      "text": "from .constants import DEFAULT_FORMAT_OPTIONS, SEPARATOR_CREDENTIALS"
+    },
+    {
+      "source_path": "httpie/cli/argtypes.py",
+      "line": 9,
+      "text": "from ..sessions import VALID_SESSION_NAME_PATTERN"
+    },
+    {
+      "source_path": "httpie/cli/constants.py",
+      "line": 4,
+      "text": "import enum"
+    },
+    {
+      "source_path": "httpie/cli/constants.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 4,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 5,
+      "text": "from argparse import FileType"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 7,
+      "text": "from httpie import __doc__, __version__"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 8,
+      "text": "from httpie.cli.argtypes import (KeyValueArgType, SessionNameValidator,\n                                 SSLCredentials, readable_file_arg,\n                                 response_charset_type, response_mime_type)"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 11,
+      "text": "from httpie.cli.constants import (BASE_OUTPUT_OPTIONS, DEFAULT_FORMAT_OPTIONS,\n                                  OUT_REQ_BODY, OUT_REQ_HEAD, OUT_RESP_BODY,\n                                  OUT_RESP_HEAD, OUT_RESP_META, OUTPUT_OPTIONS,\n                                  OUTPUT_OPTIONS_DEFAULT, PRETTY_MAP,\n                                  PRETTY_STDOUT_TTY_ONLY,\n                                  SEPARATOR_GROUP_ALL_ITEMS, SEPARATOR_PROXY,\n                                  SORTED_FORMAT_OPTIONS_STRING,\n                                  UNSORTED_FORMAT_OPTIONS_STRING, RequestType)"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 19,
+      "text": "from httpie.cli.options import ParserSpec, Qualifiers, to_argparse"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 20,
+      "text": "from httpie.output.formatters.colors import (AUTO_STYLE, DEFAULT_STYLE, BUNDLED_STYLES,\n                                             get_available_styles)"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 22,
+      "text": "from httpie.plugins.builtin import BuiltinAuthPlugin"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 23,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/cli/definition.py",
+      "line": 24,
+      "text": "from httpie.ssl_ import AVAILABLE_SSL_VERSION_ARG_MAPPING, DEFAULT_SSL_CIPHERS_STRING"
+    },
+    {
+      "source_path": "httpie/cli/dicts.py",
+      "line": 1,
+      "text": "from collections import OrderedDict"
+    },
+    {
+      "source_path": "httpie/cli/dicts.py",
+      "line": 3,
+      "text": "from multidict import MultiDict, CIMultiDict"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/__init__.py",
+      "line": 9,
+      "text": "from .interpret import interpret_nested_json, unwrap_top_level_list_if_needed"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/__init__.py",
+      "line": 10,
+      "text": "from .errors import NestedJSONSyntaxError"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/__init__.py",
+      "line": 11,
+      "text": "from .tokens import EMPTY_STRING, NestedJSONArray"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/errors.py",
+      "line": 1,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/errors.py",
+      "line": 3,
+      "text": "from .tokens import Token, HIGHLIGHTER"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/interpret.py",
+      "line": 1,
+      "text": "from typing import Type, Union, Any, Iterable, Tuple"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/interpret.py",
+      "line": 3,
+      "text": "from .parse import parse, assert_cant_happen"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/interpret.py",
+      "line": 4,
+      "text": "from .errors import NestedJSONSyntaxError"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/interpret.py",
+      "line": 5,
+      "text": "from .tokens import EMPTY_STRING, TokenKind, Token, PathAction, Path, NestedJSONArray"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/parse.py",
+      "line": 1,
+      "text": "from typing import Iterator"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/parse.py",
+      "line": 3,
+      "text": "from .errors import NestedJSONSyntaxError"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/parse.py",
+      "line": 4,
+      "text": "from .tokens import (\n    EMPTY_STRING,\n    BACKSLASH,\n    TokenKind,\n    OPERATORS,\n    SPECIAL_CHARS,\n    LITERAL_TOKENS,\n    Token,\n    PathAction,\n    Path,\n)"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/tokens.py",
+      "line": 1,
+      "text": "from enum import Enum, auto"
+    },
+    {
+      "source_path": "httpie/cli/nested_json/tokens.py",
+      "line": 2,
+      "text": "from typing import NamedTuple, Union, Optional, List"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 2,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 4,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 5,
+      "text": "from enum import Enum, auto"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 6,
+      "text": "from typing import Any, Optional, Dict, List, Tuple, Type, TypeVar"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 8,
+      "text": "from httpie.cli.argparser import HTTPieArgumentParser"
+    },
+    {
+      "source_path": "httpie/cli/options.py",
+      "line": 9,
+      "text": "from httpie.cli.utils import Manual, LazyChoices"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 2,
+      "text": "import functools"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 3,
+      "text": "from typing import Callable, Dict, IO, List, Optional, Tuple, Union"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 5,
+      "text": "from .argtypes import KeyValueArg"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 6,
+      "text": "from .constants import (\n    SEPARATORS_GROUP_MULTIPART, SEPARATOR_DATA_EMBED_FILE_CONTENTS,\n    SEPARATOR_DATA_EMBED_RAW_JSON_FILE, SEPARATOR_GROUP_NESTED_JSON_ITEMS,\n    SEPARATOR_DATA_RAW_JSON, SEPARATOR_DATA_STRING, SEPARATOR_FILE_UPLOAD,\n    SEPARATOR_FILE_UPLOAD_TYPE, SEPARATOR_HEADER, SEPARATOR_HEADER_EMPTY,\n    SEPARATOR_HEADER_EMBED, SEPARATOR_QUERY_PARAM,\n    SEPARATOR_QUERY_EMBED_FILE, RequestType\n)"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 14,
+      "text": "from .dicts import (\n    BaseMultiDict, MultipartRequestDataDict, RequestDataDict,\n    RequestFilesDict, HTTPHeadersDict, RequestJSONDataDict,\n    RequestQueryParamsDict,\n)"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 19,
+      "text": "from .exceptions import ParseError"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 20,
+      "text": "from .nested_json import interpret_nested_json"
+    },
+    {
+      "source_path": "httpie/cli/requestitems.py",
+      "line": 21,
+      "text": "from ..utils import get_content_type, load_json_preserve_order_and_dupe_keys, split_iterable"
+    },
+    {
+      "source_path": "httpie/cli/utils.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/cli/utils.py",
+      "line": 2,
+      "text": "from typing import Any, Callable, Generic, Iterator, Iterable, Optional, TypeVar"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 2,
+      "text": "import http.client"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 5,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 6,
+      "text": "from time import monotonic"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 7,
+      "text": "from typing import Any, Dict, Callable, Iterable"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 8,
+      "text": "from urllib.parse import urlparse, urlunparse"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 10,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 12,
+      "text": "import urllib3"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 13,
+      "text": "from urllib3.util import SKIP_HEADER, SKIPPABLE_HEADERS"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 15,
+      "text": "from . import __version__"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 16,
+      "text": "from .adapters import HTTPieHTTPAdapter"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 17,
+      "text": "from .cli.constants import HTTP_OPTIONS"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 18,
+      "text": "from .cli.dicts import HTTPHeadersDict"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 19,
+      "text": "from .cli.nested_json import unwrap_top_level_list_if_needed"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 20,
+      "text": "from .context import Environment"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 21,
+      "text": "from .encoding import UTF8"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 22,
+      "text": "from .models import RequestsMessage"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 23,
+      "text": "from .plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 24,
+      "text": "from .sessions import get_httpie_session"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 25,
+      "text": "from .ssl_ import AVAILABLE_SSL_VERSION_ARG_MAPPING, HTTPieCertificate, HTTPieHTTPSAdapter"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 26,
+      "text": "from .uploads import (\n    compress_request, prepare_request_body,\n    get_multipart_data_and_content_type,\n)"
+    },
+    {
+      "source_path": "httpie/client.py",
+      "line": 30,
+      "text": "from .utils import get_expired_cookies, repr_dict"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 1,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 2,
+      "text": "from ssl import SSLContext"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 3,
+      "text": "from typing import Any, Optional, Iterable"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 5,
+      "text": "from httpie.cookies import HTTPieCookiePolicy"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 6,
+      "text": "from http import cookiejar"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 21,
+      "text": "from functools import cached_property"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 74,
+      "text": "import importlib.metadata as importlib_metadata"
+    },
+    {
+      "source_path": "httpie/compat.py",
+      "line": 76,
+      "text": "import importlib_metadata"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 4,
+      "text": "from typing import Any, Dict, Union"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 6,
+      "text": "from . import __version__"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 7,
+      "text": "from .compat import is_windows"
+    },
+    {
+      "source_path": "httpie/config.py",
+      "line": 8,
+      "text": "from .encoding import UTF8"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 4,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 5,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 7,
+      "text": "from typing import Iterator, IO, Optional, TYPE_CHECKING"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 8,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 12,
+      "text": "import curses"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 16,
+      "text": "from .compat import is_windows, cached_property"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 17,
+      "text": "from .config import DEFAULT_CONFIG_DIR, Config, ConfigFileError"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 18,
+      "text": "from .encoding import UTF8"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 20,
+      "text": "from .utils import repr_dict"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 21,
+      "text": "from .output.ui.palette import GenericColor"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 24,
+      "text": "from rich.console import Console"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 82,
+      "text": "import colorama.initialise"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 114,
+      "text": "from colorama import AnsiToWin32"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 193,
+      "text": "from rich.console import Console"
+    },
+    {
+      "source_path": "httpie/context.py",
+      "line": 194,
+      "text": "from httpie.output.ui.rich_palette import _make_rich_color_theme"
+    },
+    {
+      "source_path": "httpie/cookies.py",
+      "line": 1,
+      "text": "from http import cookiejar"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 3,
+      "text": "import platform"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 5,
+      "text": "import socket"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 6,
+      "text": "from typing import List, Optional, Union, Callable"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 8,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 9,
+      "text": "from pygments import __version__ as pygments_version"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 10,
+      "text": "from requests import __version__ as requests_version"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 12,
+      "text": "from . import __version__ as httpie_version"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 13,
+      "text": "from .cli.constants import OUT_REQ_BODY"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 14,
+      "text": "from .cli.nested_json import NestedJSONSyntaxError"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 15,
+      "text": "from .client import collect_messages"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 16,
+      "text": "from .context import Environment, LogLevel"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 17,
+      "text": "from .downloads import Downloader"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 18,
+      "text": "from .models import (\n    RequestsMessageKind,\n    OutputOptions\n)"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 22,
+      "text": "from .output.models import ProcessingOptions"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 23,
+      "text": "from .output.writer import write_message, write_stream, write_raw_data, MESSAGE_SEPARATOR_BYTES"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 24,
+      "text": "from .plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 25,
+      "text": "from .status import ExitStatus, http_status_to_exit_status"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 26,
+      "text": "from .utils import unwrap_context"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 27,
+      "text": "from .internal.update_warnings import check_updates"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 28,
+      "text": "from .internal.daemon_runner import is_daemon_mode, run_daemon_task"
+    },
+    {
+      "source_path": "httpie/core.py",
+      "line": 160,
+      "text": "from .cli.definition import parser"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 5,
+      "text": "import mimetypes"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 8,
+      "text": "from mailbox import Message"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 9,
+      "text": "from time import monotonic"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 10,
+      "text": "from typing import IO, Optional, Tuple"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 11,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 13,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 15,
+      "text": "from .models import HTTPResponse, OutputOptions"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 16,
+      "text": "from .output.streams import RawStream"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 17,
+      "text": "from .context import Environment"
+    },
+    {
+      "source_path": "httpie/downloads.py",
+      "line": 326,
+      "text": "from httpie.output.ui.rich_progress import (\n            DummyDisplay,\n            StatusDisplay,\n            ProgressDisplay\n        )"
+    },
+    {
+      "source_path": "httpie/encoding.py",
+      "line": 1,
+      "text": "from typing import Union, Tuple"
+    },
+    {
+      "source_path": "httpie/encoding.py",
+      "line": 3,
+      "text": "from charset_normalizer import from_bytes"
+    },
+    {
+      "source_path": "httpie/encoding.py",
+      "line": 4,
+      "text": "from charset_normalizer.constant import TOO_SMALL_SEQUENCE"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 2,
+      "text": "from contextlib import redirect_stderr, redirect_stdout"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 3,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 5,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 6,
+      "text": "from httpie.internal.update_warnings import _fetch_updates, _get_suppress_context"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 7,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 17,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "httpie/internal/daemon_runner.py",
+      "line": 18,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 8,
+      "text": "import inspect"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 10,
+      "text": "import platform"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 11,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 12,
+      "text": "import httpie.__main__"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 13,
+      "text": "from contextlib import suppress"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 14,
+      "text": "from subprocess import Popen, DEVNULL"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 15,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 16,
+      "text": "from httpie.compat import is_frozen, is_windows"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 33,
+      "text": "from subprocess import (\n        CREATE_NEW_PROCESS_GROUP,\n        CREATE_NO_WINDOW,\n        STARTF_USESHOWWINDOW,\n        STARTUPINFO,\n    )"
+    },
+    {
+      "source_path": "httpie/internal/daemons.py",
+      "line": 64,
+      "text": "from httpie.core import main"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 2,
+      "text": "from contextlib import nullcontext, suppress"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 3,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 4,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 5,
+      "text": "from typing import Any, Optional, Callable"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 7,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 9,
+      "text": "import httpie"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 10,
+      "text": "from httpie.context import Environment, LogLevel"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 11,
+      "text": "from httpie.internal.__build_channel__ import BUILD_CHANNEL"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 12,
+      "text": "from httpie.internal.daemons import spawn_daemon"
+    },
+    {
+      "source_path": "httpie/internal/update_warnings.py",
+      "line": 13,
+      "text": "from httpie.utils import is_version_greater, open_with_lockfile"
+    },
+    {
+      "source_path": "httpie/legacy/v3_1_0_session_cookie_format.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/legacy/v3_1_0_session_cookie_format.py",
+      "line": 2,
+      "text": "from typing import Any, Type, List, Dict, TYPE_CHECKING"
+    },
+    {
+      "source_path": "httpie/legacy/v3_1_0_session_cookie_format.py",
+      "line": 5,
+      "text": "from httpie.sessions import Session"
+    },
+    {
+      "source_path": "httpie/legacy/v3_2_0_session_header_format.py",
+      "line": 1,
+      "text": "from typing import Any, Type, List, Dict, TYPE_CHECKING"
+    },
+    {
+      "source_path": "httpie/legacy/v3_2_0_session_header_format.py",
+      "line": 4,
+      "text": "from httpie.sessions import Session"
+    },
+    {
+      "source_path": "httpie/legacy/v3_2_0_session_header_format.py",
+      "line": 68,
+      "text": "from httpie.sessions import materialize_headers"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 4,
+      "text": "from typing import List, Union"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 6,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 7,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 8,
+      "text": "from httpie.manager.cli import parser"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 9,
+      "text": "from httpie.manager.core import MSG_COMMAND_CONFUSION, program as main_program"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 15,
+      "text": "from httpie.cli.definition import parser as http_parser"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 16,
+      "text": "from httpie.manager.cli import COMMANDS"
+    },
+    {
+      "source_path": "httpie/manager/__main__.py",
+      "line": 33,
+      "text": "from httpie.core import raw_main"
+    },
+    {
+      "source_path": "httpie/manager/cli.py",
+      "line": 1,
+      "text": "from textwrap import dedent"
+    },
+    {
+      "source_path": "httpie/manager/cli.py",
+      "line": 2,
+      "text": "from httpie.cli.argparser import HTTPieManagerArgumentParser"
+    },
+    {
+      "source_path": "httpie/manager/cli.py",
+      "line": 3,
+      "text": "from httpie.cli.options import Qualifiers, ARGPARSE_QUALIFIER_MAP, map_qualifiers, parser_to_parser_spec"
+    },
+    {
+      "source_path": "httpie/manager/cli.py",
+      "line": 4,
+      "text": "from httpie import __version__"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 1,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 2,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 3,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 5,
+      "text": "from contextlib import suppress"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 6,
+      "text": "from typing import List, Optional"
+    },
+    {
+      "source_path": "httpie/manager/compat.py",
+      "line": 7,
+      "text": "from httpie.compat import is_frozen"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 2,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 4,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 5,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 6,
+      "text": "from httpie.manager.cli import missing_subcommand, parser"
+    },
+    {
+      "source_path": "httpie/manager/core.py",
+      "line": 7,
+      "text": "from httpie.manager.tasks import CLI_TASKS"
+    },
+    {
+      "source_path": "httpie/manager/tasks/__init__.py",
+      "line": 1,
+      "text": "from httpie.manager.tasks.sessions import cli_sessions"
+    },
+    {
+      "source_path": "httpie/manager/tasks/__init__.py",
+      "line": 2,
+      "text": "from httpie.manager.tasks.export_args import cli_export_args"
+    },
+    {
+      "source_path": "httpie/manager/tasks/__init__.py",
+      "line": 3,
+      "text": "from httpie.manager.tasks.plugins import cli_plugins"
+    },
+    {
+      "source_path": "httpie/manager/tasks/__init__.py",
+      "line": 4,
+      "text": "from httpie.manager.tasks.check_updates import cli_check_updates"
+    },
+    {
+      "source_path": "httpie/manager/tasks/check_updates.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/tasks/check_updates.py",
+      "line": 2,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/tasks/check_updates.py",
+      "line": 3,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/tasks/check_updates.py",
+      "line": 4,
+      "text": "from httpie.internal.update_warnings import fetch_updates, get_update_status"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 4,
+      "text": "from httpie.cli.definition import options"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 5,
+      "text": "from httpie.cli.options import to_data"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 6,
+      "text": "from httpie.output.writer import write_raw_data"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 7,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/tasks/export_args.py",
+      "line": 8,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 3,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 5,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 6,
+      "text": "from collections import defaultdict"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 7,
+      "text": "from contextlib import suppress"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 9,
+      "text": "from typing import List, Optional, Tuple"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 11,
+      "text": "from httpie.manager.compat import PipError, run_pip"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 12,
+      "text": "from httpie.manager.cli import parser, missing_subcommand"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 13,
+      "text": "from httpie.compat import get_dist_name, importlib_metadata"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 14,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 15,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 16,
+      "text": "from httpie.utils import get_site_paths"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 197,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/manager/tasks/plugins.py",
+      "line": 222,
+      "text": "from httpie.plugins.manager import enable_plugins"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 3,
+      "text": "from httpie.sessions import SESSIONS_DIR_NAME, get_httpie_session"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 4,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 5,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 6,
+      "text": "from httpie.legacy import v3_1_0_session_cookie_format, v3_2_0_session_header_format"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 7,
+      "text": "from httpie.manager.cli import missing_subcommand, parser"
+    },
+    {
+      "source_path": "httpie/manager/tasks/sessions.py",
+      "line": 8,
+      "text": "from httpie.utils import is_version_greater"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 1,
+      "text": "from time import monotonic"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 3,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 4,
+      "text": "from urllib3.util import SKIP_HEADER, SKIPPABLE_HEADERS"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 6,
+      "text": "from enum import Enum, auto"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 7,
+      "text": "from typing import Iterable, Union, NamedTuple"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 8,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 10,
+      "text": "from .cli.constants import (\n    OUT_REQ_BODY,\n    OUT_REQ_HEAD,\n    OUT_RESP_BODY,\n    OUT_RESP_HEAD,\n    OUT_RESP_META\n)"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 17,
+      "text": "from .compat import cached_property"
+    },
+    {
+      "source_path": "httpie/models.py",
+      "line": 18,
+      "text": "from .utils import split_cookies, parse_content_type_header"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 2,
+      "text": "from typing import Optional, Type, Tuple"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 4,
+      "text": "import pygments.formatters"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 5,
+      "text": "import pygments.lexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 6,
+      "text": "import pygments.lexers"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 7,
+      "text": "import pygments.style"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 8,
+      "text": "import pygments.styles"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 9,
+      "text": "import pygments.token"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 10,
+      "text": "from pygments.formatters.terminal import TerminalFormatter"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 11,
+      "text": "from pygments.formatters.terminal256 import Terminal256Formatter"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 12,
+      "text": "from pygments.lexer import Lexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 13,
+      "text": "from pygments.lexers.data import JsonLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 14,
+      "text": "from pygments.lexers.special import TextLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 15,
+      "text": "from pygments.lexers.text import HttpLexer as PygmentsHttpLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 16,
+      "text": "from pygments.util import ClassNotFound"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 18,
+      "text": "from ..lexers.json import EnhancedJsonLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 19,
+      "text": "from ..lexers.metadata import MetadataLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 20,
+      "text": "from ..ui.palette import AUTO_STYLE, SHADE_TO_PIE_STYLE, PieColor, ColorString, get_color"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 21,
+      "text": "from ...context import Environment"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 22,
+      "text": "from ...plugins import FormatterPlugin"
+    },
+    {
+      "source_path": "httpie/output/formatters/colors.py",
+      "line": 71,
+      "text": "from ..lexers.http import SimplifiedHTTPLexer"
+    },
+    {
+      "source_path": "httpie/output/formatters/headers.py",
+      "line": 1,
+      "text": "from ...plugins import FormatterPlugin"
+    },
+    {
+      "source_path": "httpie/output/formatters/json.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/output/formatters/json.py",
+      "line": 3,
+      "text": "from ...plugins import FormatterPlugin"
+    },
+    {
+      "source_path": "httpie/output/formatters/json.py",
+      "line": 20,
+      "text": "from ..utils import load_prefixed_json"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 1,
+      "text": "from typing import TYPE_CHECKING, Optional"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 3,
+      "text": "from ...encoding import UTF8"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 4,
+      "text": "from ...plugins import FormatterPlugin"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 7,
+      "text": "from xml.dom.minidom import Document"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 16,
+      "text": "from defusedxml.minidom import parseString"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 63,
+      "text": "from xml.parsers.expat import ExpatError"
+    },
+    {
+      "source_path": "httpie/output/formatters/xml.py",
+      "line": 64,
+      "text": "from defusedxml.common import DefusedXmlException"
+    },
+    {
+      "source_path": "httpie/output/lexers/http.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/output/lexers/http.py",
+      "line": 2,
+      "text": "import pygments"
+    },
+    {
+      "source_path": "httpie/output/lexers/http.py",
+      "line": 3,
+      "text": "from httpie.output.lexers.common import precise"
+    },
+    {
+      "source_path": "httpie/output/lexers/json.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/output/lexers/json.py",
+      "line": 3,
+      "text": "from pygments.lexer import bygroups, using, RegexLexer"
+    },
+    {
+      "source_path": "httpie/output/lexers/json.py",
+      "line": 4,
+      "text": "from pygments.lexers.data import JsonLexer"
+    },
+    {
+      "source_path": "httpie/output/lexers/json.py",
+      "line": 5,
+      "text": "from pygments.token import Token"
+    },
+    {
+      "source_path": "httpie/output/lexers/metadata.py",
+      "line": 1,
+      "text": "import pygments"
+    },
+    {
+      "source_path": "httpie/output/lexers/metadata.py",
+      "line": 3,
+      "text": "from httpie.models import ELAPSED_TIME_LABEL"
+    },
+    {
+      "source_path": "httpie/output/lexers/metadata.py",
+      "line": 4,
+      "text": "from httpie.output.lexers.common import precise"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 2,
+      "text": "from typing import Any, Dict, Union, List, NamedTuple, Optional"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 4,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 5,
+      "text": "from httpie.cli.constants import PrettyOptions, PRETTY_MAP, PRETTY_STDOUT_TTY_ONLY"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 6,
+      "text": "from httpie.cli.argtypes import PARSED_DEFAULT_FORMAT_OPTIONS"
+    },
+    {
+      "source_path": "httpie/output/models.py",
+      "line": 7,
+      "text": "from httpie.output.formatters.colors import AUTO_STYLE"
+    },
+    {
+      "source_path": "httpie/output/processing.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/output/processing.py",
+      "line": 2,
+      "text": "from typing import Optional, List"
+    },
+    {
+      "source_path": "httpie/output/processing.py",
+      "line": 4,
+      "text": "from ..plugins import ConverterPlugin"
+    },
+    {
+      "source_path": "httpie/output/processing.py",
+      "line": 5,
+      "text": "from ..plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/output/processing.py",
+      "line": 6,
+      "text": "from ..context import Environment"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 1,
+      "text": "from abc import ABCMeta, abstractmethod"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 2,
+      "text": "from itertools import chain"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 3,
+      "text": "from typing import Callable, Iterable, Optional, Union"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 5,
+      "text": "from .processing import Conversion, Formatting"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 6,
+      "text": "from ..context import Environment"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 7,
+      "text": "from ..encoding import smart_decode, smart_encode, UTF8"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 8,
+      "text": "from ..models import HTTPMessage, OutputOptions"
+    },
+    {
+      "source_path": "httpie/output/streams.py",
+      "line": 9,
+      "text": "from ..utils import parse_content_type_header"
+    },
+    {
+      "source_path": "httpie/output/ui/man_pages.py",
+      "line": 3,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "httpie/output/ui/man_pages.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/output/ui/man_pages.py",
+      "line": 5,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/output/ui/palette.py",
+      "line": 1,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "httpie/output/ui/palette.py",
+      "line": 2,
+      "text": "from enum import Enum, auto"
+    },
+    {
+      "source_path": "httpie/output/ui/palette.py",
+      "line": 3,
+      "text": "from typing import Optional, List"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 2,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 3,
+      "text": "from typing import AbstractSet, Iterable, Optional, Tuple"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 5,
+      "text": "from rich.console import RenderableType"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 6,
+      "text": "from rich.highlighter import RegexHighlighter"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 7,
+      "text": "from rich.padding import Padding"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 8,
+      "text": "from rich.table import Table"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 9,
+      "text": "from rich.text import Text"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 11,
+      "text": "from httpie.cli.constants import SEPARATOR_GROUP_ALL_ITEMS"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 12,
+      "text": "from httpie.cli.options import Argument, ParserSpec, Qualifiers"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_help.py",
+      "line": 13,
+      "text": "from httpie.output.ui.palette import GenericColor"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 1,
+      "text": "from collections import ChainMap"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 2,
+      "text": "from typing import TYPE_CHECKING, Any, Optional"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 5,
+      "text": "from rich.theme import Theme"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 7,
+      "text": "from httpie.output.ui.palette import GenericColor, PieStyle, Styles, ColorString, _StyledGenericColor"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 46,
+      "text": "from rich.style import Style"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_palette.py",
+      "line": 47,
+      "text": "from rich.theme import Theme"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 1,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 2,
+      "text": "from typing import TYPE_CHECKING, Optional"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 4,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 7,
+      "text": "from rich.console import Console"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 33,
+      "text": "from rich import filesize"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 75,
+      "text": "from rich import filesize"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_progress.py",
+      "line": 101,
+      "text": "from rich.progress import (\n            Progress,\n            BarColumn,\n            DownloadColumn,\n            TimeRemainingColumn,\n            TransferSpeedColumn,\n        )"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 3,
+      "text": "from typing import Iterator"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 4,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 6,
+      "text": "from rich.console import Console, RenderableType"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 7,
+      "text": "from rich.highlighter import Highlighter"
+    },
+    {
+      "source_path": "httpie/output/ui/rich_utils.py",
+      "line": 9,
+      "text": "from httpie.output.ui.rich_palette import _make_rich_color_theme"
+    },
+    {
+      "source_path": "httpie/output/utils.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/output/utils.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/output/utils.py",
+      "line": 3,
+      "text": "from typing import Tuple"
+    },
+    {
+      "source_path": "httpie/output/utils.py",
+      "line": 5,
+      "text": "from ..utils import load_json_preserve_order_and_dupe_keys"
+    },
+    {
+      "source_path": "httpie/output/utils.py",
+      "line": 6,
+      "text": "from .lexers.json import PREFIX_REGEX"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 1,
+      "text": "import errno"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 2,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 3,
+      "text": "from typing import Any, Dict, IO, Optional, TextIO, Tuple, Type, Union"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 5,
+      "text": "from ..cli.dicts import HTTPHeadersDict"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 6,
+      "text": "from ..context import Environment"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 7,
+      "text": "from ..models import (\n    HTTPRequest,\n    HTTPResponse,\n    HTTPMessage,\n    RequestsMessage,\n    RequestsMessageKind,\n    OutputOptions,\n)"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 15,
+      "text": "from .models import ProcessingOptions"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 16,
+      "text": "from .processing import Conversion, Formatting"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 17,
+      "text": "from .streams import (\n    BaseStream, BufferedPrettyStream, EncodedStream, PrettyStream, RawStream,\n)"
+    },
+    {
+      "source_path": "httpie/output/writer.py",
+      "line": 20,
+      "text": "from ..utils import parse_content_type_header"
+    },
+    {
+      "source_path": "httpie/plugins/__init__.py",
+      "line": 6,
+      "text": "from .base import (\n    AuthPlugin, FormatterPlugin,\n    ConverterPlugin, TransportPlugin\n)"
+    },
+    {
+      "source_path": "httpie/plugins/base.py",
+      "line": 1,
+      "text": "from typing import Tuple"
+    },
+    {
+      "source_path": "httpie/plugins/builtin.py",
+      "line": 1,
+      "text": "from base64 import b64encode"
+    },
+    {
+      "source_path": "httpie/plugins/builtin.py",
+      "line": 3,
+      "text": "import requests.auth"
+    },
+    {
+      "source_path": "httpie/plugins/builtin.py",
+      "line": 5,
+      "text": "from .base import AuthPlugin"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 1,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 3,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 5,
+      "text": "from itertools import groupby"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 6,
+      "text": "from operator import attrgetter"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 7,
+      "text": "from typing import Dict, List, Type, Iterator, Iterable, Optional, ContextManager"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 9,
+      "text": "from contextlib import contextmanager, nullcontext"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 11,
+      "text": "from ..compat import importlib_metadata, find_entry_points, get_dist_name"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 13,
+      "text": "from ..utils import repr_dict, get_site_paths"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 14,
+      "text": "from . import AuthPlugin, ConverterPlugin, FormatterPlugin, TransportPlugin"
+    },
+    {
+      "source_path": "httpie/plugins/manager.py",
+      "line": 15,
+      "text": "from .base import BasePlugin"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 1,
+      "text": "from .manager import PluginManager"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 2,
+      "text": "from .builtin import BasicAuthPlugin, DigestAuthPlugin, BearerAuthPlugin"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 3,
+      "text": "from ..output.formatters.headers import HeadersFormatter"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 4,
+      "text": "from ..output.formatters.json import JSONFormatter"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 5,
+      "text": "from ..output.formatters.xml import XMLFormatter"
+    },
+    {
+      "source_path": "httpie/plugins/registry.py",
+      "line": 6,
+      "text": "from ..output.formatters.colors import ColorFormatter"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 8,
+      "text": "from http.cookies import SimpleCookie"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 9,
+      "text": "from http.cookiejar import Cookie"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 11,
+      "text": "from typing import Any, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 13,
+      "text": "from requests.auth import AuthBase"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 14,
+      "text": "from requests.cookies import RequestsCookieJar, remove_cookie_by_name"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 16,
+      "text": "from .context import Environment, LogLevel"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 17,
+      "text": "from .cookies import HTTPieCookiePolicy"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 18,
+      "text": "from .cli.dicts import HTTPHeadersDict"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 19,
+      "text": "from .config import BaseConfigDict, DEFAULT_CONFIG_DIR"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 20,
+      "text": "from .utils import url_as_host"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 21,
+      "text": "from .plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 23,
+      "text": "from .legacy import (\n    v3_1_0_session_cookie_format as legacy_cookies,\n    v3_2_0_session_header_format as legacy_headers\n)"
+    },
+    {
+      "source_path": "httpie/sessions.py",
+      "line": 292,
+      "text": "from .cli.argtypes import parse_auth"
+    },
+    {
+      "source_path": "httpie/ssl_.py",
+      "line": 1,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpie/ssl_.py",
+      "line": 2,
+      "text": "from typing import NamedTuple, Optional"
+    },
+    {
+      "source_path": "httpie/ssl_.py",
+      "line": 5,
+      "text": "from urllib3.util.ssl_ import (\n    create_urllib3_context,\n    resolve_ssl_version,\n)"
+    },
+    {
+      "source_path": "httpie/ssl_.py",
+      "line": 10,
+      "text": "from .adapters import HTTPAdapter"
+    },
+    {
+      "source_path": "httpie/ssl_.py",
+      "line": 11,
+      "text": "from .compat import ensure_default_certs_loaded"
+    },
+    {
+      "source_path": "httpie/status.py",
+      "line": 1,
+      "text": "from enum import IntEnum, unique"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 1,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 3,
+      "text": "import zlib"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 4,
+      "text": "import functools"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 5,
+      "text": "import threading"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 6,
+      "text": "from typing import Any, Callable, IO, Iterable, Optional, Tuple, Union, TYPE_CHECKING"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 7,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 9,
+      "text": "import requests"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 10,
+      "text": "from requests.utils import super_len"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 13,
+      "text": "from requests_toolbelt import MultipartEncoder"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 15,
+      "text": "from .context import Environment"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 16,
+      "text": "from .cli.dicts import MultipartRequestDataDict, RequestDataDict"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 17,
+      "text": "from .compat import is_windows"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 134,
+      "text": "import select"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 175,
+      "text": "from requests_toolbelt import MultipartEncoder"
+    },
+    {
+      "source_path": "httpie/uploads.py",
+      "line": 235,
+      "text": "from requests_toolbelt import MultipartEncoder"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 2,
+      "text": "import base64"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 4,
+      "text": "import mimetypes"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 8,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 9,
+      "text": "import sysconfig"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 11,
+      "text": "from collections import OrderedDict"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 12,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 13,
+      "text": "from http.cookiejar import parse_ns_headers"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 15,
+      "text": "from pprint import pformat"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 16,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 17,
+      "text": "from typing import Any, List, Optional, Tuple, Generator, Callable, Iterable, IO, TypeVar"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 19,
+      "text": "import requests.auth"
+    },
+    {
+      "source_path": "httpie/utils.py",
+      "line": 230,
+      "text": "from httpie.compat import (\n        MIN_SUPPORTED_PY_VERSION,\n        MAX_SUPPORTED_PY_VERSION,\n        is_frozen\n    )"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 1,
+      "text": "from setuptools import setup"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 1,
+      "text": "import socket"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 4,
+      "text": "from pytest_httpbin import certs"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 5,
+      "text": "from pytest_httpbin.serve import Server as PyTestHttpBinServer"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 7,
+      "text": "from .utils import (  # noqa\n    HTTPBIN_WITH_CHUNKED_SUPPORT_DOMAIN,\n    HTTPBIN_WITH_CHUNKED_SUPPORT,\n    REMOTE_HTTPBIN_DOMAIN,\n    IS_PYOPENSSL,\n    mock_env\n)"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 14,
+      "text": "from .utils.plugins_cli import (  # noqa\n    broken_plugin,\n    dummy_plugin,\n    dummy_plugins,\n    httpie_plugins,\n    httpie_plugins_success,\n    interface,\n)"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 22,
+      "text": "from .utils.http_server import http_server, localhost_http_server"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 91,
+      "text": "import urllib3.contrib.pyopenssl"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 2,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 5,
+      "text": "from httpie.plugins.builtin import HTTPBasicAuth"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 6,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 7,
+      "text": "from httpie.utils import ExplicitNullAuth"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 8,
+      "text": "from .utils import http, add_auth, HTTP_OK, MockEnvironment"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 9,
+      "text": "import httpie.cli.constants"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 10,
+      "text": "import httpie.cli.definition"
+    },
+    {
+      "source_path": "tests/test_auth_plugins.py",
+      "line": 1,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_auth_plugins.py",
+      "line": 3,
+      "text": "from httpie.cli.constants import SEPARATOR_CREDENTIALS"
+    },
+    {
+      "source_path": "tests/test_auth_plugins.py",
+      "line": 4,
+      "text": "from httpie.plugins import AuthPlugin"
+    },
+    {
+      "source_path": "tests/test_auth_plugins.py",
+      "line": 5,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "tests/test_auth_plugins.py",
+      "line": 6,
+      "text": "from .utils import http, HTTP_OK"
+    },
+    {
+      "source_path": "tests/test_binary.py",
+      "line": 2,
+      "text": "import requests"
+    },
+    {
+      "source_path": "tests/test_binary.py",
+      "line": 4,
+      "text": "from .fixtures import BIN_FILE_PATH, BIN_FILE_CONTENT, BIN_FILE_PATH_ARG"
+    },
+    {
+      "source_path": "tests/test_binary.py",
+      "line": 5,
+      "text": "from httpie.output.streams import BINARY_SUPPRESSED_NOTICE"
+    },
+    {
+      "source_path": "tests/test_binary.py",
+      "line": 6,
+      "text": "from .utils import MockEnvironment, http"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 2,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 5,
+      "text": "from requests.exceptions import InvalidSchema"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 7,
+      "text": "import httpie.cli.argparser"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 8,
+      "text": "from httpie.cli import constants"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 9,
+      "text": "from httpie.cli.definition import parser"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 10,
+      "text": "from httpie.cli.argtypes import KeyValueArg, KeyValueArgType"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 11,
+      "text": "from httpie.cli.requestitems import RequestItems"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 12,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 13,
+      "text": "from httpie.utils import load_json_preserve_order_and_dupe_keys"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 15,
+      "text": "from .fixtures import (\n    FILE_CONTENT, FILE_PATH, FILE_PATH_ARG, JSON_FILE_CONTENT,\n    JSON_FILE_PATH_ARG,\n)"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 19,
+      "text": "from .utils import HTTP_OK, MockEnvironment, StdinBytesIO, http"
+    },
+    {
+      "source_path": "tests/test_cli_ui.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cli_ui.py",
+      "line": 2,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_cli_ui.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_cli_ui.py",
+      "line": 4,
+      "text": "from tests.utils import http"
+    },
+    {
+      "source_path": "tests/test_cli_utils.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cli_utils.py",
+      "line": 2,
+      "text": "from argparse import ArgumentParser"
+    },
+    {
+      "source_path": "tests/test_cli_utils.py",
+      "line": 3,
+      "text": "from unittest.mock import Mock"
+    },
+    {
+      "source_path": "tests/test_cli_utils.py",
+      "line": 4,
+      "text": "from httpie.cli.utils import LazyChoices"
+    },
+    {
+      "source_path": "tests/test_compress.py",
+      "line": 11,
+      "text": "import base64"
+    },
+    {
+      "source_path": "tests/test_compress.py",
+      "line": 12,
+      "text": "import zlib"
+    },
+    {
+      "source_path": "tests/test_compress.py",
+      "line": 14,
+      "text": "from .fixtures import FILE_PATH, FILE_CONTENT"
+    },
+    {
+      "source_path": "tests/test_compress.py",
+      "line": 15,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_compress.py",
+      "line": 16,
+      "text": "from .utils import StdinBytesIO, http, HTTP_OK, MockEnvironment"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 1,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 4,
+      "text": "from _pytest.monkeypatch import MonkeyPatch"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 6,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 7,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 8,
+      "text": "from httpie.config import (\n    Config, DEFAULT_CONFIG_DIRNAME, DEFAULT_RELATIVE_LEGACY_CONFIG_DIR,\n    DEFAULT_RELATIVE_XDG_CONFIG_HOME, DEFAULT_WINDOWS_CONFIG_DIR,\n    ENV_HTTPIE_CONFIG_DIR, ENV_XDG_CONFIG_HOME, get_default_config_dir,\n)"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 13,
+      "text": "from .utils import HTTP_OK, MockEnvironment, http"
+    },
+    {
+      "source_path": "tests/test_cookie.py",
+      "line": 1,
+      "text": "from http.cookies import SimpleCookie"
+    },
+    {
+      "source_path": "tests/test_cookie.py",
+      "line": 2,
+      "text": "from http.server import BaseHTTPRequestHandler, HTTPServer"
+    },
+    {
+      "source_path": "tests/test_cookie.py",
+      "line": 3,
+      "text": "from threading import Thread"
+    },
+    {
+      "source_path": "tests/test_cookie.py",
+      "line": 5,
+      "text": "from .utils import http"
+    },
+    {
+      "source_path": "tests/test_cookie_on_redirects.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cookie_on_redirects.py",
+      "line": 2,
+      "text": "from .utils import http"
+    },
+    {
+      "source_path": "tests/test_defaults.py",
+      "line": 5,
+      "text": "from io import BytesIO"
+    },
+    {
+      "source_path": "tests/test_defaults.py",
+      "line": 7,
+      "text": "from httpie.client import JSON_ACCEPT"
+    },
+    {
+      "source_path": "tests/test_defaults.py",
+      "line": 8,
+      "text": "from .utils import MockEnvironment, http, HTTP_OK"
+    },
+    {
+      "source_path": "tests/test_defaults.py",
+      "line": 9,
+      "text": "from .fixtures import FILE_PATH"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 2,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 4,
+      "text": "import requests"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 5,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 6,
+      "text": "from urllib.request import urlopen"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 9,
+      "text": "from requests.structures import CaseInsensitiveDict"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 11,
+      "text": "from httpie.downloads import (\n    parse_content_range, filename_from_content_disposition, filename_from_url,\n    get_unique_filename, ContentRangeError, Downloader, PARTIAL_CONTENT\n)"
+    },
+    {
+      "source_path": "tests/test_downloads.py",
+      "line": 15,
+      "text": "from .utils import http, MockEnvironment"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 6,
+      "text": "import responses"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 7,
+      "text": "from charset_normalizer.constant import TOO_SMALL_SEQUENCE"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 9,
+      "text": "from httpie.cli.constants import PRETTY_MAP"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 10,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 12,
+      "text": "from .utils import http, HTTP_OK, DUMMY_URL, MockEnvironment"
+    },
+    {
+      "source_path": "tests/test_encoding.py",
+      "line": 13,
+      "text": "from .fixtures import UNICODE"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 2,
+      "text": "import socket"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 3,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 4,
+      "text": "from pytest import raises"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 5,
+      "text": "from requests import Request"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 6,
+      "text": "from requests.exceptions import ConnectionError"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 8,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_errors.py",
+      "line": 9,
+      "text": "from .utils import HTTP_OK, http"
+    },
+    {
+      "source_path": "tests/test_exit_status.py",
+      "line": 1,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_exit_status.py",
+      "line": 3,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_exit_status.py",
+      "line": 4,
+      "text": "from .utils import MockEnvironment, http, HTTP_OK"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 2,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 3,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 7,
+      "text": "import httpie"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 8,
+      "text": "import httpie.__main__"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 9,
+      "text": "from .fixtures import FILE_CONTENT, FILE_PATH"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 10,
+      "text": "from httpie.cli.exceptions import ParseError"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 11,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 12,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 13,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_httpie.py",
+      "line": 14,
+      "text": "from .utils import HTTP_OK, MockEnvironment, StdinBytesIO, http"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 2,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 4,
+      "text": "from httpie.sessions import SESSIONS_DIR_NAME"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 5,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 6,
+      "text": "from httpie.cli.options import PARSER_SPEC_VERSION"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 7,
+      "text": "from tests.utils import DUMMY_HOST, httpie"
+    },
+    {
+      "source_path": "tests/test_httpie_cli.py",
+      "line": 8,
+      "text": "from tests.fixtures import SESSION_FILES_PATH, SESSION_FILES_NEW, SESSION_FILES_OLD, read_session_file"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 4,
+      "text": "import responses"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 6,
+      "text": "from httpie.cli.constants import PRETTY_MAP"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 7,
+      "text": "from httpie.cli.exceptions import ParseError"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 8,
+      "text": "from httpie.cli.nested_json import NestedJSONSyntaxError"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 9,
+      "text": "from httpie.output.formatters.colors import ColorFormatter"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 10,
+      "text": "from httpie.utils import JsonDictPreservingDuplicateKeys"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 12,
+      "text": "from .fixtures import (\n    FILE_CONTENT,\n    FILE_PATH,\n    JSON_FILE_CONTENT,\n    JSON_FILE_PATH,\n    JSON_WITH_DUPE_KEYS_FILE_PATH,\n)"
+    },
+    {
+      "source_path": "tests/test_json.py",
+      "line": 19,
+      "text": "from .utils import DUMMY_URL, MockEnvironment, http"
+    },
+    {
+      "source_path": "tests/test_meta.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_meta.py",
+      "line": 3,
+      "text": "from httpie.models import ELAPSED_TIME_LABEL"
+    },
+    {
+      "source_path": "tests/test_meta.py",
+      "line": 4,
+      "text": "from httpie.output.formatters.colors import PIE_STYLE_NAMES"
+    },
+    {
+      "source_path": "tests/test_meta.py",
+      "line": 5,
+      "text": "from .utils import http, MockEnvironment, COLOR"
+    },
+    {
+      "source_path": "tests/test_offline.py",
+      "line": 1,
+      "text": "from .fixtures import FILE_CONTENT, FILE_PATH_ARG"
+    },
+    {
+      "source_path": "tests/test_offline.py",
+      "line": 2,
+      "text": "from .utils import http"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 1,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 2,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 3,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 7,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 8,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 9,
+      "text": "from urllib.request import urlopen"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 11,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 12,
+      "text": "import requests"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 13,
+      "text": "import responses"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 15,
+      "text": "from httpie.cli.argtypes import (\n    PARSED_DEFAULT_FORMAT_OPTIONS,\n    parse_format_options,\n)"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 19,
+      "text": "from httpie.cli.definition import parser"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 20,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 21,
+      "text": "from httpie.output.formatters.colors import get_lexer, PIE_STYLE_NAMES, BUNDLED_STYLES"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 22,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 23,
+      "text": "from .fixtures import XML_DATA_RAW, XML_DATA_FORMATTED"
+    },
+    {
+      "source_path": "tests/test_output.py",
+      "line": 24,
+      "text": "from .utils import COLOR, CRLF, HTTP_OK, MockEnvironment, http, DUMMY_URL, strip_colors"
+    },
+    {
+      "source_path": "tests/test_parser_schema.py",
+      "line": 1,
+      "text": "from httpie.cli.options import ParserSpec, Qualifiers"
+    },
+    {
+      "source_path": "tests/test_plugins_cli.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_plugins_cli.py",
+      "line": 3,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_plugins_cli.py",
+      "line": 4,
+      "text": "from tests.utils.plugins_cli import parse_listing"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 2,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 4,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 5,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 6,
+      "text": "from .fixtures import FILE_PATH_ARG, FILE_CONTENT"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 7,
+      "text": "from .utils import http, HTTP_OK"
+    },
+    {
+      "source_path": "tests/test_redirects.py",
+      "line": 8,
+      "text": "from .utils.matching import assert_output_matches, Expect, ExpectSequence"
+    },
+    {
+      "source_path": "tests/test_regressions.py",
+      "line": 2,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_regressions.py",
+      "line": 4,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_regressions.py",
+      "line": 5,
+      "text": "from .utils.matching import assert_output_matches, Expect"
+    },
+    {
+      "source_path": "tests/test_regressions.py",
+      "line": 6,
+      "text": "from .utils import HTTP_OK, MockEnvironment, http"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 3,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 4,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 5,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 6,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 8,
+      "text": "from typing import Iterator"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 12,
+      "text": "from .fixtures import FILE_PATH_ARG, UNICODE"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 13,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 14,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 15,
+      "text": "from httpie.plugins import AuthPlugin"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 16,
+      "text": "from httpie.plugins.builtin import HTTPBasicAuth"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 17,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 18,
+      "text": "from httpie.sessions import Session"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 19,
+      "text": "from httpie.utils import get_expired_cookies"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 20,
+      "text": "from .test_auth_plugins import basic_auth"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 21,
+      "text": "from .utils import DUMMY_HOST, HTTP_OK, MockEnvironment, http, mk_config_dir"
+    },
+    {
+      "source_path": "tests/test_sessions.py",
+      "line": 22,
+      "text": "from base64 import b64encode"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 1,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 4,
+      "text": "import pytest_httpbin.certs"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 5,
+      "text": "import requests.exceptions"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 6,
+      "text": "import urllib3"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 8,
+      "text": "from unittest import mock"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 10,
+      "text": "from httpie.ssl_ import AVAILABLE_SSL_VERSION_ARG_MAPPING, DEFAULT_SSL_CIPHERS_STRING"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 11,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 13,
+      "text": "from .utils import HTTP_OK, TESTS_ROOT, IS_PYOPENSSL, http"
+    },
+    {
+      "source_path": "tests/test_ssl.py",
+      "line": 20,
+      "text": "import OpenSSL.SSL"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 4,
+      "text": "import responses"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 5,
+      "text": "from unittest.mock import Mock"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 7,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 8,
+      "text": "from httpie.cli.constants import PRETTY_MAP"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 9,
+      "text": "from httpie.output.streams import BINARY_SUPPRESSED_NOTICE"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 10,
+      "text": "from httpie.plugins import ConverterPlugin"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 11,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 13,
+      "text": "from .utils import StdinBytesIO, http, MockEnvironment, DUMMY_URL"
+    },
+    {
+      "source_path": "tests/test_stream.py",
+      "line": 14,
+      "text": "from .fixtures import (\n    ASCII_FILE_CONTENT,\n    BIN_FILE_CONTENT,\n    BIN_FILE_PATH,\n    FILE_CONTENT as UNICODE_FILE_CONTENT\n)"
+    },
+    {
+      "source_path": "tests/test_tokens.py",
+      "line": 12,
+      "text": "from .utils.matching import assert_output_matches, Expect, ExpectSequence"
+    },
+    {
+      "source_path": "tests/test_tokens.py",
+      "line": 13,
+      "text": "from .utils import http, HTTP_OK, MockEnvironment"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 1,
+      "text": "from io import BytesIO"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 3,
+      "text": "from requests.adapters import BaseAdapter"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 4,
+      "text": "from requests.models import Response"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 5,
+      "text": "from requests.utils import get_encoding_from_headers"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 7,
+      "text": "from httpie.plugins import TransportPlugin"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 8,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    },
+    {
+      "source_path": "tests/test_transport_plugin.py",
+      "line": 10,
+      "text": "from .utils import HTTP_OK, http"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 2,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 4,
+      "text": "from contextlib import suppress"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 5,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 10,
+      "text": "from httpie.internal.daemon_runner import STATUS_FILE"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 11,
+      "text": "from httpie.internal.daemons import spawn_daemon"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 12,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_update_warnings.py",
+      "line": 14,
+      "text": "from .utils import PersistentMockEnvironment, http, httpie"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 3,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 4,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 5,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 6,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 7,
+      "text": "import httpie.__main__ as main"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 11,
+      "text": "from httpie.cli.exceptions import ParseError"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 12,
+      "text": "from httpie.client import FORM_CONTENT_TYPE"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 13,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 14,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 15,
+      "text": "from .utils import (\n    MockEnvironment, StdinBytesIO, http,\n    HTTP_OK,\n)"
+    },
+    {
+      "source_path": "tests/test_uploads.py",
+      "line": 19,
+      "text": "from .fixtures import FILE_PATH_ARG, FILE_PATH, FILE_CONTENT"
+    },
+    {
+      "source_path": "tests/test_windows.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_windows.py",
+      "line": 2,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "tests/test_windows.py",
+      "line": 4,
+      "text": "from .utils import MockEnvironment, http"
+    },
+    {
+      "source_path": "tests/test_windows.py",
+      "line": 5,
+      "text": "from httpie.compat import is_windows"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 1,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 4,
+      "text": "import responses"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 6,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 7,
+      "text": "from httpie.output.formatters.xml import parse_xml, pretty_xml"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 9,
+      "text": "from .fixtures import XML_FILES_PATH, XML_FILES_VALID, XML_FILES_INVALID, XML_DATA_RAW, XML_DATA_FORMATTED"
+    },
+    {
+      "source_path": "tests/test_xml.py",
+      "line": 10,
+      "text": "from .utils import http, DUMMY_URL"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 3,
+      "text": "import shlex"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 8,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 9,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 11,
+      "text": "from contextlib import suppress"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 12,
+      "text": "from io import BytesIO"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 14,
+      "text": "from typing import Any, Optional, Union, List, Iterable"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 16,
+      "text": "import httpie.core as core"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 17,
+      "text": "import httpie.manager.__main__ as manager"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 19,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 20,
+      "text": "from httpie.config import Config"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 21,
+      "text": "from httpie.encoding import UTF8"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 22,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 23,
+      "text": "from httpie.utils import url_as_host"
+    },
+    {
+      "source_path": "tests/utils/__init__.py",
+      "line": 176,
+      "text": "from shutil import rmtree"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 1,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 4,
+      "text": "from collections import defaultdict"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 5,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 6,
+      "text": "from http import HTTPStatus"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 7,
+      "text": "from http.cookies import SimpleCookie"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 8,
+      "text": "from http.server import HTTPServer, BaseHTTPRequestHandler"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 9,
+      "text": "from urllib.parse import urlparse, parse_qs"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 11,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/utils/http_server.py",
+      "line": 63,
+      "text": "from tests.fixtures import ASCII_FILE_CONTENT, FILE_CONTENT as UNICODE_FILE_CONTENT"
+    },
+    {
+      "source_path": "tests/utils/matching/__init__.py",
+      "line": 5,
+      "text": "from typing import Iterable"
+    },
+    {
+      "source_path": "tests/utils/matching/__init__.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/utils/matching/__init__.py",
+      "line": 9,
+      "text": "from .parsing import OutputMatchingError, expect_tokens"
+    },
+    {
+      "source_path": "tests/utils/matching/__init__.py",
+      "line": 10,
+      "text": "from .tokens import Expect, ExpectSequence"
+    },
+    {
+      "source_path": "tests/utils/matching/parsing.py",
+      "line": 1,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/utils/matching/parsing.py",
+      "line": 2,
+      "text": "from typing import Iterable"
+    },
+    {
+      "source_path": "tests/utils/matching/parsing.py",
+      "line": 4,
+      "text": "from httpie.output.writer import MESSAGE_SEPARATOR"
+    },
+    {
+      "source_path": "tests/utils/matching/parsing.py",
+      "line": 5,
+      "text": "from .tokens import Expect"
+    },
+    {
+      "source_path": "tests/utils/matching/parsing.py",
+      "line": 6,
+      "text": "from ...utils import CRLF"
+    },
+    {
+      "source_path": "tests/utils/matching/test_matching.py",
+      "line": 5,
+      "text": "from httpie.models import ELAPSED_TIME_LABEL"
+    },
+    {
+      "source_path": "tests/utils/matching/test_matching.py",
+      "line": 6,
+      "text": "from httpie.output.writer import MESSAGE_SEPARATOR"
+    },
+    {
+      "source_path": "tests/utils/matching/test_matching.py",
+      "line": 7,
+      "text": "from ...utils import CRLF"
+    },
+    {
+      "source_path": "tests/utils/matching/test_matching.py",
+      "line": 8,
+      "text": "from . import assert_output_does_not_match, assert_output_matches, Expect"
+    },
+    {
+      "source_path": "tests/utils/matching/tokens.py",
+      "line": 1,
+      "text": "from enum import Enum, auto"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 1,
+      "text": "import secrets"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 2,
+      "text": "import site"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 3,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 4,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 8,
+      "text": "from collections import defaultdict"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass, field, asdict"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 11,
+      "text": "from typing import Any, List, Dict, Tuple"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 12,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 14,
+      "text": "from httpie.context import Environment"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 15,
+      "text": "from httpie.compat import importlib_metadata"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 16,
+      "text": "from httpie.status import ExitStatus"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 17,
+      "text": "from httpie.plugins.manager import (\n    enable_plugins,\n    ENTRY_POINT_CLASSES as CLASSES,\n)"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 168,
+      "text": "from tests.utils import MockEnvironment"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 208,
+      "text": "from tests.utils import httpie"
+    },
+    {
+      "source_path": "tests/utils/plugins_cli.py",
+      "line": 209,
+      "text": "from httpie.plugins.registry import plugin_manager"
+    }
+  ],
+  "call_edges": []
+}

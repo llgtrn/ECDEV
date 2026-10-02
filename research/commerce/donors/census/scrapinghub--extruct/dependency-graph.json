@@ -1,0 +1,626 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 1,
+      "text": "from ._extruct import SYNTAXES, extract"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 2,
+      "text": "from .jsonld import JsonLdExtractor"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 3,
+      "text": "from .microformat import MicroformatExtractor"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 4,
+      "text": "from .opengraph import OpenGraphExtractor"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 5,
+      "text": "from .rdfa import RDFaExtractor"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 6,
+      "text": "from .w3cmicrodata import MicrodataExtractor"
+    },
+    {
+      "source_path": "extruct/__init__.py",
+      "line": 7,
+      "text": "from .xmldom import XmlDomHTMLParser"
+    },
+    {
+      "source_path": "extruct/__main__.py",
+      "line": 1,
+      "text": "from extruct.tool import main"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 3,
+      "text": "import logging"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 4,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 5,
+      "text": "from typing import Any, Callable"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 7,
+      "text": "from lxml.html import HtmlElement"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 9,
+      "text": "from extruct.dublincore import DublinCoreExtractor"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 10,
+      "text": "from extruct.jsonld import JsonLdExtractor"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 11,
+      "text": "from extruct.microformat import MicroformatExtractor"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 12,
+      "text": "from extruct.opengraph import OpenGraphExtractor"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 13,
+      "text": "from extruct.rdfa import RDFaExtractor"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 14,
+      "text": "from extruct.uniform import _udublincore, _umicrodata_microformat, _uopengraph"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 15,
+      "text": "from extruct.utils import parse_html, parse_xmldom_html"
+    },
+    {
+      "source_path": "extruct/_extruct.py",
+      "line": 16,
+      "text": "from extruct.w3cmicrodata import MicrodataExtractor"
+    },
+    {
+      "source_path": "extruct/dublincore.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "extruct/dublincore.py",
+      "line": 4,
+      "text": "from w3lib.html import strip_html5_whitespace"
+    },
+    {
+      "source_path": "extruct/dublincore.py",
+      "line": 6,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 6,
+      "text": "import html"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 8,
+      "text": "import logging"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 9,
+      "text": "import re"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 11,
+      "text": "import jstyleson"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 12,
+      "text": "import lxml.etree"
+    },
+    {
+      "source_path": "extruct/jsonld.py",
+      "line": 14,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "extruct/microformat.py",
+      "line": 2,
+      "text": "import mf2py"
+    },
+    {
+      "source_path": "extruct/opengraph.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "extruct/opengraph.py",
+      "line": 4,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 8,
+      "text": "import logging"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 9,
+      "text": "import re"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 10,
+      "text": "from collections import defaultdict"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 15,
+      "text": "from pyRdfa import Options"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 16,
+      "text": "from pyRdfa import pyRdfa as PyRdfa"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 17,
+      "text": "from pyRdfa.initialcontext import initial_context"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 18,
+      "text": "from rdflib import Graph"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 19,
+      "text": "from rdflib import logger as rdflib_logger"
+    },
+    {
+      "source_path": "extruct/rdfa.py",
+      "line": 21,
+      "text": "from extruct.utils import parse_xmldom_html"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 3,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 5,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 7,
+      "text": "import requests"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 9,
+      "text": "import extruct"
+    },
+    {
+      "source_path": "extruct/tool.py",
+      "line": 10,
+      "text": "from extruct import SYNTAXES"
+    },
+    {
+      "source_path": "extruct/uniform.py",
+      "line": 2,
+      "text": "import copy"
+    },
+    {
+      "source_path": "extruct/uniform.py",
+      "line": 3,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "extruct/uniform.py",
+      "line": 4,
+      "text": "from urllib.parse import urljoin, urlparse"
+    },
+    {
+      "source_path": "extruct/uniform.py",
+      "line": 6,
+      "text": "from extruct.dublincore import get_lower_attrib"
+    },
+    {
+      "source_path": "extruct/utils.py",
+      "line": 2,
+      "text": "import lxml.html"
+    },
+    {
+      "source_path": "extruct/utils.py",
+      "line": 4,
+      "text": "from extruct.xmldom import XmlDomHTMLParser"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 15,
+      "text": "import collections"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 16,
+      "text": "from functools import partial"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 17,
+      "text": "from typing import Any, Set"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 18,
+      "text": "from urllib.parse import urljoin"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 20,
+      "text": "import html_text"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 21,
+      "text": "import lxml.etree"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 22,
+      "text": "from lxml.html.clean import Cleaner"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 23,
+      "text": "from w3lib.html import strip_html5_whitespace"
+    },
+    {
+      "source_path": "extruct/w3cmicrodata.py",
+      "line": 25,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 4,
+      "text": "from copy import copy, deepcopy"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 5,
+      "text": "from xml.dom import Node"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 6,
+      "text": "from xml.dom.minidom import Attr, NamedNodeMap"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 8,
+      "text": "from lxml.etree import ElementBase, XPath, _ElementUnicodeResult, tostring"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 9,
+      "text": "from lxml.html import HtmlElementClassLookup, HTMLParser"
+    },
+    {
+      "source_path": "extruct/xmldom.py",
+      "line": 12,
+      "text": "from lxml.etree import _ElementStringResult"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 4,
+      "text": "from setuptools import find_packages, setup"
+    },
+    {
+      "source_path": "tests/__init__.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/__init__.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_dublincore.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_dublincore.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_dublincore.py",
+      "line": 5,
+      "text": "from extruct.dublincore import DublinCoreExtractor"
+    },
+    {
+      "source_path": "tests/test_dublincore.py",
+      "line": 6,
+      "text": "from tests import get_testdata, jsonize_dict"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 7,
+      "text": "import extruct"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 8,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "tests/test_extruct.py",
+      "line": 9,
+      "text": "from tests import get_testdata, jsonize_dict, replace_node_ref_with_node_id"
+    },
+    {
+      "source_path": "tests/test_extruct_uniform.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_extruct_uniform.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_extruct_uniform.py",
+      "line": 5,
+      "text": "import extruct"
+    },
+    {
+      "source_path": "tests/test_extruct_uniform.py",
+      "line": 6,
+      "text": "from extruct.utils import parse_html"
+    },
+    {
+      "source_path": "tests/test_extruct_uniform.py",
+      "line": 7,
+      "text": "from tests import get_testdata, jsonize_dict, replace_node_ref_with_node_id"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 4,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 6,
+      "text": "from extruct import jsonld"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 7,
+      "text": "from extruct.jsonld import JsonLdExtractor, _repair_escapes, _repair_quotes"
+    },
+    {
+      "source_path": "tests/test_jsonld.py",
+      "line": 8,
+      "text": "from tests import get_testdata"
+    },
+    {
+      "source_path": "tests/test_microdata.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_microdata.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_microdata.py",
+      "line": 5,
+      "text": "from extruct.w3cmicrodata import MicrodataExtractor"
+    },
+    {
+      "source_path": "tests/test_microdata.py",
+      "line": 6,
+      "text": "from tests import get_testdata"
+    },
+    {
+      "source_path": "tests/test_microformat.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_microformat.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_microformat.py",
+      "line": 5,
+      "text": "from extruct.microformat import MicroformatExtractor"
+    },
+    {
+      "source_path": "tests/test_microformat.py",
+      "line": 6,
+      "text": "from tests import get_testdata, jsonize_dict"
+    },
+    {
+      "source_path": "tests/test_opengraph.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_opengraph.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_opengraph.py",
+      "line": 5,
+      "text": "from extruct.opengraph import OpenGraphExtractor"
+    },
+    {
+      "source_path": "tests/test_opengraph.py",
+      "line": 6,
+      "text": "from tests import get_testdata, jsonize_dict"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 4,
+      "text": "from pprint import pformat"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 6,
+      "text": "from lxml.etree import XML, canonicalize"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 8,
+      "text": "from extruct.rdfa import RDFaExtractor"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 9,
+      "text": "from tests import get_testdata"
+    },
+    {
+      "source_path": "tests/test_rdfa.py",
+      "line": 41,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 4,
+      "text": "import unittest.mock as mock"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 6,
+      "text": "from requests.exceptions import HTTPError"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 8,
+      "text": "from extruct.tool import main, metadata_from_url"
+    },
+    {
+      "source_path": "tests/test_tool.py",
+      "line": 9,
+      "text": "from tests import get_testdata, jsonize_dict"
+    },
+    {
+      "source_path": "tests/test_uniform.py",
+      "line": 2,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_uniform.py",
+      "line": 4,
+      "text": "import extruct"
+    },
+    {
+      "source_path": "tests/test_uniform.py",
+      "line": 5,
+      "text": "from extruct.uniform import _flatten, _uopengraph, flatten_dict, infer_context"
+    },
+    {
+      "source_path": "tests/test_uniform.py",
+      "line": 6,
+      "text": "from tests import get_testdata"
+    }
+  ],
+  "call_edges": []
+}

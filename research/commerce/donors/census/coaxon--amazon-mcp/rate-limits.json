@@ -1,0 +1,1845 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "python3 tests/test_rate_limit_stress.py                     # Metric B"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## Metric B — Negative Testing (429 + Backoff)"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Requirement:** Rate limit handling with exponential backoff."
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Test:** `tests/test_rate_limit_stress.py`"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Simulates API returning 429 on global requests #2 and #3"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Runs 100 iterations through `RateLimitRegistry.call_with_backoff` (instant sleep in test)"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Asserts `throttled >= 2`, `backoff_sleeps >= 2`, `hard_failures == 0`"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Pass:** `B-RESULT: PASS (429 intercepted, exponential backoff, 100/100 survived)`"
+    },
+    {
+      "source_path": "ACCEPTANCE.md",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "90ce11b6e58d8367f488d560d3aa83fb1b5d6277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "> \"I've built an MCP server with LWA OAuth, SP-API + Ads clients, token-bucket pacing, and 429 exponential backoff. Run `./scripts/run_acceptance.sh` for contract + stress tests; Claude Desktop validates end-to-end inventory query.\""
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def __init__(self, cfg: AmazonConfig, auth: LWAAuth, limits: RateLimitRegistry) -> None:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line_start": 105,
+      "line_end": 105,
+      "blob_hash": "ebd72d2c26741b709d6e5b2d7b8527f9ef58eff0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitError"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def raise_on_429(resp: httpx.Response) -> None:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if resp.status_code == 429:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "729a28333bf4188f0583c67184ccbe6aed91e600",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise RateLimitError(f\"HTTP 429 Too Many Requests\", retry_after=retry_after)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "SP_API_RATE_LIMITS: dict[str, tuple[float, int]] = {"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def rate_limit_for_category(category: str) -> tuple[float, int]:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SP_API_RATE_LIMITS.get(category, SP_API_RATE_LIMITS[\"default\"])"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class RateLimitError(Exception):"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"HTTP 429 or synthetic rate-limit signal.\"\"\""
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def __init__(self, message: str = \"rate limited\", *, retry_after: float = 1.0) -> None:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class RateLimitStats:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    throttled: int = 0"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 97,
+      "line_end": 97,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class RateLimitRegistry:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 100,
+      "line_end": 100,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.stats = RateLimitStats()"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 109,
+      "line_end": 109,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            rate, burst = rate_limit_for_category(category)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Acquire token, execute fn; on RateLimitError exponential backoff + retry.\"\"\""
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except RateLimitError as exc:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "23836662eca6ecf0ec001e0876b93948c72b2818",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                self.stats.throttled += 1"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 290,
+      "line_end": 290,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def __init__(self, cfg: AmazonConfig, auth: LWAAuth, limits: RateLimitRegistry) -> None:"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 310,
+      "line_end": 310,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 323,
+      "line_end": 323,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 335,
+      "line_end": 335,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line_start": 351,
+      "line_end": 351,
+      "blob_hash": "5857cb85f79333a91d76eb7b57f51bfbcb1972d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise_on_429(resp)"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "6d1a1e2f51f36e15aba8f6aac117f69b88e5f34a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"BaseConnector — shared OAuth refresh, rate-limit, and dry-run fixture contract."
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Bearer API key middleware — per-tenant keys, tenant_id injection, rate limiting.\"\"\""
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            from amazon_mcp_pro.gateway.api_key_store import check_rate_limit, lookup_key"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if not check_rate_limit(record.key_hash, record.rate_limit_rpm):"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            \"error\": \"Rate limit exceeded\","
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            \"rate_limit_rpm\": record.rate_limit_rpm,"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "5f84db6ebbcaba262113fd5251ed6533fd4032fd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        status_code=429,"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "16671cbf7d89e52ec788df0d2d3e7973bae87a53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "16671cbf7d89e52ec788df0d2d3e7973bae87a53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    limits = RateLimitRegistry()"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 354,
+      "line_end": 354,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Usage metering + quota enforcement domain."
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 357,
+      "line_end": 357,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          usage_summary  — call volume by tool for last {days} days + monthly quota status"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 358,
+      "line_end": 358,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          check_quota    — check if current tenant is within monthly call limit"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 360,
+      "line_end": 360,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          set_quota      — set custom monthly call limit for a tenant (admin)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 364,
+      "line_end": 364,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        tool_name: filter by specific tool (check_quota)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 365,
+      "line_end": 365,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        monthly_limit: for set_quota (integer, 0 = unlimited)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 605,
+      "line_end": 605,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rate_limit_rpm: int = 60,"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 615,
+      "line_end": 615,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          rate_limit_status — check current requests/minute for a key"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 619,
+      "line_end": 619,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rate_limit_rpm: max requests per minute for this key (issue_key, default 60; 0 = unlimited)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 620,
+      "line_end": 620,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        key_hash: hash prefix from list_keys (revoke_key / rate_limit_status)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line_start": 628,
+      "line_end": 628,
+      "blob_hash": "b22d0ffc2d32e4f0c0e4bd07e70b19c0b0bc2ff7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                                                          rate_limit_rpm=rate_limit_rpm))"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "0b547917c3de88f91596d6658bbc0ef7c2b82dae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"rate_limit\": {"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "0b547917c3de88f91596d6658bbc0ef7c2b82dae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            \"throttled\": rate_stats.throttled,"
+    },
+    {
+      "source_path": "docs/PRIVACY_POLICY.md",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "75ded667df55d2a33883001691cfebb5c17ad8a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Meter tool usage for billing readiness (`usage_ledger` — dry-run quota enforcement not yet active)."
+    },
+    {
+      "source_path": "docs/PRIVACY_POLICY.md",
+      "line_start": 116,
+      "line_end": 116,
+      "blob_hash": "75ded667df55d2a33883001691cfebb5c17ad8a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limiting / 429 exponential backoff to protect Amazon API quotas."
+    },
+    {
+      "source_path": "docs/PRIVACY_POLICY.md",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "75ded667df55d2a33883001691cfebb5c17ad8a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "*This document is a technical draft aligned with the current AmazonMCP codebase (28 domain tools, multi-tenant routing v1, Stripe quota enforcement). It is not legal advice.*"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## 3. HTTP 429 Rate limiting"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Intermittent tool failures with 429 / `QuotaExceeded`"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Review logs for `429` and backoff retries"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Run stress test: `python tests/test_rate_limit_stress.py`"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Check per-tenant `rate_limit_rps` in tenant registry (default 5)"
+    },
+    {
+      "source_path": "docs/RUNBOOK.md",
+      "line_start": 76,
+      "line_end": 76,
+      "blob_hash": "c90cde530c4d1c1b517e254f41d68e7ecacc7234",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "4. For sustained load: lower tenant `rate_limit_rps` or shard sellers across instances."
+    },
+    {
+      "source_path": "docs/TOS.md",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "a1f25f9db6375301fd09548e8b68d8433791d058",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| API quotas | Accept Amazon rate limits; we implement backoff but cannot guarantee unlimited throughput |"
+    },
+    {
+      "source_path": "docs/TOS.md",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "a1f25f9db6375301fd09548e8b68d8433791d058",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Current state:** Usage metering (`amazon_billing` / `usage_ledger`) is **record-only**; quota enforcement and payment (e.g., Stripe) are **not active**."
+    },
+    {
+      "source_path": "docs/TOS.md",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "a1f25f9db6375301fd09548e8b68d8433791d058",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "*Draft aligned with AmazonMCP v2.0 (858 tests, 28 domain tools, multi-tenant quota enforcement). Not legal advice.*"
+    },
+    {
+      "source_path": "scripts/run_acceptance.sh",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "35f359b68e0faf27ef7d212843dea047b5f27d07",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "echo \"[acceptance] B — 429 backoff stress\""
+    },
+    {
+      "source_path": "scripts/run_acceptance.sh",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "35f359b68e0faf27ef7d212843dea047b5f27d07",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"$PY\" tests/test_rate_limit_stress.py"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "ea85599fa075897ab75e155c14a30bc14e602ce6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "ea85599fa075897ab75e155c14a30bc14e602ce6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SPAPIClient(cfg, auth, RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Tests for API key store, rate limiter, and admin domain.\"\"\""
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Reset rate limiter state"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ks._rate_limiter._windows.clear()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ks._rate_limiter._windows.clear()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    _RateLimiter,"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    check_rate_limit,"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def test_key_includes_rate_limit(self):"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 118,
+      "line_end": 118,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        r = issue_key(\"T1\", rate_limit_rpm=30)"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert rec.rate_limit_rpm == 30"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 123,
+      "line_end": 123,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── _RateLimiter ──────────────────────────────────────────────────────────────"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestRateLimiter:"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 127,
+      "line_end": 127,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 132,
+      "line_end": 132,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 156,
+      "line_end": 156,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rl = _RateLimiter()"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── check_rate_limit / get_current_rpm (module-level) ────────────────────────"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 162,
+      "line_end": 162,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestRateLimitModule:"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def test_check_rate_limit_allows(self):"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert check_rate_limit(\"test_hash_1\", limit_rpm=100) is True"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 168,
+      "line_end": 168,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            check_rate_limit(\"test_hash_2\", limit_rpm=100)"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert inner[\"features\"][\"quota_enforcement\"] == \"enabled\""
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 229,
+      "line_end": 229,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_rate_limit_status_unknown_key(self):"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 230,
+      "line_end": 230,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raw = await dispatch_domain(\"admin\", \"rate_limit_status\", {\"key_hash\": \"no_such\"})"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def test_rate_limited_key_blocked(self):"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 262,
+      "line_end": 262,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        r = issue_key(\"tenant_rl\", rate_limit_rpm=2)"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 266,
+      "line_end": 266,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Exhaust rate limit"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert check_rate_limit(rec.key_hash, rec.rate_limit_rpm) is True"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 268,
+      "line_end": 268,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert check_rate_limit(rec.key_hash, rec.rate_limit_rpm) is True"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line_start": 269,
+      "line_end": 269,
+      "blob_hash": "30e7b09d3ab2451e69db4fbaedaa74008098d649",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert check_rate_limit(rec.key_hash, rec.rate_limit_rpm) is False"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "19b6e4085c01bd1ec05b3a612a8964d1fa88a485",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def test_billing_check_quota_always_allowed(ledger: UsageLedger):"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "19b6e4085c01bd1ec05b3a612a8964d1fa88a485",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    raw = await dispatch_domain(\"billing\", \"check_quota\", '{\"tool_name\": \"catalog.lookup\"}', \"default\")"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "0dac3928ea08aaf2c2d15278ea30bcf8e1a634c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "0dac3928ea08aaf2c2d15278ea30bcf8e1a634c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    sp = SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "0dac3928ea08aaf2c2d15278ea30bcf8e1a634c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    sp = SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line_start": 292,
+      "line_end": 292,
+      "blob_hash": "c8ebc8a789fef2093d060b16938f4d702ab732c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert inner[\"roadmap\"][\"P4.1\"] == \"Platform rate-limit + circuit breaker ✅\""
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "fc918085ba801c674609a4d5c86cfe7304ad80a3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "fc918085ba801c674609a4d5c86cfe7304ad80a3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    limits = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "e8cd719136d2a98337b8216d916cd946ff58fd09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "e8cd719136d2a98337b8216d916cd946ff58fd09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SPAPIClient(cfg, auth, RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "ad51c4d7eec2c060aaaf0309ac83301ff5c804cc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert (\"billing\", \"check_quota\") not in ACTION_FEATURE_MAP"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "596f3f63f7675363ac6280b468ace297cc3c9779",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line_start": 211,
+      "line_end": 211,
+      "blob_hash": "596f3f63f7675363ac6280b468ace297cc3c9779",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ads = AdsAPIClient(cfg, auth, RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "ad7a241938a9d06d728b326ff02b71bae0a0394e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "ad7a241938a9d06d728b326ff02b71bae0a0394e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    limits = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Tests for real quota enforcement (Phase E).\"\"\""
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"Each test gets an isolated in-memory ledger + quota config.\"\"\""
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    monkeypatch.setattr(billing_mod, \"_QUOTA_CONFIG_FILE\", tmp_path / \"quota_config.json\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    QuotaExceededError,"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    set_tenant_quota,"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestQuotaConfig:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 78,
+      "line_end": 78,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 100)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 0)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 86,
+      "line_end": 86,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── UsageLedger.check_quota ───────────────────────────────────────────────────"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestCheckQuota:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        result = get_usage_ledger().check_quota(\"T_unlimited\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def test_within_quota(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 100)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        result = get_usage_ledger().check_quota(\"T1\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 104,
+      "line_end": 104,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 5)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        result = get_usage_ledger().check_quota(\"T1\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 109,
+      "line_end": 109,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert result[\"reason\"] == \"quota exceeded\""
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 100)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        result = get_usage_ledger().check_quota(\"T1\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert result[\"quota_pct_used\"] == 30.0"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 118,
+      "line_end": 118,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── UsageLedger.enforce_quota ─────────────────────────────────────────────────"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestEnforceQuota:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 3)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with pytest.raises(QuotaExceededError) as exc_info:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            get_usage_ledger().enforce_quota(\"T1\", \"orders.list\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 100)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().enforce_quota(\"T1\", \"orders.list\")  # should not raise"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 136,
+      "line_end": 136,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 0)  # unlimited"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 139,
+      "line_end": 139,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().enforce_quota(\"T1\", \"orders.list\")  # should not raise"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"T1\", 1)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().record(\"T1\", \"billing.check_quota\", 99)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().enforce_quota(\"T1\", tool_name=\"billing.check_quota\")  # exempt"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().enforce_quota(\"T1\", tool_name=\"system.health\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        get_usage_ledger().enforce_quota(\"T1\", tool_name=\"features.list_all\")"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 149,
+      "line_end": 149,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── QuotaExceededError ────────────────────────────────────────────────────────"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestQuotaExceededError:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 153,
+      "line_end": 153,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        err = QuotaExceededError(\"T1\", 5000, 5000)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 156,
+      "line_end": 156,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert d[\"quota_exceeded\"] is True"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# ── invoke() quota enforcement (end-to-end through registry) ─────────────────"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 165,
+      "line_end": 165,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class TestRegistryQuotaGate:"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_over_quota_returns_quota_exceeded(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 169,
+      "line_end": 169,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 2)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Either the envelope ok=False, or inner data has quota_exceeded"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 175,
+      "line_end": 175,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert data.get(\"ok\") is False or data.get(\"data\", {}).get(\"quota_exceeded\") is True"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 178,
+      "line_end": 178,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_within_quota_passes_through(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 1000)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_billing_domain_exempt_from_quota(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 0)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 187,
+      "line_end": 187,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raw = await dispatch_domain(\"billing\", \"check_quota\", {\"tenant_id\": \"default\"})"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 192,
+      "line_end": 192,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_system_domain_exempt_from_quota(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 193,
+      "line_end": 193,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Exhaust quota, then system.health should still work"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 194,
+      "line_end": 194,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 1)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 205,
+      "line_end": 205,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_usage_summary_includes_quota(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 500)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_set_quota_action(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 218,
+      "line_end": 218,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raw = await dispatch_domain(\"billing\", \"set_quota\","
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_set_quota_missing_param(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 227,
+      "line_end": 227,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raw = await dispatch_domain(\"billing\", \"set_quota\", {\"tenant_id\": \"default\"})"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 200)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 250,
+      "line_end": 250,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert inner[\"status\"] == \"within_quota\""
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 253,
+      "line_end": 253,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def test_month_usage_over_quota_status(self):"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 254,
+      "line_end": 254,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        set_tenant_quota(\"default\", 5)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line_start": 260,
+      "line_end": 260,
+      "blob_hash": "d2b15d295a65efd6e8704d31cbec64f410de6749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert inner[\"status\"] == \"over_quota\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"Acceptance B — Negative Testing: 429 storm with exponential backoff, no crash.\"\"\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitError, RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def stress_429_backoff(*, iterations: int = 100) -> dict:"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    registry = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RateLimitError(\"HTTP 429 Too Many Requests\", retry_after=0.05)"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    with patch(\"amazon_mcp.clients.rate_limit.asyncio.sleep\", _instant_sleep):"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except RateLimitError:"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(\"=== Acceptance B: Rate Limit / 429 Backoff ===\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    out = asyncio.run(stress_429_backoff(iterations=100))"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(f\"  requests={st.requests} throttled={st.throttled} backoff_sleeps={st.backoff_sleeps}\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert out[\"hard_failures\"] == 0, \"must not crash on 429 storm\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert st.throttled > 0, \"expected 429 throttling after call #2\""
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    print(\"\\nB-RESULT: PASS (429 intercepted, exponential backoff, 100/100 survived)\")"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line_start": 108,
+      "line_end": 108,
+      "blob_hash": "fa75506b622c1e61d8daef7767837b9e175fd4da",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import TokenBucket"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "bf793e297d52bade1c016895b566ad5c165b4b9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "bf793e297d52bade1c016895b566ad5c165b4b9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SPAPIClient(cfg, auth, RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "98024ef2082cda44dc0c59103f61ad4897aa5c66",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "98024ef2082cda44dc0c59103f61ad4897aa5c66",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line_start": 113,
+      "line_end": 113,
+      "blob_hash": "21ee5a730c4ea4951da73f26ebd5b435fdd5c8d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line_start": 121,
+      "line_end": 121,
+      "blob_hash": "21ee5a730c4ea4951da73f26ebd5b435fdd5c8d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    rate = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 86,
+      "line_end": 86,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    sp = SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 105,
+      "line_end": 105,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    sp = SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line_start": 171,
+      "line_end": 171,
+      "blob_hash": "b93e7ec5d30dda2fc4a51e725150df18183df0a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    sp = SPAPIClient(cfg, LWAAuth(cfg.lwa_client_id, cfg.lwa_client_secret, cfg.lwa_refresh_token), RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"SP-API endpoint rate limit registry tests.\"\"\""
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import ("
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    SP_API_RATE_LIMITS,"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    RateLimitRegistry,"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    rate_limit_for_category,"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_rate_limit_for_category_values():"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    orders_rate, orders_burst = rate_limit_for_category(\"orders\")"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    reports_rate, reports_burst = rate_limit_for_category(\"reports\")"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    inv_rate, inv_burst = rate_limit_for_category(\"inventory\")"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    reg = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert b1.rate == pytest.approx(SP_API_RATE_LIMITS[\"orders\"][0])"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert b1.burst == SP_API_RATE_LIMITS[\"orders\"][1]"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "085d6535f110aa909d57360a70f4f1a0cb19325e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    reg = RateLimitRegistry()"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "3c2e3e324ceef4ce66aa8fe988d98607fad2137c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "3c2e3e324ceef4ce66aa8fe988d98607fad2137c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return SPAPIClient(cfg, auth, RateLimitRegistry())"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "ea35c80b57df77e5b12130b7e8dd359a8ad36360",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # Patch set_tenant_tier + set_tenant_quota to avoid file I/O"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line_start": 155,
+      "line_end": 155,
+      "blob_hash": "b1c340fa01e18216377f1e7f3bab2f13feb54dc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert set(DOMAIN_HANDLERS[\"billing\"].keys()) == {\"usage_summary\", \"check_quota\", \"set_quota\", \"tier_limits\", \"month_usage\"}"
+    }
+  ]
+}

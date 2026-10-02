@@ -1,0 +1,187 @@
+[
+  {
+    "source_path": "Dockerfile",
+    "blob_hash": "9c792c0635b3fb3525576c877d1eedcecf126583",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "package.json",
+    "blob_hash": "372bca4c1f45c12dc67cfd5816061f4ee4653da2",
+    "status": "PARSED",
+    "roles": [
+      {
+        "name": "@modelcontextprotocol/sdk",
+        "version": "^1.29.0",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "dotenv",
+        "version": "^17.2.2",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "fastmcp",
+        "version": "4.3.2",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "firecrawl",
+        "version": "4.42.0",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "fuse.js",
+        "version": "^7.1.0",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "hono",
+        "version": "^4.12.27",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "mcp-proxy",
+        "version": "^6.5.1",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "undici",
+        "version": "^7.28.0",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "uri-templates",
+        "version": "^0.2.0",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "xsschema",
+        "version": "^0.4.4",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "zod",
+        "version": "^4.2.1",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "@types/node",
+        "version": "^24.3.1",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "@typescript-eslint/eslint-plugin",
+        "version": "8.48.1",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "@typescript-eslint/parser",
+        "version": "8.48.1",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "eslint",
+        "version": "8.57.1",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "eslint-config-prettier",
+        "version": "10.1.8",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "tsup",
+        "version": "^8.5.0",
+        "role": "DEVELOPMENT"
+      },
+      {
+        "name": "typescript",
+        "version": "^5.9.2",
+        "role": "DEVELOPMENT"
+      }
+    ],
+    "manifest": {
+      "name": "firecrawl-mcp",
+      "version": "3.27.2",
+      "description": "MCP server for Firecrawl — search, scrape, and interact with the web, and search scientific papers. Supports both cloud and self-hosted instances. Features include web search, scraping, page interaction, batch processing, LLM-powered content analysis, and research paper search over biomedical and arXiv literature (PubMed, bioRxiv, medRxiv, arXiv) with citation-graph expansion and full-text reading.",
+      "type": "module",
+      "mcpName": "io.github.firecrawl/firecrawl-mcp-server",
+      "bin": {
+        "firecrawl-mcp": "dist/index.js"
+      },
+      "files": [
+        "dist"
+      ],
+      "publishConfig": {
+        "access": "public"
+      },
+      "scripts": {
+        "build": "rm -rf dist && tsup && node -e \"require('fs').chmodSync('dist/index.js', '755')\"",
+        "test": "npm run build && node --test --test-concurrency=1 tests/*.test.mjs",
+        "start": "node dist/index.js",
+        "start:cloud": "CLOUD_SERVICE=true node dist/index.js",
+        "lint": "eslint src/**/*.ts",
+        "lint:fix": "eslint src/**/*.ts --fix",
+        "format": "prettier --write .",
+        "prepare": "npm run build",
+        "publish-prod": "npm run build && npm publish",
+        "publish-beta": "npm run build && npm publish --tag beta"
+      },
+      "license": "MIT",
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.29.0",
+        "dotenv": "^17.2.2",
+        "fastmcp": "4.3.2",
+        "firecrawl": "4.42.0",
+        "fuse.js": "^7.1.0",
+        "hono": "^4.12.27",
+        "mcp-proxy": "^6.5.1",
+        "undici": "^7.28.0",
+        "uri-templates": "^0.2.0",
+        "xsschema": "^0.4.4",
+        "zod": "^4.2.1"
+      },
+      "engines": {
+        "node": ">=22.0.0"
+      },
+      "keywords": [
+        "mcp",
+        "firecrawl",
+        "web-search",
+        "web-data",
+        "web-interaction",
+        "research",
+        "paper-search",
+        "literature-search",
+        "biomedical",
+        "pubmed",
+        "arxiv"
+      ],
+      "repository": {
+        "type": "git",
+        "url": "git+https://github.com/firecrawl/firecrawl-mcp-server.git"
+      },
+      "author": "firecrawl",
+      "bugs": {
+        "url": "https://github.com/firecrawl/firecrawl-mcp-server/issues"
+      },
+      "homepage": "https://github.com/firecrawl/firecrawl-mcp-server#readme",
+      "devDependencies": {
+        "@types/node": "^24.3.1",
+        "@typescript-eslint/eslint-plugin": "8.48.1",
+        "@typescript-eslint/parser": "8.48.1",
+        "eslint": "8.57.1",
+        "eslint-config-prettier": "10.1.8",
+        "tsup": "^8.5.0",
+        "typescript": "^5.9.2"
+      }
+    }
+  },
+  {
+    "source_path": "pnpm-lock.yaml",
+    "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+    "status": "INVENTORIED",
+    "roles": []
+  }
+]

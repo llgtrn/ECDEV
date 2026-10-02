@@ -1,0 +1,490 @@
+//! Zero-paid research workflow, persisted evidence/cache, candidate ledger and accounting.
+use crate::{
+    domain::Evidence,
+    economics::{self, Scenario},
+    provider::{AcquireRequest, BudgetPolicy},
+    service::{Engine, timestamp},
+};
+use rusqlite::{OptionalExtension, params};
+use serde::Deserialize;
+use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
+use std::collections::{BTreeSet, VecDeque};
+use uuid::Uuid;
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Source {
+    url: String,
+    fixture_html: Option<String>,
+}
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Input {
+    market: String,
+    query: String,
+    sources: Vec<Source>,
+    #[serde(default = "pages")]
+    max_pages: usize,
+    min_price_minor: Option<i64>,
+    max_price_minor: Option<i64>,
+    economics: Option<Scenario>,
+    #[serde(default)]
+    allow_stale: bool,
+}
+fn pages() -> usize {
+    10
+}
+fn err(e: impl std::fmt::Display) -> String {
+    e.to_string()
+}
+pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
+    ("discovery_from_seed_links", true),
+    ("crawl", true),
+    ("extraction", true),
+    ("evidence", true),
+    ("candidate_creation", true),
+    ("competitor_price_comparison", true),
+    ("economics_from_assumptions", true),
+    ("ranking_and_filtering", true),
+    ("report", true),
+    ("supplier_discovery", false),
+    ("official_marketplace_validation", false),
+    ("demand_forecasting", false),
+    ("live_ppc", false),
+    ("regulatory_risk_validation", false),
+];
+impl Engine {
+    pub(crate) fn reserve_paid(
+        &self,
+        id: &str,
+        provider: &str,
+        capability: &str,
+        policy: &BudgetPolicy,
+    ) -> Result<(), String> {
+        let mut db = self.db.lock().map_err(err)?;
+        let tx = db
+            .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+            .map_err(err)?;
+        let day = timestamp() / 86400 * 86400;
+        let month: u64 = tx
+            .query_row(
+                "SELECT CAST(strftime('%s','now','start of month') AS INTEGER)",
+                [],
+                |r| r.get(0),
+            )
+            .map_err(err)?;
+        let sum = |start: u64, p: Option<&str>, c: Option<&str>| -> Result<u64, String> {
+            tx.query_row("SELECT COALESCE(SUM(reserved_minor),0) FROM paid_reservations WHERE created_at>=?1 AND (?2 IS NULL OR provider=?2) AND (?3 IS NULL OR capability=?3)",params![start,p,c],|r|r.get(0)).map_err(err)
+        };
+        if !policy.permits(
+            sum(day, None, None)?,
+            sum(month, None, None)?,
+            sum(month, Some(provider), None)?,
+            sum(month, None, Some(capability))?,
+        ) {
+            return Err("PAID_PROVIDER_DENIED: zero/exhausted budget or unknown request ceiling; configure all explicit ceilings before paid IO".into());
+        }
+        tx.execute(
+            "INSERT INTO paid_reservations VALUES(?1,?2,?3,?4,?5)",
+            params![
+                id,
+                provider,
+                capability,
+                timestamp(),
+                policy.request_ceiling_minor
+            ],
+        )
+        .map_err(err)?;
+        tx.commit().map_err(err)
+    }
+    pub fn budget_status(&self) -> Result<Value, String> {
+        let policy = BudgetPolicy::from_env();
+        let db = self.db.lock().map_err(err)?;
+        let month: u64 = db
+            .query_row(
+                "SELECT CAST(strftime('%s','now','start of month') AS INTEGER)",
+                [],
+                |r| r.get(0),
+            )
+            .map_err(err)?;
+        let reserved:u64=db.query_row("SELECT COALESCE(SUM(reserved_minor),0) FROM paid_reservations WHERE created_at>=?1",[month],|r|r.get(0)).map_err(err)?;
+        Ok(
+            json!({"policy":policy,"month_reserved_minor":reserved,"month_remaining_minor":policy.per_month_minor.saturating_sub(reserved),"actual_paid_cost_minor":null,"unknown_actual_cost_policy":"retain full conservative reservation","zero_cost_stage_count":ZERO_COST_STAGES.iter().filter(|(_,v)|*v).count(),"research_stage_count":ZERO_COST_STAGES.len(),"zero_cost_coverage_bps":ZERO_COST_STAGES.iter().filter(|(_,v)|*v).count()*10000/ZERO_COST_STAGES.len(),"coverage_denominator":ZERO_COST_STAGES}),
+        )
+    }
+    pub fn accounting(&self) -> Result<Value, String> {
+        self.rows(
+            "SELECT payload FROM provider_accounting ORDER BY rowid DESC LIMIT 500",
+            None,
+        )
+    }
+    pub fn candidates(&self) -> Result<Value, String> {
+        self.rows(
+            "SELECT payload FROM candidates ORDER BY rowid DESC LIMIT 500",
+            None,
+        )
+    }
+    pub fn evidence(&self, id: &str) -> Result<Value, String> {
+        self.rows("SELECT payload FROM evidence WHERE run_id=?1", Some(id))
+    }
+    fn rows(&self, sql: &str, id: Option<&str>) -> Result<Value, String> {
+        let db = self.db.lock().map_err(err)?;
+        let mut st = db.prepare(sql).map_err(err)?;
+        let mut rows = if let Some(id) = id {
+            st.query([id]).map_err(err)?
+        } else {
+            st.query([]).map_err(err)?
+        };
+        let mut out = vec![];
+        while let Some(r) = rows.next().map_err(err)? {
+            let text: String = r.get(0).map_err(err)?;
+            out.push(serde_json::from_str::<Value>(&text).map_err(err)?);
+        }
+        Ok(json!(out))
+    }
+    pub fn research(&self, args: Value) -> Result<Value, String> {
+        let input: Input = serde_json::from_value(args).map_err(err)?;
+        if !matches!(
+            input.market.as_str(),
+            "AMAZON_JP" | "AMAZON_US" | "PUBLIC_WEB"
+        ) || input.query.len() > 500
+            || input.sources.is_empty()
+            || input.sources.len() > 20
+            || !(1..=20).contains(&input.max_pages)
+            || input.min_price_minor.is_some_and(|v| v < 0)
+            || input.max_price_minor.is_some_and(|v| v < 0)
+            || input
+                .min_price_minor
+                .zip(input.max_price_minor)
+                .is_some_and(|(a, b)| a > b)
+        {
+            return Err("INVALID_RESEARCH_CONSTRAINTS".into());
+        }
+        if let Some(s) = &input.economics {
+            economics::simulate(s)?;
+        }
+        let fixture = input.sources.iter().any(|s| s.fixture_html.is_some());
+        if fixture && input.sources.iter().any(|s| s.fixture_html.is_none()) {
+            return Err("Do not mix fixture and live sources".into());
+        }
+        let routes = crate::provider::routes(
+            "fetch.http",
+            self.providers()
+                .as_array()
+                .ok_or("Invalid provider catalog")?,
+            0,
+            input.sources.len(),
+        );
+        let selected = routes["routes"]
+            .as_array()
+            .and_then(|a| a.first())
+            .and_then(|p| p["id"].as_str())
+            .ok_or("NO_ZERO_COST_FETCH_PROVIDER")?;
+        let provider = self
+            .providers
+            .iter()
+            .find(|p| p.id() == selected)
+            .ok_or("NATIVE_WEB_NOT_AVAILABLE")?;
+        let id = Uuid::new_v4().to_string();
+        let mut queue: VecDeque<_> = input.sources.into_iter().map(|s| (s, 0)).collect();
+        let mut visited = BTreeSet::new();
+        let mut observations = vec![];
+        let mut candidates = vec![];
+        let mut calls = vec![];
+        let mut failures = vec![];
+        let mut snapshots = vec![];
+        while let Some((mut source, depth)) = queue.pop_front() {
+            source.url = provider.normalize_query(&json!({"url":source.url}))?["url"]
+                .as_str()
+                .ok_or("Normalized URL missing")?
+                .to_string();
+            if visited.len() >= input.max_pages {
+                break;
+            }
+            if !visited.insert(source.url.clone()) {
+                continue;
+            }
+            let started = timestamp() * 1000;
+            let started_clock = std::time::Instant::now();
+            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":1,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let cached: Option<(String, u64)> = self
+                .db
+                .lock()
+                .map_err(err)?
+                .query_row(
+                    "SELECT payload,expires_at FROM fetch_cache WHERE key=?1",
+                    [&key],
+                    |r| Ok((r.get(0)?, r.get(1)?)),
+                )
+                .optional()
+                .map_err(err)?;
+            let previous = cached
+                .as_ref()
+                .map(|(s, _)| serde_json::from_str::<Value>(s))
+                .transpose()
+                .map_err(err)?;
+            let fresh = cached
+                .as_ref()
+                .is_some_and(|(_, expires)| *expires > timestamp());
+            let request = AcquireRequest {
+                run_id: id.clone(),
+                capability: "fetch.http".into(),
+                market: input.market.clone(),
+                query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":previous.as_ref().map(|v|v["provider_cost"]["headers"].clone())}),
+            };
+            let mut stale_used = false;
+            let (mut captured, cache_hit) = if fresh {
+                (previous.clone().unwrap(), true)
+            } else {
+                match provider.acquire(&request) {
+                    Ok(result) => {
+                        if result.result["not_modified"] == true {
+                            let Some(mut prior) = previous.clone() else {
+                                failures.push(
+                                    json!({"source":source.url,"reason":"304_WITHOUT_CAPTURE"}),
+                                );
+                                continue;
+                            };
+                            prior["provider_cost"] = result.provider_cost;
+                            (prior, true)
+                        } else {
+                            let dir = self.root.join(".ynventa/materialized/raw");
+                            std::fs::create_dir_all(&dir).map_err(err)?;
+                            for observation in &result.observations {
+                                observation.validate()?;
+                                std::fs::write(
+                                    dir.join(format!("{}.html", observation.raw_hash)),
+                                    &result.raw_payload,
+                                )
+                                .map_err(err)?;
+                            }
+                            (
+                                json!({"observations":result.observations,"result":result.result,"provider_cost":result.provider_cost}),
+                                false,
+                            )
+                        }
+                    }
+                    Err(reason) => {
+                        if input.allow_stale
+                            && cached.as_ref().is_some_and(|(_, expires)| {
+                                timestamp().saturating_sub(*expires) <= 86400
+                            })
+                            && previous.is_some()
+                        {
+                            stale_used = true;
+                            let mut prior = previous.clone().unwrap();
+                            prior["provider_cost"]["fallback_reason"] = json!(reason);
+                            prior["provider_cost"]["request_count"] = Value::Null;
+                            (prior, true)
+                        } else {
+                            failures.push(json!({"source":source.url,"reason":reason}));
+                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":null,"cache_hit":false,"error":reason}));
+                            continue;
+                        }
+                    }
+                }
+            };
+            if !fresh && !stale_used {
+                self.db
+                    .lock()
+                    .map_err(err)?
+                    .execute(
+                        "INSERT OR REPLACE INTO fetch_cache VALUES(?1,?2,?3,?4)",
+                        params![key, captured.to_string(), timestamp(), timestamp() + 3600],
+                    )
+                    .map_err(err)?;
+            }
+            let evidence = captured["observations"]
+                .as_array_mut()
+                .ok_or("Invalid cached evidence")?;
+            for observation in evidence.iter_mut() {
+                observation["id"] = json!(Uuid::new_v4().to_string());
+                observation["run_id"] = json!(id);
+                if cache_hit && !fixture {
+                    observation["mode"] = json!("CACHED");
+                }
+                let typed: Evidence = serde_json::from_value(observation.clone()).map_err(err)?;
+                typed.validate()?;
+            }
+            let evidence_ids: Vec<_> = evidence.iter().map(|v| v["id"].clone()).collect();
+            observations.extend(evidence.clone());
+            let result = &captured["result"];
+            snapshots.push(result.clone());
+            for product in result["products"].as_array().ok_or("Invalid extraction")? {
+                let mut reasons = vec![];
+                let mut unknowns = vec![
+                    "true_sales",
+                    "search_volume",
+                    "supplier_moq",
+                    "shipping_quote",
+                    "regulatory_risk",
+                    "demand_forecast",
+                ];
+                let price = product["price_minor"].as_i64();
+                if price.is_none() {
+                    unknowns.push("price");
+                }
+                if price
+                    .zip(input.min_price_minor)
+                    .is_some_and(|(p, min)| p < min)
+                {
+                    reasons.push("BELOW_MIN_PRICE");
+                }
+                if price
+                    .zip(input.max_price_minor)
+                    .is_some_and(|(p, max)| p > max)
+                {
+                    reasons.push("ABOVE_MAX_PRICE");
+                }
+                let economics = if let (Some(price), Some(s)) = (price, &input.economics) {
+                    if product["currency"] == s.currency {
+                        let mut scenario = s.clone();
+                        scenario.selling_price =
+                            u64::try_from(price).map_err(|_| "INVALID_OBSERVED_PRICE")?;
+                        Some(
+                            json!({"status":"DERIVED_FROM_SUPPLIED_ASSUMPTIONS","scenario":scenario,"result":economics::simulate(&scenario)?}),
+                        )
+                    } else {
+                        unknowns.push("currency_compatible_economics");
+                        None
+                    }
+                } else {
+                    unknowns.push("economics");
+                    None
+                };
+                if economics
+                    .as_ref()
+                    .and_then(|v| v["result"]["contribution_per_unit"].as_i64())
+                    .is_some_and(|p| p <= 0)
+                {
+                    reasons.push("NON_POSITIVE_ASSUMED_MARGIN");
+                }
+                let state = if !reasons.is_empty() {
+                    "REJECTED"
+                } else if price.is_some() && economics.is_some() {
+                    "SCREENED"
+                } else {
+                    "VALIDATING"
+                };
+                candidates.push(json!({"id":Uuid::new_v4().to_string(),"run_id":id,"state":state,"product":product,"source":source.url,"evidence_ids":evidence_ids,"discovery":"OBSERVED_IN_SOURCE","economics":economics,"unknowns":unknowns,"rejection_reasons":reasons,"survival_reason":if reasons.is_empty(){"Passed supplied price constraints; requires demand/supplier/risk validation"}else{"Rejected by explicit constraints"},"confidence":"SOURCE_ASSERTION_ONLY"}));
+            }
+            if !fixture && depth == 0 {
+                for link in result["links"]
+                    .as_array()
+                    .ok_or("Invalid links")?
+                    .iter()
+                    .take(10)
+                {
+                    if let Some(url) = link.as_str() {
+                        queue.push_back((
+                            Source {
+                                url: url.into(),
+                                fixture_html: None,
+                            },
+                            1,
+                        ));
+                    }
+                }
+            }
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh{json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":"COMPLETE"}));
+        }
+        candidates.sort_by_key(|c| {
+            (
+                c["state"] == "REJECTED",
+                c["product"]["price_minor"].as_i64().unwrap_or(i64::MAX),
+            )
+        });
+        let network: u64 = calls
+            .iter()
+            .filter_map(|c| c["request_count"].as_u64())
+            .sum();
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty(){"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        Ok(run)
+    }
+    pub fn evidence_graph(&self) -> Result<Value, String> {
+        Ok(
+            json!({"entities":self.rows("SELECT payload FROM entities ORDER BY rowid DESC LIMIT 500",None)?,"edges":self.rows("SELECT payload FROM edges ORDER BY id DESC LIMIT 500",None)?}),
+        )
+    }
+    pub fn compare_snapshots(&self, args: Value) -> Result<Value, String> {
+        #[derive(Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Compare {
+            before_run_id: String,
+            after_run_id: String,
+        }
+        let c: Compare = serde_json::from_value(args).map_err(err)?;
+        let before = self.run(&c.before_run_id)?;
+        let after = self.run(&c.after_run_id)?;
+        let mut changes = vec![];
+        for b in before["candidates"]
+            .as_array()
+            .ok_or("Research run required")?
+        {
+            for a in after["candidates"]
+                .as_array()
+                .ok_or("Research run required")?
+            {
+                if b["source"] == a["source"]
+                    && ((!b["product"]["sku"].is_null()
+                        && b["product"]["sku"] == a["product"]["sku"])
+                        || (b["product"]["sku"].is_null()
+                            && a["product"]["sku"].is_null()
+                            && b["product"]["title"] == a["product"]["title"]))
+                {
+                    for field in ["price_minor", "currency", "availability", "seller", "title"] {
+                        if b["product"][field] != a["product"][field] {
+                            changes.push(json!({"source":a["source"],"field":field,"before":b["product"][field],"after":a["product"][field],"status":"DERIVED_SNAPSHOT_DIFF"}));
+                        }
+                    }
+                }
+            }
+        }
+        Ok(
+            json!({"before_run_id":c.before_run_id,"after_run_id":c.after_run_id,"changes":changes,"network_calls":0,"cost_minor":0,"schedule":"NOT_IMPLEMENTED"}),
+        )
+    }
+}
+
+#[cfg(test)]
+mod budget_storage_tests {
+    use super::*;
+    #[test]
+    fn budget_reservations_are_durable_and_zero_denies_io() {
+        let root = std::env::temp_dir().join(format!("ecdev-budget-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        assert!(
+            e.reserve_paid(
+                "denied",
+                "keepa",
+                "product.analyze",
+                &BudgetPolicy::default()
+            )
+            .is_err()
+        );
+        let policy = BudgetPolicy {
+            per_run_minor: 10,
+            per_day_minor: 20,
+            per_month_minor: 20,
+            per_provider_minor: 20,
+            per_capability_minor: 20,
+            request_ceiling_minor: 10,
+            ..Default::default()
+        };
+        e.reserve_paid("first", "keepa", "product.analyze", &policy)
+            .unwrap();
+        e.reserve_paid("second", "keepa", "product.analyze", &policy)
+            .unwrap();
+        drop(e);
+        let e = Engine::open(&root).unwrap();
+        assert!(
+            e.reserve_paid("third", "keepa", "product.analyze", &policy)
+                .is_err()
+        );
+        let db = e.db.lock().unwrap();
+        let count: u64 = db
+            .query_row("SELECT COUNT(*) FROM paid_reservations", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(count, 2);
+    }
+}

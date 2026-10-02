@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "selling_price": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "product_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "packaging": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "sample_amortization": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "freight": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "insurance": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "duty": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "import_tax": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "brokerage": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "prep": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "label": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fulfillment_fee": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "referral_bps": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "storage_fee": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payment_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ppc": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "returns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fx_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reserve": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "units": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fixed_launch_cost": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lead_time_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "inventory_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payout_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "supplier_credit_days": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "fulfillment": {
+      "type": "string",
+      "enum": [
+        "FBA",
+        "FBM",
+        "EPROLO_DROPSHIP",
+        "THREE_PL",
+        "BULK_IMPORT",
+        "FACTORY_DIRECT"
+      ]
+    }
+  },
+  "required": [
+    "currency",
+    "fulfillment",
+    "selling_price",
+    "product_cost",
+    "fulfillment_fee",
+    "referral_bps",
+    "units"
+  ],
+  "additionalProperties": false
+}

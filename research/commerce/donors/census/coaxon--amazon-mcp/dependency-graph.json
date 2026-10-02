@@ -1,0 +1,4686 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "amazon_mcp/__main__.py",
+      "line": 1,
+      "text": "from amazon_mcp.server import main"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 3,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 4,
+      "text": "import enum"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 5,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 7,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 11,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/auth/lwa.py",
+      "line": 13,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 3,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 8,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 9,
+      "text": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 10,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 11,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS"
+    },
+    {
+      "source_path": "amazon_mcp/clients/ads_api.py",
+      "line": 12,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/http_retry.py",
+      "line": 5,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitError"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 13,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 14,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 15,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 16,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 17,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 19,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 21,
+      "text": "from amazon_mcp.paths import fixture_path"
+    },
+    {
+      "source_path": "amazon_mcp/clients/meli_api.py",
+      "line": 125,
+      "text": "import datetime"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line": 3,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line": 4,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line": 5,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "amazon_mcp/clients/rate_limit.py",
+      "line": 6,
+      "text": "from typing import Awaitable, Callable, TypeVar"
+    },
+    {
+      "source_path": "amazon_mcp/clients/response_cache.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/clients/response_cache.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 3,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 4,
+      "text": "import gzip"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 6,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 7,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 9,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 11,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 12,
+      "text": "from amazon_mcp.clients.http_retry import raise_on_429"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 13,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 14,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS, briefing_cache_ttl"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 15,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 41,
+      "text": "from pathlib import Path as _Path"
+    },
+    {
+      "source_path": "amazon_mcp/clients/sp_api.py",
+      "line": 42,
+      "text": "import json as _json"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 11,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 12,
+      "text": "import hmac"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 13,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 14,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 15,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 16,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 17,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 19,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/clients/tiktok_api.py",
+      "line": 21,
+      "text": "from amazon_mcp.paths import fixture_path"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/__init__.py",
+      "line": 2,
+      "text": "from amazon_mcp.cogs.store import CogsStore, get_default_cogs_db_path"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 4,
+      "text": "import csv"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 5,
+      "text": "import io"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 7,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 10,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/cogs/store.py",
+      "line": 13,
+      "text": "from amazon_mcp.paths import data_path"
+    },
+    {
+      "source_path": "amazon_mcp/config.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/config.py",
+      "line": 4,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 11,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 12,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 14,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 15,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 16,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 18,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/base_connector.py",
+      "line": 20,
+      "text": "from amazon_mcp.paths import fixture_path"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/platform_snapshot.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/platform_snapshot.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "amazon_mcp/connectors/platform_snapshot.py",
+      "line": 10,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/dag/__init__.py",
+      "line": 1,
+      "text": "from .executor import DagExecutor, DagPhase, DagState"
+    },
+    {
+      "source_path": "amazon_mcp/dag/__init__.py",
+      "line": 2,
+      "text": "from .fast_forward import FastForward"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 4,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 7,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 8,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 10,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 12,
+      "text": "from .fast_forward import FastForward"
+    },
+    {
+      "source_path": "amazon_mcp/dag/executor.py",
+      "line": 76,
+      "text": "from amazon_mcp.refiner.dom_refiner import (\n                refine_product, refine_inventory, refine_pricing,\n                refine_order_summary, refine_competitive,\n            )"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 5,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 7,
+      "text": "from typing import Any, Optional"
+    },
+    {
+      "source_path": "amazon_mcp/dag/fast_forward.py",
+      "line": 83,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 4,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 6,
+      "text": "from typing import Callable"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 7,
+      "text": "from urllib.parse import urlparse"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 11,
+      "text": "from starlette.middleware.base import BaseHTTPMiddleware"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 12,
+      "text": "from starlette.requests import Request"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 13,
+      "text": "from starlette.responses import JSONResponse, Response"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 62,
+      "text": "from amazon_mcp_pro.gateway.api_key_store import check_rate_limit, lookup_key"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 82,
+      "text": "import hmac"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 104,
+      "text": "from amazon_mcp_pro.gateway.api_key_store import list_keys"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/api_key_auth.py",
+      "line": 114,
+      "text": "from amazon_mcp_pro.gateway.api_key_store import list_keys"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 4,
+      "text": "import ipaddress"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 5,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 7,
+      "text": "from typing import Callable"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 9,
+      "text": "from starlette.middleware.base import BaseHTTPMiddleware"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 10,
+      "text": "from starlette.requests import Request"
+    },
+    {
+      "source_path": "amazon_mcp/middleware/ip_allowlist.py",
+      "line": 11,
+      "text": "from starlette.responses import JSONResponse, Response"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/__init__.py",
+      "line": 1,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore, get_default_alert_db_path"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 3,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 5,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 6,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 7,
+      "text": "from typing import List, Optional"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 10,
+      "text": "from amazon_mcp.paths import data_dir as mcp_data_dir"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/alert_store.py",
+      "line": 11,
+      "text": "from .thresholds import InventoryThreshold, PriceWatch, AlertRecord"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/thresholds.py",
+      "line": 3,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/thresholds.py",
+      "line": 4,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "amazon_mcp/monitor/thresholds.py",
+      "line": 5,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "amazon_mcp/paths.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/paths.py",
+      "line": 5,
+      "text": "from functools import lru_cache"
+    },
+    {
+      "source_path": "amazon_mcp/paths.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/pro_edition.py",
+      "line": 4,
+      "text": "import importlib.util"
+    },
+    {
+      "source_path": "amazon_mcp/pro_edition.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/pro_edition.py",
+      "line": 6,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/refiner/__init__.py",
+      "line": 1,
+      "text": "from amazon_mcp.refiner.dom_refiner import (\n    refine_ads,\n    refine_competitive,\n    refine_inventory,\n    refine_order_summary,\n    refine_pricing,\n    refine_product,\n    refine_search_results,\n)"
+    },
+    {
+      "source_path": "amazon_mcp/refiner/dom_refiner.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 3,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 4,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 6,
+      "text": "import logging"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 10,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 14,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 15,
+      "text": "from mcp.server.fastmcp import FastMCP"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 16,
+      "text": "from starlette.requests import Request"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 17,
+      "text": "from starlette.responses import FileResponse, Response"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 19,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 20,
+      "text": "from amazon_mcp.clients.ads_api import AdsAPIClient"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 21,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 22,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 23,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 24,
+      "text": "from amazon_mcp.middleware.api_key_auth import install_mcp_api_key_middleware, redact_webhook_url"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 25,
+      "text": "from amazon_mcp.middleware.ip_allowlist import install_ip_allowlist_middleware"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 26,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore, get_default_alert_db_path"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 27,
+      "text": "from amazon_mcp.paths import data_path"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 28,
+      "text": "from amazon_mcp.pro_edition import has_pro, pro_required_scenario"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 29,
+      "text": "from amazon_mcp.tools.bootstrap import init_tool_registry"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 30,
+      "text": "from amazon_mcp.tools.domain_tools import register_domain_tools, EXPORTS as _DOMAIN_TOOL_EXPORTS"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 31,
+      "text": "from amazon_mcp.cogs.store import CogsStore, get_default_cogs_db_path"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 32,
+      "text": "from amazon_mcp.dag.executor import DagExecutor"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 33,
+      "text": "from amazon_mcp.dag.fast_forward import FastForward"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 37,
+      "text": "from contextlib import asynccontextmanager"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 106,
+      "text": "from amazon_mcp_pro.server_ext import ensure_default_tenant"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 111,
+      "text": "from amazon_mcp_pro.server_ext import start_lifespan"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 124,
+      "text": "from amazon_mcp_pro.server_ext import stop_lifespan"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 216,
+      "text": "from amazon_mcp_pro.server_ext import ctx_for_tenant as pro_ctx"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 274,
+      "text": "from amazon_mcp_pro.server_ext import ensure_default_tenant"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 282,
+      "text": "from amazon_mcp_pro.server_ext import scoring_version"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 336,
+      "text": "import uuid as _uuid"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 391,
+      "text": "from amazon_mcp_pro.server_ext import register_scenario_tools"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 402,
+      "text": "from amazon_mcp_pro.server_ext import attach_slack_services, build_slack_handler, register_routes"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 489,
+      "text": "from amazon_mcp_pro.server_ext import fire_scheduled_daily_briefing"
+    },
+    {
+      "source_path": "amazon_mcp/server.py",
+      "line": 503,
+      "text": "from amazon_mcp.tools.registry import invoke as _invoke_domain"
+    },
+    {
+      "source_path": "amazon_mcp/tools/__init__.py",
+      "line": 2,
+      "text": "from amazon_mcp.tools.registry import (\n    DOMAIN_HANDLERS,\n    LEGACY_TOOL_ALIASES,\n    bootstrap_domains,\n    dispatch_domain,\n    dispatch_legacy,\n    list_domain_actions,\n    list_domains,\n)"
+    },
+    {
+      "source_path": "amazon_mcp/tools/account.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/account.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/tools/account.py",
+      "line": 6,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/account.py",
+      "line": 8,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/ads.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/ads.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/ads.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/alerts.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/alerts.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/analytics.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/analytics.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/analytics.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/bootstrap.py",
+      "line": 4,
+      "text": "from typing import Any, Awaitable, Callable"
+    },
+    {
+      "source_path": "amazon_mcp/tools/bootstrap.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ToolDeps, set_tool_deps"
+    },
+    {
+      "source_path": "amazon_mcp/tools/bootstrap.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.registry import bootstrap_domains"
+    },
+    {
+      "source_path": "amazon_mcp/tools/catalog.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/catalog.py",
+      "line": 6,
+      "text": "from amazon_mcp.refiner.dom_refiner import refine_product, refine_search_results"
+    },
+    {
+      "source_path": "amazon_mcp/tools/catalog.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/catalog.py",
+      "line": 8,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/deps.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "amazon_mcp/tools/deps.py",
+      "line": 5,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "amazon_mcp/tools/deps.py",
+      "line": 6,
+      "text": "from typing import Any, Awaitable, Callable"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/domain_tools.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "amazon_mcp/tools/finance.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/finance.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/finance.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/fulfillment.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/fulfillment.py",
+      "line": 5,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/fulfillment.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/fulfillment.py",
+      "line": 8,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/helpers.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/helpers.py",
+      "line": 5,
+      "text": "from typing import Any, Awaitable"
+    },
+    {
+      "source_path": "amazon_mcp/tools/helpers.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import get_tool_deps"
+    },
+    {
+      "source_path": "amazon_mcp/tools/inventory.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/inventory.py",
+      "line": 6,
+      "text": "from amazon_mcp.refiner.dom_refiner import refine_inventory"
+    },
+    {
+      "source_path": "amazon_mcp/tools/inventory.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps"
+    },
+    {
+      "source_path": "amazon_mcp/tools/inventory.py",
+      "line": 8,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/listings.py",
+      "line": 9,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/listings.py",
+      "line": 11,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps"
+    },
+    {
+      "source_path": "amazon_mcp/tools/orders.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/orders.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/orders.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pilot_tools.py",
+      "line": 2,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS, register_domain_tools, register_pilot_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pricing.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pricing.py",
+      "line": 6,
+      "text": "from amazon_mcp.refiner.dom_refiner import refine_pricing"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pricing.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pricing.py",
+      "line": 8,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/pricing.py",
+      "line": 9,
+      "text": "from amazon_mcp.tools.validators import require_positive_price, require_valid_asin"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 6,
+      "text": "from typing import Any, Awaitable, Callable"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 8,
+      "text": "from amazon_mcp.pro_edition import has_pro, is_pro_required, pro_required_response"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 9,
+      "text": "from amazon_mcp.tools.deps import get_tool_deps"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 111,
+      "text": "from amazon_mcp_pro.dispatch import invoke_pro"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 142,
+      "text": "from amazon_mcp_pro.dispatch import record_tool_usage_pro"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 159,
+      "text": "from amazon_mcp_pro.dispatch import record_tool_usage_pro"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 190,
+      "text": "from amazon_mcp.tools import account as account_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 191,
+      "text": "from amazon_mcp.tools import ads as ads_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 192,
+      "text": "from amazon_mcp.tools import alerts as alerts_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 193,
+      "text": "from amazon_mcp.tools import analytics as analytics_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 194,
+      "text": "from amazon_mcp.tools import catalog as catalog_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 195,
+      "text": "from amazon_mcp.tools import finance as finance_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 196,
+      "text": "from amazon_mcp.tools import fulfillment as fulfillment_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 197,
+      "text": "from amazon_mcp.tools import inventory as inventory_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 198,
+      "text": "from amazon_mcp.tools import listings as listings_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 199,
+      "text": "from amazon_mcp.tools import orders as orders_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 200,
+      "text": "from amazon_mcp.tools import pricing as pricing_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 201,
+      "text": "from amazon_mcp.tools import report as report_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 202,
+      "text": "from amazon_mcp.tools import system as system_tools"
+    },
+    {
+      "source_path": "amazon_mcp/tools/registry.py",
+      "line": 219,
+      "text": "from amazon_mcp_pro.dispatch import bootstrap_domains_pro"
+    },
+    {
+      "source_path": "amazon_mcp/tools/report.py",
+      "line": 4,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/report.py",
+      "line": 6,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/report.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.helpers import sp_json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line": 4,
+      "text": "import time"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line": 5,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line": 7,
+      "text": "from amazon_mcp.tools.deps import ctx_from_params, get_tool_deps, tenant_id_from_params"
+    },
+    {
+      "source_path": "amazon_mcp/tools/system.py",
+      "line": 95,
+      "text": "import json"
+    },
+    {
+      "source_path": "amazon_mcp/tools/validators.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 7,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/migrate_tenant_credentials.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.tenant_credentials import TenantCredentialStore, get_default_credential_store"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 9,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 12,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 18,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 21,
+      "text": "from amazon_mcp.integrations.slack_interactions import slack_interactive_enabled"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 22,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore, get_default_alert_db_path"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 23,
+      "text": "from amazon_mcp.monitor.notifier import get_router"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 24,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord, InventoryThreshold"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 25,
+      "text": "from amazon_mcp.scenarios.daily_briefing import execute_daily_briefing"
+    },
+    {
+      "source_path": "scripts/push_slack_deploy_verify.py",
+      "line": 26,
+      "text": "from amazon_mcp.server import _ctx, category_competitor_insights"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 4,
+      "text": "import asyncio, json, sys"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 6,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 7,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/run_pause_ad_slack_flow.py",
+      "line": 23,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 11,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 12,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 13,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 19,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 20,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord, InventoryThreshold, PriceWatch"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 311,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/seed_demo_briefing_store.py",
+      "line": 316,
+      "text": "import re"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 7,
+      "text": "import platform"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/verify_claude_desktop.py",
+      "line": 39,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 5,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 13,
+      "text": "from mcp import ClientSession"
+    },
+    {
+      "source_path": "scripts/verify_cursor_mcp.py",
+      "line": 14,
+      "text": "from mcp.client.stdio import StdioServerParameters, stdio_client"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 16,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 17,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 18,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 19,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 20,
+      "text": "from amazon_mcp.scenarios.account_health import (\n    IPI_SOURCE_PLANNING,\n    fetch_account_health_summary,\n    parse_inventory_planning_tsv,\n    parse_seller_performance_tsv,\n    parse_storage_fees_tsv,\n    score_account_health,\n)"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 28,
+      "text": "from amazon_mcp.scenarios.cross_domain_rules import build_rule_context, evaluate_cross_domain_rules"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 29,
+      "text": "from amazon_mcp.scoring.operations_health import build_operations_health_report, SCORING_VERSION_V2"
+    },
+    {
+      "source_path": "tests/test_account_health.py",
+      "line": 30,
+      "text": "from fixtures.loader import fixture_path"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 21,
+      "text": "import amazon_mcp.gateway.api_key_store as ks"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 31,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 35,
+      "text": "from amazon_mcp.gateway.api_key_store import (\n    _RateLimiter,\n    _hash_key,\n    check_rate_limit,\n    get_current_rpm,\n    issue_key,\n    list_keys,\n    lookup_key,\n    revoke_key,\n)"
+    },
+    {
+      "source_path": "tests/test_admin_api_keys.py",
+      "line": 45,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 11,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_aging_inventory.py",
+      "line": 12,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 6,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 15,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 16,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 17,
+      "text": "from amazon_mcp.monitor.notifier import NotificationRouter, NotifierConfig"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 18,
+      "text": "from amazon_mcp.monitor.thresholds import InventoryThreshold, PriceWatch"
+    },
+    {
+      "source_path": "tests/test_alert_engine_live_integration.py",
+      "line": 19,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 8,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 12,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 14,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 18,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 19,
+      "text": "from amazon_mcp.server import TOOL_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_all_tools_dryrun.py",
+      "line": 51,
+      "text": "import amazon_mcp"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 7,
+      "text": "from starlette.testclient import TestClient"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 9,
+      "text": "from amazon_mcp.middleware.api_key_auth import McpApiKeyMiddleware, redact_webhook_url"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 17,
+      "text": "from starlette.applications import Starlette"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 18,
+      "text": "from starlette.responses import JSONResponse"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 19,
+      "text": "from starlette.routing import Route"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 49,
+      "text": "from starlette.applications import Starlette"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 50,
+      "text": "from starlette.responses import PlainTextResponse"
+    },
+    {
+      "source_path": "tests/test_api_key_auth.py",
+      "line": 51,
+      "text": "from starlette.routing import Route"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 17,
+      "text": "from amazon_mcp.tools.benchmark import (\n    _percentile_rank,\n    _percentile_label,\n    _improvement_hint,\n    get_percentile,\n    acos_benchmark,\n    margin_benchmark,\n    full_benchmark_report,\n    category_comparison,\n)"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 27,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 32,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 325,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_benchmark.py",
+      "line": 334,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.billing import UsageLedger, record_tool_usage, reset_usage_ledger"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 15,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain, dispatch_legacy"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 23,
+      "text": "import amazon_mcp.gateway.billing as billing_mod"
+    },
+    {
+      "source_path": "tests/test_billing.py",
+      "line": 31,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 14,
+      "text": "from amazon_mcp.reports.briefing_assets import generate_briefing_assets, resolve_asset_path"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 15,
+      "text": "from amazon_mcp.reports.sales_trend import fetch_daily_sales_series, render_sales_trend_png"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 16,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_briefing_assets.py",
+      "line": 17,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 5,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 7,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 15,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 16,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 17,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS, BRIEFING_CACHE_TTL, briefing_cache_ttl"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 18,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_briefing_response_cache.py",
+      "line": 19,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 15,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_category_competitor_insights.py",
+      "line": 16,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 22,
+      "text": "import amazon_mcp.gateway.circuit_breaker as cb_mod"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 34,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 38,
+      "text": "from amazon_mcp.gateway.circuit_breaker import (\n    CBState,\n    CircuitBreaker,\n    CircuitBreakerOpenError,\n    PlatformConfig,\n    check_platform,\n    get_breaker,\n    get_snapshot,\n    record_failure,\n    record_success,\n    reset_breaker,\n)"
+    },
+    {
+      "source_path": "tests/test_circuit_breaker.py",
+      "line": 50,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 13,
+      "text": "from amazon_mcp.cogs.store import CogsStore"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 14,
+      "text": "from amazon_mcp.scenarios.profit_snapshot import build_profit_snapshot"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 15,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 16,
+      "text": "from amazon_mcp.clients.ads_api import AdsAPIClient"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 17,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 18,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_cogs.py",
+      "line": 19,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 7,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 22,
+      "text": "import amazon_mcp.gateway.write_executor as we"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 30,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 34,
+      "text": "from amazon_mcp.gateway.write_executor import (\n    cancel_write,\n    confirm_write,\n    get_audit_log,\n    list_pending,\n    queue_write,\n)"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 41,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 287,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_command_center.py",
+      "line": 297,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_cross_domain_rules.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_cross_domain_rules.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_cross_domain_rules.py",
+      "line": 11,
+      "text": "from amazon_mcp.scenarios.cross_domain_rules import (\n    THRESHOLDS,\n    build_rule_context,\n    evaluate_cross_domain_rules,\n)"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 11,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 12,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 33,
+      "text": "from amazon_mcp.connectors.platform_snapshot import PlatformSnapshot"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 40,
+      "text": "from amazon_mcp.connectors.platform_snapshot import PlatformSnapshot, OrderSummaryRow"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 53,
+      "text": "from amazon_mcp.connectors.platform_snapshot import PlatformSnapshot, InventoryRow"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 68,
+      "text": "from amazon_mcp.connectors.platform_snapshot import PlatformSnapshot"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 80,
+      "text": "from amazon_mcp.clients.meli_api import MeliApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 93,
+      "text": "from amazon_mcp.clients.meli_api import MeliApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 104,
+      "text": "from amazon_mcp.clients.meli_api import MeliApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 115,
+      "text": "from amazon_mcp.clients.meli_api import MeliApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 126,
+      "text": "from amazon_mcp.clients.meli_api import MeliApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 140,
+      "text": "from amazon_mcp.clients.tiktok_api import TikTokApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 152,
+      "text": "from amazon_mcp.clients.tiktok_api import TikTokApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 163,
+      "text": "from amazon_mcp.clients.tiktok_api import TikTokApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 174,
+      "text": "from amazon_mcp.clients.tiktok_api import TikTokApiClient"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 365,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 372,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_cross_platform.py",
+      "line": 379,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 2,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 4,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 7,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 9,
+      "text": "from amazon_mcp.dag.fast_forward import FastForward"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 10,
+      "text": "from amazon_mcp.dag.executor import DagExecutor, DagPhase, DagState"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 16,
+      "text": "import amazon_mcp.dag.fast_forward as ff_mod"
+    },
+    {
+      "source_path": "tests/test_dag.py",
+      "line": 17,
+      "text": "import amazon_mcp.dag.executor as exec_mod"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 14,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 15,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord, InventoryThreshold, PriceWatch"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 16,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 17,
+      "text": "from amazon_mcp.server import run_scenario"
+    },
+    {
+      "source_path": "tests/test_daily_briefing.py",
+      "line": 158,
+      "text": "import amazon_mcp.scenarios.daily_briefing as db_mod"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_schedule.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_schedule.py",
+      "line": 5,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_schedule.py",
+      "line": 6,
+      "text": "from zoneinfo import ZoneInfo"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_schedule.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_schedule.py",
+      "line": 10,
+      "text": "from amazon_mcp.schedule.daily_briefing_scheduler import (\n    DailyBriefingScheduleConfig,\n    DailyBriefingScheduler,\n    parse_schedule_time,\n    seconds_until_next_run,\n)"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_summary.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_summary.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_daily_briefing_summary.py",
+      "line": 11,
+      "text": "from amazon_mcp.scenarios.daily_briefing import _build_summary"
+    },
+    {
+      "source_path": "tests/test_decision_rationale.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_decision_rationale.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_decision_rationale.py",
+      "line": 11,
+      "text": "from amazon_mcp.scenarios.daily_briefing import (\n    _health_score_reason,\n    _reorder_point_reason,\n    _replenishment_reason,\n)"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 17,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 18,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 19,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 20,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 21,
+      "text": "from amazon_mcp.scenarios.fba_reimbursement import (\n    fetch_fba_reimbursement_summary,\n    parse_reimbursement_tsv,\n    summarize_reimbursements,\n)"
+    },
+    {
+      "source_path": "tests/test_fba_reimbursement.py",
+      "line": 26,
+      "text": "from fixtures.loader import fixture_path"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 7,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 9,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 11,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 16,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 17,
+      "text": "from amazon_mcp.features.feature_registry import ACTION_FEATURE_MAP, FEATURE_CATALOG, FEATURES_BY_ID"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 18,
+      "text": "from amazon_mcp.features.tier_bundles import ADVANCED, GLOBAL_SUITE, STANDARD, STARTER, TIER_MAP, resolve_features"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 19,
+      "text": "from amazon_mcp.features.feature_gate import FeatureDisabledError, FeatureGate, get_gate"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 20,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 204,
+      "text": "from amazon_mcp.tools.registry import invoke"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 205,
+      "text": "from amazon_mcp.features.feature_gate import get_gate"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 217,
+      "text": "from amazon_mcp.tools.registry import invoke"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 228,
+      "text": "from amazon_mcp.tools.registry import invoke"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 239,
+      "text": "from amazon_mcp.tools.registry import invoke"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 254,
+      "text": "from amazon_mcp.scenarios.daily_briefing import _feat_enabled"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 259,
+      "text": "from amazon_mcp.scenarios.daily_briefing import _feat_enabled"
+    },
+    {
+      "source_path": "tests/test_feature_gate.py",
+      "line": 265,
+      "text": "from amazon_mcp.scenarios.daily_briefing import _feat_enabled"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 11,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_finance_v2024_brand_analytics.py",
+      "line": 12,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.router import GatewayRouter"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 15,
+      "text": "from amazon_mcp.gateway.tenant import TenantContext, TenantRegistry"
+    },
+    {
+      "source_path": "tests/test_gateway.py",
+      "line": 79,
+      "text": "from amazon_mcp.server import (\n        competitor_price_alert,\n        how_long_inventory_last,\n        protect_profit_margin,\n    )"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 13,
+      "text": "from amazon_mcp.gateway.router import GatewayRouter"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.tenant import TenantContext, TenantRegistry"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 15,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain, dispatch_legacy"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 22,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 50,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 51,
+      "text": "from amazon_mcp.tools.deps import ToolDeps, set_tool_deps"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 59,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_gateway_tenant_routing.py",
+      "line": 65,
+      "text": "from amazon_mcp.cogs.store import CogsStore"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 8,
+      "text": "from unittest.mock import AsyncMock, MagicMock, patch"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 16,
+      "text": "from amazon_mcp.integrations.inbound_plan_interactions import (\n    InboundPlanInteractionService,\n    format_preview_blocks,\n    mint_preview_token,\n    verify_preview_token,\n)"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 22,
+      "text": "from amazon_mcp.integrations.slack_interactions import SlackInteractionHandler"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 23,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 191,
+      "text": "from amazon_mcp.gateway import slack_permissions as spm"
+    },
+    {
+      "source_path": "tests/test_inbound_plan_interaction.py",
+      "line": 216,
+      "text": "from amazon_mcp.gateway import slack_permissions as spm"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 11,
+      "text": "from amazon_mcp.server import (\n    add_price_watch,\n    competitor_price_alert,\n    get_fee_estimate,\n    get_profit_analysis,\n    protect_profit_margin,\n)"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 119,
+      "text": "import pytest as _pt"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 120,
+      "text": "from amazon_mcp.monitor.notifier import NotifierConfig"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 126,
+      "text": "import pytest as _pt"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 127,
+      "text": "from amazon_mcp.monitor.notifier import NotifierConfig"
+    },
+    {
+      "source_path": "tests/test_input_validation.py",
+      "line": 134,
+      "text": "from amazon_mcp.monitor.notifier import NotifierConfig"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 20,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 24,
+      "text": "from amazon_mcp.tools.inventory_pool import (\n    _compute_allocation_plan,\n    _extract_sku_stock,\n    _extract_velocity,\n    allocation_plan,\n    pool_reconcile,\n    pool_status,\n    pool_connection_status,\n    _DEFAULT_MARGIN_WEIGHTS,\n)"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 34,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 344,
+      "text": "from amazon_mcp.features.feature_registry import FEATURES_BY_ID"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 351,
+      "text": "from amazon_mcp.features.tier_bundles import GLOBAL_SUITE"
+    },
+    {
+      "source_path": "tests/test_inventory_pool.py",
+      "line": 356,
+      "text": "from amazon_mcp.features.tier_bundles import STANDARD"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 5,
+      "text": "import ipaddress"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 8,
+      "text": "from unittest.mock import AsyncMock, MagicMock"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 15,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _parse_allowlist"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 63,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _parse_allowlist, _ip_allowed"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 98,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _client_ip"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 105,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _client_ip"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 112,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _client_ip"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 119,
+      "text": "from amazon_mcp.middleware.ip_allowlist import _client_ip"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 130,
+      "text": "from amazon_mcp.middleware.ip_allowlist import IpAllowlistMiddleware"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 165,
+      "text": "from amazon_mcp.middleware.ip_allowlist import IpAllowlistMiddleware"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 166,
+      "text": "from starlette.responses import JSONResponse"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 225,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 239,
+      "text": "from starlette.responses import JSONResponse"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 257,
+      "text": "from amazon_mcp.middleware.ip_allowlist import install_ip_allowlist_middleware"
+    },
+    {
+      "source_path": "tests/test_ip_allowlist.py",
+      "line": 265,
+      "text": "from amazon_mcp.middleware.ip_allowlist import install_ip_allowlist_middleware"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 11,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_listings_crud.py",
+      "line": 12,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 5,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 10,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 16,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 19,
+      "text": "from amazon_mcp.server import TOOL_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_mcp_response.py",
+      "line": 20,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 11,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 12,
+      "text": "from amazon_mcp.tools.domain_tools import EXPORTS"
+    },
+    {
+      "source_path": "tests/test_notifications_c.py",
+      "line": 13,
+      "text": "from amazon_mcp.integrations.sp_notifications import (\n    parse_listings_item_status_change,\n    parse_listings_item_issues_change,\n    parse_pricing_health,\n    parse_notification_payload,\n    NOTIFICATION_TYPE_LISTINGS_STATUS,\n    NOTIFICATION_TYPE_LISTINGS_ISSUES,\n    NOTIFICATION_TYPE_PRICING_HEALTH,\n)"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 15,
+      "text": "from amazon_mcp.scoring.operations_health import (\n    build_operations_health_report,\n    score_ad_efficiency,\n    score_inventory_risk,\n    score_price_competitiveness,\n    compute_overall,\n    SCORING_VERSION_V2,\n)"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 23,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 24,
+      "text": "from amazon_mcp.server import get_operations_health_report"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 157,
+      "text": "from amazon_mcp.scoring.operations_health import score_ad_efficiency"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 163,
+      "text": "from amazon_mcp.scoring.operations_health import score_price_competitiveness_multi"
+    },
+    {
+      "source_path": "tests/test_operations_health_scoring.py",
+      "line": 169,
+      "text": "from amazon_mcp.scoring.operations_health import score_price_competitiveness"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 8,
+      "text": "from unittest.mock import AsyncMock, MagicMock, patch"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 16,
+      "text": "from amazon_mcp.integrations.pause_ad_interactions import (\n    PauseAdInteractionService,\n    format_pause_ad_preview_blocks,\n    mint_pause_ad_preview_token,\n    verify_pause_ad_preview_token,\n)"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 22,
+      "text": "from amazon_mcp.integrations.slack_interactions import SlackInteractionHandler"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 23,
+      "text": "from amazon_mcp.integrations.slack_blocks import _build_pause_ad_action_blocks"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 118,
+      "text": "from amazon_mcp.gateway import slack_permissions as spm"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 204,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 205,
+      "text": "from amazon_mcp.clients.ads_api import AdsAPIClient"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 206,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_pause_ad_interaction.py",
+      "line": 207,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_portfolio_risk_ranker.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_portfolio_risk_ranker.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_portfolio_risk_ranker.py",
+      "line": 11,
+      "text": "from amazon_mcp.scenarios.portfolio_risk_ranker import rank_portfolio_risks"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 3,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 6,
+      "text": "from amazon_mcp.monitor.thresholds import InventoryThreshold, PriceWatch, AlertRecord"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 7,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 8,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 11,
+      "text": "from amazon_mcp.server import (\n    configure_inventory_alert,\n    add_price_watch,\n    get_pending_alerts,\n    dismiss_alert,\n    get_alert_config,\n    _get_store,\n    _alert_engine,\n    _lifespan\n)"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 21,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_proactive_alerts.py",
+      "line": 79,
+      "text": "import random"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 8,
+      "text": "from amazon_mcp.config import AmazonConfig, _is_placeholder"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 87,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 88,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 97,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 98,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 106,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 107,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 116,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 117,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 128,
+      "text": "from amazon_mcp.monitor.alert_store import get_default_alert_db_path"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 135,
+      "text": "from amazon_mcp.monitor.alert_store import get_default_alert_db_path"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 142,
+      "text": "from amazon_mcp.monitor.alert_store import get_default_alert_db_path"
+    },
+    {
+      "source_path": "tests/test_production_readiness.py",
+      "line": 149,
+      "text": "from amazon_mcp.monitor.alert_store import get_default_alert_db_path"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 13,
+      "text": "from amazon_mcp.scenarios.profit_snapshot import build_profit_snapshot"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 14,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 15,
+      "text": "from amazon_mcp.clients.ads_api import AdsAPIClient"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 16,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 17,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_profit_snapshot.py",
+      "line": 18,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 7,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 22,
+      "text": "import amazon_mcp.gateway.billing as billing_mod"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 36,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 40,
+      "text": "from amazon_mcp.gateway.billing import (\n    QuotaExceededError,\n    get_usage_ledger,\n    get_tenant_monthly_limit,\n    set_tenant_quota,\n)"
+    },
+    {
+      "source_path": "tests/test_quota_enforcement.py",
+      "line": 46,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 5,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 8,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 13,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitError, RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 72,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 78,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 79,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 80,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 107,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_rate_limit_stress.py",
+      "line": 108,
+      "text": "from amazon_mcp.clients.rate_limit import TokenBucket"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 8,
+      "text": "from unittest.mock import AsyncMock, patch"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 15,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth, TokenState"
+    },
+    {
+      "source_path": "tests/test_refiner.py",
+      "line": 16,
+      "text": "from amazon_mcp.refiner.dom_refiner import (\n    refine_ads,\n    refine_competitive,\n    refine_inventory,\n    refine_order_summary,\n    refine_pricing,\n    refine_product,\n    refine_search_results,\n)"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 14,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 15,
+      "text": "from amazon_mcp.scenarios.reorder_calculator import compute_reorder_row, build_reorder_calculations"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 16,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 49,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 50,
+      "text": "from amazon_mcp.server import run_scenario"
+    },
+    {
+      "source_path": "tests/test_reorder_calculator.py",
+      "line": 51,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 5,
+      "text": "from datetime import date"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 9,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 10,
+      "text": "from amazon_mcp.scenarios.replenishment import (\n    compute_replenishment_row,\n    build_replenishment_recommendations,\n)"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 14,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 15,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 21,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 102,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_replenishment.py",
+      "line": 103,
+      "text": "from amazon_mcp.server import run_scenario"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 13,
+      "text": "from amazon_mcp.reports.briefing_assets import (\n    generate_briefing_assets,\n    _pick_chart_asins,\n    resolve_asset_path,\n    MULTI_CHART_FILE,\n    AGING_CHART_FILE,\n)"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 20,
+      "text": "from amazon_mcp.reports.sales_trend import (\n    render_multi_panel_png,\n    render_aging_bar_png,\n)"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 24,
+      "text": "from amazon_mcp.reports.briefing_pdf import render_briefing_pdf"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 25,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_reports_b_extension.py",
+      "line": 154,
+      "text": "from amazon_mcp.reports.sales_trend import render_sales_trend_png"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 10,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 11,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 12,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 13,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 19,
+      "text": "import amazon_mcp.server as _srv"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 197,
+      "text": "from amazon_mcp.clients.sp_api import _REPORT_TYPES"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 201,
+      "text": "from amazon_mcp.clients.sp_api import _REPORT_TYPES"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 224,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 236,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 259,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 263,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_restock_recommendations.py",
+      "line": 271,
+      "text": "from amazon_mcp.features.feature_registry import FEATURE_CATALOG"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 17,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 18,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 19,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 20,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 21,
+      "text": "from amazon_mcp.scenarios.returns_summary import (\n    fetch_returns_summary,\n    parse_returns_tsv,\n    summarize_returns,\n)"
+    },
+    {
+      "source_path": "tests/test_returns_summary.py",
+      "line": 26,
+      "text": "from fixtures.loader import fixture_path"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 17,
+      "text": "from amazon_mcp.scenarios.rto_geo import (\n    build_rto_advisory,\n    geo_cluster_returns,\n    parse_orders_tsv,\n)"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 22,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 27,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 247,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 255,
+      "text": "from amazon_mcp.features.feature_gate import set_tenant_tier"
+    },
+    {
+      "source_path": "tests/test_rto_geo.py",
+      "line": 274,
+      "text": "from amazon_mcp.scenarios.returns_summary import parse_returns_tsv"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 3,
+      "text": "from amazon_mcp.server import (\n    how_long_inventory_last,\n    protect_profit_margin,\n    competitor_price_alert,\n    get_operations_health_report,\n    run_scenario,\n)"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 93,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 94,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 98,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 99,
+      "text": "from amazon_mcp.clients.sp_api import parse_fees_estimate_response"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 110,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 111,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 112,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_semantic.py",
+      "line": 113,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 7,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 95,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 124,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 142,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 158,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 180,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 240,
+      "text": "from amazon_mcp.integrations.slack_blocks import _section_with_rationale"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 257,
+      "text": "from amazon_mcp.integrations.slack_briefing_prefs import BriefingDisplayPrefs"
+    },
+    {
+      "source_path": "tests/test_slack_blocks.py",
+      "line": 258,
+      "text": "from amazon_mcp.integrations.slack_blocks import build_daily_briefing_blocks"
+    },
+    {
+      "source_path": "tests/test_slack_briefing_prefs.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_slack_briefing_prefs.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_slack_briefing_prefs.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_slack_briefing_prefs.py",
+      "line": 12,
+      "text": "from amazon_mcp.integrations.slack_briefing_prefs import (\n    SECTION_IDS,\n    BriefingDisplayPrefs,\n    resolve_prefs,\n    save_prefs,\n)"
+    },
+    {
+      "source_path": "tests/test_slack_briefing_prefs.py",
+      "line": 18,
+      "text": "from amazon_mcp.tools.notify import set_briefing_prefs"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 4,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 5,
+      "text": "import hmac"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 9,
+      "text": "from unittest.mock import AsyncMock, MagicMock, patch"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 10,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 12,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 13,
+      "text": "from starlette.testclient import TestClient"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 15,
+      "text": "from amazon_mcp.integrations.slack_interactions import (\n    SlackInteractionHandler,\n    create_slack_interactions_route,\n    parse_interaction_payload,\n    verify_slack_signature,\n)"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 21,
+      "text": "from amazon_mcp.monitor.alert_engine import AlertEngine"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 22,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 23,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord, InventoryThreshold"
+    },
+    {
+      "source_path": "tests/test_slack_interactions.py",
+      "line": 137,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_slack_permissions.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_slack_permissions.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_slack_permissions.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_slack_permissions.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_slack_permissions.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.slack_permissions import SlackPermissionStore, get_current_tenant_id"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 13,
+      "text": "from fixtures.fixture_sp_client import FixtureSPClient"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 14,
+      "text": "from fixtures.loader import load_fixture"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 15,
+      "text": "from amazon_mcp.clients.sp_api import (\n    _parse_catalog_item_data,\n    _parse_competitive_pricing_data,\n    parse_fees_estimate_response,\n    parse_financial_events_response,\n    parse_product_pricing_response,\n)"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 76,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 77,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 78,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 79,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 95,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 96,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 97,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 98,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 110,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 122,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 131,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 132,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 146,
+      "text": "from amazon_mcp.clients.response_cache import ResponseCache, CACHE_MISS"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 160,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 161,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 162,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_sp_api_contract.py",
+      "line": 163,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sp_api_rate_limits.py",
+      "line": 13,
+      "text": "from amazon_mcp.clients.rate_limit import (\n    SP_API_RATE_LIMITS,\n    RateLimitRegistry,\n    resolve_sp_endpoint_category,\n    rate_limit_for_category,\n)"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 17,
+      "text": "from amazon_mcp.auth.lwa import LWAAuth"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 18,
+      "text": "from amazon_mcp.clients.rate_limit import RateLimitRegistry"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 19,
+      "text": "from amazon_mcp.clients.sp_api import SPAPIClient"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 20,
+      "text": "from amazon_mcp.config import AmazonConfig"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 21,
+      "text": "from amazon_mcp.integrations.sp_notifications import (\n    build_event_slack_snippet,\n    evaluate_inventory_polling_replacement,\n    evaluate_polling_replacement,\n    format_trigger_reason,\n    handle_any_offer_changed_webhook,\n    handle_notification_webhook,\n    parse_any_offer_changed,\n    parse_fba_inventory_availability_changes,\n    parse_notification_payload,\n    reevaluate_cross_domain_rules_for_event,\n)"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 33,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 34,
+      "text": "from amazon_mcp.monitor.thresholds import InventoryThreshold"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 35,
+      "text": "from amazon_mcp.scenarios.cross_domain_rules import build_rule_context"
+    },
+    {
+      "source_path": "tests/test_sp_notifications.py",
+      "line": 36,
+      "text": "from fixtures.loader import load_fixture"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 5,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 6,
+      "text": "import hmac"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 11,
+      "text": "from unittest.mock import MagicMock, patch"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 20,
+      "text": "import importlib"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 21,
+      "text": "import amazon_mcp.integrations.stripe_webhook as mod"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 27,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _price_tier_map"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 32,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _price_tier_map"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 40,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _price_tier_map"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 48,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _price_tier_map"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 53,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _price_tier_map"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 73,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 80,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 86,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 93,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 101,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 106,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 111,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 123,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_tenant_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 128,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_tenant_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 133,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_tenant_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 142,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_price_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 150,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_price_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 161,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _extract_price_id"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 176,
+      "text": "from amazon_mcp.integrations.stripe_webhook import process_stripe_event"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 194,
+      "text": "from amazon_mcp.integrations.stripe_webhook import process_stripe_event"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 209,
+      "text": "from amazon_mcp.integrations.stripe_webhook import process_stripe_event"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 220,
+      "text": "from amazon_mcp.integrations.stripe_webhook import process_stripe_event"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 231,
+      "text": "from amazon_mcp.integrations.stripe_webhook import process_stripe_event"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 255,
+      "text": "from amazon_mcp.integrations.stripe_webhook import _verify_stripe_signature"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 262,
+      "text": "from amazon_mcp.integrations.stripe_webhook import stripe_webhook_endpoint"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 271,
+      "text": "from amazon_mcp.integrations.stripe_webhook import stripe_webhook_endpoint"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 278,
+      "text": "from amazon_mcp.integrations.stripe_webhook import stripe_webhook_endpoint"
+    },
+    {
+      "source_path": "tests/test_stripe_webhook.py",
+      "line": 286,
+      "text": "from amazon_mcp.integrations.stripe_webhook import stripe_webhook_endpoint"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 20,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 27,
+      "text": "import amazon_mcp.tools.sync_schedule as ss_mod"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 34,
+      "text": "from amazon_mcp.tools.sync_schedule import (\n    create_schedule,\n    delete_schedule,\n    list_schedules,\n    sync_history,\n    trigger_now,\n    real_time_sync_info,\n    connection_status,\n)"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 43,
+      "text": "from amazon_mcp.tools.registry import dispatch_domain"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 311,
+      "text": "from amazon_mcp.features.feature_registry import FEATURES_BY_ID"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 318,
+      "text": "from amazon_mcp.features.tier_bundles import GLOBAL_SUITE"
+    },
+    {
+      "source_path": "tests/test_sync_schedule.py",
+      "line": 323,
+      "text": "from amazon_mcp.features.tier_bundles import STANDARD"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 6,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 13,
+      "text": "from amazon_mcp.gateway.router import GatewayRouter"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 14,
+      "text": "from amazon_mcp.gateway.tenant import TenantContext, TenantRegistry"
+    },
+    {
+      "source_path": "tests/test_tenant_credentials.py",
+      "line": 15,
+      "text": "from amazon_mcp.gateway.tenant_credentials import (\n    LocalFernetEncryptor,\n    TenantCredentialStore,\n    reset_default_credential_store,\n)"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 4,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 15,
+      "text": "from amazon_mcp.tools.registry import DOMAIN_HANDLERS, LEGACY_TOOL_ALIASES, dispatch_domain, dispatch_legacy, list_domain_actions"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 20,
+      "text": "import amazon_mcp.server"
+    },
+    {
+      "source_path": "tests/test_tool_registry.py",
+      "line": 68,
+      "text": "from amazon_mcp.server import TOOL_HANDLERS"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 15,
+      "text": "from amazon_mcp.monitor.alert_store import AlertStore"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 16,
+      "text": "from amazon_mcp.monitor.thresholds import AlertRecord, InventoryThreshold, PriceWatch"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 17,
+      "text": "from amazon_mcp.scoring.operations_health import build_operations_health_report"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 18,
+      "text": "import amazon_mcp.server as srv"
+    },
+    {
+      "source_path": "tests/test_user_facing_english.py",
+      "line": 19,
+      "text": "from amazon_mcp.server import (\n    configure_inventory_alert,\n    add_price_watch,\n    get_operations_health_report,\n    run_scenario,\n)"
+    },
+    {
+      "source_path": "tests/test_wow_narrative.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_wow_narrative.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_wow_narrative.py",
+      "line": 11,
+      "text": "from amazon_mcp.reports.sales_trend import (\n    WOW_ANOMALY_PCT,\n    build_wow_narrative,\n    compute_wow_metrics,\n)"
+    }
+  ],
+  "call_edges": []
+}

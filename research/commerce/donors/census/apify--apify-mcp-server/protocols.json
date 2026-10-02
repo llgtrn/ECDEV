@@ -1,0 +1,2613 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "b9a38354b2dcc81b134625fd5af88a75efb40749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          \"mcpServers\": {"
+    },
+    {
+      "source_path": ".github/workflows/_check_code.yaml",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "808960c06be82917ee0562c2ba360e7ece28f3f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    request='{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"smoke\",\"version\":\"1.0\"}}}'"
+    },
+    {
+      "source_path": ".github/workflows/_smoke_test_mcpb.yaml",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "e02c0495e0b4f257bc5ee98698cd133c51d41043",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    echo '{\"mcpServers\":{\"mcpb\":{\"command\":\"node\",\"args\":[\"mcpb/dist/stdio.js\",\"--tools\",\"docs,search-actors,fetch-actor-details\",\"--telemetry-enabled\",\"false\"]}}}' > .mcp.json"
+    },
+    {
+      "source_path": ".github/workflows/_smoke_test_npm_package.yaml",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "ad5212ecec0acec2f499f9a970e7bc8c93a7e036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    echo '{\"mcpServers\":{\"dev\":{\"command\":\"npx\",\"args\":[\"actors-mcp-server\",\"--tools\",\"docs,search-actors,fetch-actor-details\",\"--telemetry-enabled\",\"false\"]}}}' > .mcp.json"
+    },
+    {
+      "source_path": ".mcp.json",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "af2c2cf0e5cfc48c1aeb479fe7d1ac2d2cd29e99",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"mcpServers\": {"
+    },
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Expose methods on `ActorsMcpServer`**, not raw data exports via `./internals` — minimize the coupling surface"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 201,
+      "line_end": 201,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [**breaking**] Separate legacy MCP wiring from ActorsMcpServer ([#1155](https://github.com/apify/apify-mcp-server/pull/1155)) ([5ebe0d8](https://github.com/apify/apify-mcp-server/commit/5ebe0d84cdaa1c0cc10d86b65c78c61c609f7fae)) by [@jirispilka](https://github.com/jirispilka), closes [#1147](https://github.com/apify/apify-mcp-server/issues/1147)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 814,
+      "line_end": 814,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Implement migration plan from low-level Server API to high-level McpServer API ([#386](https://github.com/apify/apify-mcp-server/pull/386)) ([d9cc6bf](https://github.com/apify/apify-mcp-server/commit/d9cc6bf9bb94c73e73c61f5fe5c6aa3cfffa8655)) by [@jirispilka](https://github.com/jirispilka)"
+    },
+    {
+      "source_path": "CONTRIBUTING.md",
+      "line_start": 139,
+      "line_end": 139,
+      "blob_hash": "3a1cbc6c9d60a43da5e19a87ada356d744f952f5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        * `Options` — configuration passed to a function or constructor (e.g., `ActorsMcpServerOptions`, `SchemaGenerationOptions`)."
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `src/index.ts` - Main library export (`ActorsMcpServer` class, plus `createStatelessServer` — the per-request registration for 2026-07-28 traffic)"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `loadToolsFromInput()` in `tools_loader.ts` — convenience wrapper running both phases back-to-back with an explicit `SERVER_MODE`. **Not to be confused with** `ActorsMcpServer.loadToolsFromInput()` (the public method), which queues sources when mode is still `'auto'` and registers them onto the server — call the server method from transport entry points, the plain function only when you already "
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Public preload helpers such as `ActorsMcpServer.loadToolsByName()` and `loadToolsFromUrl()` therefore queue mode-agnostic sources first."
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- The stateful (2025-era) path resolves them once at `initialize`, as above, into the shared `ActorsMcpServer.tools` map that lives for the connection."
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- The stateless (2026-07-28) path has no `initialize`. `ActorsMcpServer.createRequestSnapshot()` re-composes **all** retained sources per request, against that request's own resolved mode and declared client identity, into a snapshot the shared map never sees."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 198,
+      "line_end": 198,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"mcpServers\": {"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        mcpServers: {"
+    },
+    {
+      "source_path": "scripts/conformance_expected_failures_2025_11_25.yaml",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "6efc301f6f808448e30ac2a409f48ca2ea58794f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# 2025-11-25 era, served by the sessionful `StreamableHTTPServerTransport` path"
+    },
+    {
+      "source_path": "scripts/conformance_expected_failures_2025_11_25.yaml",
+      "line_start": 78,
+      "line_end": 78,
+      "blob_hash": "6efc301f6f808448e30ac2a409f48ca2ea58794f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # `StreamableHTTPServerTransport` sends neither a priming event carrying an event id nor a"
+    },
+    {
+      "source_path": "src/AGENTS.md",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "56c28dcaff67fc11d23520b27843b09a59172c59",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `index.ts` — the library export (`ActorsMcpServer` plus `createStatelessServer`, the"
+    },
+    {
+      "source_path": "src/const.ts",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "0029dc4fadff4124affb43c0cf7d370bdcfdd1e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Staging MCP host; mirrors the check in `getActorMCPServerURL` to pick staging vs production origins. */"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from './mcp/server.js';"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 187,
+      "line_end": 187,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const mcpServer = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                await mcpServer.loadToolsFromUrl(req.url, new ApifyClient({ token: apifyToken }));"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 202,
+      "line_end": 202,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            return createStatelessServer(mcpServer, req.url);"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const mcpServers: { [sessionId: string]: ActorsMcpServer } = {};"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 237,
+      "line_end": 237,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 256,
+      "line_end": 256,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 287,
+      "line_end": 287,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            let transport: StreamableHTTPServerTransport;"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 316,
+      "line_end": 316,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                const mcpServer = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 337,
+      "line_end": 337,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                await mcpServer.loadToolsFromUrl(req.url, apifyClient);"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                transport = new StreamableHTTPServerTransport({"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 347,
+      "line_end": 347,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        mcpServers[newSessionId] = mcpServer;"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 351,
+      "line_end": 351,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        delete mcpServers[closedSessionId];"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 355,
+      "line_end": 355,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                await mcpServer.connect(transport);"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 361,
+      "line_end": 361,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 372,
+      "line_end": 372,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 400,
+      "line_end": 400,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const transport = transports[sessionId || ''] as StreamableHTTPServerTransport | undefined;"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 421,
+      "line_end": 421,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const transport = transports[sessionId || ''] as StreamableHTTPServerTransport | undefined;"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "09853cdb8517e434109b207c97bb2002f24b5cf0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " Keep this surface minimal: the `ActorsMcpServer` facade, plus `createStatelessServer` — the"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "09853cdb8517e434109b207c97bb2002f24b5cf0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from './mcp/server.js';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "09853cdb8517e434109b207c97bb2002f24b5cf0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export { ActorsMcpServer, createStatelessServer };"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `server.ts` — `ActorsMcpServer`, the shared facade for tools, server mode, services,"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  widgets, payments, and telemetry. It constructs and delegates v1 work to `LegacyMcpServer`,"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `LegacyMcpServerHost`."
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  one `Server` per request, reading shared state through `StatelessMcpServerHost`. Serves"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `proxy.ts` — MCP-in-MCP: `getMCPServerID(url)`, `getProxyMCPServerToolName(actorFullName, toolName)`."
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `actors.ts` — `getActorMCPServerPath()`: parses an Actor's `webServerMcpPath`."
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Facade → adapter, one direction only.** `ActorsMcpServer` (facade) constructs and delegates"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  to `LegacyMcpServer`; `createStatelessServer` builds the stateless adapter per request from the"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  narrow host interface (`LegacyMcpServerHost`, `StatelessMcpServerHost`) and never imports the"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `tool_dispatch.ts`) take plain values and import no `ActorsMcpServer`, v1 `RequestHandlerExtra`,"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `getProxyMCPServerToolName`)."
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Proxy server IDs are keyed by URL, not Actor ID.** `getMCPServerID(url)` is"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  the wrong transport). `getActorMCPServerPath()` prioritizes the `/mcp` streamable"
+    },
+    {
+      "source_path": "src/mcp/actors.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "35b6c370af3f9b0cea8eec3a70f5b9c4760db3de",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function getActorMCPServerPath(actorDefinition: ActorDefinition | ActorDefinitionPruned): string | null {"
+    },
+    {
+      "source_path": "src/mcp/actors.ts",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "35b6c370af3f9b0cea8eec3a70f5b9c4760db3de",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * `mcpServerPath` comes from an Actor's `webServerMcpPath` field, i.e. it is"
+    },
+    {
+      "source_path": "src/mcp/actors.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "35b6c370af3f9b0cea8eec3a70f5b9c4760db3de",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export async function getActorMCPServerURL(realActorId: string, mcpServerPath: string): Promise<string> {"
+    },
+    {
+      "source_path": "src/mcp/actors.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "35b6c370af3f9b0cea8eec3a70f5b9c4760db3de",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const resolved = new URL(mcpServerPath, standby);"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getMCPServerID } from './proxy.js';"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    transport: SSEClientTransport | StreamableHTTPClientTransport,"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        name: getMCPServerID(url),"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transport = new StreamableHTTPClientTransport(new URL(url), {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * {@link LegacyMcpServerHost}. Sibling of `stateless_server.ts`, the 2026-07-28 adapter."
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ActorsMcpServerOptions,"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Read-facing view of the shared `ActorsMcpServer` facade that the legacy adapter depends on. Keeps"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export interface LegacyMcpServerHost {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    readonly options: ActorsMcpServerOptions;"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * v1 SDK adapter. One per serving unit, constructed only by `ActorsMcpServer`."
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 103,
+      "line_end": 103,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export class LegacyMcpServer {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    private readonly host: LegacyMcpServerHost;"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 110,
+      "line_end": 110,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    constructor(host: LegacyMcpServerHost) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 379,
+      "line_end": 379,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "         * `sendNotification`. Throws {@link McpError} to mirror the MCP SDK's McpServer error codes."
+    },
+    {
+      "source_path": "src/mcp/proxy.ts",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "fdf3c73b56024a785580660dd9fb6f765dbd5764",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function getMCPServerID(url: string): string {"
+    },
+    {
+      "source_path": "src/mcp/proxy.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "fdf3c73b56024a785580660dd9fb6f765dbd5764",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function getProxyMCPServerToolName(actorFullName: string, toolName: string, shouldCapUsername = false): string {"
+    },
+    {
+      "source_path": "src/mcp/proxy.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "fdf3c73b56024a785580660dd9fb6f765dbd5764",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export async function getMCPServerTools("
+    },
+    {
+      "source_path": "src/mcp/proxy.ts",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "fdf3c73b56024a785580660dd9fb6f765dbd5764",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            name: getProxyMCPServerToolName(actorFullName, tool.name, shouldCapUsername),"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ActorsMcpServerOptions,"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { LegacyMcpServer } from './legacy_server.js';"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { LegacyMcpServerHost } from './legacy_server.js';"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { StatelessMcpServerHost, StatelessRequestSnapshot } from './stateless_server.js';"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * than adding another (see {@link ActorsMcpServer.toolSources}). Keys are sorted because callers"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * shared (see {@link ActorsMcpServer.resolveWidgetsForMode}). Rejects on a failed scan so the"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 109,
+      "line_end": 109,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * exactly one {@link LegacyMcpServer} (2025-era adapter) and delegates all v1 protocol work to it."
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 110,
+      "line_end": 110,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Implements {@link StatelessMcpServerHost} for the 2026-07-28 adapter too, but does not construct"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 113,
+      "line_end": 113,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export class ActorsMcpServer implements LegacyMcpServerHost, StatelessMcpServerHost {"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    public readonly options: ActorsMcpServerOptions;"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 177,
+      "line_end": 177,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    private readonly legacyServer: LegacyMcpServer;"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 192,
+      "line_end": 192,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    constructor(options: ActorsMcpServerOptions = {}) {"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 222,
+      "line_end": 222,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        this.legacyServer = new LegacyMcpServer(this);"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 423,
+      "line_end": 423,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    private listActorMcpServerToolIds(): string[] {"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 435,
+      "line_end": 435,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return [...this.listInternalToolNames(), ...this.listActorToolNames(), ...this.listActorMcpServerToolIds()];"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * {@link StatelessMcpServerHost}. Sibling of `legacy_server.ts` (the 2025-era adapter on"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ActorsMcpServerOptions,"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Read-facing view of the shared `ActorsMcpServer` facade (sibling of `LegacyMcpServerHost`)."
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export interface StatelessMcpServerHost {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    readonly options: ActorsMcpServerOptions;"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 119,
+      "line_end": 119,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class StatelessMcpServer {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 121,
+      "line_end": 121,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    private readonly host: StatelessMcpServerHost;"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 128,
+      "line_end": 128,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    constructor(host: StatelessMcpServerHost, requestUrl?: string) {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 393,
+      "line_end": 393,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * const handler = createMcpHandler(() => createStatelessServer(actorsMcpServer), { legacy: 'reject' });"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 399,
+      "line_end": 399,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function createStatelessServer(host: StatelessMcpServerHost, requestUrl?: string): Server {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 400,
+      "line_end": 400,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return new StatelessMcpServer(host, requestUrl).server;"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from './mcp/server.js';"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 178,
+      "line_end": 178,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const mcpServer = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 202,
+      "line_end": 202,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    await mcpServer.loadToolsFromInput(normalizedInput, apifyClient);"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 212,
+      "line_end": 212,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    await mcpServer.connect(transport);"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getActorMCPServerPath, getActorMCPServerURL } from '../../mcp/actors.js';"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getMCPServerTools } from '../../mcp/proxy.js';"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 199,
+      "line_end": 199,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export async function getMCPServersAsTools("
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 224,
+      "line_end": 224,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // getActorMCPServerURL rejects a webServerMcpPath that escapes the Actor's standby origin."
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const mcpServerUrl = await getActorMCPServerURL("
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 233,
+      "line_end": 233,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl,"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 237,
+      "line_end": 237,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            client = await connectMCPClient(mcpServerUrl, apifyToken, mcpSessionId);"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            return await getMCPServerTools(actorId, client, mcpServerUrl, actorInfo.definition.actorFullName);"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 367,
+      "line_end": 367,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                webServerMcpPath: getActorMCPServerPath(actorDefinitionWithInfo.definition),"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 378,
+      "line_end": 378,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const actorMCPServersInfo: ActorInfo[] = [];"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 398,
+      "line_end": 398,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (toolMode === ACTOR_TOOL_MODE.MCP) actorMCPServersInfo.push(actorInfo);"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 402,
+      "line_end": 402,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const [normalTools, mcpServerTools] = await Promise.all(["
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 404,
+      "line_end": 404,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        getMCPServersAsTools(actorMCPServersInfo, apifyClient.token, mcpSessionId),"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 407,
+      "line_end": 407,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { tools: [...normalTools, ...mcpServerTools], errors };"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function buildCallActorMcpServerSection({ hasTool }: ToolDescriptionContext): string {"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        buildCallActorMcpServerSection(ctx),"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 399,
+      "line_end": 399,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * for {@link ACTOR_TOOL_MODE.MCP} Actors, so `mcpServerUrl` is always known good."
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 405,
+      "line_end": 405,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    mcpServerUrl: string;"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 410,
+      "line_end": 410,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const { baseActorName, mcpToolName, input, mcpServerUrl, apifyToken, mcpSessionId, signal } = params;"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 422,
+      "line_end": 422,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const outcome = await withRemoteMcpClient(mcpServerUrl, apifyToken, mcpSessionId, signal, async (client) =>"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 431,
+      "line_end": 431,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            return respondServerError(`Failed to connect to MCP server ${mcpServerUrl}`);"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 596,
+      "line_end": 596,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const isActorMcpServer = resolution?.toolMode === ACTOR_TOOL_MODE.MCP;"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 601,
+      "line_end": 601,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (isActorMcpServer && isMcpToolNameInvalid) {"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 624,
+      "line_end": 624,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: resolution.mcpServerUrl,"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 275,
+      "line_end": 275,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * `mcpServerUrl` is present exactly when `toolMode` is {@link ACTOR_TOOL_MODE.MCP}, so callers"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 281,
+      "line_end": 281,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    | { toolMode: typeof ACTOR_TOOL_MODE.MCP; mcpServerUrl: string }"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 590,
+      "line_end": 590,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Options for configuring the ActorsMcpServer instance."
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 592,
+      "line_end": 592,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export type ActorsMcpServerOptions = {"
+    },
+    {
+      "source_path": "src/utils/actor.ts",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "bb3ffdd6db14250688495bdcb490a5d170a114f9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getActorMCPServerPath, getActorMCPServerURL } from '../mcp/actors.js';"
+    },
+    {
+      "source_path": "src/utils/actor.ts",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "bb3ffdd6db14250688495bdcb490a5d170a114f9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * the definition (`getActorMCPServerURL` does no I/O), so this rides the authorization-gated"
+    },
+    {
+      "source_path": "src/utils/actor.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "bb3ffdd6db14250688495bdcb490a5d170a114f9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const webServerMcpPath = getActorMCPServerPath(cached.definition);"
+    },
+    {
+      "source_path": "src/utils/actor.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "bb3ffdd6db14250688495bdcb490a5d170a114f9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            mcpServerUrl: await getActorMCPServerURL(cached.definition.id, webServerMcpPath!),"
+    },
+    {
+      "source_path": "src/utils/actor_details.ts",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "57b279d6afc37468485168b280e651936f3ba949",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const client = await connectMCPClient(resolution.mcpServerUrl, apifyToken, mcpSessionId);"
+    },
+    {
+      "source_path": "src/utils/logging.ts",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "5eea3df4a18fef1efbf4c03a753d4327e39a857a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// Pinned to @modelcontextprotocol/sdk@1.29.0 — server/webStandardStreamableHttp.js. The SDK calls"
+    },
+    {
+      "source_path": "src/utils/logging.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "5eea3df4a18fef1efbf4c03a753d4327e39a857a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    'No connection established for request ID:', // webStandardStreamableHttp.js sendRequest"
+    },
+    {
+      "source_path": "src/utils/progress.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "4ce7e782ef670d56eb021f7ab76a7e04a5bf4666",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        // _meta must live in params — JSONRPCNotificationSchema is .strict(), a"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        writeFileSync(configPath, JSON.stringify({ mcpServers: { server: buildServerEntry(config) } }));"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/index.js';"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const actorsMcpServer = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        actorsMcpServer.upsertTools(initialTools);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        actorsMcpServer.upsertTools(newTool);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const names = actorsMcpServer.listAllToolNames();"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        actorsMcpServer.tools.clear();"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(actorsMcpServer.listAllToolNames()).toEqual([]);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        await actorsMcpServer.loadToolsByName(names, apifyClient);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expectArrayWeakEquals(actorsMcpServer.listAllToolNames(), expectedToolNames);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const actorsMcpServer = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        actorsMcpServer.upsertTools(tools);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const names = actorsMcpServer.listAllToolNames();"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 76,
+      "line_end": 76,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        actorsMcpServer.tools.clear();"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 77,
+      "line_end": 77,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(actorsMcpServer.listAllToolNames()).toEqual([]);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        await actorsMcpServer.loadToolsByName(names, apifyClient);"
+    },
+    {
+      "source_path": "tests/integration/internals.test.ts",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "7d45fa524c150ec973e4821f0739f81c9fb3c367",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expectArrayWeakEquals(actorsMcpServer.listAllToolNames(), ["
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    buildExampleMcpServerAddToolContent,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(content).toEqual(buildExampleMcpServerAddToolContent(2, 3));"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 196,
+      "line_end": 196,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                ((client as ClientV1).transport as StreamableHTTPClientTransport).terminateSession(),"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function buildExampleMcpServerAddToolContent(firstNumber: number, secondNumber: number) {"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StreamableHTTPClientTransport as StatelessStreamableHTTPClientTransport,"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transport = new StreamableHTTPClientTransport(url, {"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transport = new StatelessStreamableHTTPClientTransport(url, {"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { makeArgsRecorderTool, readJsonRpcPayload, STATELESS_PROTOCOL_VERSION } from './helpers/mcp_server.js';"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const body = { jsonrpc: '2.0', id: 1, method: 'tools/list', params: { _meta: ENVELOPE } };"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 86,
+      "line_end": 86,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const body = { jsonrpc: '2.0', id: 2, method: 'tools/list', params: {} };"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        body: { jsonrpc: '2.0', id: 1, method, params: { ...params, _meta: { ...ENVELOPE, ...meta } } },"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 209,
+      "line_end": 209,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const tools = (readJsonRpcPayload(response.body).result?.tools ?? []) as { name: string }[];"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 225,
+      "line_end": 225,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(readJsonRpcPayload(response.body).error?.code).toBe(-32000);"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(readJsonRpcPayload(response.body).error?.code).toBe(-32000);"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 269,
+      "line_end": 269,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 283,
+      "line_end": 283,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const { result } = readJsonRpcPayload(response.body);"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 336,
+      "line_end": 336,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(readJsonRpcPayload(response.body).error?.code).toBe(-32020);"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 353,
+      "line_end": 353,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(readJsonRpcPayload(response.body).error?.code).toBe(-32001);"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 369,
+      "line_end": 369,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const { result } = readJsonRpcPayload(response.body);"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServerOptions, InternalToolArgs, ToolEntry, ToolInputSchema } from '../../../src/types.js';"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * v1 wiring moved off `ActorsMcpServer` into `LegacyMcpServer`; this cast keeps the reach into that"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Constructs a real `ActorsMcpServer` backed by an `InMemoryTaskStore`, runs `run` against it, and"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    run: (server: ActorsMcpServer) => Promise<T>,"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    options?: Partial<ActorsMcpServerOptions>,"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    server: ActorsMcpServer;"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function readJsonRpcPayload(body: string): Omit<StatelessResponse, 'status'> {"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { status: response.status, ...readJsonRpcPayload(await response.text()) };"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 189,
+      "line_end": 189,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Constructs a real `ActorsMcpServer` and drives 2026-07-28 requests against it through the SDK's"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    options?: Partial<ActorsMcpServerOptions>,"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getActorMCPServerPath, getActorMCPServerURL } from '../../src/mcp/actors.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getActorMCPServerPath', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const result = getActorMCPServerPath(actorDefinition);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getActorMCPServerURL', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const url = await getActorMCPServerURL(ACTOR_ID, '/mcp');"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const url = await getActorMCPServerURL(ACTOR_ID, '/mcp?x=1#frag');"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 78,
+      "line_end": 78,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const url = await getActorMCPServerURL('Iei3c51WbI7eKwgSg', '/mcp');"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            url = await getActorMCPServerURL(ACTOR_ID, path);"
+    },
+    {
+      "source_path": "tests/unit/mcp.legacy.capabilities.test.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "0ad3770775bd78fb463de0fc6a2bb33b1cc2fd53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('LegacyMcpServer capabilities', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getMCPServerID, getMCPServerTools, getProxyMCPServerToolName } from '../../src/mcp/proxy.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getMCPServerID()', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getMCPServerID(url)).toBe(expected);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getMCPServerID(url)).toBe(getMCPServerID(url));"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getMCPServerID('https://actor.example/sse')).not.toBe(getMCPServerID('https://actor.example/mcp'));"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getProxyMCPServerToolName()', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName('apify/example-mcp-server', 'add')).toBe('apify--example-mcp-server--add');"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName('the.unc/my-mcp-server', 'add')).toBe('the-dot-unc--my-mcp-server--add');"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName('apify/my-mcp-server', originToolName);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const a = getProxyMCPServerToolName('apify/my-mcp-server', `${sharedPrefix}-alpha`);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const b = getProxyMCPServerToolName('apify/my-mcp-server', `${sharedPrefix}-beta`);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName(actorFullName, 'search')).toBe("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName(actorFullName, 'analyze')).toBe("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            getProxyMCPServerToolName(actorFullName, toolName),"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName('actor.fan/web-scraping-dataset-tools-mcp-server', 'get-company')).toBe("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            getProxyMCPServerToolName('actor.fan/web-scraping-dataset-tools-mcp-server---structured-output', 'add'),"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName('web.scraper-club/web-scraping-dataset-tools-mcp-server', 'search')).toBe("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 123,
+      "line_end": 123,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const a = getProxyMCPServerToolName(`crawler_alpha/${actorName}`, 'list', true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const b = getProxyMCPServerToolName(`crawler_bravo/${actorName}`, 'list', true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getProxyMCPServerToolName('web-scraping-dataset-tools-mcp-server', 'search')).toBe("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 152,
+      "line_end": 152,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const name = getProxyMCPServerToolName(`--------/${actorName}`, 'toolname');"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 168,
+      "line_end": 168,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(name).not.toBe(getProxyMCPServerToolName(`----------/${actorName}`, 'toolname'));"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getMCPServerTools()', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 183,
+      "line_end": 183,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const tools = await getMCPServerTools("
+    },
+    {
+      "source_path": "tests/unit/mcp.proxy.test.ts",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "a70b6545828d361a50348240dd728a0c6735c002",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const tools = await getMCPServerTools("
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function makeServer(serverMode: ServerModeOption): ActorsMcpServer {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function dispatchInitialize(server: ActorsMcpServer, request: InitializeRequest): Promise<void> {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer initialize handler', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const servers: ActorsMcpServer[] = [];"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.capability_gating.test.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "e01e6ee3098e040b7abfe4401402c162ecba8339",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const track = (server: ActorsMcpServer): ActorsMcpServer => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer onerror', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer close()', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function makeServer(telemetryEnabled = true, initializeRequestData?: InitializeRequest): ActorsMcpServer {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function dispatchInitialize(server: ActorsMcpServer, clientName: string): Promise<void> {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function loadReportProblemByName(server: ActorsMcpServer): Promise<void> {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function loadReportProblemByDefault(server: ActorsMcpServer): Promise<void> {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const servers: ActorsMcpServer[] = [];"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const track = (server: ActorsMcpServer): ActorsMcpServer => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_nudge.test.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "3be5dc020c1da1623587411177c52a44d262427f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_nudge.test.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "3be5dc020c1da1623587411177c52a44d262427f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function getToolCallHandler(server: ActorsMcpServer): HandlerFn {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_nudge.test.ts",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "3be5dc020c1da1623587411177c52a44d262427f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer resources/read — request-origin tagging', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer tools/call — request-origin tagging', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.stateless_instructions.test.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "e0080b817f8f3eb52a999383d5ecf818d901e49b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.stateless_instructions.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "e0080b817f8f3eb52a999383d5ecf818d901e49b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function makeServer(serverMode: SERVER_MODE = SERVER_MODE.DEFAULT): ActorsMcpServer {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.stateless_instructions.test.ts",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "e0080b817f8f3eb52a999383d5ecf818d901e49b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.stateless_instructions.test.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "e0080b817f8f3eb52a999383d5ecf818d901e49b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer.getStatelessServerInstructions()', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const servers: ActorsMcpServer[] = [];"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    function makeServer(token?: string): ActorsMcpServer {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { getMCPServerTools } from '../../src/mcp/proxy.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function runSync(server: ActorsMcpServer, tool: ToolEntry): Promise<Record<string, unknown>> {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function runTaskAndReadBack(server: ActorsMcpServer, tool: ToolEntry) {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 880,
+      "line_end": 880,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const tools = await getMCPServerTools('iei3c51wbi7ekwgsg', stubClient, serverUrl, 'apify/example-mcp-server');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 933,
+      "line_end": 933,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        server: ActorsMcpServer,"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function toolSourceKeys(server: ActorsMcpServer): string[] {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function pendingToolKeys(server: ActorsMcpServer): string[] {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const servers: ActorsMcpServer[] = [];"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function makeServer(): ActorsMcpServer {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const server = new ActorsMcpServer({"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_sources.test.ts",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "bc9a29e512e0574c627f322bd3fd01b17899c5ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const load = async (server: ActorsMcpServer, input: Input) =>"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.request_context.test.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "7cafecc025332e1ad0ceab924bb8f96cbd8a94af",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.request_context.test.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "7cafecc025332e1ad0ceab924bb8f96cbd8a94af",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function loadSource(server: ActorsMcpServer, actorTools: ToolEntry[], input: Input = { tools: [] }) {"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.services.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "9797215b5ff11cae7f87566ace25427ba77dadd9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServerOptions, PromptBase } from '../../src/types.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.services.test.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "9797215b5ff11cae7f87566ace25427ba77dadd9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    options?: Partial<ActorsMcpServerOptions>,"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServerOptions, Input, ToolEntry, ToolInputSchema } from '../../src/types.js';"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 137,
+      "line_end": 137,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function loadSource(server: ActorsMcpServer, actorTools: ToolEntry[], input: Input = { tools: [] }) {"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 159,
+      "line_end": 159,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    options?: Partial<ActorsMcpServerOptions>,"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ActorsMcpServer } from '../../src/mcp/server.js';"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function prepareFields(server: ActorsMcpServer) {"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async function prepare(server: ActorsMcpServer, name: string, tool: unknown) {"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 152,
+      "line_end": 152,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    function syncParams(server: ActorsMcpServer, toolName: string, aborted = false) {"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 554,
+      "line_end": 554,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: 'https://example.invalid/mcp',"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 575,
+      "line_end": 575,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: 'https://example.invalid/mcp',"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 591,
+      "line_end": 591,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: 'https://example.invalid/mcp',"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 611,
+      "line_end": 611,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: 'https://example.invalid/mcp',"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 635,
+      "line_end": 635,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                mcpServerUrl: 'https://example.invalid/mcp',"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const getActorMCPServerURL = vi.fn();"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const getMCPServerTools = vi.fn();"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    getActorMCPServerURL: (...args: unknown[]) => getActorMCPServerURL(...args),"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    getActorMCPServerPath: vi.fn(),"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    getMCPServerTools: (...args: unknown[]) => getMCPServerTools(...args),"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const { getMCPServersAsTools } = await import('../../src/tools/actors/actor_tools_factory.js');"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('getMCPServersAsTools', () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        getActorMCPServerURL.mockImplementation(async (realActorId: string) => {"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        getMCPServerTools.mockResolvedValue([goodTool]);"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const tools = await getMCPServersAsTools("
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getActorMCPServerURL).toHaveBeenCalledTimes(2);"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('passes the Actor full name to getMCPServerTools', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        getActorMCPServerURL.mockImplementation("
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        getMCPServerTools.mockResolvedValue([]);"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        await getMCPServersAsTools([makeActorInfo('good', '/mcp')], 'token-123');"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(getMCPServerTools).toHaveBeenCalledWith("
+    },
+    {
+      "source_path": "tests/unit/utils.actor.cache.test.ts",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "b423aced89c63df81eec00ff65a274594b4c8ef3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            mcpServerUrl: 'https://actorpub.apify.actor/mcp',"
+    },
+    {
+      "source_path": "tests/unit/utils.tools_loader.retired_selectors.test.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "69e9ae66cf4dcb676bd1fd32e344a67557ca6b4d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ActorsMcpServer } from '../../src/index.js';"
+    },
+    {
+      "source_path": "tests/unit/utils.tools_loader.retired_selectors.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "69e9ae66cf4dcb676bd1fd32e344a67557ca6b4d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('ActorsMcpServer.loadToolsByName()', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.tools_loader.retired_selectors.test.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "69e9ae66cf4dcb676bd1fd32e344a67557ca6b4d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const server = new ActorsMcpServer({"
+    }
+  ]
+}

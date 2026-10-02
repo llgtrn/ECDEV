@@ -1,0 +1,22 @@
+# The canonical Ynventa subsystem. Copied byte-identically into every Ynventa repository at
+# `.ynventa/`; its own empty `[workspace]` keeps it independent of the host workspace.
+# Zero dependencies: std only.
+[package]
+name = "ynventa"
+version = "1.0.0"
+edition = "2021"
+# The oldest toolchain pinned by an Ynventa repository must build the subsystem.
+rust-version = "1.87"
+publish = false
+description = "Ynventa protocol v1: repository graph, donor lifecycle, extinction verifier, metrics, compactor, migration and conformance"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "ynventa"
+path = "src/main.rs"
+
+[dependencies]
+
+[workspace]

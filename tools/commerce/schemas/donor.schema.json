@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "repository_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolved_remote_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "default_branch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "commit_sha": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "commit_time": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "donor_id": {
+      "type": "string"
+    },
+    "candidate_identifier": {
+      "type": "string"
+    },
+    "remote_status": {
+      "type": "string"
+    },
+    "clone_status": {
+      "type": "string"
+    },
+    "donor_type": {
+      "type": "string"
+    },
+    "license": {
+      "type": "string"
+    },
+    "absorption_status": {
+      "type": "string"
+    },
+    "oracle_status": {
+      "type": "string"
+    },
+    "extinction_status": {
+      "type": "string"
+    },
+    "runtime_dependency": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "repository_url",
+    "resolved_remote_url",
+    "default_branch",
+    "commit_sha",
+    "commit_time",
+    "donor_id",
+    "candidate_identifier",
+    "remote_status",
+    "clone_status",
+    "donor_type",
+    "license",
+    "absorption_status",
+    "oracle_status",
+    "extinction_status",
+    "runtime_dependency"
+  ],
+  "additionalProperties": true,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "remote_status": {
+            "const": "VERIFIED_REMOTE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "repository_url": {
+            "type": "string",
+            "pattern": "^https://"
+          },
+          "resolved_remote_url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}

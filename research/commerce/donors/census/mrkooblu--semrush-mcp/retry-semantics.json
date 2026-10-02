@@ -1,0 +1,229 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "CLAUDE.md",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "cfc4fc4a77585dc76f9ec03e0b3dd52ea89d093d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- The API client handles retries (429/5xx), caching, and rate limiting internally"
+    },
+    {
+      "source_path": "CLAUDE.md",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "cfc4fc4a77585dc76f9ec03e0b3dd52ea89d093d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Error handling**: Catch `SemrushApiError` for API-specific errors; the client retries automatically on 429/5xx"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1084,
+      "line_end": 1084,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // Retry Logic on 429 / 5xx"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1087,
+      "line_end": 1087,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  describe('Retry Logic', () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1088,
+      "line_end": 1088,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries on 429 and succeeds on second attempt', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1093,
+      "line_end": 1093,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      const result = await client.getDomainOverview(`retry429-${callId}.com`)"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1098,
+      "line_end": 1098,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries on 500 and succeeds', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1103,
+      "line_end": 1103,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      const result = await client.getKeywordOverview(`retry500-${callId}`)"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1108,
+      "line_end": 1108,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries on 502/503/504', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1114,
+      "line_end": 1114,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      const result = await client.getDomainOverview(`retry5xx-${callId}.com`)"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1119,
+      "line_end": 1119,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('fails after MAX_RETRIES on persistent 5xx', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1120,
+      "line_end": 1120,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      // First call + 3 retries = 4 total calls"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1127,
+      "line_end": 1127,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      await expect(client.getDomainOverview(`retryfail-${callId}.com`)).rejects.toThrow("
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1133,
+      "line_end": 1133,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('does NOT retry on 400 (client error)', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1136,
+      "line_end": 1136,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      await expect(client.getDomainOverview(`noretry400-${callId}.com`)).rejects.toThrow("
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1142,
+      "line_end": 1142,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('does NOT retry on 401 (auth error)', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1145,
+      "line_end": 1145,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      await expect(client.getDomainOverview(`noretry401-${callId}.com`)).rejects.toThrow("
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1151,
+      "line_end": 1151,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('does NOT retry on 403 (forbidden)', async () => {"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line_start": 1154,
+      "line_end": 1154,
+      "blob_hash": "e822f465c8abd2903f560bace915ca0eadfdfae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      await expect(client.getDomainOverview(`noretry403-${callId}.com`)).rejects.toThrow("
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const MAX_RETRIES = 3"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  private shouldRetry(status: number, retryCount: number): boolean {"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const RETRYABLE = [429, 500, 502, 503, 504]"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return RETRYABLE.includes(status) && retryCount < MAX_RETRIES"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // Make API request with caching, rate limiting, and retry with exponential backoff"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retryCount = 0"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 193,
+      "line_end": 193,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (this.shouldRetry(status, retryCount)) {"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 194,
+      "line_end": 194,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          const attempt = retryCount + 1"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line_start": 197,
+      "line_end": 197,
+      "blob_hash": "78ff84fa3c5269e1e2192a61ae8810bd08df33b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            `API request failed (${status}), retrying in ${delay}ms (attempt ${attempt}/${MAX_RETRIES})...`"
+    }
+  ]
+}

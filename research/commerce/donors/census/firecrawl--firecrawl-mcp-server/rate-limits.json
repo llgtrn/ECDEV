@@ -1,0 +1,565 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Keyless recovery messages now link to the caller's own signup link, `https://firecrawl.dev/k/<token>` (a 12-character encrypted token), instead of `/app/api-keys`. The API issues the link (the `signup_url` of a keyless 429, or `signupUrl` from the eligibility check, which the server now also asks for when a keyless session calls an account-only tool) and the site decrypts it to MCP keyless attri"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Hosted OAuth reuses a token's introspection answer for up to 60 seconds, capped by the token's expiry, and 10 seconds for an inactive answer. Concurrent requests with one token share a single introspection call, and failed introspections are never cached. This keeps each node under the issuer's per-IP rate limit, which was turning bursts into `Firecrawl credential validation is temporarily unava"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 118,
+      "line_end": 118,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Optimized parallel processing and rate limiting handling"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Implemented automatic retries with exponential backoff for rate limits"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 161,
+      "line_end": 161,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Optimized rate limiting with automatic backoff strategy"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limit handling in batch operations"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limiting implementation"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Automatic retries and rate limiting"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "On the keyless free tier, `scrape`, `search`, and `parse` work without an API key (rate-limited). Other tools such as `crawl`, `map`, and `agent` still need a key."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 548,
+      "line_end": 548,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      { \"topic\": \"Per-team rate limits\" }"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 1140,
+      "line_end": 1140,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limit tracking"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 1148,
+      "line_end": 1148,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "[ERROR] Rate limit exceeded"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 1182,
+      "line_end": 1182,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- API rate-limit errors surfaced to the MCP client"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 1193,
+      "line_end": 1193,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"text\": \"Error: Rate limit exceeded\""
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 851,
+      "line_end": 851,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  express-rate-limit@8.5.2:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 1862,
+      "line_end": 1862,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      express-rate-limit: 8.5.2(express@5.2.1)"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 1884,
+      "line_end": 1884,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      express-rate-limit: 8.5.2(express@5.2.1)"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 2455,
+      "line_end": 2455,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  express-rate-limit@8.5.2(express@5.2.1):"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "   * real client IP, forwarded to the API so it can rate-limit per real IP"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * against the issuer's per-IP rate limit. Reusing recent answers keeps that"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 535,
+      "line_end": 535,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const EDGE_MITIGATIONS = new Set(['deny', 'challenge', 'rate_limit']);"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 737,
+      "line_end": 737,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // result — the same agent-legible path keyless quota recovery uses. No"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 786,
+      "line_end": 786,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // search work for free (rate-limited per IP) against the Firecrawl cloud;"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 790,
+      "line_end": 790,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        'firecrawl_scrape and firecrawl_search are free (rate-limited per IP) against the Firecrawl cloud; ' +"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1486,
+      "line_end": 1486,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// the API (the 429 body's signup_url, or signupUrl from the eligibility check):"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1520,
+      "line_end": 1520,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const keylessQuotaMessage = (signupUrl: string) =>"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1521,
+      "line_end": 1521,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `You've hit Firecrawl's free MCP rate limit. To continue using without limits, create a Firecrawl API key.\\n\\n${keylessAccountFix(signupUrl)}`;"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1626,
+      "line_end": 1626,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const isQuotaExhausted ="
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1627,
+      "line_end": 1627,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    code === 'KEYLESS_QUOTA_EXHAUSTED' || code === 'KEYLESS_LIMIT_REACHED';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1633,
+      "line_end": 1633,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    isQuotaExhausted || isToolUnavailable || isKeylessAccessUnavailable;"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1641,
+      "line_end": 1641,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        : isQuotaExhausted"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1642,
+      "line_end": 1642,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          ? keylessQuotaMessage(signupUrl)"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1654,
+      "line_end": 1654,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // tools that will just return this same recovery payload. Quota, blocked"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3069,
+      "line_end": 3069,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// CLOUD_SERVICE deployment), scrape and search are free, rate-limited per IP."
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3081,
+      "line_end": 3081,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * OAuth transport challenge, so preserve only the quota details needed for recovery."
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3091,
+      "line_end": 3091,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function keylessQuotaReason(reason: unknown): reason is 'requests' | 'credits' {"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3178,
+      "line_end": 3178,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        : keylessQuotaReason(eligibility.reason)"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3179,
+      "line_end": 3179,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          ? 'KEYLESS_QUOTA_EXHAUSTED'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3194,
+      "line_end": 3194,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // requests through the hosted MCP, so the API rate-limits per real IP."
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3206,
+      "line_end": 3206,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (isKeylessMode(session) && response.status === 429) {"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3209,
+      "line_end": 3209,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      const code = keylessQuotaReason(json?.reason)"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 3210,
+      "line_end": 3210,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        ? 'KEYLESS_QUOTA_EXHAUSTED'"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 358,
+      "line_end": 358,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          'Delay in seconds between scrapes to respect site rate limits',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 964,
+      "line_end": 964,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const isRateLimit ="
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 966,
+      "line_end": 966,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      (error.message.includes('rate limit') || error.message.includes('429'));"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 968,
+      "line_end": 968,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (isRateLimit && attempt < CONFIG.retry.maxAttempts) {"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 977,
+      "line_end": 977,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        `Rate limit hit for ${context}. Attempt ${attempt}/${CONFIG.retry.maxAttempts}. Retrying in ${delayMs}ms`"
+    },
+    {
+      "source_path": "src/session-credential.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "be352f7cf875ea9141a5ab60a37bf496f1f95d3a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  /** Edge firewall verdict on the response: deny, challenge, rate_limit or other. */"
+    },
+    {
+      "source_path": "tests/introspection-cache.test.mjs",
+      "line_start": 109,
+      "line_end": 109,
+      "blob_hash": "3f1c66e78822ca613ec0afc7aeccccc7fc28217f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (call === 1) throw new Error('upstream 429');"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const keylessQuotaMessage = (signupUrl) =>"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `You've hit Firecrawl's free MCP rate limit. To continue using without limits, create a Firecrawl API key.\\n\\n${keylessAccountFix(signupUrl)}`;"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const KEYLESS_QUOTA_MESSAGE = keylessQuotaMessage();"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2376,
+      "line_end": 2376,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "test('HTTP cloud keyless quota stays 200 isError without inlining retry_after_seconds', async (t) => {"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2383,
+      "line_end": 2383,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          status: 429,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2392,
+      "line_end": 2392,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'KEYLESS_QUOTA_EXHAUSTED',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2399,
+      "line_end": 2399,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        searchResponse: { status: 429, body: { error: 'limit' } },"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2412,
+      "line_end": 2412,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'KEYLESS_QUOTA_EXHAUSTED',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2444,
+      "line_end": 2444,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      message: KEYLESS_QUOTA_MESSAGE,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2468,
+      "line_end": 2468,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'core-429',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2472,
+      "line_end": 2472,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          status: 429,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2504,
+      "line_end": 2504,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      code: 'KEYLESS_QUOTA_EXHAUSTED',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2505,
+      "line_end": 2505,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      message: keylessQuotaMessage(OWN_SIGNUP_URL),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2525,
+      "line_end": 2525,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'core-429',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2529,
+      "line_end": 2529,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          status: 429,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2561,
+      "line_end": 2561,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      code: 'KEYLESS_QUOTA_EXHAUSTED',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2562,
+      "line_end": 2562,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      message: keylessQuotaMessage(API_REGULAR_SIGNUP_URL),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2582,
+      "line_end": 2582,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'core-429',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2586,
+      "line_end": 2586,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          status: 429,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2618,
+      "line_end": 2618,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      code: 'KEYLESS_QUOTA_EXHAUSTED',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2619,
+      "line_end": 2619,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      message: KEYLESS_QUOTA_MESSAGE,"
+    }
+  ]
+}

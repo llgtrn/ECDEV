@@ -1,0 +1,246 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "bench.py",
+      "line": 5,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "bench.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "bench.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "bench.py",
+      "line": 9,
+      "text": "from reppy.robots import Robots"
+    },
+    {
+      "source_path": "reppy/__init__.py",
+      "line": 3,
+      "text": "import logging"
+    },
+    {
+      "source_path": "reppy/__init__.py",
+      "line": 17,
+      "text": "from .robots import Robots, Agent"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 3,
+      "text": "from functools import partial"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 4,
+      "text": "import threading"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 5,
+      "text": "import time"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 7,
+      "text": "from cachetools import LRUCache"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 9,
+      "text": "from .policy import DefaultObjectPolicy, ReraiseExceptionPolicy"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 10,
+      "text": "from ..robots import Robots, AllowNone, Agent"
+    },
+    {
+      "source_path": "reppy/cache/__init__.py",
+      "line": 11,
+      "text": "from .. import logger"
+    },
+    {
+      "source_path": "reppy/cache/policy.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "reppy/ttl.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "reppy/ttl.py",
+      "line": 5,
+      "text": "from . import logger"
+    },
+    {
+      "source_path": "reppy/ttl.py",
+      "line": 6,
+      "text": "from .util import parse_date"
+    },
+    {
+      "source_path": "reppy/util.py",
+      "line": 3,
+      "text": "import email"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 24,
+      "text": "from setuptools import setup"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 25,
+      "text": "from setuptools.extension import Extension"
+    },
+    {
+      "source_path": "setup.py",
+      "line": 40,
+      "text": "from Cython.Distutils import build_ext"
+    },
+    {
+      "source_path": "tests/test_agent.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_agent.py",
+      "line": 3,
+      "text": "from reppy.robots import Agent, Robots"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 5,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 6,
+      "text": "import mock"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 10,
+      "text": "from reppy import cache"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 11,
+      "text": "from reppy import logger"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 12,
+      "text": "import reppy.exceptions"
+    },
+    {
+      "source_path": "tests/test_cache/test_cache.py",
+      "line": 14,
+      "text": "from ..util import requests_fixtures"
+    },
+    {
+      "source_path": "tests/test_cache/test_policy.py",
+      "line": 3,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_cache/test_policy.py",
+      "line": 5,
+      "text": "import mock"
+    },
+    {
+      "source_path": "tests/test_cache/test_policy.py",
+      "line": 7,
+      "text": "from reppy.cache import policy"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 9,
+      "text": "import codecs"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 10,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 12,
+      "text": "import mock"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 13,
+      "text": "from requests.exceptions import SSLError"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 15,
+      "text": "from reppy import robots"
+    },
+    {
+      "source_path": "tests/test_robots.py",
+      "line": 17,
+      "text": "from .util import requests_fixtures"
+    },
+    {
+      "source_path": "tests/test_ttl.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_ttl.py",
+      "line": 3,
+      "text": "import mock"
+    },
+    {
+      "source_path": "tests/test_ttl.py",
+      "line": 5,
+      "text": "from reppy import ttl"
+    },
+    {
+      "source_path": "tests/test_util.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_util.py",
+      "line": 3,
+      "text": "from reppy import util"
+    },
+    {
+      "source_path": "tests/util.py",
+      "line": 3,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "tests/util.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/util.py",
+      "line": 6,
+      "text": "import six"
+    },
+    {
+      "source_path": "tests/util.py",
+      "line": 8,
+      "text": "import requests_mock"
+    }
+  ],
+  "call_edges": []
+}

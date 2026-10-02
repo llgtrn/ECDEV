@@ -1,0 +1,27 @@
+{
+  "status": "PARTIAL",
+  "candidates": [
+    {
+      "source_path": "packages/cli/package.json",
+      "bin": {
+        "crawlee": "./src/index.ts"
+      },
+      "scripts": {
+        "build": "pnpm clean && pnpm compile && pnpm copy",
+        "clean": "rimraf ./dist",
+        "compile": "tsc -p tsconfig.build.json",
+        "copy": "tsx ../../scripts/copy.ts"
+      }
+    },
+    {
+      "source_path": "packages/crawlee/package.json",
+      "bin": "./src/cli.ts",
+      "scripts": {
+        "build": "pnpm clean && pnpm compile && pnpm copy",
+        "clean": "rimraf ./dist",
+        "compile": "tsc -p tsconfig.build.json",
+        "copy": "tsx ../../scripts/copy.ts"
+      }
+    }
+  ]
+}

@@ -1,0 +1,986 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "sp-api-mcp/eslint.config.js",
+      "line": 1,
+      "text": "import js from \"@eslint/js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/eslint.config.js",
+      "line": 2,
+      "text": "import tseslint from \"typescript-eslint\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/auth/local-provider.ts",
+      "line": 1,
+      "text": "import axios from \"axios\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/auth/local-provider.ts",
+      "line": 2,
+      "text": "import { CredentialProvider, TokenResponse } from \"./interface.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/auth/local-provider.ts",
+      "line": 3,
+      "text": "import { CredentialsConfig, LWA_TOKEN_URL } from \"../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/auth/local-provider.ts",
+      "line": 4,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/auth/mock-provider.ts",
+      "line": 1,
+      "text": "import { CredentialProvider } from \"./interface.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line": 1,
+      "text": "import { AxiosError } from \"axios\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line": 1,
+      "text": "import { SpApiClient, ApiResponse } from \"./sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line": 2,
+      "text": "import { ServerConfig } from \"../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line": 3,
+      "text": "import { CredentialProvider } from \"../auth/interface.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line": 4,
+      "text": "import { getMockResponse } from \"./mock-data.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line": 5,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 1,
+      "text": "import axios, { AxiosInstance, AxiosError, AxiosRequestConfig } from \"axios\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 2,
+      "text": "import https from \"node:https\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 3,
+      "text": "import Bottleneck from \"bottleneck\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 4,
+      "text": "import { CredentialProvider } from \"../auth/interface.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 5,
+      "text": "import { ServerConfig, REGION_ENDPOINTS, SANDBOX_ENDPOINTS } from \"../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 6,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line": 7,
+      "text": "import { createSpApiError } from \"./errors.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/config/loader.ts",
+      "line": 1,
+      "text": "import { readFileSync } from \"node:fs\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/config/loader.ts",
+      "line": 2,
+      "text": "import { resolve } from \"node:path\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/config/loader.ts",
+      "line": 3,
+      "text": "import { ServerConfig } from \"./schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/config/loader.ts",
+      "line": 4,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/config/schema.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 3,
+      "text": "import { parseArgs } from \"node:util\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 4,
+      "text": "import { loadConfig } from \"./config/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 5,
+      "text": "import { LocalCredentialProvider } from \"./auth/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 6,
+      "text": "import { SpApiClient } from \"./clients/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 7,
+      "text": "import { MockSpApiClient } from \"./clients/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 8,
+      "text": "import { MockCredentialProvider } from \"./auth/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 9,
+      "text": "import { ToolRegistry } from \"./tools/registry.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 10,
+      "text": "import { startStdioServer } from \"./transport/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 11,
+      "text": "import { setLogLevel, createLogger } from \"./utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 14,
+      "text": "import { createHealthCheckTool, createGetConfigTool, createRateLimitStatusTool } from \"./tools/meta/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 17,
+      "text": "import {\n  createOrdersTools,\n  createFbaInventoryTools,\n  createPricingTools,\n  createFinancesTools,\n  createSalesTools,\n  createShippingTools,\n  createFulfillmentInboundTools,\n  createFulfillmentOutboundTools,\n  createMerchantFulfillmentTools,\n  createEasyShipTools,\n  createMessagingTools,\n  createSolicitationsTools,\n  createProductFeesTools,\n  createSellersTools,\n  createServicesTools,\n  createAwdTools,\n  createSellerWalletTools,\n  createTransfersTools,\n  createVehiclesTools,\n  createExternalFulfillmentTools,\n  createFbaInboundEligibilityTools,\n  createSupplySourcesTools,\n  createAppIntegrationsTools,\n} from \"./tools/seller/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 44,
+      "text": "import {\n  createCatalogTools,\n  createReportsTools,\n  createFeedsTools,\n  createListingsTools,\n  createNotificationsTools,\n  createDataKioskTools,\n  createAPlusContentTools,\n  createProductTypeDefinitionsTools,\n  createTokensTools,\n  createUploadsTools,\n  createReplenishmentTools,\n  createCustomerFeedbackTools,\n  createApplicationManagementTools,\n  createListingsRestrictionsTools,\n} from \"./tools/shared/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line": 62,
+      "text": "import {\n  createVendorOrdersTools,\n  createVendorShipmentsTools,\n  createVendorInvoicesTools,\n  createVendorDFOrdersTools,\n  createVendorDFShippingTools,\n  createVendorDFInventoryTools,\n  createVendorDFPaymentsTools,\n  createVendorTransactionStatusTools,\n} from \"./tools/vendor/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/base.ts",
+      "line": 1,
+      "text": "import { z, ZodRawShape } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/base.ts",
+      "line": 2,
+      "text": "import { AccountType } from \"../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/get-config.ts",
+      "line": 1,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/get-config.ts",
+      "line": 2,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/get-config.ts",
+      "line": 3,
+      "text": "import { ToolRegistry } from \"../registry.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/health-check.ts",
+      "line": 1,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/health-check.ts",
+      "line": 2,
+      "text": "import { CredentialProvider } from \"../../auth/interface.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/health-check.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line": 1,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line": 2,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/registry.ts",
+      "line": 1,
+      "text": "import { AccountType } from \"../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/registry.ts",
+      "line": 2,
+      "text": "import { ToolDefinition, isToolVisible, zodShapeToJsonSchema } from \"./base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/registry.ts",
+      "line": 3,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/app-integrations.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/app-integrations.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/app-integrations.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inbound-eligibility.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inbound-eligibility.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inbound-eligibility.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inbound-eligibility.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inventory.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inventory.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inventory.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inventory.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/finances.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/finances.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/finances.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/finances.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line": 5,
+      "text": "import { requireConfirmation } from \"../../utils/destructive-guard.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/product-fees.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/product-fees.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/product-fees.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sales.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sales.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sales.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sales.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/seller-wallet.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/seller-wallet.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/seller-wallet.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sellers.ts",
+      "line": 1,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sellers.ts",
+      "line": 2,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line": 4,
+      "text": "import { requireConfirmation } from \"../../utils/destructive-guard.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/transfers.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/transfers.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/transfers.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/vehicles.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/vehicles.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/vehicles.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/application-management.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/application-management.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/application-management.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/application-management.ts",
+      "line": 4,
+      "text": "import { requireConfirmation } from \"../../utils/destructive-guard.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line": 5,
+      "text": "import { createLogger } from \"../../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings-restrictions.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings-restrictions.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings-restrictions.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings-restrictions.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line": 5,
+      "text": "import { requireConfirmation } from \"../../utils/destructive-guard.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line": 5,
+      "text": "import { createLogger } from \"../../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/tokens.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/tokens.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/tokens.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/uploads.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/uploads.ts",
+      "line": 2,
+      "text": "import { ToolDefinition } from \"../base.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/uploads.ts",
+      "line": 3,
+      "text": "import { SpApiClient } from \"../../clients/sp-api-client.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/uploads.ts",
+      "line": 4,
+      "text": "import { ServerConfig } from \"../../config/schema.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 1,
+      "text": "import { Server } from \"@modelcontextprotocol/sdk/server/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 2,
+      "text": "import { StdioServerTransport } from \"@modelcontextprotocol/sdk/server/stdio.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 3,
+      "text": "import {\n  CallToolRequestSchema,\n  ListToolsRequestSchema,\n} from \"@modelcontextprotocol/sdk/types.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 7,
+      "text": "import { ToolRegistry } from \"../tools/registry.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 8,
+      "text": "import { SpApiError } from \"../clients/errors.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/transport/stdio.ts",
+      "line": 9,
+      "text": "import { createLogger } from \"../utils/logger.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/utils/logger.ts",
+      "line": 1,
+      "text": "import pino from \"pino\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/utils/validators.ts",
+      "line": 1,
+      "text": "import { z } from \"zod\";"
+    }
+  ],
+  "call_edges": []
+}

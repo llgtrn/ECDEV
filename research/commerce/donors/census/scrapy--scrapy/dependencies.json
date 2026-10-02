@@ -1,0 +1,515 @@
+[
+  {
+    "source_path": "docs/Makefile",
+    "blob_hash": "ed88099027f775942fa65dce2314f1ae9675cb36",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "docs/requirements.in",
+    "blob_hash": "7974341cf3aa7b24555b779a74ec983d6f423e54",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "docs/requirements.txt",
+    "blob_hash": "37b40591bb62918132c32a86341eee9c723bd143",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "pyproject.toml",
+    "blob_hash": "5e3f603c39fe10eeccad7b339d3a24aa17d7bb2b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "build-system": {
+        "requires": [
+          "hatchling>=1.27.0"
+        ],
+        "build-backend": "hatchling.build"
+      },
+      "project": {
+        "name": "Scrapy",
+        "dynamic": [
+          "version"
+        ],
+        "description": "A high-level Web Crawling and Web Scraping framework",
+        "dependencies": [
+          "Twisted>=21.7.0",
+          "aiohttp>=3.13.3",
+          "charset-normalizer>=3.4.0",
+          "cryptography>=41.0.5",
+          "cssselect>=1.2.0",
+          "defusedxml>=0.7.1",
+          "formerly>=0.1.0",
+          "itemadapter>=0.1.0",
+          "itemloaders>=1.0.1",
+          "lxml>=4.6.4",
+          "packaging",
+          "parsel>=1.8.1",
+          "platformdirs>=2.0.0",
+          "protego>=0.1.15",
+          "pyOpenSSL>=24.3.0",
+          "queuelib>=1.6.1",
+          "service_identity>=24.2.0",
+          "tldextract",
+          "typing-extensions>=4.5.0; python_version < \"3.13\"",
+          "w3lib>=2.1.1",
+          "zope.interface>=5.1.0",
+          "PyDispatcher>=2.0.5; platform_python_implementation == \"CPython\"",
+          "PyPyDispatcher>=2.1.0; platform_python_implementation == \"PyPy\"",
+          "backports.zstd>=1.3.0; python_version < \"3.14\"",
+          "brotli>=1.2.0; implementation_name != \"pypy\"",
+          "brotlicffi>=1.2.0.0; implementation_name == \"pypy\""
+        ],
+        "classifiers": [
+          "Development Status :: 5 - Production/Stable",
+          "Environment :: Console",
+          "Framework :: Scrapy",
+          "Intended Audience :: Developers",
+          "Operating System :: OS Independent",
+          "Programming Language :: Python",
+          "Programming Language :: Python :: 3",
+          "Programming Language :: Python :: 3.10",
+          "Programming Language :: Python :: 3.11",
+          "Programming Language :: Python :: 3.12",
+          "Programming Language :: Python :: 3.13",
+          "Programming Language :: Python :: 3.14",
+          "Programming Language :: Python :: 3.15",
+          "Programming Language :: Python :: Implementation :: CPython",
+          "Programming Language :: Python :: Implementation :: PyPy",
+          "Topic :: Internet :: WWW/HTTP",
+          "Topic :: Software Development :: Libraries :: Application Frameworks",
+          "Topic :: Software Development :: Libraries :: Python Modules"
+        ],
+        "license": "BSD-3-Clause",
+        "license-files": [
+          "LICENSE",
+          "AUTHORS"
+        ],
+        "readme": "README.rst",
+        "requires-python": ">=3.10",
+        "authors": [
+          {
+            "name": "Scrapy developers",
+            "email": "pablo@pablohoffman.com"
+          }
+        ],
+        "maintainers": [
+          {
+            "name": "Pablo Hoffman",
+            "email": "pablo@pablohoffman.com"
+          }
+        ],
+        "urls": {
+          "Homepage": "https://scrapy.org/",
+          "Documentation": "https://docs.scrapy.org/",
+          "Source": "https://github.com/scrapy/scrapy",
+          "Tracker": "https://github.com/scrapy/scrapy/issues",
+          "Release notes": "https://docs.scrapy.org/en/latest/news.html"
+        },
+        "optional-dependencies": {
+          "bpython": [
+            "bpython>=0.7.1"
+          ],
+          "color": [
+            "colorlog>=6.6.0"
+          ],
+          "gcs": [
+            "google-cloud-storage>=1.30.0"
+          ],
+          "httpx": [
+            "httpx2[http2,socks]>=2.0.0"
+          ],
+          "images": [
+            "Pillow>=8.3.2"
+          ],
+          "ipython": [
+            "ipython>=8.15.0"
+          ],
+          "ptpython": [
+            "ptpython>=3.0.23"
+          ],
+          "robotparser": [
+            "robotexclusionrulesparser>=1.6.2"
+          ],
+          "s3": [
+            "boto3>=1.20.0"
+          ],
+          "twisted-http2": [
+            "Twisted[http2]>=21.7.0"
+          ],
+          "uvloop": [
+            "uvloop>=0.16.0; platform_system != 'Windows' and implementation_name != 'pypy'"
+          ]
+        },
+        "scripts": {
+          "scrapy": "scrapy.cmdline:execute"
+        }
+      },
+      "tool": {
+        "hatch": {
+          "build": {
+            "targets": {
+              "sdist": {
+                "include": [
+                  "/docs",
+                  "/extras",
+                  "/scrapy",
+                  "/tests",
+                  "/tests_typing",
+                  "/CODE_OF_CONDUCT.md",
+                  "/CONTRIBUTING.md",
+                  "/INSTALL.md",
+                  "/NEWS",
+                  "/SECURITY.md",
+                  "/codecov.yml",
+                  "/conftest.py",
+                  "/tox.ini"
+                ]
+              }
+            }
+          },
+          "version": {
+            "path": "scrapy/VERSION",
+            "pattern": "^(?P<version>.+)$"
+          }
+        },
+        "mypy": {
+          "strict": true,
+          "untyped_calls_exclude": [
+            "twisted"
+          ],
+          "overrides": [
+            {
+              "module": "tests.*",
+              "allow_untyped_defs": true,
+              "allow_incomplete_defs": true,
+              "extra_checks": false
+            },
+            {
+              "module": "twisted.internet.interfaces",
+              "follow_imports": "skip"
+            },
+            {
+              "module": "scrapy.interfaces",
+              "ignore_errors": true
+            },
+            {
+              "module": "twisted.internet.reactor",
+              "follow_imports": "skip"
+            },
+            {
+              "module": "twisted",
+              "implicit_reexport": true
+            },
+            {
+              "module": [
+                "bpython",
+                "brotli",
+                "brotlicffi",
+                "google.*",
+                "ipdb",
+                "pydispatch.*",
+                "pyftpdlib.*",
+                "pytest_twisted",
+                "robotexclusionrulesparser",
+                "zope.interface.*"
+              ],
+              "ignore_missing_imports": true
+            }
+          ]
+        },
+        "bumpversion": {
+          "current_version": "2.19.0",
+          "commit": true,
+          "tag": true,
+          "tag_name": "{new_version}",
+          "setup_hooks": [
+            "python3 extras/pre-bump.py"
+          ],
+          "files": [
+            {
+              "filename": "docs/news.rst",
+              "search": "\\(unreleased\\)$",
+              "replace": "({now:%Y-%m-%d})",
+              "regex": true
+            },
+            {
+              "filename": "scrapy/VERSION"
+            },
+            {
+              "filename": "SECURITY.md",
+              "parse": "(?P<major>0|[1-9]\\d*)\\.(?P<minor>0|[1-9]\\d*)",
+              "serialize": [
+                "{major}.{minor}"
+              ]
+            }
+          ]
+        },
+        "coverage": {
+          "run": {
+            "core": "ctrace",
+            "branch": true,
+            "include": [
+              "scrapy/*"
+            ],
+            "omit": [
+              "tests/*"
+            ],
+            "disable_warnings": [
+              "include-ignored"
+            ],
+            "patch": [
+              "${SCRAPY_COVERAGE_PATCH-subprocess}"
+            ]
+          },
+          "paths": {
+            "source": [
+              "scrapy",
+              ".tox/**/site-packages/scrapy"
+            ]
+          },
+          "report": {
+            "exclude_also": [
+              "@(abc\\.)?abstractmethod",
+              "\\A(?s:.*# pragma: no file cover.*)\\Z"
+            ]
+          }
+        },
+        "pylint": {
+          "MASTER": {
+            "persistent": "no",
+            "jobs": 1,
+            "extension-pkg-allow-list": [
+              "lxml"
+            ],
+            "load-plugins": [
+              "pylint_per_file_ignores"
+            ]
+          },
+          "MESSAGES CONTROL": {
+            "enable": [
+              "useless-suppression"
+            ],
+            "fail-on": "I",
+            "disable": [
+              "attribute-defined-outside-init",
+              "broad-exception-caught",
+              "consider-using-with",
+              "cyclic-import",
+              "disallowed-name",
+              "duplicate-code",
+              "fixme",
+              "inherit-non-class",
+              "invalid-name",
+              "invalid-overridden-method",
+              "isinstance-second-argument-not-valid-type",
+              "line-too-long",
+              "logging-format-interpolation",
+              "logging-fstring-interpolation",
+              "logging-not-lazy",
+              "missing-docstring",
+              "no-member",
+              "no-value-for-parameter",
+              "not-callable",
+              "protected-access",
+              "redefined-outer-name",
+              "too-few-public-methods",
+              "too-many-ancestors",
+              "too-many-arguments",
+              "too-many-function-args",
+              "too-many-instance-attributes",
+              "too-many-lines",
+              "too-many-locals",
+              "too-many-positional-arguments",
+              "too-many-public-methods",
+              "too-many-return-statements",
+              "undefined-variable",
+              "unused-argument",
+              "unused-variable",
+              "use-implicit-booleaness-not-comparison",
+              "useless-import-alias",
+              "useless-return",
+              "wrong-import-position",
+              "bare-except",
+              "eval-used",
+              "global-statement",
+              "import-outside-toplevel",
+              "import-self",
+              "inconsistent-return-statements",
+              "redefined-builtin",
+              "too-many-branches",
+              "unused-import",
+              "arguments-differ",
+              "keyword-arg-before-vararg"
+            ],
+            "per-file-ignores": [
+              "./tests/*:abstract-method,arguments-renamed,dangerous-default-value,pointless-statement,raise-missing-from,unidiomatic-typecheck,unnecessary-dunder-call,used-before-assignment"
+            ]
+          }
+        },
+        "pytest": {
+          "ini_options": {
+            "addopts": [
+              "--reactor=asyncio"
+            ],
+            "xfail_strict": true,
+            "python_files": [
+              "test_*.py",
+              "test_*/__init__.py"
+            ],
+            "markers": [
+              "only_asyncio: marks tests that require the asyncio loop to be used",
+              "only_not_asyncio: marks tests that require the asyncio loop to not be used",
+              "requires_reactor: marks tests that require a reactor",
+              "requires_uvloop: marks tests as only enabled when uvloop is known to be working",
+              "requires_botocore: marks tests that need botocore (but not boto3)",
+              "requires_boto3: marks tests that need botocore and boto3",
+              "requires_mitmproxy: marks tests that need a mitmdump executable",
+              "requires_internet: marks tests that need real Internet access",
+              "walltime: marks benchmarks that need CodSpeed's walltime mode to be meaningful"
+            ],
+            "filterwarnings": [
+              "error",
+              "ignore::DeprecationWarning:twisted.web.static",
+              "ignore:.*<socket\\.socket fd=:pytest.PytestUnraisableExceptionWarning",
+              "ignore:unclosed <socket\\.socket fd=:ResourceWarning",
+              "ignore:.*<function (_SelectorTransport|_ProactorBasePipeTransport|_ProactorSocketTransport|BaseEventLoop)\\.__del__:pytest.PytestUnraisableExceptionWarning",
+              "ignore:unclosed transport <:ResourceWarning",
+              "ignore:.*<function (ClientSession|BaseConnector)\\.__del__:pytest.PytestUnraisableExceptionWarning",
+              "ignore:Unclosed (client session|connector) <aiohttp\\.:ResourceWarning",
+              "ignore:.*<function connect\\.<locals>\\.remove:pytest.PytestUnraisableExceptionWarning",
+              "ignore:.*<_io\\.\\w+ name=.*queuelib-tests-:pytest.PytestUnraisableExceptionWarning",
+              "ignore:unclosed file <_io\\.\\w+ name=.*queuelib-tests-:ResourceWarning",
+              "ignore:.*<sqlite3\\.Connection object at:pytest.PytestUnraisableExceptionWarning",
+              "ignore:unclosed database in <sqlite3\\.Connection object at:ResourceWarning",
+              "ignore:Core Pydantic V1 functionality isn't compatible:UserWarning",
+              "ignore:The async(hat|ore) module is deprecated:DeprecationWarning",
+              "ignore:Coverage disabled via --no-cov switch!"
+            ]
+          }
+        },
+        "ruff": {
+          "lint": {
+            "extend-select": [
+              "A",
+              "ASYNC",
+              "B",
+              "C4",
+              "COM",
+              "D",
+              "E4",
+              "E7",
+              "E9",
+              "F",
+              "FA",
+              "FLY",
+              "FURB",
+              "I",
+              "ISC",
+              "LOG",
+              "PERF",
+              "PGH",
+              "PIE",
+              "PL",
+              "PT",
+              "PTH",
+              "PYI",
+              "Q",
+              "RET",
+              "RSE",
+              "RUF",
+              "S",
+              "SIM",
+              "SLOT",
+              "T10",
+              "TC",
+              "TID",
+              "UP",
+              "W",
+              "YTT"
+            ],
+            "ignore": [
+              "BLE001",
+              "COM812",
+              "D100",
+              "D101",
+              "D102",
+              "D103",
+              "D104",
+              "D105",
+              "D106",
+              "D107",
+              "D200",
+              "D202",
+              "D205",
+              "D209",
+              "D400",
+              "D401",
+              "D402",
+              "D403",
+              "PERF203",
+              "PLR0911",
+              "PLR0913",
+              "PLR0917",
+              "PLR2004",
+              "RUF001",
+              "RUF002",
+              "RUF003",
+              "S101",
+              "S321",
+              "SIM115",
+              "SIM300",
+              "TRY004"
+            ],
+            "flake8-tidy-imports": {
+              "banned-module-level-imports": [
+                "twisted.internet.reactor",
+                "twisted.conch.manhole",
+                "twisted.protocols.ftp"
+              ]
+            },
+            "isort": {
+              "split-on-trailing-comma": false
+            },
+            "per-file-ignores": {
+              "scrapy/linkextractors/__init__.py": [
+                "E402"
+              ],
+              "scrapy/spiders/__init__.py": [
+                "E402"
+              ],
+              "tests/**": [
+                "ASYNC240",
+                "S",
+                "B003",
+                "B006",
+                "B018",
+                "B028",
+                "B904",
+                "PLW2901",
+                "RUF012",
+                "SIM112"
+              ],
+              "docs/conf.py": [
+                "E402"
+              ],
+              "scrapy/utils/url.py": [
+                "F403",
+                "F405"
+              ],
+              "tests/test_loader.py": [
+                "E741"
+              ]
+            },
+            "pydocstyle": {
+              "convention": "pep257"
+            }
+          }
+        }
+      }
+    }
+  }
+]

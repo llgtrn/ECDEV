@@ -1,0 +1,46 @@
+{
+  "status": "PARTIAL",
+  "candidates": [
+    {
+      "source_path": "package.json",
+      "bin": {
+        "actors-mcp-server": "./dist/stdio.js"
+      },
+      "scripts": {
+        "start": "tsx src/dev_server.ts",
+        "dev": "node scripts/dev_standby.js",
+        "build": "pnpm run build:core && pnpm run build:web",
+        "build:core": "tsc -b src && tsc -b tests/test_kit",
+        "build:watch": "tsc -b src -w",
+        "build:web": "pnpm --filter @apify/mcp-web-widget run build",
+        "postbuild": "mkdir -p dist/web && (cp -r src/web/dist dist/web/ 2>/dev/null || :)",
+        "clean": "tsc -b src --clean && tsc -b tests/test_kit --clean && rm -rf dist/web",
+        "lint": "oxlint .",
+        "lint:fix": "oxlint . --fix",
+        "format": "oxfmt",
+        "format:check": "oxfmt --check",
+        "check:agents": "node scripts/check-agents-links.mjs",
+        "type-check": "tsc -p tsconfig.json --noEmit",
+        "typecheck": "pnpm run type-check",
+        "check": "pnpm run type-check && pnpm run lint",
+        "check:widgets": "tsx scripts/check_widgets.ts",
+        "test": "pnpm run test:unit",
+        "test:unit": "vitest run tests/unit",
+        "test:integration": "pnpm run build && vitest run tests/integration",
+        "test:integration:stdio": "pnpm run build && vitest run tests/integration/stdio.test.ts",
+        "test:integration:streamable": "pnpm run build && vitest run tests/integration/actor.server_streamable.test.ts",
+        "test:integration:stateless": "pnpm run build && vitest run tests/integration/actor.server_stateless.test.ts",
+        "test:conformance": "bash scripts/test_conformance.sh",
+        "test:e2e": "pnpm run build && vitest run --project e2e",
+        "//test:e2e": "TEMPORARY, AI-GENERATED, NOT HUMAN-MAINTAINED: v1 behavior pin for #1128. Delete with tests/e2e/. Never add to CI.",
+        "test:e2e:remote": "E2E_HTTP_ONLY=1 E2E_HTTP_BASE=${E2E_HTTP_BASE:-https://mcp.apify.com/} vitest run --project e2e",
+        "//test:e2e:remote": "Same case table against a deployed server. Bills real Actor runs to APIFY_TOKEN.",
+        "inspector:stdio": "npx @modelcontextprotocol/inspector -e APIFY_TOKEN=$APIFY_TOKEN -- node dist/stdio.js",
+        "evals:mcp-agent": "pnpm run build && tsx evals/runner/run.ts",
+        "evals:mcp-agent:export-dataset": "tsx evals/scripts/export_dataset.ts",
+        "evals:mcp-agent:tasks-fixtures": "tsx evals/scripts/tasks_fixtures.ts",
+        "evals:mcp-agent:schedules-fixtures": "tsx evals/scripts/schedules_fixtures.ts"
+      }
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "status": "SOURCE_REVIEWED",
+  "runtime": "Node >=18",
+  "compile": "tsc (ES2022/Node16 strict)",
+  "ci_node": [
+    18,
+    20
+  ],
+  "release_node": 24,
+  "external_build_executable": [
+    "npm",
+    "node"
+  ],
+  "tests": "vitest forks, fully mocked fetch",
+  "release": "npm publish and MCP registry publish are release-only network writes; not executed",
+  "evidence": [
+    {
+      "donor_id": "purahmanian--keepa-mcp",
+      "repository_url": "https://github.com/purahmanian/keepa-mcp",
+      "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+      "source_path": "package.json",
+      "blob_hash": "eedd9fc7b7d80740321f7bda72dc77a4acedaf12",
+      "symbol": null,
+      "line_start": 1,
+      "line_end": 59,
+      "evidence_type": "CONFIG",
+      "confidence": 1.0
+    },
+    {
+      "donor_id": "purahmanian--keepa-mcp",
+      "repository_url": "https://github.com/purahmanian/keepa-mcp",
+      "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+      "source_path": ".github/workflows/ci.yml",
+      "blob_hash": "d27e8b07dd3418a1dba08afed24b47c64b04b48b",
+      "symbol": null,
+      "line_start": 1,
+      "line_end": 33,
+      "evidence_type": "CONFIG",
+      "confidence": 1.0
+    },
+    {
+      "donor_id": "purahmanian--keepa-mcp",
+      "repository_url": "https://github.com/purahmanian/keepa-mcp",
+      "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+      "source_path": ".github/workflows/release.yml",
+      "blob_hash": "07d53ed02c59e645e068b39d1dbad3b1e3057df5",
+      "symbol": null,
+      "line_start": 1,
+      "line_end": 75,
+      "evidence_type": "CONFIG",
+      "confidence": 1.0
+    }
+  ]
+}

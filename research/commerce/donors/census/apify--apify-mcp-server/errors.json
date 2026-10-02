@@ -1,0 +1,4245 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".claude/skills/creating-mcp-agent-evals/SKILL.md",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "3aab65e166523700761aec08aef174381b8bc4b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Truth in telemetry.** Never downgrade span levels to hide expected errors — that masks real ones. Name an expected failure in the item's `metadata.expectedErrors` instead; the gate is `tool_errors == 0` over **server (MCP) tool calls** except the named ones (failed read-only probes still count: guessing a slug instead of searching is a failure; the agent's built-in tools are exempt — their stu"
+    },
+    {
+      "source_path": ".claude/skills/creating-mcp-agent-evals/reference.md",
+      "line_start": 116,
+      "line_end": 116,
+      "blob_hash": "41b9c2c20233533afd46057a9d8533e19997c0d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "One script per stateful family (`evals/scripts/tasks_fixtures.ts` is the template): delete leftover `eval-*` resources except the permanent fixture, create the fixture if missing, and **reset the fixture's mutable state** every run (an eval agent may have mutated it). Wire as `evals:mcp-agent:<family>-fixtures` in package.json."
+    },
+    {
+      "source_path": ".github/workflows/_evaluations.yaml",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "24081cce8f078cbd9bbe9aab006a629850bd52bf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Raise as those are fixed."
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 300,
+      "line_end": 300,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **ajv:** Raise schema cap to 256 KB and soft-log oversized-schema errors ([#999](https://github.com/apify/apify-mcp-server/pull/999)) ([b609f6a](https://github.com/apify/apify-mcp-server/commit/b609f6a5916f1c325477706bebffd70e9086e8e5)) by [@MQ37](https://github.com/MQ37)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 339,
+      "line_end": 339,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Wrong default telemetry for isError without classification ([#961](https://github.com/apify/apify-mcp-server/pull/961)) ([a48d2b3](https://github.com/apify/apify-mcp-server/commit/a48d2b3b2f0d22fa04db820d1fd11d3a0af8d423)) by [@mvanhorn](https://github.com/mvanhorn), closes [#936](https://github.com/apify/apify-mcp-server/issues/936)"
+    },
+    {
+      "source_path": "CONTRIBUTING.md",
+      "line_start": 119,
+      "line_end": 119,
+      "blob_hash": "3a1cbc6c9d60a43da5e19a87ada356d744f952f5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "*   **Naming:** Use full, descriptive names. Avoid single-letter variables except for common loop indices (e.g., `i` for index)."
+    },
+    {
+      "source_path": "CONTRIBUTING.md",
+      "line_start": 301,
+      "line_end": 301,
+      "blob_hash": "3a1cbc6c9d60a43da5e19a87ada356d744f952f5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        * ❌ Don't: `log.error('Something failed'); throw new Error('Something failed');`"
+    },
+    {
+      "source_path": "CONTRIBUTING.md",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "3a1cbc6c9d60a43da5e19a87ada356d744f952f5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        * ✅ Do: `throw new Error('Something failed');`"
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 213,
+      "line_end": 213,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Harness failures (MCP spawn, OpenRouter, judge) are therefore left to throw rather than being converted into a `FAIL` verdict. A broken harness shows up as a shortfall, not as a failing eval."
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Throw with the fix if the MCP server has not been built yet. */"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`MCP server binary not found at ${STDIO_BIN_PATH}. Run \"pnpm run build\" first.`);"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 187,
+      "line_end": 187,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (stderrLines.length === 0) throw error;"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 190,
+      "line_end": 190,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`${message}\\n${suffix}`, { cause: error });"
+    },
+    {
+      "source_path": "evals/agent/conversation_adapter.ts",
+      "line_start": 295,
+      "line_end": 295,
+      "blob_hash": "b1cadb399a9685aac72b852f095ce84ce38fd0ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // a bad answer. Throw so the run fails on it instead of the judge scoring a truncated"
+    },
+    {
+      "source_path": "evals/agent/conversation_adapter.ts",
+      "line_start": 300,
+      "line_end": 300,
+      "blob_hash": "b1cadb399a9685aac72b852f095ce84ce38fd0ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`Agent run failed: ${reason}${details}`);"
+    },
+    {
+      "source_path": "evals/judge/claude_client.ts",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "7587ad4e51b79a8bd73d9bcaf00f07ea1f5affb5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error(`Claude judge run ended with \"${message.subtype}\": ${detail}`);"
+    },
+    {
+      "source_path": "evals/judge/claude_client.ts",
+      "line_start": 111,
+      "line_end": 111,
+      "blob_hash": "7587ad4e51b79a8bd73d9bcaf00f07ea1f5affb5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error('Claude judge run produced no result message');"
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 149,
+      "line_end": 149,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // No raw response here: the retry loop's final throw already carries it."
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error("
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 189,
+      "line_end": 189,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    throw new Error("
+    },
+    {
+      "source_path": "evals/judge/openrouter_client.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "57507a3ae9c78929b5324a4fef572d125c06f46e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('OPENROUTER_API_KEY environment variable is required');"
+    },
+    {
+      "source_path": "evals/judge/openrouter_client.ts",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "57507a3ae9c78929b5324a4fef572d125c06f46e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('LLM returned no message');"
+    },
+    {
+      "source_path": "evals/langfuse/dataset.ts",
+      "line_start": 156,
+      "line_end": 156,
+      "blob_hash": "e2334a0bc84813b31f141d17f6d36d04784663e4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`Dataset item \"${id}\" is not a usable MCP agent test case: ${parsed.error.message}`);"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 231,
+      "line_end": 231,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`--iterations must be a positive integer, got \"${value}\"`);"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 237,
+      "line_end": 237,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`--pass-threshold must be between 0 and 1, got \"${value}\"`);"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 244,
+      "line_end": 244,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`--concurrency must be a positive integer, got \"${value}\"`);"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 368,
+      "line_end": 368,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 369,
+      "line_end": 369,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (!isTransientAgentError(error)) throw error;"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 399,
+      "line_end": 399,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 436,
+      "line_end": 436,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 438,
+      "line_end": 438,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error(`Item \"${item.id}\": ${error instanceof Error ? error.message : String(error)}`, {"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 488,
+      "line_end": 488,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error('kind \"agent\" item has no expectedOutput; this task only runs agent items');"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 214,
+      "line_end": 214,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error("
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 317,
+      "line_end": 317,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 326,
+      "line_end": 326,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 331,
+      "line_end": 331,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "evals/scripts/schedules_fixtures.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "2035202a2d1119222a1792f148effaaf9ff45628",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Deletes schedules named `eval-*` left behind by previous runs, except the one permanent"
+    },
+    {
+      "source_path": "evals/scripts/tasks_fixtures.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "18715f3c4c1c9a9c12d508f6234a56ffe7bcb928",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (!actor) throw new Error(`Fixture Actor \"${FIXTURE_ACTOR}\" not found`);"
+    },
+    {
+      "source_path": "scripts/check-agents-links.mjs",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "2cdf61200268beb7fc98970721381ba5d79ecc25",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// throw on — a broken symlink, so the walk never crashes on one."
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error('Apify API token missing on unauthenticated request');"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 216,
+      "line_end": 216,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // The factory's throw surfaces from the entry as a 500; swap in the 401 the auth gate owns."
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 389,
+      "line_end": 389,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 413,
+      "line_end": 413,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 430,
+      "line_end": 430,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/actors.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "35b6c370af3f9b0cea8eec3a70f5b9c4760db3de",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`Actor ${realActorId} declares a webServerMcpPath that resolves outside its standby origin`);"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/client.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "92be17c698d105307a23a6d81ee900dc035562a1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/errors.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "18062d30e264d554f7da57f849f51bbc7339f703",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** A request/resource-level fault (bad URI, missing token, non-Apify origin, 3xx/4xx except 429). */"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('Task store must be provided for non-stdio transport types');"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 246,
+      "line_end": 246,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 247,
+      "line_end": 247,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw toLegacyMcpError(error);"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 266,
+      "line_end": 266,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw toLegacyMcpError(error);"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 280,
+      "line_end": 280,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new McpError(ErrorCode.InvalidParams, `Task \"${taskId}\" not found`);"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 318,
+      "line_end": 318,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new McpError("
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 350,
+      "line_end": 350,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new McpError("
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 393,
+      "line_end": 393,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error('MCP Session ID is required for tool calls');"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 471,
+      "line_end": 471,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new McpError(ErrorCode.InvalidParams, prepared.message);"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 531,
+      "line_end": 531,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw new McpError("
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 580,
+      "line_end": 580,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        }).catch((error) =>"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 609,
+      "line_end": 609,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 610,
+      "line_end": 610,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                // Match v1: classify task-creation failures, but re-throw protocol errors as JSON-RPC."
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 612,
+      "line_end": 612,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw error;"
+    },
+    {
+      "source_path": "src/mcp/remote_tool_call.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "c80bdb28e5ad4af809c2b5afe7bed7b3c92da5c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 561,
+      "line_end": 561,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const resolution = (this.widgetsResolution ??= resolveServableWidgets().catch((error: unknown) => {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new ProtocolError(ProtocolErrorCode.InvalidParams, prepared.message);"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 281,
+      "line_end": 281,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (isProtocolLevelError(error)) throw toStatelessProtocolError(error);"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 333,
+      "line_end": 333,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 359,
+      "line_end": 359,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 360,
+      "line_end": 360,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw toStatelessProtocolError(error);"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 372,
+      "line_end": 372,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/stateless_server.ts",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "df6b918d4e2b73f459f0caff780d09c3cee9e3fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw toStatelessProtocolError(error);"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 231,
+      "line_end": 231,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (err) {"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 238,
+      "line_end": 238,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw err;"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 305,
+      "line_end": 305,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 423,
+      "line_end": 423,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        isError: true,"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 438,
+      "line_end": 438,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error("
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 291,
+      "line_end": 291,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 293,
+      "line_end": 293,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (isMcpError(error)) throw error;"
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 390,
+      "line_end": 390,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 392,
+      "line_end": 392,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (isMcpError(error)) throw error;"
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 462,
+      "line_end": 462,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    { ...respondOk(errorResult.userText), isError: true, toolTelemetry: { toolStatus } },"
+    },
+    {
+      "source_path": "src/mcp/tool_call_engine.ts",
+      "line_start": 470,
+      "line_end": 470,
+      "blob_hash": "e05a9de8eea8b8922b5e62387e34bce9469d875a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error("
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * own inner catch and returns a soft-fail result instead of throwing — except on abort, which"
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // (isError body) below instead, and an abort resolves to an empty one. As a task, that"
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // means the outer completeTask stores it via the 'completed' path (isError body) —"
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 218,
+      "line_end": 218,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    // TODO: actor-mcp responses are opaque — isError could be a user input problem"
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 222,
+      "line_end": 222,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if ('isError' in outcome.value && outcome.value.isError) {"
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error("
+    },
+    {
+      "source_path": "src/mcp/tool_dispatch.ts",
+      "line_start": 297,
+      "line_end": 297,
+      "blob_hash": "ad22f671b1ee0c963c211193d3dd723ac3420f02",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error(`Unknown tool type \"${(tool satisfies never as ToolEntry).type}\"`);"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * result could be stored makes `storeTaskResult`/`updateTaskStatus` throw — the in-memory SDK store"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (!isTaskNotFoundError(error)) throw error;"
+    },
+    {
+      "source_path": "src/payments/x402.ts",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "11d8f30807b9e419765f24144fa5cc708e4cc24f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/payments/x402.ts",
+      "line_start": 240,
+      "line_end": 240,
+      "blob_hash": "11d8f30807b9e419765f24144fa5cc708e4cc24f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // `outputSchema` even when `isError: true`, so a tool that declares only the"
+    },
+    {
+      "source_path": "src/prompts/prompt_service.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "a533be0cd7303afe5ff5aa7af2f397de6f755bed",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new InvalidParamsError("
+    },
+    {
+      "source_path": "src/prompts/prompt_service.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "a533be0cd7303afe5ff5aa7af2f397de6f755bed",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new InvalidParamsError("
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - 3xx/4xx except 429 → `InvalidParamsError` (the request/resource is the problem — bad URI, missing/invalid"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Throw the standard resources/read failure. Callers log the error first — the log source differs by site. */"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    throw new ErrorClass("
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 108,
+      "line_end": 108,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (err) {"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 180,
+      "line_end": 180,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * throw a domain error (`InvalidParamsError`/`InternalError`) that the `server.ts` boundary maps to a"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 196,
+      "line_end": 196,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new InvalidParamsError("
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 202,
+      "line_end": 202,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new InvalidParamsError(`Failed to read ${uri}: no Apify token in this session.`, {"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 218,
+      "line_end": 218,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (err) {"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 227,
+      "line_end": 227,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (err) {"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 234,
+      "line_end": 234,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new InternalError(`Failed to read ${uri}: response interrupted: ${message}`, {"
+    },
+    {
+      "source_path": "src/resources/resource_service.ts",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "0bbd14868c656dcd6719cacc6ab8d881e2f68fb2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/resources/resource_service.ts",
+      "line_start": 165,
+      "line_end": 165,
+      "blob_hash": "0bbd14868c656dcd6719cacc6ab8d881e2f68fb2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // readable resource — throw so the SDK returns a JSON-RPC error instead of success-shaped"
+    },
+    {
+      "source_path": "src/resources/resource_service.ts",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "0bbd14868c656dcd6719cacc6ab8d881e2f68fb2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new InvalidParamsError(`Failed to read ${uri}: not a readable resource.`, { uri });"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 224,
+      "line_end": 224,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "main().catch(async (error) => {"
+    },
+    {
+      "source_path": "src/telemetry.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "f35a61e8f970eaaff9239c8f3afacfa9ec19ddc1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/telemetry.ts",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "f35a61e8f970eaaff9239c8f3afacfa9ec19ddc1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/telemetry.ts",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "f35a61e8f970eaaff9239c8f3afacfa9ec19ddc1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/AGENTS.md",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "69e762c79cf3f9249d51c8db2b73e21b148b4dac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    action) pair, never inline dataset items or KV bodies — except the reserved `TIP` key,"
+    },
+    {
+      "source_path": "src/tools/actor_input_schema.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "1b826ff66c01d747e0e8deceb0078e90c88b5936",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new SchemaTooLargeError(MAX_UNTRUSTED_SCHEMA_BYTES);"
+    },
+    {
+      "source_path": "src/tools/actors/actor_definition.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "4eeadc70aa70156b6b91dee6be4613261c310d51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_definition.ts",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "4eeadc70aa70156b6b91dee6be4613261c310d51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // For server errors, throw the original error (preserve error type)"
+    },
+    {
+      "source_path": "src/tools/actors/actor_definition.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "4eeadc70aa70156b6b91dee6be4613261c310d51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw error;"
+    },
+    {
+      "source_path": "src/tools/actors/actor_executor.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "0166bc5a3ded52c6f48d29bb7511329d5d993bf8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_executor.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "0166bc5a3ded52c6f48d29bb7511329d5d993bf8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if (!isActorInputValidationError(error)) throw error;"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 303,
+      "line_end": 303,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 317,
+      "line_end": 317,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 354,
+      "line_end": 354,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 450,
+      "line_end": 450,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 469,
+      "line_end": 469,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 642,
+      "line_end": 642,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * observation, so responses stay `isError: false` and the MCP task lands in `completed`. Task"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 790,
+      "line_end": 790,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    .catch(() => undefined)) ?? run;"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 904,
+      "line_end": 904,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        .catch((error) => {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 155,
+      "line_end": 155,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (e) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 243,
+      "line_end": 243,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/actor_tools_factory.ts",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "f1fa2d93d358643280ee98db2b7236242023739b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 169,
+      "line_end": 169,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * must not raise an error-level alert."
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 444,
+      "line_end": 444,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // without `structuredContent` (unless `isError: true`) with -32600. The pass-through has no"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 446,
+      "line_end": 446,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // the remote tool's payload still flows through `content`. Also forward `isError` so a"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 448,
+      "line_end": 448,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const isErrorFromRemote = outcome.value.isError === true;"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 451,
+      "line_end": 451,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                isError: isErrorFromRemote,"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 456,
+      "line_end": 456,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    status: isErrorFromRemote ? 'FAILED' : 'SUCCEEDED',"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 487,
+      "line_end": 487,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // the rethrow is keyed on \"not NOT_FOUND\", not on an enumeration of kinds."
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 489,
+      "line_end": 489,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw errors[0];"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 710,
+      "line_end": 710,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/actors/fetch_actor_details.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "7d69b2b894c709a24fe3d0d324f74a0fd6cfdb36",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - If output is undefined or empty object: use defaults (all true except mcpTools and outputSchema)"
+    },
+    {
+      "source_path": "src/tools/actors/fetch_actor_details.ts",
+      "line_start": 123,
+      "line_end": 123,
+      "blob_hash": "7d69b2b894c709a24fe3d0d324f74a0fd6cfdb36",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Default: All fields true except mcpTools"
+    },
+    {
+      "source_path": "src/tools/actors/fetch_actor_details.ts",
+      "line_start": 280,
+      "line_end": 280,
+      "blob_hash": "7d69b2b894c709a24fe3d0d324f74a0fd6cfdb36",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ? await actorStore.getActorOutputSchemaAsTypeObject(actorName).catch(() => null)"
+    },
+    {
+      "source_path": "src/tools/builds/build_helpers.ts",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "d3e5baaa1e5d47987e9a84f8159edb99d34d81d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        .catch((error: unknown) => {"
+    },
+    {
+      "source_path": "src/tools/dev/report_problem.ts",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "1fab25b3a0ae7833cacb0ad5c04736c9a8cbd82f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Nudge appended to any failed (isError) tool result so the agent is prompted to report the blocker"
+    },
+    {
+      "source_path": "src/tools/dev/report_problem.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "1fab25b3a0ae7833cacb0ad5c04736c9a8cbd82f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * instead of being suppressed outright — except when the failure carries a 402 HTTP status, a payment"
+    },
+    {
+      "source_path": "src/tools/dev/report_problem.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "1fab25b3a0ae7833cacb0ad5c04736c9a8cbd82f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const r = result as { isError?: unknown; content?: unknown };"
+    },
+    {
+      "source_path": "src/tools/dev/report_problem.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "1fab25b3a0ae7833cacb0ad5c04736c9a8cbd82f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (r?.isError !== true || !Array.isArray(r.content)) return result;"
+    },
+    {
+      "source_path": "src/tools/docs/fetch_apify_docs.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "18472628feaa85e0e4198e01fe1777d542b0bc00",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/runs/get_actor_run.ts",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "e6eef6f26b8dd917896598dc85bfc11e984ff1e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError(`Specify versionNumber; this Actor has versions: ${versions.join(', ')}.`);"
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 89,
+      "line_end": 89,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError("
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError(formatSourceTypeRefusal(version, versionLabel));"
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError("
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError("
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 169,
+      "line_end": 169,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new UserInputError(`${file.path} has ${lines.length} lines, so startLine ${startLine} is past its end.`);"
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 301,
+      "line_end": 301,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/source/get_actor_version.ts",
+      "line_start": 303,
+      "line_end": 303,
+      "blob_hash": "97b88f843b595bb30e056c109eea6292c1a75277",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw error;"
+    },
+    {
+      "source_path": "src/tools/storage/storage_helpers.ts",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "3717cb94b29612dcf8fd0051d614a60de2c5e810",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (err: unknown) {"
+    },
+    {
+      "source_path": "src/tools/storage/storage_helpers.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "3717cb94b29612dcf8fd0051d614a60de2c5e810",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw err;"
+    },
+    {
+      "source_path": "src/tools/widgets/call_actor_widget.ts",
+      "line_start": 140,
+      "line_end": 140,
+      "blob_hash": "967e66981c0084d29f6ca9e69448caac011f9f31",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/tools/widgets/get_actor_run_widget.ts",
+      "line_start": 77,
+      "line_end": 77,
+      "blob_hash": "b0abeb163d960c0ed65aa36507ee9d13503d81cf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 794,
+      "line_end": 794,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * published; the SEP-1649 fields stay for consumers reading those, except `version` and `tools`,"
+    },
+    {
+      "source_path": "src/utils/actor_details.ts",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "57b279d6afc37468485168b280e651936f3ba949",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                }).catch(() => []),"
+    },
+    {
+      "source_path": "src/utils/actor_details.ts",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "57b279d6afc37468485168b280e651936f3ba949",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/utils/actor_details.ts",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "57b279d6afc37468485168b280e651936f3ba949",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw error;"
+    },
+    {
+      "source_path": "src/utils/actor_details.ts",
+      "line_start": 213,
+      "line_end": 213,
+      "blob_hash": "57b279d6afc37468485168b280e651936f3ba949",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/utils/apify_docs.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "3853c105894ae65d198a2ae77ac7900887bfc460",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`Unknown documentation source: ${docSource}`);"
+    },
+    {
+      "source_path": "src/utils/apify_properties.ts",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "40f1d570390dc7a0393abfbac6192c8b28dfad43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    description: `Glob pattern string. Globs are patterns that specify sets of URLs using wildcards, such as * (matches any character except / one or more times), ** (matches any character one or more times), ? (matches any character), or [abc] (matches selected characters).`,"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - `isError` is MCP-visible — returned to the client."
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    isError?: boolean;"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const { texts, isError = false, telemetry, structuredContent, _meta } = options;"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 77,
+      "line_end": 77,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        isError,"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 92,
+      "line_end": 92,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * means a raw `{ content, isError }` literal (or a bare `{}`) fails to compile — the only way to produce a"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * `content` and `isError` are optional because the escape hatches may omit them: `respondAborted()`"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * omit `isError`). Consumers reading either field must guard (`?.`, an `in` check, or the `textOf` helper)."
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    isError?: boolean;"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        isError: true,"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 191,
+      "line_end": 191,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        isError: true,"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 214,
+      "line_end": 214,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { ...respondOk(texts, opts), isError: true };"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 220,
+      "line_end": 220,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * remote tool results. Returns the exact object passed in (no `isError` injection, no key reorder), so the"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 240,
+      "line_end": 240,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * `content[]` — so summing them double-counts mirrored payloads. Other fields (`isError`, `_meta`, etc.)"
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 319,
+      "line_end": 319,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Texts for a confirmed platform input-validation error — same shape wherever start() can throw one. */"
+    },
+    {
+      "source_path": "src/utils/tool_status.ts",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "2817365707a752255e4ba631093b9cee56eebbac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * 2. `isError` set without toolStatus → FAILED."
+    },
+    {
+      "source_path": "src/utils/tool_status.ts",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "2817365707a752255e4ba631093b9cee56eebbac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (res.isError) {"
+    },
+    {
+      "source_path": "src/utils/tool_status.ts",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "2817365707a752255e4ba631093b9cee56eebbac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const toolStatus = telemetry.toolStatus ?? (res.isError ? TOOL_STATUS.SOFT_FAIL : TOOL_STATUS.SUCCEEDED);"
+    },
+    {
+      "source_path": "src/web/DESIGN_SYSTEM_AGENT_INSTRUCTIONS.md",
+      "line_start": 156,
+      "line_end": 156,
+      "blob_hash": "4ec6931a3189bda7a473e93b04d9f67e0cae53d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "   - Regex: `['\"][0-9]+px['\"]` → Should be ZERO matches (except in exceptional cases)"
+    },
+    {
+      "source_path": "src/web/build.js",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "459855804ef6ab0cfc538139c8bddc3b8534b502",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/web/build.js",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "459855804ef6ab0cfc538139c8bddc3b8534b502",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw error;"
+    },
+    {
+      "source_path": "src/web/build.js",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "459855804ef6ab0cfc538139c8bddc3b8534b502",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (err) {"
+    },
+    {
+      "source_path": "src/web/build.js",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "459855804ef6ab0cfc538139c8bddc3b8534b502",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "buildAll().catch((err) => {"
+    },
+    {
+      "source_path": "src/web/src/context/mcp-app-context.tsx",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "10370716a27d6a7c2482b330cc76683dc6293f53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * `ui/notifications/tool-result` notification — the widget receives only `content`/`isError`"
+    },
+    {
+      "source_path": "src/web/src/context/mcp-app-context.tsx",
+      "line_start": 77,
+      "line_end": 77,
+      "blob_hash": "10370716a27d6a7c2482b330cc76683dc6293f53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (!result.structuredContent && !result.isError) {"
+    },
+    {
+      "source_path": "src/web/src/context/mcp-app-context.tsx",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "10370716a27d6a7c2482b330cc76683dc6293f53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            .catch(() => setToolResult(result));"
+    },
+    {
+      "source_path": "src/web/src/context/mcp-app-context.tsx",
+      "line_start": 127,
+      "line_end": 127,
+      "blob_hash": "10370716a27d6a7c2482b330cc76683dc6293f53",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (!ctx) throw new Error('useMcpApp must be used within McpAppProvider');"
+    },
+    {
+      "source_path": "src/web/src/pages/ActorRun/ActorRun.tsx",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "e6ed6a892cbf654a5f48aa8408fcdd99b026a30b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (err) {"
+    },
+    {
+      "source_path": "src/web/src/pages/ActorRun/ActorRun.tsx",
+      "line_start": 410,
+      "line_end": 410,
+      "blob_hash": "e6ed6a892cbf654a5f48aa8408fcdd99b026a30b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (err) {"
+    },
+    {
+      "source_path": "src/web/src/pages/ActorRun/ActorRun.tsx",
+      "line_start": 441,
+      "line_end": 441,
+      "blob_hash": "e6ed6a892cbf654a5f48aa8408fcdd99b026a30b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            } catch (err) {"
+    },
+    {
+      "source_path": "src/web/src/pages/ActorRun/ActorRun.tsx",
+      "line_start": 516,
+      "line_end": 516,
+      "blob_hash": "e6ed6a892cbf654a5f48aa8408fcdd99b026a30b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            await app.updateModelContext({ content: [{ type: 'text', text: ctx }] }).catch(() => {});"
+    },
+    {
+      "source_path": "src/web/src/pages/ActorRun/ActorRun.tsx",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "e6ed6a892cbf654a5f48aa8408fcdd99b026a30b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                } catch (err) {"
+    },
+    {
+      "source_path": "src/web/src/utils/actor-run.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "ec89fe24c616b32cdc481b7d273527542fc5afa0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (!toolResult?.isError) {"
+    },
+    {
+      "source_path": "src/web/src/utils/formatting.ts",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "9e6e5748b58d5153365d156b1190ef67647ec13d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "src/web/src/utils/mock-openai.ts",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "d0456234ac4a198e42ce9b4220e50e4bcaa006f2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    bridge.connect(transport).catch((err: unknown) => {"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 89,
+      "line_end": 89,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `expectError` | Expect an error response — protocol-level (non-zero exit) or tool-level (`isError: true`). |"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 103,
+      "line_end": 103,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| Tool-level | bad dataset id, forbidden URL | 0 | 2 | `{content, isError: true}` on stdout |"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "`ping`, `tools-list`, `tasks-get`, `resources-read` and tool calls that return `isError: true` all"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Tool-level `isError: true` results changed from exit 0 to exit 2** — identical to the exit code"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `isError: true` in some environment. That whack-a-mole approach was tried first and missed two"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 197,
+      "line_end": 197,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Some probes depend on outbound network reach and return `isError` on restricted networks. Their"
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 295,
+      "line_end": 295,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError == true\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 372,
+      "line_end": 372,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError == true\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 386,
+      "line_end": 386,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError == true\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 414,
+      "line_end": 414,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\" and .structuredContent.exitCode == 0 and .structuredContent.storages.datasets.default.itemCount == 1\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 428,
+      "line_end": 428,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"READY\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 442,
+      "line_end": 442,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 454,
+      "line_end": 454,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\" and .structuredContent.exitCode == 0\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 466,
+      "line_end": 466,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.content[0].text | type == \\\"string\\\")\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 478,
+      "line_end": 478,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.items | length <= 3)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 490,
+      "line_end": 490,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.itemCount == 1 and .structuredContent.items[0].sum == 3 and .structuredContent.items[0].isSumPrime == true\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 503,
+      "line_end": 503,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.itemCount == 1 and .structuredContent.items[0].sum == 3\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 515,
+      "line_end": 515,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | has(\\\"id\\\") and has(\\\"itemCount\\\") and has(\\\"fields\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 527,
+      "line_end": 527,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.schema.items.properties | has(\\\"sum\\\") and has(\\\"isSumPrime\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 539,
+      "line_end": 539,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.items | length <= 3) and (.structuredContent.items | all(has(\\\"id\\\")))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 551,
+      "line_end": 551,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | has(\\\"id\\\") and has(\\\"keysPublicUrl\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 563,
+      "line_end": 563,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.count == 5 and ([.structuredContent.items[].key] | sort) == [\\\"COVER\\\",\\\"INPUT\\\",\\\"LOG\\\",\\\"RESULT\\\",\\\"STATS\\\"]\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 576,
+      "line_end": 576,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.value.firstNumber == 1 and .structuredContent.value.secondNumber == 2\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 588,
+      "line_end": 588,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.items | length <= 3)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 623,
+      "line_end": 623,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"allowlist\\\"; \\\"i\\\")) else (.structuredContent | has(\\\"actors\\\") and has(\\\"query\\\") and has(\\\"count\\\")) end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 635,
+      "line_end": 635,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"allowlist\\\"; \\\"i\\\")) else (.structuredContent | has(\\\"results\\\")) end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 647,
+      "line_end": 647,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"HTTP Status|allowlist\\\"; \\\"i\\\")) else (.structuredContent.content | length > 100) end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 659,
+      "line_end": 659,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | has(\\\"actorInfo\\\") and has(\\\"inputSchema\\\") and has(\\\"readme\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 672,
+      "line_end": 672,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | keys) == [\\\"inputSchema\\\"]\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 685,
+      "line_end": 685,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | keys) == [\\\"actorInfo\\\"] and (.structuredContent.actorInfo | has(\\\"description\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 698,
+      "line_end": 698,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.actorInfo | has(\\\"stats\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 711,
+      "line_end": 711,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.actorInfo | has(\\\"pricing\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 724,
+      "line_end": 724,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | keys) == [\\\"readme\\\"]\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 737,
+      "line_end": 737,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.mcpTools == \\\"Note: This Actor is not an MCP server and does not expose MCP tools.\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 750,
+      "line_end": 750,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | has(\\\"actorInfo\\\") and has(\\\"readme\\\")) and (.structuredContent | has(\\\"inputSchema\\\") | not)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 763,
+      "line_end": 763,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | keys) == [\\\"actorInfo\\\"]\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 776,
+      "line_end": 776,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.mcpTools == \\\"Note: This Actor is not an MCP server and does not expose MCP tools.\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 789,
+      "line_end": 789,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\" and .structuredContent.exitCode == 0\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 802,
+      "line_end": 802,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"Failed to connect|MCP server\\\"; \\\"i\\\")) else true end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 919,
+      "line_end": 919,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"READY\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 931,
+      "line_end": 931,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.status == \\\"ABORTING\\\" or .structuredContent.status == \\\"ABORTED\\\")\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 944,
+      "line_end": 944,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent | has(\\\"actors\\\") and has(\\\"widgetActors\\\")) and ((._meta | has(\\\"ui\\\")) or .structuredContent.count == 0)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 956,
+      "line_end": 956,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (._meta | has(\\\"ui\\\")) and (.structuredContent | has(\\\"actorDetails\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 968,
+      "line_end": 968,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError == false and .content[0].text == \\\"Problem reported. Thank you \\u2014 this helps the Apify team improve its tools.\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 981,
+      "line_end": 981,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.contentType == \\\"text/plain\\\" and .structuredContent.value == \\\"Scrape finished. 3 book(s) pushed.\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 994,
+      "line_end": 994,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.contentType == \\\"image/png\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1007,
+      "line_end": 1007,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.items[0] == {\\\"isSumPrime\\\":true,\\\"sum\\\":3}\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1020,
+      "line_end": 1020,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.items[0] | has(\\\"math\\\") | not) and .structuredContent.items[0].sum == 3\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1035,
+      "line_end": 1035,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.limit == 1 and (.structuredContent.items | length == 1)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1048,
+      "line_end": 1048,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.itemCount == 1\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1062,
+      "line_end": 1062,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"allowlist\\\"; \\\"i\\\")) else (.structuredContent.actors | type == \\\"array\\\") end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1076,
+      "line_end": 1076,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \"if .isError then (.content[0].text | test(\\\"allowlist\\\"; \\\"i\\\")) else (.structuredContent | has(\\\"results\\\")) end\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1090,
+      "line_end": 1090,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.desc == true and (.structuredContent.items | all(.status == \\\"SUCCEEDED\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1103,
+      "line_end": 1103,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.content[0].text | length > 0)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1116,
+      "line_end": 1116,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and (.structuredContent.schema.items.properties | has(\\\"sum\\\"))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1129,
+      "line_end": 1129,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.limit == 2 and (.structuredContent.items | length <= 2)\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1143,
+      "line_end": 1143,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.desc == true and (.structuredContent.items | all(.name == null))\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1156,
+      "line_end": 1156,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/cases.json",
+      "line_start": 1170,
+      "line_end": 1170,
+      "blob_hash": "0b91c0369bdc779f423c9be323c962f4fcc0845a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"assert\": \".isError != true and .structuredContent.status == \\\"SUCCEEDED\\\"\""
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Expect a non-zero mcpc exit, or a tool-level `isError: true` — see `respondsWithSomeError`. */"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "if (HTTP_ONLY && !HTTP_BASE) throw new Error('E2E_HTTP_ONLY=1 requires E2E_HTTP_BASE.');"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 191,
+      "line_end": 191,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (error) {"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 193,
+      "line_end": 193,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error("
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 201,
+      "line_end": 201,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`mcpc ${args.join(' ')} failed:\\n${result.stderr}`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 215,
+      "line_end": 215,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * True when `stdout` parses as a well-formed `CallToolResult` carrying `isError: true` — a valid"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 230,
+      "line_end": 230,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            (parsed as { isError?: unknown }).isError === true &&"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 246,
+      "line_end": 246,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * tool-level (`isError: true`, whichever exit code this mcpc version happens to use for it)."
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 284,
+      "line_end": 284,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`mcpc ${args.join(' ')} failed:\\n${result.stderr}`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 321,
+      "line_end": 321,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error(`No captured value for {{${name}}}. Does an earlier case in this config capture it?`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 329,
+      "line_end": 329,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (!existsSync(MCPC_BIN)) throw new Error(`mcpc not found at ${MCPC_BIN}. Run \\`pnpm install\\`.`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 331,
+      "line_end": 331,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error(`Server entry not found at ${SERVER_ENTRY}. Run \\`pnpm run build\\`.`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 334,
+      "line_end": 334,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (jq.status !== 0) throw new Error('`jq` is required by this suite but was not found on PATH.');"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 357,
+      "line_end": 357,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        throw new Error(`Expected an error response, got a clean success:\\n${payload}`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 368,
+      "line_end": 368,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw new Error(`Capture \"${name}\" (${filter}) produced no value:\\n${payload}`);"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 372,
+      "line_end": 372,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                } catch (error) {"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error(`Probe \"${testCase.id}\" failed.`, { cause: error });"
+    },
+    {
+      "source_path": "tests/integration/actor.server_stateless.test.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "a394262aad3ffe19eb3715bc5294fafe2cdc480f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('Client negotiated the legacy era — this dimension would not exercise 2026-07-28.');"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(callResult.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 204,
+      "line_end": 204,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(callResult.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 253,
+      "line_end": 253,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 402,
+      "line_end": 402,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 433,
+      "line_end": 433,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 906,
+      "line_end": 906,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 921,
+      "line_end": 921,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/actors.cases.ts",
+      "line_start": 1044,
+      "line_end": 1044,
+      "blob_hash": "66bb1d268dc1cebde187de03d44b81485d51bc48",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 161,
+      "line_end": 161,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                let resultIsError: boolean | undefined;"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 191,
+      "line_end": 191,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        resultIsError = message.result.isError as boolean | undefined;"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        throw message.error;"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 204,
+      "line_end": 204,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(resultIsError, 'task result should be flagged as error').toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 270,
+      "line_end": 270,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(runResult.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 293,
+      "line_end": 293,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(kvResult.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 307,
+      "line_end": 307,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 322,
+      "line_end": 322,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 340,
+      "line_end": 340,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 355,
+      "line_end": 355,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 376,
+      "line_end": 376,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/storage.cases.ts",
+      "line_start": 395,
+      "line_end": 395,
+      "blob_hash": "5e75e90eed032832b0113fd6d1df2c022779a807",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    .catch(() => undefined);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 89,
+      "line_end": 89,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    .catch(() => undefined);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 137,
+      "line_end": 137,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw message.error;"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 139,
+      "line_end": 139,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw new Error(`Unknown message type: ${(message as unknown as { type: string }).type}`);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        if (!taskId) throw new Error('Task ID should be set before receiving result');"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 215,
+      "line_end": 215,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        throw new Error('Task should have been cancelled before completion');"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 253,
+      "line_end": 253,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        throw new Error('Task should have been cancelled before completion');"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 301,
+      "line_end": 301,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw message.error;"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 303,
+      "line_end": 303,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            throw new Error(`Unknown message type: ${(message as unknown as { type: string }).type}`);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // isError must be forwarded from the remote tool."
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(callResult.isError ?? false).toBe(false);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 125,
+      "line_end": 125,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 128,
+      "line_end": 128,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const content = result.content as { text: string; isError?: boolean }[];"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 245,
+      "line_end": 245,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 260,
+      "line_end": 260,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 320,
+      "line_end": 320,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // Protocol error, not an isError result — the name never resolves to a tool."
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 360,
+      "line_end": 360,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError ?? false).toBe(false);"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 379,
+      "line_end": 379,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Unknown-tool emit is always `error`; raise the threshold to drop it, lower it to let it through."
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Skip on every transport except stdio. */"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 299,
+      "line_end": 299,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw message.error;"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error('No token available: pass `token`, or set APIFY_TOKEN.');"
+    },
+    {
+      "source_path": "tests/unit/dev_server.test.ts",
+      "line_start": 343,
+      "line_end": 343,
+      "blob_hash": "6a8849b348ed88250c11d41baed1867c355f3b2c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // wrapper in `serveStatelessRequest`. The spy pins down that the sentinel throw is answered"
+    },
+    {
+      "source_path": "tests/unit/evals.claude_agent.test.ts",
+      "line_start": 149,
+      "line_end": 149,
+      "blob_hash": "1067043149e68530bc482acb02f3cb863582548f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error('Claude Code returned an error result: Reached maximum number of turns (2)');"
+    },
+    {
+      "source_path": "tests/unit/evals.claude_agent.test.ts",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "1067043149e68530bc482acb02f3cb863582548f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error('Claude Code process exited with code 1');"
+    },
+    {
+      "source_path": "tests/unit/evals.claude_agent.test.ts",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "1067043149e68530bc482acb02f3cb863582548f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "tests/unit/evals.claude_agent.test.ts",
+      "line_start": 192,
+      "line_end": 192,
+      "blob_hash": "1067043149e68530bc482acb02f3cb863582548f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw originalError;"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error('spawn ENOENT');"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 254,
+      "line_end": 254,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('span export failed');"
+    },
+    {
+      "source_path": "tests/unit/evals.observations.test.ts",
+      "line_start": 244,
+      "line_end": 244,
+      "blob_hash": "d5d6e6a7cf52bd4c8a755a2577d9440f00be9376",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if (name === failingName) throw new Error('attribute serialization failed');"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (!handler) throw new Error(`Handler \"${method}\" not registered`);"
+    },
+    {
+      "source_path": "tests/unit/helpers/mcp_server.ts",
+      "line_start": 271,
+      "line_end": 271,
+      "blob_hash": "5e56a6937718b4a24c0fd82bd3fb8ed821e2f43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw error;"
+    },
+    {
+      "source_path": "tests/unit/helpers/tool_context.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "5f0528f12fa7366fa875e01f96a2e7af91ede629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function expectSoftFailInvalidInput(result: { isError?: boolean; toolTelemetry?: ToolTelemetrySnapshot }): void {"
+    },
+    {
+      "source_path": "tests/unit/helpers/tool_context.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "5f0528f12fa7366fa875e01f96a2e7af91ede629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/helpers/tool_context.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "5f0528f12fa7366fa875e01f96a2e7af91ede629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const { structuredContent, isError } = result as { structuredContent?: unknown; isError?: boolean };"
+    },
+    {
+      "source_path": "tests/unit/helpers/tool_context.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "5f0528f12fa7366fa875e01f96a2e7af91ede629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.actors.test.ts",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "4c82ff0ff07b6cab4b7f35c938484c145b4e700f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (err) {"
+    },
+    {
+      "source_path": "tests/unit/mcp.client_context.test.ts",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "613297ac40d4af8d5dfc18af57174e2d39157eb0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (!context) throw new Error('client context was not built');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.actor_mode_matrix.test.ts",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "1f90c634ba0c1f3aac4cb9c132126822c0950874",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.actor_mode_matrix.test.ts",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "1f90c634ba0c1f3aac4cb9c132126822c0950874",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(bare.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.actor_mode_matrix.test.ts",
+      "line_start": 182,
+      "line_end": 182,
+      "blob_hash": "1f90c634ba0c1f3aac4cb9c132126822c0950874",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(earlyResponseOf(withToolName).isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * the services throw protocol-neutral domain errors, and the handler must surface them as `McpError`"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ).catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 127,
+      "line_end": 127,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ).catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.error_handling.test.ts",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "646cce9b7f7139ab84d30c8f5f84dafd29e3d9f3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ).catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.progress_wiring.test.ts",
+      "line_start": 128,
+      "line_end": 128,
+      "blob_hash": "ae7bc1a6b6c8724ef648631dd022bd09d57c3c03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (!received.called) throw new Error('recorder tool was not called');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_gating.test.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "db130787a3d23b38e80f96c2fd1f051b7d9da080",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (!handler) throw new Error('initialize handler not registered');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_nudge.test.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "3be5dc020c1da1623587411177c52a44d262427f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// singleton), not the tool's own call(). Mock it so we can return an isError result without a network."
+    },
+    {
+      "source_path": "tests/unit/mcp.server.report_problem_nudge.test.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "3be5dc020c1da1623587411177c52a44d262427f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ).catch(() => undefined);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            ).catch(() => undefined);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.resource_request_origin.test.ts",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "27e8a301370dbc5773404f17a58d42968424ea4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if (task?.status !== 'completed') throw new Error('task did not complete');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        storedResult: { content: X402_RESPONSE_CONTENT, isError: true, structuredContent: X402_PAYMENT_DATA },"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        storedResult: { content: [{ type: 'text', text: 'needs approval' }], isError: true },"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 100,
+      "line_end": 100,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 223,
+      "line_end": 223,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error(`Task ${res.task.taskId} did not reach a terminal status`);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 257,
+      "line_end": 257,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 269,
+      "line_end": 269,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 283,
+      "line_end": 283,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // no transport (notification would throw \"Not connected\"), so stub it to observe the"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 307,
+      "line_end": 307,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // McpError protocol errors, never as isError tool results. The taskSupport-gate test above"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 497,
+      "line_end": 497,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 541,
+      "line_end": 541,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                            if (trackSpy.mock.calls.length === 0) throw new Error('trackToolCall spy was not called');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 588,
+      "line_end": 588,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if (task?.status !== 'completed') throw new Error('task did not complete');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 589,
+      "line_end": 589,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if (trackSpy.mock.calls.length === 0) throw new Error('trackToolCall spy was not called');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 608,
+      "line_end": 608,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // `isError` body (matching the sync path), not the old empty {} masquerading as a success."
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 616,
+      "line_end": 616,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 639,
+      "line_end": 639,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if (trackSpy.mock.calls.length === 0) throw new Error('trackToolCall spy was not called');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 667,
+      "line_end": 667,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 698,
+      "line_end": 698,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 716,
+      "line_end": 716,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 773,
+      "line_end": 773,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new McpError(ErrorCode.RequestTimeout, 'Request cancelled');"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 803,
+      "line_end": 803,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('re-throws an escaped McpError as a JSON-RPC error, not an isError tool result', async () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 980,
+      "line_end": 980,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(stored.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1027,
+      "line_end": 1027,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                const standbyResult = { content: [{ type: 'text', text: 'standby not supported' }], isError: true };"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1052,
+      "line_end": 1052,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                const standbyResult = { content: [{ type: 'text', text: 'standby not supported' }], isError: true };"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1097,
+      "line_end": 1097,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                const standbyResult = { content: [{ type: 'text', text: 'standby not supported' }], isError: true };"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1123,
+      "line_end": 1123,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                const standbyResult = { content: [{ type: 'text', text: 'standby not supported' }], isError: true };"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1229,
+      "line_end": 1229,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('classifies a non-McpError prep-spine throw as an EXECUTION isError result, not a raw reject', async () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1252,
+      "line_end": 1252,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.server.tool_call_contracts.test.ts",
+      "line_start": 1272,
+      "line_end": 1272,
+      "blob_hash": "f3c051f769aca85184079c75bd6a36331b4d51d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('classifies a createTask throw so telemetry is FAILED, not SUCCEEDED', async () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (!handler) throw new Error(`Dispatch registered no handler for ${notification.method}`);"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 406,
+      "line_end": 406,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.result?.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.tool_call.test.ts",
+      "line_start": 498,
+      "line_end": 498,
+      "blob_hash": "540fe264f6d2dce168d356efecf250e2b02de732",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                expect(response.result?.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 116,
+      "line_end": 116,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('Task with ID task-1 not found or expired');"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 128,
+      "line_end": 128,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('redis ETIMEDOUT');"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (call === 1) throw new Error('redis ETIMEDOUT');"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const error = await promise.catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new AxiosError(`maxContentLength size of ${MAX_INLINE_BYTES} exceeded`, 'ERR_BAD_RESPONSE');"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Throw from getRecordPublicUrl to exercise the download-link fallback. */"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (opts.recordPublicUrlThrows) throw new Error('boom');"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 305,
+      "line_end": 305,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // A stray `%` in the key path used to throw in decodeURIComponent and drop the link to the"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 343,
+      "line_end": 343,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw Object.assign(new Error('not found'), { statusCode: 404 });"
+    },
+    {
+      "source_path": "tests/unit/resources.api.test.ts",
+      "line_start": 358,
+      "line_end": 358,
+      "blob_hash": "885a485b291121d095879c551dff452596d843c2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw new Error('socket hang up');"
+    },
+    {
+      "source_path": "tests/unit/resources.service.test.ts",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "8869d08e739183111eb56d009702a705b355caad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const error = await service.readResource('file://missing.md').catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/resources.service.test.ts",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "8869d08e739183111eb56d009702a705b355caad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const error = await service.readResource('https://example.com/steal-my-token').catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/resources.service.test.ts",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "8869d08e739183111eb56d009702a705b355caad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const error = await service.readResource(uri, apifyClient).catch((e: unknown) => e);"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(outcome.result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tool_call_engine.test.ts",
+      "line_start": 196,
+      "line_end": 196,
+      "blob_hash": "afa436dcfaf9c5bc83583a0dbea00651639b520a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(outcome.result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tool_call_error_mapper.test.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "c5c722f875851d1d64029680ad99a6442f3f8c51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        response: { content: [{ type: 'text', text: 'Payment required' }], isError: true },"
+    },
+    {
+      "source_path": "tests/unit/tool_call_error_mapper.test.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "c5c722f875851d1d64029680ad99a6442f3f8c51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/tool_call_error_mapper.test.ts",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "c5c722f875851d1d64029680ad99a6442f3f8c51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        response: { content: [{ type: 'text', text: 'needs approval' }], isError: true },"
+    },
+    {
+      "source_path": "tests/unit/tool_call_error_mapper.test.ts",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "c5c722f875851d1d64029680ad99a6442f3f8c51",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // sync-catch hoist relies on (see the re-throw comment in server.ts). If this pin surprises"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 181,
+      "line_end": 181,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 260,
+      "line_end": 260,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 441,
+      "line_end": 441,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(error.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 542,
+      "line_end": 542,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                isError: false,"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 559,
+      "line_end": 559,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result?.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 596,
+      "line_end": 596,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result?.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 616,
+      "line_end": 616,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result?.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 626,
+      "line_end": 626,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error('aborted');"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_widget.response.test.ts",
+      "line_start": 178,
+      "line_end": 178,
+      "blob_hash": "0e0ae2668674b01c196c85868c2762dcabfcff47",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as TextToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_widget.response.test.ts",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "0e0ae2668674b01c196c85868c2762dcabfcff47",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_build_log.test.ts",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "a8c4745cb4270cce0d86b1e4ff3b768efc192f3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(logResult.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_build_log.test.ts",
+      "line_start": 132,
+      "line_end": 132,
+      "blob_hash": "a8c4745cb4270cce0d86b1e4ff3b768efc192f3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(buildResult.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * — with no inlined dataset items or KV record bodies, except RAG Web Browser's reserved `TIP` key."
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 405,
+      "line_end": 405,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error('transient network error');"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 417,
+      "line_end": 417,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, structuredContent, isError } = result as TextToolResult & { structuredContent: RunResponse };"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 420,
+      "line_end": 420,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 447,
+      "line_end": 447,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error('transient KV error');"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 455,
+      "line_end": 455,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { structuredContent, isError } = result as { structuredContent: RunResponse; isError?: boolean };"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 457,
+      "line_end": 457,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 870,
+      "line_end": 870,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError on a missing run', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 878,
+      "line_end": 878,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run_list.test.ts",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "a16e0e24cecb61e1d920a5fa4ce02ac3dd54e847",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when the Actor does not exist', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run_log.test.ts",
+      "line_start": 148,
+      "line_end": 148,
+      "blob_hash": "9a0fe02ae42bec2c4e6e3f0bcb68949a64790b08",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(logResult.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run_log.test.ts",
+      "line_start": 149,
+      "line_end": 149,
+      "blob_hash": "9a0fe02ae42bec2c4e6e3f0bcb68949a64790b08",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(runResult.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_version.test.ts",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "1c65148c8ad352284bbd7ee6805fc47e0e8a0f9a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError ?? false).toBe(!succeeds);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_version.test.ts",
+      "line_start": 596,
+      "line_end": 596,
+      "blob_hash": "1c65148c8ad352284bbd7ee6805fc47e0e8a0f9a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError ?? false).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset.test.ts",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "541c83887e5802c765539b11ed096b9477179b4e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset.test.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "541c83887e5802c765539b11ed096b9477179b4e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset.test.ts",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "541c83887e5802c765539b11ed096b9477179b4e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when the dataset does not exist', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_items.test.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "77732ca57addc8ce108364022f0b7f0c497667c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw err;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_items.test.ts",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "77732ca57addc8ce108364022f0b7f0c497667c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when listItems throws 404', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                throw err;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 89,
+      "line_end": 89,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 99,
+      "line_end": 99,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when listItems throws 404', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError when schema generation fails (generator returns null)', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, toolTelemetry } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_dataset_schema.test.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "d2bf0a9ab67d118ff5087b09314fda1a10f0a759",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store.test.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "f96b1485bd4f3292d0c2536c85a5b0eda08503d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store.test.ts",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "f96b1485bd4f3292d0c2536c85a5b0eda08503d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store.test.ts",
+      "line_start": 77,
+      "line_end": 77,
+      "blob_hash": "f96b1485bd4f3292d0c2536c85a5b0eda08503d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when the store does not exist', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_keys.test.ts",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "ce29f1d233bc38d00262be5a4440fb2644f09ec4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError with a not-found message when listKeys throws 404', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { isError, structuredContent } = result as TextToolResult & {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 153,
+      "line_end": 153,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 175,
+      "line_end": 175,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 177,
+      "line_end": 177,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 197,
+      "line_end": 197,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 199,
+      "line_end": 199,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { content, isError } = result as CallToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 219,
+      "line_end": 219,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError \"record not found\" when getRecord is undefined but the store exists', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 241,
+      "line_end": 241,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns isError \"store not found\" when both getRecord and store get are undefined', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 315,
+      "line_end": 315,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    isError: result.isError,"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 338,
+      "line_end": 338,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.get_key_value_store_record.test.ts",
+      "line_start": 355,
+      "line_end": 355,
+      "blob_hash": "fa45de5f07a4d635381858baadc91e7813091550",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(result.isError).not.toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/tools.mcp_servers_as_tools.test.ts",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "9cfa52870e3da13379498849af35df0bbd5448c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if (realActorId === 'evil') throw new Error('resolves outside its standby origin');"
+    },
+    {
+      "source_path": "tests/unit/tools.report_problem.test.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "128824beb9c783b8502f81bb0633b375ecc9e794",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const errorResult = () => ({ content: [{ type: 'text', text: 'Actor not found.' }], isError: true });"
+    },
+    {
+      "source_path": "tests/unit/tools.report_problem.test.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "128824beb9c783b8502f81bb0633b375ecc9e794",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const { content, isError } = result as TextToolResult;"
+    },
+    {
+      "source_path": "tests/unit/tools.report_problem.test.ts",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "128824beb9c783b8502f81bb0633b375ecc9e794",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(isError).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/tools.report_problem.test.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "128824beb9c783b8502f81bb0633b375ecc9e794",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            const success = { content: [{ type: 'text', text: 'done' }], isError: false };"
+    },
+    {
+      "source_path": "tests/unit/tools.schedule_crud.test.ts",
+      "line_start": 325,
+      "line_end": 325,
+      "blob_hash": "395488567ba1bd925a848306164db676bb68fc79",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // call — it would only throw inside the tool body and reach the client as serialised JSON."
+    },
+    {
+      "source_path": "tests/unit/tools.structured_output_schemas.test.ts",
+      "line_start": 264,
+      "line_end": 264,
+      "blob_hash": "7638abd04143eba3d97afd6baeb1da29cb8fe6c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error('Database connection failed');"
+    },
+    {
+      "source_path": "tests/unit/tools.structured_output_schemas.test.ts",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "7638abd04143eba3d97afd6baeb1da29cb8fe6c1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    throw new Error('Database connection failed');"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns a success response with the raw text and no isError/telemetry', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result).toEqual({ content: [{ type: 'text', text: 'all good' }], isError: false });"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns an isError response with no toolTelemetry (framework paths)', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 104,
+      "line_end": 104,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result).toEqual({ content: [{ type: 'text', text: 'failed' }], isError: true });"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 110,
+      "line_end": 110,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 119,
+      "line_end": 119,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 165,
+      "line_end": 165,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Same reference: no isError injected, no key reorder, so the wire bytes stay identical."
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 400,
+      "line_end": 400,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(JSON.stringify(result)).toBe('{\"content\":[{\"type\":\"text\",\"text\":\"all good\"}],\"isError\":false}');"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 409,
+      "line_end": 409,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Negative: a hand-rolled { content, isError } literal is missing the brand."
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 413,
+      "line_end": 413,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/utils.mcp.test.ts",
+      "line_start": 426,
+      "line_end": 426,
+      "blob_hash": "2ae9be13170d6634bf124c8c8de085976383bb9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const bad: ToolResponse = { content: [{ type: 'text', text: 'x' }], isError: false };"
+    },
+    {
+      "source_path": "tests/unit/utils.payment_errors.test.ts",
+      "line_start": 86,
+      "line_end": 86,
+      "blob_hash": "425c3171462d65a1340ce3165dad0895a9d60ae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.payment_errors.test.ts",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "425c3171462d65a1340ce3165dad0895a9d60ae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(result.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.payment_errors.test.ts",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "425c3171462d65a1340ce3165dad0895a9d60ae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.payment_errors.test.ts",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "425c3171462d65a1340ce3165dad0895a9d60ae1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(response.isError).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 249,
+      "line_end": 249,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('defaults to FAILED when isError without toolTelemetry', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 250,
+      "line_end": 250,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const { toolStatus, callDiagnostics } = extractToolTelemetry({ isError: true }, undefined, undefined);"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('keeps explicit telemetry when isError is true', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 258,
+      "line_end": 258,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                isError: true,"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/utils.tool_status.test.ts",
+      "line_start": 318,
+      "line_end": 318,
+      "blob_hash": "93933bcdd2ba61427ed95255569a4c49f115bd5a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(deriveResourceIds({ datasetId: 'ds1' }, { isError: true })).toEqual({ dataset_id: 'ds1' });"
+    },
+    {
+      "source_path": "tests/unit/utils.ttl_lru.test.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "f6f8ff219edf5e58d533a6e4bc1abcfce8dcaccc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Should not throw if called again"
+    },
+    {
+      "source_path": "tests/unit/utils.userid_cache.test.ts",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "63088db8934945230091a5fd5a42956564b08ca5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('network');"
+    },
+    {
+      "source_path": "tests/unit/utils.userid_cache.test.ts",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "63088db8934945230091a5fd5a42956564b08ca5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if (attempts === 1) throw new Error('transient');"
+    },
+    {
+      "source_path": "tests/unit/widget.actor_run.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "c28b0e3e373bb6caf0199677069145ce86e205b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/widget.actor_run.test.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "c28b0e3e373bb6caf0199677069145ce86e205b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/widget.actor_run.test.ts",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "c28b0e3e373bb6caf0199677069145ce86e205b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: false,"
+    },
+    {
+      "source_path": "tests/unit/widget.actor_run.test.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "c28b0e3e373bb6caf0199677069145ce86e205b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    },
+    {
+      "source_path": "tests/unit/widget.actor_run.test.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "c28b0e3e373bb6caf0199677069145ce86e205b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            isError: true,"
+    }
+  ]
+}

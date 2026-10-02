@@ -1,0 +1,1709 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".github/workflows/image-staging.yml",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "97a2706c79daa124951df31fb218afa4a9b282c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      - fastmcp"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- The npm package now bundles the pnpm-patched fastmcp. npm does not apply pnpm patches, so `npx firecrawl-mcp` installs were loading unpatched fastmcp from the registry, without the top-level titles or the `canList` and `beforeValidate` hooks. fastmcp's runtime imports (`@modelcontextprotocol/sdk`, `fuse.js`, `hono`, `mcp-proxy`, `undici`, `uri-templates`, `xsschema`) are now direct dependencies "
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  `firecrawl-fastmcp` invokes `authenticate(undefined)` for stdio (there is no"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "7b994bfb1f3b383572bba68a31aa2f84490f9a6d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  HTTP request context). The resulting `TypeError` was swallowed by FastMCP,"
+    },
+    {
+      "source_path": "Dockerfile.service",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "7bad4dd86604cc373511813fdc7cdff8949df436",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## Service image: Node (FastMCP) + NGINX sidecar in one container"
+    },
+    {
+      "source_path": "Dockerfile.service",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "7bad4dd86604cc373511813fdc7cdff8949df436",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "ENV FASTMCP_ENDPOINT=/v2/mcp"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 116,
+      "line_end": 116,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     \"mcpServers\": {"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"mcpServers\": {"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 290,
+      "line_end": 290,
+      "blob_hash": "8ce8c809a23a326063083893a8ac28043aebb6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"mcpServers\": {"
+    },
+    {
+      "source_path": "docker/entrypoint.sh",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "a3a8a3eb76e66c0afc83fedfa5b46b8e7f1d04e2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "if [ \"${FASTMCP_ENDPOINT:-/v2/mcp}\" = \"/v2/mcp-search\" ]; then"
+    },
+    {
+      "source_path": "gemini-extension.json",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "2c8d4fa85d2126f51e5f134dd5704e867f5ad987",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"mcpServers\": {"
+    },
+    {
+      "source_path": "package.json",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "372bca4c1f45c12dc67cfd5816061f4ee4653da2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"fastmcp\": \"4.3.2\","
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "diff --git a/dist/FastMCP.d.cts b/dist/FastMCP.d.cts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "--- a/dist/FastMCP.d.cts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "+++ b/dist/FastMCP.d.cts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "@@ -605,6 +605,8 @@ type Tool<T extends FastMCPSessionAuth, Params extends ToolParameters = ToolPara"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "diff --git a/dist/FastMCP.d.ts b/dist/FastMCP.d.ts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "--- a/dist/FastMCP.d.ts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "+++ b/dist/FastMCP.d.ts"
+    },
+    {
+      "source_path": "patches/fastmcp@4.3.2.patch",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "91de9390c015e73f19a23fab0029345686956036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "@@ -605,6 +605,8 @@ type Tool<T extends FastMCPSessionAuth, Params extends ToolParameters = ToolPara"
+    },
+    {
+      "source_path": "plugins/claude/firecrawl-search/.mcp.json",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "b152b798de08e853d7a3812a1c6cdde592fed3a9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"mcpServers\": {"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  fastmcp@4.3.2:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    path: patches/fastmcp@4.3.2.patch"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      fastmcp:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 873,
+      "line_end": 873,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  fastmcp@4.3.2:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 2501,
+      "line_end": 2501,
+      "blob_hash": "47867d1a9807cb6302157a0ec3403211dada73cd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  fastmcp@4.3.2(patch_hash=08f77b633292d9ae4cb022c0fa5bd722dbd5c1aaaad600204f8ed38339bfd37b):"
+    },
+    {
+      "source_path": "pnpm-workspace.yaml",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "69ba26ab9fdbc7316c5428a5a3f4b5994f1e5a9b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  fastmcp@4.3.2: patches/fastmcp@4.3.2.patch"
+    },
+    {
+      "source_path": "src/agent-hints.ts",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "20fbcf966005416d091ce6023342e196d34d30d0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ContentResult } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "bfbbb14d86952b9700cd8ededfdb95a3ebc339be",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "bfbbb14d86952b9700cd8ededfdb95a3ebc339be",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  server: Pick<FastMCP<SessionData>, 'addTool'>,"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { type ContentResult, FastMCP, type Logger, UserError } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * A server profile parameterizes how a FastMCP instance is constructed. Hosted"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  /** httpStream endpoint override (defaults to fastmcp's own default). */"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Registers a tool onto an instance; a subset of the FastMCP surface. */"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "type ToolRegistrar = Pick<FastMCP<SessionData>, 'addTool'>;"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // otherwise FastMCP would return a generic error instead of the resource's"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const endpoint = normalizeHeader(process.env.FASTMCP_ENDPOINT) ?? '/v2/mcp';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 276,
+      "line_end": 276,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    `Unsupported FASTMCP_ENDPOINT: ${endpoint}. Expected /v2/mcp, /v2/mcp-oauth, or /v2/mcp-search.`"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 295,
+      "line_end": 295,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// PRM location per RFC 9728. firecrawl-fastmcp serves the document both at the"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 713,
+      "line_end": 713,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // FastMCP invokes `authenticate(undefined)` for the stdio transport"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 715,
+      "line_end": 715,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // accessing `request.headers` throws a TypeError, FastMCP silently"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 889,
+      "line_end": 889,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Builds the `authenticate` hook for one profile. FastMCP runs it on every"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1394,
+      "line_end": 1394,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      'FASTMCP_ENDPOINT=/v2/mcp-search requires FIRECRAWL_MCP_SEARCH_OAUTH_ONLY=true'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1424,
+      "line_end": 1424,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function createServer(profile: ServerProfile): FastMCP<SessionData> {"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1425,
+      "line_end": 1425,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  return new FastMCP<SessionData>({"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1426,
+      "line_end": 1426,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    name: 'firecrawl-fastmcp',"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 1481,
+      "line_end": 1481,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// FastMCP copies UserError.message onto both content[0].text and"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 4450,
+      "line_end": 4450,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    }) as FastMCP<SessionData>['addTool'],"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line_start": 4479,
+      "line_end": 4479,
+      "blob_hash": "f9d4641e0378aac034e14a78e81c4c308a301e44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    }) as FastMCP<SessionData>['addTool'],"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1048,
+      "line_end": 1048,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "              origin: 'mcp-fastmcp',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1141,
+      "line_end": 1141,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            origin: 'mcp-fastmcp',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1168,
+      "line_end": 1168,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                origin: 'mcp-fastmcp',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1216,
+      "line_end": 1216,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                  origin: 'mcp-fastmcp',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1269,
+      "line_end": 1269,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                  origin: 'mcp-fastmcp',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1423,
+      "line_end": 1423,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  let transport: SSEServerTransport | null = null;"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1427,
+      "line_end": 1427,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    transport = new SSEServerTransport(`/messages`, res);"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1458,
+      "line_end": 1458,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1464,
+      "line_end": 1464,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      let transport: StreamableHTTPServerTransport;"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1475,
+      "line_end": 1475,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        transport = new StreamableHTTPServerTransport({"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1499,
+      "line_end": 1499,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/legacy/index.md",
+      "line_start": 1513,
+      "line_end": 1513,
+      "blob_hash": "6bb61be044ba2f2652ce268d8d21f870d9c611a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "40e4e55aa2729093bd0346b6da63250cdd23bd30",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line_start": 235,
+      "line_end": 235,
+      "blob_hash": "40e4e55aa2729093bd0346b6da63250cdd23bd30",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function registerMonitorTools(server: FastMCP<SessionData>): void {"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * sends at initialize (fastmcp hands it to every tool call as"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export const ORIGIN_SERVER = 'mcp-fastmcp';"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * client name (the server's own fastmcp names, an empty name, or a stateless"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * without that to `mcp-fastmcp@<serverVersion>`."
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const own = slug === '' || slug === 'fastmcp' || slug === 'firecrawl-fastmcp';"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "ad6b1d7c8ce4531548f3eef50c457b108c6c30a4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * The client as fastmcp hands it to a tool call (`context.client`); its"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "fab78edd59a9dbe93885d149e63c5093ef9d0b4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { type ContentResult, type FastMCP, UserError } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line_start": 205,
+      "line_end": 205,
+      "blob_hash": "fab78edd59a9dbe93885d149e63c5093ef9d0b4f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  server: Pick<FastMCP<SessionData>, 'addTool'>,"
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "b035020e7b59aebaee3156a6182a8cfc89552c49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Two fastmcp behaviours shape the schemas below."
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "b035020e7b59aebaee3156a6182a8cfc89552c49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * 1. fastmcp advertises an output schema through `strictJsonSchema`, which"
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "b035020e7b59aebaee3156a6182a8cfc89552c49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * 2. fastmcp validates `structuredContent` against the schema and keeps the"
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "b035020e7b59aebaee3156a6182a8cfc89552c49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ContentResult } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "849e73296163057a2b65360f723d6bd145f24a87",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "849e73296163057a2b65360f723d6bd145f24a87",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  server: Pick<FastMCP<SessionData>, 'addTool'>,"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "e983d8ce7c588d6ea823d95703105d545178f1f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "715db6dd0cd582f4c427d5180818592e25b1cbff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// npm does not apply pnpm patches, so an external fastmcp import would load the"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "715db6dd0cd582f4c427d5180818592e25b1cbff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "test('dist bundles the patched fastmcp instead of importing it', async () => {"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "715db6dd0cd582f4c427d5180818592e25b1cbff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.doesNotMatch(dist, /from\\s+[\"']fastmcp[\"']/);"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "715db6dd0cd582f4c427d5180818592e25b1cbff",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "test('every package the bundled fastmcp imports is a direct dependency', async () => {"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "2cd71cfbcef6b39e215415413f1323807484149f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    this.#write({ jsonrpc: '2.0', method, params });"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line_start": 119,
+      "line_end": 119,
+      "blob_hash": "2cd71cfbcef6b39e215415413f1323807484149f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      this.#write({ id, jsonrpc: '2.0', method, params });"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "2cd71cfbcef6b39e215415413f1323807484149f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// isError result, depending on the FastMCP version) or inside execute."
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "2cd71cfbcef6b39e215415413f1323807484149f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id, jsonrpc: '2.0', method: 'tools/call', params }),"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "21a8b85c094fa0c793dd5b21c3cae9db265d689b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "21a8b85c094fa0c793dd5b21c3cae9db265d689b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "f1ea9f7a9807f0d247bba69073365aedbc55c778",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id, jsonrpc: '2.0', method, params }),"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "f1ea9f7a9807f0d247bba69073365aedbc55c778",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 280,
+      "line_end": 280,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 320,
+      "line_end": 320,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: SEARCH_ENDPOINT,"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 344,
+      "line_end": 344,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function jsonRpc(port, endpoint, { id, method, params = {}, headers = {} }) {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 346,
+      "line_end": 346,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id, jsonrpc: '2.0', method, params }),"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 358,
+      "line_end": 358,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(port, endpoint, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 369,
+      "line_end": 369,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(port, endpoint, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 441,
+      "line_end": 441,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 471,
+      "line_end": 471,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 492,
+      "line_end": 492,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 519,
+      "line_end": 519,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 582,
+      "line_end": 582,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 600,
+      "line_end": 600,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 622,
+      "line_end": 622,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 664,
+      "line_end": 664,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const res = await jsonRpc(port, endpoint, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 686,
+      "line_end": 686,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 728,
+      "line_end": 728,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 758,
+      "line_end": 758,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const skillsRes = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 788,
+      "line_end": 788,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 807,
+      "line_end": 807,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 829,
+      "line_end": 829,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 881,
+      "line_end": 881,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 905,
+      "line_end": 905,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 927,
+      "line_end": 927,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 969,
+      "line_end": 969,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const response = await jsonRpc(fullPort, '/v2/mcp', {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1004,
+      "line_end": 1004,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const anonymous = await jsonRpc(port, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1022,
+      "line_end": 1022,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const response = await jsonRpc(port, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1079,
+      "line_end": 1079,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const response = await jsonRpc(port, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1103,
+      "line_end": 1103,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const response = await jsonRpc(port, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1141,
+      "line_end": 1141,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // FASTMCP_ENDPOINT '/v2/mcp' (not '/v2/mcp-oauth') makes this the keyless"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1163,
+      "line_end": 1163,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1193,
+      "line_end": 1193,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: SEARCH_ENDPOINT,"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1221,
+      "line_end": 1221,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const wrongAudience = await jsonRpc(port, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1234,
+      "line_end": 1234,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: SEARCH_ENDPOINT,"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1262,
+      "line_end": 1262,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const apiKey = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1309,
+      "line_end": 1309,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const unresolved = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1335,
+      "line_end": 1335,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const listing = parseSseJson(await (await jsonRpc(searchPort, SEARCH_ENDPOINT, {id:76,method:'tools/list',params:{},headers:{'x-api-key':'fc-search-key'}})).text());"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1342,
+      "line_end": 1342,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const call = arguments_ => jsonRpc(searchPort, SEARCH_ENDPOINT, {id:77,method:'tools/call', params:{name:'firecrawl_search',arguments:arguments_},headers:{'x-api-key':'fc-search-key'}});"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1358,
+      "line_end": 1358,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line_start": 1405,
+      "line_end": 1405,
+      "blob_hash": "d4d15bbe26e7f3913b27f39643d517ad96ac4fca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const res = await jsonRpc(searchPort, SEARCH_ENDPOINT, {"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 825,
+      "line_end": 825,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id, jsonrpc: '2.0', method: 'tools/call', params }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 842,
+      "line_end": 842,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 872,
+      "line_end": 872,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 904,
+      "line_end": 904,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // Keyless sessions list only search, scrape and parse, and FastMCP serves one"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 930,
+      "line_end": 930,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 948,
+      "line_end": 948,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.equal(initializeMessage.result.serverInfo.name, 'firecrawl-fastmcp');"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 958,
+      "line_end": 958,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1011,
+      "line_end": 1011,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1029,
+      "line_end": 1029,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      jsonrpc: '2.0',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1092,
+      "line_end": 1092,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1146,
+      "line_end": 1146,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    this.#write({ jsonrpc: '2.0', method, params });"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1151,
+      "line_end": 1151,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    this.#write({ id, jsonrpc: '2.0', method, params });"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1209,
+      "line_end": 1209,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.equal(init.serverInfo.name, 'firecrawl-fastmcp');"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1881,
+      "line_end": 1881,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1912,
+      "line_end": 1912,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // per-request memoization must dedupe FastMCP's + mcp-proxy's auth calls),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 1933,
+      "line_end": 1933,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2020,
+      "line_end": 2020,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2061,
+      "line_end": 2061,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2109,
+      "line_end": 2109,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2151,
+      "line_end": 2151,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2189,
+      "line_end": 2189,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2222,
+      "line_end": 2222,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2264,
+      "line_end": 2264,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2310,
+      "line_end": 2310,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2349,
+      "line_end": 2349,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2420,
+      "line_end": 2420,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2482,
+      "line_end": 2482,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2539,
+      "line_end": 2539,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2596,
+      "line_end": 2596,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2640,
+      "line_end": 2640,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2700,
+      "line_end": 2700,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2755,
+      "line_end": 2755,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2844,
+      "line_end": 2844,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2863,
+      "line_end": 2863,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const jsonRpcId = `keyless-zdr-${'filePath' in arguments_ ? 'phase-one' : 'phase-two'}`;"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2865,
+      "line_end": 2865,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      id: jsonRpcId,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2882,
+      "line_end": 2882,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        jsonRpcId,"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2908,
+      "line_end": 2908,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2943,
+      "line_end": 2943,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 2994,
+      "line_end": 2994,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3104,
+      "line_end": 3104,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3145,
+      "line_end": 3145,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3170,
+      "line_end": 3170,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3196,
+      "line_end": 3196,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 1, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3210,
+      "line_end": 3210,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 2, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3237,
+      "line_end": 3237,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3280,
+      "line_end": 3280,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3332,
+      "line_end": 3332,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3349,
+      "line_end": 3349,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      body: JSON.stringify({ id: token, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3393,
+      "line_end": 3393,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3439,
+      "line_end": 3439,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3500,
+      "line_end": 3500,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3559,
+      "line_end": 3559,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3619,
+      "line_end": 3619,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3632,
+      "line_end": 3632,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 1, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3661,
+      "line_end": 3661,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3678,
+      "line_end": 3678,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 1, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3723,
+      "line_end": 3723,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3796,
+      "line_end": 3796,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      body: JSON.stringify({ id: 1, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 3850,
+      "line_end": 3850,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4000,
+      "line_end": 4000,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp-oauth',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4094,
+      "line_end": 4094,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4109,
+      "line_end": 4109,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 1, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4140,
+      "line_end": 4140,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/not-a-real-profile',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4154,
+      "line_end": 4154,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert.fail('server did not fail closed for unsupported FASTMCP_ENDPOINT');"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4157,
+      "line_end": 4157,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.match(stderr, /Unsupported FASTMCP_ENDPOINT/);"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4178,
+      "line_end": 4178,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    FASTMCP_ENDPOINT: '/v2/mcp',"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4204,
+      "line_end": 4204,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 2, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line_start": 4249,
+      "line_end": 4249,
+      "blob_hash": "e0a201e2b209cf59d70e2278d94d6909265c4686",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    body: JSON.stringify({ id: 4, jsonrpc: '2.0', method: 'tools/list', params: {} }),"
+    },
+    {
+      "source_path": "tests/nginx-config.test.mjs",
+      "line_start": 110,
+      "line_end": 110,
+      "blob_hash": "881f9a5c4deac7d5c02061b0dbaabb03125cff94",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.match(entrypoint, /FASTMCP_ENDPOINT:-\\/v2\\/mcp/);"
+    },
+    {
+      "source_path": "tests/nginx-config.test.mjs",
+      "line_start": 111,
+      "line_end": 111,
+      "blob_hash": "881f9a5c4deac7d5c02061b0dbaabb03125cff94",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.match(entrypoint, /\\[ \"\\$\\{FASTMCP_ENDPOINT:-\\/v2\\/mcp\\}\" = \"\\/v2\\/mcp-search\" \\]/);"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "7456c95c50b0e98c0752e461c084bbf4bf96fa55",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    originForClient({ name: 'fastmcp' }, '3.24.1'),"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "7456c95c50b0e98c0752e461c084bbf4bf96fa55",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    originForClient({ name: 'firecrawl-fastmcp' }, '3.24.1'),"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "7456c95c50b0e98c0752e461c084bbf4bf96fa55",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    originForClient({ name: 'fastmcp' }, '3.24.1', 'Claude-User/1.0'),"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "52b49111c8511ded07366eb2726c095acf0408ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  assert.equal(manifest.mcpServers, undefined);"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "52b49111c8511ded07366eb2726c095acf0408ac",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    mcpServers: {"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const fastmcpPackage = JSON.parse("
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  readFileSync(new URL('./node_modules/fastmcp/package.json', import.meta.url), 'utf8')"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // Bundle fastmcp so npm and npx installs run the pnpm-patched copy"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // (patches/fastmcp@4.3.2.patch). npm does not apply pnpm patches, so an"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  // external fastmcp would load unpatched from the registry. Its own"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  noExternal: ['fastmcp'],"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "2db0b9dea48d3a5147fedce02ea4afa17fb433f8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  external: Object.keys(fastmcpPackage.dependencies ?? {}),"
+    }
+  ]
+}

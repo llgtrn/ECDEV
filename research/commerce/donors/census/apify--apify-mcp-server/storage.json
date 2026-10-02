@@ -1,0 +1,189 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".github/scripts/before-beta-release.js",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "024f2e1c4ee5499bd23f80f07e6a87f3f0f51ffe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { readFileSync, writeFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": ".github/scripts/before-beta-release.js",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "024f2e1c4ee5499bd23f80f07e6a87f3f0f51ffe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "writeFileSync(PKG_JSON_PATH, `${JSON.stringify(pkgJson, null, 2)}\\n`);"
+    },
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Internal repo** = backend/DB/proprietary logic (Redis, MongoDB, IAM auth, multi-node)"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- IAM auth gate (401, unauth user toolset filter, `?payment=skyfire` bypass), rate limiter, `RedisEventStore` replay via `Last-Event-ID`, user-aware rental Actor filter, non-MCP HTTP routes (`/`, OAuth metadata, server card)."
+    },
+    {
+      "source_path": "evals/scripts/export_dataset.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "52063f4a809325e3c5334d932046804ff92062e2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    fs.writeFileSync(outPath, `${JSON.stringify(testCases, null, 2)}\\n`);"
+    },
+    {
+      "source_path": "res/code_runtime_eval.md",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "db5c757f47651a97e3deaa37dd673317466a1348",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "milvus.io/docs, docs.trychroma.com, redis.io/docs/latest, docs.crawlee.dev,"
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// The production Streamable HTTP transport (auth, rate limiting, Redis-backed session"
+    },
+    {
+      "source_path": "src/mcp/AGENTS.md",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "3df5235748576e955bd8316963d06cf48bae9748",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "surface — **generic types only**. No Apify-internal infrastructure (Redis, Mongo,"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * says \"Task with ID <id> not found\", the hosted RedisTaskStore appends \" or expired\". This is a"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 118,
+      "line_end": 118,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Prevents tick overlap when `getTask` is slower than the poll interval (Redis tail"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                // In production `taskStore.getTask` hits Redis. Swallow transient failures so they don't crash the pod via"
+    },
+    {
+      "source_path": "src/mcp/utils.ts",
+      "line_start": 136,
+      "line_end": 136,
+      "blob_hash": "a2a678f8b7444e3eadf6716bfba8d624620dd991",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                // unhandled rejection; the next successful tick will still detect cancellation. Not logged: under sustained Redis"
+    },
+    {
+      "source_path": "src/tools/source/source_files.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "8631349e2449ccd72b2895f3bea8ab89d25c505c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    'sqlite',"
+    },
+    {
+      "source_path": "src/web/src/utils/mock-openai.ts",
+      "line_start": 92,
+      "line_end": 92,
+      "blob_hash": "d0456234ac4a198e42ce9b4220e50e4bcaa006f2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (url) window.open(url, '_blank');"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        writeFileSync(configPath, JSON.stringify({ mcpServers: { server: buildServerEntry(config) } }));"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('matches the in-memory and Redis store messages', () => {"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 128,
+      "line_end": 128,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('redis ETIMEDOUT');"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        ).rejects.toThrow('redis ETIMEDOUT');"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Production TaskStore is Redis-backed (RedisTaskStore in the internal"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 229,
+      "line_end": 229,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // must still abort. Without this guarantee, a single Redis blip during"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if (call === 1) throw new Error('redis ETIMEDOUT');"
+    },
+    {
+      "source_path": "tests/unit/mcp.utils.test.ts",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "1ff530425a28ea6c46af57de7f614d2b561a37d3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Under Redis tail latency a single getTask can outlast pollIntervalMs."
+    }
+  ]
+}

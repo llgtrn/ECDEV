@@ -1,0 +1,191 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 11,
+      "text": "import 'dotenv/config'"
+    },
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 13,
+      "text": "import axios from 'axios'"
+    },
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 14,
+      "text": "import { readFileSync } from 'node:fs'"
+    },
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 15,
+      "text": "import { dirname, resolve } from 'node:path'"
+    },
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 16,
+      "text": "import { fileURLToPath } from 'node:url'"
+    },
+    {
+      "source_path": "src/__tests__/api-spec.integration.test.ts",
+      "line": 17,
+      "text": "import { beforeAll, describe, expect, it } from 'vitest'"
+    },
+    {
+      "source_path": "src/__tests__/mcp.integration.test.ts",
+      "line": 12,
+      "text": "import { type ChildProcess, spawn } from 'node:child_process'"
+    },
+    {
+      "source_path": "src/__tests__/mcp.integration.test.ts",
+      "line": 13,
+      "text": "import { resolve } from 'node:path'"
+    },
+    {
+      "source_path": "src/__tests__/mcp.integration.test.ts",
+      "line": 14,
+      "text": "import { afterAll, beforeAll, describe, expect, it } from 'vitest'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.integration.test.ts",
+      "line": 7,
+      "text": "import { beforeAll, describe, expect, it } from 'vitest'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.integration.test.ts",
+      "line": 9,
+      "text": "import { SemrushApiClient, SemrushApiError } from '../semrush-api.js'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.integration.test.ts",
+      "line": 10,
+      "text": "import { assertHasData, assertValidResponse } from './test-utils.js'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line": 7,
+      "text": "import axios, { AxiosError } from 'axios'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line": 8,
+      "text": "import { type Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line": 10,
+      "text": "import { SemrushApiClient, SemrushApiError } from '../semrush-api.js'"
+    },
+    {
+      "source_path": "src/__tests__/semrush-api.test.ts",
+      "line": 11,
+      "text": "import {\n  MOCK_API_UNITS_BALANCE,\n  MOCK_BACKLINKS_ANCHORS_CSV,\n  MOCK_BACKLINKS_CATEGORIES_CSV,\n  MOCK_BACKLINKS_CSV,\n  MOCK_BACKLINKS_DOMAINS_CSV,\n  MOCK_BACKLINKS_OVERVIEW_CSV,\n  MOCK_BACKLINKS_PAGES_CSV,\n  MOCK_BACKLINKS_TLD_CSV,\n  MOCK_BATCH_KEYWORD_CSV,\n  MOCK_BROAD_MATCH_CSV,\n  MOCK_COMPETITORS_CSV,\n  MOCK_DOMAIN_ADS_HISTORY_CSV,\n  MOCK_DOMAIN_ADWORDS_UNIQUE_CSV,\n  MOCK_DOMAIN_ORGANIC_KEYWORDS_CSV,\n  MOCK_DOMAIN_ORGANIC_UNIQUE_CSV,\n  MOCK_DOMAIN_OVERVIEW_CSV,\n  MOCK_DOMAIN_PAID_KEYWORDS_CSV,\n  MOCK_DOMAIN_RANK_CSV,\n  MOCK_DOMAIN_RANK_HISTORY_CSV,\n  MOCK_DOMAIN_SHOPPING_CSV,\n  MOCK_DOMAIN_SHOPPING_UNIQUE_CSV,\n  MOCK_KEYWORD_ADS_HISTORY_CSV,\n  MOCK_KEYWORD_DIFFICULTY_CSV,\n  MOCK_KEYWORD_ORGANIC_RESULTS_CSV,\n  MOCK_KEYWORD_OVERVIEW_CSV,\n  MOCK_KEYWORD_PAID_RESULTS_CSV,\n  MOCK_KEYWORD_SINGLE_DB_CSV,\n  MOCK_PAID_COMPETITORS_CSV,\n  MOCK_PHRASE_QUESTIONS_CSV,\n  MOCK_PROJECTS_LIST_JSON,\n  MOCK_PROJECT_JSON,\n  MOCK_RANK_DIFFERENCE_CSV,\n  MOCK_RELATED_KEYWORDS_CSV,\n  MOCK_SITE_AUDIT_HISTORY_JSON,\n  MOCK_SITE_AUDIT_INFO_JSON,\n  MOCK_SITE_AUDIT_ISSUES_JSON,\n  MOCK_SITE_AUDIT_LAUNCH_JSON,\n  MOCK_SITE_AUDIT_PAGES_JSON,\n  MOCK_SITE_AUDIT_PAGE_DETAIL_JSON,\n  MOCK_SITE_AUDIT_SNAPSHOTS_JSON,\n  MOCK_SITE_AUDIT_SNAPSHOT_DETAIL_JSON,\n  MOCK_SUBDOMAIN_ORGANIC_CSV,\n  MOCK_SUBDOMAIN_RANKS_CSV,\n  MOCK_SUBDOMAIN_RANK_CSV,\n  MOCK_SUBDOMAIN_RANK_HISTORY_CSV,\n  MOCK_SUBFOLDER_ADWORDS_CSV,\n  MOCK_SUBFOLDER_ADWORDS_UNIQUE_CSV,\n  MOCK_SUBFOLDER_ORGANIC_CSV,\n  MOCK_SUBFOLDER_ORGANIC_UNIQUE_CSV,\n  MOCK_SUBFOLDER_RANKS_CSV,\n  MOCK_SUBFOLDER_RANK_CSV,\n  MOCK_SUBFOLDER_RANK_HISTORY_CSV,\n  MOCK_TRAFFIC_SOURCES_JSON,\n  MOCK_TRAFFIC_SUMMARY_JSON,\n  MOCK_TRENDS_ACCURACY_CSV,\n  MOCK_TRENDS_AUDIENCE_INSIGHTS_CSV,\n  MOCK_TRENDS_AUDIENCE_INTERESTS_CSV,\n  MOCK_TRENDS_DESTINATIONS_CSV,\n  MOCK_TRENDS_EDUCATION_CSV,\n  MOCK_TRENDS_GEO_CSV,\n  MOCK_TRENDS_HOUSEHOLD_CSV,\n  MOCK_TRENDS_INCOME_CSV,\n  MOCK_TRENDS_OCCUPATION_CSV,\n  MOCK_TRENDS_PURCHASE_CONVERSION_CSV,\n  MOCK_TRENDS_RANK_CSV,\n  MOCK_TRENDS_SOCIAL_MEDIA_CSV,\n  MOCK_TRENDS_SUBDOMAINS_CSV,\n  MOCK_TRENDS_SUBFOLDERS_CSV,\n  MOCK_TRENDS_TOPPAGES_CSV,\n  MOCK_URL_ADWORDS_CSV,\n  MOCK_URL_ORGANIC_CSV,\n  MOCK_URL_RANKS_CSV,\n  MOCK_URL_RANK_CSV,\n  MOCK_URL_RANK_HISTORY_CSV,\n  assertHasData,\n  assertValidResponse,\n  createMockAxiosResponse,\n} from './test-utils.js'"
+    },
+    {
+      "source_path": "src/__tests__/test-utils.ts",
+      "line": 7,
+      "text": "import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios'"
+    },
+    {
+      "source_path": "src/__tests__/test-utils.ts",
+      "line": 9,
+      "text": "import type { SemrushApiResponse } from '../semrush-api.js'"
+    },
+    {
+      "source_path": "src/cli.ts",
+      "line": 3,
+      "text": "import chalk from 'chalk'"
+    },
+    {
+      "source_path": "src/cli.ts",
+      "line": 4,
+      "text": "import { Command } from 'commander'"
+    },
+    {
+      "source_path": "src/cli.ts",
+      "line": 6,
+      "text": "import { SemrushApiError, semrushApi } from './semrush-api.js'"
+    },
+    {
+      "source_path": "src/config.ts",
+      "line": 1,
+      "text": "import chalk from 'chalk'"
+    },
+    {
+      "source_path": "src/config.ts",
+      "line": 2,
+      "text": "import { readFileSync } from 'fs'"
+    },
+    {
+      "source_path": "src/config.ts",
+      "line": 3,
+      "text": "import { dirname, resolve } from 'path'"
+    },
+    {
+      "source_path": "src/config.ts",
+      "line": 4,
+      "text": "import { fileURLToPath } from 'url'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 3,
+      "text": "import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 4,
+      "text": "import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 5,
+      "text": "import chalk from 'chalk'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 7,
+      "text": "import { logConfigStatus, logger } from './config.js'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 8,
+      "text": "import {\n  BacklinksTargetParamsSchema,\n  BatchKeywordParamsSchema,\n  CheckParamsSchema,\n  DomainParamsSchema,\n  KeywordDbRequiredParamsSchema,\n  KeywordParamsSchema,\n  ProjectCreateParamsSchema,\n  ProjectIdParamsSchema,\n  ProjectUpdateParamsSchema,\n  RankDifferenceParamsSchema,\n  SiteAuditHistoryParamsSchema,\n  SiteAuditInfoParamsSchema,\n  SiteAuditLaunchParamsSchema,\n  SiteAuditPageDetailParamsSchema,\n  SiteAuditPagesParamsSchema,\n  SiteAuditSnapshotDetailParamsSchema,\n  SiteAuditSnapshotsParamsSchema,\n  SubdomainNoDatabaseParamsSchema,\n  SubdomainParamsSchema,\n  SubfolderNoDatabaseParamsSchema,\n  SubfolderParamsSchema,\n  TargetParamsSchema,\n  TrafficDomainParamsSchema,\n  TrafficDomainsParamsSchema,\n  TrendsAccuracyParamsSchema,\n  TrendsAudienceInsightsParamsSchema,\n  TrendsPurchaseConversionParamsSchema,\n  TrendsTargetParamsSchema,\n  UrlNoDatabaseParamsSchema,\n  UrlParamsSchema,\n} from './schemas.js'"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 40,
+      "text": "import { SemrushApiError, semrushApi } from './semrush-api.js'"
+    },
+    {
+      "source_path": "src/schemas.ts",
+      "line": 8,
+      "text": "import { z } from 'zod'"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line": 1,
+      "text": "import axios, { AxiosError } from 'axios'"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line": 2,
+      "text": "import type { AxiosRequestConfig, AxiosResponse } from 'axios'"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line": 3,
+      "text": "import NodeCache from 'node-cache'"
+    },
+    {
+      "source_path": "src/semrush-api.ts",
+      "line": 5,
+      "text": "import { config, logger } from './config.js'"
+    },
+    {
+      "source_path": "vitest.config.ts",
+      "line": 1,
+      "text": "import { defineConfig } from 'vitest/config'"
+    }
+  ],
+  "call_edges": []
+}

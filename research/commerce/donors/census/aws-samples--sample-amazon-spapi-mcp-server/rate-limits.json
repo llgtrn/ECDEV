@@ -1,0 +1,1373 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "README.md",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Rate limiting** — Built-in per-API rate limiting with queue-before-fail strategy"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Retry logic** — Exponential backoff for transient failures (429, 5xx)"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Meta (health_check, get_config, rate_limit_status)"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "├── clients/              ← SP-API HTTP client with rate limiting"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "│   ├── meta/             ← Health check, config, rate limits"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "│   ├── Rate Limiter (per-API usage plan enforcement)"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 191,
+      "line_end": 191,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "│   └── Error Handler (retry logic, throttle backoff)"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 233,
+      "line_end": 233,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-03.3 | Tool descriptions MUST include: purpose, required parameters, optional parameters, and rate limits |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 250,
+      "line_end": 250,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "### 4.5 Rate Limiting & Throttling (FR-05)"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 254,
+      "line_end": 254,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-05.1 | Implement per-API rate limiting per SP-API usage plans |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-05.2 | Exponential backoff on 429 (Too Many Requests) responses |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 256,
+      "line_end": 256,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-05.3 | Expose current rate limit status via `spapi_rate_limit_status` tool |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 257,
+      "line_end": 257,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-05.4 | Queue requests when approaching rate limits rather than failing immediately |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 264,
+      "line_end": 264,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| FR-05B.2 | Each paginated page counts as a separate API call for rate-limiting purposes |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 281,
+      "line_end": 281,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `rate_limited` | 429 | Wait and retry (auto-handled by queue) |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 286,
+      "line_end": 286,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `quota_exceeded` | 429 (usage plan) | Wait for quota reset or request increase |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 454,
+      "line_end": 454,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| Rate Limiter | `bottleneck` | `aiolimiter` |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 467,
+      "line_end": 467,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| + Meta tools (config, health, rate limits) | +5 tools |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 484,
+      "line_end": 484,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Rate limiting + error handling + retry logic (exponential backoff)"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 507,
+      "line_end": 507,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- WAF (optional) for IP filtering / rate limiting"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 524,
+      "line_end": 524,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Independent rate limiting per marketplace"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 560,
+      "line_end": 560,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| AC-1.27 | Rate limiter prevents 429 errors under normal usage | Run 50 sequential calls to Orders API → zero 429 responses |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 561,
+      "line_end": 561,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| AC-1.28 | Rate limiter queues requests when approaching limit | Burst 20 rapid calls → verify queuing (no errors) |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 567,
+      "line_end": 567,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| AC-1.34 | `spapi_rate_limit_status` shows current usage per API | Call → verify per-API remaining quota displayed |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 614,
+      "line_end": 614,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| AC-3.11 | Rate limiting is independent per marketplace | Hit NA rate limit → verify EU calls still succeed |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 630,
+      "line_end": 630,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| WAF (optional) | Rate limiting & IP filtering | ~$5/mo + $0.60/million requests |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 650,
+      "line_end": 650,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| SP-API rate limits hit frequently | Tool failures, degraded UX | Implement intelligent queuing + caching for read operations |"
+    },
+    {
+      "source_path": "SP-API MCP Server — Requirements.md",
+      "line_start": 664,
+      "line_end": 664,
+      "blob_hash": "aefa274bd4beff26d9096936a75fa8e7b9bc13a2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [ ] Rate limiting prevents API throttling under normal usage"
+    },
+    {
+      "source_path": "sp-api-mcp/README.md",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Rate limiting** — Built-in per-API rate limiting with queue-before-fail strategy"
+    },
+    {
+      "source_path": "sp-api-mcp/README.md",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Retry logic** — Exponential backoff for transient failures (429, 5xx)"
+    },
+    {
+      "source_path": "sp-api-mcp/README.md",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Meta (health_check, get_config, rate_limit_status)"
+    },
+    {
+      "source_path": "sp-api-mcp/README.md",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "├── clients/              ← SP-API HTTP client with rate limiting"
+    },
+    {
+      "source_path": "sp-api-mcp/README.md",
+      "line_start": 122,
+      "line_end": 122,
+      "blob_hash": "917c7f081f2ada2b7b5a4a6c6885fd13f1117796",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "│   ├── meta/             ← Health check, config, rate limits"
+    },
+    {
+      "source_path": "sp-api-mcp/package-lock.json",
+      "line_start": 687,
+      "line_end": 687,
+      "blob_hash": "f728e44d4eda1f4c47583034e30db4121809a956",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"express-rate-limit\": \"^8.2.1\","
+    },
+    {
+      "source_path": "sp-api-mcp/package-lock.json",
+      "line_start": 1742,
+      "line_end": 1742,
+      "blob_hash": "f728e44d4eda1f4c47583034e30db4121809a956",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"node_modules/express-rate-limit\": {"
+    },
+    {
+      "source_path": "sp-api-mcp/package-lock.json",
+      "line_start": 1744,
+      "line_end": 1744,
+      "blob_hash": "f728e44d4eda1f4c47583034e30db4121809a956",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"resolved\": \"https://registry.npmjs.org/express-rate-limit/-/express-rate-limit-8.7.0.tgz\","
+    },
+    {
+      "source_path": "sp-api-mcp/package-lock.json",
+      "line_start": 1754,
+      "line_end": 1754,
+      "blob_hash": "f728e44d4eda1f4c47583034e30db4121809a956",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"url\": \"https://github.com/sponsors/express-rate-limit\""
+    },
+    {
+      "source_path": "sp-api-mcp/security.todo",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "50a62543602b944cd448b9ab7fca73d2220c3a9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "### Rate Limiting & Resilience"
+    },
+    {
+      "source_path": "sp-api-mcp/security.todo",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "50a62543602b944cd448b9ab7fca73d2220c3a9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [x] Per-API-domain rate limiting via Bottleneck (queue-before-fail)"
+    },
+    {
+      "source_path": "sp-api-mcp/security.todo",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "50a62543602b944cd448b9ab7fca73d2220c3a9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [x] Exponential backoff retry (3x) on transient errors (429, 5xx)"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  | \"rate_limited\""
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  | \"quota_exceeded\""
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  rate_limited: \"Request has been queued. Wait for rate limit reset or reduce request frequency.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  quota_exceeded: \"API usage quota exceeded. Wait for quota reset or request a limit increase.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    case 429:"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/errors.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "973af05fd816c2dfdc154ce01fa894ae676d7e24",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      return \"rate_limited\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { data, headers: {}, rateLimitRemaining: 10 };"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { data: responseData, headers: {}, rateLimitRemaining: 10 };"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { data: responseData, headers: {}, rateLimitRemaining: 10 };"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { data: responseData, headers: {}, rateLimitRemaining: 10 };"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return { data: responseData, headers: {}, rateLimitRemaining: 10 };"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/mock-client.ts",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "21ff2b9bc80e61e030c5f26e503028dc7943e824",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  override getRateLimitStatus(): Record<string, { running: number; queued: number }> {"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  rateLimitRemaining?: number;"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * SP-API HTTP client with rate limiting, retry logic, and auto-pagination."
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "   * Get rate limit status for tracked API domains."
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  getRateLimitStatus(): Record<string, { running: number; queued: number }> {"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 220,
+      "line_end": 220,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        rateLimitRemaining: parseRateLimit("
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 221,
+      "line_end": 221,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          response.headers[\"x-amzn-ratelimit-limit\"] as string"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      // Rate limited — wait and retry"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 237,
+      "line_end": 237,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      if (status === 429 && attempt <= maxAttempts) {"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 239,
+      "line_end": 239,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        logger.warn(`Rate limited, retrying in ${backoff}ms (attempt ${attempt})`);"
+    },
+    {
+      "source_path": "sp-api-mcp/src/clients/sp-api-client.ts",
+      "line_start": 260,
+      "line_end": 260,
+      "blob_hash": "9fc26076c2622ba06b2bb2f5cd9473ac93331466",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function parseRateLimit(header: string | undefined): number | undefined {"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "342c69c084b255c4c67c68ba5a6b08f1fbef398b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { createHealthCheckTool, createGetConfigTool, createRateLimitStatusTool } from \"./tools/meta/index.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/index.ts",
+      "line_start": 123,
+      "line_end": 123,
+      "blob_hash": "342c69c084b255c4c67c68ba5a6b08f1fbef398b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  registry.register(createRateLimitStatusTool(apiClient));"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/base.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "572573aa325ffcea7e0a3cf8b5ccca45d9479675",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  /** API domain for rate limiting (e.g. \"orders\", \"catalog\") */"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/index.ts",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "52f55d644d3d086d5b24591029bdda2f6a13d058",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export { createRateLimitStatusTool } from \"./rate-limit-status.js\";"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "e8da44eac030325c41539a321574189c5d3ec0fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function createRateLimitStatusTool(client: SpApiClient): ToolDefinition {"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "e8da44eac030325c41539a321574189c5d3ec0fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    name: \"spapi_rate_limit_status\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "e8da44eac030325c41539a321574189c5d3ec0fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      \"Get current rate limit status for all tracked API domains. Shows running and queued request counts per domain.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/meta/rate-limit-status.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "e8da44eac030325c41539a321574189c5d3ec0fe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      const status = client.getRateLimitStatus();"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/app-integrations.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "a7c200232b6cad6eecca7aa8b33c0f48d5e5556d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Send a notification to a selling partner via the App Integrations API. Used by SP-API applications to communicate with sellers. Rate limit: 1 request/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "11b1826e921e0349b6299f6ad50c53b8eb516ab9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List Amazon Warehousing & Distribution (AWD) inbound orders. AWD is a long-term storage program. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "11b1826e921e0349b6299f6ad50c53b8eb516ab9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details of an AWD inbound order. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/awd.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "11b1826e921e0349b6299f6ad50c53b8eb516ab9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List inventory stored in AWD fulfillment centers. Shows SKU-level quantities. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "47da6248f465c11a0337f69e85e9e7b68ed5b207",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get available handover time slots for Easy Ship orders (IN/JP). Returns slot IDs, dates, and times for package pickup. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "47da6248f465c11a0337f69e85e9e7b68ed5b207",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Schedule an Easy Ship package for pickup at a specific time slot. Rate limit: 1 request/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "47da6248f465c11a0337f69e85e9e7b68ed5b207",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details of a scheduled Easy Ship package by order ID. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/easy-ship.ts",
+      "line_start": 104,
+      "line_end": 104,
+      "blob_hash": "47da6248f465c11a0337f69e85e9e7b68ed5b207",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Update time slot for a scheduled Easy Ship package. Rate limit: 1 request/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "3d48af3f8f92c7ac61561bf5a15dd6a563bfbc58",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get external fulfillment inventory levels by location. Shows inventory across non-Amazon channels. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "3d48af3f8f92c7ac61561bf5a15dd6a563bfbc58",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get external fulfillment shipping orders that need processing. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/external-fulfillment.ts",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "3d48af3f8f92c7ac61561bf5a15dd6a563bfbc58",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get return information for external fulfillment orders. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inbound-eligibility.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "fcebf1f5b20f64e4a5b0dd51e81ab48e2e82bb32",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Check if an item is eligible for FBA inbound. Returns eligibility status and any ineligibility reasons. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fba-inventory.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "13693cad6681c7b66bdedde4d544855a536dbbbe",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get FBA inventory summaries including fulfillable, inbound, reserved, and unfulfillable quantities. Can filter by ASIN, SKU, or date. Rate limit: 2 requests/sec (burst of 2).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/finances.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "80eca382506d43737addcf6e9905da1848449968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List financial transactions for the seller account, including order charges, refunds, fees, and adjustments. Rate limit: 0.5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create an inbound plan for sending inventory to Amazon FBA. Specify items, quantities, and source address. Rate limit: 2 requests/sec (burst of 2).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details of an existing FBA inbound plan including status, items, and shipments. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List FBA inbound plans with optional filters for status and date. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List items within an FBA inbound plan. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 111,
+      "line_end": 111,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Generate content update previews for an inbound shipment (e.g., box content changes). Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Confirm a shipment content update preview. Rate limit: 2 requests/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-inbound.ts",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "dd0cbe31ecf1c08c988214eabba214c0b1bcd7b7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details for a specific shipment within an inbound plan. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "e541e9c09c3a236c3dec728783e980849e9b1ceb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a fulfillment preview for Multi-Channel Fulfillment (MCF). Shows available shipping options, estimated delivery dates, and fees for fulfilling an order from FBA inventory. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "e541e9c09c3a236c3dec728783e980849e9b1ceb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a Multi-Channel Fulfillment order to ship inventory from FBA to a customer. Rate limit: 2 requests/sec. NOTE: Write operation — creates a real fulfillment order.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "e541e9c09c3a236c3dec728783e980849e9b1ceb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get status and details of an existing MCF fulfillment order. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "e541e9c09c3a236c3dec728783e980849e9b1ceb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List MCF fulfillment orders with optional date filter. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/fulfillment-outbound.ts",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "e541e9c09c3a236c3dec728783e980849e9b1ceb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Cancel an MCF fulfillment order. Only works if order has not shipped. DESTRUCTIVE. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "d5517dd6b0dca6d213492bbbc0b710c78edc196f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get eligible shipping services for a seller-fulfilled (MFN) order. Returns available carriers, rates, and delivery estimates. Rate limit: 1 request/sec (burst of 1).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "d5517dd6b0dca6d213492bbbc0b710c78edc196f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a shipment and purchase a shipping label for a seller-fulfilled order. Rate limit: 1 request/sec. NOTE: Write operation — charges your account.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line_start": 108,
+      "line_end": 108,
+      "blob_hash": "d5517dd6b0dca6d213492bbbc0b710c78edc196f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details and tracking for an existing merchant fulfillment shipment. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/merchant-fulfillment.ts",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "d5517dd6b0dca6d213492bbbc0b710c78edc196f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Cancel a merchant fulfillment shipment. DESTRUCTIVE. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "13a2ae430bf11ef4e2130d8fb333eb2ecc09aa3c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get available messaging actions for a given order. Returns which message types can be sent to the buyer. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/messaging.ts",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "13a2ae430bf11ef4e2130d8fb333eb2ecc09aa3c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"⚠️ DESTRUCTIVE: Send a message to a buyer for a specific order. This sends a real email to the customer and cannot be unsent. Requires confirm: true to execute. Supports various message types like order delivery info, legal disclosures, etc. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "c28c7d7f5138b0dd263feb4fd5f22061e5f46e97",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a list of orders based on criteria such as date range, status, and fulfillment channel. Returns order summaries with IDs, dates, amounts, and status. Rate limit: 0.0167 requests/sec (1 per minute burst of 20).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "c28c7d7f5138b0dd263feb4fd5f22061e5f46e97",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get detailed information for a single order by order ID. Includes shipping address, payment info, and order totals. Rate limit: 0.5 requests/sec (burst of 30).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "c28c7d7f5138b0dd263feb4fd5f22061e5f46e97",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get line items for a specific order including ASINs, quantities, prices, and fulfillment info. Rate limit: 0.5 requests/sec (burst of 30).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "c28c7d7f5138b0dd263feb4fd5f22061e5f46e97",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get the shipping address for an order. Requires Restricted Data Token (RDT) for PII fields. Rate limit: 0.5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/orders.ts",
+      "line_start": 108,
+      "line_end": 108,
+      "blob_hash": "c28c7d7f5138b0dd263feb4fd5f22061e5f46e97",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get buyer information (name, email) for an order. Requires Restricted Data Token (RDT). Rate limit: 0.5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "d768b8387818c1ad14094ad3417e8a5bf4f44b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get competitive pricing information for items including Buy Box prices, offer counts, and landed price. Supports batch requests of up to 20 ASINs. Rate limit: 0.5 requests/sec (burst of 1).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "d768b8387818c1ad14094ad3417e8a5bf4f44b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get all active offers for a specific SKU, including price, condition, shipping, and seller feedback data. Rate limit: 0.5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/pricing.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "d768b8387818c1ad14094ad3417e8a5bf4f44b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get all active offers for a specific ASIN, including price, condition, shipping, and seller feedback data. Rate limit: 0.5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/product-fees.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "f051b3209bbcc014e79ac68161c85d9f2400d126",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get fee estimates for a product by ASIN. Returns referral fees, FBA fees, closing fees, etc. based on price and fulfillment channel. Rate limit: 0.5 requests/sec (burst of 1).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/product-fees.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "f051b3209bbcc014e79ac68161c85d9f2400d126",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get fee estimates for multiple products in batch (up to 20). Rate limit: 0.5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sales.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "7319302fb546673fd8bb014ef3cfd10e06fe4feb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get aggregated order metrics (units ordered, revenue, average price) for a date range. Supports hourly, daily, weekly, monthly, yearly granularity. Rate limit: 0.5 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/seller-wallet.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "2a4d80a656958510051eb963f467c8e16785736c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get Seller Wallet account details including balance and account status. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/seller-wallet.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "2a4d80a656958510051eb963f467c8e16785736c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List Seller Wallet transactions (deposits, withdrawals, transfers). Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sellers.ts",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "5636741c6cab73bd5cd94299828f9f2bf681aafd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a list of marketplaces and participation details for the seller account. Shows which marketplaces you're registered in and your participation status. Rate limit: 0.016 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/sellers.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "5636741c6cab73bd5cd94299828f9f2bf681aafd",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get seller account information including business name, address, and marketplace registrations. Rate limit: 0.016 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "c5e59d7e973d0862c57739318dfc1ae091a621f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a list of service jobs (e.g., device installation, home services) with optional filters. Rate limit: 20 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "c5e59d7e973d0862c57739318dfc1ae091a621f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details for a specific service job by ID. Rate limit: 20 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/services.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "c5e59d7e973d0862c57739318dfc1ae091a621f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Cancel a service job. DESTRUCTIVE. Rate limit: 5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "4ad57004acd202955eaf7152f5e8191854a3c04b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get shipping rates for a shipment. Provide package dimensions, weight, origin, and destination. Returns available carrier rates. Rate limit: 80 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "4ad57004acd202955eaf7152f5e8191854a3c04b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Purchase a shipping label for a shipment using a selected rate. Returns tracking info and label. Rate limit: 80 requests/sec. NOTE: Write operation — charges your account.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "4ad57004acd202955eaf7152f5e8191854a3c04b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get tracking information for a shipment by tracking ID. Returns carrier, status, and event history. Rate limit: 80 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "4ad57004acd202955eaf7152f5e8191854a3c04b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"⚠️ DESTRUCTIVE: Cancel a previously purchased shipping label. This cannot be undone and may affect delivery commitments. Requires confirm: true to execute. Rate limit: 80 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/shipping.ts",
+      "line_start": 138,
+      "line_end": 138,
+      "blob_hash": "4ad57004acd202955eaf7152f5e8191854a3c04b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Retrieve shipping documents (labels, customs forms) for a purchased shipment. Rate limit: 80 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "f99ead5ef8c7050f8f7ec537c7f1b8308078930a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get available solicitation actions for an order (e.g., request review). Returns whether solicitations can be sent. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/solicitations.ts",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "f99ead5ef8c7050f8f7ec537c7f1b8308078930a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Send a product review solicitation to the buyer for an order. Can only be sent between 5-30 days after delivery. Rate limit: 1 request/sec. NOTE: Write operation — sends a real solicitation email.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "8d8a9a9825c6d5218a9fb1fcb79bd4f255b274b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List seller supply sources (fulfillment locations). Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "8d8a9a9825c6d5218a9fb1fcb79bd4f255b274b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details of a specific supply source by ID. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/supply-sources.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "8d8a9a9825c6d5218a9fb1fcb79bd4f255b274b3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a new supply source (fulfillment location). Rate limit: 2 requests/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/transfers.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "b91162ca3f1741682b89760ba40619bb3f7b72e3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Initiate a payout/transfer to your bank account (EU marketplaces). Rate limit: 1 request/sec. NOTE: Write operation — initiates a real money transfer.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/transfers.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "b91162ca3f1741682b89760ba40619bb3f7b72e3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get available payment methods for payouts. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/seller/vehicles.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "a415eddf92fa6d02c56b955da68b793a87fa6e77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Search for vehicles by make, model, year, or other attributes. Returns vehicle compatibility data for automotive parts. Rate limit: 5 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "02a340282715e64bae12cdfef0e2830893df528c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Search A+ Content documents for the selling partner. Returns content reference keys and metadata. Rate limit: 10 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "02a340282715e64bae12cdfef0e2830893df528c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details of an A+ Content document by content reference key. Returns modules, ASINs, and approval status. Rate limit: 10 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "02a340282715e64bae12cdfef0e2830893df528c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a new A+ Content document with content modules. Rate limit: 10 requests/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "02a340282715e64bae12cdfef0e2830893df528c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Update an existing A+ Content document. Rate limit: 10 requests/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/a-plus-content.ts",
+      "line_start": 111,
+      "line_end": 111,
+      "blob_hash": "02a340282715e64bae12cdfef0e2830893df528c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Submit an A+ Content document for approval. Rate limit: 10 requests/sec. NOTE: Write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/application-management.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "276a620c4cff571111c6450a7c3dfc4026d3a6a6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"⚠️ DESTRUCTIVE: Credential rotation — Rotates the client secret for an SP-API application. This permanently invalidates the current secret after a short grace period. All systems using the old secret will lose access. Requires confirm: true to execute. Rate limit: 0.0167 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "722d23a248e6379b2d0d587caff54fae9aa3f524",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Search the Amazon catalog by keywords, identifiers, or brand. Returns items with ASINs, titles, images, and product details. Rate limit: 2 requests/sec (burst of 2).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/catalog.ts",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "722d23a248e6379b2d0d587caff54fae9aa3f524",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get detailed information for a single catalog item by ASIN, including title, description, images, dimensions, and classifications. Rate limit: 2 requests/sec (burst of 2).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "bcf7487c190fcb531f682fc24936fe2c46c60162",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get product review insights and summaries for your ASINs. Includes sentiment analysis, star ratings, and top themes. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/customer-feedback.ts",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "bcf7487c190fcb531f682fc24936fe2c46c60162",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get return reason insights for your ASINs. Shows top return reasons, defect rates, and trends. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "bc7180b9ebb4cf130821730adce3a3223766401b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Submit a GraphQL analytics query to the SP-API Data Kiosk service (no local file system access). Supports sales, traffic, inventory, and brand analytics. This is a remote API call that queues a query on Amazon's servers — async operation, use get_query to check status. Rate limit: 0.0222 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "bc7180b9ebb4cf130821730adce3a3223766401b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get status and result of a Data Kiosk query. Returns document ID when complete. Rate limit: 2 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "bc7180b9ebb4cf130821730adce3a3223766401b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"List Data Kiosk queries with optional status/date filters. Rate limit: 0.0222 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/data-kiosk.ts",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "bc7180b9ebb4cf130821730adce3a3223766401b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a pre-signed URL to download Data Kiosk query results. Rate limit: 0.0167 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "3da02053aa79cd5775c370219c20fab23ab19ed5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a feed document and get a pre-signed URL for uploading feed content. This is step 1 of feed submission. Rate limit: 0.5 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "3da02053aa79cd5775c370219c20fab23ab19ed5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Submit a feed for processing. Requires a feed document ID (from create_feed_document). Common feed types: POST_FLAT_FILE_LISTINGS_DATA, POST_PRODUCT_DATA, POST_INVENTORY_AVAILABILITY_DATA, POST_PRODUCT_PRICING_DATA. Rate limit: 0.5 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "3da02053aa79cd5775c370219c20fab23ab19ed5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get the status and details of a submitted feed. Returns processing status and result document ID when complete. Rate limit: 2 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/feeds.ts",
+      "line_start": 81,
+      "line_end": 81,
+      "blob_hash": "3da02053aa79cd5775c370219c20fab23ab19ed5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a pre-signed URL to download the feed processing result document. Use after feed status is DONE. Rate limit: 0.0222 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings-restrictions.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "ca3c755700aafeba0b179c6d344d9404895592e7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get listing restrictions for an ASIN in a marketplace. Shows whether you're approved to sell, what conditions apply, and any required approvals. Rate limit: 5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "02053c841f3e4d0469c5f89d48dd3378ff8ad8dc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get details for a specific listing by seller ID and SKU. Returns product attributes, offers, fulfillment, and issues. Rate limit: 5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "02053c841f3e4d0469c5f89d48dd3378ff8ad8dc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create or fully update a listing for a given SKU. Provide product attributes as JSON patches. Returns submission ID and validation issues if any. Rate limit: 5 requests/sec (burst of 10). NOTE: This is a write operation that modifies your listings.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "02053c841f3e4d0469c5f89d48dd3378ff8ad8dc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Partially update a listing by applying JSON patches to specific attributes. Useful for price, quantity, or single-field updates. Rate limit: 5 requests/sec (burst of 10). NOTE: This is a write operation.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/listings.ts",
+      "line_start": 104,
+      "line_end": 104,
+      "blob_hash": "02053c841f3e4d0469c5f89d48dd3378ff8ad8dc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"⚠️ DESTRUCTIVE: Delete a listing for a given SKU. This permanently removes the listing from the marketplace and cannot be undone. Requires confirm: true to execute. Rate limit: 5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "20b85931b0831b78417f4f4fec160f708227fce1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get all notification subscriptions for a given notification type. Rate limit: 1 request/sec (burst of 5).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "20b85931b0831b78417f4f4fec160f708227fce1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a notification subscription for event notifications. Requires a destination (SQS queue or EventBridge). Rate limit: 1 request/sec (burst of 5).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "20b85931b0831b78417f4f4fec160f708227fce1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get all notification destinations (SQS queues, EventBridge event buses) configured for the application. Rate limit: 1 request/sec (burst of 5).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/notifications.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "20b85931b0831b78417f4f4fec160f708227fce1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a notification destination (SQS queue or EventBridge). This is step 1 before creating subscriptions. Rate limit: 1 request/sec (burst of 5).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "36ff1a6fa17df9776889fb4c374911ca7fa9ed49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Search for product type definitions available in a marketplace. Returns product type names and their requirements context. Rate limit: 5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/product-type-definitions.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "36ff1a6fa17df9776889fb4c374911ca7fa9ed49",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get the full definition (JSON Schema) for a product type. Shows all required and optional attributes for listing creation. Rate limit: 5 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "dcfbfc2ce28124ec9e340a96033ec6fc1fdfe3e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get Subscribe & Save metrics for the selling partner, including subscriber counts, revenue, and forecasting data. Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/replenishment.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "dcfbfc2ce28124ec9e340a96033ec6fc1fdfe3e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get Subscribe & Save offer-level metrics (per-ASIN subscriber count, revenue, forecasts). Rate limit: 1 request/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "b0e4a774ced5c0847a4d298553a988383495f55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Request a new report. This is an async operation — use spapi_reports_get_report to check status, or use spapi_reports_get_report_document_auto which handles polling automatically. Common report types: GET_FLAT_FILE_OPEN_LISTINGS_DATA, GET_MERCHANT_LISTINGS_ALL_DATA, GET_FBA_MYI_UNSUPPRESSED_INVENTORY_DATA, GET_FLAT_FILE_ALL_ORDERS_DATA_BY_ORDER_DATE_GENERAL. Rate limit: 0.0167 requests/se"
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "b0e4a774ced5c0847a4d298553a988383495f55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get the status and details of a previously requested report. Returns processing status and report document ID when complete. Rate limit: 2 requests/sec (burst of 15).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "b0e4a774ced5c0847a4d298553a988383495f55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a pre-signed URL to download a completed report document. Use after the report status is DONE. Rate limit: 0.0167 requests/sec.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "b0e4a774ced5c0847a4d298553a988383495f55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Composite tool: Creates a report, polls until completion, and returns the download URL. Handles the full async lifecycle automatically. Timeout: 5 minutes. Rate limit: follows individual API limits.\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/reports.ts",
+      "line_start": 163,
+      "line_end": 163,
+      "blob_hash": "b0e4a774ced5c0847a4d298553a988383495f55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Get a list of reports matching filters (type, status, date range). Useful for finding previously generated reports. Rate limit: 0.0222 requests/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/tokens.ts",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "841934e596c6e2fb01c0fb3117c8013990c9fe8f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create a Restricted Data Token (RDT) for accessing PII-sensitive data (buyer name, address, email). Required for Orders buyerInfo and shippingAddress. Rate limit: 1 request/sec (burst of 10).\","
+    },
+    {
+      "source_path": "sp-api-mcp/src/tools/shared/uploads.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "3ffeaebf5e075cc4152bce0b3a3a4ac964b79bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"Create an upload destination (pre-signed URL) for uploading files used by other API operations (e.g., feed documents, message attachments). Rate limit: 10 requests/sec.\","
+    }
+  ]
+}

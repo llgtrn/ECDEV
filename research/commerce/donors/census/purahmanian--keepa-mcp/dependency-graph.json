@@ -1,0 +1,226 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "src/index.ts",
+      "line": 12,
+      "text": "import { McpServer } from \"@modelcontextprotocol/sdk/server/mcp.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 13,
+      "text": "import { StdioServerTransport } from \"@modelcontextprotocol/sdk/server/stdio.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 15,
+      "text": "import { GetProductInputSchema, runGetProduct } from \"./tools/get-product.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 16,
+      "text": "import {\n  GetPriceHistoryInputSchema,\n  runGetPriceHistory,\n} from \"./tools/get-price-history.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 20,
+      "text": "import {\n  GetSalesRankHistoryInputSchema,\n  runGetSalesRankHistory,\n} from \"./tools/get-sales-rank-history.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 24,
+      "text": "import {\n  SearchProductsInputSchema,\n  runSearchProducts,\n} from \"./tools/search-products.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 28,
+      "text": "import {\n  GetBestSellersInputSchema,\n  runGetBestSellers,\n} from \"./tools/get-best-sellers.js\";"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 32,
+      "text": "import { GetDealsInputSchema, runGetDeals } from \"./tools/get-deals.js\";"
+    },
+    {
+      "source_path": "src/services/keepa-client.ts",
+      "line": 3,
+      "text": "import {\n  KEEPA_API_BASE,\n  KEEPA_TIME_OFFSET,\n  MAX_HISTORY_POINTS,\n  DEFAULT_STATS_DAYS,\n  PRICE_TYPES,\n  csvStride,\n} from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/services/keepa-client.ts",
+      "line": 11,
+      "text": "import type {\n  KeepaProductResponse,\n  KeepaSearchResponse,\n  KeepaDealsResponse,\n  HistoryPoint,\n  KeepaProduct,\n} from \"../types.js\";"
+    },
+    {
+      "source_path": "src/services/keepa-values.ts",
+      "line": 9,
+      "text": "import { csvStride } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-best-sellers.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/get-best-sellers.ts",
+      "line": 5,
+      "text": "import { fetchBestSellers } from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/get-best-sellers.ts",
+      "line": 6,
+      "text": "import { DEFAULT_DOMAIN } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-deals.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/get-deals.ts",
+      "line": 5,
+      "text": "import { fetchDeals } from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/get-deals.ts",
+      "line": 6,
+      "text": "import { resolveCurrent } from \"../services/keepa-values.js\";"
+    },
+    {
+      "source_path": "src/tools/get-deals.ts",
+      "line": 7,
+      "text": "import { DEFAULT_DOMAIN, PRICE_TYPES } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-deals.ts",
+      "line": 8,
+      "text": "import type { KeepaDeal } from \"../types.js\";"
+    },
+    {
+      "source_path": "src/tools/get-price-history.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/get-price-history.ts",
+      "line": 5,
+      "text": "import { fetchProduct, decodeSeries, parseRange } from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/get-price-history.ts",
+      "line": 6,
+      "text": "import { DEFAULT_DOMAIN, PRICE_TYPES } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-price-history.ts",
+      "line": 7,
+      "text": "import type { PriceHistoryResult, HistoryPoint } from \"../types.js\";"
+    },
+    {
+      "source_path": "src/tools/get-product.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/get-product.ts",
+      "line": 5,
+      "text": "import { fetchProduct } from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/get-product.ts",
+      "line": 6,
+      "text": "import { resolveCurrent } from \"../services/keepa-values.js\";"
+    },
+    {
+      "source_path": "src/tools/get-product.ts",
+      "line": 7,
+      "text": "import { DEFAULT_DOMAIN, PRICE_TYPES } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-product.ts",
+      "line": 8,
+      "text": "import type { ProductSummary, KeepaProduct } from \"../types.js\";"
+    },
+    {
+      "source_path": "src/tools/get-sales-rank-history.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/get-sales-rank-history.ts",
+      "line": 5,
+      "text": "import {\n  fetchProduct,\n  decodeSeries,\n  parseRange,\n  computeTrendSummary,\n} from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/get-sales-rank-history.ts",
+      "line": 11,
+      "text": "import { DEFAULT_DOMAIN, PRICE_TYPES } from \"../constants.js\";"
+    },
+    {
+      "source_path": "src/tools/get-sales-rank-history.ts",
+      "line": 12,
+      "text": "import type { SalesRankHistoryResult, HistoryPoint } from \"../types.js\";"
+    },
+    {
+      "source_path": "src/tools/search-products.ts",
+      "line": 4,
+      "text": "import { z } from \"zod\";"
+    },
+    {
+      "source_path": "src/tools/search-products.ts",
+      "line": 5,
+      "text": "import { searchProducts as apiSearch } from \"../services/keepa-client.js\";"
+    },
+    {
+      "source_path": "src/tools/search-products.ts",
+      "line": 6,
+      "text": "import { DEFAULT_DOMAIN } from \"../constants.js\";"
+    },
+    {
+      "source_path": "tests/keepa-client.test.ts",
+      "line": 1,
+      "text": "import { describe, it, expect } from \"vitest\";"
+    },
+    {
+      "source_path": "tests/keepa-client.test.ts",
+      "line": 2,
+      "text": "import {\n  keepaTimeToDate,\n  dateToKeepaTime,\n  decodeHistory,\n  decodeSeries,\n  parseRange,\n  computeTrendSummary,\n} from \"../src/services/keepa-client.js\";"
+    },
+    {
+      "source_path": "tests/keepa-client.test.ts",
+      "line": 10,
+      "text": "import { KEEPA_TIME_OFFSET, PRICE_TYPES } from \"../src/constants.js\";"
+    },
+    {
+      "source_path": "tests/tools.test.ts",
+      "line": 1,
+      "text": "import { describe, it, expect, vi, beforeEach, afterEach } from \"vitest\";"
+    },
+    {
+      "source_path": "tests/tools.test.ts",
+      "line": 2,
+      "text": "import { readFileSync } from \"fs\";"
+    },
+    {
+      "source_path": "tests/tools.test.ts",
+      "line": 3,
+      "text": "import { fileURLToPath } from \"url\";"
+    },
+    {
+      "source_path": "tests/tools.test.ts",
+      "line": 4,
+      "text": "import { dirname, join } from \"path\";"
+    },
+    {
+      "source_path": "tests/tools.test.ts",
+      "line": 6,
+      "text": "import { KEEPA_TIME_OFFSET, csvStride } from \"../src/constants.js\";"
+    },
+    {
+      "source_path": "vitest.config.ts",
+      "line": 1,
+      "text": "import { defineConfig } from \"vitest/config\";"
+    }
+  ],
+  "call_edges": []
+}

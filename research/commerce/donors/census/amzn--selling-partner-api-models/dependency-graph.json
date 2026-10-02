@@ -1,0 +1,1717 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 4,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 5,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 6,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSSigV4Signer;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 7,
+      "text": "import com.squareup.okhttp.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 8,
+      "text": "import com.squareup.okhttp.Request;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 9,
+      "text": "import com.squareup.okhttp.RequestBody;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 10,
+      "text": "import com.squareup.okhttp.Response;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegatee.java",
+      "line": 12,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 4,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 5,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 6,
+      "text": "import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 9,
+      "text": "import io.swagger.client.ApiException;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 10,
+      "text": "import io.swagger.client.api.TokensApi;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 11,
+      "text": "import io.swagger.client.model.CreateRestrictedDataTokenRequest;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 12,
+      "text": "import io.swagger.client.model.CreateRestrictedDataTokenResponse;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 13,
+      "text": "import io.swagger.client.model.RestrictedResource;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 16,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 17,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sample-code/DelegatedRestrictedDataTokenWorkflowForDelegator.java",
+      "line": 18,
+      "text": "import java.util.List;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 4,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 5,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 6,
+      "text": "import com.amazon.SellingPartnerAPIAA.AWSSigV4Signer;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 7,
+      "text": "import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 10,
+      "text": "import io.swagger.client.ApiException;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 11,
+      "text": "import io.swagger.client.api.TokensApi;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 12,
+      "text": "import io.swagger.client.model.CreateRestrictedDataTokenRequest;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 13,
+      "text": "import io.swagger.client.model.CreateRestrictedDataTokenResponse;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 14,
+      "text": "import io.swagger.client.model.RestrictedResource;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 17,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 18,
+      "text": "import java.util.ArrayList;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 19,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 20,
+      "text": "import java.util.List;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 21,
+      "text": "import com.google.gson.JsonObject;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 22,
+      "text": "import com.google.gson.JsonParser;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 23,
+      "text": "import com.squareup.okhttp.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 24,
+      "text": "import com.squareup.okhttp.Request;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 25,
+      "text": "import com.squareup.okhttp.RequestBody;"
+    },
+    {
+      "source_path": "clients/sample-code/RestrictedDataTokenWorkflow.java",
+      "line": 26,
+      "text": "import com.squareup.okhttp.Response;"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "parse_error": "Could not find language library for c_sharp"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAccessTokenCacheImpl.java",
+      "line": 3,
+      "text": "import java.util.concurrent.ConcurrentHashMap;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAccessTokenCacheItem.java",
+      "line": 3,
+      "text": "import lombok.Data;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAccessTokenRequestMeta.java",
+      "line": 3,
+      "text": "import com.google.gson.annotations.SerializedName;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAccessTokenRequestMeta.java",
+      "line": 4,
+      "text": "import lombok.Builder;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAccessTokenRequestMeta.java",
+      "line": 5,
+      "text": "import lombok.Data;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationCredentials.java",
+      "line": 3,
+      "text": "import lombok.Builder;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationCredentials.java",
+      "line": 4,
+      "text": "import lombok.Data;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationCredentials.java",
+      "line": 5,
+      "text": "import lombok.NonNull;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationCredentials.java",
+      "line": 7,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationCredentials.java",
+      "line": 8,
+      "text": "import java.util.HashSet;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSigner.java",
+      "line": 3,
+      "text": "import lombok.AccessLevel;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSigner.java",
+      "line": 4,
+      "text": "import lombok.Getter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSigner.java",
+      "line": 5,
+      "text": "import lombok.Setter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSigner.java",
+      "line": 6,
+      "text": "import okhttp3.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 3,
+      "text": "import com.google.gson.Gson;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 4,
+      "text": "import com.google.gson.JsonObject;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 5,
+      "text": "import com.google.gson.JsonParser;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 6,
+      "text": "import lombok.AccessLevel;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 7,
+      "text": "import lombok.Getter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 8,
+      "text": "import lombok.Setter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 9,
+      "text": "import okhttp3.MediaType;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 10,
+      "text": "import okhttp3.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 11,
+      "text": "import okhttp3.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 12,
+      "text": "import okhttp3.RequestBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 13,
+      "text": "import okhttp3.Response;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 14,
+      "text": "import okhttp3.ResponseBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClient.java",
+      "line": 15,
+      "text": "import org.apache.commons.lang3.EnumUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopes.java",
+      "line": 4,
+      "text": "import com.google.gson.annotations.JsonAdapter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopes.java",
+      "line": 5,
+      "text": "import lombok.AllArgsConstructor;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopes.java",
+      "line": 6,
+      "text": "import lombok.Getter;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopes.java",
+      "line": 8,
+      "text": "import java.util.Set;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 3,
+      "text": "import com.google.gson.JsonDeserializationContext;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 4,
+      "text": "import com.google.gson.JsonDeserializer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 5,
+      "text": "import com.google.gson.JsonElement;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 6,
+      "text": "import com.google.gson.JsonObject;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 7,
+      "text": "import com.google.gson.JsonParseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 8,
+      "text": "import com.google.gson.JsonPrimitive;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 9,
+      "text": "import com.google.gson.JsonSerializationContext;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 10,
+      "text": "import com.google.gson.JsonSerializer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 12,
+      "text": "import java.lang.reflect.Type;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 13,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 14,
+      "text": "import java.util.HashSet;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializer.java",
+      "line": 15,
+      "text": "import java.util.Set;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/RateLimitConfigurationOnRequests.java",
+      "line": 3,
+      "text": "import lombok.Builder;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/RateLimitConfigurationOnRequests.java",
+      "line": 4,
+      "text": "import lombok.Data;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/RestrictedDataTokenSigner.java",
+      "line": 3,
+      "text": "import okhttp3.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/RestrictedDataTokenSigner.java",
+      "line": 4,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/src/com/amazon/SellingPartnerAPIAA/RestrictedDataTokenSigner.java",
+      "line": 5,
+      "text": "import java.util.List;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 3,
+      "text": "import okhttp3.Call;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 4,
+      "text": "import okhttp3.MediaType;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 5,
+      "text": "import okhttp3.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 6,
+      "text": "import okhttp3.Protocol;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 7,
+      "text": "import okhttp3.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 8,
+      "text": "import okhttp3.Response;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 9,
+      "text": "import okhttp3.ResponseBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 10,
+      "text": "import org.junit.Assert;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 11,
+      "text": "import org.junit.Before;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 12,
+      "text": "import org.junit.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 13,
+      "text": "import org.junit.jupiter.api.BeforeEach;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 14,
+      "text": "import org.junit.jupiter.params.ParameterizedTest;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 15,
+      "text": "import org.junit.jupiter.params.provider.Arguments;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 16,
+      "text": "import org.junit.jupiter.params.provider.MethodSource;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 17,
+      "text": "import org.mockito.ArgumentCaptor;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 18,
+      "text": "import org.mockito.Mock;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 19,
+      "text": "import org.mockito.MockitoAnnotations;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 21,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 22,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 23,
+      "text": "import java.util.HashSet;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 24,
+      "text": "import java.util.stream.Stream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 26,
+      "text": "import static org.junit.Assert.assertEquals;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 27,
+      "text": "import static org.junit.Assert.assertNull;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 28,
+      "text": "import static org.junit.Assert.assertNotSame;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 29,
+      "text": "import static org.mockito.ArgumentMatchers.any;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 30,
+      "text": "import static org.mockito.Mockito.mock;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 31,
+      "text": "import static org.mockito.Mockito.when;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 33,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_NOTIFICATIONS_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAAuthorizationSignerTest.java",
+      "line": 34,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_MIGRATION_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 3,
+      "text": "import com.google.gson.Gson;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 4,
+      "text": "import org.junit.Assert;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 5,
+      "text": "import org.junit.jupiter.api.BeforeEach;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 6,
+      "text": "import org.junit.jupiter.params.ParameterizedTest;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 7,
+      "text": "import org.junit.jupiter.params.provider.Arguments;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 8,
+      "text": "import org.junit.jupiter.params.provider.MethodSource;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 10,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 11,
+      "text": "import java.util.HashSet;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 12,
+      "text": "import java.util.Set;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 13,
+      "text": "import java.util.stream.Stream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 15,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_NOTIFICATIONS_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientScopesSerializerDeserializerTest.java",
+      "line": 16,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_MIGRATION_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 3,
+      "text": "import com.google.gson.JsonObject;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 4,
+      "text": "import com.google.gson.JsonParser;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 5,
+      "text": "import okhttp3.Call;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 6,
+      "text": "import okhttp3.MediaType;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 7,
+      "text": "import okhttp3.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 8,
+      "text": "import okhttp3.Protocol;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 9,
+      "text": "import okhttp3.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 10,
+      "text": "import okhttp3.Response;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 11,
+      "text": "import okhttp3.ResponseBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 12,
+      "text": "import okio.Buffer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 13,
+      "text": "import org.junit.Before;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 14,
+      "text": "import org.junit.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 15,
+      "text": "import org.junit.jupiter.api.Assertions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 16,
+      "text": "import org.junit.jupiter.api.BeforeEach;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 17,
+      "text": "import org.junit.jupiter.params.ParameterizedTest;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 18,
+      "text": "import org.junit.jupiter.params.provider.Arguments;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 19,
+      "text": "import org.junit.jupiter.params.provider.MethodSource;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 20,
+      "text": "import org.junit.runner.RunWith;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 21,
+      "text": "import org.mockito.ArgumentCaptor;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 22,
+      "text": "import org.mockito.Mock;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 23,
+      "text": "import org.mockito.MockitoAnnotations;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 24,
+      "text": "import org.mockito.junit.MockitoJUnitRunner;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 26,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 27,
+      "text": "import java.io.InputStreamReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 28,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 29,
+      "text": "import java.util.HashSet;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 30,
+      "text": "import java.util.Set;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 31,
+      "text": "import java.util.stream.Stream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 33,
+      "text": "import static org.junit.Assert.assertEquals;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 34,
+      "text": "import static org.junit.Assert.assertNotNull;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 35,
+      "text": "import static org.mockito.ArgumentMatchers.any;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 36,
+      "text": "import static org.mockito.Mockito.when;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 38,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_NOTIFICATIONS_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-java/tst/com/amazon/SellingPartnerAPIAA/LWAClientTest.java",
+      "line": 39,
+      "text": "import static com.amazon.SellingPartnerAPIAA.ScopeConstants.SCOPE_MIGRATION_API;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-javascript/src/helper/LwaAuthClient.mjs",
+      "line": 1,
+      "text": "import superagent from 'superagent';"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-javascript/src/sample_node_app/index.mjs",
+      "line": 1,
+      "text": "import { AppConfig } from '../app.config.mjs';"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-javascript/src/sample_node_app/index.mjs",
+      "line": 2,
+      "text": "import { LwaAuthClient } from '../helper/LwaAuthClient.mjs';"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-javascript/src/sample_node_app/index.mjs",
+      "line": 3,
+      "text": "import { SellersApi, ApiClient as SellersApiClient } from '../../sdk/src/sellers/index.js';"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaExceptionErrorCode.py",
+      "line": 1,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 1,
+      "text": "import requests"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 2,
+      "text": "import time"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 3,
+      "text": "import logging"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 4,
+      "text": "import sys"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 9,
+      "text": "from auth.LwaException import LwaException"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/auth/LwaRequest.py",
+      "line": 10,
+      "text": "from auth.LwaExceptionErrorCode import LwaExceptionErrorCode"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 3,
+      "text": "import logging"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 4,
+      "text": "import backoff"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 5,
+      "text": "from requests.exceptions import HTTPError"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 9,
+      "text": "from swagger_client.configuration import Configuration"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 10,
+      "text": "from swagger_client.api_client import ApiClient"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/spapi/spapiclient.py",
+      "line": 14,
+      "text": "from auth.LwaRequest import AccessTokenCache"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test.py",
+      "line": 4,
+      "text": "from auth.credentials import SPAPIConfig"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test.py",
+      "line": 14,
+      "text": "from spapi.spapiclient import SPAPIClient"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwaexception.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwaexception.py",
+      "line": 2,
+      "text": "from auth.LwaException import LwaException"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwarequest.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwarequest.py",
+      "line": 2,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwarequest.py",
+      "line": 3,
+      "text": "from auth.LwaRequest import AccessTokenCache"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-aa-python/test_lwarequest.py",
+      "line": 4,
+      "text": "from auth.LwaException import LwaException"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/CryptoStreamFactory.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.CryptoException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/CryptoStreamFactory.java",
+      "line": 5,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.CryptoException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.exception.MissingCharsetException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 5,
+      "text": "import com.squareup.okhttp.MediaType;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 6,
+      "text": "import org.apache.commons.io.IOUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 8,
+      "text": "import java.io.BufferedReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 9,
+      "text": "import java.io.Closeable;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 10,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 11,
+      "text": "import java.io.FileInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 12,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 13,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 14,
+      "text": "import java.io.InputStreamReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 15,
+      "text": "import java.nio.charset.Charset;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadBundle.java",
+      "line": 16,
+      "text": "import java.util.zip.GZIPInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadHelper.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.HttpResponseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadHelper.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.impl.OkHttpTransferClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadHelper.java",
+      "line": 6,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadHelper.java",
+      "line": 7,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/DownloadSpecification.java",
+      "line": 3,
+      "text": "import com.google.common.base.Preconditions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/HttpTransferClient.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.HttpResponseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/HttpTransferClient.java",
+      "line": 5,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/HttpTransferClient.java",
+      "line": 6,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.CryptoException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.exception.HttpResponseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 5,
+      "text": "import com.amazon.spapi.documents.impl.OkHttpTransferClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 6,
+      "text": "import org.apache.commons.io.FileUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 8,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 9,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadHelper.java",
+      "line": 10,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadSpecification.java",
+      "line": 3,
+      "text": "import com.google.common.base.Preconditions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/UploadSpecification.java",
+      "line": 5,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.CryptoStreamFactory;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.exception.CryptoException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 5,
+      "text": "import com.google.common.base.Preconditions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 7,
+      "text": "import javax.crypto.Cipher;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 8,
+      "text": "import javax.crypto.CipherInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 9,
+      "text": "import javax.crypto.NoSuchPaddingException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 10,
+      "text": "import javax.crypto.spec.IvParameterSpec;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 11,
+      "text": "import javax.crypto.spec.SecretKeySpec;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 12,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 13,
+      "text": "import java.security.InvalidAlgorithmParameterException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 14,
+      "text": "import java.security.InvalidKeyException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 15,
+      "text": "import java.security.Key;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 16,
+      "text": "import java.security.NoSuchAlgorithmException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactory.java",
+      "line": 17,
+      "text": "import java.util.Base64;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.HttpTransferClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.exception.HttpResponseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 5,
+      "text": "import com.squareup.okhttp.MediaType;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 6,
+      "text": "import com.squareup.okhttp.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 7,
+      "text": "import com.squareup.okhttp.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 8,
+      "text": "import com.squareup.okhttp.RequestBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 9,
+      "text": "import com.squareup.okhttp.Response;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 10,
+      "text": "import org.apache.commons.io.FileUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 11,
+      "text": "import org.apache.commons.io.IOUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 13,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 14,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/main/java/com/amazon/spapi/documents/impl/OkHttpTransferClient.java",
+      "line": 15,
+      "text": "import java.io.Reader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/CompressionAlgorithmTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Assertions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/CompressionAlgorithmTest.java",
+      "line": 4,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/CompressionAlgorithmTest.java",
+      "line": 6,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadBundleTest.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.impl.AESCryptoStreamFactory;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadBundleTest.java",
+      "line": 4,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadBundleTest.java",
+      "line": 6,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadBundleTest.java",
+      "line": 7,
+      "text": "import java.io.FileNotFoundException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadBundleTest.java",
+      "line": 9,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.MissingCharsetException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 4,
+      "text": "import com.amazon.spapi.documents.impl.AESCryptoStreamFactory;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 5,
+      "text": "import org.apache.commons.io.FileUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 6,
+      "text": "import org.apache.commons.io.IOUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 7,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 8,
+      "text": "import org.mockito.ArgumentCaptor;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 9,
+      "text": "import org.mockito.Mockito;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 10,
+      "text": "import org.mockito.invocation.InvocationOnMock;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 11,
+      "text": "import org.mockito.stubbing.Answer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 13,
+      "text": "import java.io.BufferedReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 14,
+      "text": "import java.io.ByteArrayInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 15,
+      "text": "import java.io.ByteArrayOutputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 16,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 17,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 18,
+      "text": "import java.io.StringReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 19,
+      "text": "import java.nio.charset.StandardCharsets;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 20,
+      "text": "import java.nio.charset.UnsupportedCharsetException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 21,
+      "text": "import java.nio.file.Files;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 22,
+      "text": "import java.nio.file.Path;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 23,
+      "text": "import java.nio.file.Paths;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 24,
+      "text": "import java.util.zip.GZIPOutputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadHelperTest.java",
+      "line": 26,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadSpecificationTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadSpecificationTest.java",
+      "line": 4,
+      "text": "import org.mockito.Mockito;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/DownloadSpecificationTest.java",
+      "line": 6,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.impl.AESCryptoStreamFactory;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 4,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 5,
+      "text": "import org.mockito.Mockito;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 6,
+      "text": "import org.mockito.invocation.InvocationOnMock;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 7,
+      "text": "import org.mockito.stubbing.Answer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 9,
+      "text": "import java.io.ByteArrayInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 10,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 11,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 12,
+      "text": "import java.nio.file.Files;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 13,
+      "text": "import java.nio.file.Path;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 14,
+      "text": "import java.nio.file.Paths;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadHelperTest.java",
+      "line": 16,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadSpecificationTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadSpecificationTest.java",
+      "line": 4,
+      "text": "import org.mockito.Mockito;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadSpecificationTest.java",
+      "line": 6,
+      "text": "import java.io.ByteArrayInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadSpecificationTest.java",
+      "line": 7,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/UploadSpecificationTest.java",
+      "line": 9,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/CryptoExceptionTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/CryptoExceptionTest.java",
+      "line": 5,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/HttpResponseExceptionTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/HttpResponseExceptionTest.java",
+      "line": 5,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/MissingCharsetExceptionTest.java",
+      "line": 3,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/exception/MissingCharsetExceptionTest.java",
+      "line": 5,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.CryptoException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 4,
+      "text": "import com.google.common.io.ByteStreams;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 5,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 7,
+      "text": "import java.io.ByteArrayInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 8,
+      "text": "import java.io.InputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 9,
+      "text": "import java.nio.charset.StandardCharsets;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 10,
+      "text": "import java.util.Arrays;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 11,
+      "text": "import java.util.Base64;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/AESCryptoStreamFactoryTest.java",
+      "line": 13,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 3,
+      "text": "import com.amazon.spapi.documents.exception.HttpResponseException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 4,
+      "text": "import com.squareup.okhttp.Call;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 5,
+      "text": "import com.squareup.okhttp.OkHttpClient;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 6,
+      "text": "import com.squareup.okhttp.Request;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 7,
+      "text": "import com.squareup.okhttp.Response;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 8,
+      "text": "import com.squareup.okhttp.ResponseBody;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 9,
+      "text": "import okio.Buffer;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 10,
+      "text": "import org.apache.commons.io.IOUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 11,
+      "text": "import org.junit.jupiter.api.Assertions;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 12,
+      "text": "import org.junit.jupiter.api.Test;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 13,
+      "text": "import org.junit.platform.commons.util.ReflectionUtils;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 14,
+      "text": "import org.mockito.ArgumentCaptor;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 15,
+      "text": "import org.mockito.Mockito;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 17,
+      "text": "import java.io.ByteArrayInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 18,
+      "text": "import java.io.File;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 19,
+      "text": "import java.io.FileInputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 20,
+      "text": "import java.io.FileOutputStream;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 21,
+      "text": "import java.io.IOException;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 22,
+      "text": "import java.io.StringReader;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 23,
+      "text": "import java.nio.charset.StandardCharsets;"
+    },
+    {
+      "source_path": "clients/sellingpartner-api-documents-helper-java/src/test/java/com/amazon/spapi/documents/impl/OkHttpTransferClientTest.java",
+      "line": 25,
+      "text": "import static org.junit.jupiter.api.Assertions.*;"
+    }
+  ],
+  "call_edges": []
+}

@@ -1,0 +1,1706 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 1,
+      "text": "from .__version__ import __description__, __title__, __version__"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 2,
+      "text": "from ._api import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 3,
+      "text": "from ._auth import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 4,
+      "text": "from ._client import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 5,
+      "text": "from ._config import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 6,
+      "text": "from ._content import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 7,
+      "text": "from ._exceptions import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 8,
+      "text": "from ._models import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 9,
+      "text": "from ._status_codes import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 10,
+      "text": "from ._transports import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 11,
+      "text": "from ._types import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 12,
+      "text": "from ._urls import *"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 15,
+      "text": "from ._main import main"
+    },
+    {
+      "source_path": "httpx/__init__.py",
+      "line": 19,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 4,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 6,
+      "text": "from ._client import Client"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 7,
+      "text": "from ._config import DEFAULT_TIMEOUT_CONFIG"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 8,
+      "text": "from ._models import Response"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 9,
+      "text": "from ._types import (\n    AuthTypes,\n    CookieTypes,\n    HeaderTypes,\n    ProxyTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestFiles,\n    TimeoutTypes,\n)"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 20,
+      "text": "from ._urls import URL"
+    },
+    {
+      "source_path": "httpx/_api.py",
+      "line": 23,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 3,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 7,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 8,
+      "text": "from base64 import b64encode"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 9,
+      "text": "from urllib.request import parse_http_list"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 11,
+      "text": "from ._exceptions import ProtocolError"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 12,
+      "text": "from ._models import Cookies, Request, Response"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 13,
+      "text": "from ._utils import to_bytes, to_str, unquote"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 16,
+      "text": "from hashlib import _Hash"
+    },
+    {
+      "source_path": "httpx/_auth.py",
+      "line": 153,
+      "text": "import netrc"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 3,
+      "text": "import datetime"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 4,
+      "text": "import enum"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 5,
+      "text": "import logging"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 7,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 8,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 9,
+      "text": "from contextlib import asynccontextmanager, contextmanager"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 10,
+      "text": "from types import TracebackType"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 12,
+      "text": "from .__version__ import __version__"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 13,
+      "text": "from ._auth import Auth, BasicAuth, FunctionAuth"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 14,
+      "text": "from ._config import (\n    DEFAULT_LIMITS,\n    DEFAULT_MAX_REDIRECTS,\n    DEFAULT_TIMEOUT_CONFIG,\n    Limits,\n    Proxy,\n    Timeout,\n)"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 22,
+      "text": "from ._decoders import SUPPORTED_DECODERS"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 23,
+      "text": "from ._exceptions import (\n    InvalidURL,\n    RemoteProtocolError,\n    TooManyRedirects,\n    request_context,\n)"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 29,
+      "text": "from ._models import Cookies, Headers, Request, Response"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 30,
+      "text": "from ._status_codes import codes"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 31,
+      "text": "from ._transports.base import AsyncBaseTransport, BaseTransport"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 32,
+      "text": "from ._transports.default import AsyncHTTPTransport, HTTPTransport"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 33,
+      "text": "from ._types import (\n    AsyncByteStream,\n    AuthTypes,\n    CertTypes,\n    CookieTypes,\n    HeaderTypes,\n    ProxyTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestExtensions,\n    RequestFiles,\n    SyncByteStream,\n    TimeoutTypes,\n)"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 48,
+      "text": "from ._urls import URL, QueryParams"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 49,
+      "text": "from ._utils import URLPattern, get_environment_proxies"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 52,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 678,
+      "text": "import h2"
+    },
+    {
+      "source_path": "httpx/_client.py",
+      "line": 1392,
+      "text": "import h2"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 4,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 6,
+      "text": "from ._models import Headers"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 7,
+      "text": "from ._types import CertTypes, HeaderTypes, TimeoutTypes"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 8,
+      "text": "from ._urls import URL"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 11,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 28,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 29,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpx/_config.py",
+      "line": 31,
+      "text": "import certifi"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 3,
+      "text": "import inspect"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 4,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 5,
+      "text": "from json import dumps as json_dumps"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 6,
+      "text": "from typing import (\n    Any,\n    AsyncIterable,\n    AsyncIterator,\n    Iterable,\n    Iterator,\n    Mapping,\n)"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 14,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 16,
+      "text": "from ._exceptions import StreamClosed, StreamConsumed"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 17,
+      "text": "from ._multipart import MultipartStream"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 18,
+      "text": "from ._types import (\n    AsyncByteStream,\n    RequestContent,\n    RequestData,\n    RequestFiles,\n    ResponseContent,\n    SyncByteStream,\n)"
+    },
+    {
+      "source_path": "httpx/_content.py",
+      "line": 26,
+      "text": "from ._utils import peek_filelike_length, primitive_value_to_str"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 9,
+      "text": "import codecs"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 10,
+      "text": "import io"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 11,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 12,
+      "text": "import zlib"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 14,
+      "text": "from ._exceptions import DecodingError"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 19,
+      "text": "import brotli"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 24,
+      "text": "import brotlicffi as brotli"
+    },
+    {
+      "source_path": "httpx/_decoders.py",
+      "line": 31,
+      "text": "import zstandard"
+    },
+    {
+      "source_path": "httpx/_exceptions.py",
+      "line": 36,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "httpx/_exceptions.py",
+      "line": 37,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_exceptions.py",
+      "line": 40,
+      "text": "from ._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 3,
+      "text": "import functools"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 6,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 8,
+      "text": "import click"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 9,
+      "text": "import pygments.lexers"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 10,
+      "text": "import pygments.util"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 11,
+      "text": "import rich.console"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 12,
+      "text": "import rich.markup"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 13,
+      "text": "import rich.progress"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 14,
+      "text": "import rich.syntax"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 15,
+      "text": "import rich.table"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 17,
+      "text": "from ._client import Client"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 18,
+      "text": "from ._exceptions import RequestError"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 19,
+      "text": "from ._models import Response"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 20,
+      "text": "from ._status_codes import codes"
+    },
+    {
+      "source_path": "httpx/_main.py",
+      "line": 23,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 3,
+      "text": "import codecs"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 4,
+      "text": "import datetime"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 5,
+      "text": "import email.message"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 6,
+      "text": "import json as jsonlib"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 8,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 9,
+      "text": "import urllib.request"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 10,
+      "text": "from collections.abc import Mapping"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 11,
+      "text": "from http.cookiejar import Cookie, CookieJar"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 13,
+      "text": "from ._content import ByteStream, UnattachedStream, encode_request, encode_response"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 14,
+      "text": "from ._decoders import (\n    SUPPORTED_DECODERS,\n    ByteChunker,\n    ContentDecoder,\n    IdentityDecoder,\n    LineDecoder,\n    MultiDecoder,\n    TextChunker,\n    TextDecoder,\n)"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 24,
+      "text": "from ._exceptions import (\n    CookieConflict,\n    HTTPStatusError,\n    RequestNotRead,\n    ResponseNotRead,\n    StreamClosed,\n    StreamConsumed,\n    request_context,\n)"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 33,
+      "text": "from ._multipart import get_multipart_boundary_from_content_type"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 34,
+      "text": "from ._status_codes import codes"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 35,
+      "text": "from ._types import (\n    AsyncByteStream,\n    CookieTypes,\n    HeaderTypes,\n    QueryParamTypes,\n    RequestContent,\n    RequestData,\n    RequestExtensions,\n    RequestFiles,\n    ResponseContent,\n    ResponseExtensions,\n    SyncByteStream,\n)"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 48,
+      "text": "from ._urls import URL"
+    },
+    {
+      "source_path": "httpx/_models.py",
+      "line": 49,
+      "text": "from ._utils import to_bytes_or_str, to_str"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 4,
+      "text": "import mimetypes"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 7,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 10,
+      "text": "from ._types import (\n    AsyncByteStream,\n    FileContent,\n    FileTypes,\n    RequestData,\n    RequestFiles,\n    SyncByteStream,\n)"
+    },
+    {
+      "source_path": "httpx/_multipart.py",
+      "line": 18,
+      "text": "from ._utils import (\n    peek_filelike_length,\n    primitive_value_to_str,\n    to_bytes,\n)"
+    },
+    {
+      "source_path": "httpx/_status_codes.py",
+      "line": 3,
+      "text": "from enum import IntEnum"
+    },
+    {
+      "source_path": "httpx/_transports/__init__.py",
+      "line": 1,
+      "text": "from .asgi import *"
+    },
+    {
+      "source_path": "httpx/_transports/__init__.py",
+      "line": 2,
+      "text": "from .base import *"
+    },
+    {
+      "source_path": "httpx/_transports/__init__.py",
+      "line": 3,
+      "text": "from .default import *"
+    },
+    {
+      "source_path": "httpx/_transports/__init__.py",
+      "line": 4,
+      "text": "from .mock import *"
+    },
+    {
+      "source_path": "httpx/_transports/__init__.py",
+      "line": 5,
+      "text": "from .wsgi import *"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 5,
+      "text": "from .._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 6,
+      "text": "from .._types import AsyncByteStream"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 7,
+      "text": "from .base import AsyncBaseTransport"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 10,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 12,
+      "text": "import trio"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 34,
+      "text": "import sniffio"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 46,
+      "text": "import trio"
+    },
+    {
+      "source_path": "httpx/_transports/asgi.py",
+      "line": 50,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "httpx/_transports/base.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_transports/base.py",
+      "line": 4,
+      "text": "from types import TracebackType"
+    },
+    {
+      "source_path": "httpx/_transports/base.py",
+      "line": 6,
+      "text": "from .._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 29,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 30,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 31,
+      "text": "from types import TracebackType"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 34,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 36,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 38,
+      "text": "from .._config import DEFAULT_LIMITS, Limits, Proxy, create_ssl_context"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 39,
+      "text": "from .._exceptions import (\n    ConnectError,\n    ConnectTimeout,\n    LocalProtocolError,\n    NetworkError,\n    PoolTimeout,\n    ProtocolError,\n    ProxyError,\n    ReadError,\n    ReadTimeout,\n    RemoteProtocolError,\n    TimeoutException,\n    UnsupportedProtocol,\n    WriteError,\n    WriteTimeout,\n)"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 55,
+      "text": "from .._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 56,
+      "text": "from .._types import AsyncByteStream, CertTypes, ProxyTypes, SyncByteStream"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 57,
+      "text": "from .._urls import URL"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 58,
+      "text": "from .base import AsyncBaseTransport, BaseTransport"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 75,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 150,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 189,
+      "text": "import socksio"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 235,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 294,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 333,
+      "text": "import socksio"
+    },
+    {
+      "source_path": "httpx/_transports/default.py",
+      "line": 379,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "httpx/_transports/mock.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_transports/mock.py",
+      "line": 5,
+      "text": "from .._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_transports/mock.py",
+      "line": 6,
+      "text": "from .base import AsyncBaseTransport, BaseTransport"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 4,
+      "text": "import itertools"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 6,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 8,
+      "text": "from .._models import Request, Response"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 9,
+      "text": "from .._types import SyncByteStream"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 10,
+      "text": "from .base import BaseTransport"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 13,
+      "text": "from _typeshed import OptExcInfo"
+    },
+    {
+      "source_path": "httpx/_transports/wsgi.py",
+      "line": 14,
+      "text": "from _typeshed.wsgi import WSGIApplication"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 5,
+      "text": "from http.cookiejar import CookieJar"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 6,
+      "text": "from typing import (\n    IO,\n    TYPE_CHECKING,\n    Any,\n    AsyncIterable,\n    AsyncIterator,\n    Callable,\n    Dict,\n    Iterable,\n    Iterator,\n    List,\n    Mapping,\n    Optional,\n    Sequence,\n    Tuple,\n    Union,\n)"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 25,
+      "text": "from ._auth import Auth"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 26,
+      "text": "from ._config import Proxy, Timeout"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 27,
+      "text": "from ._models import Cookies, Headers, Request"
+    },
+    {
+      "source_path": "httpx/_types.py",
+      "line": 28,
+      "text": "from ._urls import URL, QueryParams"
+    },
+    {
+      "source_path": "httpx/_urlparse.py",
+      "line": 21,
+      "text": "import ipaddress"
+    },
+    {
+      "source_path": "httpx/_urlparse.py",
+      "line": 22,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpx/_urlparse.py",
+      "line": 23,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_urlparse.py",
+      "line": 25,
+      "text": "import idna"
+    },
+    {
+      "source_path": "httpx/_urlparse.py",
+      "line": 27,
+      "text": "from ._exceptions import InvalidURL"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 4,
+      "text": "from urllib.parse import parse_qs, unquote, urlencode"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 6,
+      "text": "import idna"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 8,
+      "text": "from ._types import QueryParamTypes"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 9,
+      "text": "from ._urlparse import urlparse"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 10,
+      "text": "from ._utils import primitive_value_to_str"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 364,
+      "text": "from urllib.parse import urljoin"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 405,
+      "text": "import collections"
+    },
+    {
+      "source_path": "httpx/_urls.py",
+      "line": 406,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 3,
+      "text": "import ipaddress"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 6,
+      "text": "import typing"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 7,
+      "text": "from urllib.request import getproxies"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 9,
+      "text": "from ._types import PrimitiveData"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 12,
+      "text": "from ._urls import URL"
+    },
+    {
+      "source_path": "httpx/_utils.py",
+      "line": 163,
+      "text": "from ._urls import URL"
+    },
+    {
+      "source_path": "tests/client/test_async_client.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/client/test_async_client.py",
+      "line": 4,
+      "text": "from datetime import timedelta"
+    },
+    {
+      "source_path": "tests/client/test_async_client.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_async_client.py",
+      "line": 8,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 7,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 8,
+      "text": "import netrc"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 10,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 11,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 12,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 13,
+      "text": "from urllib.request import parse_keqv_list"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 15,
+      "text": "import anyio"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 16,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 18,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_auth.py",
+      "line": 20,
+      "text": "from ..common import FIXTURES_DIR"
+    },
+    {
+      "source_path": "tests/client/test_client.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/client/test_client.py",
+      "line": 4,
+      "text": "from datetime import timedelta"
+    },
+    {
+      "source_path": "tests/client/test_client.py",
+      "line": 6,
+      "text": "import chardet"
+    },
+    {
+      "source_path": "tests/client/test_client.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_client.py",
+      "line": 9,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_cookies.py",
+      "line": 1,
+      "text": "from http.cookiejar import Cookie, CookieJar"
+    },
+    {
+      "source_path": "tests/client/test_cookies.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_cookies.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_event_hooks.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_event_hooks.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_headers.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_headers.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_properties.py",
+      "line": 1,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_proxies.py",
+      "line": 1,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "tests/client/test_proxies.py",
+      "line": 2,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_proxies.py",
+      "line": 4,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_queryparams.py",
+      "line": 1,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/client/test_redirects.py",
+      "line": 1,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/client/test_redirects.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/client/test_redirects.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/common.py",
+      "line": 1,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "tests/concurrency.py",
+      "line": 5,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/concurrency.py",
+      "line": 7,
+      "text": "import sniffio"
+    },
+    {
+      "source_path": "tests/concurrency.py",
+      "line": 8,
+      "text": "import trio"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 1,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 4,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 5,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 6,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 9,
+      "text": "import trustme"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 10,
+      "text": "from cryptography.hazmat.backends import default_backend"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 11,
+      "text": "from cryptography.hazmat.primitives.serialization import (\n    BestAvailableEncryption,\n    Encoding,\n    PrivateFormat,\n    load_pem_private_key,\n)"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 17,
+      "text": "from uvicorn.config import Config"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 18,
+      "text": "from uvicorn.server import Server"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 20,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 21,
+      "text": "from tests.concurrency import sleep"
+    },
+    {
+      "source_path": "tests/models/test_cookies.py",
+      "line": 1,
+      "text": "import http"
+    },
+    {
+      "source_path": "tests/models/test_cookies.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_cookies.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_headers.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_headers.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_queryparams.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_queryparams.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_requests.py",
+      "line": 1,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "tests/models/test_requests.py",
+      "line": 2,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/models/test_requests.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_requests.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 2,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 5,
+      "text": "import chardet"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_responses.py",
+      "line": 8,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_url.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_url.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/models/test_whatwg.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/models/test_whatwg.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/models/test_whatwg.py",
+      "line": 9,
+      "text": "from httpx._urlparse import urlparse"
+    },
+    {
+      "source_path": "tests/test_api.py",
+      "line": 1,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_api.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_api.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_api.py",
+      "line": 92,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_api.py",
+      "line": 98,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_asgi.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_asgi.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_asgi.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 7,
+      "text": "from urllib.request import parse_keqv_list"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 11,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 1,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 2,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 5,
+      "text": "import certifi"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 8,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_content.py",
+      "line": 1,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_content.py",
+      "line": 2,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_content.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_content.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 4,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 5,
+      "text": "import zlib"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 7,
+      "text": "import chardet"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 9,
+      "text": "import zstandard as zstd"
+    },
+    {
+      "source_path": "tests/test_decoders.py",
+      "line": 11,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_exceptions.py",
+      "line": 3,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_exceptions.py",
+      "line": 5,
+      "text": "import httpcore"
+    },
+    {
+      "source_path": "tests/test_exceptions.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_exceptions.py",
+      "line": 8,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_exceptions.py",
+      "line": 11,
+      "text": "from conftest import TestServer"
+    },
+    {
+      "source_path": "tests/test_exported_members.py",
+      "line": 1,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_main.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_main.py",
+      "line": 2,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_main.py",
+      "line": 4,
+      "text": "from click.testing import CliRunner"
+    },
+    {
+      "source_path": "tests/test_main.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_multipart.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_multipart.py",
+      "line": 4,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_multipart.py",
+      "line": 5,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_multipart.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_multipart.py",
+      "line": 9,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_status_codes.py",
+      "line": 1,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_timeouts.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_timeouts.py",
+      "line": 3,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 2,
+      "text": "import logging"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 4,
+      "text": "import random"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 8,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_utils.py",
+      "line": 9,
+      "text": "from httpx._utils import URLPattern, get_environment_proxies"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 3,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 4,
+      "text": "import typing"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 5,
+      "text": "import wsgiref.validate"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 6,
+      "text": "from functools import partial"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 7,
+      "text": "from io import StringIO"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 11,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_wsgi.py",
+      "line": 14,
+      "text": "from _typeshed.wsgi import StartResponse, WSGIApplication, WSGIEnvironment"
+    }
+  ],
+  "call_edges": []
+}

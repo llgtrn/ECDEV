@@ -1,0 +1,25 @@
+{
+  "status": "PARTIAL",
+  "candidates": [
+    {
+      "source_path": "package.json",
+      "bin": {
+        "playwright-mcp": "cli.js"
+      },
+      "scripts": {
+        "lint": "node update-readme.js",
+        "test": "playwright test",
+        "ctest": "playwright test --project=chrome",
+        "ftest": "playwright test --project=firefox",
+        "wtest": "playwright test --project=webkit",
+        "dtest": "MCP_IN_DOCKER=1 playwright test --project=chromium-docker",
+        "build": "echo OK",
+        "npm-publish": "npm run lint && npm run test && npm publish",
+        "docker-build": "docker build --no-cache -t playwright-mcp-dev:latest .",
+        "docker-rm": "docker rm playwright-mcp-dev",
+        "docker-run": "docker run -it -p 8080:8080 --name playwright-mcp-dev playwright-mcp-dev:latest",
+        "roll": "node roll.js"
+      }
+    }
+  ]
+}

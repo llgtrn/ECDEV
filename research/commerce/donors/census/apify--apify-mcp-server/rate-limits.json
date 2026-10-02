@@ -1,0 +1,365 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **MCP and package-logic tests go in `tests/integration/suite.ts` here.** Hosted-only behavior (auth, rate limiter, Caddy, multi-node) lives in `apify-mcp-server-internal`, not here."
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **evals:** Add task-tool workflow eval suites ([#1294](https://github.com/apify/apify-mcp-server/pull/1294)) ([43b2c48](https://github.com/apify/apify-mcp-server/commit/43b2c486eab20d00884a20898b7e50eae6ca429f)) by [@jirispilka](https://github.com/jirispilka), closes [#1288](https://github.com/apify/apify-mcp-server/issues/1288)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 715,
+      "line_end": 715,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **web:** Widget and actor run status redesign ([#429](https://github.com/apify/apify-mcp-server/pull/429)) ([056dded](https://github.com/apify/apify-mcp-server/commit/056dded1a0af47c1fc81b9fc700605a337730b70)) by [@katacek](https://github.com/katacek)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1562,
+      "line_end": 1562,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Correct readme ([#35](https://github.com/apify/actors-mcp-server/pull/35)) ([9443d86](https://github.com/apify/actors-mcp-server/commit/9443d86aac4db5a1851b664bb2cacd80c38ba429)) by [@jirispilka](https://github.com/jirispilka)"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "keeps only what's genuinely deployment-specific: databases, rate limiting, auth,"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- IAM auth gate (401, unauth user toolset filter, `?payment=skyfire` bypass), rate limiter, `RedisEventStore` replay via `Last-Event-ID`, user-aware rental Actor filter, non-MCP HTTP routes (`/`, OAuth metadata, server card)."
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 209,
+      "line_end": 209,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Those live in `apify-mcp-server-internal`, together with a small **contract smoke suite** that re-asserts our package's behavior survives the hosted server's extra code (auth, rate limiter, Caddy, response handlers). We don't maintain that suite — internal does — but we should know it exists."
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 213,
+      "line_end": 213,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The hosted server wraps this package with auth, rate limiter, Caddy, and response handlers. Any of that can change, drop, or delay something we produce; our tests don't see that wrapping. So if you change something the hosted server consumes — `internals.js` exports, `_meta` shape, `structuredContent`, anything that depends on `clientInfo`, `?ui=` / `?payment=` parsing, the timing of notifications"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 332,
+      "line_end": 332,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /\\b(408|429|500|502|503|504)\\b/,"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 2202,
+      "line_end": 2202,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    resolution: {integrity: sha512-ynt3JxVd2w2buzoKDWIyiV1pJW93xlQic1THVLXilz429oijRpSHivZAgp65KBu+cMcgf1eVVjdnTLvPxgCuoQ==}"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 3002,
+      "line_end": 3002,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  express-rate-limit@8.5.2:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 5155,
+      "line_end": 5155,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      express-rate-limit: 8.5.2(express@5.2.1)"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 7003,
+      "line_end": 7003,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  express-rate-limit@8.5.2(express@5.2.1):"
+    },
+    {
+      "source_path": "src/const.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "0029dc4fadff4124affb43c0cf7d370bdcfdd1e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// Actors needing more memory than this are rejected: a free-tier user's quota can't fit both"
+    },
+    {
+      "source_path": "src/const.ts",
+      "line_start": 141,
+      "line_end": 141,
+      "blob_hash": "0029dc4fadff4124affb43c0cf7d370bdcfdd1e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "It renders JavaScript and bypasses anti-bot protection, so it also retrieves pages where a plain HTTP fetch gets blocked, fails with an error such as 403 or 429, or returns incomplete content."
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// The production Streamable HTTP transport (auth, rate limiting, Redis-backed session"
+    },
+    {
+      "source_path": "src/mcp/errors.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "18062d30e264d554f7da57f849f51bbc7339f703",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** A request/resource-level fault (bad URI, missing token, non-Apify origin, 3xx/4xx except 429). */"
+    },
+    {
+      "source_path": "src/mcp/errors.ts",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "18062d30e264d554f7da57f849f51bbc7339f703",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** A transient/upstream fault (429, 5xx, network or mid-stream drop). */"
+    },
+    {
+      "source_path": "src/mcp/task_execution.ts",
+      "line_start": 374,
+      "line_end": 374,
+      "blob_hash": "a9f56ec348520232d8b774eb464641f2d668d417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                //   SOFT_FAIL (e.g. 402/403 user quota, client-side issues) → softFail"
+    },
+    {
+      "source_path": "src/resources/AGENTS.md",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "2642e4332d71de57a2a61a344ccf89c01d811346",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "429 → `InvalidParamsError`; 429, 5xx, no status (network, mid-stream drop) → `InternalError`. 401/403"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - 3xx/4xx except 429 → `InvalidParamsError` (the request/resource is the problem — bad URI, missing/invalid"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - 429, 5xx, or no status (network failure) → `InternalError` (transient or upstream)."
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (status !== undefined && status < 500 && status !== 429) return InvalidParamsError;"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    isMemoryQuotaError,"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 241,
+      "line_end": 241,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (isMemoryQuotaError(error)) {"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 247,
+      "line_end": 247,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                `Account memory quota exceeded for your plan. Retry with a smaller callOptions.memory, or wait for current runs to finish before retrying.`,"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 286,
+      "line_end": 286,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            Apify also caps total memory across all your concurrent runs (account plan limit); if a run is rejected because that quota would be exceeded, retry with a smaller value."
+    },
+    {
+      "source_path": "src/utils/apify_errors.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "455d55e1f892d575e87cca2359671bdaa4d075fc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** True when an Actor run is rejected because the account memory quota is exceeded. */"
+    },
+    {
+      "source_path": "src/utils/apify_errors.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "455d55e1f892d575e87cca2359671bdaa4d075fc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function isMemoryQuotaError(error: unknown): error is ApifyApiError {"
+    },
+    {
+      "source_path": "src/utils/logging.ts",
+      "line_start": 148,
+      "line_end": 148,
+      "blob_hash": "5eea3df4a18fef1efbf4c03a753d4327e39a857a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // User concurrent-run / quota limit — arrives wrapped as a 500 but is a user billing condition."
+    },
+    {
+      "source_path": "src/utils/payment_errors.ts",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "fc00ed444e172a5648bf8fdd3595ed9a68f4a1ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * 402 but is an account quota, not an x402 payment — excluded so callers fall through to"
+    },
+    {
+      "source_path": "src/web/src/utils/mock-actor-details.ts",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "2f5810ab5c905f749cdd1c1d7ccb5a32a33e7d44",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        readme: '# [README](https://apify.com/scraper_one/x-profile-posts-scraper/readme): X (Twitter) Profile Posts Scraper\\n\\n![Apify Actor](https://img.shields.io/badge/Apify-Actor-blue)\\n\\nThis **Apify Actor** extracts **posts** from **X (Twitter) profiles** provided as input URLs. It retrieves post content, author data, timestamps, media,\\nand engagement statistics. Perfect for **social media"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * A deployed server rate-limits per token, which several configurations in flight trip on ordinary"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 258,
+      "line_end": 258,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "function isRateLimited(result: ProcessResult): boolean {"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 259,
+      "line_end": 259,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return result.stderr.includes('Rate limit exceeded') || result.stdout.includes('Rate limit exceeded');"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 264,
+      "line_end": 264,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * or while the server is rate-limiting (any case, no opt-in). Any other genuine failure — including"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 274,
+      "line_end": 274,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        ((testCase.pollWhileWorking && result.stderr.includes(TASK_STILL_WORKING)) || isRateLimited(result))"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.services.test.ts",
+      "line_start": 11,
+      "line_end": 11,
+      "blob_hash": "9797215b5ff11cae7f87566ace25427ba77dadd9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// The 429/5xx branch of the API proxy is the only source of InternalError on the read path; stubbing"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 238,
+      "line_end": 238,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        it('returns memory-quota recovery hint for HTTP 402 memory-limit errors', () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.call_actor_common.test.ts",
+      "line_start": 263,
+      "line_end": 263,
+      "blob_hash": "86cbf83e94e8bc7d1642d6cb7c26de796784b2c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            expect(allText).toContain('Account memory quota exceeded');"
+    },
+    {
+      "source_path": "tests/unit/utils.apify_errors.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "fb2aba7fe7c316db7e7112336b65fba1ac77ec9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    isMemoryQuotaError,"
+    },
+    {
+      "source_path": "tests/unit/utils.apify_errors.test.ts",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "fb2aba7fe7c316db7e7112336b65fba1ac77ec9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "describe('isMemoryQuotaError', () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.apify_errors.test.ts",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "fb2aba7fe7c316db7e7112336b65fba1ac77ec9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isMemoryQuotaError(apifyApiError('memory-limit-exceeded'))).toBe(true);"
+    },
+    {
+      "source_path": "tests/unit/utils.apify_errors.test.ts",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "fb2aba7fe7c316db7e7112336b65fba1ac77ec9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isMemoryQuotaError(apifyApiError('cannot-start-actor-runs'))).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/utils.apify_errors.test.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "fb2aba7fe7c316db7e7112336b65fba1ac77ec9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isMemoryQuotaError(new Error('memory-limit-exceeded'))).toBe(false);"
+    }
+  ]
+}

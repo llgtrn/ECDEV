@@ -1,0 +1,733 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".claude/skills/creating-mcp-agent-evals/SKILL.md",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "3aab65e166523700761aec08aef174381b8bc4b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- A rerun \"fixed\" a failure you didn't diagnose → known harness flake (\"task threw, never completed\") is retry-once; a judged FAIL is never a flake, read the transcript."
+    },
+    {
+      "source_path": ".claude/skills/creating-mcp-agent-evals/reference.md",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "41b9c2c20233533afd46057a9d8533e19997c0d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Known flakes, retry the single item once before diagnosing: `🔥 Never completed (task threw)` (harness/SDK spawn); in remote/sandboxed environments, the agent reading \"MCP servers still connecting\" and falling back to built-ins (doesn't reproduce locally)."
+    },
+    {
+      "source_path": ".github/workflows/_smoke_test_npm_package.yaml",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "ad5212ecec0acec2f499f9a970e7bc8c93a7e036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                uses: nick-fields/retry@v4"
+    },
+    {
+      "source_path": ".github/workflows/_smoke_test_npm_package.yaml",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "ad5212ecec0acec2f499f9a970e7bc8c93a7e036",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    retry_wait_seconds: 30"
+    },
+    {
+      "source_path": ".github/workflows/manual_release_stable.yaml",
+      "line_start": 175,
+      "line_end": 175,
+      "blob_hash": "b4a2aea5f67dd490179c8f4803489b5c5e6aef8d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                uses: nick-fields/retry@v3 # Retry to compensate for npm registry propagation lag"
+    },
+    {
+      "source_path": ".github/workflows/manual_release_stable.yaml",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "b4a2aea5f67dd490179c8f4803489b5c5e6aef8d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    retry_wait_seconds: 30"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 756,
+      "line_end": 756,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Evals, add retry to Phoenix calls ([#426](https://github.com/apify/apify-mcp-server/pull/426)) ([792adf4](https://github.com/apify/apify-mcp-server/commit/792adf4ca5190a5a5bd146f5e8379db31179d16a)) by [@jirispilka](https://github.com/jirispilka)"
+    },
+    {
+      "source_path": "CONTRIBUTING.md",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "3a1cbc6c9d60a43da5e19a87ada356d744f952f5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    * **Booleans:** Prefix with `is`, `has`, `can`, or `should` (e.g., `isValid`, `hasFinished`, `canRetry`, `shouldRetry`)."
+    },
+    {
+      "source_path": "docs/claude-code-tools.json",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "c1f68f3f81676561b19b9542bf61622edcf9fd1c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            \"description\": \"Executes a given bash command in a persistent shell session with optional timeout, ensuring proper handling and security measures.\\n\\nBefore executing the command, please follow these steps:\\n\\n1. Directory Verification:\\n   - If the command will create new directories or files, first use the LS tool to verify the parent directory exists and is the correct location\\n   "
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "One caveat when reading a failure: a transient agent failure is retried once, and the retry replays the"
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "gate on it. The console prints a `retrying once` line for those items."
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "`merge/tasks/publish-discovery` budgets turns for several fix-and-retry rounds rather than one, and why"
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 393,
+      "line_end": 393,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "turn; a fast model sometimes doesn't wait or retry. On a local machine the CLI completes the"
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 395,
+      "line_end": 395,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Solution:** Retry the item once; a repeat failure on a local machine is real."
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 427,
+      "line_end": 427,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The pr tier has run on a hosted runner in 4m31s, inside its ten-minute target; the merge tier's threshold and 90-minute timeout are still provisional. Transient network and provider failures retry once; the handshake race above does not, because it produces a wrong answer rather than an error."
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Recover the verdict and use the rest as the reason before spending a retry call on it."
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 149,
+      "line_end": 149,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // No raw response here: the retry loop's final throw already carries it."
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 173,
+      "line_end": 173,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // parseJudgeResponse already recovers a prose verdict (e.g. \"PASS: ...\"); this retry"
+    },
+    {
+      "source_path": "evals/langfuse/observations.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "85368312492cd842cf00fcb6e8663251daa6cdb7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " *     |- <judge model>        generation, emitted by the active judge client (two on a judge parse retry)"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 322,
+      "line_end": 322,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * status. Deliberately narrow: retrying a deterministic failure (a bad prompt, a missing"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 356,
+      "line_end": 356,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Run the agent once, retrying on a transient failure. The retry replays the whole prompt,"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 361,
+      "line_end": 361,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async function runAgentWithRetry("
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 372,
+      "line_end": 372,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            `⚠️ Item \"${itemId}\": agent run failed (${error instanceof Error ? error.message : String(error)}), retrying once`,"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 501,
+      "line_end": 501,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const { adapted, startedAt } = await runAgentWithRetry(item.id, runOptions);"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 552,
+      "line_end": 552,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const { adapted, startedAt } = await runAgentWithRetry(item.id, runOptions);"
+    },
+    {
+      "source_path": "evals/runner/tool_call_mode.ts",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "8e8a4b061add163cc652c75d30dae76424aed03d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * retries instead — do not reuse it here."
+    },
+    {
+      "source_path": "evals/runner/tool_call_mode.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "8e8a4b061add163cc652c75d30dae76424aed03d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    'Tool calls are disabled in this evaluation. Do not retry with a different tool or ' +"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 2590,
+      "line_end": 2590,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  async-retry@1.3.3:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 3996,
+      "line_end": 3996,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  retry@0.12.0:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 4000,
+      "line_end": 4000,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  retry@0.13.1:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 6572,
+      "line_end": 6572,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      async-retry: 1.3.3"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 6593,
+      "line_end": 6593,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  async-retry@1.3.3:"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 6595,
+      "line_end": 6595,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      retry: 0.13.1"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 8145,
+      "line_end": 8145,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      retry: 0.12.0"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 8356,
+      "line_end": 8356,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  retry@0.12.0: {}"
+    },
+    {
+      "source_path": "pnpm-lock.yaml",
+      "line_start": 8358,
+      "line_end": 8358,
+      "blob_hash": "0de0264fad9460b668e890a0e1ea448fdf96192b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  retry@0.13.1: {}"
+    },
+    {
+      "source_path": "res/code_runtime_eval.md",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "db5c757f47651a97e3deaa37dd673317466a1348",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| retries | count re-issued Actor calls / re-run scripts in the transcript |"
+    },
+    {
+      "source_path": "res/code_runtime_eval_results.md",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "3b8d0a5881a137d1bfa294c64a2b77fd73c55a69",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## Retries and wasted runs"
+    },
+    {
+      "source_path": "res/index.md",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "5a5ebcc438d9a9779133462b7877cfee0d979eb1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "retry counts, and the confounds to fix before re-running. A dated record — do not edit it after"
+    },
+    {
+      "source_path": "scripts/conformance_expected_failures_2025_11_25.yaml",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "6efc301f6f808448e30ac2a409f48ca2ea58794f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # `retry:` field. Both are recommendations for resumability, not requirements."
+    },
+    {
+      "source_path": "src/const.ts",
+      "line_start": 132,
+      "line_end": 132,
+      "blob_hash": "0029dc4fadff4124affb43c0cf7d370bdcfdd1e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "If a scraped page comes back blocked or empty (e.g. the crawl reports a 403 or the page text is missing), do not give up: retry that URL with the apify/web-fetch tool when it is available - its anti-bot fetching gets through blocks this tool cannot.`;"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 551,
+      "line_end": 551,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * dropped so the next caller retries. Touches no per-connection state, so a per-request caller"
+    },
+    {
+      "source_path": "src/resources/AGENTS.md",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "2642e4332d71de57a2a61a344ccf89c01d811346",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "after the request resolves, outside any retry wrapper. On trip, the proxy links out: a `text/plain`"
+    },
+    {
+      "source_path": "src/resources/AGENTS.md",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "2642e4332d71de57a2a61a344ccf89c01d811346",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "unconsumed (junk message, stranded socket per retry) — one attempt, no retries; the error body is"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * stream — its `ApifyApiError` message degrades to junk and each retry attempt strands an unread"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 189,
+      "line_end": 189,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * socket. One attempt, no retries. `maxContentLength` is enforced by axios itself mid-consumption"
+    },
+    {
+      "source_path": "src/telemetry.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "f35a61e8f970eaaff9239c8f3afacfa9ec19ddc1",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * shares one identity (loops/retries/funnels stay reconstructable) instead of a fresh random id per"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 430,
+      "line_end": 430,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // render), so we do a single immediate probe and skip the delayed retries — otherwise the"
+    },
+    {
+      "source_path": "src/tools/actors/actor_run_response.ts",
+      "line_start": 696,
+      "line_end": 696,
+      "blob_hash": "85f65426ba818128a1d87aa37cc0027aa45219b9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                nextStep: `Re-run the Actor if you want to retry.`,"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 247,
+      "line_end": 247,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                `Account memory quota exceeded for your plan. Retry with a smaller callOptions.memory, or wait for current runs to finish before retrying.`,"
+    },
+    {
+      "source_path": "src/tools/actors/call_actor.ts",
+      "line_start": 286,
+      "line_end": 286,
+      "blob_hash": "16a4af0e53f8a02ee13123b70d1d6fefb12e870d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            Apify also caps total memory across all your concurrent runs (account plan limit); if a run is rejected because that quota would be exceeded, retry with a smaller value."
+    },
+    {
+      "source_path": "src/tools/actors/search_actors.ts",
+      "line_start": 129,
+      "line_end": 129,
+      "blob_hash": "0b3d0b63ceeafade13d435f648502f3a091ee6cb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        You MUST retry with broader, more generic keywords - use just the platform name"
+    },
+    {
+      "source_path": "src/tools/dev/report_problem.ts",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "1fab25b3a0ae7833cacb0ad5c04736c9a8cbd82f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * resolve this yourself\" so it does not discourage retrying fixable errors."
+    },
+    {
+      "source_path": "src/utils/mcp.ts",
+      "line_start": 311,
+      "line_end": 311,
+      "blob_hash": "6be38a5d91b5461e731bb69001bb5add5e622902",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            'requirements on publish. Fix the stated requirement before retrying. If `datasetView` is invalid, ' +"
+    },
+    {
+      "source_path": "src/utils/userid_cache.ts",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "50503cef29b85b0040f8c8ec922961ec412989c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * cached so the next call retries."
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `pollWhileWorking` | Retry while mcpc reports the task still running (`tasks-result` errors until it is terminal). |"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * Retry this probe while mcpc reports the task as still running — `tasks-result` errors until"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 256,
+      "line_end": 256,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * methods (`tools/list`, `prompts/list`). Retryable, so it is not reported as a server failure."
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 263,
+      "line_end": 263,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Runs a probe, retrying while `pollWhileWorking` is set and mcpc reports the task still running,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 2,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 1,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 227,
+      "line_end": 227,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 3,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 318,
+      "line_end": 318,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 1,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 347,
+      "line_end": 347,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 1,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 344,
+      "line_end": 344,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // A live Actor run over the network; the ticket budgets one retry for notification timing."
+    },
+    {
+      "source_path": "tests/test_kit/cases/tools.cases.ts",
+      "line_start": 345,
+      "line_end": 345,
+      "blob_hash": "69cfb74cb67e990529c938785fc81767520a768b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry: 1,"
+    },
+    {
+      "source_path": "tests/test_kit/register.ts",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "17815e9c0d8a0e435deb1018cf3846c5d838c0be",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if (c.retry !== undefined) {"
+    },
+    {
+      "source_path": "tests/test_kit/register.ts",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "17815e9c0d8a0e435deb1018cf3846c5d838c0be",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                runIt(c.name, { retry: c.retry }, runFn);"
+    },
+    {
+      "source_path": "tests/test_kit/types.ts",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "2782057d94c357f7c93e525304d9d02a29ce7bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Forwarded to vitest `it(name, { retry }, ...)`. */"
+    },
+    {
+      "source_path": "tests/test_kit/types.ts",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "2782057d94c357f7c93e525304d9d02a29ce7bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retry?: number;"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('names the item and does not retry on a deterministic failure', async () => {"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 233,
+      "line_end": 233,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('rethrows a transient failure that persists across the retry', async () => {"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 239,
+      "line_end": 239,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries the agent run once on a transient failure', async () => {"
+    },
+    {
+      "source_path": "tests/unit/evals.judge.test.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "1f55b0ff803c22b7f87c9333160e797b130326ad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('recovers a prose verdict without spending a retry call', async () => {"
+    },
+    {
+      "source_path": "tests/unit/evals.judge.test.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "1f55b0ff803c22b7f87c9333160e797b130326ad",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries once when the judge answer carries no parsable verdict', async () => {"
+    },
+    {
+      "source_path": "tests/unit/evals.tool_call_mode.test.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "6dfbc564608ccd6e5dcb1b357f12982a7d14fa63",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            'Tool calls are disabled in this evaluation. Do not retry with a different tool or ' +"
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.request_context.test.ts",
+      "line_start": 229,
+      "line_end": 229,
+      "blob_hash": "7cafecc025332e1ad0ceab924bb8f96cbd8a94af",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // reported once — not once per awaiter — while the next request stays free to retry."
+    },
+    {
+      "source_path": "tests/unit/mcp.stateless.request_context.test.ts",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "7cafecc025332e1ad0ceab924bb8f96cbd8a94af",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    // ...and the retry the memo drop exists for still happens."
+    },
+    {
+      "source_path": "tests/unit/tools.actor_task_crud.test.ts",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "eb774f9eea4c0fa84f68870779cd6976df395389",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries a 17-character value as a name when the ID lookup misses', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.fetch_actor_details.response.test.ts",
+      "line_start": 231,
+      "line_end": 231,
+      "blob_hash": "b29bd307818f87a7ace1800f3d94470c7123f470",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // found\" — that message wrongly nudges the caller to retry search-actors instead of fixing"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 248,
+      "line_end": 248,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries the itemCount=0 probe once when the first probe also returns 0 (waitSecs > 0)', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 249,
+      "line_end": 249,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Delayed retries run only when waitSecs > 0 — they're skipped on the \"return immediately\""
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 286,
+      "line_end": 286,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // (see ITEM_COUNT_PROBE_DELAYS_MS). If a future change shortens or removes retries, this"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 323,
+      "line_end": 323,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('skips delayed lag-fallback retries when waitSecs=0 (immediate-poll contract)', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 324,
+      "line_end": 324,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Regression for the widget's initial render: the [0, 1000, 2000, 2000]ms retry schedule"
+    },
+    {
+      "source_path": "tests/unit/tools.get_actor_run.response.test.ts",
+      "line_start": 345,
+      "line_end": 345,
+      "blob_hash": "a9e5d0ffacb4dbb77415e4f82fd71dc4dfbbc986",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Exactly one immediate probe — no delayed retries."
+    },
+    {
+      "source_path": "tests/unit/tools.schedule_crud.test.ts",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "395488567ba1bd925a848306164db676bb68fc79",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries a 17-character value as a name when the ID lookup misses', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.schedule_crud.test.ts",
+      "line_start": 368,
+      "line_end": 368,
+      "blob_hash": "395488567ba1bd925a848306164db676bb68fc79",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('retries a 17-character value as a name before deleting', async () => {"
+    },
+    {
+      "source_path": "tests/unit/tools.search_actors.default.response.test.ts",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "cd1d4eec5d1ca84ed939df9e8884975e1671e2ec",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('returns empty structured content and retry instructions when no actors match', async () => {"
+    },
+    {
+      "source_path": "tests/unit/utils.logging.test.ts",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "4261297354c344ed777b171ef51399bea9597a60",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        expect(isMcpClientFaultMessage('Server not initialized yet, retrying')).toBe(false);"
+    },
+    {
+      "source_path": "tests/unit/utils.userid_cache.test.ts",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "63088db8934945230091a5fd5a42956564b08ca5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it('does NOT cache failed lookups (next call retries)', async () => {"
+    }
+  ]
+}

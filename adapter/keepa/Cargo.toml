@@ -1,0 +1,11 @@
+[package]
+name = "ecdev-keepa"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde_json.workspace = true
+ecdev-core = { path = "../../domain/commerce" }
+sha2.workspace = true
+uuid.workspace = true
+reqwest = { version = "=0.12.28", default-features = false, features = ["blocking", "json", "rustls-tls"] }

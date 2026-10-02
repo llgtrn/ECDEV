@@ -1,0 +1,781 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "src/agent-hints.ts",
+      "line": 1,
+      "text": "import type { ContentResult } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/alexandria-feedback.ts",
+      "line": 1,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/alexandria.ts",
+      "line": 1,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line": 13,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line": 14,
+      "text": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line": 15,
+      "text": "import { withAgentHints } from './agent-hints';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line": 16,
+      "text": "import { originHeaders, requestOrigin } from './origin';"
+    },
+    {
+      "source_path": "src/developer.ts",
+      "line": 17,
+      "text": "import { developerSearchOutputSchema, withStructured } from './tool-output';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 2,
+      "text": "import {\n  ALEXANDRIA_FEEDBACK_HINT,\n  alexandriaCallsWarrantFeedback,\n  alexandriaFeedbackFields,\n  alexandriaSessionFeedbackSchema,\n  withAlexandriaFeedbackHint,\n} from './alexandria-feedback.js';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 9,
+      "text": "import FirecrawlApp from 'firecrawl';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 10,
+      "text": "import dotenv from 'dotenv';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 11,
+      "text": "import { type ContentResult, FastMCP, type Logger, UserError } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 12,
+      "text": "import type { IncomingHttpHeaders } from 'http';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 13,
+      "text": "import { readFile } from 'node:fs/promises';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 14,
+      "text": "import { createRequire } from 'node:module';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 15,
+      "text": "import { randomUUID } from 'node:crypto';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 16,
+      "text": "import path from 'node:path';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 17,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 18,
+      "text": "import {\n  AGENT_HINTS_HEADERS,\n  agentHintsText,\n  preserveAgentHints,\n  readAgentHints,\n  readErrorAgentHints,\n} from './agent-hints';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 25,
+      "text": "import {\n  agentOutputSchema,\n  agentStatusOutputSchema,\n  crawlOutputSchema,\n  deprecatedToolOutputSchema,\n  feedbackOutputSchema,\n  findToolsOutputSchema,\n  interactOutputSchema,\n  interactStopOutputSchema,\n  mapOutputSchema,\n  parseOutputSchema,\n  scrapeOutputSchema,\n  searchOutputSchema,\n  structuredCompact,\n  structuredJsonText,\n  structuredText,\n  withStructured,\n} from './tool-output';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 43,
+      "text": "import {\n  searchSourceSchema,\n  findToolsSchema,\n  findToolsOptions,\n  withFindToolsNavigation,\n  hasAlexandria,\n  defaultDomainTools,\n  normalizeSearchSources,\n  searchQueryIsValid,\n  ALEXANDRIA_SEARCH_LEAD,\n  ALEXANDRIA_CONTRACT_GUIDANCE,\n  ALEXANDRIA_CATALOGUE_SENTENCE,\n  ALEXANDRIA_CATALOGUE_VERTICALS,\n  ALEXANDRIA_SOURCES_OPT_OUT,\n  ALEXANDRIA_SEARCH_INSTRUCTIONS,\n} from './alexandria';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 59,
+      "text": "import { alexandriaOutput } from './alexandria-output';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 60,
+      "text": "import { registerDeveloperTools } from './developer';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 61,
+      "text": "import { extractSingleTrustedClientIp } from './keyless-client-ip';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 62,
+      "text": "import { checkKeylessSignupUrl } from './keyless-signup-link';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 63,
+      "text": "import { registerMonitorTools } from './monitor';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 64,
+      "text": "import { registerResearchTools } from './research';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 65,
+      "text": "import { registerUsageTools } from './usage';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 66,
+      "text": "import { escapeWWWAuthenticateValue } from './www-authenticate';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 67,
+      "text": "import {\n  createIntrospectionCache,\n  INTROSPECTION_ACTIVE_TTL_MS,\n  INTROSPECTION_INACTIVE_TTL_MS,\n  introspectionTtlMs,\n} from './introspection-cache';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 73,
+      "text": "import { originHeaders, requestOrigin, type McpClient } from './origin';"
+    },
+    {
+      "source_path": "src/index.ts",
+      "line": 74,
+      "text": "import {\n  credentialForOutboundRequest,\n  copyManagedOAuthApiKey,\n  CoreHttpError,\n  credentialValidationUnavailable,\n  CredentialValidationUnavailableError,\n  hasCredential,\n  hasManagedOAuthCredential,\n  requireDelegatedCredentialSigning,\n  setManagedOAuthApiKey,\n  type CredentialSession,\n} from './session-credential';"
+    },
+    {
+      "source_path": "src/introspection-cache.ts",
+      "line": 1,
+      "text": "import { createHash } from 'node:crypto';"
+    },
+    {
+      "source_path": "src/keyless-client-ip.ts",
+      "line": 1,
+      "text": "import net from 'node:net';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 12,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 13,
+      "text": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 14,
+      "text": "import { AGENT_HINTS_HEADERS, readAgentHints, withAgentHints } from './agent-hints';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 15,
+      "text": "import { originHeaders, requestOrigin } from './origin';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 16,
+      "text": "import {\n  monitorCheckOutputSchema,\n  monitorChecksOutputSchema,\n  monitorDeleteOutputSchema,\n  monitorListOutputSchema,\n  monitorOutputSchema,\n  monitorRunOutputSchema,\n  structuredText,\n} from './tool-output';"
+    },
+    {
+      "source_path": "src/monitor.ts",
+      "line": 25,
+      "text": "import {\n  CoreHttpError,\n  credentialForOutboundRequest,\n  type CredentialSession,\n} from './session-credential';"
+    },
+    {
+      "source_path": "src/origin.ts",
+      "line": 1,
+      "text": "import { createRequire } from 'node:module';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line": 12,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line": 13,
+      "text": "import { type ContentResult, type FastMCP, UserError } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line": 14,
+      "text": "import { AGENT_HINTS_HEADERS, withAgentHints } from './agent-hints';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line": 15,
+      "text": "import { originHeaders, requestOrigin } from './origin';"
+    },
+    {
+      "source_path": "src/research.ts",
+      "line": 16,
+      "text": "import {\n  deprecatedToolOutputSchema,\n  researchPaperOutputSchema,\n  researchReadOutputSchema,\n  researchRelatedOutputSchema,\n  researchSearchOutputSchema,\n  withStructured,\n} from './tool-output';"
+    },
+    {
+      "source_path": "src/session-credential.ts",
+      "line": 1,
+      "text": "import { createHmac } from 'node:crypto';"
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line": 28,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/tool-output.ts",
+      "line": 29,
+      "text": "import type { ContentResult } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line": 8,
+      "text": "import { z } from 'zod';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line": 9,
+      "text": "import type { ContentResult, FastMCP } from 'fastmcp';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line": 10,
+      "text": "import { originHeaders, requestOrigin, type McpClient } from './origin';"
+    },
+    {
+      "source_path": "src/usage.ts",
+      "line": 11,
+      "text": "import { creditUsageOutputSchema, structuredText } from './tool-output';"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line": 2,
+      "text": "import { createServer } from 'node:http';"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line": 4,
+      "text": "import {\n  getFreePort,\n  httpToolCall,\n  parseSseJson,\n  spawnServer,\n  stopChild,\n  waitForHealth,\n} from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/agent-hints.test.mjs",
+      "line": 12,
+      "text": "import {\n  preserveAgentHints,\n  readAgentHints,\n  readErrorAgentHints,\n  withAgentHints,\n} from '../dist/agent-hints.js';"
+    },
+    {
+      "source_path": "tests/agent-metadata-policy.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/agent-metadata-policy.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/agent-metadata-policy.test.mjs",
+      "line": 3,
+      "text": "import { findAgentMetadataPolicyViolations } from '../scripts/agent-metadata-policy.mjs';"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line": 2,
+      "text": "import { readFile } from 'node:fs/promises';"
+    },
+    {
+      "source_path": "tests/build-bundle.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/helpers/alexandria-metadata.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-api.mjs",
+      "line": 1,
+      "text": "import { createServer } from 'node:http';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line": 2,
+      "text": "import { spawn } from 'node:child_process';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line": 3,
+      "text": "import net from 'node:net';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line": 4,
+      "text": "import { setTimeout as delay } from 'node:timers/promises';"
+    },
+    {
+      "source_path": "tests/helpers/exchange-mcp.mjs",
+      "line": 5,
+      "text": "import { startFakeExchangeApi } from './exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/helpers/plugin-contract.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/helpers/plugin-contract.mjs",
+      "line": 2,
+      "text": "import { readFileSync, readdirSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/helpers/plugin-contract.mjs",
+      "line": 3,
+      "text": "import { join } from 'node:path';"
+    },
+    {
+      "source_path": "tests/helpers/plugin-contract.mjs",
+      "line": 4,
+      "text": "import { fileURLToPath } from 'node:url';"
+    },
+    {
+      "source_path": "tests/introspection-cache.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/introspection-cache.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/introspection-cache.test.mjs",
+      "line": 3,
+      "text": "import {\n  createIntrospectionCache,\n  INTROSPECTION_ACTIVE_TTL_MS,\n  INTROSPECTION_INACTIVE_TTL_MS,\n  introspectionTtlMs,\n} from '../dist/introspection-cache.js';"
+    },
+    {
+      "source_path": "tests/keyless-signup-link.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/keyless-signup-link.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/keyless-signup-link.test.mjs",
+      "line": 3,
+      "text": "import { checkKeylessSignupUrl } from '../dist/keyless-signup-link.js';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line": 1,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line": 2,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line": 4,
+      "text": "import { EXCHANGE_KEY_REQUIRED_MESSAGE, KEYLESS_TOOL_MESSAGE, getFreePort, waitForHealth, parseSseJson, spawnServer, stopChild, startStdio, startStdioWithApi, toolText, httpToolCall } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-auth.test.mjs",
+      "line": 5,
+      "text": "import { EXCHANGE_CALL, startFakeExchangeApi } from './helpers/exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-discovery.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-discovery.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-discovery.test.mjs",
+      "line": 3,
+      "text": "import { startStdioWithApi, toolText } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-feedback-hints.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-feedback-hints.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-feedback-hints.test.mjs",
+      "line": 3,
+      "text": "import { startStdio, startStdioWithApi, toolText } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-feedback-hints.test.mjs",
+      "line": 4,
+      "text": "import { EXCHANGE_CALL, startFakeExchangeApi } from './helpers/exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-scrape.test.mjs",
+      "line": 1,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-scrape.test.mjs",
+      "line": 2,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-scrape.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-scrape.test.mjs",
+      "line": 4,
+      "text": "import { startStdioWithApi, callExpectingError, toolText } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-scrape.test.mjs",
+      "line": 5,
+      "text": "import { EXCHANGE_CALL } from './helpers/exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-search.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-search.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-search.test.mjs",
+      "line": 3,
+      "text": "import { startStdioWithApi, callExpectingError, toolText } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-terms.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-terms.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-terms.test.mjs",
+      "line": 3,
+      "text": "import { TERMS_REQUIRED_BODY } from './helpers/exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-alexandria-terms.test.mjs",
+      "line": 4,
+      "text": "import { startStdioWithApi, callExpectingError, toolText } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-description-budget.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-description-budget.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-description-budget.test.mjs",
+      "line": 3,
+      "text": "import { startStdioWithApi } from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-description-budget.test.mjs",
+      "line": 4,
+      "text": "import { CLAUDE_CODE_TEXT_CAP as CAP } from './helpers/description-budget.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-description-budget.test.mjs",
+      "line": 5,
+      "text": "import { assertAlexandriaMetadata } from './helpers/alexandria-metadata.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line": 3,
+      "text": "import { startFakeExchangeApi } from './helpers/exchange-api.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-read-only-scrape.test.mjs",
+      "line": 4,
+      "text": "import {\n  getFreePort,\n  parseSseJson,\n  spawnServer,\n  startStdio,\n  stopChild,\n  waitForHealth,\n} from './helpers/exchange-mcp.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 2,
+      "text": "import { spawn } from 'node:child_process';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 3,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 4,
+      "text": "import { createServer } from 'node:http';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 5,
+      "text": "import net from 'node:net';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 6,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 7,
+      "text": "import { setTimeout as delay } from 'node:timers/promises';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 8,
+      "text": "import { assertAgentMetadataPolicy } from '../scripts/agent-metadata-policy.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 9,
+      "text": "import { CLAUDE_CODE_TEXT_CAP } from './helpers/description-budget.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 10,
+      "text": "import { assertAlexandriaMetadata } from './helpers/alexandria-metadata.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-search-profile.test.mjs",
+      "line": 11,
+      "text": "import {\n  assertPluginToolCoverage,\n  claudePlugin,\n} from './helpers/plugin-contract.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 2,
+      "text": "import { spawn } from 'node:child_process';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 3,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 4,
+      "text": "import { createServer } from 'node:http';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 5,
+      "text": "import net from 'node:net';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 6,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 7,
+      "text": "import { setTimeout as delay } from 'node:timers/promises';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 8,
+      "text": "import { assertAgentMetadataPolicy } from '../scripts/agent-metadata-policy.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 9,
+      "text": "import { CLAUDE_CODE_TEXT_CAP } from './helpers/description-budget.mjs';"
+    },
+    {
+      "source_path": "tests/mcp-smoke.test.mjs",
+      "line": 10,
+      "text": "import {\n  assertPluginToolCoverage,\n  openaiPlugin,\n} from './helpers/plugin-contract.mjs';"
+    },
+    {
+      "source_path": "tests/nginx-config.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/nginx-config.test.mjs",
+      "line": 2,
+      "text": "import { readFile } from 'node:fs/promises';"
+    },
+    {
+      "source_path": "tests/nginx-config.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/origin.test.mjs",
+      "line": 3,
+      "text": "import {\n  ORIGIN_SERVER,\n  originForClient,\n  originHeaders,\n  userAgentProduct,\n} from '../dist/origin.js';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 2,
+      "text": "import {\n  existsSync,\n  mkdirSync,\n  mkdtempSync,\n  readFileSync,\n  readdirSync,\n  realpathSync,\n  rmSync,\n  writeFileSync,\n} from 'node:fs';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 12,
+      "text": "import { tmpdir } from 'node:os';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 13,
+      "text": "import { dirname, join, resolve, sep } from 'node:path';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 14,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/plugin-packages.test.mjs",
+      "line": 15,
+      "text": "import {\n  assertPluginToolCoverage,\n  claudePlugin,\n  instructionFiles,\n  openaiPlugin,\n} from './helpers/plugin-contract.mjs';"
+    },
+    {
+      "source_path": "tests/readme-security.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/readme-security.test.mjs",
+      "line": 2,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tests/readme-security.test.mjs",
+      "line": 3,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/www-authenticate.test.mjs",
+      "line": 1,
+      "text": "import assert from 'node:assert/strict';"
+    },
+    {
+      "source_path": "tests/www-authenticate.test.mjs",
+      "line": 2,
+      "text": "import test from 'node:test';"
+    },
+    {
+      "source_path": "tests/www-authenticate.test.mjs",
+      "line": 3,
+      "text": "import { escapeWWWAuthenticateValue } from '../dist/www-authenticate.js';"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line": 1,
+      "text": "import { readFileSync } from 'node:fs';"
+    },
+    {
+      "source_path": "tsup.config.ts",
+      "line": 2,
+      "text": "import { defineConfig } from 'tsup';"
+    }
+  ],
+  "call_edges": []
+}

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "donor_id": {
+      "type": "string"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "CENSUS_PARTIAL",
+        "CENSUS_COMPLETE"
+      ]
+    },
+    "total_files": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "classified_files": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "first_party_source_files": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_parsed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "parse_unknown": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "unknown_files": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tests": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fixtures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "symbols": {
+      "type": "integer",
+      "minimum": 0
+    }
+  },
+  "required": [
+    "donor_id",
+    "commit_sha",
+    "status",
+    "total_files",
+    "classified_files",
+    "first_party_source_files",
+    "source_parsed",
+    "parse_unknown",
+    "unknown_files",
+    "tests",
+    "fixtures",
+    "symbols"
+  ],
+  "additionalProperties": true
+}

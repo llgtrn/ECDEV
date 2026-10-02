@@ -1,0 +1,1597 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "5. **Bridges are typically already connected.** Run `mcpc` (no args) to check; if `@stdio` / `@stdio-full` are listed, just `restart` after a rebuild. Only `connect` as a fallback when missing. Do NOT source `.env` or wrap calls in `set -a` — the bridge already has the user's token."
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `@stdio` | `node dist/stdio.js` | Default — core tools only |"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `@stdio-full` | `node dist/stdio.js --tools=...` | When you need non-default tools (extra categories like runs/storage, specific actors) |"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Available `stdio.js` arguments: `--tools` (comma-separated tool names or actor IDs), `--actors` (comma-separated actor IDs), `--enable-adding-actors`, `--ui`."
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# 1. Build (always — mcpc runs the compiled dist/stdio.js)"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# 3a. If @stdio is NOT listed — connect:"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc connect .mcp.json:stdio @stdio"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# 3b. If @stdio IS listed — restart to pick up the new build:"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio restart"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-list"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-call <tool> key:=\"value\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call <tool> key:=\"value\" | jq '...'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "If the task requires non-default tools, also connect/restart `@stdio-full`."
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 76,
+      "line_end": 76,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Pass the resulting IDs straight into `mcpc @stdio tools-call …`. Keep extraction terse with `--json | jq -r`."
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "3. **Stdin**: `echo '{\"key\":\"value\"}' | mcpc @stdio tools-call <tool>`"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 93,
+      "line_end": 93,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| _(none — bare `mcpc @stdio`)_ | Server info, capabilities, negotiated MCP version and transport, tools overview |"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 136,
+      "line_end": 136,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-list | jq '.[].name'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 139,
+      "line_end": 139,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-get <tool-name>"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-list --full | jq '[.[] | {name, readOnly: .annotations.readOnlyHint}]'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call search-actors keywords:=\"web scraper\" | jq '.content[0].text'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 148,
+      "line_end": 148,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-list | jq 'length'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio grep \"search\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio ping"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio resources-list | jq '.[].uri'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 161,
+      "line_end": 161,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio resources-templates-list | jq '.[].uriTemplate'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio resources-read \"resource://uri\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-get my-tool --schema expected.json --schema-mode strict"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 176,
+      "line_end": 176,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-call search-actors keywords:=\"google maps\" limit:=3"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-call fetch-actor-details actorId:=\"compass/crawler-google-places\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 182,
+      "line_end": 182,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-list | jq '.[].name'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 185,
+      "line_end": 185,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-get <tool-name>"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call <tool-name> key:=\"value\" | jq '.content[0].text'"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "DATASET_ID=$(mcpc --json @stdio tools-call call-actor actorId:=\"apify/hello-world\" input:='{}' | jq -r '.content[0].text | fromjson | .defaultDatasetId')"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 196,
+      "line_end": 196,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call get-dataset-items datasetId:=\"$DATASET_ID\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 199,
+      "line_end": 199,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "ACTOR_ID=$(mcpc --json @stdio tools-call search-actors keywords:=\"hello world\" limit:=1 | jq -r '.content[0].text | fromjson | .[0].id')"
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-call fetch-actor-details actorId:=\"$ACTOR_ID\""
+    },
+    {
+      "source_path": ".claude/agents/mcpc-tester.md",
+      "line_start": 201,
+      "line_end": 201,
+      "blob_hash": "aa509fcc976de47c0d4d211981d77621e80a069b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call call-actor actorId:=\"$ACTOR_ID\" input:='{}'"
+    },
+    {
+      "source_path": ".claude/skills/bug-triage/SKILL.md",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "eb25158051997c573eda1d7aaa676842a2bd4d8b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "4. **npx cache corruption**: Stale cache prevents stdio server from starting. Fix: `rm -rf ~/.npm/_npx` (macOS/Linux) or `rmdir /s /q %LOCALAPPDATA%\\npm-cache\\_npx` (Windows)."
+    },
+    {
+      "source_path": ".claude/skills/creating-mcp-agent-evals/reference.md",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "41b9c2c20233533afd46057a9d8533e19997c0d2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `--subscription` deletes `ANTHROPIC_API_KEY` from the process env so the Agent SDK's Claude Code subprocess uses the local login. Without it the run bills the API key."
+    },
+    {
+      "source_path": ".claude/skills/dig/SKILL.md",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "611c72a3d41e8b5349e54947a4076146b03ccf1b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "4. Use `mcpc @stdio tools-call` to probe current behavior if useful (requires `pnpm run build`)"
+    },
+    {
+      "source_path": ".claude/skills/dig/SKILL.md",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "611c72a3d41e8b5349e54947a4076146b03ccf1b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| **mcpc stdio**         | `mcpc @stdio tools-call ...` (requires `pnpm run build`)             | Test tools — no running server needed                       |"
+    },
+    {
+      "source_path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "b9a38354b2dcc81b134625fd5af88a75efb40749",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        - \"Local (stdio via npx @apify/actors-mcp-server)\""
+    },
+    {
+      "source_path": ".github/workflows/_check_code.yaml",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "808960c06be82917ee0562c2ba360e7ece28f3f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    docker run --rm apify-mcp-server:ci --help | grep -F 'Usage: stdio.js'"
+    },
+    {
+      "source_path": ".github/workflows/_check_code.yaml",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "808960c06be82917ee0562c2ba360e7ece28f3f6",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            -   name: Smoke test — MCP initialize handshake over stdio"
+    },
+    {
+      "source_path": ".github/workflows/_smoke_test_mcpb.yaml",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "e02c0495e0b4f257bc5ee98698cd133c51d41043",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    echo '{\"mcpServers\":{\"mcpb\":{\"command\":\"node\",\"args\":[\"mcpb/dist/stdio.js\",\"--tools\",\"docs,search-actors,fetch-actor-details\",\"--telemetry-enabled\",\"false\"]}}}' > .mcp.json"
+    },
+    {
+      "source_path": ".mcp.json",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "af2c2cf0e5cfc48c1aeb479fe7d1ac2d2cd29e99",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"stdio\": {"
+    },
+    {
+      "source_path": ".mcp.json",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "af2c2cf0e5cfc48c1aeb479fe7d1ac2d2cd29e99",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"dist/stdio.js\""
+    },
+    {
+      "source_path": ".mcp.json",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "af2c2cf0e5cfc48c1aeb479fe7d1ac2d2cd29e99",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"stdio-full\": {"
+    },
+    {
+      "source_path": ".mcp.json",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "af2c2cf0e5cfc48c1aeb479fe7d1ac2d2cd29e99",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"dist/stdio.js\","
+    },
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "TypeScript, ES modules. Runs in two modes: **stdio** (local CLI clients, `stdio.ts`) and **HTTP Streamable** (`dev_server.ts`)."
+    },
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "After `pnpm run build`, run `mcpc` (no args) to check sessions: if `@stdio` (default) / `@stdio-full` (non-default tools) is listed, `mcpc @stdio restart`; otherwise `mcpc connect .mcp.json:stdio @stdio` (non-default tools: `mcpc connect .mcp.json:stdio-full @stdio-full`). Use the `mcpc-tester` subagent for systematic spec/edge-case coverage; call mcpc directly for quick checks."
+    },
+    {
+      "source_path": "AGENTS.md",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "1dd19935abe5ec9dc1cded4f6accebe7fefed0e0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `tests/integration/suite.ts` wires the `stdio`, `2025-11-25` (streamable HTTP) and `2026-07-28` (stateless HTTP) transport dimensions into one shared suite. Add new integration cases to the matching capability array in `tests/test_kit/cases/*.cases.ts` (registration, tools, actors, apps, tasks, storage, payments) — each is a plain `Case[]` (`{ name, isDeploymentTest, run, ... }`), registered via"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 338,
+      "line_end": 338,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Expose stdio CLI version ([#963](https://github.com/apify/apify-mcp-server/pull/963)) ([fd289f0](https://github.com/apify/apify-mcp-server/commit/fd289f04cd335a9992316f9bea2f50c6ab9472a8)) by [@wowsofine](https://github.com/wowsofine)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 748,
+      "line_end": 748,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **stdio:** Allow unauthenticated access for public tools ([#421](https://github.com/apify/apify-mcp-server/pull/421)) ([64a4ed5](https://github.com/apify/apify-mcp-server/commit/64a4ed5cd289855cde24680d4c3abd033b39c73f)) by [@muhammetakkurtt](https://github.com/muhammetakkurtt)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 751,
+      "line_end": 751,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **stdio:** Add Sentry error tracking for stdio transport ([#452](https://github.com/apify/apify-mcp-server/pull/452)) ([a772ba4](https://github.com/apify/apify-mcp-server/commit/a772ba4f79ac048ee814a8ef840f953a3fcd0139)) by [@MQ37](https://github.com/MQ37)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 852,
+      "line_end": 852,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Temporarily disable MCP Session ID error handling to resolve stdio transport issues ([#373](https://github.com/apify/apify-mcp-server/pull/373)) ([bad1163](https://github.com/apify/apify-mcp-server/commit/bad116323c118f819f51d2b38aff2f2401bc5940)) by [@MQ37](https://github.com/MQ37)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1192,
+      "line_end": 1192,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Prepare for dockerhub integration, prepare dockerfile, add support for reading config from env vars for stdio ([#224](https://github.com/apify/actors-mcp-server/pull/224)) ([08c62be](https://github.com/apify/actors-mcp-server/commit/08c62be284032bc1d5f4ccb25301129fc1ea2c58)) by [@MQ37](https://github.com/MQ37)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1415,
+      "line_end": 1415,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Stdio print error ([#101](https://github.com/apify/actors-mcp-server/pull/101)) ([1964e69](https://github.com/apify/actors-mcp-server/commit/1964e69f5bcf64e47892b4d09044ac40ccd97ac9)) by [@MQ37](https://github.com/MQ37)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1417,
+      "line_end": 1417,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Stdio and streamable http client examples ([#106](https://github.com/apify/actors-mcp-server/pull/106)) ([8d58bfa](https://github.com/apify/actors-mcp-server/commit/8d58bfaee377877968c96aa465f0125159b84e8b)) by [@MQ37](https://github.com/MQ37), closes [#105](https://github.com/apify/actors-mcp-server/issues/105)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1584,
+      "line_end": 1584,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Stdio and SSE example, improve logging ([#32](https://github.com/apify/actors-mcp-server/pull/32)) ([1b1852c](https://github.com/apify/actors-mcp-server/commit/1b1852cdb49c5de3f8dd48a1d9abc5fd28c58b3a)) by [@jirispilka](https://github.com/jirispilka)"
+    },
+    {
+      "source_path": "CHANGELOG.md",
+      "line_start": 1613,
+      "line_end": 1613,
+      "blob_hash": "660e548b17853916f3236409dd22cdcb8419e212",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Add log to stdio ([#25](https://github.com/apify/actors-mcp-server/pull/25)) ([b6e58cd](https://github.com/apify/actors-mcp-server/commit/b6e58cd79f36cfcca1f51b843b5af7ae8e519935)) by [@jirispilka](https://github.com/jirispilka)"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- The stdio entry point (CLI)"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `src/stdio.ts` - Standard input/output (CLI) entry point"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| **Integration tests** | `pnpm run test:integration` | Full server over stdio, streamable HTTP and the `2026-07-28` stateless HTTP dimension against real Apify API (requires `APIFY_TOKEN` + `pnpm run build`) |"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 153,
+      "line_end": 153,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| **mcpc probing** | `mcpc @stdio tools-call ...` | Interactive end-to-end verification during development |"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 176,
+      "line_end": 176,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  - Other files in this directory set up different transport dimensions (`stdio`, `2025-11-25` streamable HTTP, and `2026-07-28` stateless HTTP driven by the v2 SDK client) that all use `suite.ts`"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc connect .mcp.json:stdio @stdio"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 229,
+      "line_end": 229,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-list   # verify"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 237,
+      "line_end": 237,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-list"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 238,
+      "line_end": 238,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc @stdio tools-call search-actors keywords:=\"web scraper\" limit:=5"
+    },
+    {
+      "source_path": "DEVELOPMENT.md",
+      "line_start": 239,
+      "line_end": 239,
+      "blob_hash": "95494370a1ceee11228cac080b784b80cbe0de73",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "mcpc --json @stdio tools-call search-actors keywords:=\"scraper\" | jq ‘.content[0].text’"
+    },
+    {
+      "source_path": "Dockerfile",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "ff4663a9fff011a4496a31848007e83b8a9b9e35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Skip tests/test_kit — dist/stdio.js never imports it."
+    },
+    {
+      "source_path": "Dockerfile",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "ff4663a9fff011a4496a31848007e83b8a9b9e35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "ENTRYPOINT [\"node\", \"dist/stdio.js\"]"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "> For the best experience, connect your AI assistant to our hosted server at **[`https://mcp.apify.com`](https://mcp.apify.com)**. The hosted server supports the latest features - including output schema inference for structured Actor results - that are not available when running locally via stdio."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 76,
+      "line_end": 76,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**Standard Input/Output (stdio)**: Ideal for local integrations and command-line tools like the Claude for Desktop client."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 463,
+      "line_end": 463,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The stdio transport also uses [Sentry](https://sentry.io) for error tracking, which helps us identify and fix issues faster."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 479,
+      "line_end": 479,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "**For the local stdio server**:"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "## Start standard input/output (stdio) MCP server"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 528,
+      "line_end": 528,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "npx @modelcontextprotocol/inspector node ./dist/stdio.js"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 549,
+      "line_end": 549,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The Apify MCP Server is also available on [Docker Hub](https://hub.docker.com/mcp/server/apify-mcp-server/overview), registered via the [mcp-registry](https://github.com/docker/mcp-registry) repository. The entry in `servers/apify-mcp-server/server.yaml` should be deployed automatically by the Docker Hub MCP registry (deployment frequency is unknown). **Before making major changes to the `stdio` s"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 564,
+      "line_end": 564,
+      "blob_hash": "da5fa1fa2c0aa08215f7b2c9c1497b909b7fe67e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **Rental Actors** are only available for use with the hosted MCP server at https://mcp.apify.com. When running the server locally via stdio, you can only access Actors that are already added to your local toolset. To dynamically search for and use any Actor from Apify Store—including rental Actors—connect to the hosted endpoint."
+    },
+    {
+      "source_path": "evals/README.md",
+      "line_start": 155,
+      "line_end": 155,
+      "blob_hash": "19f30f361fde7c8594296b47483840e69675a5c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The harness uses `canUseTool` instead of root-incompatible permission bypass flags. The deny-all hook still runs first. On a subprocess failure, inspect `[claude-stderr]` output."
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Each run spawns its own Apify MCP server from `dist/stdio.js` (fresh state per test)"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * shuts the subprocess down when the query ends."
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const STDIO_BIN_PATH = resolve(process.cwd(), 'dist/stdio.js');"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function assertStdioBinExists(): void {"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    if (!existsSync(STDIO_BIN_PATH)) {"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throw new Error(`MCP server binary not found at ${STDIO_BIN_PATH}. Run \"pnpm run build\" first.`);"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const serverArgs = [STDIO_BIN_PATH];"
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 119,
+      "line_end": 119,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Tears down the Claude Code + MCP-server subprocesses."
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Append recent stderr lines so opaque subprocess failures retain the CLI's message."
+    },
+    {
+      "source_path": "evals/agent/claude_agent.ts",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "5cc0869783fc1f581a1f225de719df8962c352b5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                type: 'stdio',"
+    },
+    {
+      "source_path": "evals/judge/claude_client.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "7587ad4e51b79a8bd73d9bcaf00f07ea1f5affb5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Selected with `--claude-judge`. Each call spawns a short-lived Claude Code subprocess"
+    },
+    {
+      "source_path": "evals/judge/judge.ts",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "0297999956a45e2014f317a4f90a16915fc064fa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const prose = PROSE_VERDICT_PATTERN.exec(response);"
+    },
+    {
+      "source_path": "evals/langfuse/observations.ts",
+      "line_start": 4,
+      "line_end": 4,
+      "blob_hash": "85368312492cd842cf00fcb6e8663251daa6cdb7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * The agent runs inside the Claude Code subprocess, so none of its work is instrumented"
+    },
+    {
+      "source_path": "evals/runner/experiment.ts",
+      "line_start": 379,
+      "line_end": 379,
+      "blob_hash": "8dd1943fc2c718d372313e3014e32a63a674d228",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Sends the subprocess conversation to Langfuse without affecting the item result if tracing fails. */"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { assertStdioBinExists } from '../agent/claude_agent.js';"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 101,
+      "line_end": 101,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            stdio: ['ignore', 'pipe', 'ignore'],"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 205,
+      "line_end": 205,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // The Agent SDK's Claude Code subprocess falls back to the local login only when no"
+    },
+    {
+      "source_path": "evals/runner/run.ts",
+      "line_start": 213,
+      "line_end": 213,
+      "blob_hash": "e730c828698560cc2c53faead941338e28cc7475",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assertStdioBinExists();"
+    },
+    {
+      "source_path": "manifest.json",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "989c70b0a41a9591c69207d45d75b25fc007a8a0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"entry_point\": \"dist/stdio.js\","
+    },
+    {
+      "source_path": "manifest.json",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "989c70b0a41a9591c69207d45d75b25fc007a8a0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"${__dirname}/dist/stdio.js\","
+    },
+    {
+      "source_path": "package.json",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "f3e0db1ee040263e7bb0b304a7f43b3bff072057",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"actors-mcp-server\": \"./dist/stdio.js\""
+    },
+    {
+      "source_path": "package.json",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "f3e0db1ee040263e7bb0b304a7f43b3bff072057",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"test:integration:stdio\": \"pnpm run build && vitest run tests/integration/stdio.test.ts\","
+    },
+    {
+      "source_path": "package.json",
+      "line_start": 139,
+      "line_end": 139,
+      "blob_hash": "f3e0db1ee040263e7bb0b304a7f43b3bff072057",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"inspector:stdio\": \"npx @modelcontextprotocol/inspector -e APIFY_TOKEN=$APIFY_TOKEN -- node dist/stdio.js\","
+    },
+    {
+      "source_path": "scripts/dev_standby.js",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "c09b2e64078d5aa94a75d7b67ceacc6a3c06bd29",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const child = spawn(cmd, args, {"
+    },
+    {
+      "source_path": "scripts/dev_standby.js",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "c09b2e64078d5aa94a75d7b67ceacc6a3c06bd29",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        stdio: 'inherit',"
+    },
+    {
+      "source_path": "src/AGENTS.md",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "56c28dcaff67fc11d23520b27843b09a59172c59",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `stdio.ts` — CLI entry (used for Docker). **Sentry must be imported first** — keep"
+    },
+    {
+      "source_path": "src/AGENTS.md",
+      "line_start": 23,
+      "line_end": 23,
+      "blob_hash": "56c28dcaff67fc11d23520b27843b09a59172c59",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `input.ts` — input processing (`processInput`, used by `stdio.ts` and the HTTP URL-param parser in `mcp/utils.ts`)."
+    },
+    {
+      "source_path": "src/dev_server.ts",
+      "line_start": 329,
+      "line_end": 329,
+      "blob_hash": "bf5824b3626daf57e6b1342a83c72f3d2dd6186b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                // Client info is already available here — unlike stdio.ts, which loads tools"
+    },
+    {
+      "source_path": "src/instrument.ts",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "c69bd949ac517720596bf9e0dd85677810399e9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Sentry instrumentation for the stdio transport."
+    },
+    {
+      "source_path": "src/instrument.ts",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "c69bd949ac517720596bf9e0dd85677810399e9d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// This mirrors the --telemetry-enabled / TELEMETRY_ENABLED option from stdio.ts."
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // for stdio use in memory task store if not provided, otherwise use provided task store"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if (transportType === 'stdio' && !taskStore) {"
+    },
+    {
+      "source_path": "src/mcp/legacy_server.ts",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "2f2467b1f7839badb1aa788bb9af18308c382f71",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            throw new Error('Task store must be provided for non-stdio transport types');"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 521,
+      "line_end": 521,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * Token sources in order: per-request `_meta.apifyToken` (stdio inline) > server-instance"
+    },
+    {
+      "source_path": "src/mcp/server.ts",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "39f6e87d91c89956e1eed3525930d121f996c1c8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * option (set by the transport from `Authorization` header or stdio env). No env fallback:"
+    },
+    {
+      "source_path": "src/payments/types.ts",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "c4c8a3d8edc6a67b1450be005ae208c4e3c16509",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * Undefined for non-HTTP transports (e.g., stdio)."
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 103,
+      "line_end": 103,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const match = KV_RECORD_PATH_RE.exec(pathname);"
+    },
+    {
+      "source_path": "src/resources/api_resources.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "1c36468ef0d61a0dfc0de47aa56363a3c9c1eb09",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const match = /;\\s*charset\\s*=\\s*\"?([^\";]+)\"?/i.exec(contentType ?? '');"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * This script initializes and starts the Apify MCP server using the Stdio transport."
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " *   node stdio.js --actors=apify/google-search-scraper,apify/instagram-scraper"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// it is only relevant to the CLI/STDIO transport in this file"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        transportType: 'stdio',"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 205,
+      "line_end": 205,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transport = new StdioServerTransport();"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 207,
+      "line_end": 207,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Generate a unique session ID for this stdio connection"
+    },
+    {
+      "source_path": "src/stdio.ts",
+      "line_start": 208,
+      "line_end": 208,
+      "blob_hash": "1a5f430c43e57d69d3afe2836e04920b3f9ec763",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    // Note: stdio transport does not have a strict session ID concept like HTTP transports,"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 585,
+      "line_end": 585,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * How the server is connected: 'stdio' (direct/local) or 'http' (remote HTTP streamable)."
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 587,
+      "line_end": 587,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export type TransportType = 'stdio' | 'http';"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 638,
+      "line_end": 638,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * - 'stdio': Direct/local stdio connection"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 642,
+      "line_end": 642,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Raw `?client=` value from the connecting URL, for Segment attribution; independent of `clientInfo.name`, HTTP-only (undefined on stdio). */"
+    },
+    {
+      "source_path": "src/types.ts",
+      "line_start": 646,
+      "line_end": 646,
+      "blob_hash": "b36f3db7e8b50299e52d756bb2ca3321b37f059a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "     * Primarily used by stdio transport when token is read from ~/.apify/auth.json file"
+    },
+    {
+      "source_path": "src/utils/apify_properties.ts",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "40f1d570390dc7a0393abfbac6192c8b28dfad43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "             * which is not possible for the local stdio server, and an API endpoint for that is not available."
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "migration (#1128), by driving the built `dist/stdio.js` through `mcpc` and asserting on the"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "`E2E_HTTP_ONLY=1` translates each stdio config into the equivalent URL instead of spawning"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "`dist/stdio.js` — `--tools=actors` becomes `?tools=actors`. Every flag the configs vary (`tools`,"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 165,
+      "line_end": 165,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "server with `server/discover` and only falls back to `2025-11-25`. Against the local stdio server"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 166,
+      "line_end": 166,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "that fallback lands on `2025-11-25` as before (verified with `mcpc @stdio` — `MCP: version"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "2025-11-25 / stdio (stateful)`), so the pin still measures v1. It is only a hazard for"
+    },
+    {
+      "source_path": "tests/e2e/README.md",
+      "line_start": 216,
+      "line_end": 216,
+      "blob_hash": "77b20ca77fc5ec94b7aa3ef6672ec32598541889",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The `no-token` config relies on `~/.apify/auth.json` being absent. `stdio.ts` falls back to that"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Arguments for the spawned stdio server. Ignored when `url` is set. */"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /** Connect to an HTTP endpoint instead of spawning a stdio server. */"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const SERVER_ENTRY = resolve('dist/stdio.js');"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Run every configuration over HTTP against E2E_HTTP_BASE instead of spawning a stdio server. */"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Stdio flags that are also query params. Anything else would become a silently ignored param. */"
+    },
+    {
+      "source_path": "tests/e2e/protocol_v1.test.ts",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "cee96624196d075ab63159cfc2c25fbfb0f75a18",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        const child = spawn(command, args, { stdio: 'pipe' });"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 2,
+      "line_end": 2,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** stdio client for this repo's dist/stdio.js. Honors the shared `options.token` contract. */"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 9,
+      "line_end": 9,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export async function createMcpStdioClient(options?: SuiteClientOptions): Promise<Client> {"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const args = ['dist/stdio.js'];"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const transport = new StdioClientTransport({"
+    },
+    {
+      "source_path": "tests/helpers.ts",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "1dfce2f4f9f11c84fa458395e6627183e81ac6ca",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        name: options?.clientName || 'stdio-client',"
+    },
+    {
+      "source_path": "tests/integration/stdio.test.ts",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "984c7f70892da54a33c2bc1a3bad188f828bde9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { createMcpStdioClient } from '../helpers.js';"
+    },
+    {
+      "source_path": "tests/integration/stdio.test.ts",
+      "line_start": 5,
+      "line_end": 5,
+      "blob_hash": "984c7f70892da54a33c2bc1a3bad188f828bde9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    suiteName: 'MCP stdio',"
+    },
+    {
+      "source_path": "tests/integration/stdio.test.ts",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "984c7f70892da54a33c2bc1a3bad188f828bde9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    transport: 'stdio',"
+    },
+    {
+      "source_path": "tests/integration/stdio.test.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "984c7f70892da54a33c2bc1a3bad188f828bde9c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    createClientFn: createMcpStdioClient,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import { ACTOR_EXAMPLE_MCP_SERVER, ACTOR_NORMAL_MODE, skipOnStdio } from '../helpers.js';"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipOnStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipOnStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 117,
+      "line_end": 117,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipOnStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 152,
+      "line_end": 152,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipOnStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/payments.cases.ts",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "0f718ea0ffebbae77ed8563ae2501c567a7d317e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipOnStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    skipUnlessStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 380,
+      "line_end": 380,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // Environment variable tests - only applicable to stdio transport"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 383,
+      "line_end": 383,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipUnlessStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 401,
+      "line_end": 401,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipUnlessStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 403,
+      "line_end": 403,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            // TOOLS=docs via stdio; docs avoids auto-inject noise."
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 449,
+      "line_end": 449,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipUnlessStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/registration.cases.ts",
+      "line_start": 466,
+      "line_end": 466,
+      "blob_hash": "ab5fe948469d8f5d5b1bf06940534b37e4c69be8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        skipIf: skipUnlessStdio,"
+    },
+    {
+      "source_path": "tests/test_kit/cases/tasks.cases.ts",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "b00f2dac19340e70339301072304c33c1cf45c35",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// v2 stateless client has no .experimental.tasks; v1 (stdio + 2025-11-25) does."
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "const STDIO_TRANSPORT: Transport = 'stdio';"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Skip on stdio. */"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function skipOnStdio(ctx: CaseCtx): boolean {"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return ctx.transport === STDIO_TRANSPORT;"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Skip on every transport except stdio. */"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export function skipUnlessStdio(ctx: CaseCtx): boolean {"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return ctx.transport !== STDIO_TRANSPORT;"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 78,
+      "line_end": 78,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Skip unless stdio or `2025-11-25`. Allowlist so a future era does not inherit legacy-only caps. */"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return ctx.transport !== STDIO_TRANSPORT && ctx.transport !== '2025-11-25';"
+    },
+    {
+      "source_path": "tests/test_kit/helpers.ts",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "2c4306f7949eda82c3d45b2e433260c6e7bd9b03",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/** Skip on stdio and `2025-11-25`. Mirror of {@link skipUnlessStatefulEra}. */"
+    },
+    {
+      "source_path": "tests/test_kit/mcp_client.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "f03f4ef4256f63b0faab3cae8e31ebec5971a20a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    useEnv?: boolean; // stdio only"
+    },
+    {
+      "source_path": "tests/test_kit/types.ts",
+      "line_start": 13,
+      "line_end": 13,
+      "blob_hash": "2782057d94c357f7c93e525304d9d02a29ce7bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - `2025-11-25`: v1 SDK, streamable HTTP (or stdio in this repo only)"
+    },
+    {
+      "source_path": "tests/test_kit/types.ts",
+      "line_start": 15,
+      "line_end": 15,
+      "blob_hash": "2782057d94c357f7c93e525304d9d02a29ce7bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * - `stdio`: this repo only"
+    },
+    {
+      "source_path": "tests/test_kit/types.ts",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "2782057d94c357f7c93e525304d9d02a29ce7bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "export type Transport = '2025-11-25' | 'stdio' | '2026-07-28';"
+    },
+    {
+      "source_path": "tests/unit/evals.claude_agent.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "1067043149e68530bc482acb02f3cb863582548f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "// The SDK spawns a real Claude Code subprocess; capture what runAgentConversation builds"
+    },
+    {
+      "source_path": "tests/unit/evals.experiment.test.ts",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "c122b69e7bfcb21fe911fb1b84e075ad4a01c563",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    it.each(['spawn ENOENT', 'Prompt is too long', 'stdio binary not found', 'Invalid model name'])("
+    },
+    {
+      "source_path": "tests/unit/mcp.server.token_resolution.test.ts",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "86ec1582e46358be4deaeabf92ae9f914976ffa3",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": " * rejects a tokenless connection before `_meta` is parsed, and stdio refuses"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 100,
+      "line_end": 100,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 176,
+      "line_end": 176,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 195,
+      "line_end": 195,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    },
+    {
+      "source_path": "tests/unit/telemetry.test.ts",
+      "line_start": 239,
+      "line_end": 239,
+      "blob_hash": "18a46a717dcce1fde138b96ba31d44a34792357a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            transport_type: 'stdio',"
+    }
+  ]
+}
