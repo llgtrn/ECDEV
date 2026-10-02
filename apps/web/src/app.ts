@@ -39,6 +39,15 @@ async function render(){
  }else if(selected==='Evidence graph'){
   const d=await api('/api/tools/ecdev.evidence.graph',{});const rows=d.edges.map((e:any)=>[e.from,e.relation,e.to,e.mode].map(v=>el('span',String(v))));panel('Persisted evidence graph').append(table(['From','Relation','To','Mode'],rows));panel('Entities').append(pretty(d.entities));
  }else if(selected==='Monitoring'){
+  const form=panel('Scheduled public watches');form.append(el('p','Watch up to five public URLs with fresh bounded captures. Unknown or blocked captures preserve the previous baseline. No external notifications are sent.'));
+  const watchInput=el('textarea') as HTMLTextAreaElement;watchInput.value=JSON.stringify({market:'PUBLIC_WEB',query:'Product watch',targets:['https://shop.hariocorp.co.jp/collections/all'],interval_seconds:3600,enabled:true},null,2);
+  form.append(watchInput,button('Save watch',async()=>{try{panel('Saved watch').append(pretty(await api('/api/tools/ecdev.monitor.create',JSON.parse(watchInput.value))));}catch(e){showError(e);}}));
+  const watches=await api('/api/tools/ecdev.monitor.status',{});
+  panel('Persisted schedules').append(table(['Watch','Status','Interval seconds','Next due','History','Control'],watches.map((w:any)=>[
+   el('code',w.watch_id),el('span',w.status),el('span',String(w.schedule.interval_seconds)),el('span',new Date(w.schedule.next_due*1000).toLocaleString()),
+   button('Inspect snapshots and changes',async()=>{try{panel(w.watch_id).append(pretty(await api('/api/tools/ecdev.monitor.status',{watch_id:w.watch_id})));}catch(e){showError(e);}}),
+   button(w.status==='ACTIVE'?'Disable':'Enable',async()=>{try{await api('/api/tools/ecdev.monitor.create',{watch_id:w.watch_id,enabled:w.status!=='ACTIVE',market:w.request.market,query:w.request.query,targets:w.request.sources.map((s:any)=>s.url),interval_seconds:w.schedule.interval_seconds});await render();}catch(e){showError(e);}})
+  ])));
   const p=panel('Compare captured commerce snapshots');p.append(el('p','Compare prices, availability and sellers from two saved research runs. Unknown fields remain unknown. This comparison makes no network requests.'));
   const input=el('textarea') as HTMLTextAreaElement;input.value=JSON.stringify({before_run_id:'',after_run_id:''},null,2);p.append(input,button('Compare snapshots',async()=>{try{panel('Snapshot changes').append(pretty(await api('/api/tools/ecdev.monitor.compare',JSON.parse(input.value))));}catch(e){showError(e);}}));
  }else if(selected==='Ynventa'){

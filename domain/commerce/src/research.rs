@@ -31,6 +31,8 @@ struct Input {
     economics: Option<Scenario>,
     #[serde(default)]
     allow_stale: bool,
+    #[serde(default)]
+    force_refresh: bool,
     #[serde(default = "depth_limit")]
     max_depth: u32,
     #[serde(default = "url_limit")]
@@ -71,6 +73,32 @@ pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
     ("regulatory_risk_validation", false),
 ];
 impl Engine {
+    pub fn inspect_candidate(&self, id: &str) -> Result<Value, String> {
+        self.rows("SELECT payload FROM candidates WHERE id=?1", Some(id))?
+            .as_array()
+            .and_then(|rows| rows.first())
+            .cloned()
+            .ok_or("CANDIDATE_NOT_FOUND".into())
+    }
+    pub fn compare_candidates(&self, args: Value) -> Result<Value, String> {
+        #[derive(Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Compare {
+            candidate_ids: Vec<String>,
+        }
+        let input: Compare = serde_json::from_value(args).map_err(err)?;
+        if !(2..=20).contains(&input.candidate_ids.len()) {
+            return Err("COMPARE_REQUIRES_2_TO_20_CANDIDATES".into());
+        }
+        let candidates: Vec<_> = input
+            .candidate_ids
+            .iter()
+            .map(|id| self.inspect_candidate(id))
+            .collect::<Result<_, _>>()?;
+        Ok(
+            json!({"mode":"CAPTURED_COMPARISON","network_calls":0,"cost_minor":0,"candidates":candidates,"ranking":"No unsupported sales or profit ranking; compare source assertions, unknowns and uncertainty explicitly"}),
+        )
+    }
     pub(crate) fn reserve_paid(
         &self,
         id: &str,
@@ -314,14 +342,15 @@ impl Engine {
                 .map(|(s, _)| serde_json::from_str::<Value>(s))
                 .transpose()
                 .map_err(err)?;
-            let fresh = cached
-                .as_ref()
-                .is_some_and(|(_, expires)| *expires > timestamp());
+            let fresh = !input.force_refresh
+                && cached
+                    .as_ref()
+                    .is_some_and(|(_, expires)| *expires > timestamp());
             let request = AcquireRequest {
                 run_id: id.clone(),
                 capability: "fetch.http".into(),
                 market: input.market.clone(),
-                query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":previous.as_ref().map(|v|v["provider_cost"]["headers"].clone())}),
+                query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":if input.force_refresh {None} else {previous.as_ref().map(|v|v["provider_cost"]["headers"].clone())}}),
             };
             let mut stale_used = false;
             let recovered_capture = checkpoint.is_some();

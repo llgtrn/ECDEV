@@ -5,7 +5,8 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,25);
+ const tools=await client.listTools();assert.equal(tools.tools.length,31);
+ for(const name of ['ecdev.product.discover','ecdev.product.inspect','ecdev.product.compare','ecdev.provider.status','ecdev.monitor.create','ecdev.monitor.status'])assert.ok(tools.tools.some(t=>t.name===name),name);
  const status=await client.callTool({name:'ecdev.system.status',arguments:{}});
  assert.equal(status.isError,false);assert.equal(status.structuredContent.name,'ECDEV');
  const providers=await (await fetch(base+'/api/providers')).json();
@@ -24,6 +25,15 @@ try {
  const fixture=await (await fetch(base+'/api/research/example')).json();
  const research=await client.callTool({name:'ecdev.research.run',arguments:fixture});assert.equal(research.isError,false);
  assert.equal(research.structuredContent.mode,'FIXTURE');assert.equal(research.structuredContent.cost_minor,0);assert.equal(research.structuredContent.funnel.discovered,3);assert.equal(research.structuredContent.funnel.rejected,2);
+ const discovery=await client.callTool({name:'ecdev.product.discover',arguments:fixture});assert.equal(discovery.isError,false);assert.equal(discovery.structuredContent.mode,'FIXTURE');
+ const candidates=discovery.structuredContent.candidates;
+ const inspect=await client.callTool({name:'ecdev.product.inspect',arguments:{candidate_id:candidates[0].id}});assert.equal(inspect.isError,false);assert.equal(inspect.structuredContent.id,candidates[0].id);
+ const comparison=await client.callTool({name:'ecdev.product.compare',arguments:{candidate_ids:candidates.slice(0,2).map(c=>c.id)}});assert.equal(comparison.isError,false);assert.equal(comparison.structuredContent.network_calls,0);
+ const providerStatus=await client.callTool({name:'ecdev.provider.status',arguments:{}});assert.equal(providerStatus.isError,false);assert.ok(Array.isArray(providerStatus.structuredContent.items));
+ const watchList=await client.callTool({name:'ecdev.monitor.status',arguments:{}});assert.ok(Array.isArray(watchList.structuredContent.items));
+ const watchArgs={enabled:false,market:'PUBLIC_WEB',query:'SDK disabled watch',targets:['https://example.org/product'],interval_seconds:60};
+ const watch=await client.callTool({name:'ecdev.monitor.create',arguments:watchArgs});assert.equal(watch.isError,false);assert.equal(watch.structuredContent.status,'DISABLED');
+ const watchStatus=await client.callTool({name:'ecdev.monitor.status',arguments:{watch_id:watch.structuredContent.watch_id}});assert.equal(watchStatus.isError,false);assert.equal(watchStatus.structuredContent.status,'DISABLED');
  const budget=await client.callTool({name:'ecdev.provider.budget',arguments:{}});assert.equal(budget.structuredContent.policy.per_month_minor,0);
  const api=await fetch(base+'/api/runs/'+value.run_id);assert.equal((await api.json()).run_id,value.run_id);
  for(const path of ['/health','/api/donors','/api/providers','/metrics','/','/app.js','/style.css'])assert.equal((await fetch(base+path)).status,200,path);

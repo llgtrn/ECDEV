@@ -46,6 +46,7 @@ impl Engine {
    CREATE TABLE IF NOT EXISTS candidates(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), state TEXT NOT NULL, payload TEXT NOT NULL);
    CREATE TABLE IF NOT EXISTS provider_accounting(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL);
    PRAGMA user_version=1;").map_err(error)?;
+        crate::monitor::initialize(&db)?;
         Ok(Self {
             root: root.to_path_buf(),
             db: Arc::new(Mutex::new(db)),
@@ -384,7 +385,12 @@ impl Engine {
     }
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
         match name {
-            "ecdev.research.run" => self.research(args),
+            "ecdev.research.run" | "ecdev.product.discover" => self.research(args),
+            "ecdev.monitor.create" => self.monitor_create(args),
+            "ecdev.monitor.status" => self.monitor_status(args["watch_id"].as_str()),
+            "ecdev.provider.status" => Ok(self.providers()),
+            "ecdev.product.inspect" => self.inspect_candidate(required_str(&args, "candidate_id")?),
+            "ecdev.product.compare" => self.compare_candidates(args),
             "ecdev.research.status" => {
                 let id = required_str(&args, "run_id")?;
                 if !valid_id(id) {
@@ -423,7 +429,7 @@ impl Engine {
             "ecdev.system.capabilities" => Ok(json!(tool_definitions())),
             "ecdev.system.providers" => Ok(self.providers()),
             "ecdev.system.health" => {
-                Ok(json!({"storage":"PASS","migrations":1,"live_providers":"UNAVAILABLE"}))
+                Ok(json!({"storage":"PASS","migrations":2,"live_providers":"UNAVAILABLE"}))
             }
             "ecdev.system.metrics" => self.metrics(),
             "ecdev.ynventa.donors" => self.registry(),
@@ -461,6 +467,12 @@ pub fn tool_definitions() -> Vec<Value> {
     let run = json!({"type":"object","properties":{"run_id":{"type":"string"}},"required":["run_id"],"additionalProperties":false});
     let donor = json!({"type":"object","properties":{"donor_id":{"type":"string"}},"required":["donor_id"],"additionalProperties":false});
     let mut out = vec![];
+    out.push(json!({"name":"ecdev.product.discover","description":"Discover real product candidates through bounded native research; paid providers optional; supplied fixtures explicitly labeled","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
+    out.push(json!({"name":"ecdev.product.inspect","description":"Inspect one persisted candidate with field provenance, conflicts and economics uncertainty; zero network","inputSchema":{"type":"object","properties":{"candidate_id":{"type":"string"}},"required":["candidate_id"],"additionalProperties":false}}));
+    out.push(json!({"name":"ecdev.product.compare","description":"Compare 2 to 20 captured candidates without network acquisition or invented market ranking","inputSchema":{"type":"object","properties":{"candidate_ids":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":20}},"required":["candidate_ids"],"additionalProperties":false}}));
+    out.push(json!({"name":"ecdev.provider.status","description":"Provider availability and credentials state without secrets or network","inputSchema":empty}));
+    out.push(json!({"name":"ecdev.monitor.create","description":"Create or update a persisted public watch for up to five URLs; watch_id updates and enabled=false disables; refresh acquisitions use native robots/budget policy; no external notifications","inputSchema":{"type":"object","properties":{"watch_id":{"type":"string"},"enabled":{"type":"boolean","default":true},"market":{"enum":["PUBLIC_WEB","AMAZON_JP","AMAZON_US"]},"query":{"type":"string"},"targets":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":5},"interval_seconds":{"type":"integer","minimum":60,"maximum":604800}},"required":["market","query","targets","interval_seconds"],"additionalProperties":false}}));
+    out.push(json!({"name":"ecdev.monitor.status","description":"Persisted watch schedule, snapshots, change triggers and acquisition errors; omit watch_id to list","inputSchema":{"type":"object","properties":{"watch_id":{"type":"string"}},"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.evidence.graph","description":"Actual persisted candidate/evidence edges","inputSchema":empty}));
     out.push(json!({"name":"ecdev.marketplace.normalize","description":"Map a supplied Amazon Catalog Items payload into the ECDEV ontology; authenticity unverified, absent fields unknown","inputSchema":{"type":"object","properties":{"marketplace_id":{"type":"string"},"catalog_item":{"type":"object"}},"required":["marketplace_id","catalog_item"],"additionalProperties":false}}));
     for (name, desc) in [

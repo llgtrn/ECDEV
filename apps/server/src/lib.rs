@@ -58,7 +58,11 @@ impl ServerHandler for Mcp {
             .await
             .map_err(|_| ErrorData::internal_error("Engine task failed", None))?;
         Ok(match result {
-            Ok(v) => CallToolResult::structured(v),
+            Ok(v) => CallToolResult::structured(if v.is_object() {
+                v
+            } else {
+                json!({"items": v})
+            }),
             Err(e) => CallToolResult::error(vec![ContentBlock::text(e)]),
         }
         .into())
@@ -270,12 +274,29 @@ pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
     println!(
         "ECDEV SERVER READY\n\nMCP     http://127.0.0.1:{port}/mcp\nWEB     http://127.0.0.1:{port}/\nAPI     http://127.0.0.1:{port}/api/status\nHEALTH  http://127.0.0.1:{port}/health"
     );
+    let scheduler = start_watch_scheduler(e.clone());
     axum::serve(listener, router(e, port))
         .with_graceful_shutdown(async {
             let _ = tokio::signal::ctrl_c().await;
         })
         .await?;
+    scheduler.abort();
     Ok(())
+}
+fn start_watch_scheduler(engine: Engine) -> tokio::task::JoinHandle<()> {
+    tokio::spawn(async move {
+        loop {
+            let e = engine.clone();
+            let result = tokio::task::spawn_blocking(move || {
+                e.monitor_tick(ecdev_core::service::timestamp())
+            })
+            .await;
+            if let Ok(Err(reason)) = result {
+                eprintln!("Watch scheduler: {reason}");
+            }
+            tokio::time::sleep(Duration::from_secs(1)).await;
+        }
+    })
 }
 pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
     let a: Vec<String> = std::env::args().skip(1).collect();
@@ -284,10 +305,11 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         return serve().await;
     }
     if cmd == "stdio" {
-        let service = Mcp(configured_engine()?)
-            .serve(rmcp::transport::stdio())
-            .await?;
+        let engine = configured_engine()?;
+        let scheduler = start_watch_scheduler(engine.clone());
+        let service = Mcp(engine).serve(rmcp::transport::stdio()).await?;
         service.waiting().await?;
+        scheduler.abort();
         return Ok(());
     }
     if cmd == "ynventa" {
