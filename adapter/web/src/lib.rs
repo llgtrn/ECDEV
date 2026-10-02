@@ -1,6 +1,7 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
 pub mod commerce;
 pub mod robots;
+pub mod supplier;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireRequest, AcquireResult, Provider},
@@ -214,8 +215,9 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
         .next()
         .map(|n| n.text().collect::<String>());
     let page_metadata = commerce::page_metadata(&doc, &base, &found, &hash);
+    let supplier_leads = supplier::extract(&doc, &base, &structured_data, &hash);
     Ok(
-        json!({"page_metadata":page_metadata,"structured_data":structured_data,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_JSON_LD_V2","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
+        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_JSON_LD_V2","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
     )
 }
 impl Web {

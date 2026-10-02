@@ -379,6 +379,36 @@ fn configured_engine() -> Result<Engine, String> {
 mod research_tests {
     use super::*;
     #[test]
+    fn supplier_research_plans_public_follow_up_without_invented_terms() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-suppliers-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let html = r#"<title>Example Wholesale</title><p>Wholesale enquiries and OEM customization welcome.</p><a href='/contact'>Contact</a><script type='application/ld+json'>{"@type":"Product","name":"Cup","brand":"Example","sku":"CUP","offers":{"price":4000,"priceCurrency":"JPY"}}</script>"#;
+        let input = json!({"market":"PUBLIC_WEB","query":"Supplier research fixture","sources":[{"url":"https://example.org/partners","fixture_html":html}],"max_pages":1});
+        let run = e.research(input).unwrap();
+        assert_eq!(run["supplier_leads"].as_array().unwrap().len(), 1);
+        assert_eq!(
+            run["supplier_leads"][0]["fields"]["unit_price"]["status"],
+            "UNKNOWN"
+        );
+        assert_eq!(
+            run["next_actions"]["selected_actions"][0]["url"],
+            "https://example.org/contact"
+        );
+        assert_eq!(
+            run["candidates"][0]["economics_uncertainty"]["profit_expected"],
+            Value::Null
+        );
+        assert_eq!(e.research(json!({"market":"PUBLIC_WEB","query":"No fixture-to-live transition","follow_up_run_id":run["run_id"]})).unwrap_err(),"FIXTURE_PLAN_CANNOT_LAUNCH_LIVE_FOLLOW_UP");
+    }
+    #[test]
     fn zero_paid_research_e2e() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-research-{}",

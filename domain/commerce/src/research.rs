@@ -23,7 +23,9 @@ struct Source {
 struct Input {
     market: String,
     query: String,
+    #[serde(default)]
     sources: Vec<Source>,
+    follow_up_run_id: Option<String>,
     #[serde(default = "pages")]
     max_pages: usize,
     min_price_minor: Option<i64>,
@@ -66,7 +68,7 @@ pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
     ("economics_from_assumptions", true),
     ("ranking_and_filtering", true),
     ("report", true),
-    ("supplier_discovery", false),
+    ("supplier_discovery", true),
     ("official_marketplace_validation", false),
     ("demand_forecasting", false),
     ("live_ppc", false),
@@ -188,7 +190,44 @@ impl Engine {
         Ok(json!(out))
     }
     pub fn research(&self, args: Value) -> Result<Value, String> {
-        let input: Input = serde_json::from_value(args).map_err(err)?;
+        let mut input: Input = serde_json::from_value(args).map_err(err)?;
+        let mut executed_plan = Value::Null;
+        if let Some(prior_id) = &input.follow_up_run_id {
+            if !input.sources.is_empty() || input.crawl_run_id.is_some() {
+                return Err("FOLLOW_UP_REQUIRES_NO_EXPLICIT_SOURCES_OR_RESUME".into());
+            }
+            let prior = self.run(prior_id)?;
+            if prior["mode"] == "FIXTURE" {
+                return Err("FIXTURE_PLAN_CANNOT_LAUNCH_LIVE_FOLLOW_UP".into());
+            }
+            if prior["market"] != input.market {
+                return Err("FOLLOW_UP_MARKET_MISMATCH".into());
+            }
+            executed_plan = crate::planner::information_gain(
+                prior["candidates"]
+                    .as_array()
+                    .ok_or("PRIOR_RUN_HAS_NO_CANDIDATES")?,
+                prior["supplier_leads"]
+                    .as_array()
+                    .ok_or("PRIOR_RUN_HAS_NO_SUPPLIER_LEADS")?,
+                0,
+                input.max_pages.min(20),
+            );
+            input.sources = executed_plan["selected_actions"]
+                .as_array()
+                .ok_or("INVALID_FOLLOW_UP_PLAN")?
+                .iter()
+                .filter_map(|action| action["url"].as_str())
+                .map(|url| Source {
+                    url: url.into(),
+                    fixture_html: None,
+                })
+                .collect();
+            if input.sources.is_empty() {
+                return Err("NO_EXECUTABLE_INFORMATION_GAIN_ACTION".into());
+            }
+            input.max_depth = 0;
+        }
         if !matches!(
             input.market.as_str(),
             "AMAZON_JP" | "AMAZON_US" | "PUBLIC_WEB"
@@ -325,7 +364,7 @@ impl Engine {
             };
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
-            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":3,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":4,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
             let cached: Option<(String, u64)> = self
                 .db
                 .lock()
@@ -547,6 +586,16 @@ impl Engine {
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;
+        let supplier_leads: Vec<Value> = snapshots
+            .iter()
+            .flat_map(|s| s["supplier_leads"].as_array().cloned().unwrap_or_default())
+            .collect();
+        let next_actions = crate::planner::information_gain(
+            &candidates,
+            &supplier_leads,
+            0,
+            input.max_pages.min(20),
+        );
         candidates.sort_by_key(|c| {
             (
                 c["state"] == "REJECTED",
@@ -557,6 +606,13 @@ impl Engine {
             .iter()
             .filter_map(|c| c["request_count"].as_u64())
             .sum();
+        let completeness = crate::intelligence::completeness(
+            &candidates,
+            &snapshots,
+            fixture,
+            network,
+            supplier_leads.len(),
+        );
         let frontier_status = frontier.status(&crawl_id)?;
         let incomplete = [
             "DISCOVERED",
@@ -568,7 +624,7 @@ impl Engine {
         ]
         .iter()
         .any(|state| frontier_status["states"][*state].as_u64().unwrap_or(0) > 0);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {

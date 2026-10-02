@@ -24,7 +24,8 @@ try {
  const invalid=await client.callTool({name:'ecdev.economics.simulate',arguments:{...scenario,referral_bps:10001}});assert.equal(invalid.isError,true);
  const fixture=await (await fetch(base+'/api/research/example')).json();
  const research=await client.callTool({name:'ecdev.research.run',arguments:fixture});assert.equal(research.isError,false);
- assert.equal(research.structuredContent.mode,'FIXTURE');assert.equal(research.structuredContent.cost_minor,0);assert.equal(research.structuredContent.funnel.discovered,3);assert.equal(research.structuredContent.funnel.rejected,2);
+ assert.equal(research.structuredContent.mode,'FIXTURE');assert.equal(research.structuredContent.cost_minor,0);assert.equal(research.structuredContent.funnel.discovered,3);assert.equal(research.structuredContent.funnel.rejected,2);assert.equal(research.structuredContent.completeness.evidence_mode,'FIXTURE');assert.equal(research.structuredContent.completeness.live_zero_paid_research_coverage_bps,null);
+ const forbiddenFollowUp=await client.callTool({name:'ecdev.research.run',arguments:{market:fixture.market,query:'Fixture isolation',follow_up_run_id:research.structuredContent.run_id}});assert.equal(forbiddenFollowUp.isError,true);
  const discovery=await client.callTool({name:'ecdev.product.discover',arguments:fixture});assert.equal(discovery.isError,false);assert.equal(discovery.structuredContent.mode,'FIXTURE');
  const candidates=discovery.structuredContent.candidates;
  const inspect=await client.callTool({name:'ecdev.product.inspect',arguments:{candidate_id:candidates[0].id}});assert.equal(inspect.isError,false);assert.equal(inspect.structuredContent.id,candidates[0].id);

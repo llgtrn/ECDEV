@@ -209,11 +209,36 @@
       "type": "boolean",
       "default": false,
       "description": "Acquire a new body even when a fresh cache entry exists; bounded public fetching and robots rules still apply"
+    },
+    "follow_up_run_id": {
+      "type": "string",
+      "description": "Execute selected zero-paid information-gain actions from a persisted non-fixture run; omit sources and crawl_run_id. Robots and frontier budgets still apply."
     }
   },
   "required": [
     "market",
-    "query",
-    "sources"
+    "query"
+  ],
+  "oneOf": [
+    {
+      "required": [
+        "sources"
+      ],
+      "not": {
+        "required": [
+          "follow_up_run_id"
+        ]
+      }
+    },
+    {
+      "required": [
+        "follow_up_run_id"
+      ],
+      "not": {
+        "required": [
+          "sources"
+        ]
+      }
+    }
   ]
 }

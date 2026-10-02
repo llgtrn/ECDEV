@@ -46,7 +46,7 @@ impl Engine {
             || input.targets.is_empty()
             || input.targets.len() > 5
             || input.query.is_empty()
-            || input.query.len() > 2000
+            || input.query.len() > 500
             || !["PUBLIC_WEB", "AMAZON_JP", "AMAZON_US"].contains(&input.market.as_str())
         {
             return Err("INVALID_WATCH_LIMITS".into());

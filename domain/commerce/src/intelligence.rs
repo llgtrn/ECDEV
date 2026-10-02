@@ -95,3 +95,122 @@ mod tests {
         assert!(summary["total_market_competitors"].is_null());
     }
 }
+
+/// Per-run observations are kept separate from executable-capability coverage.
+pub fn completeness(
+    candidates: &[Value],
+    snapshots: &[Value],
+    fixture: bool,
+    network_calls: u64,
+    supplier_count: usize,
+) -> Value {
+    let required = [
+        "title",
+        "brand",
+        "sku",
+        "gtin",
+        "ean",
+        "upc",
+        "mpn",
+        "price_minor",
+        "currency",
+        "original_price",
+        "discount",
+        "availability",
+        "seller",
+        "shipping_text",
+        "rating",
+        "review_count",
+        "images",
+        "variants",
+        "breadcrumbs",
+        "category",
+        "description",
+        "specifications",
+        "canonical_url",
+        "weight_g",
+    ];
+    let mut counts: BTreeMap<&str, usize> = [
+        ("OBSERVED", 0),
+        ("DERIVED", 0),
+        ("ESTIMATED", 0),
+        ("UNKNOWN", 0),
+        ("CONFLICT", 0),
+    ]
+    .into();
+    let mut with_evidence = 0;
+    let mut known = 0;
+    for candidate in candidates {
+        for key in required {
+            let field = &candidate["product"]["fields"][key];
+            let status = field["status"]
+                .as_str()
+                .filter(|s| counts.contains_key(*s))
+                .unwrap_or("UNKNOWN");
+            *counts.get_mut(status).unwrap() += 1;
+            if matches!(status, "OBSERVED" | "DERIVED" | "ESTIMATED") && !field["value"].is_null() {
+                known += 1;
+                if field["evidence"].as_array().is_some_and(|a| {
+                    a.iter()
+                        .any(|e| e["page"].is_string() && e["raw_capture_sha256"].is_string())
+                }) {
+                    with_evidence += 1;
+                }
+            }
+        }
+    }
+    let denominator = candidates.len() * required.len();
+    let ratio = |n: usize, d: usize| (n * 10000).checked_div(d).map_or(Value::Null, |v| json!(v));
+    let stages: Vec<Value> = crate::research::ZERO_COST_STAGES
+        .iter()
+        .map(|(name, _)| {
+            let observed = match *name {
+                "discovery_from_seed_links" => snapshots
+                    .iter()
+                    .any(|s| s["links"].as_array().is_some_and(|a| !a.is_empty())),
+                "crawl" | "extraction" | "evidence" => !snapshots.is_empty(),
+                "candidate_creation" | "ranking_and_filtering" => !candidates.is_empty(),
+                "competitor_price_comparison" => candidates.iter().any(|c| {
+                    c["competition_evidence"]["observed_offer_price_ranges"]
+                        .as_array()
+                        .is_some_and(|a| !a.is_empty())
+                }),
+                "economics_from_assumptions" => {
+                    candidates.iter().any(|c| !c["economics"].is_null())
+                }
+                "report" => true,
+                "supplier_discovery" => supplier_count > 0,
+                _ => false,
+            };
+            json!({"stage":name,"observed_in_run":observed})
+        })
+        .collect();
+    let observed_stages = stages
+        .iter()
+        .filter(|s| s["observed_in_run"] == true)
+        .count();
+    let live = !fixture && network_calls > 0;
+    json!({"scope":"THIS_RUN_ONLY","evidence_mode":if fixture{"FIXTURE"}else if live{"LIVE_NETWORK"}else{"CACHED_NO_NEW_NETWORK"},"live_zero_paid_research_coverage_bps":if live{ratio(observed_stages,stages.len())}else{Value::Null},"fixture_zero_paid_research_coverage_bps":if fixture{ratio(observed_stages,stages.len())}else{Value::Null},"stage_denominator":stages,"live_data_completeness_bps":if live{ratio(known,denominator)}else{Value::Null},"candidate_field_observability_bps":ratio(known,denominator),"evidence_completeness_bps":ratio(with_evidence,known),"evidence_supported_known_fields":with_evidence,"known_fields":known,"field_count_denominator":denominator,"required_fields":required,"field_evidence_states":counts,"definitions":"Field observability counts known nonconflicting required product fields. Evidence completeness counts known fields with page and raw-capture hash. Stage coverage records operations evidenced in this run, not accuracy or total market coverage. Empty denominators remain unknown; live coverage requires new network IO. Cached and fixture observations never increment live coverage."})
+}
+#[cfg(test)]
+mod completeness_tests {
+    use super::*;
+    #[test]
+    fn fixture_and_empty_runs_cannot_claim_live_completeness() {
+        let rows = vec![
+            json!({"product":{"fields":{"title":{"status":"OBSERVED","value":"Cup","evidence":[{"page":"https://example.org/p","raw_capture_sha256":"fixture"}]}}}}),
+        ];
+        let fixture = completeness(&rows, &[], true, 0, 0);
+        assert!(fixture["live_zero_paid_research_coverage_bps"].is_null());
+        assert_eq!(fixture["known_fields"], 1);
+        assert_eq!(fixture["field_count_denominator"], 24);
+        assert_eq!(fixture["evidence_completeness_bps"], 10000);
+        let empty = completeness(&[], &[], false, 1, 0);
+        assert!(empty["live_data_completeness_bps"].is_null());
+        assert!(completeness(&rows, &[], false, 0, 0)["live_data_completeness_bps"].is_null());
+        assert_eq!(
+            completeness(&rows, &[], false, 2, 0)["evidence_mode"],
+            "LIVE_NETWORK"
+        );
+    }
+}
