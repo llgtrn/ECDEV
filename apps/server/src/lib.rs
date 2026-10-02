@@ -430,5 +430,41 @@ mod research_tests {
             .unwrap();
         assert_eq!(diff["changes"][0]["field"], "price_minor");
         assert_eq!(diff["changes"][0]["after"], 4100);
+        let mut resume: Value = serde_json::from_str(include_str!(
+            "../../../domain/commerce/tests/fixtures/research-household.json"
+        ))
+        .unwrap();
+        resume["crawl_run_id"] = first["crawl_run_id"].clone();
+        drop(engine);
+        let reopened = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let restored = reopened.research(resume).unwrap();
+        assert_eq!(restored["frontier"]["states"]["HANDLED"], 1);
+        assert_eq!(restored["frontier"]["acquisition_attempts"], 1);
+        assert_eq!(restored["network_calls"], 0);
+        assert_eq!(restored["funnel"]["discovered"], 3);
+        assert_eq!(restored["funnel"]["rejected"], 2);
+        assert_eq!(restored["provider_calls"][0]["request_count"], 0);
+        let mut bounded: Value = serde_json::from_str(include_str!(
+            "../../../domain/commerce/tests/fixtures/research-household.json"
+        ))
+        .unwrap();
+        let mut second_source = bounded["sources"][0].clone();
+        second_source["url"] = json!("https://fixture.example/second");
+        bounded["sources"]
+            .as_array_mut()
+            .unwrap()
+            .push(second_source);
+        bounded["max_pages"] = json!(1);
+        let partial = reopened.research(bounded.clone()).unwrap();
+        assert_eq!(partial["frontier"]["states"]["HANDLED"], 1);
+        assert_eq!(partial["frontier"]["states"]["PENDING"], 1);
+        assert_eq!(partial["status"], "PARTIAL");
+        bounded["crawl_run_id"] = partial["crawl_run_id"].clone();
+        let bounded_resume = reopened.research(bounded).unwrap();
+        assert_eq!(bounded_resume["status"], "PARTIAL");
+        assert_eq!(bounded_resume["network_calls"], 0);
+        assert_eq!(bounded_resume["frontier"]["acquisition_attempts"], 1);
     }
 }

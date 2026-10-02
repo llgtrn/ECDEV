@@ -312,5 +312,102 @@
     "oracle_status": "508_INTEGER_JSON_CASES_MATCHED",
     "absorption_status": "EXPERIMENTAL_REPLACEMENT",
     "runtime_donor_source_dependency": false
+  },
+  {
+    "capability_id": "crawl.robots",
+    "donor_id": "seomoz--reppy",
+    "status": "VERIFIED",
+    "evidence": [
+      {
+        "path": "reppy/rep-cpp/src/robots.cpp",
+        "commit_sha": "9c1278b754a7284304ee263f86adadeb0297b02f",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "425f5704736cc91f077ac370f40acbe97a2128a7",
+        "sha256": "e0c4b5a5fa93604cad24781023bc637ec731a96dc3d76a7e1d52cb774e486d92"
+      },
+      {
+        "path": "reppy/rep-cpp/src/agent.cpp",
+        "commit_sha": "9c1278b754a7284304ee263f86adadeb0297b02f",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "da7768a10fcf0e31d14ae6b4fb09912abaadbb92",
+        "sha256": "cee654af18c61a35052f13b93da6940120b5898a42b2563fd06e780b98ce0e15"
+      },
+      {
+        "path": "reppy/rep-cpp/src/directive.cpp",
+        "commit_sha": "9c1278b754a7284304ee263f86adadeb0297b02f",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "21376b7056f653924e4814ffa0ad57e5320c7976",
+        "sha256": "9703dfc6a4d817f71f0ab0f68c53fc17ac7105a0f8e72da9ffdc4ed00d4633ed"
+      },
+      {
+        "path": "reppy/rep-cpp/deps/url-cpp/src/url.cpp",
+        "commit_sha": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "1f5432717c2a3ec99e500d51768e50575c976ff0",
+        "sha256": "d165ff238c21458306b46d8c68ff745fa9cca6e94d437b8741d8ec452b5a5834"
+      },
+      {
+        "path": "reppy/rep-cpp/deps/url-cpp/src/utf8.cpp",
+        "commit_sha": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "35023776b94998ae6f6fa71086c0dcf2e4686b2a",
+        "sha256": "a456fe19ef41fdb621d928bb0e15b05b7a25ffe8978541f7e68a25ca7de02adf"
+      },
+      {
+        "path": "reppy/rep-cpp/deps/url-cpp/src/punycode.cpp",
+        "commit_sha": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "04a3b2ffd836dd95adf10c3340883a929d69333c",
+        "sha256": "68b87a8fd5b8a45e9626f32cb659d2dfeaa285f0c62d487083e3dbcbf7a9e6dd"
+      },
+      {
+        "path": "reppy/rep-cpp/deps/url-cpp/src/psl.cpp",
+        "commit_sha": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "91865f61242eb45ac6de8ba5939458b09bb07071",
+        "sha256": "747deb2b590f334dcc8a3587d06f55013d252b148eda71cdbb06fba60c0a12cc"
+      },
+      {
+        "path": "tests/test_agent.py",
+        "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "22fe79252ae6f84cf5cc0752f94dd7afa124fdc2",
+        "sha256": "0efbb1af00ba89d1474ffed15de0517b62ace78a742b7874805bda0f6e0847e6"
+      },
+      {
+        "path": "tests/test_robots.py",
+        "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "9448672ee2169273a6b2e2934f47fde39c897d4a",
+        "sha256": "374b72b8b99651cb55886ff32987111e60e73c4134a839e952ecb797e6f0c450"
+      },
+      {
+        "path": "LICENSE",
+        "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "parent_commit": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+        "blob_hash": "e469756e2fcbdb4711049f89c9be341cd8d7c4c0",
+        "sha256": "8c84117e685c25022c5035433b4cd4b324f631d2be64d7422f87805688a1c613"
+      }
+    ],
+    "behavior_contract": "Public same-origin robots allowed decisions and crawl-delay for exact case-insensitive agent selection; ambiguity remains conservatively denied",
+    "native_implementation": {
+      "source_path": "adapter/web/src/robots.rs",
+      "symbol": "evaluate",
+      "status": "RUST_REPLACEMENT",
+      "canonical_technology_state": "EXPERIMENTAL"
+    },
+    "oracle_status": "1620_ROBOTS_CASES_MATCHED",
+    "oracle_family": "ROBOTS_ALLOW_AND_DELAY",
+    "oracle_cases": 1620,
+    "fixture": "adapter/web/tests/fixtures/reppy-robots.json",
+    "execution": "COMPILED_UNMODIFIED_DONOR_CPP",
+    "license_review": "MIT_SOURCE_LICENSE_REVIEWED_ONLY",
+    "absorption_status": "EXPERIMENTAL_REPLACEMENT",
+    "runtime_donor_source_dependency": false,
+    "remaining": [
+      "Full Reppy census and semantic absorption",
+      "HTTP fetch/redirect/error semantics parity",
+      "Ambiguous and unsupported policies denied by native safety policy"
+    ]
   }
 ]

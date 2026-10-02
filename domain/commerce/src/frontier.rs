@@ -425,4 +425,12 @@ impl Frontier {
             json!({"run_id":run,"states":states,"acquisition_attempts":starts,"retry_events":retries,"cancelled":cancelled,"limits":serde_json::from_str::<Value>(&limits).map_err(err)?}),
         )
     }
+    /// Captures are committed with HANDLED so an interrupted report can be rebuilt.
+    pub fn captures(&self, run: &str) -> Result<Vec<Value>, String> {
+        let mut st=self.db.prepare("SELECT payload FROM crawl_urls WHERE run_id=?1 AND state='HANDLED' AND payload IS NOT NULL ORDER BY rowid").map_err(err)?;
+        st.query_map([run], |r| r.get::<_, String>(0))
+            .map_err(err)?
+            .map(|row| serde_json::from_str(&row.map_err(err)?).map_err(err))
+            .collect()
+    }
 }

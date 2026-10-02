@@ -96,7 +96,12 @@ impl Engine {
             .as_array()
             .ok_or("Invalid capability records")?
             .iter()
-            .filter(|c| c["oracle_status"] == "508_INTEGER_JSON_CASES_MATCHED")
+            .filter(|c| {
+                matches!(
+                    c["oracle_status"].as_str(),
+                    Some("508_INTEGER_JSON_CASES_MATCHED" | "1620_ROBOTS_CASES_MATCHED")
+                )
+            })
             .count();
         Ok(
             json!({"donor_candidates":donors.len(),"remote_verified":donors.iter().filter(|d|d["remote_status"]=="VERIFIED_REMOTE").count(),"full_clones":donors.iter().filter(|d|d["clone_status"]=="FULL_CLONE").count(),"total_files":total,"classified_files":classified,"first_party_source_files":sources,"source_parsed":parsed,"parse_unknown":unknown,"tests":tests,"capabilities_verified":verified,"native_absorbed":0,"oracle_verified":0,"oracle_compared_capabilities":compared,"extinct":0,"seed_runtime_dependencies":0,"runtime_donor_dependencies":upstreams.len(),"runtime_dependency_packages":dependencies["runtime_packages"]}),
@@ -380,7 +385,26 @@ impl Engine {
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
         match name {
             "ecdev.research.run" => self.research(args),
-            "ecdev.research.status" => self.run(required_str(&args, "run_id")?),
+            "ecdev.research.status" => {
+                let id = required_str(&args, "run_id")?;
+                if !valid_id(id) {
+                    return Err("INVALID_CRAWL_RUN_ID".into());
+                }
+                let frontier = crate::frontier::Frontier::open(
+                    &self.root.join(".ynventa/materialized/runtime/ecdev.sqlite"),
+                )?;
+                match self.run(id) {
+                    Ok(mut run) => {
+                        if let Some(crawl) = run["crawl_run_id"].as_str() {
+                            run["frontier"] = frontier.status(crawl)?;
+                        }
+                        Ok(run)
+                    }
+                    Err(_) => Ok(
+                        json!({"run_id":id,"status":"CRAWL_RUNNING_OR_INTERRUPTED","frontier":frontier.status(id)?}),
+                    ),
+                }
+            }
             "ecdev.provider.budget" => self.budget_status(),
             "ecdev.provider.calls" => self.accounting(),
             "ecdev.research.candidates" => self.candidates(),

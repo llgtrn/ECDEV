@@ -37,7 +37,7 @@
     "max_pages": {
       "type": "integer",
       "minimum": 1,
-      "maximum": 20
+      "maximum": 1000
     },
     "min_price_minor": {
       "type": "integer",
@@ -182,6 +182,28 @@
     "allow_stale": {
       "type": "boolean",
       "default": false
+    },
+    "max_depth": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "default": 3
+    },
+    "max_urls": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100000,
+      "default": 2000
+    },
+    "deadline_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600,
+      "default": 600
+    },
+    "crawl_run_id": {
+      "type": "string",
+      "description": "Resume a persisted crawl, recovering handled captures and expired leases; original crawl limits remain in force"
     }
   },
   "required": [

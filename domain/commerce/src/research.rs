@@ -1,4 +1,5 @@
 //! Zero-paid research workflow, persisted evidence/cache, candidate ledger and accounting.
+use crate::frontier::{CrawlLimits, Frontier, UrlPolicy, canonicalize};
 use crate::{
     domain::Evidence,
     economics::{self, Scenario},
@@ -9,9 +10,9 @@ use rusqlite::{OptionalExtension, params};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeSet, VecDeque};
+use std::collections::{BTreeMap, VecDeque};
 use uuid::Uuid;
-#[derive(Deserialize)]
+#[derive(Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Source {
     url: String,
@@ -30,6 +31,22 @@ struct Input {
     economics: Option<Scenario>,
     #[serde(default)]
     allow_stale: bool,
+    #[serde(default = "depth_limit")]
+    max_depth: u32,
+    #[serde(default = "url_limit")]
+    max_urls: u32,
+    #[serde(default = "run_deadline")]
+    deadline_seconds: u32,
+    crawl_run_id: Option<String>,
+}
+fn depth_limit() -> u32 {
+    3
+}
+fn url_limit() -> u32 {
+    2000
+}
+fn run_deadline() -> u32 {
+    600
 }
 fn pages() -> usize {
     10
@@ -150,7 +167,11 @@ impl Engine {
         ) || input.query.len() > 500
             || input.sources.is_empty()
             || input.sources.len() > 20
-            || !(1..=20).contains(&input.max_pages)
+            || !(1..=1000).contains(&input.max_pages)
+            || input.max_depth > 10
+            || input.max_urls < input.max_pages as u32
+            || input.max_urls > 100_000
+            || !(1..=3600).contains(&input.deadline_seconds)
             || input.min_price_minor.is_some_and(|v| v < 0)
             || input.max_price_minor.is_some_and(|v| v < 0)
             || input
@@ -186,27 +207,97 @@ impl Engine {
             .find(|p| p.id() == selected)
             .ok_or("NATIVE_WEB_NOT_AVAILABLE")?;
         let id = Uuid::new_v4().to_string();
-        let mut queue: VecDeque<_> = input.sources.into_iter().map(|s| (s, 0)).collect();
-        let mut visited = BTreeSet::new();
+        let crawl_id = input.crawl_run_id.clone().unwrap_or_else(|| id.clone());
+        if !crate::service::valid_id(&crawl_id) {
+            return Err("INVALID_CRAWL_RUN_ID".into());
+        }
+        let mut frontier =
+            Frontier::open(&self.root.join(".ynventa/materialized/runtime/ecdev.sqlite"))?;
+        if input.crawl_run_id.is_none() {
+            frontier.create_run(
+                &crawl_id,
+                &CrawlLimits {
+                    max_pages: input.max_pages as u32,
+                    max_urls: input.max_urls,
+                    max_depth: input.max_depth,
+                    global_concurrency: 1,
+                    per_origin_concurrency: 1,
+                    origin_interval_ms: 750,
+                    lease_ms: 120_000,
+                    max_retries: 2,
+                    backoff_ms: 1000,
+                    max_backoff_ms: 30_000,
+                    deadline_ms: (timestamp() * 1000 + u64::from(input.deadline_seconds) * 1000)
+                        as i64,
+                },
+            )?;
+        } else {
+            frontier.status(&crawl_id)?;
+        }
+        let mut fixtures = BTreeMap::new();
+        for source in &input.sources {
+            let normal = provider.normalize_query(&json!({"url":source.url}))?["url"]
+                .as_str()
+                .ok_or("Normalized URL missing")?
+                .to_string();
+            let identity = canonicalize(
+                &normal,
+                None,
+                &UrlPolicy::default(),
+                (timestamp() * 1000) as i64,
+            )?;
+            if let Some(html) = &source.fixture_html {
+                fixtures.insert(identity.canonical_url.clone(), html.clone());
+            }
+            frontier.enqueue(&crawl_id, &identity, 0, 1000)?;
+        }
+        let mut recovered: VecDeque<_> = frontier.captures(&crawl_id)?.into();
         let mut observations = vec![];
         let mut candidates = vec![];
         let mut calls = vec![];
         let mut failures = vec![];
         let mut snapshots = vec![];
-        while let Some((mut source, depth)) = queue.pop_front() {
-            source.url = provider.normalize_query(&json!({"url":source.url}))?["url"]
-                .as_str()
-                .ok_or("Normalized URL missing")?
-                .to_string();
-            if visited.len() >= input.max_pages {
-                break;
-            }
-            if !visited.insert(source.url.clone()) {
+        loop {
+            let (source, depth, checkpoint, lease) = if let Some(saved) = recovered.pop_front() {
+                (
+                    Source {
+                        url: saved["source"]
+                            .as_str()
+                            .ok_or("Invalid saved source")?
+                            .into(),
+                        fixture_html: None,
+                    },
+                    saved["depth"].as_u64().unwrap_or(0) as u32,
+                    Some(saved["capture"].clone()),
+                    None,
+                )
+            } else if let Some(lease) = frontier.lease(&crawl_id, (timestamp() * 1000) as i64)? {
+                (
+                    Source {
+                        fixture_html: fixtures.get(&lease.canonical_url).cloned(),
+                        url: lease.canonical_url.clone(),
+                    },
+                    lease.depth,
+                    None,
+                    Some(lease),
+                )
+            } else {
+                let status = frontier.status(&crawl_id)?;
+                let ready = status["states"]["PENDING"].as_u64().unwrap_or(0)
+                    + status["states"]["RETRYABLE"].as_u64().unwrap_or(0)
+                    + status["states"]["LEASED"].as_u64().unwrap_or(0);
+                if ready == 0
+                    || status["acquisition_attempts"].as_u64().unwrap_or(0)
+                        >= status["limits"]["max_pages"].as_u64().unwrap_or(0)
+                {
+                    break;
+                }
+                std::thread::sleep(std::time::Duration::from_millis(200));
                 continue;
-            }
+            };
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
-            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":1,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":2,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
             let cached: Option<(String, u64)> = self
                 .db
                 .lock()
@@ -233,7 +324,10 @@ impl Engine {
                 query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":previous.as_ref().map(|v|v["provider_cost"]["headers"].clone())}),
             };
             let mut stale_used = false;
-            let (mut captured, cache_hit) = if fresh {
+            let recovered_capture = checkpoint.is_some();
+            let (mut captured, cache_hit) = if let Some(saved) = checkpoint {
+                (saved, true)
+            } else if fresh {
                 (previous.clone().unwrap(), true)
             } else {
                 match provider.acquire(&request) {
@@ -243,6 +337,15 @@ impl Engine {
                                 failures.push(
                                     json!({"source":source.url,"reason":"304_WITHOUT_CAPTURE"}),
                                 );
+                                if let Some(lease) = &lease {
+                                    frontier.fail(
+                                        lease,
+                                        (timestamp() * 1000) as i64,
+                                        "304_WITHOUT_CAPTURE",
+                                        false,
+                                        None,
+                                    )?;
+                                }
                                 continue;
                             };
                             prior["provider_cost"] = result.provider_cost;
@@ -279,12 +382,25 @@ impl Engine {
                         } else {
                             failures.push(json!({"source":source.url,"reason":reason}));
                             calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":null,"cache_hit":false,"error":reason}));
+                            if let Some(lease) = &lease {
+                                let retryable = reason.contains("HTTP_STATUS_429")
+                                    || reason.contains("HTTP_STATUS_50")
+                                    || reason == "FETCH_NETWORK_ERROR"
+                                    || reason == "DNS_FAILED";
+                                frontier.fail(
+                                    lease,
+                                    (timestamp() * 1000) as i64,
+                                    &reason,
+                                    retryable,
+                                    None,
+                                )?;
+                            }
                             continue;
                         }
                     }
                 }
             };
-            if !fresh && !stale_used {
+            if !fresh && !stale_used && !recovered_capture {
                 self.db
                     .lock()
                     .map_err(err)?
@@ -368,25 +484,37 @@ impl Engine {
                 };
                 candidates.push(json!({"id":Uuid::new_v4().to_string(),"run_id":id,"state":state,"product":product,"source":source.url,"evidence_ids":evidence_ids,"discovery":"OBSERVED_IN_SOURCE","economics":economics,"unknowns":unknowns,"rejection_reasons":reasons,"survival_reason":if reasons.is_empty(){"Passed supplied price constraints; requires demand/supplier/risk validation"}else{"Rejected by explicit constraints"},"confidence":"SOURCE_ASSERTION_ONLY"}));
             }
-            if !fixture && depth == 0 {
-                for link in result["links"]
-                    .as_array()
-                    .ok_or("Invalid links")?
-                    .iter()
-                    .take(10)
-                {
-                    if let Some(url) = link.as_str() {
-                        queue.push_back((
-                            Source {
-                                url: url.into(),
-                                fixture_html: None,
-                            },
-                            1,
-                        ));
+            if !fixture {
+                for link in result["links"].as_array().ok_or("Invalid links")? {
+                    if let Some(url) = link.as_str()
+                        && let Ok(identity) = canonicalize(
+                            url,
+                            Some(&source.url),
+                            &UrlPolicy::default(),
+                            (timestamp() * 1000) as i64,
+                        )
+                    {
+                        let priority = if url.contains("/products/") {
+                            100
+                        } else if url.contains("page=") {
+                            90
+                        } else if url.contains("/collections/") {
+                            50
+                        } else {
+                            0
+                        };
+                        frontier.enqueue(&crawl_id, &identity, depth + 1, priority)?;
                     }
                 }
             }
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh{json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":"COMPLETE"}));
+            if let Some(lease) = &lease {
+                frontier.complete(
+                    lease,
+                    (timestamp() * 1000) as i64,
+                    &json!({"source":source.url,"depth":depth,"capture":captured}),
+                )?;
+            }
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":"COMPLETE"}));
         }
         candidates.sort_by_key(|c| {
             (
@@ -398,7 +526,18 @@ impl Engine {
             .iter()
             .filter_map(|c| c["request_count"].as_u64())
             .sum();
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty(){"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let frontier_status = frontier.status(&crawl_id)?;
+        let incomplete = [
+            "DISCOVERED",
+            "PENDING",
+            "LEASED",
+            "RETRYABLE",
+            "FAILED",
+            "CANCELLED",
+        ]
+        .iter()
+        .any(|state| frontier_status["states"][*state].as_u64().unwrap_or(0) > 0);
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {

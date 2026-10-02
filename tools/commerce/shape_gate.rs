@@ -5,7 +5,7 @@ use ynventa::{
     donors::NodeIndex,
     formats::json::Json,
     repository::{role_of_path, root_file_allowed},
-    schema::{is_physical, NodeLifecycle},
+    schema::{is_physical, EdgeKind, NodeLifecycle},
 };
 fn main() {
     let root = std::env::args().nth(1).unwrap_or_else(|| ".".into());
@@ -90,10 +90,46 @@ fn main() {
         .iter()
         .filter(|f| f.code == "NONCANONICAL_TARGET" || f.code == "LEGACY_PLACEMENT")
         .count() as u64;
+    // Observe package dependencies with the canonical census, then require explicit
+    // graph authorization rather than treating a legal plane order as authorization.
+    let mut undeclared_dependencies = Vec::new();
+    let mut cargo_dependencies = Vec::new();
+    for (from, to, scope) in &a.census.internal {
+        let from_owner = index.owner(&format!("{from}/Cargo.toml"));
+        let to_owner = index.owner(&format!("{to}/Cargo.toml"));
+        let declared = from_owner.is_some()
+            && to_owner.is_some()
+            && (from_owner == to_owner
+                || a.declaration.repository.edges.iter().any(|e| {
+                    Some(e.from.as_str()) == from_owner
+                        && Some(e.to.as_str()) == to_owner
+                        && e.kind == EdgeKind::DependsOn
+                        && e.scope == *scope
+                }));
+        let record = Json::obj()
+            .with("from", from.as_str())
+            .with("to", to.as_str())
+            .with("from_owner", from_owner.unwrap_or("UNOWNED"))
+            .with("to_owner", to_owner.unwrap_or("UNOWNED"))
+            .with("scope", scope.wire())
+            .with("declared", declared);
+        if !declared {
+            undeclared_dependencies.push(record.clone());
+        }
+        cargo_dependencies.push(record);
+    }
+    let dependency_cycles: Vec<_> = a
+        .findings
+        .iter()
+        .filter(|f| f.code == "DEPENDENCY_CYCLE")
+        .map(|f| f.to_json())
+        .collect();
     let ok = a.shape.units == a.shape.conformant
         && unowned == 0
         && duplicate == 0
-        && forbidden.is_empty();
+        && forbidden.is_empty()
+        && undeclared_dependencies.is_empty()
+        && dependency_cycles.is_empty();
     let report = Json::obj()
         .with("status", if ok { "PASS" } else { "FAIL" })
         .with(
@@ -123,6 +159,12 @@ fn main() {
             },
         )
         .with("forbidden_architecture_paths", forbidden)
+        .with("cargo_dependencies", Json::Array(cargo_dependencies))
+        .with(
+            "undeclared_cargo_dependencies",
+            Json::Array(undeclared_dependencies),
+        )
+        .with("dependency_cycles", Json::Array(dependency_cycles))
         .with(
             "findings",
             Json::Array(a.shape.findings.iter().map(|f| f.to_json()).collect()),

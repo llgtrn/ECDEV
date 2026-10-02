@@ -32,7 +32,7 @@ def main():
  report['runtime_donor_dependencies']=report['runtime_dependency_upstreams']
  report['seed_runtime_dependencies']=0
  report['rust_replacement_capabilities']=sum(c.get('native_implementation') is not None for c in read(ROOT/'research/commerce/capabilities.json'))
- report['oracle_compared_capabilities']=sum(c.get('oracle_status')=='508_INTEGER_JSON_CASES_MATCHED' for c in read(ROOT/'research/commerce/capabilities.json'))
+ report['oracle_compared_capabilities']=sum(c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED') for c in read(ROOT/'research/commerce/capabilities.json'))
  summaries=[read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json') for d in reg['donors']]
  report['symbols_censused']=sum(s['symbols'] for s in summaries)
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)
