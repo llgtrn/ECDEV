@@ -23,6 +23,11 @@ jobs:
       - name: Canonical regression tests except the unresolved repository shard gate
         run: cargo test --manifest-path .ynventa/Cargo.toml -- --skip dogfood_repository_conforms
       - run: cargo run --manifest-path .ynventa/Cargo.toml -- protocol --check --root .
+      - name: Canonical repository shape and no crate buckets
+        run: |
+          cargo build --manifest-path .ynventa/Cargo.toml --lib
+          rustc --edition=2021 tools/commerce/shape_gate.rs --extern ynventa=.ynventa/target/debug/libynventa.rlib -L dependency=.ynventa/target/debug/deps -o target/shape-gate
+          target/shape-gate . > /tmp/repository-shape.json
       - run: pip install -r tools/commerce/requirements.txt
       - run: python tools/commerce/validate.py --records-only
       - run: npm ci --prefix tests/commerce

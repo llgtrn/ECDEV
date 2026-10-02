@@ -2,6 +2,10 @@
 
 Rust commerce engine with a local MCP/HTTP server, TypeScript dashboard, persisted runs and a source-backed donor registry. Development takes place directly on `main`.
 
+The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable SQLite frontier with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Its six behavioral regression tests include forcibly terminating a worker after lease commit. Integration into the research workflow and Crawlee runtime oracle parity are still pending; the existing fixture proof is not a live proof.
+
+Repository shape is checked by `tools/commerce/shape_gate.rs` using the unchanged canonical Ynventa assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes. The empty historical `crates` and `docs` roots have been removed. The separate upstream ECDEV registration proposal is recorded in `research/commerce/upstream-registration-action.json`; it has not been applied to canonical protocol bytes.
+
 ## Run
 
 Requires Rust, Node.js and npm. From the repository root:

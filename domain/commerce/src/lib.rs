@@ -1,5 +1,6 @@
 pub mod domain;
 pub mod economics;
+pub mod frontier;
 pub mod marketplace;
 pub mod planner;
 pub mod provider;
