@@ -1,5 +1,6 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
 pub mod commerce;
+pub mod microdata;
 pub mod robots;
 pub mod supplier;
 use ecdev_core::{
@@ -200,6 +201,55 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
             Err(_) => errors.push("INVALID_JSON_LD"),
         }
     }
+    let microdata = microdata::extract(&doc, Some(&base), false);
+    let (normalized_microdata, microdata_paths) = microdata::normalize(&microdata);
+    let start = found.len();
+    products(&normalized_microdata, &mut found, "");
+    for product in &mut found[start..] {
+        commerce::annotate(product, source, 0, &hash);
+        fn relabel(value: &mut Value, paths: &std::collections::BTreeMap<String, String>) {
+            match value {
+                Value::Object(object) => {
+                    if object.get("source").is_some_and(|v| v == "JSON_LD") {
+                        object.insert("source".into(), json!("MICRODATA"));
+                        object.remove("script_index");
+                        object.insert("data_container".into(), json!("microdata"));
+                        if let Some(raw) = object
+                            .get("json_pointer")
+                            .and_then(Value::as_str)
+                            .and_then(|path| paths.get(path))
+                            .cloned()
+                        {
+                            object.insert("json_pointer".into(), json!(raw));
+                        }
+                        object.insert("normalization".into(),json!("Microdata type/properties projected to schema fields; exact raw graph pointer retained"));
+                    }
+                    for child in object.values_mut() {
+                        relabel(child, paths);
+                    }
+                }
+                Value::Array(a) => {
+                    for child in a {
+                        relabel(child, paths);
+                    }
+                }
+                _ => {}
+            }
+        }
+        relabel(product, &microdata_paths);
+        let normalized_pointer = product["json_pointer"].as_str().unwrap_or("");
+        let raw_pointer = microdata_paths
+            .get(normalized_pointer)
+            .cloned()
+            .unwrap_or_else(|| normalized_pointer.into());
+        product["raw_microdata"] = microdata
+            .pointer(&raw_pointer)
+            .cloned()
+            .unwrap_or(Value::Null);
+        product["json_pointer"] = json!(raw_pointer);
+        product.as_object_mut().unwrap().remove("raw_json_ld");
+        product["provenance"] = json!({"source":"MICRODATA","page":source,"data_container":"microdata","json_pointer":raw_pointer,"raw_capture_sha256":hash,"identity_assertions":{"title":product["title"],"sku":product["sku"]},"price_derivation":"Exact minor-unit conversion; conflicting offers retained; no selected price"});
+    }
     let mut links = BTreeSet::new();
     for a in doc.select(&Selector::parse("a[href]").unwrap()) {
         if let Some(h) = a.value().attr("href")
@@ -217,7 +267,7 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
     let page_metadata = commerce::page_metadata(&doc, &base, &found, &hash);
     let supplier_leads = supplier::extract(&doc, &base, &structured_data, &hash);
     Ok(
-        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_JSON_LD_V2","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
+        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
     )
 }
 impl Web {

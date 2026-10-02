@@ -27,11 +27,11 @@
       "symbol": "extract",
       "line_start": 22,
       "line_end": 84,
-      "behavior_contract": "Syntax validation, configurable error handling and HTML tree parsing precede extraction. ECDEV implements strict JSON-LD only; microdata/RDFa and malformed-JS repair remain unknown/unimplemented.",
+      "behavior_contract": "Syntax validation, configurable error handling and HTML tree parsing precede extraction. Native strict JSON-LD and separately oracle-tested nested microdata graph extraction exist; RDFa, Microformats, optional donor APIs and malformed-JS repair remain incomplete.",
       "native_node": "commerce.web-research",
       "oracle_parity": "NOT_CLAIMED",
       "native_lifecycle": "EXPERIMENTAL",
-      "license": "UNVERIFIED"
+      "license": "BSD-3-Clause"
     },
     {
       "capability": "cache.ttl",
@@ -96,6 +96,23 @@
       "oracle_parity": "NOT_CLAIMED",
       "native_lifecycle": "EXPERIMENTAL",
       "license": "UNVERIFIED"
+    },
+    {
+      "capability": "extract.microdata-graph",
+      "status": "STUDIED_ORACLE_COMPARED",
+      "donor_id": "scrapinghub--extruct",
+      "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+      "source_path": "extruct/w3cmicrodata.py",
+      "blob_hash": "0a7dbe6abff9c85ae7a5118200125a9cad3b9b08",
+      "symbol": "LxmlMicrodataExtractor",
+      "line_start": 46,
+      "line_end": 254,
+      "behavior_contract": "Nested microdata scope and itemref graph, repeated/multi-name properties, item types and IDs, HTML value tags, URL resolution and cleaned text; strict and default scalar/list outputs. Flat iid, optional htmlNode/textContent and malformed-parser equivalence are not claimed.",
+      "native_node": "commerce.web-research",
+      "oracle_parity": "132_CASES_MATCHED",
+      "native_lifecycle": "EXPERIMENTAL",
+      "license": "BSD-3-Clause",
+      "evidence": "research/commerce/capabilities.json"
     }
   ],
   "edges": [
@@ -134,11 +151,11 @@
         "symbol": "extract",
         "line_start": 22,
         "line_end": 84,
-        "behavior_contract": "Syntax validation, configurable error handling and HTML tree parsing precede extraction. ECDEV implements strict JSON-LD only; microdata/RDFa and malformed-JS repair remain unknown/unimplemented.",
+        "behavior_contract": "Syntax validation, configurable error handling and HTML tree parsing precede extraction. Native strict JSON-LD and separately oracle-tested nested microdata graph extraction exist; RDFa, Microformats, optional donor APIs and malformed-JS repair remain incomplete.",
         "native_node": "commerce.web-research",
         "oracle_parity": "NOT_CLAIMED",
         "native_lifecycle": "EXPERIMENTAL",
-        "license": "UNVERIFIED"
+        "license": "BSD-3-Clause"
       }
     },
     {
@@ -223,6 +240,28 @@
         "oracle_parity": "NOT_CLAIMED",
         "native_lifecycle": "EXPERIMENTAL",
         "license": "UNVERIFIED"
+      }
+    },
+    {
+      "from": "scrapinghub--extruct",
+      "relation": "SOURCE_REVIEWED_FOR",
+      "to": "extract.microdata-graph",
+      "evidence": {
+        "capability": "extract.microdata-graph",
+        "status": "STUDIED_ORACLE_COMPARED",
+        "donor_id": "scrapinghub--extruct",
+        "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+        "source_path": "extruct/w3cmicrodata.py",
+        "blob_hash": "0a7dbe6abff9c85ae7a5118200125a9cad3b9b08",
+        "symbol": "LxmlMicrodataExtractor",
+        "line_start": 46,
+        "line_end": 254,
+        "behavior_contract": "Nested microdata scope and itemref graph, repeated/multi-name properties, item types and IDs, HTML value tags, URL resolution and cleaned text; strict and default scalar/list outputs. Flat iid, optional htmlNode/textContent and malformed-parser equivalence are not claimed.",
+        "native_node": "commerce.web-research",
+        "oracle_parity": "132_CASES_MATCHED",
+        "native_lifecycle": "EXPERIMENTAL",
+        "license": "BSD-3-Clause",
+        "evidence": "research/commerce/capabilities.json"
       }
     }
   ],

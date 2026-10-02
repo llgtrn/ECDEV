@@ -100,12 +100,16 @@ impl Engine {
             .filter(|c| {
                 matches!(
                     c["oracle_status"].as_str(),
-                    Some("508_INTEGER_JSON_CASES_MATCHED" | "1620_ROBOTS_CASES_MATCHED")
+                    Some(
+                        "508_INTEGER_JSON_CASES_MATCHED"
+                            | "1620_ROBOTS_CASES_MATCHED"
+                            | "132_MICRODATA_CASES_MATCHED"
+                    )
                 )
             })
             .count();
         Ok(
-            json!({"donor_candidates":donors.len(),"remote_verified":donors.iter().filter(|d|d["remote_status"]=="VERIFIED_REMOTE").count(),"full_clones":donors.iter().filter(|d|d["clone_status"]=="FULL_CLONE").count(),"total_files":total,"classified_files":classified,"first_party_source_files":sources,"source_parsed":parsed,"parse_unknown":unknown,"tests":tests,"capabilities_verified":verified,"native_absorbed":0,"oracle_verified":0,"oracle_compared_capabilities":compared,"extinct":0,"seed_runtime_dependencies":0,"runtime_donor_dependencies":upstreams.len(),"runtime_dependency_packages":dependencies["runtime_packages"]}),
+            json!({"donor_candidates":donors.len(),"remote_verified":donors.iter().filter(|d|d["remote_status"]=="VERIFIED_REMOTE").count(),"full_clones":donors.iter().filter(|d|d["clone_status"]=="FULL_CLONE").count(),"total_files":total,"classified_files":classified,"first_party_source_files":sources,"source_parsed":parsed,"parse_unknown":unknown,"tests":tests,"capabilities_verified":verified,"native_absorbed":0,"oracle_verified":0,"oracle_compared_capabilities":compared,"oracle_proven_native_capabilities":compared,"oracle_cases_executed":capabilities.as_array().unwrap().iter().filter(|c|matches!(c["oracle_status"].as_str(),Some("508_INTEGER_JSON_CASES_MATCHED"|"1620_ROBOTS_CASES_MATCHED"|"132_MICRODATA_CASES_MATCHED"))).filter_map(|c|c["oracle_cases"].as_u64()).sum::<u64>(),"extinct":0,"seed_runtime_dependencies":0,"runtime_donor_dependencies":upstreams.len(),"runtime_dependency_packages":dependencies["runtime_packages"]}),
         )
     }
     pub fn census(&self, id: &str) -> Result<Value, String> {

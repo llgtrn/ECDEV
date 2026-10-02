@@ -16,10 +16,11 @@ def main():
   for name in m.get('devDependencies',{}):
    p=json.loads((ROOT/folder/'node_modules'/name/'package.json').read_text());r=p['repository'];url=r['url'] if isinstance(r,dict) else r
    candidates.append({'ecosystem':'Npm','package':name,'version':p['version'],'candidate_url':url.removeprefix('git+'),'license':p.get('license','UNVERIFIED'),'scope':scope,'metadata_path':str(ROOT/folder/'node_modules'/name/'package.json'),'clone_status':'NOT_CLONED','role':'DEVELOPMENT_DEPENDENCY'})
- for name in ['tree-sitter','tree-sitter-language-pack','jsonschema']:
+ for name in ['tree-sitter','tree-sitter-language-pack','jsonschema','lxml','html-text','w3lib','lxml_html_clean']:
   file=next((ROOT/'.venv/research').glob(name.replace('-','_')+'-*.dist-info/METADATA'));p=email.message_from_string(file.read_text(encoding='utf-8'));links=p.get_all('Project-URL',[])
   link=next((s.split(', ',1)[1] for s in links if s.lower().startswith(('source,','repository,'))),None)
-  lic=p.get('License-Expression') or ('MIT' if any('MIT License' in s for s in p.get_all('Classifier',[])) else 'UNVERIFIED')
+  if link is None:link=next((s.split(', ',1)[1] for s in links if s.lower().startswith('homepage,') and 'github.com' in s),p.get('Home-page'))
+  lic=p.get('License-Expression') or p.get('License') or ('MIT' if any('MIT License' in s for s in p.get_all('Classifier',[])) else 'UNVERIFIED')
   candidates.append({'ecosystem':'Python','package':name,'version':p['Version'],'candidate_url':link,'license':lic,'scope':'BUILD','metadata_path':str(file),'clone_status':'NOT_CLONED','role':'RESEARCH_TOOL_DEPENDENCY'})
  def resolve(p):
   try:
@@ -34,12 +35,12 @@ def main():
  # One canonical donor per upstream; package participation is explicit, no invented capability.
  groups={}
  for p in records:groups.setdefault(p['repository_url'],[]).append(p)
- declaration=ROOT/'.ynventa/declared/donors.rs';text=declaration.read_text().rstrip();assert text.endswith(']');text=text[:-1]
+ declaration=ROOT/'.ynventa/declared/donors.rs';text=declaration.read_text(encoding="utf-8").rstrip();assert text.endswith(']');text=text[:-1]
  # Idempotent update of support records, retaining the reviewed commerce donor declarations.
  text='\n'.join(line for line in text.splitlines() if not line.startswith('Donor { key: "dependency--'))+'\n'
  for url,items in sorted(groups.items()):
   key='dependency--'+re.sub('[^a-z0-9]+','-',url.lower().removeprefix('https://')).strip('-')
   packages='&['+','.join('Package { ecosystem: Ecosystem::'+p['ecosystem']+', name: '+json.dumps(p['package'])+' }' for p in items)+']'
   text+='Donor { key: '+json.dumps(key)+', name: '+json.dumps(items[0]['package'])+', origin: '+json.dumps(url)+', license: '+json.dumps(items[0]['license'])+', claimed: DonorState::Registered, exception: Exception::None, packages: '+packages+', source_paths: &[], capabilities: &[], cutover: None, provenance: &["research/commerce/dependencies.json"] },\n'
- declaration.write_text(text+']\n');print('Verified dependency packages:',len(records),'unique upstreams:',len(groups),'runtime packages:',sum(p['scope']=='RUNTIME' for p in records))
+ declaration.write_text(text+']\n',encoding='utf-8',newline='\n');print('Verified dependency packages:',len(records),'unique upstreams:',len(groups),'runtime packages:',sum(p['scope']=='RUNTIME' for p in records))
 if __name__=='__main__':main()

@@ -409,6 +409,56 @@ mod research_tests {
         assert_eq!(e.research(json!({"market":"PUBLIC_WEB","query":"No fixture-to-live transition","follow_up_run_id":run["run_id"]})).unwrap_err(),"FIXTURE_PLAN_CANNOT_LAUNCH_LIVE_FOLLOW_UP");
     }
     #[test]
+    fn microdata_products_and_cross_format_conflicts_retain_evidence() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-microdata-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let html = r#"<div itemscope itemtype="https://schema.org/Product"><span itemprop="name">Cup</span><meta itemprop="sku" content="CUP"><span itemprop="brand">Example</span><div itemprop="offers" itemscope itemtype="https://schema.org/Offer"><meta itemprop="priceCurrency" content="JPY"><meta itemprop="price" content="2980"><link itemprop="availability" href="https://schema.org/InStock"></div></div>"#;
+        let input = |html: &str| json!({"market":"PUBLIC_WEB","query":"Microdata fixture","sources":[{"url":"https://example.org/cup","fixture_html":html}],"max_pages":1});
+        let first = e.research(input(html)).unwrap();
+        assert_eq!(first["funnel"]["discovered"], 1);
+        assert_eq!(first["candidates"][0]["product"]["price_minor"], 2980);
+        let evidence = &first["candidates"][0]["product"]["fields"]["price_minor"]["evidence"][0];
+        assert_eq!(evidence["source"], "MICRODATA");
+        assert_eq!(
+            evidence["json_pointer"],
+            "/0/properties/offers/properties/price"
+        );
+        assert_eq!(
+            first["snapshots"][0]["microdata"]
+                .pointer(evidence["json_pointer"].as_str().unwrap())
+                .unwrap(),
+            "2980"
+        );
+        assert_eq!(
+            first["snapshots"][0]["page_metadata"]["classification"]["role"],
+            "PRODUCT"
+        );
+        let mixed = format!(
+            "{html}<script type='application/ld+json'>{{\"@type\":\"Product\",\"name\":\"Cup\",\"sku\":\"CUP\",\"brand\":\"Example\",\"offers\":{{\"price\":3200,\"priceCurrency\":\"JPY\"}}}}</script>"
+        );
+        let conflict = e.research(input(&mixed)).unwrap();
+        assert_eq!(conflict["funnel"]["discovered"], 1);
+        assert_eq!(
+            conflict["candidates"][0]["product"]["fields"]["price_minor"]["status"],
+            "CONFLICT"
+        );
+        assert!(conflict["candidates"][0]["product"]["price_minor"].is_null());
+        assert_eq!(conflict["candidates"][0]["state"], "INSUFFICIENT_EVIDENCE");
+        let rows = conflict["candidates"][0]["product"]["fields"]["price_minor"]["evidence"]
+            .as_array()
+            .unwrap();
+        assert!(rows.iter().any(|e| e["source"] == "MICRODATA"));
+        assert!(rows.iter().any(|e| e["source"] == "JSON_LD"));
+    }
+    #[test]
     fn zero_paid_research_e2e() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-research-{}",

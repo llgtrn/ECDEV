@@ -5,7 +5,7 @@ sys.path.insert(0,str(ROOT/'.venv/research'))
 import census
 REVIEWS=[
  ('apify--crawlee','crawl.deduplicate','packages/core/src/storages/request_queue.ts','addRequest',229,279,'uniqueKey request cache avoids duplicate backend writes; backend state and deferred transactions exist. ECDEV implements only bounded run-local normalized-URL deduplication.','commerce.research'),
- ('scrapinghub--extruct','extract.structured_data','extruct/_extruct.py','extract',22,84,'Syntax validation, configurable error handling and HTML tree parsing precede extraction. ECDEV implements strict JSON-LD only; microdata/RDFa and malformed-JS repair remain unknown/unimplemented.','commerce.web-research'),
+ ('scrapinghub--extruct','extract.structured_data','extruct/_extruct.py','extract',22,84,'Syntax validation, configurable error handling and HTML tree parsing precede extraction. Native strict JSON-LD and separately oracle-tested nested microdata exist; RDFa, Microformats, optional donor APIs and malformed-JS repair remain incomplete.','commerce.web-research'),
  ('tkem--cachetools','cache.ttl','src/cachetools/__init__.py','TTLCache',451,501,'Monotonic expiration bounds cache lookup; expired keys behave as missing. ECDEV uses persistent wall-clock TTL and HTTP conditional revalidation, not donor LRU parity.','commerce.research'),
  ('dgtlmoon--changedetection.io','monitor.change_detection','changedetectionio/diff/__init__.py','render_diff',424,474,'Two snapshots and configured text/word policies produce a diff. ECDEV compares typed product price/stock/seller fields only, not generic text diff parity.','commerce.research'),
  ('encode--httpx','fetch.redirect','httpx/_client.py','_build_redirect_request',475,493,'Redirect method, URL, headers and streams are reconstructed separately. ECDEV owns bounded manual GET redirects and validates each target; session/auth transfer is absent.','commerce.web-research'),
@@ -18,6 +18,12 @@ def main():
   row={'capability':cap,'status':'STUDIED','donor_id':donor,'commit_sha':r['commit_sha'],'source_path':path,'blob_hash':blob,'symbol':symbol,'line_start':start,'line_end':end,'behavior_contract':contract,'native_node':node,'oracle_parity':'NOT_CLAIMED','native_lifecycle':'EXPERIMENTAL','license':r['license']}
   if row['native_node']=='commerce.research':row['native_node']='commerce'
   graph.append(row)
+ # Retain later source-reviewed oracle contracts when refreshing this initial study set.
+ existing_path=ROOT/'research/commerce/expansion-capability-graph.json'
+ if existing_path.exists():
+  existing=json.loads(existing_path.read_text(encoding='utf-8'))
+  known={r['capability'] for r in graph}
+  graph.extend(r for r in existing['capabilities'] if r['capability'] not in known)
  census.dump(ROOT/'research/commerce/expansion-capability-graph.json',{'schema_version':1,'capabilities':graph,'edges':[{'from':r['donor_id'],'relation':'SOURCE_REVIEWED_FOR','to':r['capability'],'evidence':r} for r in graph],'all_other_hypotheses':'CANDIDATE_SOURCE_INVENTORY_NOT_SEMANTIC_VERIFICATION'})
  d=ROOT/'.ynventa/declared/donors.rs';text=d.read_text(encoding='utf-8').rstrip();assert text.endswith(']');text=text[:-1]
  for r in reg['donors']:

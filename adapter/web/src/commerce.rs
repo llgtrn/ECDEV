@@ -159,7 +159,18 @@ pub fn page_metadata(doc: &Html, base: &Url, products: &[Value], hash: &str) -> 
     });
     let mut signals = vec![];
     let role = if !products.is_empty() && !article {
-        signals.push("JSON_LD_PRODUCT");
+        if products
+            .iter()
+            .any(|p| p["provenance"]["source"] == "JSON_LD")
+        {
+            signals.push("JSON_LD_PRODUCT");
+        }
+        if products
+            .iter()
+            .any(|p| p["provenance"]["source"] == "MICRODATA")
+        {
+            signals.push("MICRODATA_PRODUCT");
+        }
         "PRODUCT"
     } else if article || path.contains("/blog") || path.contains("/article") {
         signals.push("ARTICLE_METADATA_OR_PATH");
