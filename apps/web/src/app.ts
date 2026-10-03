@@ -16,6 +16,15 @@ function candidateDetail(c:any){
   el('code',name),el('span',String(f.status)),el('span',f.value===null?'UNKNOWN':JSON.stringify(f.value)),
   button(`${f.evidence?.length??0} observations`,()=>panel(name+' evidence').append(pretty(f.evidence??[])))
  ])));
+ const listings=c.competition_evidence?.listing_observations??[];
+ if(listings.length){
+  const value=(f:any)=>f?.value===null||f?.value===undefined?String(f?.status??'UNKNOWN'):`${JSON.stringify(f.value)} (${f.status})`;
+  p.append(el('h3','Captured listing evidence'),el('p','Metadata support describes this captured sample. Publisher independence, content accuracy and total marketplace coverage remain unverified.'),table(['Page','Availability','Rating / reviews','Shipping claim','Declared variants','Supported fields','Evidence'],listings.map((l:any)=>[
+   el('span',String(l.page)),el('span',value(l.fields.availability)),el('span',`${value(l.fields.rating)} / ${value(l.fields.review_count)}`),el('span',value(l.fields.shipping_text)),
+   el('span',l.variation_depth?.declared_member_count===null?'UNKNOWN':`${l.variation_depth.declared_member_count} declared members; ${l.variation_depth.embedded_structure_depth} embedded levels`),
+   el('span',`${l.listing_completeness.supported_field_count} / ${l.listing_completeness.field_denominator}`),button('Inspect listing',()=>panel('Captured listing evidence').append(pretty(l)))
+  ])));
+ }
  p.append(el('h3','Identity observations and conflicts'),pretty(c.resolution??{status:'LEGACY_RECORD_WITHOUT_RESOLUTION'}),el('h3','Assessment'),pretty({decision:c.decision,economics:c.economics,economics_uncertainty:c.economics_uncertainty,competition_evidence:c.competition_evidence,demand_evidence:c.demand_evidence,unknowns:c.unknowns,rejection_reasons:c.rejection_reasons,evidence_ids:c.evidence_ids}));
 }
 async function render(){
