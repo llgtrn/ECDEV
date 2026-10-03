@@ -32,6 +32,8 @@ struct Input {
     max_price_minor: Option<i64>,
     economics: Option<Scenario>,
     #[serde(default)]
+    decision_policy: crate::decision::Policy,
+    #[serde(default)]
     allow_stale: bool,
     #[serde(default)]
     force_refresh: bool,
@@ -191,6 +193,19 @@ impl Engine {
     }
     pub fn research(&self, args: Value) -> Result<Value, String> {
         let mut input: Input = serde_json::from_value(args).map_err(err)?;
+        if input
+            .decision_policy
+            .currency
+            .as_ref()
+            .is_some_and(|s| s.len() != 3 || !s.bytes().all(|b| b.is_ascii_uppercase()))
+            || input
+                .decision_policy
+                .excluded_categories
+                .iter()
+                .any(|s| s.trim().is_empty())
+        {
+            return Err("INVALID_DECISION_POLICY".into());
+        }
         let mut executed_plan = Value::Null;
         if let Some(prior_id) = &input.follow_up_run_id {
             if !input.sources.is_empty() || input.crawl_run_id.is_some() {
@@ -364,7 +379,7 @@ impl Engine {
             };
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
-            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":8,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":9,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
             let cached: Option<(String, u64)> = self
                 .db
                 .lock()
@@ -586,6 +601,25 @@ impl Engine {
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;
+        let frontier_status = frontier.status(&crawl_id)?;
+        let decision_budget_exhausted = if fixture {
+            calls.len() >= input.max_pages
+        } else {
+            frontier_status["acquisition_attempts"]
+                .as_u64()
+                .unwrap_or(0)
+                >= frontier_status["limits"]["max_pages"]
+                    .as_u64()
+                    .unwrap_or(u64::MAX)
+                || frontier_status["limits"]["deadline_ms"]
+                    .as_u64()
+                    .is_some_and(|deadline| timestamp() * 1000 >= deadline)
+        };
+        crate::decision::assess(
+            &mut candidates,
+            &input.decision_policy,
+            decision_budget_exhausted,
+        );
         let supplier_leads: Vec<Value> = snapshots
             .iter()
             .flat_map(|s| s["supplier_leads"].as_array().cloned().unwrap_or_default())
@@ -613,7 +647,7 @@ impl Engine {
             network,
             supplier_leads.len(),
         );
-        let frontier_status = frontier.status(&crawl_id)?;
+
         let incomplete = [
             "DISCOVERED",
             "PENDING",
@@ -624,7 +658,7 @@ impl Engine {
         ]
         .iter()
         .any(|state| frontier_status["states"][*state].as_u64().unwrap_or(0) > 0);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":0,"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {

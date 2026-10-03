@@ -379,6 +379,52 @@ fn configured_engine() -> Result<Engine, String> {
 mod research_tests {
     use super::*;
     #[test]
+    fn multi_origin_identifier_evidence_reaches_research_shortlist() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-shortlist-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let manufacturer = r#"<script type='application/ld+json'>{"@type":"Product","name":"SEPIA mug","sku":"21741","offers":[{"price":1980,"priceCurrency":"JPY","availability":"https://schema.org/OutOfStock","gtin13":4963264503563}]}</script>"#;
+        let retailer = r#"<script type='application/ld+json'>{"@type":"Product","name":"Retailer SEPIA mug","sku":"retail-21741","gtin":"4963264503563","offers":{"price":1980,"priceCurrency":"JPY","availability":"https://schema.org/InStock"}}</script>"#;
+        let args = json!({"market":"PUBLIC_WEB","query":"Fixture shortlist policy","sources":[{"url":"https://manufacturer.example/product","fixture_html":manufacturer},{"url":"https://retailer.example/product","fixture_html":retailer}],"max_pages":2,"decision_policy":{"currency":"JPY"}});
+        let run = e.research(args.clone()).unwrap();
+        assert_eq!(run["mode"], "FIXTURE");
+        assert_eq!(run["network_calls"], 0);
+        assert_eq!(run["candidates"].as_array().unwrap().len(), 1);
+        assert_eq!(run["funnel"]["shortlisted"], 1);
+        let candidate = &run["candidates"][0];
+        assert_eq!(candidate["decision"]["purpose"], "FURTHER_RESEARCH");
+        assert_eq!(
+            candidate["decision"]["listing_origins"]
+                .as_array()
+                .unwrap()
+                .len(),
+            2
+        );
+        assert!(candidate["economics_uncertainty"]["profit_expected"].is_null());
+        assert_eq!(
+            candidate["resolution"]["observations"][0]["product"]["fields"]["ean"]["evidence"][0]["json_pointer"],
+            "/offers/0/gtin13"
+        );
+        let replay = e.replay(run["run_id"].as_str().unwrap()).unwrap();
+        assert_eq!(replay["funnel"]["shortlisted"], 1);
+        let mut constrained = args.clone();
+        constrained["min_price_minor"] = json!(3000);
+        assert_eq!(e.research(constrained).unwrap()["funnel"]["rejected"], 1);
+        let mut single = args;
+        single["sources"].as_array_mut().unwrap().truncate(1);
+        single["max_pages"] = json!(1);
+        let run = e.research(single).unwrap();
+        assert_eq!(run["funnel"]["shortlisted"], 0);
+        assert_eq!(run["funnel"]["insufficient_evidence"], 1);
+    }
+    #[test]
     fn supplier_research_plans_public_follow_up_without_invented_terms() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-suppliers-{}",

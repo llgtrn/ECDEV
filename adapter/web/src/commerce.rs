@@ -106,6 +106,66 @@ pub fn annotate(product: &mut Value, page: &str, script: usize, hash: &str) {
             .entry(name)
             .or_insert_with(|| field(Value::Null, vec![]));
     }
+    // Offer identifiers only identify the product when every offer agrees.
+    // Retain their actual location; never attribute an offer assertion to Product.
+    let raw_offers: Vec<&Value> = match raw["offers"].as_array() {
+        Some(a) => a.iter().collect(),
+        None if raw["offers"].is_object() => vec![&raw["offers"]],
+        _ => vec![],
+    };
+    for (name, key) in [
+        ("gtin", "gtin"),
+        ("ean", "gtin13"),
+        ("upc", "gtin12"),
+        ("gtin8", "gtin8"),
+        ("gtin14", "gtin14"),
+    ] {
+        let mut evidence = fields[name]["evidence"]
+            .as_array()
+            .cloned()
+            .unwrap_or_default();
+        for (i, offer) in raw_offers.iter().enumerate() {
+            if !offer[key].is_null() {
+                let suffix = if raw["offers"].is_array() {
+                    format!("/offers/{i}/{key}")
+                } else {
+                    format!("/offers/{key}")
+                };
+                evidence.push(json!({"value":offer[key],"source":"JSON_LD","page":page,"script_index":script,"json_pointer":format!("{pointer}{suffix}"),"raw_capture_sha256":hash}));
+            }
+        }
+        let normalize = |v: &Value| {
+            v.as_str()
+                .map(str::to_string)
+                .or_else(|| v.as_u64().map(|n| n.to_string()))
+        };
+        let values: BTreeSet<_> = evidence
+            .iter()
+            .filter_map(|e| normalize(&e["value"]))
+            .collect();
+        let complete = !raw[key].is_null()
+            || (!raw_offers.is_empty() && raw_offers.iter().all(|o| normalize(&o[key]).is_some()));
+        let value = if complete && values.len() == 1 {
+            json!(values.first().unwrap())
+        } else {
+            Value::Null
+        };
+        let mut record = field(value.clone(), evidence);
+        if values.len() > 1 {
+            record["status"] = json!("CONFLICT");
+        }
+        if !value.is_null()
+            && record["evidence"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|e| e["value"].is_number())
+        {
+            record["status"] = json!("DERIVED");
+        }
+        product[name] = value;
+        fields.insert(name.into(), record);
+    }
     product["fields"] = Value::Object(fields);
 }
 
@@ -212,6 +272,43 @@ pub fn page_metadata(doc: &Html, base: &Url, products: &[Value], hash: &str) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn offer_identifiers_require_complete_agreement_and_retain_locators() {
+        let html = r#"<script type='application/ld+json'>{"@type":"Product","name":"Mug","offers":[{"price":1980,"priceCurrency":"JPY","gtin13":4963264503563}]}</script>"#;
+        let data = crate::extract(html, "https://manufacturer.example/mug").unwrap();
+        let p = &data["products"][0];
+        assert_eq!(p["ean"], "4963264503563");
+        assert_eq!(p["fields"]["ean"]["status"], "DERIVED");
+        assert_eq!(
+            p["fields"]["ean"]["evidence"][0]["value"],
+            4963264503563_u64
+        );
+        assert_eq!(
+            p["fields"]["ean"]["evidence"][0]["json_pointer"],
+            "/offers/0/gtin13"
+        );
+        for (offers, status) in [
+            (r#"[{"gtin13":"4963264503563"},{}]"#, "UNKNOWN"),
+            (
+                r#"[{"gtin13":"4963264503563"},{"gtin13":"4963264503556"}]"#,
+                "CONFLICT",
+            ),
+        ] {
+            let html = format!(
+                r#"<script type='application/ld+json'>{{"@type":"Product","name":"Variants","offers":{offers}}}</script>"#
+            );
+            let p =
+                &crate::extract(&html, "https://manufacturer.example/mug").unwrap()["products"][0];
+            assert!(p["ean"].is_null());
+            assert_eq!(p["fields"]["ean"]["status"], status);
+            assert!(
+                !p["fields"]["ean"]["evidence"]
+                    .as_array()
+                    .unwrap()
+                    .is_empty()
+            );
+        }
+    }
     #[test]
     fn page_roles_and_field_conflicts_are_inspectable() {
         for (url, role) in [

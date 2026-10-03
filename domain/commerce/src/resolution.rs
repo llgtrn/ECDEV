@@ -90,8 +90,26 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
         )
     };
     let mut anchors: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let sku_anchor = |c: &Value| {
+        let sku = text(&c["product"]["sku"]);
+        let origin = url::Url::parse(c["source"].as_str().unwrap_or("")).ok()?;
+        (!sku.is_empty()).then(|| {
+            format!(
+                "{}|{sku}|{}|{}",
+                origin.origin().ascii_serialization(),
+                text(&c["product"]["color"]),
+                text(&c["product"]["size"])
+            )
+        })
+    };
+    let mut gtin_skus: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     for c in &records {
         let (identity, basis) = key(c);
+        if basis == "CHECKSUM_VALID_GTIN_AND_VARIANT"
+            && let Some(sku) = sku_anchor(c)
+        {
+            gtin_skus.entry(sku).or_default().insert(identity.clone());
+        }
         if basis != "EXACT_PAGE_TITLE_AND_VARIANT_ONLY"
             && text(&c["product"]["color"]).is_empty()
             && text(&c["product"]["size"]).is_empty()
@@ -102,6 +120,15 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
     let mut groups: BTreeMap<String, Vec<Value>> = BTreeMap::new();
     for c in records {
         let (mut identity, basis) = key(&c);
+        if basis == "ORIGIN_SCOPED_SKU_AND_VARIANT"
+            && ["gtin", "ean", "upc", "gtin8", "gtin14"].iter().all(|k| {
+                c["product"][*k].is_null() && c["product"]["fields"][*k]["status"] != "CONFLICT"
+            })
+            && let Some(ids) = sku_anchor(&c).and_then(|sku| gtin_skus.get(&sku))
+            && ids.len() == 1
+        {
+            identity = ids.first().unwrap().clone();
+        }
         if basis == "EXACT_PAGE_TITLE_AND_VARIANT_ONLY"
             && text(&c["product"]["color"]).is_empty()
             && text(&c["product"]["size"]).is_empty()
@@ -169,7 +196,11 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
             }
         }
         let entity_id = format!("product:{:x}", Sha256::digest(identity.as_bytes()));
-        let basis = key(&primary).1;
+        let basis = if identity.starts_with("gtin:") {
+            "CHECKSUM_VALID_GTIN_AND_VARIANT"
+        } else {
+            key(&primary).1
+        };
         // Field projections must not retain a precise first-source value after merging
         // contradictory source assertions. Preserve every original locator alongside it.
         let field_names: BTreeSet<String> = rows
@@ -320,6 +351,27 @@ mod tests {
         assert_eq!(
             rows[0]["product"]["fields"]["price_minor"]["evidence"][0]["value"],
             3000
+        );
+        let mut identified = candidate("gtin", "one.example", "C1", "red");
+        identified["product"]["gtin"] = json!("4963264503563");
+        let weak = candidate("sku", "one.example", "C1", "red");
+        let (rows, _) = resolve(vec![identified.clone(), weak.clone()]);
+        assert_eq!(
+            rows.len(),
+            1,
+            "same origin SKU observation joins the unique GTIN anchor"
+        );
+        assert_eq!(
+            rows[0]["resolution"]["basis"],
+            "CHECKSUM_VALID_GTIN_AND_VARIANT"
+        );
+        let mut ambiguous = identified.clone();
+        ambiguous["product"]["gtin"] = json!("4963264503556");
+        let (rows, _) = resolve(vec![identified, ambiguous, weak]);
+        assert_eq!(
+            rows.len(),
+            3,
+            "two GTIN anchors prevent an ambiguous SKU bridge"
         );
     }
 }

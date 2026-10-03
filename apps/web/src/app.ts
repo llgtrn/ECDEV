@@ -16,7 +16,7 @@ function candidateDetail(c:any){
   el('code',name),el('span',String(f.status)),el('span',f.value===null?'UNKNOWN':JSON.stringify(f.value)),
   button(`${f.evidence?.length??0} observations`,()=>panel(name+' evidence').append(pretty(f.evidence??[])))
  ])));
- p.append(el('h3','Identity observations and conflicts'),pretty(c.resolution??{status:'LEGACY_RECORD_WITHOUT_RESOLUTION'}),el('h3','Assessment'),pretty({economics:c.economics,economics_uncertainty:c.economics_uncertainty,competition_evidence:c.competition_evidence,demand_evidence:c.demand_evidence,unknowns:c.unknowns,rejection_reasons:c.rejection_reasons,evidence_ids:c.evidence_ids}));
+ p.append(el('h3','Identity observations and conflicts'),pretty(c.resolution??{status:'LEGACY_RECORD_WITHOUT_RESOLUTION'}),el('h3','Assessment'),pretty({decision:c.decision,economics:c.economics,economics_uncertainty:c.economics_uncertainty,competition_evidence:c.competition_evidence,demand_evidence:c.demand_evidence,unknowns:c.unknowns,rejection_reasons:c.rejection_reasons,evidence_ids:c.evidence_ids}));
 }
 async function render(){
  document.querySelector('#title')!.textContent=selected;

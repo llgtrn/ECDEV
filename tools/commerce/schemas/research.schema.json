@@ -213,6 +213,28 @@
     "follow_up_run_id": {
       "type": "string",
       "description": "Execute selected zero-paid information-gain actions from a persisted non-fixture run; omit sources and crawl_run_id. Robots and frontier budgets still apply."
+    },
+    "decision_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Evidence-based shortlist for further research; unknown costs, demand and risk remain unknown. Requires matched GTIN/ASIN, two captured listing origins, consistent positive price and an available offer. Distinct origins do not prove publisher independence.",
+      "properties": {
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "max_weight_g": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
     }
   },
   "required": [

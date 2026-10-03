@@ -31,6 +31,11 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
             .filter_map(|r| r["source"].as_str())
             .map(str::to_string)
             .collect();
+        let listing_origins: BTreeSet<_> = pages
+            .iter()
+            .filter_map(|page| url::Url::parse(page).ok())
+            .map(|u| u.origin().ascii_serialization())
+            .collect();
         let mut sellers = BTreeSet::new();
         let mut prices: BTreeMap<String, BTreeSet<i64>> = BTreeMap::new();
         let mut offers = vec![];
@@ -58,8 +63,8 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
         }
         let ranges:Vec<_>=prices.iter().map(|(currency,values)|json!({"currency":currency,"min_minor":values.first(),"max_minor":values.last(),"status":"OBSERVED_IN_CAPTURED_OFFERS"})).collect();
         let category_pages:Vec<_>=snapshots.iter().filter(|s|matches!(s["page_metadata"]["classification"]["role"].as_str(),Some("CATEGORY"|"PAGINATION"|"SEARCH_RESULT"))).filter(|s|s["links"].as_array().is_some_and(|links|links.iter().any(|l|l.as_str().is_some_and(|u|pages.contains(u))))).map(|s|json!({"page":s["source"],"role":s["page_metadata"]["classification"]["role"],"raw_capture_sha256":s["content_hash"]})).collect();
-        c["competition_evidence"] = json!({"status":"OBSERVED_SAMPLE_ONLY","listing_pages_observed":pages.len(),"source_pages":pages,"seller_assertions_observed":sellers.len(),"seller_assertions":sellers,"observed_offer_price_ranges":ranges,"offers":offers,"rating":c["product"]["rating"],"review_count":c["product"]["review_count"],"limitation":"These are captured listings/offers, not a total competitor count. A single manufacturer catalog does not establish competitive intensity."});
-        c["demand_evidence"] = json!({"status":"PROXY","kind":"PUBLIC_CATEGORY_OR_SEARCH_LINK_PRESENCE","observed_surfaces":category_pages,"search_volume":null,"true_sales":null,"review_velocity":null,"limitation":"Link presence is a visibility proxy; no volume, sales, trend or velocity inference."});
+        c["competition_evidence"] = json!({"status":"OBSERVED_SAMPLE_ONLY","listing_pages_observed":pages.len(),"source_pages":pages,"listing_origins_observed":listing_origins,"publisher_independence":"UNVERIFIED","seller_assertions_observed":sellers.len(),"seller_assertions":sellers,"observed_offer_price_ranges":ranges,"offers":offers,"rating":c["product"]["rating"],"review_count":c["product"]["review_count"],"limitation":"These are captured listings/offers, not a total competitor count. A single manufacturer catalog does not establish competitive intensity."});
+        c["demand_evidence"] = json!({"status":"PROXY","kind":"PUBLIC_LINK_AND_MATCHED_PRODUCT_LISTING_PRESENCE","observed_surfaces":category_pages,"observed_listing_origins":listing_origins,"listing_origin_evidence":rows.iter().map(|r|json!({"page":r["source"],"evidence_ids":r["evidence_ids"]})).collect::<Vec<_>>(),"publisher_independence":"UNVERIFIED","search_volume":null,"true_sales":null,"review_velocity":null,"limitation":"Link presence is a visibility proxy; no volume, sales, trend or velocity inference."});
         c["economics_uncertainty"] = crate::uncertainty::observed_candidate(&c["product"])?;
     }
     Ok(
