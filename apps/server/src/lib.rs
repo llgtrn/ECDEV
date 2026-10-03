@@ -373,11 +373,50 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
 fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
         .with_provider(std::sync::Arc::new(ecdev_keepa::client::Keepa::from_env()))
-        .with_provider(std::sync::Arc::new(ecdev_web::Web::default())))
+        .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
+        .with_provider(std::sync::Arc::new(
+            ecdev_web::amazon::PublicAmazon::default(),
+        )))
 }
 #[cfg(test)]
 mod research_tests {
     use super::*;
+    #[test]
+    fn public_amazon_blocked_route_preserves_provider_identity_and_public_fallback() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-public-amazon-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()))
+            .with_provider(Arc::new(ecdev_web::amazon::PublicAmazon::default()));
+        let run = e.research(json!({"market":"AMAZON_JP","query":"Fixture source availability separation","max_pages":2,"sources":[{"url":"https://www.amazon.co.jp/dp/B012345678","fixture_html":"<form action='/errors/validateCaptcha'><input name='guess'></form>"},{"url":"https://retailer.example/cup","fixture_html":"<script type='application/ld+json'>{\"@type\":\"Product\",\"name\":\"Fallback cup\",\"offers\":{\"price\":2980,\"priceCurrency\":\"JPY\"}}</script>"}]})).unwrap();
+        assert_eq!(run["mode"], "FIXTURE");
+        assert_eq!(run["network_calls"], 0);
+        assert_eq!(run["errors"][0]["status"], "SOURCE_BLOCKED");
+        assert_eq!(run["errors"][0]["provider"], "public-amazon");
+        assert_eq!(run["provider_calls"][0]["provider"], "public-amazon");
+        assert_eq!(run["provider_calls"][1]["provider"], "native-web");
+        assert_eq!(run["observations"][0]["provider"], "public-amazon");
+        assert_eq!(run["candidates"].as_array().unwrap().len(), 1);
+        assert_eq!(
+            run["candidates"][0]["source"],
+            "https://retailer.example/cup"
+        );
+        let profiles = e.providers();
+        let official = profiles
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|p| p["id"] == "amazon-sp-api")
+            .unwrap();
+        assert_eq!(official["source_layer"], "OFFICIAL_SP_API");
+        assert_eq!(official["status"], "UNAVAILABLE");
+    }
     #[test]
     fn multi_origin_identifier_evidence_reaches_research_shortlist() {
         let root = std::env::temp_dir().join(format!(

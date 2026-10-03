@@ -280,7 +280,7 @@ impl Engine {
         );
         let selected = routes["routes"]
             .as_array()
-            .and_then(|a| a.first())
+            .and_then(|a| a.iter().find(|p| p["id"] == "native-web"))
             .and_then(|p| p["id"].as_str())
             .ok_or("NO_ZERO_COST_FETCH_PROVIDER")?;
         let provider = self
@@ -377,9 +377,35 @@ impl Engine {
                 std::thread::sleep(std::time::Duration::from_millis(200));
                 continue;
             };
+            let amazon_source = url::Url::parse(&source.url).ok().is_some_and(|u| {
+                matches!(
+                    u.host_str(),
+                    Some("amazon.co.jp" | "www.amazon.co.jp" | "amazon.com" | "www.amazon.com")
+                )
+            });
+            let provider = if amazon_source {
+                if let Some(public) = self.providers.iter().find(|p| p.id() == "public-amazon") {
+                    public
+                } else {
+                    let reason = "PUBLIC_AMAZON_ADAPTER_UNAVAILABLE";
+                    failures.push(json!({"source":source.url,"provider":"public-amazon","status":"SOURCE_UNAVAILABLE","reason":reason}));
+                    calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"public-amazon","capability":"fetch.http","status":"UNAVAILABLE","actual_cost_minor":0,"request_count":0,"cache_hit":false,"error":reason}));
+                    if let Some(lease) = &lease {
+                        frontier.fail(lease, (timestamp() * 1000) as i64, reason, false, None)?;
+                    }
+                    continue;
+                }
+            } else {
+                provider
+            };
+            let checkpoint = checkpoint.filter(|capture| {
+                capture["observations"].as_array().is_some_and(|a| {
+                    !a.is_empty() && a.iter().all(|o| o["provider"] == provider.id())
+                })
+            });
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
-            let key=format!("{:x}",Sha256::digest(json!({"provider":"native-web","operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":9,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let key=format!("{:x}",Sha256::digest(json!({"provider":provider.id(),"operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":10,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
             let cached: Option<(String, u64)> = self
                 .db
                 .lock()
@@ -463,8 +489,8 @@ impl Engine {
                             prior["provider_cost"]["request_count"] = Value::Null;
                             (prior, true)
                         } else {
-                            failures.push(json!({"source":source.url,"reason":reason}));
-                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":null,"cache_hit":false,"error":reason}));
+                            failures.push(json!({"source":source.url,"provider":provider.id(),"status":if reason.contains("ROBOTS") || reason.contains("HTTP_STATUS_403") || reason.contains("REDIRECT_SCOPE_DENIED") {"SOURCE_BLOCKED"}else{"SOURCE_UNAVAILABLE"},"reason":reason}));
+                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":null,"cache_hit":false,"error":reason}));
                             if let Some(lease) = &lease {
                                 let retryable = reason.contains("HTTP_STATUS_429")
                                     || reason.contains("HTTP_STATUS_50")
@@ -509,6 +535,9 @@ impl Engine {
             observations.extend(evidence.clone());
             let result = &captured["result"];
             snapshots.push(result.clone());
+            if result["source_status"] == "SOURCE_BLOCKED" {
+                failures.push(json!({"source":source.url,"provider":provider.id(),"status":"SOURCE_BLOCKED","reason":result["blocked_reason"]}));
+            }
             for product in result["products"].as_array().ok_or("Invalid extraction")? {
                 let mut reasons = vec![];
                 let mut unknowns = vec![
@@ -565,7 +594,7 @@ impl Engine {
                 } else {
                     "VALIDATING"
                 };
-                candidates.push(json!({"id":Uuid::new_v4().to_string(),"run_id":id,"state":state,"product":product,"source":source.url,"evidence_ids":evidence_ids,"discovery":"OBSERVED_IN_SOURCE","economics":economics,"unknowns":unknowns,"rejection_reasons":reasons,"survival_reason":if reasons.is_empty(){"Passed supplied price constraints; requires demand/supplier/risk validation"}else{"Rejected by explicit constraints"},"confidence":"SOURCE_ASSERTION_ONLY"}));
+                candidates.push(json!({"id":Uuid::new_v4().to_string(),"run_id":id,"state":state,"product":product,"source":result["source"],"requested_source":source.url,"evidence_ids":evidence_ids,"discovery":"OBSERVED_IN_SOURCE","economics":economics,"unknowns":unknowns,"rejection_reasons":reasons,"survival_reason":if reasons.is_empty(){"Passed supplied price constraints; requires demand/supplier/risk validation"}else{"Rejected by explicit constraints"},"confidence":"SOURCE_ASSERTION_ONLY"}));
             }
             if !fixture {
                 for link in result["links"].as_array().ok_or("Invalid links")? {
@@ -597,7 +626,7 @@ impl Engine {
                     &json!({"source":source.url,"depth":depth,"capture":captured}),
                 )?;
             }
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":"native-web","capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":"COMPLETE"}));
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;

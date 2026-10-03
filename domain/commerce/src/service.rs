@@ -150,6 +150,11 @@ impl Engine {
         profiles.push(json!({"id":"native-economics","class":"NATIVE","status":"AVAILABLE","capabilities":["economics.simulate"],"estimated_cost_minor":0,"auth_state":"NOT_REQUIRED"}));
         profiles.push(json!({"id":"local-cache","class":"NATIVE","status":"AVAILABLE","capabilities":["evidence.reuse"],"estimated_cost_minor":0,"auth_state":"NOT_REQUIRED"}));
         for p in &mut profiles {
+            match p["id"].as_str() {
+                Some("amazon-sp-api") => p["source_layer"] = json!("OFFICIAL_SP_API"),
+                Some("keepa") => p["source_layer"] = json!("KEEPA"),
+                _ => {}
+            }
             for (k, v) in [
                 ("quota_remaining", Value::Null),
                 ("rate_limit", Value::Null),

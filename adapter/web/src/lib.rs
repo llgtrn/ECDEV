@@ -1,4 +1,5 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
+pub mod amazon;
 pub mod commerce;
 pub mod document;
 pub mod microdata;
@@ -356,7 +357,9 @@ impl Provider for Web {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;
         let start = Instant::now();
-        let (raw, mode, headers, requests) = if let Some(html) = r.query["fixture_html"].as_str() {
+        let (raw, mode, headers, requests, final_url) = if let Some(html) =
+            r.query["fixture_html"].as_str()
+        {
             if html.len() > 4 * 1024 * 1024 {
                 return Err("FIXTURE_BODY_LIMIT".into());
             }
@@ -365,6 +368,7 @@ impl Provider for Web {
                 ObservationMode::Fixture,
                 json!({}),
                 0,
+                normalized.clone(),
             )
         } else {
             let mut url = Url::parse(&normalized).map_err(|_| "INVALID_URL")?;
@@ -372,6 +376,10 @@ impl Provider for Web {
             let mut visited = BTreeSet::new();
             let mut body = None;
             for _ in 0..6 {
+                if r.query["source_layer"] == "PUBLIC_AMAZON" && !amazon::public_host(url.as_str())
+                {
+                    return Err("PUBLIC_AMAZON_REDIRECT_SCOPE_DENIED".into());
+                }
                 if !visited.insert(url.to_string()) {
                     return Err("REDIRECT_LOOP".into());
                 }
@@ -431,17 +439,19 @@ impl Provider for Web {
                 {
                     return Err("UNSUPPORTED_CONTENT_TYPE".into());
                 }
-                body = Some((content, headers));
+                body = Some((content, headers, url.to_string()));
                 break;
             }
-            let (content, headers) = body.ok_or("REDIRECT_LIMIT")?;
-            (content, ObservationMode::Live, headers, requests)
+            let (content, headers, final_url) = body.ok_or("REDIRECT_LIMIT")?;
+            (content, ObservationMode::Live, headers, requests, final_url)
         };
-        let result = document::extract(
+        let mut result = document::extract(
             &raw,
             headers["content_type"].as_str().unwrap_or(""),
-            &normalized,
+            &final_url,
         )?;
+        result["requested_url"] = json!(normalized);
+        result["final_url"] = json!(final_url);
         let hash = format!("{:x}", Sha256::digest(&raw));
         let now = (timestamp() * 1000).to_string();
         let evidence = Evidence {
@@ -449,7 +459,7 @@ impl Provider for Web {
             mode,
             source_type: "PUBLIC_HTML".into(),
             provider: self.id().into(),
-            external_source: normalized,
+            external_source: final_url,
             market: r.market.clone(),
             query: json!({"url":source}),
             timestamp: now.clone(),

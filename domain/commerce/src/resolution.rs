@@ -46,7 +46,15 @@ fn key(c: &Value) -> (String, &'static str) {
     }
     let asin = p["asin"].as_str().unwrap_or("").to_ascii_uppercase();
     if asin.len() == 10 && asin.bytes().all(|b| b.is_ascii_alphanumeric()) {
-        return (format!("asin:{asin}:{variant}"), "ASIN_AND_VARIANT");
+        let scope = url::Url::parse(c["source"].as_str().unwrap_or(""))
+            .ok()
+            .map(|u| match u.host_str() {
+                Some("amazon.co.jp" | "www.amazon.co.jp") => "AMAZON_JP".into(),
+                Some("amazon.com" | "www.amazon.com") => "AMAZON_US".into(),
+                _ => u.origin().ascii_serialization(),
+            })
+            .unwrap_or_else(|| "UNKNOWN_ORIGIN".into());
+        return (format!("asin:{scope}:{asin}:{variant}"), "ASIN_AND_VARIANT");
     }
     let b = brand(p);
     for k in ["mpn", "model"] {
@@ -351,6 +359,16 @@ mod tests {
         assert_eq!(
             rows[0]["product"]["fields"]["price_minor"]["evidence"][0]["value"],
             3000
+        );
+        let mut jp = candidate("jp", "www.amazon.co.jp", "", "red");
+        let mut us = candidate("us", "www.amazon.com", "", "red");
+        jp["product"]["asin"] = json!("B012345678");
+        us["product"]["asin"] = json!("B012345678");
+        let (rows, _) = resolve(vec![jp, us]);
+        assert_eq!(
+            rows.len(),
+            2,
+            "ASIN assertions remain scoped to the source marketplace"
         );
         let mut identified = candidate("gtin", "one.example", "C1", "red");
         identified["product"]["gtin"] = json!("4963264503563");
