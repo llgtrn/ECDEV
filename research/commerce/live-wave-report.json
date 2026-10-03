@@ -1,7 +1,7 @@
 {
   "status": "MEASURED_LIVE_WAVE_REPORT_WITH_REMAINING_REQUIREMENTS",
   "goal_complete": false,
-  "head_at_audit": "dc736a5ec7d142b6750a3feb0470261cce8a210b",
+  "head_at_audit": "a27e192a55b47973e1350aff5a45a42d6e0b9376",
   "branch": "main",
   "live_run": {
     "run_id": "92e352a4-f6c7-4ef2-8b74-002f14790698",
@@ -199,15 +199,15 @@
     "historical_status_requires_raw_hashes": true
   },
   "verification": {
-    "native_tests": 56,
+    "native_tests": 59,
     "doctests": "PASS",
     "clippy": "PASS",
     "typescript_build": "PASS",
-    "canonical_proofs": 49,
+    "canonical_proofs": "PASS_52_OF_52_CURRENT",
     "canonical_protocol": "BYTE_IDENTICAL",
     "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
     "shape_conformance_bps": 10000,
-    "owned_sources": 129,
+    "owned_sources": 130,
     "unowned_sources": 0,
     "v1_achieved": false
   },
@@ -230,7 +230,7 @@
     {
       "id": 4,
       "requirement": "Retry, lease, backpressure engine",
-      "status": "PARTIAL_NATIVE_RETRY_LEASE_BACKPRESSURE_AND_RESEARCH_INTEGRATION_HTTP_RETRY_AFTER_HEADER_PENDING"
+      "status": "HTTP_429_5XX_RETRY_AFTER_RESPONSE_WIRING_REQUEST_ACCOUNTING_AND_RUN_ORIGIN_COOLDOWN_RESTART_REGRESSIONS_PASS_REDIRECT_SPECIFIC_DEFERRAL_PENDING"
     },
     {
       "id": 5,
@@ -354,7 +354,7 @@
     }
   ],
   "remaining": [
-    "Wire observed HTTP Retry-After into persistent retry scheduling; the native frontier delay primitive is tested but response-header propagation is pending",
+    "Redirect-specific Retry-After handling and cross-run/redirected-origin coordination remain unproven; 429/5xx response headers now reach persistent retry scheduling",
     "Additional commerce extraction formats, donor studies and remaining full crawler error policy and extraction donor contracts",
     "Independent marketplace competition samples, broader observed demand and official SP-API acquisition and live public Amazon product mapping",
     "Supplier term extraction when available and uncertainty planner beyond the initial public supplier heuristic",
@@ -372,5 +372,6 @@
     "donor": "scrapinghub/price-parser",
     "reason": "A bounded numeric subroutine already has 1235 oracle cases; remaining text selection and currency recognition must be decomposed and proven before donor-wide promotion or cutover.",
     "extinction_claim": false
-  }
+  },
+  "http_retry_checkpoint": "research/commerce/http-retry-proof.json"
 }

@@ -476,7 +476,8 @@ impl Engine {
                             )
                         }
                     }
-                    Err(reason) => {
+                    Err(failure) => {
+                        let reason = &failure.reason;
                         if input.allow_stale
                             && cached.as_ref().is_some_and(|(_, expires)| {
                                 timestamp().saturating_sub(*expires) <= 86400
@@ -486,22 +487,24 @@ impl Engine {
                             stale_used = true;
                             let mut prior = previous.clone().unwrap();
                             prior["provider_cost"]["fallback_reason"] = json!(reason);
-                            prior["provider_cost"]["request_count"] = Value::Null;
+                            prior["provider_cost"]["request_count"] = json!(failure.request_count);
+                            prior["provider_cost"]["acquisition_failure"] = json!(failure);
                             (prior, true)
                         } else {
-                            failures.push(json!({"source":source.url,"provider":provider.id(),"status":if reason.contains("ROBOTS") || reason.contains("HTTP_STATUS_403") || reason.contains("REDIRECT_SCOPE_DENIED") {"SOURCE_BLOCKED"}else{"SOURCE_UNAVAILABLE"},"reason":reason}));
-                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":null,"cache_hit":false,"error":reason}));
+                            failures.push(json!({"source":source.url,"provider":provider.id(),"status":if reason.contains("ROBOTS") || reason.contains("HTTP_STATUS_403") || reason.contains("REDIRECT_SCOPE_DENIED") {"SOURCE_BLOCKED"}else{"SOURCE_UNAVAILABLE"},"reason":reason,"acquisition_failure":failure}));
+                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":failure.request_count,"cache_hit":false,"error":reason,"acquisition_failure":failure}));
                             if let Some(lease) = &lease {
-                                let retryable = reason.contains("HTTP_STATUS_429")
-                                    || reason.contains("HTTP_STATUS_50")
-                                    || reason == "FETCH_NETWORK_ERROR"
-                                    || reason == "DNS_FAILED";
+                                let retryable =
+                                    matches!(failure.http_status, Some(429 | 500..=599))
+                                        || reason == "FETCH_NETWORK_ERROR"
+                                        || reason == "DNS_FAILED";
+                                let failed_at = (timestamp() * 1000) as i64;
                                 frontier.fail(
                                     lease,
-                                    (timestamp() * 1000) as i64,
-                                    &reason,
+                                    failed_at,
+                                    reason,
                                     retryable,
-                                    None,
+                                    failure.retry_delay_ms(failed_at),
                                 )?;
                             }
                             continue;
@@ -620,13 +623,19 @@ impl Engine {
                 }
             }
             if let Some(lease) = &lease {
-                frontier.complete(
+                frontier.complete_with_origin_cooldown(
                     lease,
                     (timestamp() * 1000) as i64,
                     &json!({"source":source.url,"depth":depth,"capture":captured}),
+                    if stale_used {
+                        captured["provider_cost"]["acquisition_failure"]["retry_not_before_ms"]
+                            .as_i64()
+                    } else {
+                        None
+                    },
                 )?;
             }
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;
@@ -738,6 +747,75 @@ impl Engine {
 #[cfg(test)]
 mod budget_storage_tests {
     use super::*;
+    #[test]
+    fn response_retry_after_reaches_durable_frontier_and_known_request_accounting() {
+        use crate::provider::{AcquireError, AcquireResult, Provider};
+        struct FailureProvider(u16);
+        impl Provider for FailureProvider {
+            fn id(&self) -> &str {
+                "native-web"
+            }
+            fn metadata(&self) -> Value {
+                json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","capabilities":["fetch.http"],"markets":["PUBLIC_WEB"]})
+            }
+            fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                Err(AcquireError::http(
+                    self.0,
+                    2,
+                    Some("120"),
+                    (timestamp() * 1000) as i64,
+                ))
+            }
+        }
+        for status in [429, 503] {
+            let root = std::env::temp_dir().join(format!("ecdev-http-retry-{}", Uuid::new_v4()));
+            let e = Engine::open(&root)
+                .unwrap()
+                .with_provider(std::sync::Arc::new(FailureProvider(status)));
+            let run = e.research(json!({"market":"PUBLIC_WEB","query":"Synthetic response failure, no network IO","sources":[{"url":"https://shop.example/product","fixture_html":""}],"max_pages":1,"deadline_seconds":300})).unwrap();
+            assert_eq!(run["mode"], "FIXTURE");
+            assert_eq!(run["network_calls"], 2); // Synthetic provider's declared counter, not live proof.
+            assert_eq!(run["known_network_calls"], 2);
+            assert_eq!(
+                run["provider_calls"][0]["acquisition_failure"]["http_status"],
+                status
+            );
+            assert_eq!(run["frontier"]["states"]["RETRYABLE"], 1);
+            let id = run["crawl_run_id"].as_str().unwrap();
+            let next_at = run["provider_calls"][0]["acquisition_failure"]["retry_not_before_ms"]
+                .as_i64()
+                .unwrap();
+            {
+                let db = e.db.lock().unwrap();
+                let saved: i64 = db
+                    .query_row(
+                        "SELECT next_at FROM crawl_urls WHERE run_id=?1",
+                        [id],
+                        |row| row.get(0),
+                    )
+                    .unwrap();
+                assert_eq!(saved, next_at);
+                // Permit another attempt so the page budget cannot mask the not-before assertion.
+                let text: String = db
+                    .query_row("SELECT limits FROM crawl_runs WHERE id=?1", [id], |row| {
+                        row.get(0)
+                    })
+                    .unwrap();
+                let mut limits: CrawlLimits = serde_json::from_str(&text).unwrap();
+                limits.max_pages = 2;
+                db.execute(
+                    "UPDATE crawl_runs SET limits=?2 WHERE id=?1",
+                    params![id, serde_json::to_string(&limits).unwrap()],
+                )
+                .unwrap();
+            }
+            drop(e);
+            let mut reopened =
+                Frontier::open(&root.join(".ynventa/materialized/runtime/ecdev.sqlite")).unwrap();
+            assert!(reopened.lease(id, next_at - 1).unwrap().is_none());
+            assert_eq!(reopened.lease(id, next_at).unwrap().unwrap().attempts, 2);
+        }
+    }
     #[test]
     fn budget_reservations_are_durable_and_zero_denies_io() {
         let root = std::env::temp_dir().join(format!("ecdev-budget-{}", Uuid::new_v4()));

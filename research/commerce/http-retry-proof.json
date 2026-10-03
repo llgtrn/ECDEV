@@ -1,0 +1,166 @@
+{
+  "status": "PASS_FRESH_HTTP_RESPONSE_ACCOUNTING_AND_PUBLIC_FALLBACK",
+  "goal_complete": false,
+  "parent_main": "a27e192a55b47973e1350aff5a45a42d6e0b9376",
+  "run_id": "7423aee6-93ea-447b-a6e2-e5f984a3f3b7",
+  "mode": "LIVE",
+  "run_status": "PARTIAL",
+  "frontier": {
+    "acquisition_attempts": 3,
+    "cancelled": false,
+    "limits": {
+      "backoff_ms": 1000,
+      "deadline_ms": 1791030302000,
+      "global_concurrency": 1,
+      "lease_ms": 120000,
+      "max_backoff_ms": 30000,
+      "max_depth": 0,
+      "max_pages": 3,
+      "max_retries": 2,
+      "max_urls": 3,
+      "origin_interval_ms": 750,
+      "per_origin_concurrency": 1
+    },
+    "retry_events": 1,
+    "run_id": "7423aee6-93ea-447b-a6e2-e5f984a3f3b7",
+    "states": {
+      "CANCELLED": 0,
+      "DISCOVERED": 0,
+      "FAILED": 0,
+      "HANDLED": 2,
+      "LEASED": 0,
+      "PENDING": 0,
+      "RETRYABLE": 1
+    }
+  },
+  "funnel": {
+    "discovered": 2,
+    "insufficient_evidence": 1,
+    "rejected": 0,
+    "sampling": 0,
+    "screened": 0,
+    "shortlisted": 1,
+    "validating": 0
+  },
+  "errors": [
+    {
+      "acquisition_failure": {
+        "http_status": 503,
+        "reason": "HTTP_STATUS_503",
+        "request_count": 2,
+        "retry_after_header": null,
+        "retry_not_before_ms": null
+      },
+      "provider": "public-amazon",
+      "reason": "HTTP_STATUS_503",
+      "source": "https://www.amazon.co.jp/s?k=KINTO+SEPIA+21741",
+      "status": "SOURCE_UNAVAILABLE"
+    }
+  ],
+  "provider_calls": [
+    {
+      "acquisition_failure": {
+        "http_status": 503,
+        "reason": "HTTP_STATUS_503",
+        "request_count": 2,
+        "retry_after_header": null,
+        "retry_not_before_ms": null
+      },
+      "actual_cost_minor": 0,
+      "cache_hit": false,
+      "capability": "fetch.http",
+      "completed_at": 1791030243000,
+      "error": "HTTP_STATUS_503",
+      "id": "7f05e8b8-110d-4844-af01-aaef7af5ca34",
+      "provider": "public-amazon",
+      "request_count": 2,
+      "started_at": 1791030242000,
+      "status": "FAILED"
+    },
+    {
+      "acquisition_failure": null,
+      "actual_cost_minor": 0,
+      "cache_hit": false,
+      "cache_status": "MISS",
+      "capability": "fetch.http",
+      "completed_at": 1791030247000,
+      "estimated_cost_minor": 0,
+      "evidence_ids": [
+        "5e21ef6c-7ea3-493c-832f-234047572738"
+      ],
+      "id": "00f61ad4-762a-47ff-a6f9-e39c08722f14",
+      "latency_ms": 3788,
+      "provider": "native-web",
+      "quota_after": null,
+      "quota_before": null,
+      "request_count": 2,
+      "result_count": 1,
+      "started_at": 1791030243000,
+      "status": "COMPLETE"
+    },
+    {
+      "acquisition_failure": null,
+      "actual_cost_minor": 0,
+      "cache_hit": false,
+      "cache_status": "MISS",
+      "capability": "fetch.http",
+      "completed_at": 1791030250000,
+      "estimated_cost_minor": 0,
+      "evidence_ids": [
+        "d4aae7c4-9fe1-4d42-82c9-d76852af60b4"
+      ],
+      "id": "f017d38a-e26f-4df1-ac0a-7013cd152667",
+      "latency_ms": 2499,
+      "provider": "native-web",
+      "quota_after": null,
+      "quota_before": null,
+      "request_count": 2,
+      "result_count": 4,
+      "started_at": 1791030247000,
+      "status": "COMPLETE"
+    }
+  ],
+  "captures": [
+    {
+      "source": "https://kinto.co.jp/products/21741",
+      "sha256": "a89663a398cd2334fc8dc0f2b11fa091e36e2f3db5d228e6b262fc51b85cbfea",
+      "provider": "native-web"
+    },
+    {
+      "source": "https://hinatalife.com/products/231212121212342",
+      "sha256": "d05aba7b3d5439bd97c4c4696d2749b130b9b3cd59127b380b1187629bd05e49",
+      "provider": "native-web"
+    }
+  ],
+  "known_network_calls": 6,
+  "total_network_calls": 6,
+  "paid_provider_calls": 0,
+  "paid_cost_minor": 0,
+  "live_retry_after_header_observed": false,
+  "timing_regressions": [
+    "Delay-seconds, IMF-fixdate, RFC850 and asctime; invalid calendar dates remain unknown.",
+    "Synthetic 429 and 503 responses reach persisted retry scheduling and request accounting.",
+    "Origin cooldown survives reopen; other origins remain available; stale workers cannot modify it.",
+    "Completing a stale-cache fallback can preserve origin cooldown atomically."
+  ],
+  "standard_reference": "https://www.rfc-editor.org/rfc/rfc9110.html#name-retry-after",
+  "limits": [
+    "Live response accounting is verified; no Retry-After header was observed in the captured live failure.",
+    "Retry timing is regression verified and is not presented as an observed live server delay.",
+    "Origin cooldown is scoped to the frontier run and original request origin; cross-run and redirected-origin coordination remain unproven.",
+    "Redirect-specific Retry-After deferral remains pending.",
+    "No full HTTP, Crawlee or extraction donor absorption is claimed."
+  ],
+  "verification": {
+    "native_tests": 59,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "typescript_build": "PASS_UNCHANGED_UI",
+    "mcp_sdk_smoke": "PASS_31_TOOLS",
+    "canonical_proofs": "PASS_52_OF_52_CURRENT",
+    "canonical_protocol": "BYTE_IDENTICAL_PASS",
+    "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
+    "repository_shape": "130_OWNED_SOURCES_0_UNOWNED_10000_BPS",
+    "donor_records": "PASS_25_RECORDS"
+  }
+}

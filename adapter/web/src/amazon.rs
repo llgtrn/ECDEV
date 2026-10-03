@@ -1,6 +1,6 @@
 //! Public Amazon documents share native HTTP policy, never SP-API or Keepa data.
 use crate::Web;
-use ecdev_core::provider::{AcquireRequest, AcquireResult, Provider};
+use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
 use serde_json::{Value, json};
 
 pub fn public_host(url: &str) -> bool {
@@ -31,7 +31,7 @@ impl Provider for PublicAmazon {
         }
         Ok(result)
     }
-    fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, String> {
+    fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
         let source = self.normalize_query(&request.query)?["url"]
             .as_str()
             .unwrap()

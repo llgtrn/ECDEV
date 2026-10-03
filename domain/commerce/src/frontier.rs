@@ -163,6 +163,7 @@ struct Transition<'a> {
     payload: Option<&'a Value>,
     reason: Option<&'a str>,
     priority: Option<i64>,
+    origin_not_before: Option<i64>,
 }
 impl Frontier {
     pub fn open(path: &Path) -> Result<Self, String> {
@@ -311,6 +312,15 @@ impl Frontier {
         }))
     }
     pub fn complete(&mut self, lease: &Lease, now: i64, payload: &Value) -> Result<(), String> {
+        self.complete_with_origin_cooldown(lease, now, payload, None)
+    }
+    pub fn complete_with_origin_cooldown(
+        &mut self,
+        lease: &Lease,
+        now: i64,
+        payload: &Value,
+        origin_not_before: Option<i64>,
+    ) -> Result<(), String> {
         self.transition(
             lease,
             now,
@@ -320,6 +330,7 @@ impl Frontier {
                 payload: Some(payload),
                 reason: None,
                 priority: None,
+                origin_not_before,
             },
         )
     }
@@ -358,6 +369,13 @@ impl Frontier {
                 payload: None,
                 reason: Some(reason),
                 priority: None,
+                origin_not_before: if retryable {
+                    retry_after_ms
+                        .filter(|delay| *delay > 0)
+                        .map(|delay| now.saturating_add(delay))
+                } else {
+                    None
+                },
             },
         )
     }
@@ -393,6 +411,7 @@ impl Frontier {
                 payload: None,
                 reason: Some("RECLAIM"),
                 priority,
+                origin_not_before: None,
             },
         )
     }
@@ -408,6 +427,7 @@ impl Frontier {
             payload,
             reason,
             priority,
+            origin_not_before,
         } = change;
         let tx = self
             .db
@@ -416,6 +436,11 @@ impl Frontier {
         let n=tx.execute("UPDATE crawl_urls SET state=?4,next_at=?5,payload=?6,last_error=?7,priority=COALESCE(?9,priority),lease_token=NULL,lease_until=NULL WHERE run_id=?1 AND identity_hash=?2 AND lease_token=?3 AND state='LEASED' AND lease_until>?8 AND EXISTS(SELECT 1 FROM crawl_runs WHERE id=?1 AND cancelled=0)", params![lease.run_id,lease.identity_hash,lease.token,state,next,payload.map(Value::to_string),reason,now,priority]).map_err(err)?;
         if n != 1 {
             return Err("STALE_OR_CANCELLED_LEASE".into());
+        }
+        if let Some(until) = origin_not_before {
+            // This cooldown and lease completion commit together. A stale worker cannot
+            // change origin scheduling, and other processes observe the same deadline.
+            tx.execute("INSERT INTO crawl_origins(run_id,origin,next_at) SELECT run_id,origin,?3 FROM crawl_urls WHERE run_id=?1 AND identity_hash=?2 ON CONFLICT(run_id,origin) DO UPDATE SET next_at=MAX(crawl_origins.next_at,excluded.next_at)", params![lease.run_id,lease.identity_hash,until]).map_err(err)?;
         }
         tx.execute(
             "INSERT INTO crawl_events(run_id,identity_hash,at,state,reason) VALUES(?1,?2,?3,?4,?5)",

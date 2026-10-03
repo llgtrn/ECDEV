@@ -9,7 +9,7 @@ pub mod robots;
 pub mod supplier;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
-    provider::{AcquireRequest, AcquireResult, Provider},
+    provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use scraper::{Html, Selector};
@@ -331,7 +331,12 @@ impl Web {
         }
         let response = request.send().map_err(|_| "FETCH_NETWORK_ERROR")?;
         let status = response.status().as_u16();
-        let headers = json!({"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok())});
+        let headers = json!({"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
+        if status != 200 {
+            // Error, redirect and validator responses are control evidence; an unused
+            // body read must not discard their status or Retry-After header.
+            return Ok((status, vec![], headers));
+        }
         let mut body = vec![];
         response
             .take(4 * 1024 * 1024 + 1)
@@ -353,7 +358,7 @@ impl Provider for Web {
     fn metadata(&self) -> Value {
         json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","auth_state":"NOT_REQUIRED","capabilities":["fetch.http","extract.product","research.market"],"markets":["AMAZON_JP","AMAZON_US","PUBLIC_WEB"],"quota_remaining":null,"rate_limit":{"concurrency":1,"minimum_interval_ms":750},"estimated_cost_minor":0,"latency_estimate_ms":null,"freshness":null,"confidence_characteristics":"Source assertions, not verified commercial truth","cacheable":true,"cache_ttl_seconds":3600,"failure_state":null,"fallback_providers":[],"adapter_state":"RUST_IMPLEMENTED","reason":"Public HTTP and supplied fixtures; private addresses denied; robots enforced; no browser/CAPTCHA bypass"})
     }
-    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, String> {
+    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;
         let start = Instant::now();
@@ -386,7 +391,7 @@ impl Provider for Web {
                 let mut robot = url.clone();
                 robot.set_path("/robots.txt");
                 robot.set_query(None);
-                let (rs, policy, _) =
+                let (rs, policy, robot_headers) =
                     self.request(&robot, &json!({}), Duration::from_millis(750))?;
                 requests += 1;
                 let policy = if rs == 200 {
@@ -397,6 +402,16 @@ impl Provider for Web {
                     ""
                 };
                 let decision = robots::evaluate(policy, url.as_str(), "ECDEV");
+                if rs == 429 || (500..600).contains(&rs) {
+                    return Err(AcquireError::http(
+                        rs,
+                        requests,
+                        robot_headers["retry_after"].as_str(),
+                        robot_headers["received_at_ms"]
+                            .as_i64()
+                            .unwrap_or((timestamp() * 1000) as i64),
+                    ));
+                }
                 if rs != 404 && (rs != 200 || !decision.allowed) {
                     return Err("ROBOTS_DENIED_OR_UNKNOWN".into());
                 }
@@ -431,7 +446,14 @@ impl Provider for Web {
                     continue;
                 }
                 if status != 200 {
-                    return Err(format!("HTTP_STATUS_{status}"));
+                    return Err(AcquireError::http(
+                        status,
+                        requests,
+                        headers["retry_after"].as_str(),
+                        headers["received_at_ms"]
+                            .as_i64()
+                            .unwrap_or((timestamp() * 1000) as i64),
+                    ));
                 }
                 if !headers["content_type"]
                     .as_str()

@@ -111,6 +111,57 @@ pub fn routes(capability: &str, providers: &[Value], paid_budget: u64, candidate
 mod budget_tests {
     use super::*;
     #[test]
+    fn retry_after_formats_preserve_not_before_and_reject_invalid_dates() {
+        let target = 784_111_777_000;
+        for header in [
+            "Sun, 06 Nov 1994 08:49:37 GMT",
+            "Sunday, 06-Nov-94 08:49:37 GMT",
+            "Sun Nov  6 08:49:37 1994",
+        ] {
+            assert_eq!(retry_after_not_before(header, target - 5000), Some(target));
+            assert_eq!(
+                retry_after_not_before(header, target + 5000),
+                Some(target + 5000)
+            );
+        }
+        assert_eq!(
+            retry_after_not_before("Thu, 29 Feb 2024 00:00:00 GMT", 0),
+            Some(1_709_164_800_000)
+        );
+        assert_eq!(
+            retry_after_not_before("Sat, 03 Oct 2026 12:00:00 GMT", 0),
+            Some(1_791_028_800_000)
+        );
+        for header in [
+            "",
+            "-1",
+            "+1",
+            "1.5",
+            "1, 2",
+            "Fri, 30 Feb 2024 00:00:00 GMT",
+            "Thu, 29 Feb 1900 00:00:00 GMT",
+            "Mon, 06 Nov 1994 08:49:37 GMT",
+            "Sun,, 06 Nov 1994 08:49:37 GMT",
+            "Sun, 06 Nov 1994 24:49:37 GMT",
+            "Sun, 06 Nov 1994 08:60:37 GMT",
+            "Sun, 06 Nov 1994 08:49:61 GMT",
+            "Sun, 06 Nov 1994 08:49:37 JST",
+        ] {
+            assert_eq!(retry_after_not_before(header, 0), None, "{header}");
+        }
+        let failure = AcquireError::http(429, 2, Some("\t120 "), 10_123);
+        assert_eq!(failure.retry_not_before_ms, Some(130_123));
+        assert_eq!(failure.retry_delay_ms(20_123), Some(110_000));
+        assert_eq!(retry_after_not_before("0", 10_123), Some(10_123));
+        assert_eq!(
+            retry_after_not_before("999999999999999999999999", 10_123),
+            Some(i64::MAX)
+        );
+        let unknown: AcquireError = "DNS_FAILED".into();
+        assert_eq!(unknown.request_count, None);
+        assert_eq!(unknown.retry_delay_ms(100), None);
+    }
+    #[test]
     fn zero_budget_and_unknown_cost_deny_paid_calls() {
         assert!(!BudgetPolicy::default().permits(0, 0, 0, 0));
         let b = BudgetPolicy {
@@ -151,6 +202,169 @@ pub struct AcquireResult {
     pub raw_payload: Vec<u8>,
     pub provider_cost: Value,
 }
+/// Acquisition failures retain machine-readable HTTP facts without disguising them as captures.
+#[derive(Clone, Debug, serde::Serialize)]
+pub struct AcquireError {
+    pub reason: String,
+    pub http_status: Option<u16>,
+    pub request_count: Option<u64>,
+    pub retry_after_header: Option<String>,
+    pub retry_not_before_ms: Option<i64>,
+}
+impl From<String> for AcquireError {
+    fn from(reason: String) -> Self {
+        Self {
+            reason,
+            http_status: None,
+            request_count: None,
+            retry_after_header: None,
+            retry_not_before_ms: None,
+        }
+    }
+}
+impl From<&str> for AcquireError {
+    fn from(reason: &str) -> Self {
+        reason.to_owned().into()
+    }
+}
+impl std::fmt::Display for AcquireError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.reason)
+    }
+}
+impl std::error::Error for AcquireError {}
+impl AcquireError {
+    pub fn http(
+        status: u16,
+        requests: u64,
+        retry_after: Option<&str>,
+        received_at_ms: i64,
+    ) -> Self {
+        Self {
+            reason: format!("HTTP_STATUS_{status}"),
+            http_status: Some(status),
+            request_count: Some(requests),
+            retry_after_header: retry_after.map(str::to_owned),
+            retry_not_before_ms: retry_after
+                .and_then(|header| retry_after_not_before(header, received_at_ms)),
+        }
+    }
+    pub fn retry_delay_ms(&self, now_ms: i64) -> Option<i64> {
+        self.retry_not_before_ms
+            .map(|time| time.saturating_sub(now_ms).max(0))
+    }
+}
+
+/// RFC 9110 delay-seconds and the three HTTP-date forms. Unsupported syntax remains unknown.
+/// Delays beyond the clock range saturate at its last instant rather than wrapping into an early retry.
+pub fn retry_after_not_before(header: &str, received_at_ms: i64) -> Option<i64> {
+    let header = header.trim_matches([' ', '\t']);
+    if !header.is_empty() && header.bytes().all(|b| b.is_ascii_digit()) {
+        let seconds = header.bytes().fold(0_i64, |n, b| {
+            n.saturating_mul(10).saturating_add((b - b'0') as i64)
+        });
+        return Some(received_at_ms.saturating_add(seconds.saturating_mul(1000)));
+    }
+    fn number(value: &str, width: usize) -> Option<i64> {
+        (value.len() == width && value.bytes().all(|b| b.is_ascii_digit()))
+            .then(|| value.parse().ok())
+            .flatten()
+    }
+    fn year_start(year: i64) -> i64 {
+        let last = year - 1;
+        365 * last + last / 4 - last / 100 + last / 400
+    }
+    let fields: Vec<_> = header.split_ascii_whitespace().collect();
+    let (weekday, day, month, mut year, time, obsolete) = match fields.as_slice() {
+        [weekday, day, month, year, time, "GMT"] if weekday.ends_with(',') => (
+            weekday.strip_suffix(',').unwrap(),
+            number(day, 2)?,
+            *month,
+            number(year, 4)?,
+            *time,
+            false,
+        ),
+        [weekday, date, time, "GMT"] if weekday.ends_with(',') => {
+            let parts: Vec<_> = date.split('-').collect();
+            let [day, month, year] = parts.as_slice() else {
+                return None;
+            };
+            (
+                weekday.strip_suffix(',').unwrap(),
+                number(day, 2)?,
+                *month,
+                number(year, 2)?,
+                *time,
+                true,
+            )
+        }
+        [weekday, month, day, time, year] => (
+            *weekday,
+            number(day, day.len().min(2))?,
+            *month,
+            number(year, 4)?,
+            *time,
+            false,
+        ),
+        _ => return None,
+    };
+    if obsolete {
+        // Interpret the two-digit year in the current century, rolling a date more than
+        // fifty years ahead back to the most recent matching year in the past.
+        let days = received_at_ms.div_euclid(86_400_000) + year_start(1970);
+        let current_year = (1..=9999).rev().find(|y| year_start(*y) <= days)?;
+        year += current_year / 100 * 100;
+        if year > current_year + 50 {
+            year -= 100;
+        }
+    }
+    if !(1..=9999).contains(&year) {
+        return None;
+    }
+    let months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ];
+    let month = months.iter().position(|m| *m == month)?;
+    let leap = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    let mut lengths = [31_i64, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    if leap {
+        lengths[1] = 29;
+    }
+    if day < 1 || day > lengths[month] {
+        return None;
+    }
+    let clock: Vec<_> = time.split(':').collect();
+    let [hour, minute, second] = clock.as_slice() else {
+        return None;
+    };
+    let (hour, minute, second) = (number(hour, 2)?, number(minute, 2)?, number(second, 2)?);
+    if hour > 23 || minute > 59 || second > 60 {
+        return None;
+    }
+    let days = year_start(year) - year_start(1970) + lengths[..month].iter().sum::<i64>() + day - 1;
+    let expected = (days + 4).rem_euclid(7) as usize;
+    let short = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    let long = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+    ];
+    if weekday
+        != if obsolete {
+            long[expected]
+        } else {
+            short[expected]
+        }
+    {
+        return None;
+    }
+    Some(((days * 86400 + hour * 3600 + minute * 60 + second) * 1000).max(received_at_ms))
+}
+
 pub trait Provider: Send + Sync {
     fn id(&self) -> &str;
     fn metadata(&self) -> Value;
@@ -158,5 +372,5 @@ pub trait Provider: Send + Sync {
         Ok(query.clone())
     }
     /// Blocking IO; application transports execute this on a blocking worker.
-    fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, String>;
+    fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError>;
 }

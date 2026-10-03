@@ -315,6 +315,49 @@ fn independent_workers_fenced_origin_global_limits_cancellation_and_deadline() {
 }
 
 #[test]
+fn retry_after_origin_cooldown_survives_reopen_and_keeps_other_origins_available() {
+    let p = path();
+    let mut f = Frontier::open(&p).unwrap();
+    f.create_run("a", &limits()).unwrap();
+    f.enqueue("a", &url("https://shop.example/a"), 0, 1000)
+        .unwrap();
+    f.enqueue("a", &url("https://shop.example/b"), 0, 500)
+        .unwrap();
+    f.enqueue("a", &url("https://other.example/a"), 0, 100)
+        .unwrap();
+    let failed = f.lease("a", 2).unwrap().unwrap();
+    f.fail(&failed, 3, "HTTP_STATUS_429", true, Some(80))
+        .unwrap();
+    // Reusing an expired token cannot replace the valid cooldown with a longer one.
+    assert!(
+        f.fail(&failed, 4, "HTTP_STATUS_429", true, Some(5000))
+            .is_err()
+    );
+    drop(f);
+    let mut f = Frontier::open(&p).unwrap();
+    let other = f.lease("a", 4).unwrap().unwrap();
+    assert_eq!(other.canonical_url, "https://other.example/a");
+    f.complete(&other, 5, &json!({})).unwrap();
+    assert!(f.lease("a", 82).unwrap().is_none());
+    let retried = f.lease("a", 83).unwrap().unwrap();
+    assert_eq!(retried.canonical_url, "https://shop.example/a");
+    f.complete_with_origin_cooldown(
+        &retried,
+        84,
+        &json!({"stale_cache_fallback":true}),
+        Some(150),
+    )
+    .unwrap();
+    drop(f);
+    let mut f = Frontier::open(&p).unwrap();
+    assert!(f.lease("a", 149).unwrap().is_none());
+    assert_eq!(
+        f.lease("a", 150).unwrap().unwrap().canonical_url,
+        "https://shop.example/b"
+    );
+}
+
+#[test]
 fn depth_url_and_attempt_budgets_and_throttle_are_durable() {
     let p = path();
     let mut f = Frontier::open(&p).unwrap();

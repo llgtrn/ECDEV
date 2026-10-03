@@ -1,7 +1,7 @@
 use crate::resolve_current;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
-    provider::{AcquireRequest, AcquireResult, Provider},
+    provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use serde_json::{Value, json};
@@ -51,7 +51,7 @@ impl Provider for Keepa {
     fn metadata(&self) -> Value {
         json!({"id":"keepa","class":"PAID","type":"TYPE_B","status":if self.key.is_some(){"AVAILABLE"}else{"UNAVAILABLE"},"auth_state":if self.key.is_some(){"CONFIGURED"}else{"MISSING"},"auth_verified":false,"health":"UNVERIFIED","adapter_state":"RUST_IMPLEMENTED","capabilities":["product.analyze"],"markets":["AMAZON_JP","AMAZON_US"],"cost_minor":null,"reason":"Paid optional product inspection; disabled by default budget. Auth and live correctness unverified. No retries."})
     }
-    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, String> {
+    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
         let key = self
             .key
             .as_ref()
@@ -188,10 +188,10 @@ mod tests {
     trait ErrorText {
         fn unwrap_err_text(self) -> String;
     }
-    impl ErrorText for Result<AcquireResult, String> {
+    impl ErrorText for Result<AcquireResult, AcquireError> {
         fn unwrap_err_text(self) -> String {
             match self {
-                Err(e) => e,
+                Err(e) => e.to_string(),
                 Ok(_) => panic!("Expected unavailable"),
             }
         }
