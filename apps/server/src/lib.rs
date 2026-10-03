@@ -464,6 +464,45 @@ mod research_tests {
         assert_eq!(run["funnel"]["insufficient_evidence"], 1);
     }
     #[test]
+    fn supplier_offer_terms_persist_without_becoming_product_cost() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-supplier-terms-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let html = r#"<script type='application/ld+json'>{"@type":"Organization","name":"Source supplier","makesOffer":{"@type":"Offer","eligibleQuantity":{"minValue":24,"unitCode":"C62"},"priceSpecification":{"@type":"UnitPriceSpecification","price":"2.50","priceCurrency":"USD"},"itemOffered":{"@type":"Product","name":"Cup","sku":"CUP","offers":{"price":4000,"priceCurrency":"JPY"}}}}</script>"#;
+        let run = e.research(json!({"market":"PUBLIC_WEB","query":"Published supplier terms fixture","sources":[{"url":"https://supplier.example/terms","fixture_html":html}],"max_pages":1})).unwrap();
+        assert_eq!(run["mode"], "FIXTURE");
+        assert_eq!(run["network_calls"], 0);
+        assert_eq!(
+            run["supplier_leads"][0]["fields"]["unit_price"]["value"]["minor"],
+            250
+        );
+        assert_eq!(
+            run["supplier_leads"][0]["fields"]["moq"]["status"],
+            "DERIVED"
+        );
+        assert_eq!(
+            run["candidates"][0]["product"]["fields"]["supplier_moq"]["status"],
+            "UNKNOWN"
+        );
+        assert!(run["candidates"][0]["economics_uncertainty"]["profit_expected"].is_null());
+        let id = run["run_id"].as_str().unwrap().to_owned();
+        drop(e);
+        let reopened = Engine::open(&root).unwrap();
+        let saved = reopened.run(&id).unwrap();
+        assert_eq!(saved["supplier_leads"], run["supplier_leads"]);
+        assert_eq!(
+            saved["supplier_leads"][0]["fields"]["unit_price"]["evidence"][0]["raw_capture_sha256"],
+            saved["observations"][0]["raw_hash"]
+        );
+    }
+    #[test]
     fn supplier_research_plans_public_follow_up_without_invented_terms() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-suppliers-{}",

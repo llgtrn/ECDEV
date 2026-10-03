@@ -405,7 +405,7 @@ impl Engine {
             });
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
-            let key=format!("{:x}",Sha256::digest(json!({"provider":provider.id(),"operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":10,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
+            let key=format!("{:x}",Sha256::digest(json!({"provider":provider.id(),"operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":11,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
             let cached: Option<(String, u64)> = self
                 .db
                 .lock()

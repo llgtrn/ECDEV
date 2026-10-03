@@ -7,6 +7,7 @@ pub mod page_product;
 pub mod price;
 pub mod robots;
 pub mod supplier;
+pub mod supplier_terms;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
@@ -282,7 +283,15 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
         .map(|n| n.text().collect::<String>());
     let page_metadata = commerce::page_metadata(&doc, &base, &found, hash);
     page_product::enrich(&mut found, &page_metadata, &structured_data, source, hash);
-    let supplier_leads = supplier::extract(&doc, &base, &structured_data, hash);
+    let mut supplier_leads = supplier::extract(&doc, &base, &structured_data, hash);
+    supplier_leads.extend(supplier_terms::extract(&base, &structured_data, hash));
+    supplier_leads.extend(supplier_terms::microdata(
+        &base,
+        &normalized_microdata,
+        &microdata_paths,
+        &microdata,
+        hash,
+    ));
     Ok(
         json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":hash}),
     )

@@ -63,12 +63,23 @@ pub fn extract(doc: &Html, base: &Url, structured: &[Value], hash: &str) -> Vec<
         .next()
         .map(|n| n.text().collect::<String>())
         .unwrap_or_default();
-    let organization = structured
-        .iter()
-        .find_map(|s| find_organization(&s["value"], "", s["script_index"].as_u64().unwrap_or(0)));
+    let mut organizations = vec![];
+    for script in structured {
+        let mut found = vec![];
+        crate::supplier_terms::organizations(&script["value"], "", &mut found);
+        organizations.extend(
+            found
+                .into_iter()
+                .map(|(v, p)| (v, p, script["script_index"].as_u64().unwrap_or(0))),
+        );
+    }
+    let organization = (organizations.len() == 1).then(|| organizations[0].clone());
     let mut fields = serde_json::Map::new();
     if let Some((org, pointer, script)) = &organization {
-        for (name, key) in [("name", "name"), ("origin", "address/addressCountry")] {
+        for (name, key) in [
+            ("name", "name"),
+            ("organization_country", "address/addressCountry"),
+        ] {
             let value = org
                 .pointer(&format!("/{key}"))
                 .cloned()
@@ -155,29 +166,6 @@ pub fn extract(doc: &Html, base: &Url, structured: &[Value], hash: &str) -> Vec<
     vec![
         json!({"kind":"PUBLIC_SUPPLIER_LEAD","source":base.as_str(),"status":"OBSERVED_SOURCE_CLAIMS","fields":fields,"claims":claims,"follow_up_urls":links,"raw_capture_sha256":hash,"qualification":"UNVERIFIED","limitation":"Public statements identify a research lead, not a negotiated offer, proven factory or authorization to sell. Retail prices are never supplier unit prices."}),
     ]
-}
-fn find_organization(v: &Value, pointer: &str, script: u64) -> Option<(Value, String, u64)> {
-    if v["@type"] == "Organization"
-        || v["@type"]
-            .as_array()
-            .is_some_and(|types| types.iter().any(|t| t == "Organization"))
-    {
-        return Some((v.clone(), pointer.into(), script));
-    }
-    match v {
-        Value::Array(a) => a
-            .iter()
-            .enumerate()
-            .find_map(|(i, n)| find_organization(n, &format!("{pointer}/{i}"), script)),
-        Value::Object(o) => o.iter().find_map(|(k, n)| {
-            find_organization(
-                n,
-                &format!("{pointer}/{}", k.replace('~', "~0").replace('/', "~1")),
-                script,
-            )
-        }),
-        _ => None,
-    }
 }
 #[cfg(test)]
 mod tests {

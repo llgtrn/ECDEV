@@ -1,0 +1,156 @@
+{
+  "status": "PASS_NATIVE_SUPPLIER_TERM_REGRESSIONS_AND_FRESH_PUBLIC_SOURCE_PASS",
+  "goal_complete": false,
+  "parent_main": "a62c8bb442a2b87eeaa441820b8f7fc0d8028914",
+  "implementation": {
+    "formats": [
+      "JSON_LD",
+      "MICRODATA"
+    ],
+    "relations": [
+      "Organization.makesOffer",
+      "Organization.hasOfferCatalog",
+      "OfferCatalog.itemListElement",
+      "ListItem.item"
+    ],
+    "offer_fields": [
+      "item",
+      "moq",
+      "unit_price",
+      "currency",
+      "lead_time",
+      "origin",
+      "shipping_term",
+      "delivery_method",
+      "availability",
+      "published_price",
+      "published_currency"
+    ],
+    "organization_fields": [
+      "name",
+      "organization_country",
+      "certification_claim"
+    ],
+    "cache_schema": 11,
+    "unit_price": "Only explicit UnitPriceSpecification; exact decimal conversion retains currency, reference quantity and units. Retail Offer.price remains published_price, never supplier unit_price.",
+    "moq": "Derived eligible-quantity lower bound, not verified wholesale MOQ.",
+    "conflicts": "Conflicting unit-price specifications remain CONFLICT; invalid companion specifications prevent selecting a price. Different offers and organizations stay separate.",
+    "economics": "No automatic product-cost or supplier-MOQ attribution from unverified published offers.",
+    "organization_country": "Business address country remains separate from product countryOfOrigin."
+  },
+  "regressions": [
+    "supplier_terms::explicit_supplier_offers_preserve_terms_and_source_pointers",
+    "supplier_terms::offers_and_organizations_do_not_mix_prices_or_unverified_origins",
+    "supplier_terms::microdata_supplier_offers_retain_original_graph_locators",
+    "supplier_offer_terms_persist_without_becoming_product_cost"
+  ],
+  "live": {
+    "run_id": "2f8c7331-916f-4885-855a-7b881c63e582",
+    "mode": "LIVE",
+    "status": "COMPLETE_WITH_UNKNOWNS",
+    "captures": [
+      {
+        "source": "https://kinto.co.jp/pages/partners",
+        "sha256": "cef34155ac7b0d8506aab21c79420782145cfd85337c06171564afd4bb9c0c0e"
+      },
+      {
+        "source": "https://kinto.co.jp/pages/collaborations",
+        "sha256": "ef039bfaf64f765c4b186ea298cbf41a06996082b50b6350c3989b854e780c4c"
+      },
+      {
+        "source": "https://www.hario-lwf.com/view/page/about_en",
+        "sha256": "609a100dc01b2733af07fc126538bbb9d96aa02763536dadab4183ffc1813db6"
+      }
+    ],
+    "supplier_leads": 3,
+    "structured_supplier_offers": 0,
+    "known_network_calls": 6,
+    "total_network_calls": 6,
+    "paid_provider_calls": 0,
+    "paid_cost_minor": 0,
+    "field_statuses": [
+      {
+        "source": "https://kinto.co.jp/pages/partners",
+        "fields": {
+          "certification_claim": "UNKNOWN",
+          "currency": "UNKNOWN",
+          "customization": "UNKNOWN",
+          "distributor": "UNKNOWN",
+          "factory_capacity": "UNKNOWN",
+          "lead_time": "UNKNOWN",
+          "manufacturer": "UNKNOWN",
+          "moq": "UNKNOWN",
+          "name": "DERIVED",
+          "offer": "UNKNOWN",
+          "origin": "UNKNOWN",
+          "shipping_term": "UNKNOWN",
+          "supplier": "OBSERVED",
+          "unit_price": "UNKNOWN"
+        }
+      },
+      {
+        "source": "https://kinto.co.jp/pages/collaborations",
+        "fields": {
+          "certification_claim": "UNKNOWN",
+          "currency": "UNKNOWN",
+          "customization": "OBSERVED",
+          "distributor": "UNKNOWN",
+          "factory_capacity": "UNKNOWN",
+          "lead_time": "UNKNOWN",
+          "manufacturer": "UNKNOWN",
+          "moq": "UNKNOWN",
+          "name": "DERIVED",
+          "offer": "UNKNOWN",
+          "origin": "UNKNOWN",
+          "shipping_term": "UNKNOWN",
+          "supplier": "UNKNOWN",
+          "unit_price": "UNKNOWN"
+        }
+      },
+      {
+        "source": "https://www.hario-lwf.com/view/page/about_en",
+        "fields": {
+          "certification_claim": "UNKNOWN",
+          "currency": "UNKNOWN",
+          "customization": "UNKNOWN",
+          "distributor": "UNKNOWN",
+          "factory_capacity": "UNKNOWN",
+          "lead_time": "UNKNOWN",
+          "manufacturer": "OBSERVED",
+          "moq": "UNKNOWN",
+          "name": "DERIVED",
+          "offer": "UNKNOWN",
+          "origin": "UNKNOWN",
+          "shipping_term": "UNKNOWN",
+          "supplier": "UNKNOWN",
+          "unit_price": "UNKNOWN"
+        }
+      }
+    ]
+  },
+  "standard_references": [
+    "https://schema.org/makesOffer",
+    "https://schema.org/UnitPriceSpecification",
+    "https://schema.org/eligibleQuantity",
+    "https://schema.org/deliveryLeadTime"
+  ],
+  "limits": [
+    "No structured supplier offers or commercial terms were observed on the three fresh live pages; term normalization is regression verified, not presented as live observed terms.",
+    "Negotiated quotation, wholesale eligibility, certification authenticity and factory capacity remain unverified.",
+    "Visible-text/table term parsing, external JSON-LD reference resolution and complete supplier-format coverage remain pending.",
+    "ShippingDetails is a source shipping assertion, not verified Incoterms.",
+    "Offer extraction is bounded to 100 per organization.",
+    "No new oracle family, full donor absorption or extinction is claimed."
+  ],
+  "verification": {
+    "native_tests": 63,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "canonical_proofs": "PASS_56_OF_56_CURRENT",
+    "mcp_sdk": "PASS_31_TOOLS",
+    "repository_shape": "PASS_131_OWNED_SOURCES_0_UNOWNED_10000_BPS",
+    "canonical_protocol": "BYTE_IDENTICAL_PASS",
+    "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
+    "donor_records": "PASS_25_RECORDS"
+  }
+}
