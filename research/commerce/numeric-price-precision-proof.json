@@ -1,0 +1,92 @@
+{
+  "status": "PASS_NATIVE_PRECISION_REGRESSION_AND_LIVE_CAPTURE",
+  "goal_complete": false,
+  "parent_main": "5d02655ce808aeecbd8a5ba7a41e576763d77491",
+  "native_source": "adapter/web/src/lib.rs",
+  "regression": "json_numeric_prices_preserve_source_precision",
+  "observed_before": {
+    "input": "2980.0000000000001",
+    "currency": "JPY",
+    "selected_minor": 2980,
+    "status": "INCORRECT_ROUNDING"
+  },
+  "policy": "Preserve exact JSON numeric decimal digits using serde_json arbitrary_precision; expand numeric exponents without binary floating point. Monetary conversion rejects fractional minor units and i64 overflow. String prices retain the existing strict syntax.",
+  "cases": 6,
+  "native_limits": "Existing 4096-byte number input/exponent and 8192-byte output limits apply to numeric expansion. Extreme exponents remain unavailable.",
+  "evidence_limit": "Exponent formatting may be canonicalized by JSON parsing; original spelling remains in the hashed raw HTML capture. This is a native regression, not another donor oracle family.",
+  "cache_schema": 8,
+  "runtime_dependency_packages_added": 0,
+  "full_wave_remaining": "Independent competition and demand, supplier terms, live shortlist, remaining extraction donor contracts and final audit.",
+  "live": {
+    "run_id": "6e0a0135-f4f1-4f08-9e7f-ff889bf15fc4",
+    "mode": "LIVE",
+    "known_network_calls": 2,
+    "paid_cost_minor": 0,
+    "captures": [
+      {
+        "source": "https://kinto.co.jp/products/16201",
+        "content_hash": "5139795cffd2df621b74fea35512132bf3ceae3d27b3ddd0c4ee29a4eb6cbcc8",
+        "product_prices": [
+          {
+            "price_minor": 3024,
+            "price_field": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "json_pointer": "/offers/0/price",
+                  "page": "https://kinto.co.jp/products/16201",
+                  "raw_capture_sha256": "5139795cffd2df621b74fea35512132bf3ceae3d27b3ddd0c4ee29a4eb6cbcc8",
+                  "raw_value": 3024.0,
+                  "script_index": 0,
+                  "source": "JSON_LD",
+                  "value": 3024
+                }
+              ],
+              "status": "OBSERVED",
+              "value": 3024
+            },
+            "observed_offers": [
+              {
+                "availability": "http://schema.org/InStock",
+                "currency": "JPY",
+                "price_minor": 3024,
+                "provenance": {
+                  "field_path": "Product.offers[0]",
+                  "source": "JSON_LD"
+                },
+                "raw_price": 3024.0,
+                "seller": null,
+                "sku": "16201",
+                "url": "https://kinto.co.jp/products/16201?variant=46573043319009"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "funnel": {
+      "discovered": 1,
+      "insufficient_evidence": 0,
+      "rejected": 0,
+      "sampling": 0,
+      "screened": 0,
+      "shortlisted": 0,
+      "validating": 1
+    },
+    "errors": [],
+    "limit": "One live product capture verifies the acquisition path; high-precision numeric literals are native regression inputs, not claims about this retailer."
+  },
+  "verification": {
+    "native_tests_passed": 50,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "format": "PASS",
+    "mcp_sdk": "PASS_31_TOOLS_FIXTURE_SEPARATE_FROM_LIVE",
+    "canonical_current_proofs": "43_OF_43_PASS",
+    "canonical_protocol": "BYTE_IDENTICAL_PASS",
+    "canonical_conformance": "30_OF_31_UPSTREAM_SHARD_MISSING",
+    "shape": "124_OWNED_0_UNOWNED_10000_BPS",
+    "shape_negative_checks": "PASS",
+    "v1_gate": "NOT_ACHIEVED"
+  }
+}

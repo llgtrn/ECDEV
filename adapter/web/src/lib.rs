@@ -84,12 +84,18 @@ fn public_ip(ip: IpAddr) -> bool {
     }
 }
 fn money(value: &Value, currency: &str) -> Option<i64> {
-    let s = if let Some(s) = value.as_str() {
+    let raw = if let Some(s) = value.as_str() {
         s.to_string()
     } else if value.is_number() {
         value.to_string()
     } else {
         return None;
+    };
+    // JSON numeric lexemes retain decimal precision; exponent expansion is bounded.
+    let s = if value.is_number() {
+        price::parse_number(&raw, Some('.'))?
+    } else {
+        raw
     };
     let digits = match currency {
         "JPY" => 0,
@@ -478,6 +484,37 @@ mod tests {
         assert_eq!(money(&json!(550.0), "JPY"), Some(550));
         assert_eq!(money(&json!("550.00"), "JPY"), Some(550));
         assert_eq!(money(&json!("550.50"), "JPY"), None);
+    }
+    #[test]
+    fn json_numeric_prices_preserve_source_precision() {
+        for (literal, currency, expected) in [
+            ("2980.0000000000001", "JPY", None),
+            ("0.29000000000000001", "USD", None),
+            ("9007199254740993.0", "JPY", Some(9007199254740993_i64)),
+            ("2.98e3", "JPY", Some(2980)),
+            ("2.9e-1", "USD", Some(29)),
+            ("1e999999", "JPY", None),
+        ] {
+            let html = format!(
+                r#"<script type="application/ld+json">{{"@type":"Product","name":"Exact decimal","offers":{{"price":{literal},"priceCurrency":"{currency}"}}}}</script>"#
+            );
+            let data = extract(&html, "https://shop.example/product").unwrap();
+            let product = &data["products"][0];
+            assert_eq!(
+                product["price_minor"],
+                json!(expected),
+                "{literal} {currency}"
+            );
+            let retained = product["observed_offers"][0]["raw_price"].to_string();
+            if !literal.contains('e') {
+                assert_eq!(retained, literal);
+            } else {
+                assert_eq!(
+                    price::parse_number(&retained, Some('.')),
+                    price::parse_number(literal, Some('.'))
+                );
+            }
+        }
     }
     #[test]
     fn conservative_policy_and_url_validation() {
