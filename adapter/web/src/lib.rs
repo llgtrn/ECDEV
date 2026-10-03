@@ -1,5 +1,6 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
 pub mod commerce;
+pub mod document;
 pub mod microdata;
 pub mod robots;
 pub mod supplier;
@@ -178,9 +179,15 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
     }
 }
 pub fn extract(html: &str, source: &str) -> Result<Value, String> {
+    extract_with_hash(
+        html,
+        source,
+        &format!("{:x}", Sha256::digest(html.as_bytes())),
+    )
+}
+fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, String> {
     let base = Url::parse(&normalize_url(source)?).map_err(|_| "INVALID_URL")?;
     let doc = Html::parse_document(html);
-    let hash = format!("{:x}", Sha256::digest(html.as_bytes()));
     let mut structured_data = vec![];
     let mut found = vec![];
     let mut errors = vec![];
@@ -194,8 +201,8 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
                 let start = found.len();
                 products(&v, &mut found, "");
                 for product in &mut found[start..] {
-                    commerce::annotate(product, source, script_number, &hash);
-                    product["provenance"] = json!({"source":"JSON_LD","page":source,"script_index":script_number,"raw_capture_sha256":format!("{:x}",Sha256::digest(html.as_bytes())),"identity_assertions":{"title":product["title"],"sku":product["sku"]},"price_derivation":"Exact minor-unit conversion; conflicting offers retained, no selected price"});
+                    commerce::annotate(product, source, script_number, hash);
+                    product["provenance"] = json!({"source":"JSON_LD","page":source,"script_index":script_number,"raw_capture_sha256":hash,"identity_assertions":{"title":product["title"],"sku":product["sku"]},"price_derivation":"Exact minor-unit conversion; conflicting offers retained, no selected price"});
                 }
             }
             Err(_) => errors.push("INVALID_JSON_LD"),
@@ -206,7 +213,7 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
     let start = found.len();
     products(&normalized_microdata, &mut found, "");
     for product in &mut found[start..] {
-        commerce::annotate(product, source, 0, &hash);
+        commerce::annotate(product, source, 0, hash);
         fn relabel(value: &mut Value, paths: &std::collections::BTreeMap<String, String>) {
             match value {
                 Value::Object(object) => {
@@ -264,10 +271,10 @@ pub fn extract(html: &str, source: &str) -> Result<Value, String> {
         .select(&Selector::parse("title").unwrap())
         .next()
         .map(|n| n.text().collect::<String>());
-    let page_metadata = commerce::page_metadata(&doc, &base, &found, &hash);
-    let supplier_leads = supplier::extract(&doc, &base, &structured_data, &hash);
+    let page_metadata = commerce::page_metadata(&doc, &base, &found, hash);
+    let supplier_leads = supplier::extract(&doc, &base, &structured_data, hash);
     Ok(
-        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":format!("{:x}",Sha256::digest(html.as_bytes()))}),
+        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":hash}),
     )
 }
 impl Web {
@@ -276,7 +283,7 @@ impl Web {
         u: &Url,
         conditional: &Value,
         minimum_interval: Duration,
-    ) -> Result<(u16, String, Value), String> {
+    ) -> Result<(u16, Vec<u8>, Value), String> {
         let host = u.host_str().ok_or("INVALID_HOST")?;
         let port = u.port_or_known_default().ok_or("INVALID_PORT")?;
         let addresses: Vec<_> = (host, port)
@@ -323,11 +330,7 @@ impl Web {
         if body.len() > 4 * 1024 * 1024 {
             return Err("BODY_LIMIT_EXCEEDED".into());
         }
-        Ok((
-            status,
-            String::from_utf8(body).map_err(|_| "NON_UTF8_DOCUMENT")?,
-            headers,
-        ))
+        Ok((status, body, headers))
     }
 }
 impl Provider for Web {
@@ -344,11 +347,16 @@ impl Provider for Web {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;
         let start = Instant::now();
-        let (html, mode, headers, requests) = if let Some(html) = r.query["fixture_html"].as_str() {
+        let (raw, mode, headers, requests) = if let Some(html) = r.query["fixture_html"].as_str() {
             if html.len() > 4 * 1024 * 1024 {
                 return Err("FIXTURE_BODY_LIMIT".into());
             }
-            (html.to_string(), ObservationMode::Fixture, json!({}), 0)
+            (
+                html.as_bytes().to_vec(),
+                ObservationMode::Fixture,
+                json!({}),
+                0,
+            )
         } else {
             let mut url = Url::parse(&normalized).map_err(|_| "INVALID_URL")?;
             let mut requests = 0;
@@ -364,7 +372,14 @@ impl Provider for Web {
                 let (rs, policy, _) =
                     self.request(&robot, &json!({}), Duration::from_millis(750))?;
                 requests += 1;
-                let decision = robots::evaluate(&policy, url.as_str(), "ECDEV");
+                let policy = if rs == 200 {
+                    std::str::from_utf8(&policy)
+                        .map_err(|_| "ROBOTS_ENCODING_UNKNOWN")?
+                        .trim_start_matches('\u{feff}')
+                } else {
+                    ""
+                };
+                let decision = robots::evaluate(policy, url.as_str(), "ECDEV");
                 if rs != 404 && (rs != 200 || !decision.allowed) {
                     return Err("ROBOTS_DENIED_OR_UNKNOWN".into());
                 }
@@ -413,8 +428,11 @@ impl Provider for Web {
             let (content, headers) = body.ok_or("REDIRECT_LIMIT")?;
             (content, ObservationMode::Live, headers, requests)
         };
-        let result = extract(&html, &normalized)?;
-        let raw = html.into_bytes();
+        let result = document::extract(
+            &raw,
+            headers["content_type"].as_str().unwrap_or(""),
+            &normalized,
+        )?;
         let hash = format!("{:x}", Sha256::digest(&raw));
         let now = (timestamp() * 1000).to_string();
         let evidence = Evidence {
