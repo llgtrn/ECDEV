@@ -192,16 +192,47 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
                         .cloned()
                 })
                 .collect();
-            let values: BTreeSet<_> = evidence.iter().map(|e| e["value"].to_string()).collect();
+            // Evidence can describe an element of a collection or a failed conversion.
+            // Compare field projections, and retain the status of each source assertion.
+            let states: BTreeSet<_> = rows
+                .iter()
+                .filter_map(|r| r["product"]["fields"][&name]["status"].as_str())
+                .collect();
+            let values: BTreeSet<_> = rows
+                .iter()
+                .map(|r| &r["product"]["fields"][&name]["value"])
+                .filter(|v| !v.is_null())
+                .map(|v| {
+                    if name == "brand" && v["name"].is_string() {
+                        v["name"].to_string()
+                    } else {
+                        v.to_string()
+                    }
+                })
+                .collect();
             if !primary["product"]["fields"].is_object() {
                 primary["product"]["fields"] = json!({});
             }
-            if values.len() > 1 || conflicts.contains_key(&name) {
+            if values.len() > 1 || conflicts.contains_key(&name) || states.contains("CONFLICT") {
                 primary["product"]["fields"][&name] =
                     json!({"status":"CONFLICT","value":null,"evidence":evidence});
-            } else if !evidence.is_empty() {
+            } else if values.len() == 1 {
+                let value = rows
+                    .iter()
+                    .map(|r| &r["product"]["fields"][&name]["value"])
+                    .find(|v| !v.is_null())
+                    .unwrap();
+                let status = if states.contains("OBSERVED") {
+                    "OBSERVED"
+                } else if states.contains("DERIVED") {
+                    "DERIVED"
+                } else if states.contains("ESTIMATED") {
+                    "ESTIMATED"
+                } else {
+                    "UNKNOWN"
+                };
                 primary["product"]["fields"][&name] =
-                    json!({"status":"OBSERVED","value":evidence[0]["value"],"evidence":evidence});
+                    json!({"status":status,"value":value,"evidence":evidence});
             }
             // Known individual offers do not establish a complete product price.
             if name == "price_minor" && primary["product"]["price_minor"].is_null() {

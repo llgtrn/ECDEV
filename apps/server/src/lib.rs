@@ -409,6 +409,47 @@ mod research_tests {
         assert_eq!(e.research(json!({"market":"PUBLIC_WEB","query":"No fixture-to-live transition","follow_up_run_id":run["run_id"]})).unwrap_err(),"FIXTURE_PLAN_CANNOT_LAUNCH_LIVE_FOLLOW_UP");
     }
     #[test]
+    fn open_graph_products_reach_candidates_with_inspectable_unknowns() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-og-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let html = r#"<meta property="og:type" content="product"><meta property="og:title" content="Cup"><meta property="product:price:amount" content="2,980"><meta property="product:price:currency" content="JPY"><link rel="canonical" href="/cup">"#;
+        let args = |html: &str| json!({"market":"PUBLIC_WEB","query":"OpenGraph evidence fixture","sources":[{"url":"https://example.org/cup","fixture_html":html}],"max_pages":1});
+        let first = e.research(args(html)).unwrap();
+        assert_eq!(first["mode"], "FIXTURE");
+        assert_eq!(first["network_calls"], 0);
+        assert_eq!(first["funnel"]["discovered"], 1);
+        let candidate = &first["candidates"][0];
+        assert_eq!(candidate["product"]["price_minor"], 2980);
+        assert_eq!(
+            candidate["product"]["fields"]["price_minor"]["status"],
+            "DERIVED"
+        );
+        assert_eq!(
+            candidate["product"]["fields"]["canonical_url"]["value"],
+            "https://example.org/cup"
+        );
+        assert!(candidate["product"]["fields"]["supplier_moq"]["value"].is_null());
+        let mixed = format!(
+            "{html}<script type='application/ld+json'>{{\"@type\":\"Product\",\"name\":\"Cup\",\"offers\":{{\"price\":\"3200\",\"priceCurrency\":\"JPY\"}}}}</script>"
+        );
+        let run = e.research(args(&mixed)).unwrap();
+        assert_eq!(run["candidates"].as_array().unwrap().len(), 1);
+        assert!(run["candidates"][0]["product"]["price_minor"].is_null());
+        assert_eq!(
+            run["candidates"][0]["product"]["fields"]["price_minor"]["status"],
+            "CONFLICT"
+        );
+        assert_eq!(run["funnel"]["shortlisted"], 0);
+    }
+    #[test]
     fn microdata_products_and_cross_format_conflicts_retain_evidence() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-microdata-{}",

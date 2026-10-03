@@ -1,0 +1,374 @@
+{
+  "status": "PASS_BOUNDED_PRICE_NUMBER_PARITY",
+  "goal_complete": false,
+  "source_evidence": [
+    {
+      "path": "price_parser/parser.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+      "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa"
+    },
+    {
+      "path": "price_parser/_currencies.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+      "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1"
+    },
+    {
+      "path": "tests/test_price_parsing.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+      "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966"
+    },
+    {
+      "path": "LICENSE",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+      "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+    }
+  ],
+  "source_contracts": [
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "fromstring",
+      "line_start": 28,
+      "line_end": 72,
+      "symbol_sha256": "f9b5a97c774fd3b8ef421534c1a2343d7f267a064a50ab06123098743dd883b1",
+      "source_excerpt": "    def fromstring(\n        cls,\n        price: Optional[str],\n        currency_hint: Optional[str] = None,\n        decimal_separator: Optional[str] = None,\n        digit_group_separator: Optional[str] = None,\n    ) -> \"Price\":\n        \"\"\"\n        Given price and currency text extracted from HTML elements, return\n        ``Price`` instance, which provides a clean currency symbol and\n        price amount as a Decimal number.\n\n        ``currency_hint`` is optional; you can pass value of some element\n        which may contain currency, as a hint. If currency is present in\n        ``price`` string, it could be **preferred** over a value extracted\n        from ``currency_hint`` string.\n\n        ``decimal_separator`` is optional; it is used to determine the\n        decimal separator in price. If ``decimal_separator`` is ``None``,\n        then it is guessed from ``price`` string. If ``decimal_separator``\n        is ``\".\"``, then ``1.000`` is parsed as ``1``. If it is ``,```,\n        then ``1.000`` is parsed as ``1000``.\n\n        ``digit_group_separator`` is optional; it is used to determine the\n        digit group separator in price. If ``digit_group_separator`` is\n        ``None``, then it is guessed from ``price`` string. If\n        ``digit_group_separator`` is ``\".\"``, then ``1.000`` is parsed as\n        ``1000``. If it is ``,``, then ``1.000`` is parsed as ``1``.\n        \"\"\"\n        currency = extract_currency_symbol(price, currency_hint)\n        if currency is not None:\n            currency = currency.strip()\n        if digit_group_separator is not None and price is not None:\n            price = price.replace(digit_group_separator, \"\")\n        amount_text = extract_price_text(price) if price is not None else None\n        amount_num = (\n            parse_number(amount_text, decimal_separator)\n            if amount_text is not None\n            else None\n        )\n        return Price(\n            amount=amount_num,\n            currency=currency,\n            amount_text=amount_text,\n        )\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "extract_currency_symbol",
+      "line_start": 256,
+      "line_end": 281,
+      "symbol_sha256": "1a81d2410a709e8a4b7f234dda496588a613e934859b67d2956e4b6ee9c5ab46",
+      "source_excerpt": "def extract_currency_symbol(\n    price: Optional[str], currency_hint: Optional[str]\n) -> Optional[str]:\n    \"\"\"\n    Guess currency symbol from extracted price and currency strings.\n    Return an empty string if symbol is not found.\n    \"\"\"\n    methods: list[tuple[Callable[[str], Optional[re.Match[str]]], Optional[str]]] = [\n        (_search_safe_currency, price),\n        (_search_safe_currency, currency_hint),\n        (_search_unsafe_currency, price),\n        (_search_unsafe_currency, currency_hint),\n    ]\n\n    if currency_hint and \"$\" in currency_hint:\n        methods.insert(0, (_search_dollar_code, currency_hint))\n\n    if price and \"$\" in price:\n        methods.insert(0, (_search_dollar_code, price))\n\n    for meth, value in methods:\n        m = meth(value) if value else None\n        if m:\n            return m.group(0)\n\n    return None\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "extract_price_text",
+      "line_start": 284,
+      "line_end": 360,
+      "symbol_sha256": "1c1a88a30473ba1cca0e8a6781eb15c108715a00ffe0ae16930dec00fa24a18f",
+      "source_excerpt": "def extract_price_text(price: str) -> Optional[str]:\n    r\"\"\"\n    Extract text of a price from a string which contains price and\n    maybe some other text. If multiple price-looking substrings are present,\n    the first is returned (FIXME: it is better to return a number\n    which is near a currency symbol).\n\n    >>> extract_price_text(\"price: $12.99\")\n    '12.99'\n    >>> extract_price_text(\"Free\")\n    '0'\n    >>> extract_price_text(\"Foo\")\n    >>> extract_price_text(\"1,235 USD\")\n    '1,235'\n\n    In addition to numbers, it has a limited support for a case where\n    currency symbol (currently only euro) is a decimal separator:\n\n    >>> extract_price_text(\"99 €, 79 €\")\n    '99'\n    >>> extract_price_text(\"99 € 79 €\")\n    '99'\n    >>> extract_price_text(\"35€ 99\")\n    '35€99'\n    >>> extract_price_text(\"35€ 999\")\n    '35'\n    >>> extract_price_text(\"1,235€ 99\")\n    '1,235€99'\n    >>> extract_price_text(\"50% OFF\")\n    >>> extract_price_text(\"50%\")\n    >>> extract_price_text(\"50\")\n    '50'\n    >>> extract_price_text(\"$1\\xa0298,00\")\n    '1 298,00'\n    >>> extract_price_text(\"$.75\")\n    '.75'\n    \"\"\"\n    price = re.sub(\n        r\"\\s+\", \" \", price\n    )  # clean initial text from non-breaking and extra spaces\n\n    if price.count(\"€\") == 1:\n        m = re.search(\n            r\"\"\"\n        [\\d\\s.,']*?\\d    # number, probably with thousand separators\n        \\s*?€(\\s*?)?    # euro, probably separated by whitespace\n        \\d(?(1)\\d|\\d*?)  # if separated by whitespace - search one digit,\n                         # multiple digits otherwise\n        (?:$|[^\\d])     # something which is not a digit\n        \"\"\",\n            price,\n            re.VERBOSE,\n        )\n        if m:\n            return m.group(0).replace(\" \", \"\")\n\n    m = re.search(\n        r\"\"\"\n        ([.]?\\d[\\d\\s.,']*)   # number, probably with thousand separators\n        \\s*?                # skip whitespace\n        (?:[^%\\d]|$)        # capture next symbol - it shouldn't be %\n        \"\"\",\n        price,\n        re.VERBOSE,\n    )\n\n    if m:\n        price_text = m.group(1).rstrip(\",.\")\n        price_text = price_text.replace(\"'\", \"\")\n        return (\n            price_text.strip()\n            if price_text.count(\".\") == 1\n            else price_text.lstrip(\",.\").strip()\n        )\n    if \"free\" in price.lower():\n        return \"0\"\n    return None\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "get_decimal_separator",
+      "line_start": 378,
+      "line_end": 398,
+      "symbol_sha256": "083a4d6e672daa138fdc45a5583ca7defbdc8f7214fafdaad913e1ea8453f036",
+      "source_excerpt": "def get_decimal_separator(price: str) -> Optional[str]:\n    \"\"\"Return decimal separator symbol or None if there\n    is no decimal separator.\n\n    >>> get_decimal_separator(\"1000\")\n    >>> get_decimal_separator(\"12.99\")\n    '.'\n    >>> get_decimal_separator(\"12,99\")\n    ','\n    >>> get_decimal_separator(\"12.999\")\n    >>> get_decimal_separator(\"3,0000\")\n    ','\n    >>> get_decimal_separator(\"1,235€99\")\n    '€'\n    >>> get_decimal_separator(\".75\")\n    '.'\n    \"\"\"\n    m = _search_decimal_sep(price)\n    if m:\n        return m.group(1)\n    return None\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "parse_number",
+      "line_start": 401,
+      "line_end": 455,
+      "symbol_sha256": "609b4bf756911ea2776b24d529b06a9f185badf1e66d1d5897448942b7e87dca",
+      "source_excerpt": "def parse_number(\n    num: str, decimal_separator: Optional[str] = None\n) -> Optional[Decimal]:\n    \"\"\"Parse a string with a number to a Decimal, guessing its format:\n    decimal separator, thousand separator. Return None if parsing fails.\n\n    >>> parse_number(\"1,234\")\n    Decimal('1234')\n    >>> parse_number(\"12,34\")\n    Decimal('12.34')\n    >>> parse_number(\"12,345\")\n    Decimal('12345')\n    >>> parse_number(\"1,1\")\n    Decimal('1.1')\n    >>> parse_number(\"1.1\")\n    Decimal('1.1')\n    >>> parse_number(\"1234\")\n    Decimal('1234')\n    >>> parse_number(\"12€34\")\n    Decimal('12.34')\n    >>> parse_number(\"12€ 34\")\n    Decimal('12.34')\n    >>> parse_number(\"1 234.99\")\n    Decimal('1234.99')\n    >>> parse_number(\"1,235€99\")\n    Decimal('1235.99')\n    >>> parse_number(\"1 235€99\")\n    Decimal('1235.99')\n    >>> parse_number(\"1.235€99\")\n    Decimal('1235.99')\n    >>> parse_number(\"140.000\", decimal_separator=\",\")\n    Decimal('140000')\n    >>> parse_number(\"140.000\", decimal_separator=\".\")\n    Decimal('140.000')\n    >>> parse_number(\"\")\n    >>> parse_number(\"foo\")\n    \"\"\"\n    if not num:\n        return None\n    num = num.strip().replace(\" \", \"\")\n    decimal_separator = decimal_separator or get_decimal_separator(num)\n    # NOTE: Keep supported separators in sync with _search_decimal_sep\n    if decimal_separator is None:\n        num = num.replace(\".\", \"\").replace(\",\", \"\")\n    elif decimal_separator == \".\":\n        num = num.replace(\",\", \"\")\n    elif decimal_separator == \",\":\n        num = num.replace(\".\", \"\").replace(\",\", \".\")\n    else:\n        assert decimal_separator == \"€\"\n        num = num.replace(\".\", \"\").replace(\",\", \"\").replace(\"€\", \".\")\n    try:\n        return Decimal(num)\n    except InvalidOperation:\n        return None\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "symbol": "or_regex",
+      "line_start": 78,
+      "line_end": 80,
+      "symbol_sha256": "a55e4780f4daf430f8438514deb60b0497e0f1bd981d32af2193c175bebf9dac",
+      "source_excerpt": "def or_regex(symbols: list[str]) -> Pattern[str]:\n    \"\"\"Return a regex which matches any of ``symbols``\"\"\"\n    return re.compile(\"|\".join(re.escape(s) for s in symbols))\n",
+      "parse_status": "PARSED"
+    },
+    {
+      "donor_id": "mozilla--readability",
+      "commit_sha": "ab4027a8b37669745016869a37a504727992b2ba",
+      "source_path": "Readability.js",
+      "blob_hash": "5cff4540c63fa2dd1471804ac7c919bd988638ce",
+      "source_sha256": "e9330028c8a5a4aa7d75147be2605d520f7f213c7b28474947dc0e9c984e9bed",
+      "symbol": "_getArticleMetadata",
+      "line_start": 1783,
+      "line_end": 1889,
+      "symbol_sha256": "8c9e0c83eb5eec78bbe4fad8f3210eb5265d9e9a73b415d615c617f58765934d",
+      "parse_status": "PARSED",
+      "behavior_contract": "JSON-LD title/description precede HTML metadata; fields have ordered fallback. ECDEV retains conflicts instead of a preferred field truth; article-author, prose extraction and broad metadata fallback parity are not claimed."
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/src/scraper/scrapeURL/lib/extractMetadata.ts",
+      "blob_hash": "2a94af8834f2fec8ee25fe89fa787397cdf0cd7f",
+      "source_sha256": "779588487b88fb822e2a520667fddba8faec632edd6c16d30e71f4495e0b9119",
+      "symbol": "extractMetadata",
+      "line_start": 32,
+      "line_end": 223,
+      "symbol_sha256": "6a4d8b9e62b81c15d46ee1964ff736d838097cb937e0685a99bced10de4bb897",
+      "parse_status": "PARSED",
+      "behavior_contract": "First delegates to firecrawl-rs, then Cheerio metadata projection; title and individual OpenGraph fields are separate. Only this wrapper/fallback is reviewed; delegated native implementation and complete Firecrawl scraping are unabsorbed."
+    }
+  ],
+  "numeric_cases": 1235,
+  "unique_numeric_inputs": 868,
+  "native_source": "adapter/web/src/price.rs",
+  "page_enrichment_source": "adapter/web/src/page_product.rs",
+  "scope": "Numeric format normalization including separator guessing and explicit separator overrides, exact decimal strings. Currency detection and first-price text selection are separate donor APIs, not claimed.",
+  "native_limits": "4096-byte numeric input and exponent magnitude, 8192-byte output; finite ASCII decimal syntax only. No binary floating point. No currency inferred from ambiguous symbols.",
+  "whole_donor_absorption": false,
+  "live": {
+    "run_id": "ef5dff9d-bcc7-48c9-a6cb-a658103a0180",
+    "mode": "LIVE",
+    "status": "PARTIAL",
+    "network_calls": 8,
+    "known_network_calls": 8,
+    "cost_minor": 0,
+    "frontier": {
+      "acquisition_attempts": 4,
+      "cancelled": false,
+      "limits": {
+        "backoff_ms": 1000,
+        "deadline_ms": 1791005175000,
+        "global_concurrency": 1,
+        "lease_ms": 120000,
+        "max_backoff_ms": 30000,
+        "max_depth": 1,
+        "max_pages": 4,
+        "max_retries": 2,
+        "max_urls": 500,
+        "origin_interval_ms": 750,
+        "per_origin_concurrency": 1
+      },
+      "retry_events": 0,
+      "run_id": "ef5dff9d-bcc7-48c9-a6cb-a658103a0180",
+      "states": {
+        "CANCELLED": 0,
+        "DISCOVERED": 0,
+        "FAILED": 0,
+        "HANDLED": 4,
+        "LEASED": 0,
+        "PENDING": 148,
+        "RETRYABLE": 0
+      }
+    },
+    "funnel": {
+      "discovered": 3,
+      "insufficient_evidence": 0,
+      "rejected": 0,
+      "sampling": 0,
+      "screened": 0,
+      "shortlisted": 0,
+      "validating": 3
+    },
+    "errors": [],
+    "captures": [
+      {
+        "source": "https://kinto.co.jp/collections/all",
+        "content_hash": "f3671adb66eb780f2d0529cef39a88b0f4c4fe90a95f30976e2b5088b51be6c5",
+        "products": 0,
+        "product_fields": []
+      },
+      {
+        "source": "https://kinto.co.jp/products/16201",
+        "content_hash": "8fcf7289985a0c7679905882b489de2393ea90f86f4e20e9c8aae5b4fc80ddbf",
+        "products": 1,
+        "product_fields": [
+          {
+            "title": "KF B01 レモンバーベナブレンド ティーリーフ 6袋入り",
+            "price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "json_pointer": "/offers/0/price",
+                  "page": "https://kinto.co.jp/products/16201",
+                  "raw_capture_sha256": "8fcf7289985a0c7679905882b489de2393ea90f86f4e20e9c8aae5b4fc80ddbf",
+                  "raw_value": 3024.0,
+                  "script_index": 0,
+                  "source": "JSON_LD",
+                  "value": 3024
+                }
+              ],
+              "status": "OBSERVED",
+              "value": 3024
+            },
+            "canonical_url": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "association": "DERIVED_SINGLE_PRODUCT_PAGE_NOT_VARIANT_LEVEL_VERIFICATION",
+                  "page": "https://kinto.co.jp/products/16201",
+                  "raw_capture_sha256": "8fcf7289985a0c7679905882b489de2393ea90f86f4e20e9c8aae5b4fc80ddbf",
+                  "raw_value": "https://kinto.co.jp/products/16201",
+                  "selector": "link[rel~=canonical]",
+                  "source": "HTML_LINK",
+                  "value": "https://kinto.co.jp/products/16201"
+                }
+              ],
+              "status": "OBSERVED",
+              "value": "https://kinto.co.jp/products/16201"
+            },
+            "breadcrumbs": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "original_price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "shipping_text": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            }
+          }
+        ]
+      },
+      {
+        "source": "https://kinto.co.jp/products/16202",
+        "content_hash": "c4d14936c11f7c4822e96707fd04871622c655700147d1cf633039ace96a62fd",
+        "products": 1,
+        "product_fields": [
+          {
+            "title": "KF B02 ホーリーバジルブレンド ティーリーフ 6袋入り",
+            "price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "json_pointer": "/offers/0/price",
+                  "page": "https://kinto.co.jp/products/16202",
+                  "raw_capture_sha256": "c4d14936c11f7c4822e96707fd04871622c655700147d1cf633039ace96a62fd",
+                  "raw_value": 3024.0,
+                  "script_index": 0,
+                  "source": "JSON_LD",
+                  "value": 3024
+                }
+              ],
+              "status": "OBSERVED",
+              "value": 3024
+            },
+            "canonical_url": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "association": "DERIVED_SINGLE_PRODUCT_PAGE_NOT_VARIANT_LEVEL_VERIFICATION",
+                  "page": "https://kinto.co.jp/products/16202",
+                  "raw_capture_sha256": "c4d14936c11f7c4822e96707fd04871622c655700147d1cf633039ace96a62fd",
+                  "raw_value": "https://kinto.co.jp/products/16202",
+                  "selector": "link[rel~=canonical]",
+                  "source": "HTML_LINK",
+                  "value": "https://kinto.co.jp/products/16202"
+                }
+              ],
+              "status": "OBSERVED",
+              "value": "https://kinto.co.jp/products/16202"
+            },
+            "breadcrumbs": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "original_price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "shipping_text": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            }
+          }
+        ]
+      },
+      {
+        "source": "https://kinto.co.jp/products/16203",
+        "content_hash": "37f143074eae8b27626d5b6dd6ca44a6aab6659f93719705db552df34d8c48eb",
+        "products": 1,
+        "product_fields": [
+          {
+            "title": "KF B03 ブラックペパーミントブレンド ティーリーフ 6袋入り",
+            "price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "json_pointer": "/offers/0/price",
+                  "page": "https://kinto.co.jp/products/16203",
+                  "raw_capture_sha256": "37f143074eae8b27626d5b6dd6ca44a6aab6659f93719705db552df34d8c48eb",
+                  "raw_value": 3024.0,
+                  "script_index": 0,
+                  "source": "JSON_LD",
+                  "value": 3024
+                }
+              ],
+              "status": "OBSERVED",
+              "value": 3024
+            },
+            "canonical_url": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [
+                {
+                  "association": "DERIVED_SINGLE_PRODUCT_PAGE_NOT_VARIANT_LEVEL_VERIFICATION",
+                  "page": "https://kinto.co.jp/products/16203",
+                  "raw_capture_sha256": "37f143074eae8b27626d5b6dd6ca44a6aab6659f93719705db552df34d8c48eb",
+                  "raw_value": "https://kinto.co.jp/products/16203",
+                  "selector": "link[rel~=canonical]",
+                  "source": "HTML_LINK",
+                  "value": "https://kinto.co.jp/products/16203"
+                }
+              ],
+              "status": "OBSERVED",
+              "value": "https://kinto.co.jp/products/16203"
+            },
+            "breadcrumbs": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "original_price": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            },
+            "shipping_text": {
+              "confidence": "SOURCE_ASSERTION_ONLY",
+              "evidence": [],
+              "status": "UNKNOWN",
+              "value": null
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "checkpoint_verification": {
+    "native_tests_passed": 49,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "mcp_sdk_smoke": "PASS_31_TOOLS_FIXTURE_SEPARATE_FROM_LIVE",
+    "canonical_current_proofs_passed": 42,
+    "canonical_declared_proofs": 42,
+    "canonical_protocol": "BYTE_IDENTICAL_PASS",
+    "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
+    "shape_owned_sources": 124,
+    "shape_unowned_sources": 0,
+    "shape_conformance_bps": 10000,
+    "shape_negative_checks": "PASS",
+    "full_wave_complete": false
+  }
+}

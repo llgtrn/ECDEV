@@ -789,5 +789,52 @@
       "Statistical charset guessing intentionally unavailable"
     ],
     "scope": "Valid explicitly declared HTML encodings and BOM precedence only; no replacement, statistical guessing, UTF-32, malformed declaration or complete Scrapy parity claim."
+  },
+  {
+    "capability_id": "extract.price-number",
+    "donor_id": "scrapinghub--price-parser",
+    "status": "VERIFIED",
+    "evidence": [
+      {
+        "path": "price_parser/parser.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+        "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa"
+      },
+      {
+        "path": "price_parser/_currencies.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+        "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1"
+      },
+      {
+        "path": "tests/test_price_parsing.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+        "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966"
+      },
+      {
+        "path": "LICENSE",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+        "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+      }
+    ],
+    "native_implementation": "adapter/web/src/price.rs",
+    "native_status": "EXPERIMENTAL_BOUNDED_REPLACEMENT",
+    "oracle_status": "1235_PRICE_NUMBER_CASES_MATCHED",
+    "oracle_cases": 1235,
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-number.json",
+    "fixture_sha256": "98c6045041c276573bc8f7799e9a08dd601afa5f392cbc6f7f88af95477c0800",
+    "license": "BSD-3-Clause",
+    "scope": "Numeric format normalization including separator guessing and explicit separator overrides, exact decimal strings. Currency detection and first-price text selection are separate donor APIs, not claimed.",
+    "runtime_donor_source_dependency": false,
+    "remaining": [
+      "Full currency symbol and first-price text selection APIs",
+      "Nonfinite and non-ASCII numeric alphabets",
+      "Unbounded scientific exponents intentionally unavailable",
+      "Full donor semantic census and absorption"
+    ]
   }
 ]

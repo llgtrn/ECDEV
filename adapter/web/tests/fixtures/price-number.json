@@ -1,0 +1,7444 @@
+{
+  "oracle": "UNMODIFIED_LOCKED_PRICE_PARSER_PARSE_NUMBER",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "license": "BSD-3-Clause",
+  "source_evidence": [
+    {
+      "path": "price_parser/parser.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+      "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa"
+    },
+    {
+      "path": "price_parser/_currencies.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+      "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1"
+    },
+    {
+      "path": "tests/test_price_parsing.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+      "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966"
+    },
+    {
+      "path": "LICENSE",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+      "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+    }
+  ],
+  "scope": "Numeric format normalization including separator guessing and explicit separator overrides, exact decimal strings. Currency detection and first-price text selection are separate donor APIs, not claimed.",
+  "cases": [
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/0",
+      "input": "12.99",
+      "decimal_separator": null,
+      "expected": "12.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/1",
+      "input": "34.992001",
+      "decimal_separator": null,
+      "expected": "34.992001"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/2",
+      "input": "29.1583",
+      "decimal_separator": null,
+      "expected": "29.1583"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/3",
+      "input": "1.11000000000000009770",
+      "decimal_separator": null,
+      "expected": "1.1100000000000000977"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/4",
+      "input": "423.923",
+      "decimal_separator": ".",
+      "expected": "423.923"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_BUGS_CAUGHT/5",
+      "input": "123,456.789",
+      "decimal_separator": ".",
+      "expected": "123456.789"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/0",
+      "input": "120 000 000",
+      "decimal_separator": null,
+      "expected": "120000000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/1",
+      "input": "170 000",
+      "decimal_separator": null,
+      "expected": "170000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/2",
+      "input": "1700",
+      "decimal_separator": null,
+      "expected": "1700"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/3",
+      "input": "1.144.000",
+      "decimal_separator": null,
+      "expected": "1144000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/4",
+      "input": "190.00",
+      "decimal_separator": null,
+      "expected": "190"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/5",
+      "input": "205,68",
+      "decimal_separator": null,
+      "expected": "205.68"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/6",
+      "input": "8000",
+      "decimal_separator": null,
+      "expected": "8000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/7",
+      "input": "13800",
+      "decimal_separator": null,
+      "expected": "13800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/8",
+      "input": "12,000",
+      "decimal_separator": null,
+      "expected": "12000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/9",
+      "input": "3,500",
+      "decimal_separator": null,
+      "expected": "3500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/10",
+      "input": "1049,95",
+      "decimal_separator": null,
+      "expected": "1049.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/11",
+      "input": "1049,95",
+      "decimal_separator": null,
+      "expected": "1049.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/12",
+      "input": "644.00",
+      "decimal_separator": null,
+      "expected": "644"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/13",
+      "input": "3,439.00",
+      "decimal_separator": null,
+      "expected": "3439"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NEW/14",
+      "input": "106.61",
+      "decimal_separator": null,
+      "expected": "106.61"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/0",
+      "input": "399 167.00",
+      "decimal_separator": null,
+      "expected": "399167"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/1",
+      "input": "45,00",
+      "decimal_separator": null,
+      "expected": "45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/2",
+      "input": "22.00",
+      "decimal_separator": null,
+      "expected": "22"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/3",
+      "input": "14.99",
+      "decimal_separator": null,
+      "expected": "14.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/4",
+      "input": "11.95",
+      "decimal_separator": null,
+      "expected": "11.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/5",
+      "input": "19.95",
+      "decimal_separator": null,
+      "expected": "19.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/6",
+      "input": "39.95",
+      "decimal_separator": null,
+      "expected": "39.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/7",
+      "input": "260,00",
+      "decimal_separator": null,
+      "expected": "260"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/8",
+      "input": "79.00",
+      "decimal_separator": null,
+      "expected": "79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/9",
+      "input": "34,50",
+      "decimal_separator": null,
+      "expected": "34.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/10",
+      "input": "35,70",
+      "decimal_separator": null,
+      "expected": "35.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/11",
+      "input": "147.44",
+      "decimal_separator": null,
+      "expected": "147.44"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/12",
+      "input": "4.70",
+      "decimal_separator": null,
+      "expected": "4.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/13",
+      "input": "924.99",
+      "decimal_separator": null,
+      "expected": "924.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/14",
+      "input": "690,00",
+      "decimal_separator": null,
+      "expected": "690"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/15",
+      "input": "9 800",
+      "decimal_separator": null,
+      "expected": "9800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/16",
+      "input": "479,00",
+      "decimal_separator": null,
+      "expected": "479"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/17",
+      "input": "590",
+      "decimal_separator": null,
+      "expected": "590"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/18",
+      "input": "249,00",
+      "decimal_separator": null,
+      "expected": "249"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/19",
+      "input": "13.95",
+      "decimal_separator": null,
+      "expected": "13.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/20",
+      "input": "89",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/21",
+      "input": "171900",
+      "decimal_separator": null,
+      "expected": "171900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/22",
+      "input": "0.31",
+      "decimal_separator": null,
+      "expected": "0.31"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/23",
+      "input": "45.49",
+      "decimal_separator": null,
+      "expected": "45.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/24",
+      "input": "28",
+      "decimal_separator": null,
+      "expected": "28"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/25",
+      "input": "4.81",
+      "decimal_separator": null,
+      "expected": "4.81"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/26",
+      "input": "47.00",
+      "decimal_separator": null,
+      "expected": "47"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/27",
+      "input": "419",
+      "decimal_separator": null,
+      "expected": "419"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/28",
+      "input": "129,99",
+      "decimal_separator": null,
+      "expected": "129.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/29",
+      "input": "1,10",
+      "decimal_separator": null,
+      "expected": "1.1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/30",
+      "input": "559.00",
+      "decimal_separator": null,
+      "expected": "559"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/31",
+      "input": "49.99",
+      "decimal_separator": null,
+      "expected": "49.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/32",
+      "input": "32.00",
+      "decimal_separator": null,
+      "expected": "32"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/33",
+      "input": "699,000",
+      "decimal_separator": null,
+      "expected": "699000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/34",
+      "input": "11.69",
+      "decimal_separator": null,
+      "expected": "11.69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/35",
+      "input": "100,00",
+      "decimal_separator": null,
+      "expected": "100"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/36",
+      "input": "17,35",
+      "decimal_separator": null,
+      "expected": "17.35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/37",
+      "input": "19.95",
+      "decimal_separator": null,
+      "expected": "19.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/38",
+      "input": "11.95",
+      "decimal_separator": null,
+      "expected": "11.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/39",
+      "input": "5 870",
+      "decimal_separator": null,
+      "expected": "5870"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/40",
+      "input": "80",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/41",
+      "input": "610",
+      "decimal_separator": null,
+      "expected": "610"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/42",
+      "input": "299",
+      "decimal_separator": null,
+      "expected": "299"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/43",
+      "input": "1128240",
+      "decimal_separator": null,
+      "expected": "1128240"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/44",
+      "input": "9.99",
+      "decimal_separator": null,
+      "expected": "9.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/45",
+      "input": "0",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/46",
+      "input": "49,96",
+      "decimal_separator": null,
+      "expected": "49.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/47",
+      "input": "9.00",
+      "decimal_separator": null,
+      "expected": "9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/48",
+      "input": "8.29",
+      "decimal_separator": null,
+      "expected": "8.29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/49",
+      "input": "6 300",
+      "decimal_separator": null,
+      "expected": "6300"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/50",
+      "input": "99,99",
+      "decimal_separator": null,
+      "expected": "99.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/51",
+      "input": "1 890",
+      "decimal_separator": null,
+      "expected": "1890"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/52",
+      "input": "15,95",
+      "decimal_separator": null,
+      "expected": "15.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/53",
+      "input": "16.00",
+      "decimal_separator": null,
+      "expected": "16"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/54",
+      "input": "4.99",
+      "decimal_separator": null,
+      "expected": "4.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/55",
+      "input": "119. 95",
+      "decimal_separator": null,
+      "expected": "119.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/56",
+      "input": "269",
+      "decimal_separator": null,
+      "expected": "269"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/57",
+      "input": "13,30",
+      "decimal_separator": null,
+      "expected": "13.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/58",
+      "input": "98",
+      "decimal_separator": null,
+      "expected": "98"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/59",
+      "input": "80,00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/60",
+      "input": "29,95",
+      "decimal_separator": null,
+      "expected": "29.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/61",
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/62",
+      "input": "16.95",
+      "decimal_separator": null,
+      "expected": "16.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/63",
+      "input": "23,40",
+      "decimal_separator": null,
+      "expected": "23.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/64",
+      "input": "34.44",
+      "decimal_separator": null,
+      "expected": "34.44"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/65",
+      "input": "31.500",
+      "decimal_separator": null,
+      "expected": "31500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/66",
+      "input": "6,00",
+      "decimal_separator": null,
+      "expected": "6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/67",
+      "input": "19,59",
+      "decimal_separator": null,
+      "expected": "19.59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/68",
+      "input": "2 285,81",
+      "decimal_separator": null,
+      "expected": "2285.81"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/69",
+      "input": "119,999",
+      "decimal_separator": null,
+      "expected": "119999"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/70",
+      "input": "1,20",
+      "decimal_separator": null,
+      "expected": "1.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/71",
+      "input": "1.99",
+      "decimal_separator": null,
+      "expected": "1.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/72",
+      "input": "283,50",
+      "decimal_separator": null,
+      "expected": "283.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/73",
+      "input": "99.99",
+      "decimal_separator": null,
+      "expected": "99.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/74",
+      "input": "979.00",
+      "decimal_separator": null,
+      "expected": "979"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/75",
+      "input": "169,00",
+      "decimal_separator": null,
+      "expected": "169"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/76",
+      "input": "94,456",
+      "decimal_separator": null,
+      "expected": "94456"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/77",
+      "input": "180",
+      "decimal_separator": null,
+      "expected": "180"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/78",
+      "input": "2.85",
+      "decimal_separator": null,
+      "expected": "2.85"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/79",
+      "input": "3.3900",
+      "decimal_separator": null,
+      "expected": "3.39"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/80",
+      "input": "5,90",
+      "decimal_separator": null,
+      "expected": "5.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/81",
+      "input": "1 030",
+      "decimal_separator": null,
+      "expected": "1030"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/82",
+      "input": "22.00",
+      "decimal_separator": null,
+      "expected": "22"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/83",
+      "input": "39900",
+      "decimal_separator": null,
+      "expected": "39900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/84",
+      "input": "79,00",
+      "decimal_separator": null,
+      "expected": "79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/85",
+      "input": "429,00",
+      "decimal_separator": null,
+      "expected": "429"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/86",
+      "input": "302,44",
+      "decimal_separator": null,
+      "expected": "302.44"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/87",
+      "input": "129.900",
+      "decimal_separator": null,
+      "expected": "129900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/88",
+      "input": "54.17",
+      "decimal_separator": null,
+      "expected": "54.17"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/89",
+      "input": "3.00",
+      "decimal_separator": null,
+      "expected": "3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/90",
+      "input": "3,49",
+      "decimal_separator": null,
+      "expected": "3.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/91",
+      "input": "59,90",
+      "decimal_separator": null,
+      "expected": "59.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/92",
+      "input": "49.95",
+      "decimal_separator": null,
+      "expected": "49.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/93",
+      "input": "299.00",
+      "decimal_separator": null,
+      "expected": "299"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/94",
+      "input": "30,40",
+      "decimal_separator": null,
+      "expected": "30.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/95",
+      "input": "59.99",
+      "decimal_separator": null,
+      "expected": "59.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/96",
+      "input": "2800",
+      "decimal_separator": null,
+      "expected": "2800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/97",
+      "input": "225,00",
+      "decimal_separator": null,
+      "expected": "225"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/98",
+      "input": "17 940,00",
+      "decimal_separator": null,
+      "expected": "17940"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/99",
+      "input": "159,50",
+      "decimal_separator": null,
+      "expected": "159.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/100",
+      "input": "18.99",
+      "decimal_separator": null,
+      "expected": "18.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/101",
+      "input": "699,00",
+      "decimal_separator": null,
+      "expected": "699"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/102",
+      "input": "45.33",
+      "decimal_separator": null,
+      "expected": "45.33"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/103",
+      "input": "33",
+      "decimal_separator": null,
+      "expected": "33"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/104",
+      "input": "16,50",
+      "decimal_separator": null,
+      "expected": "16.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/105",
+      "input": "880,000",
+      "decimal_separator": null,
+      "expected": "880000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/106",
+      "input": "13.50",
+      "decimal_separator": null,
+      "expected": "13.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/107",
+      "input": "336",
+      "decimal_separator": null,
+      "expected": "336"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/108",
+      "input": "200",
+      "decimal_separator": null,
+      "expected": "200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/109",
+      "input": "860.00",
+      "decimal_separator": null,
+      "expected": "860"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/110",
+      "input": "10",
+      "decimal_separator": null,
+      "expected": "10"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/111",
+      "input": "13",
+      "decimal_separator": null,
+      "expected": "13"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/112",
+      "input": "60,00",
+      "decimal_separator": null,
+      "expected": "60"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/113",
+      "input": "63,90",
+      "decimal_separator": null,
+      "expected": "63.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/114",
+      "input": "11.99",
+      "decimal_separator": null,
+      "expected": "11.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/115",
+      "input": "25,00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/116",
+      "input": "106,40",
+      "decimal_separator": null,
+      "expected": "106.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/117",
+      "input": "426.20",
+      "decimal_separator": null,
+      "expected": "426.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/118",
+      "input": "5.76",
+      "decimal_separator": null,
+      "expected": "5.76"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/119",
+      "input": "4.50",
+      "decimal_separator": null,
+      "expected": "4.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/120",
+      "input": "2 660",
+      "decimal_separator": null,
+      "expected": "2660"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/121",
+      "input": "5 000",
+      "decimal_separator": null,
+      "expected": "5000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/122",
+      "input": "4.60",
+      "decimal_separator": null,
+      "expected": "4.6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/123",
+      "input": "14.99",
+      "decimal_separator": null,
+      "expected": "14.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/124",
+      "input": "150.00",
+      "decimal_separator": null,
+      "expected": "150"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/125",
+      "input": "70,31",
+      "decimal_separator": null,
+      "expected": "70.31"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/126",
+      "input": "379",
+      "decimal_separator": null,
+      "expected": "379"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/127",
+      "input": "139,95",
+      "decimal_separator": null,
+      "expected": "139.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/128",
+      "input": "22,90",
+      "decimal_separator": null,
+      "expected": "22.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/129",
+      "input": "94,99",
+      "decimal_separator": null,
+      "expected": "94.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/130",
+      "input": "89.99",
+      "decimal_separator": null,
+      "expected": "89.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/131",
+      "input": "4.00",
+      "decimal_separator": null,
+      "expected": "4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/133",
+      "input": "892.00",
+      "decimal_separator": null,
+      "expected": "892"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/134",
+      "input": "60800",
+      "decimal_separator": null,
+      "expected": "60800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/135",
+      "input": "1849.00",
+      "decimal_separator": null,
+      "expected": "1849"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/136",
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/137",
+      "input": "5 450",
+      "decimal_separator": null,
+      "expected": "5450"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/138",
+      "input": "15.95",
+      "decimal_separator": null,
+      "expected": "15.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/139",
+      "input": "850",
+      "decimal_separator": null,
+      "expected": "850"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/140",
+      "input": "6,000.00",
+      "decimal_separator": null,
+      "expected": "6000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/141",
+      "input": "9.990,00",
+      "decimal_separator": null,
+      "expected": "9990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/142",
+      "input": "175.00",
+      "decimal_separator": null,
+      "expected": "175"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/143",
+      "input": "99.99",
+      "decimal_separator": null,
+      "expected": "99.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/144",
+      "input": "119,00",
+      "decimal_separator": null,
+      "expected": "119"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/145",
+      "input": "11.96",
+      "decimal_separator": null,
+      "expected": "11.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/146",
+      "input": "9,94",
+      "decimal_separator": null,
+      "expected": "9.94"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/147",
+      "input": "69.00",
+      "decimal_separator": null,
+      "expected": "69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/149",
+      "input": "50.00",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/150",
+      "input": "39.99",
+      "decimal_separator": null,
+      "expected": "39.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/151",
+      "input": "75 000",
+      "decimal_separator": null,
+      "expected": "75000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/152",
+      "input": "17,95",
+      "decimal_separator": null,
+      "expected": "17.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/153",
+      "input": "841,00",
+      "decimal_separator": null,
+      "expected": "841"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/154",
+      "input": "18.95",
+      "decimal_separator": null,
+      "expected": "18.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/155",
+      "input": "434",
+      "decimal_separator": null,
+      "expected": "434"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/156",
+      "input": "21.00",
+      "decimal_separator": null,
+      "expected": "21"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/157",
+      "input": "19,90",
+      "decimal_separator": null,
+      "expected": "19.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/158",
+      "input": "30",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/159",
+      "input": "684,25",
+      "decimal_separator": null,
+      "expected": "684.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/160",
+      "input": "45.00",
+      "decimal_separator": null,
+      "expected": "45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/161",
+      "input": "17.90",
+      "decimal_separator": null,
+      "expected": "17.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/162",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/163",
+      "input": "49",
+      "decimal_separator": null,
+      "expected": "49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/164",
+      "input": "1 995,00",
+      "decimal_separator": null,
+      "expected": "1995"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/165",
+      "input": "2,99",
+      "decimal_separator": null,
+      "expected": "2.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/166",
+      "input": "475",
+      "decimal_separator": null,
+      "expected": "475"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/167",
+      "input": "11,76",
+      "decimal_separator": null,
+      "expected": "11.76"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/168",
+      "input": "99.99",
+      "decimal_separator": null,
+      "expected": "99.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/169",
+      "input": "1 298,00",
+      "decimal_separator": null,
+      "expected": "1298"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/170",
+      "input": "1 298,00",
+      "decimal_separator": null,
+      "expected": "1298"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/171",
+      "input": "1 298,00",
+      "decimal_separator": null,
+      "expected": "1298"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/172",
+      "input": ".75",
+      "decimal_separator": null,
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/173",
+      "input": ".75",
+      "decimal_separator": null,
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/174",
+      "input": ".75",
+      "decimal_separator": null,
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/175",
+      "input": ".75,333",
+      "decimal_separator": null,
+      "expected": "75333"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES/176",
+      "input": "750.30",
+      "decimal_separator": null,
+      "expected": "750.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/0",
+      "input": "7,99",
+      "decimal_separator": null,
+      "expected": "7.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/1",
+      "input": "6.75",
+      "decimal_separator": null,
+      "expected": "6.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/2",
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/3",
+      "input": "23,00",
+      "decimal_separator": null,
+      "expected": "23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/4",
+      "input": "12,96",
+      "decimal_separator": null,
+      "expected": "12.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/5",
+      "input": "3,20",
+      "decimal_separator": null,
+      "expected": "3.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/6",
+      "input": "2.109,00",
+      "decimal_separator": null,
+      "expected": "2109"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/7",
+      "input": "32690",
+      "decimal_separator": null,
+      "expected": "32690"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/8",
+      "input": "3 250 000",
+      "decimal_separator": null,
+      "expected": "3250000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/9",
+      "input": "20.00",
+      "decimal_separator": null,
+      "expected": "20"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/10",
+      "input": "950",
+      "decimal_separator": null,
+      "expected": "950"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/11",
+      "input": "149,00",
+      "decimal_separator": null,
+      "expected": "149"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/12",
+      "input": "166,81",
+      "decimal_separator": null,
+      "expected": "166.81"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/13",
+      "input": "679.00",
+      "decimal_separator": null,
+      "expected": "679"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/14",
+      "input": "10,50",
+      "decimal_separator": null,
+      "expected": "10.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/15",
+      "input": "2,20",
+      "decimal_separator": null,
+      "expected": "2.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/16",
+      "input": "10.00",
+      "decimal_separator": null,
+      "expected": "10"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/17",
+      "input": "16,95",
+      "decimal_separator": null,
+      "expected": "16.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/18",
+      "input": "95.00",
+      "decimal_separator": null,
+      "expected": "95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/19",
+      "input": "1 400",
+      "decimal_separator": null,
+      "expected": "1400"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/20",
+      "input": "15.00",
+      "decimal_separator": null,
+      "expected": "15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/21",
+      "input": "119.00",
+      "decimal_separator": null,
+      "expected": "119"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/22",
+      "input": "50",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/23",
+      "input": "25.95",
+      "decimal_separator": null,
+      "expected": "25.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/24",
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/25",
+      "input": "125,00",
+      "decimal_separator": null,
+      "expected": "125"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/26",
+      "input": "3,600.00",
+      "decimal_separator": null,
+      "expected": "3600"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/27",
+      "input": "29",
+      "decimal_separator": null,
+      "expected": "29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/28",
+      "input": "2 690",
+      "decimal_separator": null,
+      "expected": "2690"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/29",
+      "input": "134.96",
+      "decimal_separator": null,
+      "expected": "134.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/30",
+      "input": "449,72",
+      "decimal_separator": null,
+      "expected": "449.72"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/31",
+      "input": "499.80",
+      "decimal_separator": null,
+      "expected": "499.8"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/32",
+      "input": "15.00",
+      "decimal_separator": null,
+      "expected": "15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/33",
+      "input": "2 750",
+      "decimal_separator": null,
+      "expected": "2750"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/34",
+      "input": "4,56",
+      "decimal_separator": null,
+      "expected": "4.56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/35",
+      "input": "40.00",
+      "decimal_separator": null,
+      "expected": "40"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/36",
+      "input": "2,90",
+      "decimal_separator": null,
+      "expected": "2.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/37",
+      "input": "19 000",
+      "decimal_separator": null,
+      "expected": "19000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/38",
+      "input": "184,20",
+      "decimal_separator": null,
+      "expected": "184.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/39",
+      "input": "1 849",
+      "decimal_separator": null,
+      "expected": "1849"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/40",
+      "input": "12,00",
+      "decimal_separator": null,
+      "expected": "12"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/41",
+      "input": "205.99",
+      "decimal_separator": null,
+      "expected": "205.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/43",
+      "input": "69.90",
+      "decimal_separator": null,
+      "expected": "69.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/44",
+      "input": "876",
+      "decimal_separator": null,
+      "expected": "876"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/45",
+      "input": "79.95",
+      "decimal_separator": null,
+      "expected": "79.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/46",
+      "input": "3,990",
+      "decimal_separator": null,
+      "expected": "3990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/47",
+      "input": "288,00",
+      "decimal_separator": null,
+      "expected": "288"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/48",
+      "input": "899,00",
+      "decimal_separator": null,
+      "expected": "899"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/49",
+      "input": "50,00",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/50",
+      "input": "54,99",
+      "decimal_separator": null,
+      "expected": "54.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/51",
+      "input": "139,00",
+      "decimal_separator": null,
+      "expected": "139"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/52",
+      "input": "238.00",
+      "decimal_separator": null,
+      "expected": "238"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/53",
+      "input": "119.99",
+      "decimal_separator": null,
+      "expected": "119.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/54",
+      "input": "99.95",
+      "decimal_separator": null,
+      "expected": "99.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/55",
+      "input": "14.99",
+      "decimal_separator": null,
+      "expected": "14.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/56",
+      "input": "150",
+      "decimal_separator": null,
+      "expected": "150"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/57",
+      "input": "528,00",
+      "decimal_separator": null,
+      "expected": "528"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/58",
+      "input": "14,90",
+      "decimal_separator": null,
+      "expected": "14.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/59",
+      "input": "5 290",
+      "decimal_separator": null,
+      "expected": "5290"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/60",
+      "input": "39.95",
+      "decimal_separator": null,
+      "expected": "39.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/61",
+      "input": "370",
+      "decimal_separator": null,
+      "expected": "370"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/62",
+      "input": "39000",
+      "decimal_separator": null,
+      "expected": "39000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/63",
+      "input": "1 995",
+      "decimal_separator": null,
+      "expected": "1995"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/64",
+      "input": "5.95",
+      "decimal_separator": null,
+      "expected": "5.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/65",
+      "input": "22800.00",
+      "decimal_separator": null,
+      "expected": "22800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/66",
+      "input": "359",
+      "decimal_separator": null,
+      "expected": "359"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/67",
+      "input": "189,00",
+      "decimal_separator": null,
+      "expected": "189"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/68",
+      "input": "179.62",
+      "decimal_separator": null,
+      "expected": "179.62"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/69",
+      "input": "145,79",
+      "decimal_separator": null,
+      "expected": "145.79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/70",
+      "input": "695.00",
+      "decimal_separator": null,
+      "expected": "695"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/71",
+      "input": "2 999",
+      "decimal_separator": null,
+      "expected": "2999"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/72",
+      "input": "6,50",
+      "decimal_separator": null,
+      "expected": "6.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/73",
+      "input": "61.00",
+      "decimal_separator": null,
+      "expected": "61"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/74",
+      "input": "5 799,00",
+      "decimal_separator": null,
+      "expected": "5799"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/75",
+      "input": "7,31",
+      "decimal_separator": null,
+      "expected": "7.31"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/76",
+      "input": "53,20",
+      "decimal_separator": null,
+      "expected": "53.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/77",
+      "input": "668",
+      "decimal_separator": null,
+      "expected": "668"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/78",
+      "input": "27,95",
+      "decimal_separator": null,
+      "expected": "27.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/79",
+      "input": "109.90",
+      "decimal_separator": null,
+      "expected": "109.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/80",
+      "input": "4.75",
+      "decimal_separator": null,
+      "expected": "4.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/81",
+      "input": "14,90",
+      "decimal_separator": null,
+      "expected": "14.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/82",
+      "input": "23.00",
+      "decimal_separator": null,
+      "expected": "23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/83",
+      "input": "33.00",
+      "decimal_separator": null,
+      "expected": "33"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/84",
+      "input": "78",
+      "decimal_separator": null,
+      "expected": "78"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/85",
+      "input": "5.00",
+      "decimal_separator": null,
+      "expected": "5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/86",
+      "input": "29,90",
+      "decimal_separator": null,
+      "expected": "29.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/87",
+      "input": "860",
+      "decimal_separator": null,
+      "expected": "860"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/88",
+      "input": "60,55",
+      "decimal_separator": null,
+      "expected": "60.55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/89",
+      "input": "129.00",
+      "decimal_separator": null,
+      "expected": "129"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/90",
+      "input": "13.50",
+      "decimal_separator": null,
+      "expected": "13.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/91",
+      "input": "39.99",
+      "decimal_separator": null,
+      "expected": "39.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/92",
+      "input": "60,00",
+      "decimal_separator": null,
+      "expected": "60"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/93",
+      "input": "64,59",
+      "decimal_separator": null,
+      "expected": "64.59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/94",
+      "input": "13,50",
+      "decimal_separator": null,
+      "expected": "13.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/95",
+      "input": "30",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/96",
+      "input": "139.00",
+      "decimal_separator": null,
+      "expected": "139"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/97",
+      "input": "26",
+      "decimal_separator": null,
+      "expected": "26"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/98",
+      "input": "139,00",
+      "decimal_separator": null,
+      "expected": "139"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/99",
+      "input": "1.52",
+      "decimal_separator": null,
+      "expected": "1.52"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/100",
+      "input": "4.95",
+      "decimal_separator": null,
+      "expected": "4.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/101",
+      "input": "12",
+      "decimal_separator": null,
+      "expected": "12"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/102",
+      "input": "4.10",
+      "decimal_separator": null,
+      "expected": "4.1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/103",
+      "input": "590",
+      "decimal_separator": null,
+      "expected": "590"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/104",
+      "input": "99,90",
+      "decimal_separator": null,
+      "expected": "99.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/105",
+      "input": "9,50",
+      "decimal_separator": null,
+      "expected": "9.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/106",
+      "input": "74.99",
+      "decimal_separator": null,
+      "expected": "74.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/107",
+      "input": "3.22",
+      "decimal_separator": null,
+      "expected": "3.22"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/108",
+      "input": "3,301.00",
+      "decimal_separator": null,
+      "expected": "3301"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/109",
+      "input": "41,78",
+      "decimal_separator": null,
+      "expected": "41.78"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/110",
+      "input": "44,50",
+      "decimal_separator": null,
+      "expected": "44.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/111",
+      "input": "4.00",
+      "decimal_separator": null,
+      "expected": "4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/112",
+      "input": "7 390",
+      "decimal_separator": null,
+      "expected": "7390"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/113",
+      "input": "34.99",
+      "decimal_separator": null,
+      "expected": "34.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/114",
+      "input": "12,99",
+      "decimal_separator": null,
+      "expected": "12.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/115",
+      "input": "149.00",
+      "decimal_separator": null,
+      "expected": "149"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/116",
+      "input": "27.00",
+      "decimal_separator": null,
+      "expected": "27"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/117",
+      "input": "7.95",
+      "decimal_separator": null,
+      "expected": "7.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/118",
+      "input": "16,500",
+      "decimal_separator": null,
+      "expected": "16500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/119",
+      "input": "59.99",
+      "decimal_separator": null,
+      "expected": "59.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/120",
+      "input": "349.95",
+      "decimal_separator": null,
+      "expected": "349.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/121",
+      "input": "35€99",
+      "decimal_separator": null,
+      "expected": "35.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/122",
+      "input": "5,72",
+      "decimal_separator": null,
+      "expected": "5.72"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/123",
+      "input": "199,00",
+      "decimal_separator": null,
+      "expected": "199"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/124",
+      "input": "4.07",
+      "decimal_separator": null,
+      "expected": "4.07"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/125",
+      "input": "15.00",
+      "decimal_separator": null,
+      "expected": "15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/126",
+      "input": "20.00",
+      "decimal_separator": null,
+      "expected": "20"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/127",
+      "input": "14.50",
+      "decimal_separator": null,
+      "expected": "14.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/128",
+      "input": "59,00",
+      "decimal_separator": null,
+      "expected": "59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/129",
+      "input": "9 472",
+      "decimal_separator": null,
+      "expected": "9472"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/130",
+      "input": "95",
+      "decimal_separator": null,
+      "expected": "95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/131",
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/132",
+      "input": "69,50",
+      "decimal_separator": null,
+      "expected": "69.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/133",
+      "input": "169.000",
+      "decimal_separator": null,
+      "expected": "169000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/134",
+      "input": "4,50",
+      "decimal_separator": null,
+      "expected": "4.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/135",
+      "input": "145.00",
+      "decimal_separator": null,
+      "expected": "145"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/136",
+      "input": "11.70",
+      "decimal_separator": null,
+      "expected": "11.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/137",
+      "input": "25,13",
+      "decimal_separator": null,
+      "expected": "25.13"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/138",
+      "input": "58,00",
+      "decimal_separator": null,
+      "expected": "58"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/139",
+      "input": "15,55",
+      "decimal_separator": null,
+      "expected": "15.55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/140",
+      "input": "19,95",
+      "decimal_separator": null,
+      "expected": "19.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/141",
+      "input": "185.00",
+      "decimal_separator": null,
+      "expected": "185"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/142",
+      "input": "18",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/143",
+      "input": "0",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/144",
+      "input": "9,41",
+      "decimal_separator": null,
+      "expected": "9.41"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/145",
+      "input": "1 075",
+      "decimal_separator": null,
+      "expected": "1075"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/146",
+      "input": "22.99",
+      "decimal_separator": null,
+      "expected": "22.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/147",
+      "input": "9 282",
+      "decimal_separator": null,
+      "expected": "9282"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/148",
+      "input": "50",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/149",
+      "input": "7,60",
+      "decimal_separator": null,
+      "expected": "7.6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/150",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/151",
+      "input": "6,00",
+      "decimal_separator": null,
+      "expected": "6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/152",
+      "input": "5 833,00",
+      "decimal_separator": null,
+      "expected": "5833"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/153",
+      "input": "26,95",
+      "decimal_separator": null,
+      "expected": "26.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/154",
+      "input": "35,00",
+      "decimal_separator": null,
+      "expected": "35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/155",
+      "input": "2 500",
+      "decimal_separator": null,
+      "expected": "2500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/156",
+      "input": "499,00",
+      "decimal_separator": null,
+      "expected": "499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/157",
+      "input": "1 120 900",
+      "decimal_separator": null,
+      "expected": "1120900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/158",
+      "input": "125,00",
+      "decimal_separator": null,
+      "expected": "125"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/159",
+      "input": "7362",
+      "decimal_separator": null,
+      "expected": "7362"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/160",
+      "input": "12.99",
+      "decimal_separator": null,
+      "expected": "12.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/161",
+      "input": "600",
+      "decimal_separator": null,
+      "expected": "600"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/162",
+      "input": "29,90",
+      "decimal_separator": null,
+      "expected": "29.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/163",
+      "input": "150.00",
+      "decimal_separator": null,
+      "expected": "150"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/164",
+      "input": "1 987",
+      "decimal_separator": null,
+      "expected": "1987"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/165",
+      "input": "69.00",
+      "decimal_separator": null,
+      "expected": "69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/166",
+      "input": "280",
+      "decimal_separator": null,
+      "expected": "280"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/167",
+      "input": "6 450,00",
+      "decimal_separator": null,
+      "expected": "6450"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/168",
+      "input": "178.00",
+      "decimal_separator": null,
+      "expected": "178"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/169",
+      "input": "300.00",
+      "decimal_separator": null,
+      "expected": "300"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/170",
+      "input": "19,1",
+      "decimal_separator": null,
+      "expected": "19.1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/171",
+      "input": "49,90",
+      "decimal_separator": null,
+      "expected": "49.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/172",
+      "input": "790,00",
+      "decimal_separator": null,
+      "expected": "790"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/173",
+      "input": "14,79",
+      "decimal_separator": null,
+      "expected": "14.79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/174",
+      "input": "395,000",
+      "decimal_separator": null,
+      "expected": "395000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/175",
+      "input": "10.14",
+      "decimal_separator": null,
+      "expected": "10.14"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/176",
+      "input": "5.00",
+      "decimal_separator": null,
+      "expected": "5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/177",
+      "input": "549.00",
+      "decimal_separator": null,
+      "expected": "549"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/178",
+      "input": "19",
+      "decimal_separator": null,
+      "expected": "19"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/179",
+      "input": "210",
+      "decimal_separator": null,
+      "expected": "210"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/180",
+      "input": "79.95",
+      "decimal_separator": null,
+      "expected": "79.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/181",
+      "input": "279 000",
+      "decimal_separator": null,
+      "expected": "279000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/182",
+      "input": "2 390",
+      "decimal_separator": null,
+      "expected": "2390"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/183",
+      "input": "281.40",
+      "decimal_separator": null,
+      "expected": "281.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/184",
+      "input": "3200",
+      "decimal_separator": null,
+      "expected": "3200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/185",
+      "input": "999.00",
+      "decimal_separator": null,
+      "expected": "999"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/186",
+      "input": "15,00",
+      "decimal_separator": null,
+      "expected": "15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/187",
+      "input": "20.70",
+      "decimal_separator": null,
+      "expected": "20.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/188",
+      "input": "30.00",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/189",
+      "input": "398,00",
+      "decimal_separator": null,
+      "expected": "398"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/190",
+      "input": "94.50",
+      "decimal_separator": null,
+      "expected": "94.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/191",
+      "input": "5 427",
+      "decimal_separator": null,
+      "expected": "5427"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/192",
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/193",
+      "input": "2.00",
+      "decimal_separator": null,
+      "expected": "2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/194",
+      "input": "10,00",
+      "decimal_separator": null,
+      "expected": "10"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/195",
+      "input": "32,50",
+      "decimal_separator": null,
+      "expected": "32.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/196",
+      "input": "1,599.00",
+      "decimal_separator": null,
+      "expected": "1599"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/197",
+      "input": "14.95",
+      "decimal_separator": null,
+      "expected": "14.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/198",
+      "input": "42.90",
+      "decimal_separator": null,
+      "expected": "42.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/199",
+      "input": "164.00",
+      "decimal_separator": null,
+      "expected": "164"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/200",
+      "input": "6,200.00",
+      "decimal_separator": null,
+      "expected": "6200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/201",
+      "input": "69.99",
+      "decimal_separator": null,
+      "expected": "69.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/202",
+      "input": "48,39",
+      "decimal_separator": null,
+      "expected": "48.39"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/203",
+      "input": "320.000",
+      "decimal_separator": null,
+      "expected": "320000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/204",
+      "input": "2.130,00",
+      "decimal_separator": null,
+      "expected": "2130"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/205",
+      "input": "179.00",
+      "decimal_separator": null,
+      "expected": "179"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/206",
+      "input": "39.99",
+      "decimal_separator": null,
+      "expected": "39.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/207",
+      "input": "4.90",
+      "decimal_separator": null,
+      "expected": "4.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/208",
+      "input": "4.90",
+      "decimal_separator": null,
+      "expected": "4.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_2/209",
+      "input": "4.90",
+      "decimal_separator": null,
+      "expected": "4.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/0",
+      "input": "67",
+      "decimal_separator": null,
+      "expected": "67"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/1",
+      "input": "67,30",
+      "decimal_separator": null,
+      "expected": "67.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/2",
+      "input": "29.66",
+      "decimal_separator": null,
+      "expected": "29.66"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/3",
+      "input": "17,00",
+      "decimal_separator": null,
+      "expected": "17"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/4",
+      "input": "0,29",
+      "decimal_separator": null,
+      "expected": "0.29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/5",
+      "input": "39,00",
+      "decimal_separator": null,
+      "expected": "39"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/6",
+      "input": "24,00",
+      "decimal_separator": null,
+      "expected": "24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/7",
+      "input": "7 940",
+      "decimal_separator": null,
+      "expected": "7940"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/8",
+      "input": "46.00",
+      "decimal_separator": null,
+      "expected": "46"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/9",
+      "input": "9.99",
+      "decimal_separator": null,
+      "expected": "9.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/10",
+      "input": "459,00",
+      "decimal_separator": null,
+      "expected": "459"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/11",
+      "input": "60.00",
+      "decimal_separator": null,
+      "expected": "60"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/12",
+      "input": "0,82",
+      "decimal_separator": null,
+      "expected": "0.82"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/13",
+      "input": "599",
+      "decimal_separator": null,
+      "expected": "599"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/14",
+      "input": "10.90",
+      "decimal_separator": null,
+      "expected": "10.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/15",
+      "input": "299,00",
+      "decimal_separator": null,
+      "expected": "299"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/16",
+      "input": "21,95",
+      "decimal_separator": null,
+      "expected": "21.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/17",
+      "input": "343,05",
+      "decimal_separator": null,
+      "expected": "343.05"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/18",
+      "input": "1 139,00",
+      "decimal_separator": null,
+      "expected": "1139"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/19",
+      "input": "157,000",
+      "decimal_separator": null,
+      "expected": "157000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/20",
+      "input": "35.00",
+      "decimal_separator": null,
+      "expected": "35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/21",
+      "input": "8.000.000",
+      "decimal_separator": null,
+      "expected": "8000000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/22",
+      "input": "6790",
+      "decimal_separator": null,
+      "expected": "6790"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/23",
+      "input": "3.99",
+      "decimal_separator": null,
+      "expected": "3.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/24",
+      "input": "165.00",
+      "decimal_separator": null,
+      "expected": "165"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/25",
+      "input": "844,900",
+      "decimal_separator": null,
+      "expected": "844900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/26",
+      "input": "140,00",
+      "decimal_separator": null,
+      "expected": "140"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/27",
+      "input": "2,99",
+      "decimal_separator": null,
+      "expected": "2.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/28",
+      "input": "145,00",
+      "decimal_separator": null,
+      "expected": "145"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/29",
+      "input": "3,90",
+      "decimal_separator": null,
+      "expected": "3.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/30",
+      "input": "149.99",
+      "decimal_separator": null,
+      "expected": "149.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/31",
+      "input": "4,30",
+      "decimal_separator": null,
+      "expected": "4.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/32",
+      "input": "36.95",
+      "decimal_separator": null,
+      "expected": "36.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/33",
+      "input": "2 499,00",
+      "decimal_separator": null,
+      "expected": "2499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/34",
+      "input": "800",
+      "decimal_separator": null,
+      "expected": "800"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/35",
+      "input": "89.00",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/36",
+      "input": "3 100",
+      "decimal_separator": null,
+      "expected": "3100"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/37",
+      "input": "0,85",
+      "decimal_separator": null,
+      "expected": "0.85"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/38",
+      "input": "35,95",
+      "decimal_separator": null,
+      "expected": "35.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/39",
+      "input": "0.42",
+      "decimal_separator": null,
+      "expected": "0.42"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/40",
+      "input": "80,000",
+      "decimal_separator": null,
+      "expected": "80000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/41",
+      "input": "550,00",
+      "decimal_separator": null,
+      "expected": "550"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/42",
+      "input": "25,00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/43",
+      "input": "17,45",
+      "decimal_separator": null,
+      "expected": "17.45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/44",
+      "input": "49,00",
+      "decimal_separator": null,
+      "expected": "49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/45",
+      "input": "169.00",
+      "decimal_separator": null,
+      "expected": "169"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/46",
+      "input": "8,99",
+      "decimal_separator": null,
+      "expected": "8.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/47",
+      "input": "1 099",
+      "decimal_separator": null,
+      "expected": "1099"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/48",
+      "input": "17.99",
+      "decimal_separator": null,
+      "expected": "17.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/49",
+      "input": "274.95",
+      "decimal_separator": null,
+      "expected": "274.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/50",
+      "input": "70,20",
+      "decimal_separator": null,
+      "expected": "70.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/51",
+      "input": "289,00",
+      "decimal_separator": null,
+      "expected": "289"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/52",
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/53",
+      "input": "12,00",
+      "decimal_separator": null,
+      "expected": "12"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/54",
+      "input": "19.97",
+      "decimal_separator": null,
+      "expected": "19.97"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/55",
+      "input": "749,00",
+      "decimal_separator": null,
+      "expected": "749"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/56",
+      "input": "48.25",
+      "decimal_separator": null,
+      "expected": "48.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/57",
+      "input": "5.00",
+      "decimal_separator": null,
+      "expected": "5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/58",
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/59",
+      "input": "3.00",
+      "decimal_separator": null,
+      "expected": "3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/60",
+      "input": "1,85",
+      "decimal_separator": null,
+      "expected": "1.85"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/61",
+      "input": "4.25",
+      "decimal_separator": null,
+      "expected": "4.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/62",
+      "input": "1.20",
+      "decimal_separator": null,
+      "expected": "1.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/63",
+      "input": "196.50",
+      "decimal_separator": null,
+      "expected": "196.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/64",
+      "input": "129.00",
+      "decimal_separator": null,
+      "expected": "129"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/65",
+      "input": "179,00",
+      "decimal_separator": null,
+      "expected": "179"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/66",
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/67",
+      "input": "14.50",
+      "decimal_separator": null,
+      "expected": "14.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/68",
+      "input": "24.95",
+      "decimal_separator": null,
+      "expected": "24.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/69",
+      "input": "5.11",
+      "decimal_separator": null,
+      "expected": "5.11"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/70",
+      "input": "6,99",
+      "decimal_separator": null,
+      "expected": "6.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/72",
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/73",
+      "input": "14.00",
+      "decimal_separator": null,
+      "expected": "14"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/74",
+      "input": "22.00",
+      "decimal_separator": null,
+      "expected": "22"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/75",
+      "input": "1000.00",
+      "decimal_separator": null,
+      "expected": "1000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/76",
+      "input": "12.95",
+      "decimal_separator": null,
+      "expected": "12.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/77",
+      "input": "987,20",
+      "decimal_separator": null,
+      "expected": "987.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/78",
+      "input": "104,64",
+      "decimal_separator": null,
+      "expected": "104.64"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/79",
+      "input": "163,80",
+      "decimal_separator": null,
+      "expected": "163.8"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/80",
+      "input": "89.00",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/81",
+      "input": "1 600",
+      "decimal_separator": null,
+      "expected": "1600"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/82",
+      "input": "20,95",
+      "decimal_separator": null,
+      "expected": "20.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/83",
+      "input": "9,50",
+      "decimal_separator": null,
+      "expected": "9.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/84",
+      "input": "170,00",
+      "decimal_separator": null,
+      "expected": "170"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/85",
+      "input": "170,00",
+      "decimal_separator": null,
+      "expected": "170"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/86",
+      "input": "6.00",
+      "decimal_separator": null,
+      "expected": "6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/87",
+      "input": "24.00",
+      "decimal_separator": null,
+      "expected": "24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/88",
+      "input": "9.95",
+      "decimal_separator": null,
+      "expected": "9.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/89",
+      "input": "34.12",
+      "decimal_separator": null,
+      "expected": "34.12"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/90",
+      "input": "350.000",
+      "decimal_separator": null,
+      "expected": "350000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/91",
+      "input": "55.00",
+      "decimal_separator": null,
+      "expected": "55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/92",
+      "input": "595.00",
+      "decimal_separator": null,
+      "expected": "595"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/93",
+      "input": "7,00",
+      "decimal_separator": null,
+      "expected": "7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/94",
+      "input": "119.95",
+      "decimal_separator": null,
+      "expected": "119.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/95",
+      "input": "1.95",
+      "decimal_separator": null,
+      "expected": "1.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/96",
+      "input": "390,00",
+      "decimal_separator": null,
+      "expected": "390"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/97",
+      "input": "3.24",
+      "decimal_separator": null,
+      "expected": "3.24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/98",
+      "input": "12 590",
+      "decimal_separator": null,
+      "expected": "12590"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/99",
+      "input": "330",
+      "decimal_separator": null,
+      "expected": "330"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/100",
+      "input": "8 500",
+      "decimal_separator": null,
+      "expected": "8500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/101",
+      "input": "589,00",
+      "decimal_separator": null,
+      "expected": "589"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/102",
+      "input": "1,099.99",
+      "decimal_separator": null,
+      "expected": "1099.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/103",
+      "input": "14 196",
+      "decimal_separator": null,
+      "expected": "14196"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/104",
+      "input": "19.00",
+      "decimal_separator": null,
+      "expected": "19"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/105",
+      "input": "870",
+      "decimal_separator": null,
+      "expected": "870"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/106",
+      "input": "59,00",
+      "decimal_separator": null,
+      "expected": "59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/107",
+      "input": "172",
+      "decimal_separator": null,
+      "expected": "172"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/108",
+      "input": "1 573",
+      "decimal_separator": null,
+      "expected": "1573"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/109",
+      "input": "2.99",
+      "decimal_separator": null,
+      "expected": "2.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/110",
+      "input": "13,90",
+      "decimal_separator": null,
+      "expected": "13.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/111",
+      "input": "29.95",
+      "decimal_separator": null,
+      "expected": "29.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/113",
+      "input": "16,90",
+      "decimal_separator": null,
+      "expected": "16.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/114",
+      "input": "149.95",
+      "decimal_separator": null,
+      "expected": "149.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/115",
+      "input": "8.90",
+      "decimal_separator": null,
+      "expected": "8.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/116",
+      "input": "419",
+      "decimal_separator": null,
+      "expected": "419"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/117",
+      "input": "50.00",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/118",
+      "input": "3 291,00",
+      "decimal_separator": null,
+      "expected": "3291"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/119",
+      "input": "13,00",
+      "decimal_separator": null,
+      "expected": "13"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/120",
+      "input": "449,00",
+      "decimal_separator": null,
+      "expected": "449"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/121",
+      "input": "20.00",
+      "decimal_separator": null,
+      "expected": "20"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/122",
+      "input": "154",
+      "decimal_separator": null,
+      "expected": "154"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/123",
+      "input": "22.48",
+      "decimal_separator": null,
+      "expected": "22.48"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/124",
+      "input": "20,00",
+      "decimal_separator": null,
+      "expected": "20"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/125",
+      "input": "73,460",
+      "decimal_separator": null,
+      "expected": "73460"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/126",
+      "input": "850",
+      "decimal_separator": null,
+      "expected": "850"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/127",
+      "input": "14.99",
+      "decimal_separator": null,
+      "expected": "14.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/128",
+      "input": "79.95",
+      "decimal_separator": null,
+      "expected": "79.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/129",
+      "input": "40,00",
+      "decimal_separator": null,
+      "expected": "40"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/130",
+      "input": "149,98",
+      "decimal_separator": null,
+      "expected": "149.98"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/131",
+      "input": "1 150",
+      "decimal_separator": null,
+      "expected": "1150"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/132",
+      "input": "399.00",
+      "decimal_separator": null,
+      "expected": "399"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/133",
+      "input": "33,90",
+      "decimal_separator": null,
+      "expected": "33.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/134",
+      "input": "79,50",
+      "decimal_separator": null,
+      "expected": "79.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/135",
+      "input": "40 130",
+      "decimal_separator": null,
+      "expected": "40130"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/136",
+      "input": "69.99",
+      "decimal_separator": null,
+      "expected": "69.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/137",
+      "input": "1 090",
+      "decimal_separator": null,
+      "expected": "1090"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/138",
+      "input": "395",
+      "decimal_separator": null,
+      "expected": "395"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/139",
+      "input": "53,95",
+      "decimal_separator": null,
+      "expected": "53.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/140",
+      "input": "0.99",
+      "decimal_separator": null,
+      "expected": "0.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/141",
+      "input": "5,60",
+      "decimal_separator": null,
+      "expected": "5.6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/142",
+      "input": "29,50",
+      "decimal_separator": null,
+      "expected": "29.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/143",
+      "input": "2 990",
+      "decimal_separator": null,
+      "expected": "2990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/144",
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/145",
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/146",
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/147",
+      "input": "600,00",
+      "decimal_separator": null,
+      "expected": "600"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/148",
+      "input": "25.00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/149",
+      "input": "8,55",
+      "decimal_separator": null,
+      "expected": "8.55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/150",
+      "input": "1,422.50",
+      "decimal_separator": null,
+      "expected": "1422.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/151",
+      "input": "244,00",
+      "decimal_separator": null,
+      "expected": "244"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/152",
+      "input": "12,90",
+      "decimal_separator": null,
+      "expected": "12.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/153",
+      "input": "12 900,00",
+      "decimal_separator": null,
+      "expected": "12900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/154",
+      "input": "1.727",
+      "decimal_separator": null,
+      "expected": "1727"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/155",
+      "input": "79,00",
+      "decimal_separator": null,
+      "expected": "79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/156",
+      "input": "100.70",
+      "decimal_separator": null,
+      "expected": "100.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/157",
+      "input": "479.00",
+      "decimal_separator": null,
+      "expected": "479"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/158",
+      "input": "69.00",
+      "decimal_separator": null,
+      "expected": "69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/159",
+      "input": "135,00",
+      "decimal_separator": null,
+      "expected": "135"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/160",
+      "input": "25.00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/161",
+      "input": "94,90",
+      "decimal_separator": null,
+      "expected": "94.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/162",
+      "input": "149.99",
+      "decimal_separator": null,
+      "expected": "149.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/163",
+      "input": "44,00",
+      "decimal_separator": null,
+      "expected": "44"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/164",
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/165",
+      "input": "22,00",
+      "decimal_separator": null,
+      "expected": "22"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/166",
+      "input": "89,90",
+      "decimal_separator": null,
+      "expected": "89.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/167",
+      "input": "24.95",
+      "decimal_separator": null,
+      "expected": "24.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/168",
+      "input": "1.99",
+      "decimal_separator": null,
+      "expected": "1.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/169",
+      "input": "1 099,00",
+      "decimal_separator": null,
+      "expected": "1099"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/170",
+      "input": "28 270,00",
+      "decimal_separator": null,
+      "expected": "28270"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/171",
+      "input": "72.00",
+      "decimal_separator": null,
+      "expected": "72"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/172",
+      "input": "15.95",
+      "decimal_separator": null,
+      "expected": "15.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/173",
+      "input": "56,000",
+      "decimal_separator": null,
+      "expected": "56000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/174",
+      "input": "1,695.00",
+      "decimal_separator": null,
+      "expected": "1695"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/175",
+      "input": "595.00",
+      "decimal_separator": null,
+      "expected": "595"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/176",
+      "input": "11.95",
+      "decimal_separator": null,
+      "expected": "11.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/177",
+      "input": "290,00",
+      "decimal_separator": null,
+      "expected": "290"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/178",
+      "input": "199.90",
+      "decimal_separator": null,
+      "expected": "199.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/179",
+      "input": "197",
+      "decimal_separator": null,
+      "expected": "197"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/180",
+      "input": "9.99",
+      "decimal_separator": null,
+      "expected": "9.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/181",
+      "input": "56.00",
+      "decimal_separator": null,
+      "expected": "56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/182",
+      "input": "4 980",
+      "decimal_separator": null,
+      "expected": "4980"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/183",
+      "input": "124,00",
+      "decimal_separator": null,
+      "expected": "124"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/184",
+      "input": "104.99",
+      "decimal_separator": null,
+      "expected": "104.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/185",
+      "input": "39,00",
+      "decimal_separator": null,
+      "expected": "39"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/186",
+      "input": "1 029,00",
+      "decimal_separator": null,
+      "expected": "1029"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/187",
+      "input": "299,00",
+      "decimal_separator": null,
+      "expected": "299"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/188",
+      "input": "745,00",
+      "decimal_separator": null,
+      "expected": "745"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/189",
+      "input": "89.00",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/190",
+      "input": "29.95",
+      "decimal_separator": null,
+      "expected": "29.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/191",
+      "input": "2.00",
+      "decimal_separator": null,
+      "expected": "2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/192",
+      "input": "249.99",
+      "decimal_separator": null,
+      "expected": "249.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/193",
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/194",
+      "input": "1 499",
+      "decimal_separator": null,
+      "expected": "1499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/195",
+      "input": "199,95",
+      "decimal_separator": null,
+      "expected": "199.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/196",
+      "input": "6,00",
+      "decimal_separator": null,
+      "expected": "6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/197",
+      "input": "28.49",
+      "decimal_separator": null,
+      "expected": "28.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/198",
+      "input": "200.000",
+      "decimal_separator": null,
+      "expected": "200000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/199",
+      "input": "9,24",
+      "decimal_separator": null,
+      "expected": "9.24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/200",
+      "input": "48,00",
+      "decimal_separator": null,
+      "expected": "48"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/201",
+      "input": "890",
+      "decimal_separator": null,
+      "expected": "890"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/202",
+      "input": "790.00",
+      "decimal_separator": null,
+      "expected": "790"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/203",
+      "input": "17 260",
+      "decimal_separator": null,
+      "expected": "17260"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/204",
+      "input": "227,000",
+      "decimal_separator": null,
+      "expected": "227000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/205",
+      "input": "295,88",
+      "decimal_separator": null,
+      "expected": "295.88"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/206",
+      "input": "1399",
+      "decimal_separator": null,
+      "expected": "1399"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/207",
+      "input": "11,33",
+      "decimal_separator": null,
+      "expected": "11.33"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/208",
+      "input": "325.95",
+      "decimal_separator": null,
+      "expected": "325.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/209",
+      "input": "19.50",
+      "decimal_separator": null,
+      "expected": "19.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/210",
+      "input": "19,00",
+      "decimal_separator": null,
+      "expected": "19"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/211",
+      "input": "2 999,00",
+      "decimal_separator": null,
+      "expected": "2999"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/212",
+      "input": "49.95",
+      "decimal_separator": null,
+      "expected": "49.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/213",
+      "input": "99",
+      "decimal_separator": null,
+      "expected": "99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/214",
+      "input": "249",
+      "decimal_separator": null,
+      "expected": "249"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/215",
+      "input": "3.79",
+      "decimal_separator": null,
+      "expected": "3.79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/216",
+      "input": "890",
+      "decimal_separator": null,
+      "expected": "890"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/217",
+      "input": "809,000",
+      "decimal_separator": null,
+      "expected": "809000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/218",
+      "input": "450 000",
+      "decimal_separator": null,
+      "expected": "450000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/219",
+      "input": "30,00",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/220",
+      "input": "14.95",
+      "decimal_separator": null,
+      "expected": "14.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/221",
+      "input": "12.50",
+      "decimal_separator": null,
+      "expected": "12.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/222",
+      "input": "129,00",
+      "decimal_separator": null,
+      "expected": "129"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/223",
+      "input": "12,90",
+      "decimal_separator": null,
+      "expected": "12.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/224",
+      "input": "11,70",
+      "decimal_separator": null,
+      "expected": "11.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/225",
+      "input": "15.49",
+      "decimal_separator": null,
+      "expected": "15.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/226",
+      "input": "12.34",
+      "decimal_separator": null,
+      "expected": "12.34"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/227",
+      "input": "799,00",
+      "decimal_separator": null,
+      "expected": "799"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/228",
+      "input": "230",
+      "decimal_separator": null,
+      "expected": "230"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/229",
+      "input": "14.55",
+      "decimal_separator": null,
+      "expected": "14.55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/230",
+      "input": "133,86",
+      "decimal_separator": null,
+      "expected": "133.86"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/231",
+      "input": "7 990,00",
+      "decimal_separator": null,
+      "expected": "7990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/232",
+      "input": "350.00",
+      "decimal_separator": null,
+      "expected": "350"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/233",
+      "input": "55,72",
+      "decimal_separator": null,
+      "expected": "55.72"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/235",
+      "input": "3,822.00",
+      "decimal_separator": null,
+      "expected": "3822"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/236",
+      "input": "0,15",
+      "decimal_separator": null,
+      "expected": "0.15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/237",
+      "input": "430,00",
+      "decimal_separator": null,
+      "expected": "430"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/238",
+      "input": "29.00",
+      "decimal_separator": null,
+      "expected": "29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/239",
+      "input": "39.99",
+      "decimal_separator": null,
+      "expected": "39.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/240",
+      "input": "15.00",
+      "decimal_separator": null,
+      "expected": "15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/241",
+      "input": "21,00",
+      "decimal_separator": null,
+      "expected": "21"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/242",
+      "input": "250,00",
+      "decimal_separator": null,
+      "expected": "250"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/243",
+      "input": "24.95",
+      "decimal_separator": null,
+      "expected": "24.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/244",
+      "input": "162.18",
+      "decimal_separator": null,
+      "expected": "162.18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/245",
+      "input": "39,60",
+      "decimal_separator": null,
+      "expected": "39.6"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/246",
+      "input": "10,75",
+      "decimal_separator": null,
+      "expected": "10.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/247",
+      "input": "219",
+      "decimal_separator": null,
+      "expected": "219"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/248",
+      "input": "89,00",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/249",
+      "input": "151,200",
+      "decimal_separator": null,
+      "expected": "151200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/250",
+      "input": "159.99",
+      "decimal_separator": null,
+      "expected": "159.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/251",
+      "input": "2.49",
+      "decimal_separator": null,
+      "expected": "2.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/252",
+      "input": "7.38",
+      "decimal_separator": null,
+      "expected": "7.38"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/253",
+      "input": "62,00",
+      "decimal_separator": null,
+      "expected": "62"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/254",
+      "input": "20.00",
+      "decimal_separator": null,
+      "expected": "20"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/255",
+      "input": "50.00",
+      "decimal_separator": null,
+      "expected": "50"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/256",
+      "input": "34.99",
+      "decimal_separator": null,
+      "expected": "34.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/257",
+      "input": "318,00",
+      "decimal_separator": null,
+      "expected": "318"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/258",
+      "input": "11.499,00",
+      "decimal_separator": null,
+      "expected": "11499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/259",
+      "input": "571.12",
+      "decimal_separator": null,
+      "expected": "571.12"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/260",
+      "input": "75.00",
+      "decimal_separator": null,
+      "expected": "75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/261",
+      "input": "11,90",
+      "decimal_separator": null,
+      "expected": "11.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/262",
+      "input": "0.51",
+      "decimal_separator": null,
+      "expected": "0.51"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/263",
+      "input": "6,50",
+      "decimal_separator": null,
+      "expected": "6.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/264",
+      "input": "790",
+      "decimal_separator": null,
+      "expected": "790"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/265",
+      "input": "2.99",
+      "decimal_separator": null,
+      "expected": "2.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/266",
+      "input": "369",
+      "decimal_separator": null,
+      "expected": "369"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/267",
+      "input": "134.96",
+      "decimal_separator": null,
+      "expected": "134.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/268",
+      "input": "135",
+      "decimal_separator": null,
+      "expected": "135"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/269",
+      "input": "2,99",
+      "decimal_separator": null,
+      "expected": "2.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/270",
+      "input": "9.99",
+      "decimal_separator": null,
+      "expected": "9.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/271",
+      "input": "2.950,00",
+      "decimal_separator": null,
+      "expected": "2950"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/272",
+      "input": "19.99",
+      "decimal_separator": null,
+      "expected": "19.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/273",
+      "input": "49",
+      "decimal_separator": null,
+      "expected": "49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/274",
+      "input": "31,07",
+      "decimal_separator": null,
+      "expected": "31.07"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/275",
+      "input": "56.00",
+      "decimal_separator": null,
+      "expected": "56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/276",
+      "input": "54.95",
+      "decimal_separator": null,
+      "expected": "54.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/277",
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/278",
+      "input": "39.00",
+      "decimal_separator": null,
+      "expected": "39"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/279",
+      "input": "221.000",
+      "decimal_separator": null,
+      "expected": "221000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/280",
+      "input": "35,90",
+      "decimal_separator": null,
+      "expected": "35.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/281",
+      "input": "4 835,50",
+      "decimal_separator": null,
+      "expected": "4835.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/282",
+      "input": "75,00",
+      "decimal_separator": null,
+      "expected": "75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/283",
+      "input": "21.95",
+      "decimal_separator": null,
+      "expected": "21.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/284",
+      "input": "737,00",
+      "decimal_separator": null,
+      "expected": "737"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/285",
+      "input": "129,00",
+      "decimal_separator": null,
+      "expected": "129"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/286",
+      "input": "2 399",
+      "decimal_separator": null,
+      "expected": "2399"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/287",
+      "input": "430",
+      "decimal_separator": null,
+      "expected": "430"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/288",
+      "input": "69.95",
+      "decimal_separator": null,
+      "expected": "69.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/289",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/290",
+      "input": "49.56",
+      "decimal_separator": null,
+      "expected": "49.56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/291",
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/292",
+      "input": "145,00",
+      "decimal_separator": null,
+      "expected": "145"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/293",
+      "input": "99,00",
+      "decimal_separator": null,
+      "expected": "99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/294",
+      "input": "750,000",
+      "decimal_separator": null,
+      "expected": "750000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/295",
+      "input": "49.99",
+      "decimal_separator": null,
+      "expected": "49.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/296",
+      "input": "29.00",
+      "decimal_separator": null,
+      "expected": "29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/297",
+      "input": "7.20",
+      "decimal_separator": null,
+      "expected": "7.2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/298",
+      "input": "69.00",
+      "decimal_separator": null,
+      "expected": "69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/299",
+      "input": "4.47",
+      "decimal_separator": null,
+      "expected": "4.47"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/300",
+      "input": "39,90",
+      "decimal_separator": null,
+      "expected": "39.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/301",
+      "input": "469,00",
+      "decimal_separator": null,
+      "expected": "469"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/302",
+      "input": "24.38",
+      "decimal_separator": null,
+      "expected": "24.38"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/303",
+      "input": "6,24",
+      "decimal_separator": null,
+      "expected": "6.24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/304",
+      "input": "89.00",
+      "decimal_separator": null,
+      "expected": "89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/305",
+      "input": "24,35",
+      "decimal_separator": null,
+      "expected": "24.35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/306",
+      "input": "805",
+      "decimal_separator": null,
+      "expected": "805"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/307",
+      "input": "295",
+      "decimal_separator": null,
+      "expected": "295"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/308",
+      "input": "175.00",
+      "decimal_separator": null,
+      "expected": "175"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/309",
+      "input": "7 990",
+      "decimal_separator": null,
+      "expected": "7990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/310",
+      "input": "14,00",
+      "decimal_separator": null,
+      "expected": "14"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/311",
+      "input": "249",
+      "decimal_separator": null,
+      "expected": "249"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/312",
+      "input": "39.95",
+      "decimal_separator": null,
+      "expected": "39.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/313",
+      "input": "10,75",
+      "decimal_separator": null,
+      "expected": "10.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/314",
+      "input": "25.00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/315",
+      "input": "1 720,00",
+      "decimal_separator": null,
+      "expected": "1720"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/316",
+      "input": "749",
+      "decimal_separator": null,
+      "expected": "749"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/317",
+      "input": "425,00",
+      "decimal_separator": null,
+      "expected": "425"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/318",
+      "input": "59.00",
+      "decimal_separator": null,
+      "expected": "59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/319",
+      "input": "1,120.00",
+      "decimal_separator": null,
+      "expected": "1120"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/320",
+      "input": "7,32",
+      "decimal_separator": null,
+      "expected": "7.32"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/321",
+      "input": "148.50",
+      "decimal_separator": null,
+      "expected": "148.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/322",
+      "input": "7.49",
+      "decimal_separator": null,
+      "expected": "7.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/323",
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/324",
+      "input": "93 499",
+      "decimal_separator": null,
+      "expected": "93499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/325",
+      "input": "1.599,00",
+      "decimal_separator": null,
+      "expected": "1599"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/326",
+      "input": "3,63",
+      "decimal_separator": null,
+      "expected": "3.63"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/327",
+      "input": "29,90",
+      "decimal_separator": null,
+      "expected": "29.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/328",
+      "input": "3.95",
+      "decimal_separator": null,
+      "expected": "3.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/329",
+      "input": "3430",
+      "decimal_separator": null,
+      "expected": "3430"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/330",
+      "input": "724,00",
+      "decimal_separator": null,
+      "expected": "724"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/331",
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/332",
+      "input": "6,75",
+      "decimal_separator": null,
+      "expected": "6.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/333",
+      "input": "29,90",
+      "decimal_separator": null,
+      "expected": "29.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/334",
+      "input": "135.99",
+      "decimal_separator": null,
+      "expected": "135.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/335",
+      "input": "30,000",
+      "decimal_separator": null,
+      "expected": "30000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/336",
+      "input": "1 500",
+      "decimal_separator": null,
+      "expected": "1500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/337",
+      "input": "349,00",
+      "decimal_separator": null,
+      "expected": "349"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/338",
+      "input": "250.00",
+      "decimal_separator": null,
+      "expected": "250"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/339",
+      "input": "44.95",
+      "decimal_separator": null,
+      "expected": "44.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/340",
+      "input": "22.75",
+      "decimal_separator": null,
+      "expected": "22.75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/341",
+      "input": "250,00",
+      "decimal_separator": null,
+      "expected": "250"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/342",
+      "input": "14.96",
+      "decimal_separator": null,
+      "expected": "14.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/343",
+      "input": "4,350.00",
+      "decimal_separator": null,
+      "expected": "4350"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/344",
+      "input": "379",
+      "decimal_separator": null,
+      "expected": "379"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/345",
+      "input": "19,50",
+      "decimal_separator": null,
+      "expected": "19.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/346",
+      "input": "33,68",
+      "decimal_separator": null,
+      "expected": "33.68"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/347",
+      "input": "6.70",
+      "decimal_separator": null,
+      "expected": "6.7"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/348",
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_NO_CURRENCY/349",
+      "input": "6.50",
+      "decimal_separator": null,
+      "expected": "6.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/0",
+      "input": "139,99",
+      "decimal_separator": null,
+      "expected": "139.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/1",
+      "input": "34.99",
+      "decimal_separator": null,
+      "expected": "34.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/2",
+      "input": "7.65",
+      "decimal_separator": null,
+      "expected": "7.65"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/3",
+      "input": "75,00",
+      "decimal_separator": null,
+      "expected": "75"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/4",
+      "input": "34,90",
+      "decimal_separator": null,
+      "expected": "34.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/5",
+      "input": "629.95",
+      "decimal_separator": null,
+      "expected": "629.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/6",
+      "input": "47700",
+      "decimal_separator": null,
+      "expected": "47700"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/7",
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/8",
+      "input": "174,00",
+      "decimal_separator": null,
+      "expected": "174"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/9",
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/10",
+      "input": "19.50",
+      "decimal_separator": null,
+      "expected": "19.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/11",
+      "input": "8 390",
+      "decimal_separator": null,
+      "expected": "8390"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/12",
+      "input": "55,00",
+      "decimal_separator": null,
+      "expected": "55"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/13",
+      "input": "299.71",
+      "decimal_separator": null,
+      "expected": "299.71"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/14",
+      "input": "384,00",
+      "decimal_separator": null,
+      "expected": "384"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/15",
+      "input": "14.97",
+      "decimal_separator": null,
+      "expected": "14.97"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/16",
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/17",
+      "input": "280,00",
+      "decimal_separator": null,
+      "expected": "280"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/18",
+      "input": "11 450",
+      "decimal_separator": null,
+      "expected": "11450"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/19",
+      "input": "118.15",
+      "decimal_separator": null,
+      "expected": "118.15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/20",
+      "input": "49.99",
+      "decimal_separator": null,
+      "expected": "49.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/21",
+      "input": "1,15",
+      "decimal_separator": null,
+      "expected": "1.15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/22",
+      "input": "31,93",
+      "decimal_separator": null,
+      "expected": "31.93"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/23",
+      "input": "24,401",
+      "decimal_separator": null,
+      "expected": "24401"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/24",
+      "input": "60.00",
+      "decimal_separator": null,
+      "expected": "60"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/25",
+      "input": "12,15",
+      "decimal_separator": null,
+      "expected": "12.15"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/26",
+      "input": "163.95",
+      "decimal_separator": null,
+      "expected": "163.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/27",
+      "input": "30,00",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/28",
+      "input": "165,00",
+      "decimal_separator": null,
+      "expected": "165"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/29",
+      "input": "469.00",
+      "decimal_separator": null,
+      "expected": "469"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/30",
+      "input": "72.95",
+      "decimal_separator": null,
+      "expected": "72.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/31",
+      "input": "3,179.00",
+      "decimal_separator": null,
+      "expected": "3179"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/32",
+      "input": "4 370",
+      "decimal_separator": null,
+      "expected": "4370"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/33",
+      "input": "21,33",
+      "decimal_separator": null,
+      "expected": "21.33"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/34",
+      "input": "49.95",
+      "decimal_separator": null,
+      "expected": "49.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/35",
+      "input": "59 900",
+      "decimal_separator": null,
+      "expected": "59900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/36",
+      "input": "6,78",
+      "decimal_separator": null,
+      "expected": "6.78"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/37",
+      "input": "442",
+      "decimal_separator": null,
+      "expected": "442"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/38",
+      "input": "16.00",
+      "decimal_separator": null,
+      "expected": "16"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/39",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/40",
+      "input": "379,00",
+      "decimal_separator": null,
+      "expected": "379"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/41",
+      "input": "125.00",
+      "decimal_separator": null,
+      "expected": "125"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/42",
+      "input": "30.84",
+      "decimal_separator": null,
+      "expected": "30.84"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/43",
+      "input": "259,00",
+      "decimal_separator": null,
+      "expected": "259"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/44",
+      "input": "1540",
+      "decimal_separator": null,
+      "expected": "1540"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/45",
+      "input": "95",
+      "decimal_separator": null,
+      "expected": "95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/46",
+      "input": "53.79",
+      "decimal_separator": null,
+      "expected": "53.79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/47",
+      "input": "1,160",
+      "decimal_separator": null,
+      "expected": "1160"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/48",
+      "input": "69,900",
+      "decimal_separator": null,
+      "expected": "69900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/49",
+      "input": "14.95",
+      "decimal_separator": null,
+      "expected": "14.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/50",
+      "input": "4649",
+      "decimal_separator": null,
+      "expected": "4649"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/51",
+      "input": "25",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/52",
+      "input": "16,40",
+      "decimal_separator": null,
+      "expected": "16.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/53",
+      "input": "0,46",
+      "decimal_separator": null,
+      "expected": "0.46"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/54",
+      "input": "261.25",
+      "decimal_separator": null,
+      "expected": "261.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/55",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/56",
+      "input": "24.95",
+      "decimal_separator": null,
+      "expected": "24.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/57",
+      "input": "27.00",
+      "decimal_separator": null,
+      "expected": "27"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/58",
+      "input": "189,900",
+      "decimal_separator": null,
+      "expected": "189900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/59",
+      "input": "269",
+      "decimal_separator": null,
+      "expected": "269"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/60",
+      "input": "189",
+      "decimal_separator": null,
+      "expected": "189"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/61",
+      "input": "160,00",
+      "decimal_separator": null,
+      "expected": "160"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/62",
+      "input": "2 400",
+      "decimal_separator": null,
+      "expected": "2400"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/63",
+      "input": "4.59",
+      "decimal_separator": null,
+      "expected": "4.59"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/64",
+      "input": "542",
+      "decimal_separator": null,
+      "expected": "542"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/65",
+      "input": "19.99",
+      "decimal_separator": null,
+      "expected": "19.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/66",
+      "input": "6.45",
+      "decimal_separator": null,
+      "expected": "6.45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/67",
+      "input": "32.99",
+      "decimal_separator": null,
+      "expected": "32.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/68",
+      "input": "86.44",
+      "decimal_separator": null,
+      "expected": "86.44"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/69",
+      "input": "25.00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/70",
+      "input": "99,00",
+      "decimal_separator": null,
+      "expected": "99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/71",
+      "input": "103.90",
+      "decimal_separator": null,
+      "expected": "103.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/72",
+      "input": "25,00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/73",
+      "input": "6.49",
+      "decimal_separator": null,
+      "expected": "6.49"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/74",
+      "input": "59,95",
+      "decimal_separator": null,
+      "expected": "59.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/75",
+      "input": "75 990,00",
+      "decimal_separator": null,
+      "expected": "75990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/76",
+      "input": "1.550.000",
+      "decimal_separator": null,
+      "expected": "1550000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/77",
+      "input": "1 430",
+      "decimal_separator": null,
+      "expected": "1430"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/78",
+      "input": "1 690,54",
+      "decimal_separator": null,
+      "expected": "1690.54"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/79",
+      "input": "69",
+      "decimal_separator": null,
+      "expected": "69"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/80",
+      "input": "960,00",
+      "decimal_separator": null,
+      "expected": "960"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/81",
+      "input": "184,35",
+      "decimal_separator": null,
+      "expected": "184.35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/82",
+      "input": "1 505",
+      "decimal_separator": null,
+      "expected": "1505"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/83",
+      "input": "23,00",
+      "decimal_separator": null,
+      "expected": "23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/84",
+      "input": "25.97",
+      "decimal_separator": null,
+      "expected": "25.97"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/85",
+      "input": "58,19",
+      "decimal_separator": null,
+      "expected": "58.19"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/86",
+      "input": "27.00",
+      "decimal_separator": null,
+      "expected": "27"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/87",
+      "input": "3,85",
+      "decimal_separator": null,
+      "expected": "3.85"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/88",
+      "input": "10,90",
+      "decimal_separator": null,
+      "expected": "10.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/89",
+      "input": "879.0",
+      "decimal_separator": null,
+      "expected": "879"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/90",
+      "input": "25.88",
+      "decimal_separator": null,
+      "expected": "25.88"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/91",
+      "input": "215,10",
+      "decimal_separator": null,
+      "expected": "215.1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/92",
+      "input": "12.50",
+      "decimal_separator": null,
+      "expected": "12.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/93",
+      "input": "3 173,00",
+      "decimal_separator": null,
+      "expected": "3173"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/94",
+      "input": "34,94",
+      "decimal_separator": null,
+      "expected": "34.94"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/96",
+      "input": "392. 00",
+      "decimal_separator": null,
+      "expected": "392"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/97",
+      "input": "213,62",
+      "decimal_separator": null,
+      "expected": "213.62"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/98",
+      "input": "3,00",
+      "decimal_separator": null,
+      "expected": "3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/99",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/100",
+      "input": "10 990,00",
+      "decimal_separator": null,
+      "expected": "10990"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/101",
+      "input": "24,95",
+      "decimal_separator": null,
+      "expected": "24.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/103",
+      "input": "19.99",
+      "decimal_separator": null,
+      "expected": "19.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/104",
+      "input": "15 130",
+      "decimal_separator": null,
+      "expected": "15130"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/105",
+      "input": "5.95",
+      "decimal_separator": null,
+      "expected": "5.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/106",
+      "input": "199,99",
+      "decimal_separator": null,
+      "expected": "199.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/107",
+      "input": "23.40",
+      "decimal_separator": null,
+      "expected": "23.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/108",
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/109",
+      "input": "795",
+      "decimal_separator": null,
+      "expected": "795"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/110",
+      "input": "34.99",
+      "decimal_separator": null,
+      "expected": "34.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/111",
+      "input": "149.95",
+      "decimal_separator": null,
+      "expected": "149.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/112",
+      "input": "119.95",
+      "decimal_separator": null,
+      "expected": "119.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/113",
+      "input": "339",
+      "decimal_separator": null,
+      "expected": "339"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/114",
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/115",
+      "input": "79,00",
+      "decimal_separator": null,
+      "expected": "79"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/116",
+      "input": "378.00",
+      "decimal_separator": null,
+      "expected": "378"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/118",
+      "input": "356.03",
+      "decimal_separator": null,
+      "expected": "356.03"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/119",
+      "input": "890",
+      "decimal_separator": null,
+      "expected": "890"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/120",
+      "input": "49.99",
+      "decimal_separator": null,
+      "expected": "49.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/121",
+      "input": "5 550",
+      "decimal_separator": null,
+      "expected": "5550"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/122",
+      "input": "5 770",
+      "decimal_separator": null,
+      "expected": "5770"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/123",
+      "input": "0",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/124",
+      "input": "199",
+      "decimal_separator": null,
+      "expected": "199"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/125",
+      "input": "16,50",
+      "decimal_separator": null,
+      "expected": "16.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/126",
+      "input": "42.95",
+      "decimal_separator": null,
+      "expected": "42.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/127",
+      "input": "1.837, 32",
+      "decimal_separator": null,
+      "expected": "1837.32"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/128",
+      "input": "791.00",
+      "decimal_separator": null,
+      "expected": "791"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/129",
+      "input": "69.30",
+      "decimal_separator": null,
+      "expected": "69.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/130",
+      "input": "163,900",
+      "decimal_separator": null,
+      "expected": "163900"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/131",
+      "input": "36.95",
+      "decimal_separator": null,
+      "expected": "36.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/132",
+      "input": "235.000",
+      "decimal_separator": null,
+      "expected": "235000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/133",
+      "input": "11,13",
+      "decimal_separator": null,
+      "expected": "11.13"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/134",
+      "input": "160,00",
+      "decimal_separator": null,
+      "expected": "160"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/135",
+      "input": "3 300",
+      "decimal_separator": null,
+      "expected": "3300"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/136",
+      "input": "4 690",
+      "decimal_separator": null,
+      "expected": "4690"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/137",
+      "input": "189,00",
+      "decimal_separator": null,
+      "expected": "189"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/139",
+      "input": "30.00",
+      "decimal_separator": null,
+      "expected": "30"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/140",
+      "input": "5.95",
+      "decimal_separator": null,
+      "expected": "5.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/141",
+      "input": "74.00",
+      "decimal_separator": null,
+      "expected": "74"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/142",
+      "input": "158,24",
+      "decimal_separator": null,
+      "expected": "158.24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/143",
+      "input": "550,00",
+      "decimal_separator": null,
+      "expected": "550"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/144",
+      "input": "7,25",
+      "decimal_separator": null,
+      "expected": "7.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/145",
+      "input": "94,000",
+      "decimal_separator": null,
+      "expected": "94000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/146",
+      "input": "8.27",
+      "decimal_separator": null,
+      "expected": "8.27"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/147",
+      "input": "12.500",
+      "decimal_separator": null,
+      "expected": "12500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/148",
+      "input": "27.50",
+      "decimal_separator": null,
+      "expected": "27.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/149",
+      "input": "23.90",
+      "decimal_separator": null,
+      "expected": "23.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/150",
+      "input": "18 000",
+      "decimal_separator": null,
+      "expected": "18000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/151",
+      "input": "48,96",
+      "decimal_separator": null,
+      "expected": "48.96"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/152",
+      "input": "199",
+      "decimal_separator": null,
+      "expected": "199"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/153",
+      "input": "6.95",
+      "decimal_separator": null,
+      "expected": "6.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/154",
+      "input": "599.97",
+      "decimal_separator": null,
+      "expected": "599.97"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/155",
+      "input": "40.00",
+      "decimal_separator": null,
+      "expected": "40"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/156",
+      "input": "100,00",
+      "decimal_separator": null,
+      "expected": "100"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/157",
+      "input": "18,25",
+      "decimal_separator": null,
+      "expected": "18.25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/158",
+      "input": "29,00",
+      "decimal_separator": null,
+      "expected": "29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/159",
+      "input": "39,95",
+      "decimal_separator": null,
+      "expected": "39.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/160",
+      "input": "32.00",
+      "decimal_separator": null,
+      "expected": "32"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/161",
+      "input": "32.99",
+      "decimal_separator": null,
+      "expected": "32.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/162",
+      "input": "39000",
+      "decimal_separator": null,
+      "expected": "39000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/163",
+      "input": "850,000",
+      "decimal_separator": null,
+      "expected": "850000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/164",
+      "input": "24,00",
+      "decimal_separator": null,
+      "expected": "24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/165",
+      "input": "19.90",
+      "decimal_separator": null,
+      "expected": "19.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/166",
+      "input": "530,42",
+      "decimal_separator": null,
+      "expected": "530.42"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/167",
+      "input": "124.95",
+      "decimal_separator": null,
+      "expected": "124.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/168",
+      "input": "344.99",
+      "decimal_separator": null,
+      "expected": "344.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/169",
+      "input": "3089.9",
+      "decimal_separator": null,
+      "expected": "3089.9"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/170",
+      "input": "40.00",
+      "decimal_separator": null,
+      "expected": "40"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/171",
+      "input": "105.",
+      "decimal_separator": null,
+      "expected": "105"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/172",
+      "input": "1.899",
+      "decimal_separator": null,
+      "expected": "1899"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/174",
+      "input": "36. 24",
+      "decimal_separator": null,
+      "expected": "36.24"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/175",
+      "input": "32",
+      "decimal_separator": null,
+      "expected": "32"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/176",
+      "input": "29",
+      "decimal_separator": null,
+      "expected": "29"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/177",
+      "input": "559. 99",
+      "decimal_separator": null,
+      "expected": "559.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/178",
+      "input": "36",
+      "decimal_separator": null,
+      "expected": "36"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/179",
+      "input": "1.800.000",
+      "decimal_separator": null,
+      "expected": "1800000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/180",
+      "input": "0,40",
+      "decimal_separator": null,
+      "expected": "0.4"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/181",
+      "input": "1.500,00",
+      "decimal_separator": null,
+      "expected": "1500"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/182",
+      "input": "8. 94",
+      "decimal_separator": null,
+      "expected": "8.94"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/183",
+      "input": "30.56",
+      "decimal_separator": null,
+      "expected": "30.56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/184",
+      "input": "742.50",
+      "decimal_separator": null,
+      "expected": "742.5"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/185",
+      "input": "25,00",
+      "decimal_separator": null,
+      "expected": "25"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/186",
+      "input": "3,690.00",
+      "decimal_separator": null,
+      "expected": "3690"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/187",
+      "input": "26.30",
+      "decimal_separator": null,
+      "expected": "26.3"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/188",
+      "input": "15,000",
+      "decimal_separator": null,
+      "expected": "15000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/189",
+      "input": "5,246.58",
+      "decimal_separator": null,
+      "expected": "5246.58"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/190",
+      "input": "118, 99",
+      "decimal_separator": null,
+      "expected": "118.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/191",
+      "input": "575.00",
+      "decimal_separator": null,
+      "expected": "575"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/192",
+      "input": "150",
+      "decimal_separator": null,
+      "expected": "150"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/193",
+      "input": "45,000",
+      "decimal_separator": null,
+      "expected": "45000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/194",
+      "input": "7.99",
+      "decimal_separator": null,
+      "expected": "7.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/195",
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/196",
+      "input": "253,89",
+      "decimal_separator": null,
+      "expected": "253.89"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/197",
+      "input": "1,190.00",
+      "decimal_separator": null,
+      "expected": "1190"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/198",
+      "input": "6.56",
+      "decimal_separator": null,
+      "expected": "6.56"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/199",
+      "input": "4,35",
+      "decimal_separator": null,
+      "expected": "4.35"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/200",
+      "input": "1.890,00",
+      "decimal_separator": null,
+      "expected": "1890"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/201",
+      "input": "397.00",
+      "decimal_separator": null,
+      "expected": "397"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/202",
+      "input": "44.99",
+      "decimal_separator": null,
+      "expected": "44.99"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/203",
+      "input": "1,175",
+      "decimal_separator": null,
+      "expected": "1175"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/204",
+      "input": "130, 38",
+      "decimal_separator": null,
+      "expected": "130.38"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/205",
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/206",
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/207",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/208",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/209",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/210",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/211",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/212",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/213",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/214",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/215",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/216",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/217",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/218",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/219",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/220",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/221",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/222",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/223",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/224",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/225",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/226",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/227",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/228",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/229",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/230",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/231",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/232",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/233",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/234",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/235",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/236",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/237",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/238",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/239",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/240",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/241",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/242",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/243",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/244",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/245",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/246",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/247",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/248",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/249",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/250",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/251",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/252",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/253",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/254",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/255",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/256",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/257",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/258",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/259",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/260",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/261",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/262",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/263",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/264",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/265",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/266",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/267",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/268",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/269",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/270",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/271",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/272",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/273",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/274",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/275",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_3/276",
+      "input": "14.00",
+      "decimal_separator": null,
+      "expected": "14"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/0",
+      "input": "14,85",
+      "decimal_separator": null,
+      "expected": "14.85"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/1",
+      "input": "60.00",
+      "decimal_separator": null,
+      "expected": "60"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/3",
+      "input": "2.00",
+      "decimal_separator": null,
+      "expected": "2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/4",
+      "input": "273.00",
+      "decimal_separator": null,
+      "expected": "273"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/5",
+      "input": "8,499",
+      "decimal_separator": null,
+      "expected": "8499"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/6",
+      "input": "61.858",
+      "decimal_separator": null,
+      "expected": "61858"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL/9",
+      "input": "884",
+      "decimal_separator": null,
+      "expected": "884"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/0",
+      "input": "22000.00",
+      "decimal_separator": null,
+      "expected": "22000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/1",
+      "input": "2963",
+      "decimal_separator": null,
+      "expected": "2963"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/2",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/3",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/4",
+      "input": "1.198",
+      "decimal_separator": null,
+      "expected": "1198"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/5",
+      "input": "45",
+      "decimal_separator": null,
+      "expected": "45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/6",
+      "input": "45",
+      "decimal_separator": null,
+      "expected": "45"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/7",
+      "input": "2000",
+      "decimal_separator": null,
+      "expected": "2000"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/8",
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/9",
+      "input": "200",
+      "decimal_separator": null,
+      "expected": "200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/10",
+      "input": "200",
+      "decimal_separator": null,
+      "expected": "200"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/11",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/12",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/13",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/14",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/15",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/16",
+      "input": "2",
+      "decimal_separator": null,
+      "expected": "2"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/17",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/18",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/19",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/20",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/21",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/22",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/23",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/24",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/25",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/26",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/27",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/28",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/29",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/30",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/31",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/32",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/33",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/34",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/35",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/36",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/37",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/38",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/39",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/40",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/41",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/42",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/43",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/44",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/45",
+      "input": "59.95",
+      "decimal_separator": null,
+      "expected": "59.95"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/46",
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/47",
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/48",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/49",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/50",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/51",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/52",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/53",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/54",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/55",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/56",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/57",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/58",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/59",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/60",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/61",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/62",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/63",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/64",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/65",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/66",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/67",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/68",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/69",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/70",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/71",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/72",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/73",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/74",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/75",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/76",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/77",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/78",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/79",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/80",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/81",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/82",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/83",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/84",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/85",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/86",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/87",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/88",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/89",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/90",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/91",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/92",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/93",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/94",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/95",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/96",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/97",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/98",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/99",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/100",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/101",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/102",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/103",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/104",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/105",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/106",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/107",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/108",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/109",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/110",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/111",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/112",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/113",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/114",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/115",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/116",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/117",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_EXAMPLES_XFAIL_CURRENCIES_TO_BE_ADDED/118",
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/0",
+      "input": "1250",
+      "decimal_separator": "€",
+      "expected": "1250"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/1",
+      "input": "1250€60",
+      "decimal_separator": "€",
+      "expected": "1250.6"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/2",
+      "input": "1250€600",
+      "decimal_separator": "€",
+      "expected": "1250.6"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/3",
+      "input": ".75",
+      "decimal_separator": ".",
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/4",
+      "input": ".75",
+      "decimal_separator": ".",
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/5",
+      "input": ".75",
+      "decimal_separator": ".",
+      "expected": "0.75"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/6",
+      "input": ".75,333",
+      "decimal_separator": ".",
+      "expected": "0.75333"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/7",
+      "input": ".75,333",
+      "decimal_separator": ",",
+      "expected": "75.333"
+    },
+    {
+      "name": "PRICE_PARSING_DECIMAL_SEPARATOR_EXAMPLES/8",
+      "input": "750.30",
+      "decimal_separator": ".",
+      "expected": "750.3"
+    },
+    {
+      "name": "derived//None",
+      "input": "",
+      "decimal_separator": null,
+      "expected": null
+    },
+    {
+      "name": "derived//.",
+      "input": "",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived//,",
+      "input": "",
+      "decimal_separator": ",",
+      "expected": null
+    },
+    {
+      "name": "derived//€",
+      "input": "",
+      "decimal_separator": "€",
+      "expected": null
+    },
+    {
+      "name": "derived/foo/None",
+      "input": "foo",
+      "decimal_separator": null,
+      "expected": null
+    },
+    {
+      "name": "derived/foo/.",
+      "input": "foo",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived/foo/,",
+      "input": "foo",
+      "decimal_separator": ",",
+      "expected": null
+    },
+    {
+      "name": "derived/foo/€",
+      "input": "foo",
+      "decimal_separator": "€",
+      "expected": null
+    },
+    {
+      "name": "derived/140.000/None",
+      "input": "140.000",
+      "decimal_separator": null,
+      "expected": "140000"
+    },
+    {
+      "name": "derived/140.000/.",
+      "input": "140.000",
+      "decimal_separator": ".",
+      "expected": "140"
+    },
+    {
+      "name": "derived/140.000/,",
+      "input": "140.000",
+      "decimal_separator": ",",
+      "expected": "140000"
+    },
+    {
+      "name": "derived/140.000/€",
+      "input": "140.000",
+      "decimal_separator": "€",
+      "expected": "140000"
+    },
+    {
+      "name": "derived/140,000€33/None",
+      "input": "140,000€33",
+      "decimal_separator": null,
+      "expected": "140000.33"
+    },
+    {
+      "name": "derived/140,000€33/.",
+      "input": "140,000€33",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived/140,000€33/,",
+      "input": "140,000€33",
+      "decimal_separator": ",",
+      "expected": null
+    },
+    {
+      "name": "derived/140,000€33/€",
+      "input": "140,000€33",
+      "decimal_separator": "€",
+      "expected": "140000.33"
+    },
+    {
+      "name": "derived/1 235€99/None",
+      "input": "1 235€99",
+      "decimal_separator": null,
+      "expected": "1235.99"
+    },
+    {
+      "name": "derived/1 235€99/.",
+      "input": "1 235€99",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived/1 235€99/,",
+      "input": "1 235€99",
+      "decimal_separator": ",",
+      "expected": null
+    },
+    {
+      "name": "derived/1 235€99/€",
+      "input": "1 235€99",
+      "decimal_separator": "€",
+      "expected": "1235.99"
+    },
+    {
+      "name": "derived/1.235€99/None",
+      "input": "1.235€99",
+      "decimal_separator": null,
+      "expected": "1235.99"
+    },
+    {
+      "name": "derived/1.235€99/.",
+      "input": "1.235€99",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived/1.235€99/,",
+      "input": "1.235€99",
+      "decimal_separator": ",",
+      "expected": null
+    },
+    {
+      "name": "derived/1.235€99/€",
+      "input": "1.235€99",
+      "decimal_separator": "€",
+      "expected": "1235.99"
+    },
+    {
+      "name": "derived/.75/None",
+      "input": ".75",
+      "decimal_separator": null,
+      "expected": "0.75"
+    },
+    {
+      "name": "derived/.75/.",
+      "input": ".75",
+      "decimal_separator": ".",
+      "expected": "0.75"
+    },
+    {
+      "name": "derived/.75/,",
+      "input": ".75",
+      "decimal_separator": ",",
+      "expected": "75"
+    },
+    {
+      "name": "derived/.75/€",
+      "input": ".75",
+      "decimal_separator": "€",
+      "expected": "75"
+    },
+    {
+      "name": "derived/12.345/None",
+      "input": "12.345",
+      "decimal_separator": null,
+      "expected": "12345"
+    },
+    {
+      "name": "derived/12.345/.",
+      "input": "12.345",
+      "decimal_separator": ".",
+      "expected": "12.345"
+    },
+    {
+      "name": "derived/12.345/,",
+      "input": "12.345",
+      "decimal_separator": ",",
+      "expected": "12345"
+    },
+    {
+      "name": "derived/12.345/€",
+      "input": "12.345",
+      "decimal_separator": "€",
+      "expected": "12345"
+    },
+    {
+      "name": "derived/3,0000/None",
+      "input": "3,0000",
+      "decimal_separator": null,
+      "expected": "3"
+    },
+    {
+      "name": "derived/3,0000/.",
+      "input": "3,0000",
+      "decimal_separator": ".",
+      "expected": "30000"
+    },
+    {
+      "name": "derived/3,0000/,",
+      "input": "3,0000",
+      "decimal_separator": ",",
+      "expected": "3"
+    },
+    {
+      "name": "derived/3,0000/€",
+      "input": "3,0000",
+      "decimal_separator": "€",
+      "expected": "30000"
+    },
+    {
+      "name": "derived/+12.99/None",
+      "input": "+12.99",
+      "decimal_separator": null,
+      "expected": "12.99"
+    },
+    {
+      "name": "derived/+12.99/.",
+      "input": "+12.99",
+      "decimal_separator": ".",
+      "expected": "12.99"
+    },
+    {
+      "name": "derived/+12.99/,",
+      "input": "+12.99",
+      "decimal_separator": ",",
+      "expected": "1299"
+    },
+    {
+      "name": "derived/+12.99/€",
+      "input": "+12.99",
+      "decimal_separator": "€",
+      "expected": "1299"
+    },
+    {
+      "name": "derived/-12.99/None",
+      "input": "-12.99",
+      "decimal_separator": null,
+      "expected": "-12.99"
+    },
+    {
+      "name": "derived/-12.99/.",
+      "input": "-12.99",
+      "decimal_separator": ".",
+      "expected": "-12.99"
+    },
+    {
+      "name": "derived/-12.99/,",
+      "input": "-12.99",
+      "decimal_separator": ",",
+      "expected": "-1299"
+    },
+    {
+      "name": "derived/-12.99/€",
+      "input": "-12.99",
+      "decimal_separator": "€",
+      "expected": "-1299"
+    },
+    {
+      "name": "derived/1e3/None",
+      "input": "1e3",
+      "decimal_separator": null,
+      "expected": "1000"
+    },
+    {
+      "name": "derived/1e3/.",
+      "input": "1e3",
+      "decimal_separator": ".",
+      "expected": "1000"
+    },
+    {
+      "name": "derived/1e3/,",
+      "input": "1e3",
+      "decimal_separator": ",",
+      "expected": "1000"
+    },
+    {
+      "name": "derived/1e3/€",
+      "input": "1e3",
+      "decimal_separator": "€",
+      "expected": "1000"
+    },
+    {
+      "name": "derived/1.2e-3/None",
+      "input": "1.2e-3",
+      "decimal_separator": null,
+      "expected": "0.012"
+    },
+    {
+      "name": "derived/1.2e-3/.",
+      "input": "1.2e-3",
+      "decimal_separator": ".",
+      "expected": "0.0012"
+    },
+    {
+      "name": "derived/1.2e-3/,",
+      "input": "1.2e-3",
+      "decimal_separator": ",",
+      "expected": "0.012"
+    },
+    {
+      "name": "derived/1.2e-3/€",
+      "input": "1.2e-3",
+      "decimal_separator": "€",
+      "expected": "0.012"
+    },
+    {
+      "name": "derived/1_234.50/None",
+      "input": "1_234.50",
+      "decimal_separator": null,
+      "expected": "1234.5"
+    },
+    {
+      "name": "derived/1_234.50/.",
+      "input": "1_234.50",
+      "decimal_separator": ".",
+      "expected": "1234.5"
+    },
+    {
+      "name": "derived/1_234.50/,",
+      "input": "1_234.50",
+      "decimal_separator": ",",
+      "expected": "123450"
+    },
+    {
+      "name": "derived/1_234.50/€",
+      "input": "1_234.50",
+      "decimal_separator": "€",
+      "expected": "123450"
+    },
+    {
+      "name": "derived/12..34/None",
+      "input": "12..34",
+      "decimal_separator": null,
+      "expected": null
+    },
+    {
+      "name": "derived/12..34/.",
+      "input": "12..34",
+      "decimal_separator": ".",
+      "expected": null
+    },
+    {
+      "name": "derived/12..34/,",
+      "input": "12..34",
+      "decimal_separator": ",",
+      "expected": "1234"
+    },
+    {
+      "name": "derived/12..34/€",
+      "input": "12..34",
+      "decimal_separator": "€",
+      "expected": "1234"
+    },
+    {
+      "name": "derived/1,234.56/None",
+      "input": "1,234.56",
+      "decimal_separator": null,
+      "expected": "1234.56"
+    },
+    {
+      "name": "derived/1,234.56/.",
+      "input": "1,234.56",
+      "decimal_separator": ".",
+      "expected": "1234.56"
+    },
+    {
+      "name": "derived/1,234.56/,",
+      "input": "1,234.56",
+      "decimal_separator": ",",
+      "expected": "1.23456"
+    },
+    {
+      "name": "derived/1,234.56/€",
+      "input": "1,234.56",
+      "decimal_separator": "€",
+      "expected": "123456"
+    },
+    {
+      "name": "derived/0.0000000001/None",
+      "input": "0.0000000001",
+      "decimal_separator": null,
+      "expected": "0.0000000001"
+    },
+    {
+      "name": "derived/0.0000000001/.",
+      "input": "0.0000000001",
+      "decimal_separator": ".",
+      "expected": "0.0000000001"
+    },
+    {
+      "name": "derived/0.0000000001/,",
+      "input": "0.0000000001",
+      "decimal_separator": ",",
+      "expected": "1"
+    },
+    {
+      "name": "derived/0.0000000001/€",
+      "input": "0.0000000001",
+      "decimal_separator": "€",
+      "expected": "1"
+    },
+    {
+      "name": "derived/000.00/None",
+      "input": "000.00",
+      "decimal_separator": null,
+      "expected": "0"
+    },
+    {
+      "name": "derived/000.00/.",
+      "input": "000.00",
+      "decimal_separator": ".",
+      "expected": "0"
+    },
+    {
+      "name": "derived/000.00/,",
+      "input": "000.00",
+      "decimal_separator": ",",
+      "expected": "0"
+    },
+    {
+      "name": "derived/000.00/€",
+      "input": "000.00",
+      "decimal_separator": "€",
+      "expected": "0"
+    },
+    {
+      "name": "derived/999999999999999999999999.99/None",
+      "input": "999999999999999999999999.99",
+      "decimal_separator": null,
+      "expected": "999999999999999999999999.99"
+    },
+    {
+      "name": "derived/999999999999999999999999.99/.",
+      "input": "999999999999999999999999.99",
+      "decimal_separator": ".",
+      "expected": "999999999999999999999999.99"
+    },
+    {
+      "name": "derived/999999999999999999999999.99/,",
+      "input": "999999999999999999999999.99",
+      "decimal_separator": ",",
+      "expected": "99999999999999999999999999"
+    },
+    {
+      "name": "derived/999999999999999999999999.99/€",
+      "input": "999999999999999999999999.99",
+      "decimal_separator": "€",
+      "expected": "99999999999999999999999999"
+    }
+  ]
+}

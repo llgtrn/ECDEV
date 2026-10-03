@@ -60,9 +60,17 @@ def main():
    assert len(oracle['cases'])==capability['oracle_cases']==54
    assert oracle['commit_sha']==capability['commit_sha']=='537c5d46455ae8b2c67b53fc03b36ef1da8c4837'
    assert oracle['oracle']=='UNMODIFIED_LOCKED_W3LIB_HTML_TO_UNICODE'
- report['oracle_compared_capabilities']=sum(c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED') for c in read(ROOT/'research/commerce/capabilities.json'))
+ for capability in read(ROOT/'research/commerce/capabilities.json'):
+  if capability.get('oracle_status')=='1235_PRICE_NUMBER_CASES_MATCHED':
+   import hashlib
+   fixture=ROOT/capability['fixture'];oracle=read(fixture)
+   assert hashlib.sha256(fixture.read_bytes()).hexdigest()==capability['fixture_sha256']
+   assert len(oracle['cases'])==capability['oracle_cases']==1235
+   assert oracle['commit_sha']==capability['commit_sha']==next(d['commit_sha'] for d in reg['donors'] if d['donor_id']=='scrapinghub--price-parser')
+   assert oracle['oracle']=='UNMODIFIED_LOCKED_PRICE_PARSER_PARSE_NUMBER'
+ report['oracle_compared_capabilities']=sum(c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED','1235_PRICE_NUMBER_CASES_MATCHED') for c in read(ROOT/'research/commerce/capabilities.json'))
  report['oracle_proven_native_capabilities']=report['oracle_compared_capabilities']
- report['oracle_cases_executed']=sum(c.get('oracle_cases',0) for c in read(ROOT/'research/commerce/capabilities.json') if c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED'))
+ report['oracle_cases_executed']=sum(c.get('oracle_cases',0) for c in read(ROOT/'research/commerce/capabilities.json') if c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED','1235_PRICE_NUMBER_CASES_MATCHED'))
  summaries=[read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json') for d in reg['donors']]
  report['symbols_censused']=sum(s['symbols'] for s in summaries)
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)
