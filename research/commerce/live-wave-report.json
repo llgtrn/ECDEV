@@ -1,0 +1,376 @@
+{
+  "status": "MEASURED_LIVE_WAVE_REPORT_WITH_REMAINING_REQUIREMENTS",
+  "goal_complete": false,
+  "head_at_audit": "dc736a5ec7d142b6750a3feb0470261cce8a210b",
+  "branch": "main",
+  "live_run": {
+    "run_id": "92e352a4-f6c7-4ef2-8b74-002f14790698",
+    "mode": "LIVE",
+    "run_status": "PARTIAL",
+    "discovered_urls": 332,
+    "pages_captured": 40,
+    "product_pages_recognized": 39,
+    "candidates_normalized": 39,
+    "funnel": {
+      "discovered": 39,
+      "insufficient_evidence": 35,
+      "rejected": 3,
+      "sampling": 0,
+      "screened": 0,
+      "shortlisted": 1,
+      "validating": 0
+    }
+  },
+  "frontier": {
+    "acquisition_attempts": 40,
+    "cancelled": false,
+    "limits": {
+      "backoff_ms": 1000,
+      "deadline_ms": 1791013298000,
+      "global_concurrency": 1,
+      "lease_ms": 120000,
+      "max_backoff_ms": 30000,
+      "max_depth": 1,
+      "max_pages": 40,
+      "max_retries": 2,
+      "max_urls": 500,
+      "origin_interval_ms": 750,
+      "per_origin_concurrency": 1
+    },
+    "retry_events": 0,
+    "run_id": "92e352a4-f6c7-4ef2-8b74-002f14790698",
+    "states": {
+      "CANCELLED": 0,
+      "DISCOVERED": 0,
+      "FAILED": 0,
+      "HANDLED": 40,
+      "LEASED": 0,
+      "PENDING": 292,
+      "RETRYABLE": 0
+    }
+  },
+  "restart_recovery": {
+    "independent_process_regression": "PASS",
+    "live_reopen_proof": "research/commerce/live-jp-resume-proof.json"
+  },
+  "zero_cost": {
+    "paid_provider_calls": 0,
+    "paid_cost_minor": 0,
+    "executable_stage_count": 10,
+    "stage_denominator": 14,
+    "executable_coverage_bps": 7142,
+    "live_coverage_bps": 6428,
+    "known_network_calls": 80
+  },
+  "evidence": {
+    "candidate_field_observability_bps": 3514,
+    "definitions": "Field observability counts known nonconflicting required product fields. Evidence completeness counts known fields with page and raw-capture hash. Stage coverage records operations evidenced in this run, not accuracy or total market coverage. Empty denominators remain unknown; live coverage requires new network IO. Cached and fixture observations never increment live coverage.",
+    "evidence_completeness_bps": 10000,
+    "evidence_mode": "LIVE_NETWORK",
+    "evidence_supported_known_fields": 329,
+    "field_count_denominator": 936,
+    "field_evidence_states": {
+      "CONFLICT": 61,
+      "DERIVED": 16,
+      "ESTIMATED": 0,
+      "OBSERVED": 313,
+      "UNKNOWN": 546
+    },
+    "fixture_zero_paid_research_coverage_bps": null,
+    "known_fields": 329,
+    "live_data_completeness_bps": 3514,
+    "live_zero_paid_research_coverage_bps": 6428,
+    "required_fields": [
+      "title",
+      "brand",
+      "sku",
+      "gtin",
+      "ean",
+      "upc",
+      "mpn",
+      "price_minor",
+      "currency",
+      "original_price",
+      "discount",
+      "availability",
+      "seller",
+      "shipping_text",
+      "rating",
+      "review_count",
+      "images",
+      "variants",
+      "breadcrumbs",
+      "category",
+      "description",
+      "specifications",
+      "canonical_url",
+      "weight_g"
+    ],
+    "scope": "THIS_RUN_ONLY",
+    "stage_denominator": [
+      {
+        "observed_in_run": true,
+        "stage": "discovery_from_seed_links"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "crawl"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "extraction"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "evidence"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "candidate_creation"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "competitor_price_comparison"
+      },
+      {
+        "observed_in_run": false,
+        "stage": "economics_from_assumptions"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "ranking_and_filtering"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "report"
+      },
+      {
+        "observed_in_run": true,
+        "stage": "supplier_discovery"
+      },
+      {
+        "observed_in_run": false,
+        "stage": "official_marketplace_validation"
+      },
+      {
+        "observed_in_run": false,
+        "stage": "demand_forecasting"
+      },
+      {
+        "observed_in_run": false,
+        "stage": "live_ppc"
+      },
+      {
+        "observed_in_run": false,
+        "stage": "regulatory_risk_validation"
+      }
+    ]
+  },
+  "donor_absorption": {
+    "lifecycle_review": "research/commerce/donor-lifecycle-review.json",
+    "whole_donors_absorbed": 0,
+    "extinct": 0,
+    "runtime_foundation_packages": 14,
+    "runtime_foundation_upstreams": 13,
+    "bounded_oracle_families": 6,
+    "oracle_families_before": 1,
+    "cases_executed": 3595
+  },
+  "census": {
+    "unknown_files_before": 77,
+    "unknown_files_after": 0,
+    "parse_unknown_before": 193,
+    "parse_unknown_after": 134,
+    "inventoried_files": 12972,
+    "parsed_sources": 4646,
+    "first_party_sources": 4780,
+    "symbols": 59180
+  },
+  "mcp": {
+    "tools": 31,
+    "official_sdk_smoke": "PASS",
+    "high_level_tools": 9,
+    "smoke_scope": "FIXTURE_OPERATIONS_AND_HISTORICAL_LIVE_STATUS_PROJECTION_NO_NEW_LIVE_ACQUISITION"
+  },
+  "observability": {
+    "dashboard_build": "PASS",
+    "frontier_and_candidate_fields": "IMPLEMENTED",
+    "live_status_proof": "research/commerce/live-status-proof.json",
+    "historical_status_requires_raw_hashes": true
+  },
+  "verification": {
+    "native_tests": 56,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "typescript_build": "PASS",
+    "canonical_proofs": 49,
+    "canonical_protocol": "BYTE_IDENTICAL",
+    "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
+    "shape_conformance_bps": 10000,
+    "owned_sources": 129,
+    "unowned_sources": 0,
+    "v1_achieved": false
+  },
+  "requirements": [
+    {
+      "id": 1,
+      "requirement": "Start from live main",
+      "status": "VERIFIED"
+    },
+    {
+      "id": 2,
+      "requirement": "Deep Crawlee census and native frontier",
+      "status": "PARTIAL_21_RELEVANT_METHODS_REVIEWED_46_QUEUE_TRACES_MATCHED_FULL_CRAWLER_PENDING"
+    },
+    {
+      "id": 3,
+      "requirement": "URL canonicalization and per-site identity policy",
+      "status": "NATIVE_IMPLEMENTED_REGRESSION_TESTED_NOT_DONOR_PARITY"
+    },
+    {
+      "id": 4,
+      "requirement": "Retry, lease, backpressure engine",
+      "status": "PARTIAL_NATIVE_RETRY_LEASE_BACKPRESSURE_AND_RESEARCH_INTEGRATION_HTTP_RETRY_AFTER_HEADER_PENDING"
+    },
+    {
+      "id": 5,
+      "requirement": "Robots oracle parity",
+      "status": "1620_LOCKED_CPP_DONOR_CASES_MATCHED_NATIVE_DELAY_ENFORCED_FULL_FETCH_PARITY_PENDING"
+    },
+    {
+      "id": 6,
+      "requirement": "Commerce page classifier",
+      "status": "NATIVE_NINE_ROLE_HEURISTIC_WITH_SOURCE_SIGNALS_TESTED"
+    },
+    {
+      "id": 7,
+      "requirement": "Structured extraction with field provenance and conflicts",
+      "status": "PARTIAL_JSON_LD_MICRODATA_OPEN_GRAPH_CANONICAL_ORIGINAL_PRICE_DISCOUNT_BREADCRUMB_SHIPPING_ASSERTIONS_WITH_CONFLICTS_OTHER_FORMATS_PENDING"
+    },
+    {
+      "id": 8,
+      "requirement": "Live discovery with source fallbacks",
+      "status": "LIVE_FALLBACK_SEED_AND_PERSISTED_FRONTIER_EXECUTED"
+    },
+    {
+      "id": 9,
+      "requirement": "Independent public Amazon, SP-API and Keepa layers",
+      "status": "PUBLIC_AMAZON_NATIVE_PROVIDER_SEPARATED_LIVE_HTTP_503_RETAILER_FALLBACK_PASS_SP_API_UNIMPLEMENTED_KEEPA_OPTIONAL"
+    },
+    {
+      "id": 10,
+      "requirement": "JP live discovery targets",
+      "status": "LIVE_332_URLS_40_CAPTURES_39_PRODUCT_PAGES_39_NORMALIZED_CANDIDATES_TARGETS_MET"
+    },
+    {
+      "id": 11,
+      "requirement": "Candidate entity resolution",
+      "status": "CONSERVATIVE_GTIN_AND_VARIANT_RESOLUTION_WITH_UNIQUE_ORIGIN_SKU_ALIAS_LIVE_42_OBSERVATIONS_TO_39_CANDIDATES"
+    },
+    {
+      "id": 12,
+      "requirement": "Observed live competition evidence",
+      "status": "OBSERVED_MATCHED_PRODUCT_OFFERS_ACROSS_TWO_CAPTURED_ORIGINS_PUBLISHER_INDEPENDENCE_UNVERIFIED"
+    },
+    {
+      "id": 13,
+      "requirement": "Zero-paid demand proxies",
+      "status": "PUBLIC_LINK_AND_MATCHED_MULTI_ORIGIN_LISTING_PRESENCE_PROXY_OBSERVED_NO_VOLUME_OR_SALES_INFERENCE"
+    },
+    {
+      "id": 14,
+      "requirement": "First live supplier discovery route",
+      "status": "LIVE_PUBLIC_SUPPLIER_FIRST_PASS_EXECUTED_TERMS_AND_INDEPENDENT_MATCH_PENDING"
+    },
+    {
+      "id": 15,
+      "requirement": "Partial-evidence economics and uncertainty intervals",
+      "status": "MONETARY_INTERVAL_KERNEL_TESTED_LIVE_UNKNOWN_COSTS_KEEP_EXPECTED_PROFIT_UNKNOWN"
+    },
+    {
+      "id": 16,
+      "requirement": "Information-gain planner",
+      "status": "PARTIAL_PUBLIC_URL_INFORMATION_GAIN_HEURISTIC_AND_PERSISTED_FOLLOW_UP_EXECUTED"
+    },
+    {
+      "id": 17,
+      "requirement": "Evidence-based rejection versus insufficient evidence",
+      "status": "EXPLICIT_PRICE_WEIGHT_CATEGORY_AND_NONPOSITIVE_PROFIT_UPPER_BOUND_POLICIES_UNKNOWN_SELECTION_FIELDS_INSUFFICIENT_AFTER_BUDGET"
+    },
+    {
+      "id": 18,
+      "requirement": "Persisted scheduled watches",
+      "status": "PERSISTED_SQLITE_WATCHES_FENCED_LEASES_FOUR_TRIGGERS_LIVE_RESTART_VERIFIED"
+    },
+    {
+      "id": 19,
+      "requirement": "Frontier and candidate provenance dashboard",
+      "status": "DASHBOARD_FRONTIER_FIELD_EVIDENCE_AND_HISTORICAL_HASH_VERIFIED_LIVE_STATUS_IMPLEMENTED"
+    },
+    {
+      "id": 20,
+      "requirement": "High-level MCP orchestration",
+      "status": "31_MCP_TOOLS_PASS_ALL_NINE_HIGH_LEVEL_TOOLS_IMPLEMENTED"
+    },
+    {
+      "id": 21,
+      "requirement": "Several independent donor oracle families",
+      "status": "SIX_INDEPENDENT_ORACLE_FAMILIES_3595_CASES_FULL_DONOR_CONTRACTS_PENDING"
+    },
+    {
+      "id": 22,
+      "requirement": "Evidence-backed donor lifecycle reevaluation",
+      "status": "EIGHT_DONORS_LICENSE_HASH_REVIEWED_REGISTERED_CANONICAL_STATES_COMPUTED_NO_FULL_ABSORPTION_OR_EXTINCTION"
+    },
+    {
+      "id": 23,
+      "requirement": "Reduce 77 unknown files and 193 parse unknowns",
+      "status": "UNKNOWN_FILES_77_TO_0_PARSE_UNKNOWN_193_TO_134_REMAINING_REASONS_EXPLICIT"
+    },
+    {
+      "id": 24,
+      "requirement": "Canonical gate and separate upstream action",
+      "status": "PARTIAL_REGISTRATION_PATCH_PREPARED_UPSTREAM_ADOPTION_PENDING"
+    },
+    {
+      "id": 25,
+      "requirement": "Live zero-paid end-to-end proof",
+      "status": "PASS_LIVE_PUBLIC_RESEARCH_CHAIN_ONE_FURTHER_RESEARCH_SHORTLIST_UNKNOWN_EXPECTED_PROFIT"
+    },
+    {
+      "id": 26,
+      "requirement": "Separate live/fixture coverage and completeness metrics",
+      "status": "PARTIAL_LIVE_ACQUISITION_FIELD_OBSERVABILITY_MEASURED_DISTINCT_FROM_FIXTURE_EXECUTABILITY"
+    },
+    {
+      "id": 27,
+      "requirement": "Full live-wave definition of done",
+      "status": "NOT_ACHIEVED"
+    },
+    {
+      "id": 28,
+      "requirement": "Measured final report, direct main push, clean tree",
+      "status": "MEASURED_REPORT_PUBLISHED_REMAINING_REQUIREMENTS_EXPLICIT_DIRECT_MAIN_CHECKPOINT"
+    }
+  ],
+  "remaining": [
+    "Wire observed HTTP Retry-After into persistent retry scheduling; the native frontier delay primitive is tested but response-header propagation is pending",
+    "Additional commerce extraction formats, donor studies and remaining full crawler error policy and extraction donor contracts",
+    "Independent marketplace competition samples, broader observed demand and official SP-API acquisition and live public Amazon product mapping",
+    "Supplier term extraction when available and uncertainty planner beyond the initial public supplier heuristic",
+    "Remaining commercial validation beyond the further-research shortlist",
+    "Canonical upstream shard registration adoption and remaining full donor semantic census"
+  ],
+  "live_data_gaps": [
+    "Public Amazon request returned HTTP 503; public product mapping has fixture regression evidence only.",
+    "Publisher independence, total market competition, sales and demand are unverified.",
+    "Supplier quotations, logistics costs, expected profit and regulatory validation remain unknown.",
+    "The broad crawl is PARTIAL: 292 pending URLs remain after the 40-page budget."
+  ],
+  "canonical_upstream_action": "research/commerce/upstream-registration-action.json",
+  "next_extinction_target": {
+    "donor": "scrapinghub/price-parser",
+    "reason": "A bounded numeric subroutine already has 1235 oracle cases; remaining text selection and currency recognition must be decomposed and proven before donor-wide promotion or cutover.",
+    "extinction_claim": false
+  }
+}

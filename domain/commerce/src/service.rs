@@ -390,9 +390,30 @@ impl Engine {
         }
         Ok(json!(out))
     }
-    pub fn status(&self) -> Result<Value, String> {
+    pub fn live_research_status(&self) -> Result<Value, String> {
+        let payloads = {
+            let db = self.db.lock().map_err(error)?;
+            let mut statement = db.prepare("SELECT payload FROM runs WHERE mode='LIVE' ORDER BY created_at DESC,rowid DESC LIMIT 100").map_err(error)?;
+            statement
+                .query_map([], |row| row.get::<_, String>(0))
+                .map_err(error)?
+                .collect::<Result<Vec<_>, _>>()
+                .map_err(error)?
+        };
+        for payload in payloads {
+            let run: Value = serde_json::from_str(&payload).map_err(error)?;
+            if let Some(witness) = live_shortlist_witness(&self.root, &run) {
+                return Ok(witness);
+            }
+        }
         Ok(
-            json!({"name":"ECDEV","version":env!("CARGO_PKG_VERSION"),"phase":"FOUNDATION","mcp":"SDK_STREAMABLE_HTTP","live_e2e":"UNAVAILABLE","protocol":"ynventa-v1","protocol_shard":"UNREGISTERED_UPSTREAM","metrics":self.metrics()?,"providers":self.providers()}),
+            json!({"status":"UNAVAILABLE","scope":"LATEST_100_PERSISTED_LIVE_RUNS","reason":"No zero-paid research shortlist with available matching live capture hashes","network_calls":0}),
+        )
+    }
+    pub fn status(&self) -> Result<Value, String> {
+        let live = self.live_research_status()?;
+        Ok(
+            json!({"name":"ECDEV","version":env!("CARGO_PKG_VERSION"),"phase":"FOUNDATION","mcp":"SDK_STREAMABLE_HTTP","live_e2e":live["status"],"live_research":live,"protocol":"ynventa-v1","protocol_shard":"UNREGISTERED_UPSTREAM","metrics":self.metrics()?,"providers":self.providers()}),
         )
     }
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
@@ -554,6 +575,97 @@ pub fn tool_definitions() -> Vec<Value> {
     }
     out
 }
+// Historical capture validation, never a freshness or profitability assertion.
+fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
+    use sha2::{Digest, Sha256};
+    if run["mode"] != "LIVE"
+        || run["research_run"] != true
+        || run["cost_minor"] != 0
+        || run["known_network_calls"].as_u64().unwrap_or(0) == 0
+    {
+        return None;
+    }
+    let calls = run["provider_calls"].as_array()?;
+    if calls.is_empty()
+        || !calls.iter().all(|call| {
+            matches!(
+                call["provider"].as_str(),
+                Some("native-web" | "public-amazon")
+            ) && call["actual_cost_minor"] == 0
+        })
+    {
+        return None;
+    }
+    let observations = run["observations"].as_array()?;
+    for candidate in run["candidates"].as_array()? {
+        if candidate["state"] != "SHORTLISTED"
+            || candidate["decision"]["purpose"] != "FURTHER_RESEARCH"
+        {
+            continue;
+        }
+        let Some(ids) = candidate["evidence_ids"].as_array() else {
+            continue;
+        };
+        let mut hashes = Vec::new();
+        let mut origins = std::collections::BTreeSet::new();
+        for id in ids {
+            let Some(observation) = observations
+                .iter()
+                .find(|o| o["id"] == *id && o["mode"] == "LIVE")
+            else {
+                continue;
+            };
+            let Some(hash) = observation["raw_hash"].as_str().filter(|h| {
+                h.len() == 64
+                    && h.bytes()
+                        .all(|b| b.is_ascii_hexdigit() && !b.is_ascii_uppercase())
+            }) else {
+                continue;
+            };
+            if observation["normalized_value"]["content_hash"] != hash {
+                continue;
+            }
+            let acquired = calls.iter().any(|call| {
+                call["provider"] == observation["provider"]
+                    && call["cache_hit"] == false
+                    && call["request_count"].as_u64().unwrap_or(0) > 0
+                    && call["evidence_ids"]
+                        .as_array()
+                        .is_some_and(|ids| ids.contains(id))
+            });
+            if !acquired {
+                continue;
+            }
+            let Ok(bytes) = fs::read(
+                root.join(".ynventa/materialized/raw")
+                    .join(format!("{hash}.html")),
+            ) else {
+                continue;
+            };
+            if format!("{:x}", Sha256::digest(&bytes)) != hash {
+                continue;
+            }
+            let Some(source) = observation["external_source"].as_str() else {
+                continue;
+            };
+            let Ok(source) = url::Url::parse(source) else {
+                continue;
+            };
+            if !matches!(source.scheme(), "http" | "https") || source.host_str().is_none() {
+                continue;
+            }
+            origins.insert(source.origin().ascii_serialization());
+            hashes.push(json!({"evidence_id":id,"raw_capture_sha256":hash}));
+        }
+        if origins.len() >= 2 {
+            return Some(
+                json!({"status":"CAPTURED_ZERO_PAID_RESEARCH_SHORTLIST","scope":"HISTORICAL_PERSISTED_CAPTURE_NOT_CURRENT_MARKET_VALIDATION","run_id":run["run_id"],"run_status":run["status"],"captured_at":run["created_at"],"candidate_id":candidate["id"],"verified_capture_hashes":hashes,"listing_origins":origins,"publisher_independence":"UNVERIFIED","paid_provider_calls":0,"paid_cost_minor":0,"network_calls":0,"commercial_validation":"INCOMPLETE","goal_complete":false}),
+            );
+        }
+    }
+    None
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -577,6 +689,59 @@ mod tests {
         assert_eq!(replay["network_calls"], 0);
         assert_eq!(e.runs().unwrap().as_array().unwrap().len(), 2);
         assert_eq!(e.events(0).unwrap().as_array().unwrap().len(), 2);
+    }
+    #[test]
+    fn live_status_requires_network_witnesses_and_capture_hashes() {
+        use sha2::{Digest, Sha256};
+        let root = temp();
+        let engine = Engine::open(&root).unwrap();
+        let dir = root.join(".ynventa/materialized/raw");
+        fs::create_dir_all(&dir).unwrap();
+        let mut observations = vec![];
+        let mut calls = vec![];
+        for (id, source) in [
+            ("one", "https://manufacturer.example/product"),
+            ("two", "https://retailer.example/product"),
+        ] {
+            let raw = format!("<html>{id}</html>");
+            let hash = format!("{:x}", Sha256::digest(raw.as_bytes()));
+            fs::write(dir.join(format!("{hash}.html")), raw).unwrap();
+            observations.push(json!({"id":id,"provider":"native-web","mode":"LIVE","raw_hash":hash,"external_source":source,"normalized_value":{"content_hash":hash}}));
+            calls.push(json!({"provider":"native-web","actual_cost_minor":0,"cache_hit":false,"request_count":2,"evidence_ids":[id]}));
+        }
+        let mut run = json!({"research_run":true,"mode":"LIVE","status":"PARTIAL","cost_minor":0,"known_network_calls":4,"observations":observations,"provider_calls":calls,"candidates":[{"id":"candidate","state":"SHORTLISTED","decision":{"purpose":"FURTHER_RESEARCH"},"evidence_ids":["one","two"]}]});
+        assert_eq!(
+            engine.live_research_status().unwrap()["status"],
+            "UNAVAILABLE"
+        );
+        assert!(live_shortlist_witness(&root, &run).is_some());
+        for mode in ["FIXTURE", "CACHED", "REPLAY"] {
+            run["mode"] = json!(mode);
+            assert!(live_shortlist_witness(&root, &run).is_none());
+        }
+        run["mode"] = json!("LIVE");
+        run["observations"][1]["mode"] = json!("CACHED");
+        assert!(live_shortlist_witness(&root, &run).is_none());
+        run["observations"][1]["mode"] = json!("LIVE");
+        run["provider_calls"][1]["cache_hit"] = json!(true);
+        assert!(live_shortlist_witness(&root, &run).is_none());
+        run["provider_calls"][1]["cache_hit"] = json!(false);
+        run["provider_calls"][1]["provider"] = json!("keepa");
+        assert!(live_shortlist_witness(&root, &run).is_none());
+        run["provider_calls"][1]["provider"] = json!("native-web");
+        let saved = engine.persist(run.clone()).unwrap();
+        drop(engine);
+        let engine = Engine::open(&root).unwrap();
+        assert_eq!(
+            engine.live_research_status().unwrap()["run_id"],
+            saved["run_id"]
+        );
+        let hash = run["observations"][1]["raw_hash"].as_str().unwrap();
+        fs::write(dir.join(format!("{hash}.html")), "changed bytes").unwrap();
+        assert_eq!(
+            engine.live_research_status().unwrap()["status"],
+            "UNAVAILABLE"
+        );
     }
     #[test]
     fn rejects_paths_and_bad_intents() {
