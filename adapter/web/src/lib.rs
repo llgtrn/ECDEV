@@ -6,6 +6,7 @@ pub mod microdata;
 pub mod page_product;
 pub mod price;
 pub mod robots;
+pub mod social;
 pub mod supplier;
 pub mod supplier_terms;
 use ecdev_core::{

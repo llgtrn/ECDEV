@@ -1,0 +1,373 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "Dockerfile",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "e18d764e79ae24efd247416b475b2c4036cbe079",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    CMD python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8042/health', timeout=3)\""
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- **🏠 Self-hosted & local-first.** One SQLite file on your machine. No Harken telemetry or account required."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  sources ──▶ normalize ──▶ sentiment ──▶ themes ──▶ SQLite ──▶ dashboard / CLI"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "5. Everything lands in **SQLite** and renders in a local **web dashboard** and a **terminal report**."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Each scan is de-duplicated into the same SQLite database, and a failed source does not stop the others. Add `--runs N` for a bounded job."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Delivery state is kept in SQLite independently for each target: successful alerts are de-duplicated and failed alerts remain queued for the next scan. Webhook URLs and SMTP passwords are treated as secrets and never stored in alert target identifiers or error messages."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "The dashboard remains account-free by default. For an opt-in multi-user deployment, create the first administrator in the same SQLite database and enable account mode:"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Exports contain the complete stored result set rather than the dashboard's visible page. `harken backup` uses SQLite's online backup API, so it is consistent even while the dashboard is running; it refuses to overwrite a file unless `--force` is explicit. To restore, stop Harken and replace the configured database with a verified backup copy. Retention pruning is preview-only unless `--yes` is exp"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Operational probes are available at `/health` (including a SQLite read/write check) and `/metrics` (Prometheus text format). Metrics include stored mention/query/alert counts plus durable per-source scan, error, retry, fetched-page, fetched-mention, and latency totals. Per-source counters live in SQLite, so they survive service restarts."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `HARKEN_DB` | `harken.db` | SQLite path. |"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import sqlite3"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 678,
+      "line_end": 678,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"Create a consistent SQLite backup while Harken is running.\"\"\""
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 684,
+      "line_end": 684,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except (OSError, sqlite3.Error) as exc:"
+    },
+    {
+      "source_path": "src/harken/evaluation/sentiment_v1.json",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "4211b90766d15f1d6c3d72129e4afa3d4042d981",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    {\"id\": \"neu-04\", \"label\": \"neutral\", \"category\": \"question\", \"text\": \"Does anyone know whether it supports SQLite?\"},"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"SQLite persistence. One file, no server, your data stays on your box."
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 10,
+      "line_end": 10,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import sqlite3"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 178,
+      "line_end": 178,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self._conn = sqlite3.connect(self.path, timeout=30.0)"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self._conn.row_factory = sqlite3.Row"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 194,
+      "line_end": 194,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            cur.execute(\"SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'projects'\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 196,
+      "line_end": 196,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            cur.execute(\"SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'mentions'\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 264,
+      "line_end": 264,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Raise if SQLite cannot execute a read and a small write transaction.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 271,
+      "line_end": 271,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Create a transactionally consistent SQLite backup.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(sqlite3.connect(target)) as destination_conn:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 340,
+      "line_end": 340,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except sqlite3.IntegrityError as exc:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def _ensure_another_admin(cur: sqlite3.Cursor, excluded_user_id: int) -> None:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 674,
+      "line_end": 674,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except sqlite3.IntegrityError as exc:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 893,
+      "line_end": 893,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Return IDs already stored for a query, chunked below SQLite's variable limit.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1423,
+      "line_end": 1423,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _row_to_mention(r: sqlite3.Row) -> Mention:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1440,
+      "line_end": 1440,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _user_view(row: sqlite3.Row) -> dict:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 40,
+      "line_end": 40,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Largest value SQLite binds as an INTEGER; anything larger overflows the bind"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/OFL.txt",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "e0fedd6cff1072682fc796ae9df442f5d7f5cdb4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "redistributed freely as long as they are not sold by themselves. The"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/OFL.txt",
+      "line_start": 24,
+      "line_end": 24,
+      "blob_hash": "e0fedd6cff1072682fc796ae9df442f5d7f5cdb4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "redistributed and/or sold with any software provided that any reserved"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/OFL.txt",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "e0fedd6cff1072682fc796ae9df442f5d7f5cdb4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "redistribute, and sell modified and unmodified copies of the Font"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/OFL.txt",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "e0fedd6cff1072682fc796ae9df442f5d7f5cdb4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "redistributed and/or sold with any software, provided that each copy"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/README.md",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "773bcecc0ba45dc2088edef93caca0164148646c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "bundling and redistribution. The required copyright notices and full license are"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # store.close() on the \"no data yet\" path, leaking the sqlite connection."
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 290,
+      "line_end": 290,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    with csv_path.open() as exported:"
+    },
+    {
+      "source_path": "tests/test_sentiment.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "03be3bcc2fdee9a54efc9c7cadebc2b3db21c3f4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    r = a.score(\"The release ships on Tuesday and supports SQLite.\")"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 1,
+      "line_end": 1,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "\"\"\"SQLite store tests — temp DB, no network.\"\"\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "import sqlite3"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 382,
+      "line_end": 382,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    conn = sqlite3.connect(path)"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 411,
+      "line_end": 411,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'alert_outbox'\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 414,
+      "line_end": 414,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'tracked_queries'\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 417,
+      "line_end": 417,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'threshold_alerts'\""
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 321,
+      "line_end": 321,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # was set) and SQLite treats `LIMIT -1` as \"no limit\", dumping the table."
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 588,
+      "line_end": 588,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # A project id past SQLite's INTEGER range must be a clean 422, never a 500."
+    }
+  ]
+}

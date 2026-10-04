@@ -1,0 +1,1013 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "media_downloader/__init__.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "450673967ad302c63a89724fc48a12e27d9ba55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    MediaRetryableError,"
+    },
+    {
+      "source_path": "media_downloader/__init__.py",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "450673967ad302c63a89724fc48a12e27d9ba55f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"MediaRetryableError\","
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from .types import MediaDownloadError, MediaFatalError, MediaItem, MediaRetryableError, MediaType"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries: int = 3,"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_base_delay: float = 1.0,"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 135,
+      "line_end": 135,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_max_delay: float = 30.0,"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 144,
+      "line_end": 144,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.max_retries = max(0, max_retries)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 145,
+      "line_end": 145,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.retry_base_delay = retry_base_delay"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.retry_max_delay = retry_max_delay"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 290,
+      "line_end": 290,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                content_type = await self._fetch_with_retry(client, item, candidate, part_path)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 379,
+      "line_end": 379,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    async def _fetch_with_retry("
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 388,
+      "line_end": 388,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        for attempt in range(self.max_retries + 1):"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 395,
+      "line_end": 395,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except (MediaRetryableError, httpx.HTTPError, httpx.InvalidURL, OSError) as exc:"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 397,
+      "line_end": 397,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if attempt < self.max_retries:"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 398,
+      "line_end": 398,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    delay = self._retry_delay(attempt)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 402,
+      "line_end": 402,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        self.max_retries,"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 409,
+      "line_end": 409,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise MediaRetryableError(\"未知错误\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 411,
+      "line_end": 411,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise MediaRetryableError(f\"{type(last_error).__name__}: {last_error}\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 413,
+      "line_end": 413,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def _retry_delay(self, attempt: int) -> float:"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 415,
+      "line_end": 415,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        ceiling = min(self.retry_base_delay * (2**attempt), self.retry_max_delay)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 442,
+      "line_end": 442,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise MediaRetryableError(\"HTTP 416：本地残留片段已失效，重新下载\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 444,
+      "line_end": 444,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise MediaRetryableError(f\"HTTP {status}\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 450,
+      "line_end": 450,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise MediaRetryableError("
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 466,
+      "line_end": 466,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise MediaRetryableError(\"206 响应缺少 Content-Range，丢弃片段重新下载\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 471,
+      "line_end": 471,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise MediaRetryableError("
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 479,
+      "line_end": 479,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise MediaRetryableError(\"206 的 Content-Range 未给出总长（*），重新完整下载\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 500,
+      "line_end": 500,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise MediaRetryableError(\"响应体为空\")"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line_start": 509,
+      "line_end": 509,
+      "blob_hash": "b3eb24473c32f552932665a56f42a5a1135de40a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise MediaRetryableError(f\"大小不符：实际 {written} 字节，期望 {total_size} 字节\")"
+    },
+    {
+      "source_path": "media_downloader/types.py",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "eb491d652b8d7e2ea6509bfb8e8255a4059b9616",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "class MediaRetryableError(MediaDownloadError):"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line_start": 278,
+      "line_end": 278,
+      "blob_hash": "4ff7948c6b6f37f66da4016d384a05007582075f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries = 3"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "4ff7948c6b6f37f66da4016d384a05007582075f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            for attempt in range(max_retries):"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line_start": 287,
+      "line_end": 287,
+      "blob_hash": "4ff7948c6b6f37f66da4016d384a05007582075f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if attempt < max_retries - 1:"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line_start": 289,
+      "line_end": 289,
+      "blob_hash": "4ff7948c6b6f37f66da4016d384a05007582075f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        utils.logger.warning(f\"[BilibiliClient.get_video_all_comments] Retrying video_id {video_id} in {delay:.2f}s... (Attempt {attempt + 1}/{max_retries})\")"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line_start": 292,
+      "line_end": 292,
+      "blob_hash": "4ff7948c6b6f37f66da4016d384a05007582075f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        utils.logger.error(f\"[BilibiliClient.get_video_all_comments] Max retries reached for video_id: {video_id}. Skipping comments. Error: {e}\")"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "13e31a1efa6c99d0023adee0522c46387fb4223e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line_start": 92,
+      "line_end": 92,
+      "blob_hash": "13e31a1efa6c99d0023adee0522c46387fb4223e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "13e31a1efa6c99d0023adee0522c46387fb4223e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retry decorator will retry 600 times if the return value is False, and the retry interval is 1 second"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line_start": 97,
+      "line_end": 97,
+      "blob_hash": "13e31a1efa6c99d0023adee0522c46387fb4223e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if max retry times reached, raise RetryError"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line_start": 152,
+      "line_end": 152,
+      "blob_hash": "13e31a1efa6c99d0023adee0522c46387fb4223e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "4b76d119da3d55ec115a4789c6845b3c47e2ee89",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "4b76d119da3d55ec115a4789c6845b3c47e2ee89",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "4b76d119da3d55ec115a4789c6845b3c47e2ee89",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line_start": 197,
+      "line_end": 197,
+      "blob_hash": "4b76d119da3d55ec115a4789c6845b3c47e2ee89",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    utils.logger.info(\"[DouYinLogin.check_page_display_slider] slider verify failed, retry ...\")"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line_start": 126,
+      "line_end": 126,
+      "blob_hash": "0f78040b0f660c50bdbdb1804fd522e8ed81b19f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retry = 3"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line_start": 127,
+      "line_end": 127,
+      "blob_hash": "0f78040b0f660c50bdbdb1804fd522e8ed81b19f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        for attempt in range(max_retry):"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "0f78040b0f660c50bdbdb1804fd522e8ed81b19f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    f\"retry in {delay:.1f}s, attempt {attempt + 1}/{max_retry}\""
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "13da132638c15a14265b39e0e0578b8ead0b29e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "13da132638c15a14265b39e0e0578b8ead0b29e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "13da132638c15a14265b39e0e0578b8ead0b29e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retry decorator will retry 20 times if the return value is False, and the retry interval is 1 second"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "13da132638c15a14265b39e0e0578b8ead0b29e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if max retry times reached, raise RetryError"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line_start": 103,
+      "line_end": 103,
+      "blob_hash": "13da132638c15a14265b39e0e0578b8ead0b29e9",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "e7bda822df775551dff8d416fed4e404258f959a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import RetryError, retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "e7bda822df775551dff8d416fed4e404258f959a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line_start": 296,
+      "line_end": 296,
+      "blob_hash": "e7bda822df775551dff8d416fed4e404258f959a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError as e:"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line_start": 304,
+      "line_end": 304,
+      "blob_hash": "e7bda822df775551dff8d416fed4e404258f959a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            utils.logger.error(f\"[BaiduTieBaClient.get] Reached maximum retry attempts, IP is blocked, please try a new IP proxy: {e}\")"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line_start": 305,
+      "line_end": 305,
+      "blob_hash": "e7bda822df775551dff8d416fed4e404258f959a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise Exception(f\"[BaiduTieBaClient.get] Reached maximum retry attempts, IP is blocked, please try a new IP proxy: {e}\")"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "a177293dd76434580c64fc24307d588a34ac59d4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "a177293dd76434580c64fc24307d588a34ac59d4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line_start": 115,
+      "line_end": 115,
+      "blob_hash": "a177293dd76434580c64fc24307d588a34ac59d4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/tieba/test_data/note_comments.html",
+      "line_start": 874,
+      "line_end": 874,
+      "blob_hash": "5d08b07d0b73d6e70af265325d959f71aec32285",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "</style><script>    _.Module.use('adsense/widget/data_handler_async', [], function (instance){    instance.addData({    'forum_vdir': null});    });</script><script>    _.Module.use('tbmall/widget/grab_treasure_dialog_success',[{    diamondData: []}]);</script><script>    /*加载无刷新组件*/    _.Module.use('pb/widget/NoRefresh', [\"\\/p\\/9119688421?pn=\", false]);</script><script>        _.Module.use('spage"
+    },
+    {
+      "source_path": "media_platform/tieba/test_data/note_detail.html",
+      "line_start": 839,
+      "line_end": 839,
+      "blob_hash": "e4ecae6a0390b9f1fdc3e4362e46870c3ff47546",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "<script>    (function () {        var isGameTab = false;        function getNormalTabUrl() {            var location = $.tb.location;            var origin = location.getOrigin(), pathname = location.getPathname();            var searchValue = location.getSearchValue();            var searchString = '';            for (var i in searchValue) {                if (i != 'all_thread_tab') {            "
+    },
+    {
+      "source_path": "media_platform/tieba/test_data/tieba_note_list.html",
+      "line_start": 275,
+      "line_end": 275,
+      "blob_hash": "abd423c9f4c19cd81139e7ba3c460f7b16a822c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retryCount: 3,"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "08c17421c0021e680fee295c009bd4d277dcde1a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "08c17421c0021e680fee295c009bd4d277dcde1a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(5), wait=wait_fixed(3))"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line_start": 86,
+      "line_end": 86,
+      "blob_hash": "08c17421c0021e680fee295c009bd4d277dcde1a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # issue: #771 Search API returns error 432, retry multiple times + update h5 cookies"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "7916c872f27d6f43e5fa9da6aa6ec8ee4e53227c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "7916c872f27d6f43e5fa9da6aa6ec8ee4e53227c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line_start": 73,
+      "line_end": 73,
+      "blob_hash": "7916c872f27d6f43e5fa9da6aa6ec8ee4e53227c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retry decorator will retry 20 times if the return value is False, and the retry interval is 1 second"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "7916c872f27d6f43e5fa9da6aa6ec8ee4e53227c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            if max retry times reached, raise RetryError"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line_start": 112,
+      "line_end": 112,
+      "blob_hash": "7916c872f27d6f43e5fa9da6aa6ec8ee4e53227c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    RetryError,"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retry,"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retry_if_not_exception_type,"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 127,
+      "line_end": 127,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry("
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry=retry_if_not_exception_type("
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 689,
+      "line_end": 689,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry("
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 692,
+      "line_end": 692,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry=retry_if_not_exception_type("
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 693,
+      "line_end": 693,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            (RetryError, IPBlockError, PlatformAccessError)"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line_start": 704,
+      "line_end": 704,
+      "blob_hash": "f9d5193718990af65b5f705cdf845944d13d77c4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        Get note details by parsing note detail page HTML, this interface may fail, retry 3 times here"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "8110907f3db53e1cd3edffd462d3079fb5cc2f60",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import RetryError"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line_start": 313,
+      "line_end": 313,
+      "blob_hash": "8110907f3db53e1cd3edffd462d3079fb5cc2f60",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                except RetryError:"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line_start": 27,
+      "line_end": 27,
+      "blob_hash": "e38295404d77cd509d2ec66cbb3071456c984b77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "e38295404d77cd509d2ec66cbb3071456c984b77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "e38295404d77cd509d2ec66cbb3071456c984b77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # Set a short timeout since this is called within a retry loop"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line_start": 159,
+      "line_end": 159,
+      "blob_hash": "e38295404d77cd509d2ec66cbb3071456c984b77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line_start": 205,
+      "line_end": 205,
+      "blob_hash": "e38295404d77cd509d2ec66cbb3071456c984b77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "073928f3d4aa39f9c0ad795a17f70efc7f4c7264",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "073928f3d4aa39f9c0ad795a17f70efc7f4c7264",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line_start": 28,
+      "line_end": 28,
+      "blob_hash": "ca8210b83cf864d476bda6f51c2898a6f960963a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "ca8210b83cf864d476bda6f51c2898a6f960963a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(600), wait=wait_fixed(1), retry=retry_if_result(lambda value: value is False))"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "ca8210b83cf864d476bda6f51c2898a6f960963a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except RetryError:"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "a58b14d70678c80dd0fbd741a7fc7f6b7d90032c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line_start": 99,
+      "line_end": 99,
+      "blob_hash": "a58b14d70678c80dd0fbd741a7fc7f6b7d90032c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    @retry(stop=stop_after_attempt(3), wait=wait_fixed(1))"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=2,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_base_delay=0.001,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_max_delay=0.005,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=0,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 212,
+      "line_end": 212,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def test_truncated_response_retries_with_range(server, downloader, tmp_path):"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 412,
+      "line_end": 412,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    downloader = MediaDownloader(\"dy\", base_dir=tmp_path, max_retries=0, max_candidates=2)"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 458,
+      "line_end": 458,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    downloader = MediaDownloader(\"xhs\", base_dir=tmp_path, max_retries=0)"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 526,
+      "line_end": 526,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=3,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 527,
+      "line_end": 527,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_base_delay=0.001,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 528,
+      "line_end": 528,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_max_delay=0.005,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 540,
+      "line_end": 540,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def test_retry_exhausted_returns_none(server, downloader):"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 564,
+      "line_end": 564,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=0,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 683,
+      "line_end": 683,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=0,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 710,
+      "line_end": 710,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=0,"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 767,
+      "line_end": 767,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    downloader = MediaDownloader(\"bili\", base_dir=tmp_path / \"out\", max_retries=0)"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line_start": 798,
+      "line_end": 798,
+      "blob_hash": "bd99727986068cb6f029e203a176549dc0dc1b6e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    downloader = MediaDownloader(\"bili\", base_dir=tmp_path / \"out\", max_retries=0)"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line_start": 97,
+      "line_end": 97,
+      "blob_hash": "e639889e57ea5c52bb4f0befef29cd722160619a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        max_retries=2,"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line_start": 6,
+      "line_end": 6,
+      "blob_hash": "0b8485b4e3734638d8e10fe13a9ebce465410b92",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "IPBlockError / PlatformAccessError 被加入 request() 的 retry_if_not_exception_type 之后,"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line_start": 7,
+      "line_end": 7,
+      "blob_hash": "0b8485b4e3734638d8e10fe13a9ebce465410b92",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "tenacity 会直接重抛原异常而不再包装成 RetryError。core 层原先只 catch"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "0b8485b4e3734638d8e10fe13a9ebce465410b92",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "RetryError / NoteNotFoundError / DataFetchError / KeyError,导致单条笔记被限流"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line_start": 8,
+      "line_end": 8,
+      "blob_hash": "89c77a9e80dc70ed1995de4dbbf5b66881cc8629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "from tenacity import RetryError"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "89c77a9e80dc70ed1995de4dbbf5b66881cc8629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def test_html_detail_does_not_multiply_transport_retries(monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line_start": 170,
+      "line_end": 170,
+      "blob_hash": "89c77a9e80dc70ed1995de4dbbf5b66881cc8629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    with pytest.raises(RetryError):"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line_start": 179,
+      "line_end": 179,
+      "blob_hash": "89c77a9e80dc70ed1995de4dbbf5b66881cc8629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "async def test_html_detail_still_retries_parse_failures():"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line_start": 186,
+      "line_end": 186,
+      "blob_hash": "89c77a9e80dc70ed1995de4dbbf5b66881cc8629",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    with pytest.raises(RetryError):"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "148c72d7bf6e4a26751f583633356cedb80dab28",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  const handleRetry = () => {"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "148c72d7bf6e4a26751f583633356cedb80dab28",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                onClick={handleRetry}"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "148c72d7bf6e4a26751f583633356cedb80dab28",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                {t('retryCheck')}"
+    },
+    {
+      "source_path": "webui/src/i18n/locales/en-US/common.json",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "6e16d135da5f62d6338853dd192fbf9b5b8486c5",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"retry\": \"RETRY_SCAN\""
+    },
+    {
+      "source_path": "webui/src/i18n/locales/en-US/env.json",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "062d10116d1b374094e879d977609f10813f6392",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"retryCheck\": \"RETRY_SCAN\""
+    },
+    {
+      "source_path": "webui/src/i18n/locales/zh-CN/common.json",
+      "line_start": 20,
+      "line_end": 20,
+      "blob_hash": "e1ada03814cf24bcbfc1c80e76953a9a060ad67b",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"retry\": \"重新扫描\""
+    },
+    {
+      "source_path": "webui/src/i18n/locales/zh-CN/env.json",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "fa1b3206e8c0437f9617dd5e86065c6e70206c76",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  \"retryCheck\": \"重新检测\""
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "bd411f1a4b443465ea0c2f6c7c408d2d46918a28",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      retry: 1,"
+    }
+  ]
+}

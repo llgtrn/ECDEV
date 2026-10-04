@@ -1,0 +1,245 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".env.example",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "8a3b5d08a339f4fc068df1f87ca30f7fc20d3417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Retry network errors, HTTP 429, and HTTP 5xx with exponential backoff"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Passwords use salted PBKDF2-HMAC-SHA256 hashes, never reversible encryption. Browser sessions are opaque random tokens; only their SHA-256 hashes are stored, they expire after `HARKEN_SESSION_HOURS`, and cookies are HttpOnly with `SameSite=Strict`. Login attempts are rate-limited and errors do not reveal whether a username exists. For HTTPS deployments, set `HARKEN_SESSION_SECURE=true`. `/health` "
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| Stack Overflow | ✅ | Public Stack Exchange question search; Harken preserves API backoff and anonymous quota state. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| YouTube | needs API key | YouTube Data API v3 video search, ordered by publication time; provider quota applies. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 245,
+      "line_end": 245,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `HARKEN_RETRIES` | `2` | Retries for network, HTTP 429, and HTTP 5xx failures. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 270,
+      "line_end": 270,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "X accepts `HARKEN_X_BEARER_TOKEN`; YouTube accepts `HARKEN_YOUTUBE_API_KEY`. Both adapters support incremental time boundaries and persisted pagination cursors. Harken never logs either credential. See the official [X recent-search documentation](https://docs.x.com/x-api/posts/search/integrate/overview) and [YouTube `search.list` reference](https://developers.google.com/youtube/v3/docs/search/list"
+    },
+    {
+      "source_path": "src/harken/analyze/sentiment.py",
+      "line_start": 202,
+      "line_end": 202,
+      "blob_hash": "38a8b5cc3df7e6df169ac38cbc9448e362976137",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"’\": \"'\",  # RIGHT SINGLE QUOTATION MARK (’)"
+    },
+    {
+      "source_path": "src/harken/analyze/sentiment.py",
+      "line_start": 203,
+      "line_end": 203,
+      "blob_hash": "38a8b5cc3df7e6df169ac38cbc9448e362976137",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"‘\": \"'\",  # LEFT SINGLE QUOTATION MARK (‘)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 3,
+      "line_end": 3,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "A single source failing (rate limit, network) never sinks the run — its error is"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 563,
+      "line_end": 563,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return status == 429 or status >= 500"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # rate-limited token endpoint once per page."
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Backoff and anonymous daily quota apply to the calling process, even though"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    _quota_remaining: int | None = None"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if self._quota_remaining == 0:"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"Stack Exchange API daily quota is exhausted\")"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if \"quota_remaining\" in data:"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            type(self)._quota_remaining = max(int(data[\"quota_remaining\"]), 0)"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 323,
+      "line_end": 323,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                status_code=429,"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 261,
+      "line_end": 261,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    class RateLimitedSource:"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 271,
+      "line_end": 271,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                response = httpx.Response(429, headers={\"Retry-After\": \"7\"}, request=request)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 272,
+      "line_end": 272,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise httpx.HTTPStatusError(\"rate limited\", request=request, response=response)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 276,
+      "line_end": 276,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    monkeypatch.setitem(REGISTRY, \"limited\", RateLimitedSource)"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 175,
+      "line_end": 175,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._quota_remaining = None"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 193,
+      "line_end": 193,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"quota_remaining\": 99,"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 207,
+      "line_end": 207,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._quota_remaining = None"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 213,
+      "line_end": 213,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._quota_remaining = None"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"quota_remaining\": 99,"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_account_login_has_generic_errors_and_rate_limit(tmp_path):"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    db_path = str(tmp_path / \"rate-limit.db\")"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert limited.status_code == 429"
+    }
+  ]
+}

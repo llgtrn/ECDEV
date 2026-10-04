@@ -1,0 +1,1161 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 6,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 7,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 9,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 11,
+      "text": "from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 12,
+      "text": "from telegram.ext import (\n    Application, CommandHandler, MessageHandler,\n    CallbackQueryHandler, ContextTypes, filters,\n)"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 16,
+      "text": "from telegram.constants import ParseMode"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 20,
+      "text": "import sys"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 23,
+      "text": "from database.models               import get_session, Cluster, RawPost, UserAlert"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 24,
+      "text": "from intelligence.virality_scorer  import ViralityScorer"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 25,
+      "text": "from intelligence.emotion_detector import EMOTION_EMOJI, EMOTION_SPREAD_PATTERN"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 26,
+      "text": "from predictor.viral_predictor     import ViralPredictor"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 27,
+      "text": "from config                        import TOP_TRENDS_COUNT, DEFAULT_ALERT_THRESHOLD"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 302,
+      "text": "import json"
+    },
+    {
+      "source_path": "bot/telegram_bot.py",
+      "line": 362,
+      "text": "from sqlalchemy import func"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 9,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 10,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 11,
+      "text": "import streamlit as st"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 12,
+      "text": "import plotly.express as px"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 13,
+      "text": "import plotly.graph_objects as go"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 14,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 18,
+      "text": "from database.models               import get_session, Cluster, RawPost, Snapshot"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 19,
+      "text": "from intelligence.virality_scorer  import ViralityScorer"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 20,
+      "text": "from intelligence.emotion_detector import EMOTION_EMOJI"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 21,
+      "text": "from predictor.viral_predictor     import ViralPredictor"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 69,
+      "text": "from sqlalchemy import func"
+    },
+    {
+      "source_path": "dashboard/app.py",
+      "line": 545,
+      "text": "from sqlalchemy import func"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 2,
+      "text": "from sqlalchemy import (\n    create_engine, Column, String, Integer, Float,\n    DateTime, Text, Boolean, Index\n)"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 6,
+      "text": "from sqlalchemy.orm import declarative_base, sessionmaker"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 7,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 11,
+      "text": "from config import DATABASE_URL"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 2,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 4,
+      "text": "import requests"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 5,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 6,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 7,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 8,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 10,
+      "text": "from config import TARGET_COUNTRIES, EXCLUDE_REGIONS"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line": 11,
+      "text": "from database.models import RawPost, get_session"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 6,
+      "text": "import feedparser"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 7,
+      "text": "import requests"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 10,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 11,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 12,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 13,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 218,
+      "text": "import re"
+    },
+    {
+      "source_path": "fetchers/google_trends_fetcher.py",
+      "line": 241,
+      "text": "import re"
+    },
+    {
+      "source_path": "fetchers/hn_fetcher.py",
+      "line": 2,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/hn_fetcher.py",
+      "line": 3,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/hn_fetcher.py",
+      "line": 4,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/hn_fetcher.py",
+      "line": 5,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/hn_fetcher.py",
+      "line": 6,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 8,
+      "text": "import requests"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 9,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 11,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 12,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "fetchers/nitter_fetcher.py",
+      "line": 317,
+      "text": "import re"
+    },
+    {
+      "source_path": "fetchers/reddit_fetcher.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/reddit_fetcher.py",
+      "line": 7,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "fetchers/reddit_fetcher.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/reddit_fetcher.py",
+      "line": 9,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/reddit_fetcher.py",
+      "line": 10,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 2,
+      "text": "import feedparser"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 4,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 5,
+      "text": "from email.utils import parsedate_to_datetime"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 6,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 7,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 8,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "fetchers/rss_fetcher.py",
+      "line": 9,
+      "text": "from config import RSS_FEEDS"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 7,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 10,
+      "text": "import sys"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 11,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 13,
+      "text": "from fetchers.base import BaseFetcher"
+    },
+    {
+      "source_path": "fetchers/youtube_fetcher.py",
+      "line": 14,
+      "text": "from database.models import RawPost"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 7,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 8,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 9,
+      "text": "from sklearn.preprocessing import normalize"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 10,
+      "text": "from sklearn.metrics.pairwise import cosine_similarity"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 11,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 13,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 15,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 18,
+      "text": "from database.models import RawPost, Cluster, Snapshot, get_session"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 19,
+      "text": "from processing.embedder import Embedder"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 20,
+      "text": "from config import CLUSTER_WINDOW_HOURS, MIN_CLUSTER_SIZE"
+    },
+    {
+      "source_path": "intelligence/clusterer.py",
+      "line": 415,
+      "text": "from processing.cleaner import clean_text"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 10,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 11,
+      "text": "from transformers import pipeline"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 13,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 16,
+      "text": "from database.models    import Cluster, RawPost, get_session"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 17,
+      "text": "from processing.cleaner import clean_for_emotion"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 18,
+      "text": "from config             import EMOTION_MODEL"
+    },
+    {
+      "source_path": "intelligence/emotion_detector.py",
+      "line": 241,
+      "text": "from database.models import get_session, Cluster"
+    },
+    {
+      "source_path": "intelligence/growth_detector.py",
+      "line": 6,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "intelligence/growth_detector.py",
+      "line": 7,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "intelligence/growth_detector.py",
+      "line": 9,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "intelligence/growth_detector.py",
+      "line": 12,
+      "text": "from database.models import Cluster, Snapshot, get_session"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 7,
+      "text": "import math"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 11,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 14,
+      "text": "from database.models import Cluster, Snapshot, RawPost, get_session"
+    },
+    {
+      "source_path": "intelligence/virality_scorer.py",
+      "line": 15,
+      "text": "from config import (\n    W_GROWTH_RATE, W_UPVOTE_VELOCITY, W_COMMENT_VELOCITY,\n    W_CROSS_PLATFORM, W_RECENCY,\n)"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 7,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 11,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 14,
+      "text": "from database.models               import Cluster, RawPost, get_session"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 15,
+      "text": "from processing.embedder           import Embedder"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 16,
+      "text": "from processing.cleaner            import clean_text, build_embedding_text"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 17,
+      "text": "from intelligence.emotion_detector import EmotionDetector, EMOTION_EMOJI"
+    },
+    {
+      "source_path": "predictor/viral_predictor.py",
+      "line": 18,
+      "text": "from intelligence.virality_scorer  import ViralityScorer"
+    },
+    {
+      "source_path": "processing/cleaner.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "processing/cleaner.py",
+      "line": 8,
+      "text": "import html"
+    },
+    {
+      "source_path": "processing/cleaner.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 6,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 7,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 9,
+      "text": "from sqlalchemy import and_"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 11,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 14,
+      "text": "from database.models    import RawPost, get_session"
+    },
+    {
+      "source_path": "processing/deduplicator.py",
+      "line": 15,
+      "text": "from processing.embedder import Embedder"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 7,
+      "text": "import time"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 8,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 10,
+      "text": "from sentence_transformers import SentenceTransformer"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 11,
+      "text": "from sqlalchemy import and_"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 12,
+      "text": "from datetime import datetime, timezone, timedelta"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 13,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 15,
+      "text": "import sys, os"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 18,
+      "text": "from database.models  import RawPost, get_session"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 19,
+      "text": "from processing.cleaner import build_embedding_text, is_bot_post"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line": 20,
+      "text": "from config import EMBEDDING_MODEL"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 2,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 4,
+      "text": "import signal"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 5,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 6,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 7,
+      "text": "from apscheduler.schedulers.background import BackgroundScheduler"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 8,
+      "text": "from apscheduler.events import EVENT_JOB_ERROR, EVENT_JOB_EXECUTED"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 9,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 13,
+      "text": "from database.models                import init_db"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 14,
+      "text": "from fetchers.reddit_fetcher        import RedditFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 15,
+      "text": "from fetchers.hn_fetcher            import HNFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 16,
+      "text": "from fetchers.rss_fetcher           import RSSFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 17,
+      "text": "from fetchers.google_trends_fetcher import GoogleTrendsFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 18,
+      "text": "from fetchers.youtube_fetcher       import YouTubeFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 19,
+      "text": "from fetchers.nitter_fetcher        import NitterFetcher"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 20,
+      "text": "from processing.embedder            import Embedder"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 21,
+      "text": "from processing.deduplicator        import Deduplicator"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 22,
+      "text": "from intelligence.clusterer         import ClusterEngine"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 23,
+      "text": "from intelligence.growth_detector   import GrowthDetector"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 24,
+      "text": "from intelligence.virality_scorer   import ViralityScorer"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 25,
+      "text": "from intelligence.emotion_detector  import EmotionDetector"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 26,
+      "text": "from bot.telegram_bot               import ViralBot"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 27,
+      "text": "from config import (\n    REDDIT_INTERVAL, HN_INTERVAL, RSS_INTERVAL,\n    GOOGLE_TRENDS_INTERVAL, YOUTUBE_INTERVAL, NITTER_INTERVAL,\n)"
+    },
+    {
+      "source_path": "scheduler.py",
+      "line": 114,
+      "text": "from database.models import get_session, RawPost, Cluster, Snapshot"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 3,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 6,
+      "text": "from database.models import init_db, get_session, RawPost"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 7,
+      "text": "from fetchers.reddit_fetcher        import RedditFetcher"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 8,
+      "text": "from fetchers.hn_fetcher            import HNFetcher"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 9,
+      "text": "from fetchers.rss_fetcher           import RSSFetcher"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 10,
+      "text": "from fetchers.google_trends_fetcher import GoogleTrendsFetcher"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 11,
+      "text": "from fetchers.youtube_fetcher       import YouTubeFetcher"
+    },
+    {
+      "source_path": "test_phase1.py",
+      "line": 12,
+      "text": "from fetchers.nitter_fetcher        import NitterFetcher"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 2,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 3,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 6,
+      "text": "from database.models         import init_db, get_session, RawPost"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 7,
+      "text": "from processing.cleaner      import clean_text, build_embedding_text, is_bot_post"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 8,
+      "text": "from processing.embedder     import Embedder"
+    },
+    {
+      "source_path": "test_phase2.py",
+      "line": 9,
+      "text": "from processing.deduplicator import Deduplicator"
+    },
+    {
+      "source_path": "test_phase3.py",
+      "line": 2,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase3.py",
+      "line": 5,
+      "text": "from database.models              import init_db, get_session, Cluster, Snapshot, RawPost"
+    },
+    {
+      "source_path": "test_phase3.py",
+      "line": 6,
+      "text": "from intelligence.clusterer       import ClusterEngine"
+    },
+    {
+      "source_path": "test_phase3.py",
+      "line": 7,
+      "text": "from intelligence.growth_detector import GrowthDetector"
+    },
+    {
+      "source_path": "test_phase3.py",
+      "line": 55,
+      "text": "import time"
+    },
+    {
+      "source_path": "test_phase4.py",
+      "line": 2,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase4.py",
+      "line": 5,
+      "text": "from database.models             import init_db, get_session, Cluster"
+    },
+    {
+      "source_path": "test_phase4.py",
+      "line": 6,
+      "text": "from intelligence.clusterer      import ClusterEngine"
+    },
+    {
+      "source_path": "test_phase4.py",
+      "line": 7,
+      "text": "from intelligence.growth_detector import GrowthDetector"
+    },
+    {
+      "source_path": "test_phase4.py",
+      "line": 8,
+      "text": "from intelligence.virality_scorer import ViralityScorer"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 2,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 5,
+      "text": "from database.models               import init_db, get_session, Cluster"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 6,
+      "text": "from intelligence.clusterer        import ClusterEngine"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 7,
+      "text": "from intelligence.growth_detector  import GrowthDetector"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 8,
+      "text": "from intelligence.virality_scorer  import ViralityScorer"
+    },
+    {
+      "source_path": "test_phase5.py",
+      "line": 9,
+      "text": "from intelligence.emotion_detector import EmotionDetector, EMOTION_EMOJI"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 2,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 5,
+      "text": "from database.models              import init_db"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 6,
+      "text": "from intelligence.clusterer       import ClusterEngine"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 7,
+      "text": "from intelligence.growth_detector import GrowthDetector"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 8,
+      "text": "from intelligence.virality_scorer import ViralityScorer"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 9,
+      "text": "from intelligence.emotion_detector import EmotionDetector"
+    },
+    {
+      "source_path": "test_phase6.py",
+      "line": 10,
+      "text": "from predictor.viral_predictor    import ViralPredictor"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 6,
+      "text": "import requests"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 7,
+      "text": "import feedparser"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 8,
+      "text": "from pytrends.request import TrendReq"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 9,
+      "text": "from bs4 import BeautifulSoup"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 10,
+      "text": "from sentence_transformers import SentenceTransformer"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 11,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 12,
+      "text": "from transformers import pipeline"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 13,
+      "text": "from telegram import Bot"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 14,
+      "text": "import streamlit"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 15,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 16,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 17,
+      "text": "import sqlalchemy"
+    },
+    {
+      "source_path": "verify_setup.py",
+      "line": 18,
+      "text": "from apscheduler.schedulers.background import BackgroundScheduler"
+    }
+  ],
+  "call_edges": []
+}

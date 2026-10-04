@@ -47,6 +47,7 @@ impl Engine {
    CREATE TABLE IF NOT EXISTS provider_accounting(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL);
    PRAGMA user_version=1;").map_err(error)?;
         crate::monitor::initialize(&db)?;
+        crate::social::runtime::initialize(&db)?;
         Ok(Self {
             root: root.to_path_buf(),
             db: Arc::new(Mutex::new(db)),
@@ -116,6 +117,18 @@ impl Engine {
             .filter_map(|p| p["repository_url"].as_str())
             .collect();
         let capabilities = self.read_json("research/commerce/capabilities.json")?;
+        let social_oracle = self
+            .read_json("research/commerce/social-oracle-report.json")
+            .ok()
+            .filter(|r| r["status"] == "PASS");
+        let social_families = social_oracle
+            .as_ref()
+            .and_then(|r| r["families"].as_u64())
+            .unwrap_or(0);
+        let social_cases = social_oracle
+            .as_ref()
+            .and_then(|r| r["cases"].as_u64())
+            .unwrap_or(0);
         let compared = capabilities
             .as_array()
             .ok_or("Invalid capability records")?
@@ -135,7 +148,7 @@ impl Engine {
             })
             .count();
         Ok(
-            json!({"donor_candidates":donors.len(),"remote_verified":donors.iter().filter(|d|d["remote_status"]=="VERIFIED_REMOTE").count(),"full_clones":donors.iter().filter(|d|d["clone_status"]=="FULL_CLONE").count(),"total_files":total,"classified_files":classified,"first_party_source_files":sources,"source_parsed":parsed,"parse_unknown":unknown,"tests":tests,"capabilities_verified":verified,"native_absorbed":0,"oracle_verified":0,"oracle_compared_capabilities":compared,"oracle_proven_native_capabilities":compared,"oracle_cases_executed":capabilities.as_array().unwrap().iter().filter(|c|matches!(c["oracle_status"].as_str(),Some("508_INTEGER_JSON_CASES_MATCHED"|"1620_ROBOTS_CASES_MATCHED"|"132_MICRODATA_CASES_MATCHED"|"46_QUEUE_TRACES_MATCHED"|"54_DECLARED_DOCUMENT_CASES_MATCHED"|"1235_PRICE_NUMBER_CASES_MATCHED"))).filter_map(|c|c["oracle_cases"].as_u64()).sum::<u64>(),"extinct":0,"seed_runtime_dependencies":0,"runtime_donor_dependencies":upstreams.len(),"runtime_dependency_packages":dependencies["runtime_packages"]}),
+            json!({"donor_candidates":donors.len(),"remote_verified":donors.iter().filter(|d|d["remote_status"]=="VERIFIED_REMOTE").count(),"full_clones":donors.iter().filter(|d|d["clone_status"]=="FULL_CLONE").count(),"total_files":total,"classified_files":classified,"first_party_source_files":sources,"source_parsed":parsed,"parse_unknown":unknown,"tests":tests,"capabilities_verified":verified,"native_absorbed":0,"oracle_verified":0,"oracle_compared_capabilities":compared as u64+social_families,"oracle_proven_native_capabilities":compared as u64+social_families,"oracle_cases_executed":capabilities.as_array().unwrap().iter().filter(|c|matches!(c["oracle_status"].as_str(),Some("508_INTEGER_JSON_CASES_MATCHED"|"1620_ROBOTS_CASES_MATCHED"|"132_MICRODATA_CASES_MATCHED"|"46_QUEUE_TRACES_MATCHED"|"54_DECLARED_DOCUMENT_CASES_MATCHED"|"1235_PRICE_NUMBER_CASES_MATCHED"))).filter_map(|c|c["oracle_cases"].as_u64()).sum::<u64>()+social_cases,"social_oracle_families":social_families,"social_oracle_cases":social_cases,"extinct":0,"seed_runtime_dependencies":0,"runtime_donor_dependencies":upstreams.len(),"runtime_dependency_packages":dependencies["runtime_packages"]}),
         )
     }
     pub fn census(&self, id: &str) -> Result<Value, String> {
@@ -302,7 +315,8 @@ impl Engine {
         )
         .map_err(error)?;
         if payload["mode"] == "LIVE"
-            || (payload["research_run"] == true && payload["mode"] != "REPLAY")
+            || ((payload["research_run"] == true || payload["social_run"] == true)
+                && payload["mode"] != "REPLAY")
         {
             for observation in payload["observations"]
                 .as_array()
@@ -416,7 +430,7 @@ impl Engine {
     pub fn live_research_status(&self) -> Result<Value, String> {
         let payloads = {
             let db = self.db.lock().map_err(error)?;
-            let mut statement = db.prepare("SELECT payload FROM runs WHERE mode='LIVE' ORDER BY created_at DESC,rowid DESC LIMIT 100").map_err(error)?;
+            let mut statement = db.prepare("SELECT payload FROM runs WHERE mode='LIVE' AND json_extract(payload,'$.research_run')=1 ORDER BY created_at DESC,rowid DESC LIMIT 100").map_err(error)?;
             statement
                 .query_map([], |row| row.get::<_, String>(0))
                 .map_err(error)?
@@ -441,6 +455,10 @@ impl Engine {
     }
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
         match name {
+            "ecdev.trend.discover" => self.trend_discover(args),
+            "ecdev.trend.inspect" | "ecdev.trend.explain" => self.trend_inspect(args),
+            "ecdev.trend.compare" => self.trend_compare(args),
+            "ecdev.trend.watch" => self.trend_watch(args),
             "ecdev.research.run" | "ecdev.product.discover" => self.research(args),
             "ecdev.monitor.create" => self.monitor_create(args),
             "ecdev.monitor.status" => self.monitor_status(args["watch_id"].as_str()),
@@ -523,6 +541,7 @@ pub fn tool_definitions() -> Vec<Value> {
     let run = json!({"type":"object","properties":{"run_id":{"type":"string"}},"required":["run_id"],"additionalProperties":false});
     let donor = json!({"type":"object","properties":{"donor_id":{"type":"string"}},"required":["donor_id"],"additionalProperties":false});
     let mut out = vec![];
+    out.extend(crate::social::runtime::tool_definitions());
     out.push(json!({"name":"ecdev.product.discover","description":"Discover real product candidates through bounded native research; paid providers optional; supplied fixtures explicitly labeled","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.product.inspect","description":"Inspect one persisted candidate with field provenance, conflicts and economics uncertainty; zero network","inputSchema":{"type":"object","properties":{"candidate_id":{"type":"string"}},"required":["candidate_id"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.product.compare","description":"Compare 2 to 20 captured candidates without network acquisition or invented market ranking","inputSchema":{"type":"object","properties":{"candidate_ids":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":20}},"required":["candidate_ids"],"additionalProperties":false}}));

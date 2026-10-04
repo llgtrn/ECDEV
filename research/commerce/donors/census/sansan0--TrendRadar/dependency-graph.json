@@ -1,0 +1,2071 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "docker/manage.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 9,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 10,
+      "text": "import time"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 11,
+      "text": "import signal"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "docker/manage.py",
+      "line": 499,
+      "text": "import urllib.request"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 8,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 10,
+      "text": "from typing import List, Optional, Dict, Union"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 12,
+      "text": "from fastmcp import FastMCP"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 14,
+      "text": "from .tools.data_query import DataQueryTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 15,
+      "text": "from .tools.analytics import AnalyticsTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 16,
+      "text": "from .tools.search_tools import SearchTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 17,
+      "text": "from .tools.config_mgmt import ConfigManagementTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 18,
+      "text": "from .tools.system import SystemManagementTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 19,
+      "text": "from .tools.storage_sync import StorageSyncTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 20,
+      "text": "from .tools.article_reader import ArticleReaderTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 21,
+      "text": "from .tools.notification import NotificationTools"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 22,
+      "text": "from .utils.date_parser import DateParser"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 23,
+      "text": "from .utils.errors import MCPError"
+    },
+    {
+      "source_path": "mcp_server/server.py",
+      "line": 1219,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "mcp_server/services/cache_service.py",
+      "line": 7,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "mcp_server/services/cache_service.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "mcp_server/services/cache_service.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "mcp_server/services/cache_service.py",
+      "line": 10,
+      "text": "from typing import Any, Optional"
+    },
+    {
+      "source_path": "mcp_server/services/cache_service.py",
+      "line": 11,
+      "text": "from threading import Lock"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 8,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 9,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 10,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 12,
+      "text": "from .cache_service import get_cache"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 13,
+      "text": "from .parser_service import ParserService"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 14,
+      "text": "from ..utils.errors import DataNotFoundError"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 383,
+      "text": "from trendradar.core.frequency import _word_matches"
+    },
+    {
+      "source_path": "mcp_server/services/data_service.py",
+      "line": 504,
+      "text": "from trendradar.core.loader import _load_webhook_config"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 9,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 11,
+      "text": "from typing import Dict, List, Tuple, Optional"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 12,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 14,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 16,
+      "text": "from ..utils.errors import FileParseError, DataNotFoundError"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 17,
+      "text": "from .cache_service import get_cache"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 402,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/services/parser_service.py",
+      "line": 403,
+      "text": "from trendradar.core.frequency import load_frequency_words"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 9,
+      "text": "from collections import Counter, defaultdict"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 10,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 11,
+      "text": "from typing import Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 12,
+      "text": "from difflib import SequenceMatcher"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 14,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 16,
+      "text": "from trendradar.core.analyzer import calculate_news_weight as _calculate_news_weight"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 18,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 19,
+      "text": "from ..utils.validators import (\n    validate_platforms,\n    validate_limit,\n    validate_keyword,\n    validate_top_n,\n    validate_date_range,\n    validate_threshold\n)"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 27,
+      "text": "from ..utils.errors import MCPError, InvalidParameterError, DataNotFoundError"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 315,
+      "text": "from ..utils.errors import InvalidParameterError"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 323,
+      "text": "from ..utils.validators import validate_date_range"
+    },
+    {
+      "source_path": "mcp_server/tools/analytics.py",
+      "line": 1527,
+      "text": "from ..utils.validators import validate_date_range"
+    },
+    {
+      "source_path": "mcp_server/tools/article_reader.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "mcp_server/tools/article_reader.py",
+      "line": 10,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "mcp_server/tools/article_reader.py",
+      "line": 12,
+      "text": "import requests"
+    },
+    {
+      "source_path": "mcp_server/tools/article_reader.py",
+      "line": 14,
+      "text": "from ..utils.errors import MCPError, InvalidParameterError"
+    },
+    {
+      "source_path": "mcp_server/tools/config_mgmt.py",
+      "line": 7,
+      "text": "from typing import Dict, Optional, Any, TypedDict"
+    },
+    {
+      "source_path": "mcp_server/tools/config_mgmt.py",
+      "line": 9,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "mcp_server/tools/config_mgmt.py",
+      "line": 10,
+      "text": "from ..utils.validators import validate_config_section"
+    },
+    {
+      "source_path": "mcp_server/tools/config_mgmt.py",
+      "line": 11,
+      "text": "from ..utils.errors import MCPError"
+    },
+    {
+      "source_path": "mcp_server/tools/data_query.py",
+      "line": 7,
+      "text": "from typing import Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "mcp_server/tools/data_query.py",
+      "line": 9,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "mcp_server/tools/data_query.py",
+      "line": 10,
+      "text": "from ..utils.validators import (\n    validate_platforms,\n    validate_limit,\n    validate_keyword,\n    validate_date_range,\n    validate_top_n,\n    validate_mode,\n    validate_date_query,\n    normalize_date_range\n)"
+    },
+    {
+      "source_path": "mcp_server/tools/data_query.py",
+      "line": 20,
+      "text": "from ..utils.errors import MCPError"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 12,
+      "text": "import smtplib"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 14,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 15,
+      "text": "from email.header import Header"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 16,
+      "text": "from email.mime.multipart import MIMEMultipart"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 17,
+      "text": "from email.mime.text import MIMEText"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 18,
+      "text": "from email.utils import formataddr, formatdate, make_msgid"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 19,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 20,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 21,
+      "text": "from urllib.parse import urlparse"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 23,
+      "text": "import requests"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 24,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 26,
+      "text": "from trendradar.core.loader import _load_webhook_config, _load_notification_config"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 27,
+      "text": "from trendradar.notification.batch import (\n    truncate_to_bytes,\n    get_batch_header,\n    get_max_batch_header_size,\n    add_batch_headers,\n)"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 33,
+      "text": "from trendradar.notification.formatters import strip_markdown"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 34,
+      "text": "from trendradar.notification.senders import SMTP_CONFIGS"
+    },
+    {
+      "source_path": "mcp_server/tools/notification.py",
+      "line": 36,
+      "text": "from ..utils.errors import MCPError, InvalidParameterError"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 8,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 9,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 10,
+      "text": "from difflib import SequenceMatcher"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 11,
+      "text": "from typing import Dict, List, Optional, Tuple, Union"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 13,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 14,
+      "text": "from ..utils.validators import validate_keyword, validate_limit, validate_threshold, normalize_date_range"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 15,
+      "text": "from ..utils.errors import MCPError, InvalidParameterError, DataNotFoundError"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 99,
+      "text": "from ..utils.validators import validate_date_range"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 187,
+      "text": "from .analytics import calculate_news_weight"
+    },
+    {
+      "source_path": "mcp_server/tools/search_tools.py",
+      "line": 804,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 9,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 11,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 12,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 14,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 16,
+      "text": "from ..utils.errors import MCPError"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 88,
+      "text": "from trendradar.storage.remote import RemoteStorageBackend"
+    },
+    {
+      "source_path": "mcp_server/tools/storage_sync.py",
+      "line": 258,
+      "text": "from trendradar.utils.time import get_configured_time"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 11,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 12,
+      "text": "from ..utils.validators import validate_platforms"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 13,
+      "text": "from ..utils.errors import MCPError, CrawlTaskError"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 74,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 153,
+      "text": "import time"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 214,
+      "text": "from trendradar.crawler.fetcher import DataFetcher"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 215,
+      "text": "from trendradar.storage.local import LocalStorageBackend"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 216,
+      "text": "from trendradar.storage.base import convert_crawl_results_to_news_data"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 217,
+      "text": "from trendradar.utils.time import get_configured_time, format_date_folder, format_time_filename"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 218,
+      "text": "from ..services.cache_service import get_cache"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 285,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 409,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 410,
+      "text": "import requests"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 431,
+      "text": "from trendradar.core.cdn import fetch_with_fallback"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 476,
+      "text": "from trendradar import __version__ as trendradar_version"
+    },
+    {
+      "source_path": "mcp_server/tools/system.py",
+      "line": 477,
+      "text": "from mcp_server import __version__ as mcp_version"
+    },
+    {
+      "source_path": "mcp_server/utils/date_parser.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "mcp_server/utils/date_parser.py",
+      "line": 8,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "mcp_server/utils/date_parser.py",
+      "line": 9,
+      "text": "from typing import Tuple, Dict, Optional"
+    },
+    {
+      "source_path": "mcp_server/utils/date_parser.py",
+      "line": 11,
+      "text": "from .errors import InvalidParameterError"
+    },
+    {
+      "source_path": "mcp_server/utils/errors.py",
+      "line": 7,
+      "text": "from typing import Optional, List, Callable"
+    },
+    {
+      "source_path": "mcp_server/utils/errors.py",
+      "line": 20,
+      "text": "from .validators import get_supported_platforms"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 9,
+      "text": "from typing import List, Optional, Union"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 12,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 13,
+      "text": "import ast"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 15,
+      "text": "from .errors import InvalidParameterError"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 16,
+      "text": "from .date_parser import DateParser"
+    },
+    {
+      "source_path": "mcp_server/utils/validators.py",
+      "line": 457,
+      "text": "from ..services.data_service import DataService"
+    },
+    {
+      "source_path": "trendradar/__init__.py",
+      "line": 10,
+      "text": "from trendradar.context import AppContext"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 9,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 11,
+      "text": "import webbrowser"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 13,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 15,
+      "text": "from trendradar.context import AppContext"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 16,
+      "text": "from trendradar import __version__"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 17,
+      "text": "from trendradar.core import load_config"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 18,
+      "text": "from trendradar.core.analyzer import convert_keyword_stats_to_platform_stats"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 19,
+      "text": "from trendradar.crawler import DataFetcher"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 20,
+      "text": "from trendradar.storage import convert_crawl_results_to_news_data"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 21,
+      "text": "from trendradar.utils.time import DEFAULT_TIMEZONE, is_within_days, calculate_days_old"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 22,
+      "text": "from trendradar.ai import AIAnalyzer, AIAnalysisResult"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 23,
+      "text": "from trendradar.core.scheduler import ResolvedSchedule"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 24,
+      "text": "from trendradar.commands import check_all_versions, run_doctor, run_test_notification, handle_status_commands"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 25,
+      "text": "from trendradar.commands.version import _fetch_remote_version, _parse_version"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 301,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 430,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 438,
+      "text": "import sys"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 1009,
+      "text": "from trendradar.crawler.rss import RSSFetcher, RSSFeedConfig"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 1109,
+      "text": "from trendradar.core.analyzer import count_rss_frequency"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 1340,
+      "text": "from trendradar.core.frequency import matches_word_groups"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 1362,
+      "text": "from trendradar.report.rss_html import render_rss_html_content"
+    },
+    {
+      "source_path": "trendradar/__main__.py",
+      "line": 1363,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/ai/__init__.py",
+      "line": 8,
+      "text": "from .analyzer import AIAnalyzer, AIAnalysisResult"
+    },
+    {
+      "source_path": "trendradar/ai/__init__.py",
+      "line": 9,
+      "text": "from .filter import AIFilter, AIFilterResult"
+    },
+    {
+      "source_path": "trendradar/ai/__init__.py",
+      "line": 10,
+      "text": "from .filter_pipeline import AIFilterPipeline"
+    },
+    {
+      "source_path": "trendradar/ai/__init__.py",
+      "line": 11,
+      "text": "from .translator import AITranslator, TranslationResult, BatchTranslationResult"
+    },
+    {
+      "source_path": "trendradar/ai/__init__.py",
+      "line": 12,
+      "text": "from .formatter import (\n    get_ai_analysis_renderer,\n    render_ai_analysis_markdown,\n    render_ai_analysis_feishu,\n    render_ai_analysis_dingtalk,\n    render_ai_analysis_html_rich,\n    render_ai_analysis_plain,\n)"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 10,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 11,
+      "text": "from typing import Any, Callable, Dict, List, NamedTuple, Optional"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 13,
+      "text": "from trendradar.ai.client import AIClient"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 14,
+      "text": "from trendradar.ai.prompt_loader import load_prompt_template"
+    },
+    {
+      "source_path": "trendradar/ai/analyzer.py",
+      "line": 601,
+      "text": "from json_repair import repair_json"
+    },
+    {
+      "source_path": "trendradar/ai/client.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/ai/client.py",
+      "line": 10,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "trendradar/ai/client.py",
+      "line": 12,
+      "text": "from litellm import completion"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 10,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 12,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 14,
+      "text": "from typing import Any, Callable, Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 16,
+      "text": "from trendradar.ai.client import AIClient"
+    },
+    {
+      "source_path": "trendradar/ai/filter.py",
+      "line": 17,
+      "text": "from trendradar.ai.prompt_loader import load_prompt_template"
+    },
+    {
+      "source_path": "trendradar/ai/filter_pipeline.py",
+      "line": 9,
+      "text": "from typing import Any, Callable, Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/ai/filter_pipeline.py",
+      "line": 11,
+      "text": "from trendradar.ai.filter import AIFilter, AIFilterResult"
+    },
+    {
+      "source_path": "trendradar/ai/filter_pipeline.py",
+      "line": 12,
+      "text": "from trendradar.utils.time import (\n    DEFAULT_TIMEZONE,\n    convert_time_for_display,\n    format_iso_time_friendly,\n    is_within_days,\n)"
+    },
+    {
+      "source_path": "trendradar/ai/filter_pipeline.py",
+      "line": 326,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/ai/filter_pipeline.py",
+      "line": 348,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/ai/formatter.py",
+      "line": 8,
+      "text": "import html as html_lib"
+    },
+    {
+      "source_path": "trendradar/ai/formatter.py",
+      "line": 9,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/ai/formatter.py",
+      "line": 10,
+      "text": "from .analyzer import AIAnalysisResult"
+    },
+    {
+      "source_path": "trendradar/ai/prompt_loader.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/ai/prompt_loader.py",
+      "line": 10,
+      "text": "from typing import Tuple"
+    },
+    {
+      "source_path": "trendradar/ai/translator.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "trendradar/ai/translator.py",
+      "line": 10,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "trendradar/ai/translator.py",
+      "line": 12,
+      "text": "from trendradar.ai.client import AIClient"
+    },
+    {
+      "source_path": "trendradar/ai/translator.py",
+      "line": 13,
+      "text": "from trendradar.ai.prompt_loader import load_prompt_template"
+    },
+    {
+      "source_path": "trendradar/commands/__init__.py",
+      "line": 8,
+      "text": "from .doctor import run_doctor"
+    },
+    {
+      "source_path": "trendradar/commands/__init__.py",
+      "line": 9,
+      "text": "from .test_notification import run_test_notification"
+    },
+    {
+      "source_path": "trendradar/commands/__init__.py",
+      "line": 10,
+      "text": "from .status import handle_status_commands"
+    },
+    {
+      "source_path": "trendradar/commands/__init__.py",
+      "line": 11,
+      "text": "from .version import check_all_versions"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 7,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 11,
+      "text": "from trendradar import __version__"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 12,
+      "text": "from trendradar.context import AppContext"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 13,
+      "text": "from trendradar.core import load_config, parse_multi_account_config, validate_paired_configs"
+    },
+    {
+      "source_path": "trendradar/commands/doctor.py",
+      "line": 146,
+      "text": "from trendradar.ai.client import AIClient"
+    },
+    {
+      "source_path": "trendradar/commands/status.py",
+      "line": 4,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "trendradar/commands/status.py",
+      "line": 6,
+      "text": "from trendradar import __version__"
+    },
+    {
+      "source_path": "trendradar/commands/status.py",
+      "line": 7,
+      "text": "from trendradar.context import AppContext"
+    },
+    {
+      "source_path": "trendradar/commands/test_notification.py",
+      "line": 4,
+      "text": "import copy"
+    },
+    {
+      "source_path": "trendradar/commands/test_notification.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/commands/test_notification.py",
+      "line": 6,
+      "text": "from typing import Dict, Optional"
+    },
+    {
+      "source_path": "trendradar/commands/test_notification.py",
+      "line": 8,
+      "text": "from trendradar.context import AppContext"
+    },
+    {
+      "source_path": "trendradar/commands/test_notification.py",
+      "line": 67,
+      "text": "from trendradar.notification import NotificationDispatcher"
+    },
+    {
+      "source_path": "trendradar/commands/version.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/commands/version.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/commands/version.py",
+      "line": 6,
+      "text": "from typing import Dict, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/commands/version.py",
+      "line": 8,
+      "text": "from trendradar import __version__"
+    },
+    {
+      "source_path": "trendradar/commands/version.py",
+      "line": 9,
+      "text": "from trendradar.core.cdn import fetch_with_fallback"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 10,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 12,
+      "text": "from trendradar.utils.time import (\n    DEFAULT_TIMEZONE,\n    get_configured_time,\n    format_date_folder,\n    format_time_filename,\n    get_current_time_display,\n    convert_time_for_display,\n    format_iso_time_friendly,\n    is_within_days,\n)"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 22,
+      "text": "from trendradar.core import (\n    load_frequency_words,\n    matches_word_groups,\n    read_all_today_titles,\n    detect_latest_new_titles,\n    count_word_frequency,\n    Scheduler,\n)"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 30,
+      "text": "from trendradar.report import (\n    prepare_report_data,\n    generate_html_report,\n    render_html_content,\n)"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 35,
+      "text": "from trendradar.notification import (\n    render_feishu_content,\n    render_dingtalk_content,\n    split_content_into_batches,\n    NotificationDispatcher,\n)"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 41,
+      "text": "from trendradar.ai import AITranslator"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 42,
+      "text": "from trendradar.ai.filter import AIFilterResult"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 43,
+      "text": "from trendradar.ai.filter_pipeline import AIFilterPipeline, _TagExtractionError"
+    },
+    {
+      "source_path": "trendradar/context.py",
+      "line": 44,
+      "text": "from trendradar.storage import get_storage_manager"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 6,
+      "text": "from trendradar.core.config import (\n    parse_multi_account_config,\n    validate_paired_configs,\n    limit_accounts,\n    get_account_at_index,\n)"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 12,
+      "text": "from trendradar.core.loader import load_config"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 13,
+      "text": "from trendradar.core.frequency import load_frequency_words, matches_word_groups"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 14,
+      "text": "from trendradar.core.scheduler import Scheduler, ResolvedSchedule"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 15,
+      "text": "from trendradar.core.data import (\n    read_all_today_titles_from_storage,\n    read_all_today_titles,\n    detect_latest_new_titles_from_storage,\n    detect_latest_new_titles,\n)"
+    },
+    {
+      "source_path": "trendradar/core/__init__.py",
+      "line": 21,
+      "text": "from trendradar.core.analyzer import (\n    calculate_news_weight,\n    format_time_display,\n    count_word_frequency,\n    count_rss_frequency,\n)"
+    },
+    {
+      "source_path": "trendradar/core/analyzer.py",
+      "line": 11,
+      "text": "from typing import Dict, List, Tuple, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/core/analyzer.py",
+      "line": 13,
+      "text": "from trendradar.core.frequency import matches_word_groups, _word_matches"
+    },
+    {
+      "source_path": "trendradar/core/analyzer.py",
+      "line": 14,
+      "text": "from trendradar.utils.time import DEFAULT_TIMEZONE"
+    },
+    {
+      "source_path": "trendradar/core/analyzer.py",
+      "line": 550,
+      "text": "from trendradar.utils.time import format_iso_time_friendly"
+    },
+    {
+      "source_path": "trendradar/core/cdn.py",
+      "line": 10,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/core/cdn.py",
+      "line": 11,
+      "text": "import logging"
+    },
+    {
+      "source_path": "trendradar/core/cdn.py",
+      "line": 12,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "trendradar/core/cdn.py",
+      "line": 14,
+      "text": "import requests"
+    },
+    {
+      "source_path": "trendradar/core/config.py",
+      "line": 8,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/core/data.py",
+      "line": 12,
+      "text": "from typing import Dict, List, Tuple, Optional"
+    },
+    {
+      "source_path": "trendradar/core/frequency.py",
+      "line": 16,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/core/frequency.py",
+      "line": 17,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/core/frequency.py",
+      "line": 18,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/core/frequency.py",
+      "line": 19,
+      "text": "from typing import Dict, List, Tuple, Optional, Union"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 10,
+      "text": "from typing import Dict, Any, Optional"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 12,
+      "text": "import yaml"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 14,
+      "text": "from .config import parse_multi_account_config, validate_paired_configs"
+    },
+    {
+      "source_path": "trendradar/core/loader.py",
+      "line": 15,
+      "text": "from trendradar.utils.time import DEFAULT_TIMEZONE"
+    },
+    {
+      "source_path": "trendradar/core/scheduler.py",
+      "line": 9,
+      "text": "import copy"
+    },
+    {
+      "source_path": "trendradar/core/scheduler.py",
+      "line": 10,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/core/scheduler.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "trendradar/core/scheduler.py",
+      "line": 12,
+      "text": "from typing import Any, Callable, Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/core/scheduler.py",
+      "line": 14,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/crawler/__init__.py",
+      "line": 6,
+      "text": "from trendradar.crawler.fetcher import DataFetcher"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 12,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 13,
+      "text": "import random"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 14,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 15,
+      "text": "from typing import Dict, List, Tuple, Optional, Union"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 16,
+      "text": "from urllib.parse import urlparse"
+    },
+    {
+      "source_path": "trendradar/crawler/fetcher.py",
+      "line": 18,
+      "text": "import requests"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/__init__.py",
+      "line": 8,
+      "text": "from .parser import RSSParser"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/__init__.py",
+      "line": 9,
+      "text": "from .fetcher import RSSFetcher, RSSFeedConfig"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 9,
+      "text": "import random"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 10,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 11,
+      "text": "from typing import List, Dict, Optional, Tuple"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 13,
+      "text": "import requests"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 15,
+      "text": "from .parser import RSSParser"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 16,
+      "text": "from trendradar.storage.base import RSSItem, RSSData"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/fetcher.py",
+      "line": 17,
+      "text": "from trendradar.utils.time import get_configured_time, is_within_days, DEFAULT_TIMEZONE"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 9,
+      "text": "import html"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 12,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 13,
+      "text": "from typing import List, Optional, Dict, Any"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 14,
+      "text": "from email.utils import parsedate_to_datetime"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 17,
+      "text": "import feedparser"
+    },
+    {
+      "source_path": "trendradar/crawler/rss/parser.py",
+      "line": 207,
+      "text": "import requests"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 19,
+      "text": "from trendradar.notification.formatters import (\n    strip_markdown,\n    convert_markdown_to_mrkdwn,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 23,
+      "text": "from trendradar.notification.batch import (\n    get_batch_header,\n    get_max_batch_header_size,\n    truncate_to_bytes,\n    add_batch_headers,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 29,
+      "text": "from trendradar.notification.renderer import (\n    render_feishu_content,\n    render_dingtalk_content,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 33,
+      "text": "from trendradar.notification.splitter import (\n    split_content_into_batches,\n    DEFAULT_BATCH_SIZES,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 37,
+      "text": "from trendradar.notification.senders import (\n    send_to_feishu,\n    send_to_dingtalk,\n    send_to_wework,\n    send_to_telegram,\n    send_to_email,\n    send_to_ntfy,\n    send_to_bark,\n    send_to_slack,\n    SMTP_CONFIGS,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/__init__.py",
+      "line": 48,
+      "text": "from trendradar.notification.dispatcher import NotificationDispatcher"
+    },
+    {
+      "source_path": "trendradar/notification/batch.py",
+      "line": 8,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 15,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 16,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 18,
+      "text": "from trendradar.core.config import (\n    get_account_at_index,\n    limit_accounts,\n    parse_multi_account_config,\n    validate_paired_configs,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 25,
+      "text": "from .senders import (\n    send_to_bark,\n    send_to_dingtalk,\n    send_to_email,\n    send_to_feishu,\n    send_to_ntfy,\n    send_to_slack,\n    send_to_telegram,\n    send_to_wework,\n    send_to_generic_webhook,\n)"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 40,
+      "text": "from trendradar.ai import AIAnalysisResult, AITranslator"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 101,
+      "text": "import copy"
+    },
+    {
+      "source_path": "trendradar/notification/dispatcher.py",
+      "line": 174,
+      "text": "from trendradar.ai.translator import BatchTranslationResult"
+    },
+    {
+      "source_path": "trendradar/notification/formatters.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/notification/renderer.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/notification/renderer.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/notification/renderer.py",
+      "line": 11,
+      "text": "from trendradar.report.formatter import format_title_for_platform"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 18,
+      "text": "import smtplib"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 19,
+      "text": "import time"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 20,
+      "text": "import json"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 21,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 22,
+      "text": "from email.header import Header"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 23,
+      "text": "from email.mime.multipart import MIMEMultipart"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 24,
+      "text": "from email.mime.text import MIMEText"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 25,
+      "text": "from email.utils import formataddr, formatdate, make_msgid"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 26,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 27,
+      "text": "from typing import Any, Callable, Dict, Optional"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 28,
+      "text": "from urllib.parse import urlparse"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 30,
+      "text": "import requests"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 32,
+      "text": "from .batch import add_batch_headers, get_max_batch_header_size"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 33,
+      "text": "from .formatters import convert_markdown_to_mrkdwn, strip_markdown"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 61,
+      "text": "from trendradar.ai.formatter import get_ai_analysis_renderer"
+    },
+    {
+      "source_path": "trendradar/notification/senders.py",
+      "line": 742,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 11,
+      "text": "from trendradar.report.formatter import format_title_for_platform"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 12,
+      "text": "from trendradar.report.helpers import format_rank_display"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 13,
+      "text": "from trendradar.utils.time import DEFAULT_TIMEZONE, format_iso_time_friendly, convert_time_for_display"
+    },
+    {
+      "source_path": "trendradar/notification/splitter.py",
+      "line": 14,
+      "text": "from trendradar.notification.batch import truncate_at_line_boundary"
+    },
+    {
+      "source_path": "trendradar/report/__init__.py",
+      "line": 16,
+      "text": "from trendradar.report.helpers import (\n    clean_title,\n    html_escape,\n    format_rank_display,\n)"
+    },
+    {
+      "source_path": "trendradar/report/__init__.py",
+      "line": 21,
+      "text": "from trendradar.report.formatter import format_title_for_platform"
+    },
+    {
+      "source_path": "trendradar/report/__init__.py",
+      "line": 22,
+      "text": "from trendradar.report.html import render_html_content"
+    },
+    {
+      "source_path": "trendradar/report/__init__.py",
+      "line": 23,
+      "text": "from trendradar.report.generator import (\n    prepare_report_data,\n    generate_html_report,\n)"
+    },
+    {
+      "source_path": "trendradar/report/formatter.py",
+      "line": 8,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "trendradar/report/formatter.py",
+      "line": 10,
+      "text": "from trendradar.report.helpers import clean_title, html_escape, format_rank_display"
+    },
+    {
+      "source_path": "trendradar/report/generator.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/report/generator.py",
+      "line": 11,
+      "text": "from typing import Dict, List, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/report/helpers.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/report/helpers.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 9,
+      "text": "from typing import Any, Dict, List, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 11,
+      "text": "from trendradar.report.helpers import html_escape, calculate_rank_trend"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 12,
+      "text": "from trendradar.utils.time import convert_time_for_display"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 13,
+      "text": "from trendradar.ai.formatter import render_ai_analysis_html_rich"
+    },
+    {
+      "source_path": "trendradar/report/html.py",
+      "line": 2094,
+      "text": "from datetime import datetime as dt"
+    },
+    {
+      "source_path": "trendradar/report/rss_html.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/report/rss_html.py",
+      "line": 9,
+      "text": "from typing import Dict, List, Optional, Callable"
+    },
+    {
+      "source_path": "trendradar/report/rss_html.py",
+      "line": 11,
+      "text": "from trendradar.report.helpers import html_escape"
+    },
+    {
+      "source_path": "trendradar/storage/__init__.py",
+      "line": 11,
+      "text": "from trendradar.storage.base import (\n    StorageBackend,\n    NewsItem,\n    NewsData,\n    RSSItem,\n    RSSData,\n    convert_crawl_results_to_news_data,\n)"
+    },
+    {
+      "source_path": "trendradar/storage/__init__.py",
+      "line": 19,
+      "text": "from trendradar.storage.sqlite_mixin import SQLiteStorageMixin"
+    },
+    {
+      "source_path": "trendradar/storage/__init__.py",
+      "line": 20,
+      "text": "from trendradar.storage.local import LocalStorageBackend"
+    },
+    {
+      "source_path": "trendradar/storage/__init__.py",
+      "line": 21,
+      "text": "from trendradar.storage.manager import StorageManager, get_storage_manager"
+    },
+    {
+      "source_path": "trendradar/storage/__init__.py",
+      "line": 25,
+      "text": "from trendradar.storage.remote import RemoteStorageBackend"
+    },
+    {
+      "source_path": "trendradar/storage/base.py",
+      "line": 8,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "trendradar/storage/base.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "trendradar/storage/base.py",
+      "line": 10,
+      "text": "from typing import Dict, List, Optional, Any, Set"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 8,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 9,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 10,
+      "text": "import pytz"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 12,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 14,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 16,
+      "text": "from trendradar.storage.base import StorageBackend, NewsData, RSSItem, RSSData"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 17,
+      "text": "from trendradar.storage.sqlite_mixin import SQLiteStorageMixin"
+    },
+    {
+      "source_path": "trendradar/storage/local.py",
+      "line": 18,
+      "text": "from trendradar.utils.time import (\n    DEFAULT_TIMEZONE,\n    get_configured_time,\n    format_date_folder,\n    format_time_filename,\n)"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 9,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 11,
+      "text": "from trendradar.storage.base import StorageBackend, NewsData, RSSData"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 12,
+      "text": "from trendradar.utils.time import DEFAULT_TIMEZONE"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 130,
+      "text": "from trendradar.storage.remote import RemoteStorageBackend"
+    },
+    {
+      "source_path": "trendradar/storage/manager.py",
+      "line": 164,
+      "text": "from trendradar.storage.local import LocalStorageBackend"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 10,
+      "text": "import pytz"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 12,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 13,
+      "text": "import sys"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 14,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 15,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 16,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 17,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 18,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 21,
+      "text": "import boto3"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 22,
+      "text": "from botocore.config import Config as BotoConfig"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 23,
+      "text": "from botocore.exceptions import ClientError"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 31,
+      "text": "from trendradar.storage.base import StorageBackend, NewsData, RSSItem, RSSData"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 32,
+      "text": "from trendradar.storage.sqlite_mixin import SQLiteStorageMixin"
+    },
+    {
+      "source_path": "trendradar/storage/remote.py",
+      "line": 33,
+      "text": "from trendradar.utils.time import (\n    DEFAULT_TIMEZONE,\n    get_configured_time,\n    format_date_folder,\n    format_time_filename,\n)"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 8,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 9,
+      "text": "from abc import abstractmethod"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 10,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 12,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 14,
+      "text": "from trendradar.storage.base import NewsItem, NewsData, RSSItem, RSSData"
+    },
+    {
+      "source_path": "trendradar/storage/sqlite_mixin.py",
+      "line": 15,
+      "text": "from trendradar.utils.url import normalize_url"
+    },
+    {
+      "source_path": "trendradar/utils/__init__.py",
+      "line": 6,
+      "text": "from trendradar.utils.time import (\n    get_configured_time,\n    format_date_folder,\n    format_time_filename,\n    get_current_time_display,\n    convert_time_for_display,\n)"
+    },
+    {
+      "source_path": "trendradar/utils/__init__.py",
+      "line": 13,
+      "text": "from trendradar.utils.url import normalize_url"
+    },
+    {
+      "source_path": "trendradar/utils/time.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "trendradar/utils/time.py",
+      "line": 9,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "trendradar/utils/time.py",
+      "line": 11,
+      "text": "import pytz"
+    },
+    {
+      "source_path": "trendradar/utils/url.py",
+      "line": 9,
+      "text": "from urllib.parse import urlparse, urlunparse, parse_qs, urlencode"
+    },
+    {
+      "source_path": "trendradar/utils/url.py",
+      "line": 10,
+      "text": "from typing import Dict, Set"
+    }
+  ],
+  "call_edges": []
+}

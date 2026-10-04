@@ -1,0 +1,1406 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 5,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 8,
+      "text": "import smtplib"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 9,
+      "text": "import ssl"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 10,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 11,
+      "text": "from email.message import EmailMessage"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 12,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 14,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 16,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line": 17,
+      "text": "from harken.sources.base import USER_AGENT"
+    },
+    {
+      "source_path": "src/harken/analyze/insights.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "src/harken/analyze/insights.py",
+      "line": 12,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "src/harken/analyze/insights.py",
+      "line": 13,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "src/harken/analyze/insights.py",
+      "line": 14,
+      "text": "from math import ceil"
+    },
+    {
+      "source_path": "src/harken/analyze/insights.py",
+      "line": 16,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/analyze/sentiment.py",
+      "line": 13,
+      "text": "import re"
+    },
+    {
+      "source_path": "src/harken/analyze/sentiment.py",
+      "line": 14,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "src/harken/analyze/sentiment.py",
+      "line": 16,
+      "text": "from harken.models import Sentiment"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line": 5,
+      "text": "import base64"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line": 6,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line": 8,
+      "text": "import secrets"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 5,
+      "text": "import csv"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 6,
+      "text": "import io"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 8,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 10,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 13,
+      "text": "import typer"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 14,
+      "text": "from rich.console import Console"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 15,
+      "text": "from rich.panel import Panel"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 16,
+      "text": "from rich.table import Table"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 18,
+      "text": "from harken import __version__"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 19,
+      "text": "from harken.alerts import (\n    EmailSettings,\n    send_negative_alert,\n    send_negative_email,\n    send_threshold_alert,\n    send_threshold_email,\n)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 26,
+      "text": "from harken.analyze.insights import ThemeExtractor"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 27,
+      "text": "from harken.analyze.sentiment import LexiconSentiment"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 28,
+      "text": "from harken.auth import ROLES, hash_password, validate_password, validate_role, validate_username"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 29,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 30,
+      "text": "from harken.evaluate import evaluate_sentiment, load_sentiment_dataset"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 31,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 32,
+      "text": "from harken.observability import configure_logging"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 33,
+      "text": "from harken.pipeline import Pipeline"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 34,
+      "text": "from harken.sample_data import DEMO_QUERY, sample_mentions"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 35,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 36,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 858,
+      "text": "import uvicorn"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line": 860,
+      "text": "from harken.web.app import create_app"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line": 8,
+      "text": "from dotenv import find_dotenv, load_dotenv"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 7,
+      "text": "from importlib.resources import files"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 10,
+      "text": "from harken.analyze.sentiment import LexiconSentiment"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line": 11,
+      "text": "from harken.models import Sentiment"
+    },
+    {
+      "source_path": "src/harken/llm/__init__.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "src/harken/llm/__init__.py",
+      "line": 13,
+      "text": "from harken.llm.base import LLMProvider"
+    },
+    {
+      "source_path": "src/harken/llm/__init__.py",
+      "line": 14,
+      "text": "from harken.llm.null import NullProvider"
+    },
+    {
+      "source_path": "src/harken/llm/__init__.py",
+      "line": 35,
+      "text": "import importlib"
+    },
+    {
+      "source_path": "src/harken/llm/anthropic_provider.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "src/harken/llm/anthropic_provider.py",
+      "line": 11,
+      "text": "from harken.llm.base import LLMProvider"
+    },
+    {
+      "source_path": "src/harken/llm/anthropic_provider.py",
+      "line": 31,
+      "text": "import anthropic"
+    },
+    {
+      "source_path": "src/harken/llm/null.py",
+      "line": 5,
+      "text": "from harken.llm.base import LLMProvider"
+    },
+    {
+      "source_path": "src/harken/llm/ollama_provider.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "src/harken/llm/ollama_provider.py",
+      "line": 11,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/llm/ollama_provider.py",
+      "line": 13,
+      "text": "from harken.llm.base import LLMProvider"
+    },
+    {
+      "source_path": "src/harken/llm/openai_provider.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "src/harken/llm/openai_provider.py",
+      "line": 12,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/llm/openai_provider.py",
+      "line": 14,
+      "text": "from harken.llm.base import LLMProvider"
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line": 10,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line": 11,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line": 12,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line": 14,
+      "text": "from pydantic import BaseModel, field_validator"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line": 6,
+      "text": "import logging"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line": 9,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 10,
+      "text": "import logging"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 11,
+      "text": "import math"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 12,
+      "text": "import time"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 13,
+      "text": "from collections.abc import Callable"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 14,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 15,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 17,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 19,
+      "text": "from harken.alerts import (\n    EmailSettings,\n    email_target_key,\n    send_negative_alert,\n    send_negative_email,\n    send_threshold_alert,\n    send_threshold_email,\n    webhook_target_key,\n)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 28,
+      "text": "from harken.analyze.insights import Theme, ThemeExtractor"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 29,
+      "text": "from harken.analyze.sentiment import LexiconSentiment"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 30,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 31,
+      "text": "from harken.llm import get_provider"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 32,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 33,
+      "text": "from harken.observability import log_event"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 34,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 35,
+      "text": "from harken.sources.base import FetchPage"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 36,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line": 37,
+      "text": "from harken.thresholds import evaluate_thresholds"
+    },
+    {
+      "source_path": "src/harken/sample_data.py",
+      "line": 11,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "src/harken/sample_data.py",
+      "line": 13,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 10,
+      "text": "from harken.sources.base import Source"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 11,
+      "text": "from harken.sources.bluesky import BlueskySource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 12,
+      "text": "from harken.sources.hackernews import HackerNewsSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 13,
+      "text": "from harken.sources.mastodon import MastodonSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 14,
+      "text": "from harken.sources.reddit import RedditSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 15,
+      "text": "from harken.sources.rss import RSSSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 16,
+      "text": "from harken.sources.stackoverflow import StackOverflowSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 17,
+      "text": "from harken.sources.x import XSource"
+    },
+    {
+      "source_path": "src/harken/sources/__init__.py",
+      "line": 18,
+      "text": "from harken.sources.youtube import YouTubeSource"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 5,
+      "text": "import html"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 7,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 10,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line": 12,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line": 9,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line": 11,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line": 12,
+      "text": "from harken.sources.base import FetchPage, Source"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line": 8,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line": 10,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line": 11,
+      "text": "from harken.sources.base import FetchPage, Source, strip_html"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line": 10,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line": 12,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line": 13,
+      "text": "from harken.sources.base import FetchPage, Source, strip_html"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line": 10,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line": 12,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line": 13,
+      "text": "from harken.sources.base import FetchPage, Source"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 9,
+      "text": "from calendar import timegm"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 10,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 12,
+      "text": "import feedparser"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 13,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 15,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line": 16,
+      "text": "from harken.sources.base import Source, strip_html"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line": 5,
+      "text": "import time"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line": 6,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line": 8,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line": 9,
+      "text": "from harken.sources.base import FetchPage, Source, strip_html"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line": 5,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line": 7,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line": 8,
+      "text": "from harken.sources.base import FetchPage, Source"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line": 5,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line": 7,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line": 8,
+      "text": "from harken.sources.base import FetchPage, Source, strip_html"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 10,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 11,
+      "text": "from contextlib import closing"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 12,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 15,
+      "text": "from harken.auth import validate_role, validate_username"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line": 16,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "src/harken/thresholds.py",
+      "line": 5,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 5,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 6,
+      "text": "import math"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 7,
+      "text": "import secrets"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 9,
+      "text": "from base64 import b64decode"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 10,
+      "text": "from dataclasses import replace"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 11,
+      "text": "from datetime import date, datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 13,
+      "text": "from urllib.parse import parse_qs, urlsplit"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 15,
+      "text": "from fastapi import FastAPI, HTTPException, Query"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 16,
+      "text": "from fastapi import Path as PathParam"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 17,
+      "text": "from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse, RedirectResponse"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 18,
+      "text": "from fastapi.staticfiles import StaticFiles"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 19,
+      "text": "from fastapi.templating import Jinja2Templates"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 20,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 21,
+      "text": "from starlette.requests import Request"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 23,
+      "text": "from harken import __version__"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 24,
+      "text": "from harken.auth import (\n    DUMMY_PASSWORD_HASH,\n    MUTATING_ROLES,\n    new_session_token,\n    session_token_hash,\n    verify_password,\n)"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 31,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 32,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 33,
+      "text": "from harken.observability import configure_logging"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 34,
+      "text": "from harken.pipeline import Pipeline"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 35,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line": 36,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 4,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 8,
+      "text": "import respx"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 10,
+      "text": "import harken.alerts as alerts"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 11,
+      "text": "from harken.alerts import (\n    EmailDeliveryError,\n    EmailSettings,\n    WebhookDeliveryError,\n    email_target_key,\n    send_negative_alert,\n    send_negative_email,\n    send_threshold_alert,\n    send_threshold_email,\n    webhook_target_key,\n)"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 22,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 23,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 24,
+      "text": "from harken.pipeline import Pipeline"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 25,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line": 26,
+      "text": "from harken.thresholds import ThresholdEvent"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 3,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 7,
+      "text": "from harken.auth import (\n    hash_password,\n    new_session_token,\n    session_token_hash,\n    validate_password,\n    validate_role,\n    validate_username,\n    verify_password,\n)"
+    },
+    {
+      "source_path": "tests/test_auth.py",
+      "line": 16,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 7,
+      "text": "import csv"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 10,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 11,
+      "text": "import respx"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 12,
+      "text": "from typer.testing import CliRunner"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 14,
+      "text": "from harken import cli"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 15,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line": 68,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 3,
+      "text": "import importlib"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line": 8,
+      "text": "import harken.config as config"
+    },
+    {
+      "source_path": "tests/test_evaluate.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_evaluate.py",
+      "line": 4,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "tests/test_evaluate.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_evaluate.py",
+      "line": 8,
+      "text": "from harken.evaluate import evaluate_sentiment, load_sentiment_dataset"
+    },
+    {
+      "source_path": "tests/test_insights.py",
+      "line": 3,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_insights.py",
+      "line": 5,
+      "text": "from harken.analyze.insights import ThemeExtractor"
+    },
+    {
+      "source_path": "tests/test_insights.py",
+      "line": 6,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "tests/test_llm.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_llm.py",
+      "line": 5,
+      "text": "from harken.llm import NullProvider, get_provider"
+    },
+    {
+      "source_path": "tests/test_observability.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_observability.py",
+      "line": 4,
+      "text": "import logging"
+    },
+    {
+      "source_path": "tests/test_observability.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_observability.py",
+      "line": 8,
+      "text": "from harken.observability import configure_logging, log_event"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 4,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 8,
+      "text": "import respx"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 10,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 11,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 12,
+      "text": "from harken.pipeline import Pipeline"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 13,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 95,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 96,
+      "text": "from harken.sources.base import FetchPage"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 158,
+      "text": "from harken.analyze.insights import ThemeExtractor"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 159,
+      "text": "from harken.analyze.sentiment import LexiconSentiment"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 160,
+      "text": "from harken.sample_data import DEMO_QUERY, sample_mentions"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 215,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 259,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 292,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 322,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line": 379,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 3,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 4,
+      "text": "from time import struct_time"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 8,
+      "text": "import respx"
+    },
+    {
+      "source_path": "tests/test_rss.py",
+      "line": 10,
+      "text": "from harken.sources.rss import RSSSource, _entry_time"
+    },
+    {
+      "source_path": "tests/test_sentiment.py",
+      "line": 3,
+      "text": "from harken.analyze.sentiment import LexiconSentiment"
+    },
+    {
+      "source_path": "tests/test_sentiment.py",
+      "line": 4,
+      "text": "from harken.models import Sentiment"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 3,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 5,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 7,
+      "text": "import respx"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 9,
+      "text": "from harken.sources.bluesky import BlueskySource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 10,
+      "text": "from harken.sources.hackernews import HackerNewsSource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 11,
+      "text": "from harken.sources.reddit import RedditSource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 12,
+      "text": "from harken.sources.stackoverflow import StackOverflowSource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 13,
+      "text": "from harken.sources.x import XSource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 14,
+      "text": "from harken.sources.youtube import YouTubeSource"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 342,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line": 344,
+      "text": "from harken.models import Mention"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line": 3,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line": 4,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line": 8,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line": 9,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_thresholds.py",
+      "line": 3,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_thresholds.py",
+      "line": 5,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "tests/test_thresholds.py",
+      "line": 6,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_thresholds.py",
+      "line": 7,
+      "text": "from harken.thresholds import evaluate_thresholds"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 3,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 4,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 7,
+      "text": "from fastapi.testclient import TestClient"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 9,
+      "text": "from harken import __version__"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 10,
+      "text": "from harken.auth import hash_password"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 11,
+      "text": "from harken.config import Config"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 12,
+      "text": "from harken.models import Mention, Sentiment"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 13,
+      "text": "from harken.store import Store"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 14,
+      "text": "from harken.web.app import _chart_series, create_app"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 479,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 480,
+      "text": "from harken.sources.base import FetchPage"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 541,
+      "text": "from harken.sources import REGISTRY"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line": 542,
+      "text": "from harken.sources.base import FetchPage"
+    }
+  ],
+  "call_edges": []
+}

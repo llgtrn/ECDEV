@@ -11,7 +11,7 @@ def main():
  for d in reg['donors']:
   jsonschema.validate(d,read(schema/'donor.schema.json'))
   path=ROOT/'research/commerce/donors/census'/d['donor_id'];summary=read(path/'summary.json');jsonschema.validate(summary,read(schema/'census.schema.json'))
-  files=[json.loads(x) for x in (path/'files.jsonl').read_text().splitlines()]
+  files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
   assert len(files)==summary['total_files'];assert len({x['path'] for x in files})==len(files)
   assert sum(x['classification']=='UNKNOWN' for x in files)==summary['unknown_files']
   assert summary['status']=='CENSUS_PARTIAL' or (summary['unknown_files']==0 and summary['parse_unknown']==0 and summary['semantic_review']=='COMPLETE')
@@ -76,6 +76,12 @@ def main():
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)
  graph=read(ROOT/'research/commerce/expansion-capability-graph.json')
  report['source_reviewed_contracts']=len(graph['capabilities']);report['mapped_capabilities']=len(graph['capabilities'])
+ social_graph=read(ROOT/'research/commerce/social-capability-graph.json')
+ report['source_reviewed_contracts']+=len(social_graph['capabilities']);report['mapped_capabilities']+=len(social_graph['capabilities'])
+ social_oracle=read(ROOT/'research/commerce/social-oracle-report.json')
+ import hashlib
+ assert social_oracle['status']=='PASS';assert hashlib.sha256((ROOT/social_oracle['fixture']).read_bytes()).hexdigest()==social_oracle['fixture_sha256']
+ report['oracle_compared_capabilities']+=social_oracle['families'];report['oracle_proven_native_capabilities']+=social_oracle['families'];report['oracle_cases_executed']+=social_oracle['cases'];report['rust_replacement_capabilities']+=2
  source=(ROOT/'domain/commerce/src/research.rs').read_text(encoding='utf-8');block=source.split('pub const ZERO_COST_STAGES',1)[1].split('];',1)[0]
  stages=re.findall(r'\("[^"]+",\s*(true|false)\)',block)
  assert stages

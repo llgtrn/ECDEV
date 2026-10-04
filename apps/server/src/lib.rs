@@ -288,7 +288,8 @@ fn start_watch_scheduler(engine: Engine) -> tokio::task::JoinHandle<()> {
         loop {
             let e = engine.clone();
             let result = tokio::task::spawn_blocking(move || {
-                e.monitor_tick(ecdev_core::service::timestamp())
+                e.monitor_tick(ecdev_core::service::timestamp())?;
+                e.trend_watch_tick(ecdev_core::service::timestamp())
             })
             .await;
             if let Ok(Err(reason)) = result {
@@ -374,6 +375,7 @@ fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
         .with_provider(std::sync::Arc::new(ecdev_keepa::client::Keepa::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
+        .with_provider(std::sync::Arc::new(ecdev_web::social::Social::default()))
         .with_provider(std::sync::Arc::new(
             ecdev_web::amazon::PublicAmazon::default(),
         )))
@@ -381,6 +383,128 @@ fn configured_engine() -> Result<Engine, String> {
 #[cfg(test)]
 mod research_tests {
     use super::*;
+    #[test]
+    fn social_snapshot_mcp_projection_and_scenario_isolation() {
+        use ecdev_core::social::{EvidenceState, ForecastScenario, SimulatedActor, SimulatedPost};
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-e2e-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()))
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let commerce_fixture: Value = serde_json::from_str(include_str!(
+            "../../../domain/commerce/tests/fixtures/research-household.json"
+        ))
+        .unwrap();
+        engine.research(commerce_fixture).unwrap();
+        let commercial_before = engine.candidates().unwrap();
+        let raw=json!({"hits":[{"objectID":"1","title":"matcha glass good","created_at_i":9000,"points":0},{"objectID":"2","title":"matcha glass bad","created_at_i":9200}]}).to_string();
+        let before=engine.call("ecdev.trend.discover",json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}],"fixture_now":10000})).unwrap();
+        assert_eq!(before["mention_count"], 2);
+        let linked=engine.trend_discover(json!({"query":"storage","sources":[{"platform":"HACKER_NEWS","fixture_raw":json!({"hits":[{"objectID":"33","title":"storage box","created_at_i":9000}]}).to_string()}],"fixture_now":10000})).unwrap();
+        assert!(!linked["commerce_links"].as_array().unwrap().is_empty());
+        assert!(
+            linked["commerce_links"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|l| l["shortlist_permitted_by_social"] == false)
+        );
+        assert_eq!(engine.candidates().unwrap(), commercial_before);
+        assert_eq!(before["budget_usage"]["request_count"], 0);
+        assert_eq!(before["capture_mode"], "FIXTURE");
+        let projection = engine
+            .call(
+                "ecdev.trend.explain",
+                json!({"snapshot_id":before["snapshot_id"]}),
+            )
+            .unwrap();
+        assert_eq!(
+            projection["observed_source_evidence"]
+                .as_array()
+                .unwrap()
+                .len(),
+            2
+        );
+        assert_eq!(
+            projection["observed_source_evidence"][0]["engagement"]["likes"],
+            0
+        );
+        assert!(projection["observed_source_evidence"][1]["engagement"]["likes"].is_null());
+        let scenario = ForecastScenario {
+            id: "simulation-1".into(),
+            seed_snapshot_id: before["snapshot_id"].as_str().unwrap().into(),
+            question: "illustrative scenario".into(),
+            population: vec![SimulatedActor {
+                id: "synthetic-1".into(),
+                persona: "hypothetical".into(),
+                state: EvidenceState::Simulated,
+            }],
+            posts: vec![SimulatedPost {
+                actor_id: "synthetic-1".into(),
+                text: "matcha glass".into(),
+                state: EvidenceState::Simulated,
+            }],
+            reactions: vec![],
+            state: EvidenceState::Simulated,
+        };
+        engine.store_social_scenario(scenario).unwrap();
+        let after=engine.trend_discover(json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}],"fixture_now":13600})).unwrap();
+        assert_eq!(after["mention_count"], 2);
+        assert_eq!(after["velocity"]["value"], 0.);
+        assert_eq!(after["simulation_contribution"], 0);
+        let comparison=engine.call("ecdev.trend.compare",json!({"before_snapshot_id":before["snapshot_id"],"after_snapshot_id":after["snapshot_id"]})).unwrap();
+        assert_eq!(comparison["mention_delta"], 0);
+        let cached = engine
+            .trend_discover(
+                json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS"}],"cache_only":true}),
+            )
+            .unwrap();
+        assert_eq!(cached["capture_mode"], "CACHED");
+        assert_eq!(cached["mention_count"], 0);
+        assert_eq!(cached["budget_usage"]["request_count"], 0);
+        assert!(!cached["provider_failures"].as_array().unwrap().is_empty());
+        assert!(engine.call("ecdev.trend.compare",json!({"before_snapshot_id":before["snapshot_id"],"after_snapshot_id":cached["snapshot_id"]})).is_err());
+        let denied = engine
+            .trend_discover(
+                json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS"}],"request_budget":0}),
+            )
+            .unwrap();
+        assert_eq!(denied["budget_usage"]["request_count"], 0);
+        assert_eq!(denied["source_complete"], false);
+        assert!(denied["velocity"]["value"].is_null());
+        let changed_scope = engine.trend_discover(json!({"query":"matcha","sources":[{"platform":"JSON_FEED","url":"https://example.org/feed.json","fixture_raw":"{\"version\":\"https://jsonfeed.org/version/1.1\",\"items\":[]}"}],"fixture_now":17200})).unwrap();
+        assert!(changed_scope["velocity"]["value"].is_null());
+        assert!(
+            engine
+                .trend_discover(
+                    json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS"}],"fixture_now":1})
+                )
+                .is_err()
+        );
+        let frozen = engine
+            .trend_inspect(json!({"snapshot_id":before["snapshot_id"]}))
+            .unwrap();
+        assert_eq!(
+            frozen["observed_source_evidence"],
+            projection["observed_source_evidence"]
+        );
+        drop(engine);
+        let reopened = Engine::open(&root).unwrap();
+        assert_eq!(
+            reopened
+                .trend_inspect(json!({"snapshot_id":before["snapshot_id"]}))
+                .unwrap()["mention_count"],
+            2
+        );
+        drop(reopened);
+        std::fs::remove_dir_all(root).unwrap();
+    }
     #[test]
     fn public_amazon_blocked_route_preserves_provider_identity_and_public_fallback() {
         let root = std::env::temp_dir().join(format!(

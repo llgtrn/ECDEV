@@ -1,0 +1,5651 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "ForumEngine/__init__.py",
+      "line": 5,
+      "text": "from .monitor import LogMonitor"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 6,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 9,
+      "text": "from typing import List, Dict, Any, Optional"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 10,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 15,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "ForumEngine/llm_host.py",
+      "line": 24,
+      "text": "from utils.retry_helper import with_graceful_retry, SEARCH_API_RETRY_CONFIG"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 7,
+      "text": "import threading"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 10,
+      "text": "import re"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 12,
+      "text": "from typing import Dict, Optional, List"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 13,
+      "text": "from threading import Lock"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 14,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 18,
+      "text": "from .llm_host import generate_host_speech"
+    },
+    {
+      "source_path": "ForumEngine/monitor.py",
+      "line": 698,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "InsightEngine/__init__.py",
+      "line": 6,
+      "text": "from .agent import DeepSearchAgent, create_agent"
+    },
+    {
+      "source_path": "InsightEngine/__init__.py",
+      "line": 7,
+      "text": "from .utils.config import settings, Settings"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 10,
+      "text": "from typing import Any, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 12,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 13,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 14,
+      "text": "from sentence_transformers import SentenceTransformer"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 15,
+      "text": "from sklearn.cluster import KMeans"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 17,
+      "text": "from .llms import LLMClient"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 18,
+      "text": "from .nodes import (\n    FirstSearchNode,\n    FirstSummaryNode,\n    ReflectionNode,\n    ReflectionSummaryNode,\n    ReportFormattingNode,\n    ReportStructureNode,\n)"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 26,
+      "text": "from .state import State"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 27,
+      "text": "from .tools import (\n    DBResponse,\n    MediaCrawlerDB,\n    keyword_optimizer,\n    multilingual_sentiment_analyzer,\n)"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 33,
+      "text": "from .utils import format_search_results_for_prompt"
+    },
+    {
+      "source_path": "InsightEngine/agent.py",
+      "line": 34,
+      "text": "from .utils.config import Settings, settings"
+    },
+    {
+      "source_path": "InsightEngine/llms/__init__.py",
+      "line": 6,
+      "text": "from .base import LLMClient"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 7,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, Optional, Iterator, Generator"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 11,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "InsightEngine/llms/base.py",
+      "line": 20,
+      "text": "from retry_helper import with_retry, LLM_RETRY_CONFIG"
+    },
+    {
+      "source_path": "InsightEngine/nodes/__init__.py",
+      "line": 6,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/__init__.py",
+      "line": 7,
+      "text": "from .report_structure_node import ReportStructureNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/__init__.py",
+      "line": 8,
+      "text": "from .search_node import FirstSearchNode, ReflectionNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/__init__.py",
+      "line": 9,
+      "text": "from .summary_node import FirstSummaryNode, ReflectionSummaryNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/__init__.py",
+      "line": 10,
+      "text": "from .formatting_node import ReportFormattingNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/base_node.py",
+      "line": 6,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "InsightEngine/nodes/base_node.py",
+      "line": 7,
+      "text": "from typing import Any, Dict, Optional"
+    },
+    {
+      "source_path": "InsightEngine/nodes/base_node.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/nodes/base_node.py",
+      "line": 9,
+      "text": "from ..llms.base import LLMClient"
+    },
+    {
+      "source_path": "InsightEngine/nodes/base_node.py",
+      "line": 10,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 10,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 11,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_FORMATTING"
+    },
+    {
+      "source_path": "InsightEngine/nodes/formatting_node.py",
+      "line": 12,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_markdown_tags\n)"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_STRUCTURE"
+    },
+    {
+      "source_path": "InsightEngine/nodes/report_structure_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 11,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 12,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SEARCH, SYSTEM_PROMPT_REFLECTION"
+    },
+    {
+      "source_path": "InsightEngine/nodes/search_node.py",
+      "line": 13,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SUMMARY, SYSTEM_PROMPT_REFLECTION_SUMMARY"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/nodes/summary_node.py",
+      "line": 27,
+      "text": "from utils.forum_reader import get_latest_host_speech, format_host_speech_for_prompt"
+    },
+    {
+      "source_path": "InsightEngine/prompts/__init__.py",
+      "line": 6,
+      "text": "from .prompts import (\n    SYSTEM_PROMPT_REPORT_STRUCTURE,\n    SYSTEM_PROMPT_FIRST_SEARCH,\n    SYSTEM_PROMPT_FIRST_SUMMARY,\n    SYSTEM_PROMPT_REFLECTION,\n    SYSTEM_PROMPT_REFLECTION_SUMMARY,\n    SYSTEM_PROMPT_REPORT_FORMATTING,\n    output_schema_report_structure,\n    output_schema_first_search,\n    output_schema_first_summary,\n    output_schema_reflection,\n    output_schema_reflection_summary,\n    input_schema_report_formatting\n)"
+    },
+    {
+      "source_path": "InsightEngine/prompts/prompts.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/state/__init__.py",
+      "line": 6,
+      "text": "from .state import State, Paragraph, Research, Search"
+    },
+    {
+      "source_path": "InsightEngine/state/state.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "InsightEngine/state/state.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any, Optional"
+    },
+    {
+      "source_path": "InsightEngine/state/state.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/state/state.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "InsightEngine/tools/__init__.py",
+      "line": 6,
+      "text": "from .search import (\n    MediaCrawlerDB,\n    QueryResult,\n    DBResponse,\n    print_response_summary\n)"
+    },
+    {
+      "source_path": "InsightEngine/tools/__init__.py",
+      "line": 12,
+      "text": "from .keyword_optimizer import (\n    KeywordOptimizer,\n    KeywordOptimizationResponse,\n    keyword_optimizer\n)"
+    },
+    {
+      "source_path": "InsightEngine/tools/__init__.py",
+      "line": 17,
+      "text": "from .sentiment_analyzer import (\n    WeiboMultilingualSentimentAnalyzer,\n    SentimentResult,\n    BatchSentimentResult,\n    multilingual_sentiment_analyzer,\n    analyze_sentiment\n)"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 6,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 9,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 10,
+      "text": "from typing import List, Dict, Any"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 15,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 16,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 25,
+      "text": "from retry_helper import with_graceful_retry, SEARCH_API_RETRY_CONFIG"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 236,
+      "text": "import re"
+    },
+    {
+      "source_path": "InsightEngine/tools/keyword_optimizer.py",
+      "line": 279,
+      "text": "import re"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 26,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 28,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 29,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 30,
+      "text": "from typing import List, Dict, Any, Optional, Literal"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 31,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 32,
+      "text": "from ..utils.db import fetch_all"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 33,
+      "text": "from datetime import datetime, timedelta, date"
+    },
+    {
+      "source_path": "InsightEngine/tools/search.py",
+      "line": 34,
+      "text": "from InsightEngine.utils.config import settings"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 8,
+      "text": "from typing import List, Dict, Any, Optional, Union"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 10,
+      "text": "import re"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 13,
+      "text": "import torch"
+    },
+    {
+      "source_path": "InsightEngine/tools/sentiment_analyzer.py",
+      "line": 22,
+      "text": "from transformers import AutoTokenizer, AutoModelForSequenceClassification"
+    },
+    {
+      "source_path": "InsightEngine/utils/__init__.py",
+      "line": 6,
+      "text": "from .text_processing import (\n    clean_json_tags,\n    clean_markdown_tags, \n    remove_reasoning_from_output,\n    extract_clean_response,\n    update_state_with_search_results,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 7,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 8,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 9,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 10,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "InsightEngine/utils/config.py",
+      "line": 11,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 11,
+      "text": "from typing import Any, Dict, Iterable, List, Optional, Union"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 13,
+      "text": "from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 14,
+      "text": "from sqlalchemy.engine import URL, make_url"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 15,
+      "text": "from sqlalchemy import text"
+    },
+    {
+      "source_path": "InsightEngine/utils/db.py",
+      "line": 16,
+      "text": "from InsightEngine.utils.config import settings"
+    },
+    {
+      "source_path": "InsightEngine/utils/text_processing.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "InsightEngine/utils/text_processing.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "InsightEngine/utils/text_processing.py",
+      "line": 8,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "InsightEngine/utils/text_processing.py",
+      "line": 9,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "MediaEngine/__init__.py",
+      "line": 6,
+      "text": "from .agent import DeepSearchAgent, AnspireSearchAgent, create_agent"
+    },
+    {
+      "source_path": "MediaEngine/__init__.py",
+      "line": 7,
+      "text": "from .utils.config import Settings"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 10,
+      "text": "from typing import Optional, Dict, Any, List"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 11,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 12,
+      "text": "from .llms import LLMClient"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 13,
+      "text": "from .nodes import (\n    ReportStructureNode,\n    FirstSearchNode, \n    ReflectionNode,\n    FirstSummaryNode,\n    ReflectionSummaryNode,\n    ReportFormattingNode\n)"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 21,
+      "text": "from .state import State"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 22,
+      "text": "from .tools import BochaMultimodalSearch, BochaResponse, AnspireAISearch, AnspireResponse"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 23,
+      "text": "from .utils import settings, Settings, format_search_results_for_prompt"
+    },
+    {
+      "source_path": "MediaEngine/agent.py",
+      "line": 169,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "MediaEngine/llms/__init__.py",
+      "line": 5,
+      "text": "from .base import LLMClient"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 7,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, Optional, Generator"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 11,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "MediaEngine/llms/base.py",
+      "line": 21,
+      "text": "from retry_helper import with_retry, LLM_RETRY_CONFIG"
+    },
+    {
+      "source_path": "MediaEngine/nodes/__init__.py",
+      "line": 6,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/__init__.py",
+      "line": 7,
+      "text": "from .report_structure_node import ReportStructureNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/__init__.py",
+      "line": 8,
+      "text": "from .search_node import FirstSearchNode, ReflectionNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/__init__.py",
+      "line": 9,
+      "text": "from .summary_node import FirstSummaryNode, ReflectionSummaryNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/__init__.py",
+      "line": 10,
+      "text": "from .formatting_node import ReportFormattingNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/base_node.py",
+      "line": 6,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "MediaEngine/nodes/base_node.py",
+      "line": 7,
+      "text": "from typing import Any, Dict, Optional"
+    },
+    {
+      "source_path": "MediaEngine/nodes/base_node.py",
+      "line": 8,
+      "text": "from ..llms.base import LLMClient"
+    },
+    {
+      "source_path": "MediaEngine/nodes/base_node.py",
+      "line": 9,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "MediaEngine/nodes/base_node.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 10,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 11,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_FORMATTING"
+    },
+    {
+      "source_path": "MediaEngine/nodes/formatting_node.py",
+      "line": 12,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_markdown_tags\n)"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_STRUCTURE"
+    },
+    {
+      "source_path": "MediaEngine/nodes/report_structure_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 11,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 12,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SEARCH, SYSTEM_PROMPT_REFLECTION"
+    },
+    {
+      "source_path": "MediaEngine/nodes/search_node.py",
+      "line": 13,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SUMMARY, SYSTEM_PROMPT_REFLECTION_SUMMARY"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "MediaEngine/nodes/summary_node.py",
+      "line": 27,
+      "text": "from utils.forum_reader import get_latest_host_speech, format_host_speech_for_prompt"
+    },
+    {
+      "source_path": "MediaEngine/prompts/__init__.py",
+      "line": 6,
+      "text": "from .prompts import (\n    SYSTEM_PROMPT_REPORT_STRUCTURE,\n    SYSTEM_PROMPT_FIRST_SEARCH,\n    SYSTEM_PROMPT_FIRST_SUMMARY,\n    SYSTEM_PROMPT_REFLECTION,\n    SYSTEM_PROMPT_REFLECTION_SUMMARY,\n    SYSTEM_PROMPT_REPORT_FORMATTING,\n    output_schema_report_structure,\n    output_schema_first_search,\n    output_schema_first_summary,\n    output_schema_reflection,\n    output_schema_reflection_summary,\n    input_schema_report_formatting\n)"
+    },
+    {
+      "source_path": "MediaEngine/prompts/prompts.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/state/__init__.py",
+      "line": 6,
+      "text": "from .state import State, Paragraph, Research, Search"
+    },
+    {
+      "source_path": "MediaEngine/state/state.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "MediaEngine/state/state.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any, Optional"
+    },
+    {
+      "source_path": "MediaEngine/state/state.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/state/state.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "MediaEngine/tools/__init__.py",
+      "line": 6,
+      "text": "from .search import (\n    BochaMultimodalSearch,\n    AnspireAISearch,\n    WebpageResult,\n    ImageResult,\n    ModalCardResult,\n    BochaResponse,\n    AnspireResponse,\n    print_response_summary\n)"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 24,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 25,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 26,
+      "text": "import datetime"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 27,
+      "text": "from typing import List, Dict, Any, Optional, Literal"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 29,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 30,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 34,
+      "text": "import requests"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 45,
+      "text": "from retry_helper import with_graceful_retry, SEARCH_API_RETRY_CONFIG"
+    },
+    {
+      "source_path": "MediaEngine/tools/search.py",
+      "line": 48,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "MediaEngine/utils/__init__.py",
+      "line": 6,
+      "text": "from .text_processing import (\n    clean_json_tags,\n    clean_markdown_tags, \n    remove_reasoning_from_output,\n    extract_clean_response,\n    update_state_with_search_results,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "MediaEngine/utils/__init__.py",
+      "line": 15,
+      "text": "from .config import Settings, settings"
+    },
+    {
+      "source_path": "MediaEngine/utils/config.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MediaEngine/utils/config.py",
+      "line": 6,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "MediaEngine/utils/config.py",
+      "line": 7,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "MediaEngine/utils/config.py",
+      "line": 8,
+      "text": "from typing import Optional, Literal"
+    },
+    {
+      "source_path": "MediaEngine/utils/text_processing.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "MediaEngine/utils/text_processing.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "MediaEngine/utils/text_processing.py",
+      "line": 8,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "MediaEngine/utils/text_processing.py",
+      "line": 9,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 10,
+      "text": "from datetime import datetime, date, timedelta"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 12,
+      "text": "from typing import List, Dict, Optional"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 13,
+      "text": "from sqlalchemy import create_engine, text"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 14,
+      "text": "from sqlalchemy.engine import Engine"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 15,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 22,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/database_manager.py",
+      "line": 26,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 9,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 10,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 12,
+      "text": "from datetime import datetime, date"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 14,
+      "text": "from typing import List, Dict, Optional"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 15,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/get_today_news.py",
+      "line": 22,
+      "text": "from BroadTopicExtraction.database_manager import DatabaseManager"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 9,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 10,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 11,
+      "text": "from datetime import datetime, date"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 13,
+      "text": "from typing import List, Dict, Optional"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 14,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 21,
+      "text": "from BroadTopicExtraction.get_today_news import NewsCollector, SOURCE_NAMES"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 22,
+      "text": "from BroadTopicExtraction.topic_extractor import TopicExtractor"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/main.py",
+      "line": 23,
+      "text": "from BroadTopicExtraction.database_manager import DatabaseManager"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 10,
+      "text": "import re"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 12,
+      "text": "from typing import List, Dict, Tuple"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 13,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 20,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+      "line": 21,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 10,
+      "text": "from datetime import date, timedelta, datetime"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 12,
+      "text": "from typing import List, Dict, Optional"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 13,
+      "text": "import random"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 14,
+      "text": "from sqlalchemy import create_engine, text"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 15,
+      "text": "from sqlalchemy.engine import Engine"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 22,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 26,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+      "line": 27,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 9,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 10,
+      "text": "from datetime import date, datetime"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 12,
+      "text": "from typing import List, Dict"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 18,
+      "text": "from keyword_manager import KeywordManager"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/main.py",
+      "line": 19,
+      "text": "from platform_crawler import PlatformCrawler"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 10,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 11,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 12,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 14,
+      "text": "from typing import List, Dict, Optional"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 15,
+      "text": "import json"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 16,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 23,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 345,
+      "text": "import re"
+    },
+    {
+      "source_path": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+      "line": 353,
+      "text": "import re"
+    },
+    {
+      "source_path": "MindSpider/config.py",
+      "line": 6,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "MindSpider/config.py",
+      "line": 7,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "MindSpider/config.py",
+      "line": 8,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "MindSpider/config.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 10,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 11,
+      "text": "import difflib"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 12,
+      "text": "import re"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 13,
+      "text": "from datetime import date, datetime"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 15,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 16,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 17,
+      "text": "import pymysql"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 18,
+      "text": "from pymysql.cursors import DictCursor"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 19,
+      "text": "from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 20,
+      "text": "from sqlalchemy import inspect, text"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 21,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 22,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 23,
+      "text": "from urllib.parse import quote_plus"
+    },
+    {
+      "source_path": "MindSpider/main.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/schema/__init__.py",
+      "line": 1,
+      "text": "from .models_bigdata import Base as BDBase"
+    },
+    {
+      "source_path": "MindSpider/schema/__init__.py",
+      "line": 2,
+      "text": "from .models_sa import Base as SABase"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 10,
+      "text": "from sqlalchemy import create_engine, text, inspect"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 11,
+      "text": "from sqlalchemy.engine import Engine"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 12,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 14,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 15,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 16,
+      "text": "from urllib.parse import quote_plus"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 23,
+      "text": "import config"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 28,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/schema/db_manager.py",
+      "line": 183,
+      "text": "from datetime import date, timedelta"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 13,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 14,
+      "text": "import os"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 15,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 16,
+      "text": "from urllib.parse import quote_plus"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 17,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 19,
+      "text": "from sqlalchemy.ext.asyncio import create_async_engine"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 20,
+      "text": "from sqlalchemy import text"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 22,
+      "text": "from models_sa import Base"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 26,
+      "text": "import models_bigdata"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 27,
+      "text": "import sys"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 28,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 34,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "MindSpider/schema/init_database.py",
+      "line": 92,
+      "text": "from sqlalchemy.ext.asyncio import AsyncEngine"
+    },
+    {
+      "source_path": "MindSpider/schema/models_bigdata.py",
+      "line": 12,
+      "text": "from sqlalchemy.orm import Mapped, mapped_column"
+    },
+    {
+      "source_path": "MindSpider/schema/models_bigdata.py",
+      "line": 13,
+      "text": "from sqlalchemy import Integer, String, BigInteger, Text, ForeignKey"
+    },
+    {
+      "source_path": "MindSpider/schema/models_bigdata.py",
+      "line": 16,
+      "text": "from models_sa import Base"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 11,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 12,
+      "text": "from datetime import date"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 14,
+      "text": "from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 15,
+      "text": "from sqlalchemy import Integer, String, Text, BigInteger, Date, Float, ForeignKey, Index, UniqueConstraint"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 16,
+      "text": "from sqlalchemy.schema import ForeignKeyConstraint"
+    },
+    {
+      "source_path": "MindSpider/schema/models_sa.py",
+      "line": 17,
+      "text": "from sqlalchemy.orm import relationship"
+    },
+    {
+      "source_path": "QueryEngine/__init__.py",
+      "line": 6,
+      "text": "from .agent import DeepSearchAgent, create_agent"
+    },
+    {
+      "source_path": "QueryEngine/__init__.py",
+      "line": 7,
+      "text": "from .utils.config import Settings"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 10,
+      "text": "from typing import Optional, Dict, Any, List"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 12,
+      "text": "from .llms import LLMClient"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 13,
+      "text": "from .nodes import (\n    ReportStructureNode,\n    FirstSearchNode, \n    ReflectionNode,\n    FirstSummaryNode,\n    ReflectionSummaryNode,\n    ReportFormattingNode\n)"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 21,
+      "text": "from .state import State"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 22,
+      "text": "from .tools import TavilyNewsAgency, TavilyResponse"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 23,
+      "text": "from .utils import Settings, format_search_results_for_prompt"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 24,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 37,
+      "text": "from .utils.config import settings"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 177,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "QueryEngine/agent.py",
+      "line": 471,
+      "text": "from .utils.config import Settings"
+    },
+    {
+      "source_path": "QueryEngine/llms/__init__.py",
+      "line": 5,
+      "text": "from .base import LLMClient"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 7,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, Optional, Generator"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 11,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "QueryEngine/llms/base.py",
+      "line": 20,
+      "text": "from retry_helper import with_retry, LLM_RETRY_CONFIG"
+    },
+    {
+      "source_path": "QueryEngine/nodes/__init__.py",
+      "line": 6,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/__init__.py",
+      "line": 7,
+      "text": "from .report_structure_node import ReportStructureNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/__init__.py",
+      "line": 8,
+      "text": "from .search_node import FirstSearchNode, ReflectionNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/__init__.py",
+      "line": 9,
+      "text": "from .summary_node import FirstSummaryNode, ReflectionSummaryNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/__init__.py",
+      "line": 10,
+      "text": "from .formatting_node import ReportFormattingNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/base_node.py",
+      "line": 6,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "QueryEngine/nodes/base_node.py",
+      "line": 7,
+      "text": "from typing import Any, Dict, Optional"
+    },
+    {
+      "source_path": "QueryEngine/nodes/base_node.py",
+      "line": 8,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/nodes/base_node.py",
+      "line": 9,
+      "text": "from ..llms.base import LLMClient"
+    },
+    {
+      "source_path": "QueryEngine/nodes/base_node.py",
+      "line": 10,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 9,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 11,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_FORMATTING"
+    },
+    {
+      "source_path": "QueryEngine/nodes/formatting_node.py",
+      "line": 12,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_markdown_tags\n)"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_REPORT_STRUCTURE"
+    },
+    {
+      "source_path": "QueryEngine/nodes/report_structure_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 11,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 12,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SEARCH, SYSTEM_PROMPT_REFLECTION"
+    },
+    {
+      "source_path": "QueryEngine/nodes/search_node.py",
+      "line": 13,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json\n)"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 8,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 11,
+      "text": "from .base_node import StateMutationNode"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 12,
+      "text": "from ..state.state import State"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 13,
+      "text": "from ..prompts import SYSTEM_PROMPT_FIRST_SUMMARY, SYSTEM_PROMPT_REFLECTION_SUMMARY"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 14,
+      "text": "from ..utils.text_processing import (\n    remove_reasoning_from_output,\n    clean_json_tags,\n    extract_clean_response,\n    fix_incomplete_json,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "QueryEngine/nodes/summary_node.py",
+      "line": 27,
+      "text": "from utils.forum_reader import get_latest_host_speech, format_host_speech_for_prompt"
+    },
+    {
+      "source_path": "QueryEngine/prompts/__init__.py",
+      "line": 6,
+      "text": "from .prompts import (\n    SYSTEM_PROMPT_REPORT_STRUCTURE,\n    SYSTEM_PROMPT_FIRST_SEARCH,\n    SYSTEM_PROMPT_FIRST_SUMMARY,\n    SYSTEM_PROMPT_REFLECTION,\n    SYSTEM_PROMPT_REFLECTION_SUMMARY,\n    SYSTEM_PROMPT_REPORT_FORMATTING,\n    output_schema_report_structure,\n    output_schema_first_search,\n    output_schema_first_summary,\n    output_schema_reflection,\n    output_schema_reflection_summary,\n    input_schema_report_formatting\n)"
+    },
+    {
+      "source_path": "QueryEngine/prompts/prompts.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/state/__init__.py",
+      "line": 6,
+      "text": "from .state import State, Paragraph, Research, Search"
+    },
+    {
+      "source_path": "QueryEngine/state/state.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "QueryEngine/state/state.py",
+      "line": 7,
+      "text": "from typing import List, Dict, Any, Optional"
+    },
+    {
+      "source_path": "QueryEngine/state/state.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/state/state.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "QueryEngine/tools/__init__.py",
+      "line": 6,
+      "text": "from .search import (\n    TavilyNewsAgency, \n    SearchResult, \n    TavilyResponse, \n    ImageResult,\n    print_response_summary\n)"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 25,
+      "text": "import sys"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 26,
+      "text": "from typing import List, Dict, Any, Optional"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 35,
+      "text": "from retry_helper import with_graceful_retry, SEARCH_API_RETRY_CONFIG"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 36,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "QueryEngine/tools/search.py",
+      "line": 40,
+      "text": "from tavily import TavilyClient"
+    },
+    {
+      "source_path": "QueryEngine/utils/__init__.py",
+      "line": 6,
+      "text": "from .text_processing import (\n    clean_json_tags,\n    clean_markdown_tags, \n    remove_reasoning_from_output,\n    extract_clean_response,\n    update_state_with_search_results,\n    format_search_results_for_prompt\n)"
+    },
+    {
+      "source_path": "QueryEngine/utils/__init__.py",
+      "line": 15,
+      "text": "from .config import Settings"
+    },
+    {
+      "source_path": "QueryEngine/utils/config.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "QueryEngine/utils/config.py",
+      "line": 10,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "QueryEngine/utils/config.py",
+      "line": 11,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "QueryEngine/utils/config.py",
+      "line": 12,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "QueryEngine/utils/config.py",
+      "line": 13,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "QueryEngine/utils/text_processing.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "QueryEngine/utils/text_processing.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "QueryEngine/utils/text_processing.py",
+      "line": 8,
+      "text": "from typing import Dict, Any, List"
+    },
+    {
+      "source_path": "QueryEngine/utils/text_processing.py",
+      "line": 9,
+      "text": "from json.decoder import JSONDecodeError"
+    },
+    {
+      "source_path": "ReportEngine/__init__.py",
+      "line": 8,
+      "text": "from .agent import ReportAgent, create_agent"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 12,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 13,
+      "text": "from copy import deepcopy"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 15,
+      "text": "from uuid import uuid4"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 16,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 17,
+      "text": "from typing import Optional, Dict, Any, List, Callable, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 19,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 21,
+      "text": "from .core import (\n    ChapterStorage,\n    DocumentComposer,\n    TemplateSection,\n    parse_template_sections,\n)"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 27,
+      "text": "from .ir import IRValidator"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 28,
+      "text": "from .llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 29,
+      "text": "from .nodes import (\n    TemplateSelectionNode,\n    ChapterGenerationNode,\n    ChapterJsonParseError,\n    ChapterContentError,\n    ChapterValidationError,\n    DocumentLayoutNode,\n    WordBudgetNode,\n)"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 38,
+      "text": "from .renderers import HTMLRenderer"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 39,
+      "text": "from .state import ReportState"
+    },
+    {
+      "source_path": "ReportEngine/agent.py",
+      "line": 40,
+      "text": "from .utils.config import settings, Settings"
+    },
+    {
+      "source_path": "ReportEngine/core/__init__.py",
+      "line": 8,
+      "text": "from .template_parser import TemplateSection, parse_template_sections"
+    },
+    {
+      "source_path": "ReportEngine/core/__init__.py",
+      "line": 9,
+      "text": "from .chapter_storage import ChapterStorage"
+    },
+    {
+      "source_path": "ReportEngine/core/__init__.py",
+      "line": 10,
+      "text": "from .stitcher import DocumentComposer"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 11,
+      "text": "from contextlib import contextmanager"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 12,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 13,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/core/chapter_storage.py",
+      "line": 15,
+      "text": "from typing import Dict, Generator, List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/core/stitcher.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/core/stitcher.py",
+      "line": 10,
+      "text": "from typing import Dict, List, Set"
+    },
+    {
+      "source_path": "ReportEngine/core/stitcher.py",
+      "line": 12,
+      "text": "from ..ir import IR_VERSION"
+    },
+    {
+      "source_path": "ReportEngine/core/template_parser.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/core/template_parser.py",
+      "line": 12,
+      "text": "import unicodedata"
+    },
+    {
+      "source_path": "ReportEngine/core/template_parser.py",
+      "line": 13,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "ReportEngine/core/template_parser.py",
+      "line": 14,
+      "text": "from typing import List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 12,
+      "text": "import threading"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 14,
+      "text": "from collections import deque, defaultdict"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 15,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 16,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 17,
+      "text": "from queue import Queue, Empty"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 18,
+      "text": "from flask import Blueprint, request, jsonify, Response, send_file, stream_with_context"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 19,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 20,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 21,
+      "text": "from .agent import ReportAgent, create_agent"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 22,
+      "text": "from .nodes import ChapterJsonParseError"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 23,
+      "text": "from .utils.config import settings"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 263,
+      "text": "from .utils.dependency_check import log_dependency_status"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 1256,
+      "text": "from .renderers import MarkdownRenderer"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 1311,
+      "text": "from .utils.dependency_check import check_pango_available"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 1352,
+      "text": "from .renderers import PDFRenderer"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 1400,
+      "text": "from .utils.dependency_check import check_pango_available"
+    },
+    {
+      "source_path": "ReportEngine/flask_interface.py",
+      "line": 1429,
+      "text": "from .renderers import PDFRenderer"
+    },
+    {
+      "source_path": "ReportEngine/ir/__init__.py",
+      "line": 8,
+      "text": "from .schema import (\n    IR_VERSION,\n    CHAPTER_JSON_SCHEMA,\n    CHAPTER_JSON_SCHEMA_TEXT,\n    ALLOWED_BLOCK_TYPES,\n    ALLOWED_INLINE_MARKS,\n    ENGINE_AGENT_TITLES,\n)"
+    },
+    {
+      "source_path": "ReportEngine/ir/__init__.py",
+      "line": 16,
+      "text": "from .validator import IRValidator"
+    },
+    {
+      "source_path": "ReportEngine/ir/schema.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/ir/schema.py",
+      "line": 11,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "ReportEngine/ir/validator.py",
+      "line": 11,
+      "text": "from typing import Any, Dict, List, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/ir/validator.py",
+      "line": 13,
+      "text": "from .schema import (\n    ALLOWED_BLOCK_TYPES,\n    ALLOWED_INLINE_MARKS,\n    ENGINE_AGENT_TITLES,\n    IR_VERSION,\n)"
+    },
+    {
+      "source_path": "ReportEngine/llms/__init__.py",
+      "line": 7,
+      "text": "from .base import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 8,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 9,
+      "text": "from typing import Any, Dict, Optional, Generator"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 12,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "ReportEngine/llms/base.py",
+      "line": 21,
+      "text": "from retry_helper import with_retry, LLM_RETRY_CONFIG"
+    },
+    {
+      "source_path": "ReportEngine/nodes/__init__.py",
+      "line": 7,
+      "text": "from .base_node import BaseNode, StateMutationNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/__init__.py",
+      "line": 8,
+      "text": "from .template_selection_node import TemplateSelectionNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/__init__.py",
+      "line": 9,
+      "text": "from .chapter_generation_node import (\n    ChapterGenerationNode,\n    ChapterJsonParseError,\n    ChapterContentError,\n    ChapterValidationError,\n)"
+    },
+    {
+      "source_path": "ReportEngine/nodes/__init__.py",
+      "line": 15,
+      "text": "from .document_layout_node import DocumentLayoutNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/__init__.py",
+      "line": 16,
+      "text": "from .word_budget_node import WordBudgetNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/base_node.py",
+      "line": 7,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "ReportEngine/nodes/base_node.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, Optional"
+    },
+    {
+      "source_path": "ReportEngine/nodes/base_node.py",
+      "line": 9,
+      "text": "from ..llms.base import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/nodes/base_node.py",
+      "line": 10,
+      "text": "from ..state.state import ReportState"
+    },
+    {
+      "source_path": "ReportEngine/nodes/base_node.py",
+      "line": 11,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 11,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 12,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 13,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 14,
+      "text": "from typing import Any, Dict, List, Tuple, Callable, Optional, Set"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 16,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 18,
+      "text": "from ..core import TemplateSection, ChapterStorage"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 19,
+      "text": "from ..ir import (\n    ALLOWED_BLOCK_TYPES,\n    ALLOWED_INLINE_MARKS,\n    ENGINE_AGENT_TITLES,\n    IRValidator,\n)"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 25,
+      "text": "from ..prompts import (\n    SYSTEM_PROMPT_CHAPTER_JSON,\n    SYSTEM_PROMPT_CHAPTER_JSON_REPAIR,\n    SYSTEM_PROMPT_CHAPTER_JSON_RECOVERY,\n    build_chapter_repair_prompt,\n    build_chapter_recovery_payload,\n    build_chapter_user_prompt,\n)"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 33,
+      "text": "from ..utils.json_parser import RobustJSONParser, JSONParseError"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 34,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/chapter_generation_node.py",
+      "line": 37,
+      "text": "from json_repair import repair_json as _json_repair_fn"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 12,
+      "text": "from ..core import TemplateSection"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 13,
+      "text": "from ..prompts import (\n    SYSTEM_PROMPT_DOCUMENT_LAYOUT,\n    build_document_layout_prompt,\n)"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 17,
+      "text": "from ..utils.json_parser import RobustJSONParser, JSONParseError"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 18,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/document_layout_node.py",
+      "line": 147,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 10,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 11,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 13,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 14,
+      "text": "from ..prompts import SYSTEM_PROMPT_TEMPLATE_SELECTION"
+    },
+    {
+      "source_path": "ReportEngine/nodes/template_selection_node.py",
+      "line": 15,
+      "text": "from ..utils.json_parser import RobustJSONParser, JSONParseError"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 8,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 12,
+      "text": "from ..core import TemplateSection"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 13,
+      "text": "from ..prompts import (\n    SYSTEM_PROMPT_WORD_BUDGET,\n    build_word_budget_prompt,\n)"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 17,
+      "text": "from ..utils.json_parser import RobustJSONParser, JSONParseError"
+    },
+    {
+      "source_path": "ReportEngine/nodes/word_budget_node.py",
+      "line": 18,
+      "text": "from .base_node import BaseNode"
+    },
+    {
+      "source_path": "ReportEngine/prompts/__init__.py",
+      "line": 7,
+      "text": "from .prompts import (\n    SYSTEM_PROMPT_TEMPLATE_SELECTION,\n    SYSTEM_PROMPT_HTML_GENERATION,\n    SYSTEM_PROMPT_CHAPTER_JSON,\n    SYSTEM_PROMPT_CHAPTER_JSON_REPAIR,\n    SYSTEM_PROMPT_CHAPTER_JSON_RECOVERY,\n    SYSTEM_PROMPT_DOCUMENT_LAYOUT,\n    SYSTEM_PROMPT_WORD_BUDGET,\n    output_schema_template_selection,\n    input_schema_html_generation,\n    chapter_generation_input_schema,\n    build_chapter_user_prompt,\n    build_chapter_repair_prompt,\n    build_chapter_recovery_payload,\n    build_document_layout_prompt,\n    build_word_budget_prompt,\n)"
+    },
+    {
+      "source_path": "ReportEngine/prompts/prompts.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/prompts/prompts.py",
+      "line": 10,
+      "text": "from ..ir import (\n    ALLOWED_BLOCK_TYPES,\n    ALLOWED_INLINE_MARKS,\n    CHAPTER_JSON_SCHEMA_TEXT,\n    IR_VERSION,\n)"
+    },
+    {
+      "source_path": "ReportEngine/renderers/__init__.py",
+      "line": 7,
+      "text": "from .html_renderer import HTMLRenderer"
+    },
+    {
+      "source_path": "ReportEngine/renderers/__init__.py",
+      "line": 8,
+      "text": "from .pdf_renderer import PDFRenderer"
+    },
+    {
+      "source_path": "ReportEngine/renderers/__init__.py",
+      "line": 9,
+      "text": "from .pdf_layout_optimizer import (\n    PDFLayoutOptimizer,\n    PDFLayoutConfig,\n    PageLayout,\n    KPICardLayout,\n    CalloutLayout,\n    TableLayout,\n    ChartLayout,\n    GridLayout,\n)"
+    },
+    {
+      "source_path": "ReportEngine/renderers/__init__.py",
+      "line": 19,
+      "text": "from .markdown_renderer import MarkdownRenderer"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 16,
+      "text": "import base64"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 17,
+      "text": "import io"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 18,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 19,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 20,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 21,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 24,
+      "text": "import matplotlib"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 26,
+      "text": "import matplotlib.pyplot as plt"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 27,
+      "text": "import matplotlib.dates as mdates"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 28,
+      "text": "import matplotlib.font_manager as fm"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 29,
+      "text": "from matplotlib.patches import Wedge, Rectangle"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 30,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 38,
+      "text": "from scipy.interpolate import make_interp_spline"
+    },
+    {
+      "source_path": "ReportEngine/renderers/chart_to_svg.py",
+      "line": 690,
+      "text": "from matplotlib.legend_handler import HandlerTuple"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 12,
+      "text": "import ast"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 13,
+      "text": "import copy"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 14,
+      "text": "import html"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 15,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 16,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 17,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 18,
+      "text": "import base64"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 19,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 20,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 21,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 23,
+      "text": "from ReportEngine.ir.schema import ENGINE_AGENT_TITLES"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 24,
+      "text": "from ReportEngine.utils.chart_validator import (\n    ChartValidator,\n    ChartRepairer,\n    ValidationResult,\n    create_chart_validator,\n    create_chart_repairer\n)"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 31,
+      "text": "from ReportEngine.utils.chart_repair_api import create_llm_repair_functions"
+    },
+    {
+      "source_path": "ReportEngine/renderers/html_renderer.py",
+      "line": 32,
+      "text": "from ReportEngine.utils.chart_review_service import get_chart_review_service"
+    },
+    {
+      "source_path": "ReportEngine/renderers/markdown_renderer.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/renderers/markdown_renderer.py",
+      "line": 4,
+      "text": "from typing import Any, Dict, List"
+    },
+    {
+      "source_path": "ReportEngine/renderers/markdown_renderer.py",
+      "line": 6,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/markdown_renderer.py",
+      "line": 8,
+      "text": "from ReportEngine.utils.chart_review_service import get_chart_review_service"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 6,
+      "text": "import io"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 8,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 9,
+      "text": "import matplotlib"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 10,
+      "text": "import matplotlib.pyplot as plt"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 11,
+      "text": "from matplotlib import mathtext"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/math_to_svg.py",
+      "line": 199,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 17,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 18,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 19,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 20,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 21,
+      "text": "from dataclasses import dataclass, asdict"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 22,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_layout_optimizer.py",
+      "line": 23,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 8,
+      "text": "import base64"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 9,
+      "text": "import copy"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 11,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 12,
+      "text": "import io"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 13,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 14,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 15,
+      "text": "from typing import Any, Dict"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 16,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 17,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 18,
+      "text": "from ReportEngine.utils.dependency_check import (\n    prepare_pango_environment,\n    check_pango_available,\n)"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 42,
+      "text": "from weasyprint import HTML, CSS"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 43,
+      "text": "from weasyprint.text.fonts import FontConfiguration"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 70,
+      "text": "from .html_renderer import HTMLRenderer"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 71,
+      "text": "from .pdf_layout_optimizer import PDFLayoutOptimizer, PDFLayoutConfig"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 72,
+      "text": "from .chart_to_svg import create_chart_converter"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 73,
+      "text": "from .math_to_svg import MathToSVG"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 74,
+      "text": "from ReportEngine.utils.chart_review_service import get_chart_review_service"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 76,
+      "text": "from wordcloud import WordCloud"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 610,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 731,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/renderers/pdf_renderer.py",
+      "line": 782,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 13,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 14,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 15,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 16,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 18,
+      "text": "from ReportEngine.renderers import PDFRenderer"
+    },
+    {
+      "source_path": "ReportEngine/scripts/export_to_pdf.py",
+      "line": 70,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 12,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 13,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 14,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 15,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 22,
+      "text": "from ReportEngine.core import DocumentComposer"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 23,
+      "text": "from ReportEngine.ir import IRValidator"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 24,
+      "text": "from ReportEngine.ir.schema import ENGINE_AGENT_TITLES"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 25,
+      "text": "from ReportEngine.renderers import HTMLRenderer, MarkdownRenderer, PDFRenderer"
+    },
+    {
+      "source_path": "ReportEngine/scripts/generate_all_blocks_demo.py",
+      "line": 26,
+      "text": "from ReportEngine.utils.config import settings"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 19,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 20,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 21,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 22,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 23,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 24,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 31,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 33,
+      "text": "from ReportEngine.utils.chart_validator import (\n    ChartValidator,\n    ChartRepairer,\n    ValidationResult,\n)"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 38,
+      "text": "from ReportEngine.utils.table_validator import (\n    TableValidator,\n    TableRepairer,\n    TableValidationResult,\n)"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 492,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "ReportEngine/scripts/validate_ir.py",
+      "line": 567,
+      "text": "import glob"
+    },
+    {
+      "source_path": "ReportEngine/state/__init__.py",
+      "line": 7,
+      "text": "from .state import ReportState, ReportMetadata"
+    },
+    {
+      "source_path": "ReportEngine/state/state.py",
+      "line": 6,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "ReportEngine/state/state.py",
+      "line": 7,
+      "text": "from typing import Dict, Any, Optional"
+    },
+    {
+      "source_path": "ReportEngine/state/state.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/state/state.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "ReportEngine/utils/__init__.py",
+      "line": 7,
+      "text": "from ReportEngine.utils.chart_review_service import (\n    ChartReviewService,\n    ReviewStats,\n    get_chart_review_service,\n    review_document_charts,\n)"
+    },
+    {
+      "source_path": "ReportEngine/utils/__init__.py",
+      "line": 14,
+      "text": "from ReportEngine.utils.table_validator import (\n    TableValidator,\n    TableRepairer,\n    TableValidationResult,\n    TableRepairResult,\n    create_table_validator,\n    create_table_repairer,\n)"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 11,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 14,
+      "text": "from ReportEngine.utils.config import settings"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 385,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 420,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 454,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 488,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 541,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_repair_api.py",
+      "line": 595,
+      "text": "from ReportEngine.llms import LLMClient"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 15,
+      "text": "import copy"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 16,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 17,
+      "text": "import threading"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 18,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 19,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 20,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 22,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 24,
+      "text": "from ReportEngine.utils.chart_validator import (\n    ChartValidator,\n    ChartRepairer,\n    ValidationResult,\n    create_chart_validator,\n    create_chart_repairer\n)"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_review_service.py",
+      "line": 31,
+      "text": "from ReportEngine.utils.chart_repair_api import create_llm_repair_functions"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 24,
+      "text": "import copy"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 25,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 26,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 27,
+      "text": "from typing import Any, Dict, List, Optional, Tuple, Callable"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 28,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "ReportEngine/utils/chart_validator.py",
+      "line": 29,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/config.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/utils/config.py",
+      "line": 6,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "ReportEngine/utils/config.py",
+      "line": 7,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "ReportEngine/utils/config.py",
+      "line": 8,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "ReportEngine/utils/config.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 7,
+      "text": "import platform"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 10,
+      "text": "from ctypes import util as ctypes_util"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 268,
+      "text": "from weasyprint import HTML"
+    },
+    {
+      "source_path": "ReportEngine/utils/dependency_check.py",
+      "line": 269,
+      "text": "from weasyprint.text.ffi import ffi, pango"
+    },
+    {
+      "source_path": "ReportEngine/utils/json_parser.py",
+      "line": 14,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/utils/json_parser.py",
+      "line": 15,
+      "text": "import re"
+    },
+    {
+      "source_path": "ReportEngine/utils/json_parser.py",
+      "line": 16,
+      "text": "from typing import Any, Dict, List, Optional, Tuple, Callable"
+    },
+    {
+      "source_path": "ReportEngine/utils/json_parser.py",
+      "line": 17,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/json_parser.py",
+      "line": 20,
+      "text": "from json_repair import repair_json as _json_repair_fn"
+    },
+    {
+      "source_path": "ReportEngine/utils/table_validator.py",
+      "line": 14,
+      "text": "import copy"
+    },
+    {
+      "source_path": "ReportEngine/utils/table_validator.py",
+      "line": 15,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "ReportEngine/utils/table_validator.py",
+      "line": 16,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "ReportEngine/utils/table_validator.py",
+      "line": 17,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "ReportEngine/utils/test_chart_validator.py",
+      "line": 8,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "ReportEngine/utils/test_chart_validator.py",
+      "line": 9,
+      "text": "from ReportEngine.utils.chart_validator import (\n    ChartValidator,\n    ChartRepairer,\n    ValidationResult,\n    RepairResult,\n    create_chart_validator,\n    create_chart_repairer\n)"
+    },
+    {
+      "source_path": "ReportEngine/utils/test_json_parser.py",
+      "line": 13,
+      "text": "import json"
+    },
+    {
+      "source_path": "ReportEngine/utils/test_json_parser.py",
+      "line": 14,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "ReportEngine/utils/test_json_parser.py",
+      "line": 15,
+      "text": "from json_parser import RobustJSONParser, JSONParseError"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 6,
+      "text": "from typing import Dict, Tuple, List"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 29,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+      "line": 30,
+      "text": "from transformers import (\n    AutoTokenizer,\n    AutoModel,\n    AutoModelForSequenceClassification,\n)"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 6,
+      "text": "import math"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 7,
+      "text": "import inspect"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 8,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 34,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 35,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 36,
+      "text": "from torch.utils.data import Dataset"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 37,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 38,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 40,
+      "text": "from transformers import (\n    AutoTokenizer,\n    AutoModel,\n    AutoModelForSequenceClassification,\n    AutoConfig,\n    DataCollatorWithPadding,\n    Trainer,\n    TrainingArguments,\n    set_seed,\n)"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 51,
+      "text": "from transformers import EarlyStoppingCallback"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "line": 455,
+      "text": "import matplotlib.pyplot as plt"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboMultilingualSentiment/predict.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboMultilingualSentiment/predict.py",
+      "line": 2,
+      "text": "from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboMultilingualSentiment/predict.py",
+      "line": 3,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboMultilingualSentiment/predict.py",
+      "line": 18,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict.py",
+      "line": 2,
+      "text": "from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipeline"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict.py",
+      "line": 3,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict.py",
+      "line": 17,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict_pipeline.py",
+      "line": 1,
+      "text": "from transformers import pipeline"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict_pipeline.py",
+      "line": 2,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict_pipeline.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict_pipeline.py",
+      "line": 35,
+      "text": "from transformers import AutoTokenizer, AutoModelForSequenceClassification"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/adapter.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/adapter.py",
+      "line": 2,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/Adapter.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/Adapter.py",
+      "line": 2,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/Roberta_adapter.py",
+      "line": 1,
+      "text": "from transformers.models.roberta.modeling_roberta import RobertaLayer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/gpt2_adapter.py",
+      "line": 1,
+      "text": "from transformers.models.gpt2.modeling_gpt2 import GPT2Block"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/gpt2_adapter.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/gpt2_adapter.py",
+      "line": 2,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/gpt2_adapter.py",
+      "line": 3,
+      "text": "from transformers.models.gpt2.modeling_gpt2 import GPT2Block"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/gpt2_adapter.py",
+      "line": 4,
+      "text": "from adapter import AdapterLayer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/predict.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/predict.py",
+      "line": 2,
+      "text": "from transformers import BertTokenizer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/predict.py",
+      "line": 3,
+      "text": "from train import GPT2ClassifierWithAdapter"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/predict.py",
+      "line": 4,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 2,
+      "text": "import random"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 3,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 4,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 5,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 6,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 7,
+      "text": "from torch.utils.data import Dataset, DataLoader"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 8,
+      "text": "from transformers import GPT2Config, GPT2ForSequenceClassification, BertTokenizer, get_linear_schedule_with_warmup"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 9,
+      "text": "from torch.optim import AdamW"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 10,
+      "text": "from sklearn.model_selection import train_test_split"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 11,
+      "text": "from sklearn.metrics import accuracy_score, f1_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 12,
+      "text": "from tqdm import tqdm"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 14,
+      "text": "from adapter import AdapterLayer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+      "line": 15,
+      "text": "from gpt2_adapter import GPT2BlockWithAdapter"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+      "line": 1,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+      "line": 2,
+      "text": "from transformers import GPT2ForSequenceClassification, BertTokenizer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+      "line": 3,
+      "text": "from peft import PeftModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+      "line": 5,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 2,
+      "text": "import random"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 3,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 4,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 5,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 6,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 7,
+      "text": "from torch.utils.data import Dataset, DataLoader"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 8,
+      "text": "from transformers import (\n    GPT2ForSequenceClassification, \n    BertTokenizer, \n    get_linear_schedule_with_warmup,\n    TrainingArguments,\n    Trainer\n)"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 15,
+      "text": "from torch.optim import AdamW"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 16,
+      "text": "from sklearn.model_selection import train_test_split"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 17,
+      "text": "from sklearn.metrics import accuracy_score, f1_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 18,
+      "text": "from tqdm import tqdm"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+      "line": 21,
+      "text": "from peft import LoraConfig, TaskType, get_peft_model"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 6,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 7,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 8,
+      "text": "from typing import List, Tuple, Dict, Any"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 9,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 10,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, classification_report"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+      "line": 11,
+      "text": "from utils import load_corpus"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 6,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 7,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 8,
+      "text": "from sklearn.feature_extraction.text import CountVectorizer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 9,
+      "text": "from sklearn.naive_bayes import MultinomialNB"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 10,
+      "text": "from sklearn.metrics import accuracy_score, f1_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 12,
+      "text": "from base_model import BaseModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+      "line": 13,
+      "text": "from utils import stopwords"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 7,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 8,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 9,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 10,
+      "text": "from torch.utils.data import Dataset, DataLoader"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 11,
+      "text": "from transformers import BertTokenizer, BertModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 12,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, classification_report, roc_auc_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 13,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 14,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 15,
+      "text": "import requests"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 16,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 18,
+      "text": "from base_model import BaseModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+      "line": 19,
+      "text": "from utils import load_corpus_bert"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 7,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 8,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 9,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 10,
+      "text": "from torch.utils.data import Dataset, DataLoader"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 11,
+      "text": "from torch.nn.utils.rnn import pad_sequence, pack_padded_sequence, pad_packed_sequence"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 12,
+      "text": "from gensim import models"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 13,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, classification_report, roc_auc_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 14,
+      "text": "from typing import List, Tuple, Dict, Any"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 15,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+      "line": 17,
+      "text": "from base_model import BaseModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 6,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 9,
+      "text": "from typing import Dict, Tuple, List"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 10,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 14,
+      "text": "from bayes_train import BayesModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 15,
+      "text": "from svm_train import SVMModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 16,
+      "text": "from xgboost_train import XGBoostModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 17,
+      "text": "from lstm_train import LSTMModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 18,
+      "text": "from bert_train import BertModel_Custom"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+      "line": 19,
+      "text": "from utils import processing"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 6,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 7,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 8,
+      "text": "from sklearn.feature_extraction.text import TfidfVectorizer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 9,
+      "text": "from sklearn import svm"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 10,
+      "text": "from sklearn.metrics import accuracy_score, f1_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 12,
+      "text": "from base_model import BaseModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+      "line": 13,
+      "text": "from utils import stopwords"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+      "line": 2,
+      "text": "import jieba"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+      "line": 3,
+      "text": "import re"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+      "line": 5,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+      "line": 6,
+      "text": "from typing import List, Tuple, Any"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 5,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 6,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 7,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 8,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 9,
+      "text": "from sklearn.feature_extraction.text import CountVectorizer"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 10,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, roc_auc_score"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 11,
+      "text": "import xgboost as xgb"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 13,
+      "text": "from base_model import BaseModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+      "line": 14,
+      "text": "from utils import stopwords"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 6,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 7,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 8,
+      "text": "from typing import List, Tuple, Dict, Any"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 9,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 10,
+      "text": "from sklearn.metrics import accuracy_score, f1_score, classification_report"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+      "line": 11,
+      "text": "from sklearn.model_selection import train_test_split"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 10,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 11,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 12,
+      "text": "from typing import List, Dict, Tuple, Any"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 17,
+      "text": "from models_config import QWEN3_MODELS, MODEL_PATHS"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 18,
+      "text": "from qwen3_embedding_universal import Qwen3EmbeddingUniversal"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+      "line": 19,
+      "text": "from qwen3_lora_universal import Qwen3LoRAUniversal"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 6,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 8,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 9,
+      "text": "import torch.nn as nn"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 10,
+      "text": "from torch.utils.data import Dataset, DataLoader"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 11,
+      "text": "from transformers import AutoTokenizer, AutoModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 12,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 13,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 14,
+      "text": "from tqdm import tqdm"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 16,
+      "text": "from base_model import BaseQwenModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 17,
+      "text": "from models_config import QWEN3_MODELS, MODEL_PATHS"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+      "line": 121,
+      "text": "from transformers.utils import default_cache_path"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 6,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 8,
+      "text": "import torch"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 9,
+      "text": "from transformers import (\n    AutoTokenizer, \n    AutoModelForCausalLM, \n    TrainingArguments, \n    Trainer,\n    DataCollatorForLanguageModeling\n)"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 16,
+      "text": "from peft import LoraConfig, get_peft_model, TaskType, PeftModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 17,
+      "text": "from datasets import Dataset"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 18,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 19,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 20,
+      "text": "from tqdm import tqdm"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 22,
+      "text": "from base_model import BaseQwenModel"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 23,
+      "text": "from models_config import QWEN3_MODELS, MODEL_PATHS"
+    },
+    {
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+      "line": 74,
+      "text": "from transformers.utils import default_cache_path"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 8,
+      "text": "import streamlit as st"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 11,
+      "text": "import locale"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 30,
+      "text": "from InsightEngine import DeepSearchAgent, Settings"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 31,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 32,
+      "text": "from utils.github_issues import error_with_issue_link"
+    },
+    {
+      "source_path": "SingleEngineApp/insight_engine_streamlit_app.py",
+      "line": 185,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 8,
+      "text": "import streamlit as st"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 11,
+      "text": "import locale"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 30,
+      "text": "from MediaEngine import DeepSearchAgent, AnspireSearchAgent, Settings"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 31,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 32,
+      "text": "from utils.github_issues import error_with_issue_link"
+    },
+    {
+      "source_path": "SingleEngineApp/media_engine_streamlit_app.py",
+      "line": 211,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 8,
+      "text": "import streamlit as st"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 11,
+      "text": "import locale"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 12,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 30,
+      "text": "from QueryEngine import DeepSearchAgent, Settings"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 31,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 32,
+      "text": "from utils.github_issues import error_with_issue_link"
+    },
+    {
+      "source_path": "SingleEngineApp/query_engine_streamlit_app.py",
+      "line": 176,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "app.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "app.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "app.py",
+      "line": 13,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "app.py",
+      "line": 14,
+      "text": "import time"
+    },
+    {
+      "source_path": "app.py",
+      "line": 15,
+      "text": "import threading"
+    },
+    {
+      "source_path": "app.py",
+      "line": 16,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "app.py",
+      "line": 17,
+      "text": "from queue import Queue"
+    },
+    {
+      "source_path": "app.py",
+      "line": 18,
+      "text": "from flask import Flask, render_template, request, jsonify, Response"
+    },
+    {
+      "source_path": "app.py",
+      "line": 19,
+      "text": "from flask_socketio import SocketIO, emit"
+    },
+    {
+      "source_path": "app.py",
+      "line": 20,
+      "text": "import atexit"
+    },
+    {
+      "source_path": "app.py",
+      "line": 21,
+      "text": "import requests"
+    },
+    {
+      "source_path": "app.py",
+      "line": 22,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "app.py",
+      "line": 23,
+      "text": "import importlib"
+    },
+    {
+      "source_path": "app.py",
+      "line": 24,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "app.py",
+      "line": 25,
+      "text": "from MindSpider.main import MindSpider"
+    },
+    {
+      "source_path": "app.py",
+      "line": 29,
+      "text": "from ReportEngine.flask_interface import report_bp, initialize_report_engine"
+    },
+    {
+      "source_path": "app.py",
+      "line": 43,
+      "text": "import eventlet.wsgi"
+    },
+    {
+      "source_path": "app.py",
+      "line": 138,
+      "text": "from config import reload_settings, settings"
+    },
+    {
+      "source_path": "app.py",
+      "line": 172,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "app.py",
+      "line": 368,
+      "text": "from ForumEngine.monitor import start_forum_monitoring"
+    },
+    {
+      "source_path": "app.py",
+      "line": 380,
+      "text": "from ForumEngine.monitor import stop_forum_monitoring"
+    },
+    {
+      "source_path": "app.py",
+      "line": 389,
+      "text": "import re"
+    },
+    {
+      "source_path": "app.py",
+      "line": 434,
+      "text": "import time"
+    },
+    {
+      "source_path": "app.py",
+      "line": 435,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "app.py",
+      "line": 565,
+      "text": "import select"
+    },
+    {
+      "source_path": "app.py",
+      "line": 566,
+      "text": "import sys"
+    },
+    {
+      "source_path": "app.py",
+      "line": 794,
+      "text": "import time"
+    },
+    {
+      "source_path": "app.py",
+      "line": 1049,
+      "text": "from ForumEngine.monitor import start_forum_monitoring"
+    },
+    {
+      "source_path": "app.py",
+      "line": 1062,
+      "text": "from ForumEngine.monitor import stop_forum_monitoring"
+    },
+    {
+      "source_path": "app.py",
+      "line": 1337,
+      "text": "from config import settings"
+    },
+    {
+      "source_path": "config.py",
+      "line": 10,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "config.py",
+      "line": 11,
+      "text": "from pydantic_settings import BaseSettings"
+    },
+    {
+      "source_path": "config.py",
+      "line": 12,
+      "text": "from pydantic import Field, ConfigDict"
+    },
+    {
+      "source_path": "config.py",
+      "line": 13,
+      "text": "from typing import Optional, Literal"
+    },
+    {
+      "source_path": "config.py",
+      "line": 14,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 26,
+      "text": "from ReportEngine.renderers.pdf_renderer import PDFRenderer"
+    },
+    {
+      "source_path": "export_pdf.py",
+      "line": 57,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 7,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 14,
+      "text": "from ReportEngine.core import ChapterStorage, DocumentComposer"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 15,
+      "text": "from ReportEngine.ir import IRValidator"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 16,
+      "text": "from ReportEngine.renderers import HTMLRenderer"
+    },
+    {
+      "source_path": "regenerate_latest_html.py",
+      "line": 17,
+      "text": "from ReportEngine.utils.config import settings"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 7,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 14,
+      "text": "from ReportEngine.core import ChapterStorage, DocumentComposer"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 15,
+      "text": "from ReportEngine.ir import IRValidator"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 16,
+      "text": "from ReportEngine.renderers import MarkdownRenderer"
+    },
+    {
+      "source_path": "regenerate_latest_md.py",
+      "line": 17,
+      "text": "from ReportEngine.utils.config import settings"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 5,
+      "text": "import json"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "regenerate_latest_pdf.py",
+      "line": 14,
+      "text": "from ReportEngine.renderers import PDFRenderer"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 25,
+      "text": "import json"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 26,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 27,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 28,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 29,
+      "text": "from typing import Dict, Any, Optional"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 31,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 64,
+      "text": "from ReportEngine.utils.dependency_check import check_pango_available"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 243,
+      "text": "from ReportEngine.agent import ReportAgent"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 325,
+      "text": "from ReportEngine.renderers import PDFRenderer"
+    },
+    {
+      "source_path": "report_engine_only.py",
+      "line": 380,
+      "text": "from ReportEngine.renderers import MarkdownRenderer"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 12,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 13,
+      "text": "import urllib.error"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 14,
+      "text": "import urllib.request"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 15,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 12,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 13,
+      "text": "import base64"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 14,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 15,
+      "text": "import html"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 16,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 17,
+      "text": "import math"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 18,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 19,
+      "text": "import re"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 20,
+      "text": "import stat"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 21,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 22,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 23,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 24,
+      "text": "import xml.etree.ElementTree as ET"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 25,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 26,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 27,
+      "text": "from datetime import date, datetime, time, timedelta, timezone"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 28,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 29,
+      "text": "from typing import Any, Mapping, Protocol, Sequence"
+    },
+    {
+      "source_path": "tests/run_tests.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/run_tests.py",
+      "line": 8,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/run_tests.py",
+      "line": 14,
+      "text": "from test_monitor import TestLogMonitor"
+    },
+    {
+      "source_path": "tests/test_export_pdf_paths.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_export_pdf_paths.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_export_pdf_paths.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_export_pdf_paths.py",
+      "line": 4,
+      "text": "from types import ModuleType"
+    },
+    {
+      "source_path": "tests/test_export_pdf_paths.py",
+      "line": 6,
+      "text": "import export_pdf"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 1,
+      "text": "import ast"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 2,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 5,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 6,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 7,
+      "text": "from contextlib import redirect_stderr, redirect_stdout"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 8,
+      "text": "from http.server import BaseHTTPRequestHandler, HTTPServer"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 10,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_fetch_star_count.py",
+      "line": 12,
+      "text": "from scripts import fetch_star_count"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 1,
+      "text": "import importlib.util"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 3,
+      "text": "import types"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 4,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 6,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_insight_database_url.py",
+      "line": 7,
+      "text": "from sqlalchemy.engine import make_url"
+    },
+    {
+      "source_path": "tests/test_mindspider_database_hint.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "tests/test_mindspider_database_hint.py",
+      "line": 2,
+      "text": "from unittest.mock import Mock"
+    },
+    {
+      "source_path": "tests/test_mindspider_database_hint.py",
+      "line": 4,
+      "text": "from MindSpider import main as mindspider_main"
+    },
+    {
+      "source_path": "tests/test_monitor.py",
+      "line": 10,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_monitor.py",
+      "line": 11,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_monitor.py",
+      "line": 17,
+      "text": "from ForumEngine.monitor import LogMonitor"
+    },
+    {
+      "source_path": "tests/test_monitor.py",
+      "line": 18,
+      "text": "from tests import forum_log_test_data as test_data"
+    },
+    {
+      "source_path": "tests/test_monitor.py",
+      "line": 332,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_report_cancel_route.py",
+      "line": 1,
+      "text": "import importlib"
+    },
+    {
+      "source_path": "tests/test_report_cancel_route.py",
+      "line": 2,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_report_cancel_route.py",
+      "line": 3,
+      "text": "from types import ModuleType, SimpleNamespace"
+    },
+    {
+      "source_path": "tests/test_report_cancel_route.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_report_cancel_route.py",
+      "line": 6,
+      "text": "from flask import Flask"
+    },
+    {
+      "source_path": "tests/test_report_engine_sanitization.py",
+      "line": 1,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_report_engine_sanitization.py",
+      "line": 3,
+      "text": "from ReportEngine.ir import IRValidator"
+    },
+    {
+      "source_path": "tests/test_report_engine_sanitization.py",
+      "line": 4,
+      "text": "from ReportEngine.nodes.chapter_generation_node import ChapterGenerationNode"
+    },
+    {
+      "source_path": "tests/test_retry_helper.py",
+      "line": 1,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_retry_helper.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_retry_helper.py",
+      "line": 4,
+      "text": "import requests"
+    },
+    {
+      "source_path": "tests/test_retry_helper.py",
+      "line": 6,
+      "text": "from utils.retry_helper import RetryConfig, with_graceful_retry, with_retry"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 1,
+      "text": "import atexit"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 2,
+      "text": "import importlib.util"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 3,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 4,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 6,
+      "text": "from types import ModuleType"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 7,
+      "text": "from unittest.mock import Mock, patch"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 9,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_search_route.py",
+      "line": 10,
+      "text": "from flask import Blueprint"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 1,
+      "text": "import base64"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 2,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 6,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 7,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 8,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 9,
+      "text": "import xml.etree.ElementTree as ET"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 10,
+      "text": "from contextlib import redirect_stderr, redirect_stdout"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 11,
+      "text": "from copy import deepcopy"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 12,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 14,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_star_history.py",
+      "line": 16,
+      "text": "from scripts import star_history"
+    },
+    {
+      "source_path": "utils/forum_reader.py",
+      "line": 6,
+      "text": "import re"
+    },
+    {
+      "source_path": "utils/forum_reader.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "utils/forum_reader.py",
+      "line": 8,
+      "text": "from typing import Optional, List, Dict"
+    },
+    {
+      "source_path": "utils/forum_reader.py",
+      "line": 9,
+      "text": "from loguru import logger"
+    },
+    {
+      "source_path": "utils/github_issues.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "utils/github_issues.py",
+      "line": 10,
+      "text": "from urllib.parse import quote"
+    },
+    {
+      "source_path": "utils/retry_helper.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "utils/retry_helper.py",
+      "line": 7,
+      "text": "from functools import wraps"
+    },
+    {
+      "source_path": "utils/retry_helper.py",
+      "line": 8,
+      "text": "from typing import Any, Callable, Optional"
+    },
+    {
+      "source_path": "utils/retry_helper.py",
+      "line": 9,
+      "text": "import requests"
+    },
+    {
+      "source_path": "utils/retry_helper.py",
+      "line": 10,
+      "text": "from loguru import logger"
+    }
+  ],
+  "call_edges": []
+}

@@ -1,0 +1,529 @@
+//! Evidence-first social contracts. Capture mode and evidence state are orthogonal.
+pub mod runtime;
+use serde::{Deserialize, Serialize};
+use serde_json::{Value, json};
+use std::collections::{BTreeMap, BTreeSet};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum EvidenceState {
+    Observed,
+    Derived,
+    Estimated,
+    Simulated,
+    Unknown,
+    Conflict,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum IdentityState {
+    ExactIdentifier,
+    SourceAsserted,
+    DerivedStrongMatch,
+    DerivedWeakMatch,
+    Unresolved,
+    Conflict,
+}
+/// Equality of identifiers is scoped; topic similarity never establishes product identity.
+pub fn entity_link(a: &Value, b: &Value) -> IdentityState {
+    if a["kind"] != b["kind"] {
+        return IdentityState::Unresolved;
+    }
+    let (Some(av), Some(bv)) = (a["value"].as_str(), b["value"].as_str()) else {
+        return IdentityState::Unresolved;
+    };
+    if av != bv {
+        return if a["kind"] == "GTIN" {
+            IdentityState::Conflict
+        } else {
+            IdentityState::DerivedWeakMatch
+        };
+    }
+    if a["kind"] == "GTIN"
+        && av.bytes().all(|c| c.is_ascii_digit())
+        && [8, 12, 13, 14].contains(&av.len())
+    {
+        let sum = av
+            .bytes()
+            .rev()
+            .enumerate()
+            .map(|(i, c)| (c - b'0') as u32 * if i % 2 == 0 { 1 } else { 3 })
+            .sum::<u32>();
+        return if sum % 10 == 0 {
+            IdentityState::ExactIdentifier
+        } else {
+            IdentityState::Conflict
+        };
+    }
+    if a["kind"] == "ASIN"
+        && av.len() == 10
+        && av
+            .bytes()
+            .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
+        && a["market"].is_string()
+        && a["market"] == b["market"]
+    {
+        return IdentityState::ExactIdentifier;
+    }
+    if matches!(a["kind"].as_str(), Some("URL" | "SKU" | "MPN")) {
+        IdentityState::SourceAsserted
+    } else {
+        IdentityState::DerivedWeakMatch
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SocialEngagement {
+    pub views: Option<u64>,
+    pub likes: Option<u64>,
+    pub comments: Option<u64>,
+    pub reposts: Option<u64>,
+    pub favorites: Option<u64>,
+    pub followers: Option<u64>,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SocialPost {
+    pub platform: String,
+    pub provider: String,
+    pub source_url: String,
+    pub native_id: String,
+    pub thread_id: Option<String>,
+    pub author_id: Option<String>,
+    pub publisher: Option<String>,
+    pub published_at: Option<u64>,
+    pub captured_at: u64,
+    pub text: String,
+    pub language: Option<String>,
+    pub media: Vec<String>,
+    pub hashtags: Vec<String>,
+    pub mentions: Vec<String>,
+    pub entities: Vec<Value>,
+    pub propagation: String,
+    pub parent_id: Option<String>,
+    pub engagement: SocialEngagement,
+    pub raw_hash: String,
+    pub raw_locator: String,
+    pub extraction_method: String,
+    pub state: EvidenceState,
+    pub capture_mode: String,
+    pub evidence_id: String,
+    pub freshness_seconds: Option<u64>,
+    pub origin_evidence_id: Option<String>,
+}
+impl SocialPost {
+    pub fn key(&self) -> String {
+        format!("{}:{}", self.platform, self.native_id)
+    }
+    pub fn validate(&self) -> Result<(), String> {
+        if self.native_id.is_empty()
+            || self.native_id.len() > 2048
+            || self.platform.is_empty()
+            || self.text.len() > 65536
+            || self.text.chars().any(|c| c == '\0')
+            || self.raw_hash.len() != 64
+            || !self.raw_hash.bytes().all(|c| c.is_ascii_hexdigit())
+            || !matches!(self.capture_mode.as_str(), "LIVE" | "CACHED" | "FIXTURE")
+            || self.state != EvidenceState::Observed
+            || self.evidence_id.is_empty()
+            || !matches!(
+                self.propagation.as_str(),
+                "ORIGINAL"
+                    | "REPOST"
+                    | "QUOTE"
+                    | "SYNDICATION"
+                    | "MIRROR"
+                    | "AGGREGATOR"
+                    | "UNKNOWN"
+            )
+        {
+            return Err("INVALID_OBSERVED_SOCIAL_POST".into());
+        }
+        let url = url::Url::parse(&self.source_url).map_err(|_| "INVALID_SOURCE_URL")?;
+        if !matches!(url.scheme(), "https" | "http")
+            || !url.username().is_empty()
+            || url.password().is_some()
+        {
+            return Err("PUBLIC_SOURCE_URL_REQUIRED".into());
+        }
+        Ok(())
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SimulatedActor {
+    pub id: String,
+    pub persona: String,
+    pub state: EvidenceState,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SimulatedPost {
+    pub actor_id: String,
+    pub text: String,
+    pub state: EvidenceState,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SimulatedReaction {
+    pub actor_id: String,
+    pub post_index: usize,
+    pub state: EvidenceState,
+}
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ForecastScenario {
+    pub id: String,
+    pub seed_snapshot_id: String,
+    pub question: String,
+    pub population: Vec<SimulatedActor>,
+    pub posts: Vec<SimulatedPost>,
+    pub reactions: Vec<SimulatedReaction>,
+    pub state: EvidenceState,
+}
+impl ForecastScenario {
+    pub fn validate(&self) -> Result<(), String> {
+        if self.state != EvidenceState::Simulated
+            || self
+                .population
+                .iter()
+                .any(|a| a.state != EvidenceState::Simulated)
+            || self
+                .posts
+                .iter()
+                .any(|a| a.state != EvidenceState::Simulated)
+            || self
+                .reactions
+                .iter()
+                .any(|a| a.state != EvidenceState::Simulated)
+        {
+            return Err("SCENARIO_MUST_BE_SIMULATED".into());
+        }
+        Ok(())
+    }
+}
+
+pub fn terms(text: &str) -> BTreeSet<String> {
+    text.to_lowercase()
+        .split(|c: char| !c.is_alphanumeric())
+        .filter(|s| s.chars().count() > 2)
+        .filter(|s| {
+            !matches!(
+                *s,
+                "the"
+                    | "and"
+                    | "for"
+                    | "with"
+                    | "that"
+                    | "this"
+                    | "from"
+                    | "https"
+                    | "http"
+                    | "com"
+            )
+        })
+        .take(256)
+        .map(str::to_owned)
+        .collect()
+}
+pub fn sentiment(post: &SocialPost) -> Value {
+    let tokens = terms(&post.text);
+    let english = post
+        .language
+        .as_deref()
+        .is_some_and(|s| s == "en" || s.starts_with("en-"));
+    let positive = tokens
+        .iter()
+        .filter(|s| {
+            matches!(
+                s.as_str(),
+                "love" | "excellent" | "great" | "happy" | "good"
+            )
+        })
+        .count();
+    let negative = tokens
+        .iter()
+        .filter(|s| matches!(s.as_str(), "hate" | "awful" | "bad" | "broken" | "terrible"))
+        .count();
+    let label = if !english {
+        "UNKNOWN"
+    } else if positive > 0 && negative > 0 {
+        "MIXED"
+    } else if positive > 0 {
+        "POSITIVE"
+    } else if negative > 0 {
+        "NEGATIVE"
+    } else {
+        "NEUTRAL"
+    };
+    json!({"label":label,"method":"ECDEV_SMALL_ENGLISH_TOKEN_RULE_V1","language":post.language,"confidence":if english {json!(0.3)} else {Value::Null},"state":if english {"DERIVED"}else{"UNKNOWN"},"evidence_ids":[post.evidence_id],"limitations":"No sarcasm/negation/model calibration; neutral means no matched tokens, never purchase intent"})
+}
+
+pub fn rank_exposure(ranks: &[u64], count: u64, threshold: u64, weights: [f64; 3]) -> f64 {
+    if ranks.is_empty() {
+        return 0.;
+    }
+    let n = ranks.len() as f64;
+    let rank = ranks.iter().map(|r| 11 - r.min(&10)).sum::<u64>() as f64 / n * 10.;
+    rank * weights[0]
+        + count.min(10) as f64 * 10. * weights[1]
+        + ranks.iter().filter(|r| **r <= threshold).count() as f64 / n * 100. * weights[2]
+}
+pub fn threshold_events(input: &Value) -> Value {
+    let m = &input["metrics"];
+    let cur = m["current_count"].as_f64().unwrap_or(0.);
+    let base = m["baseline_count"].as_f64().unwrap_or(0.);
+    let avg = m["baseline_average"].as_f64().unwrap_or(0.);
+    let min = input["minimum_mentions"].as_f64().unwrap_or(0.);
+    let mult = input["volume_multiplier"].as_f64().unwrap_or(0.);
+    let drop = input["sentiment_drop"].as_f64().unwrap_or(0.);
+    let sentiment = m["current_net_sentiment"]
+        .as_f64()
+        .zip(m["baseline_net_sentiment"].as_f64())
+        .is_some_and(|(c, b)| drop > 0. && cur >= min && base >= min && b - c >= drop);
+    json!({"volume_spike":mult>0.&&cur>=min&&base>0.&&(avg==0.||cur/avg>=mult),"sentiment_drop":sentiment})
+}
+pub fn decay(age_seconds: u64, half_life_seconds: u64) -> Option<f64> {
+    (half_life_seconds > 0).then(|| 2_f64.powf(-(age_seconds as f64) / half_life_seconds as f64))
+}
+pub fn derivative(a: f64, b: f64, ta: u64, tb: u64) -> Option<f64> {
+    (tb > ta).then(|| (b - a) / ((tb - ta) as f64 / 3600.))
+}
+
+/// Stable platform/native IDs collapse repeated captures; text collisions remain conflicts.
+pub fn deduplicate(posts: &[SocialPost]) -> (Vec<SocialPost>, Vec<Value>) {
+    let mut unique: BTreeMap<String, SocialPost> = BTreeMap::new();
+    let mut conflicts = vec![];
+    for p in posts {
+        if p.validate().is_err() {
+            continue;
+        }
+        if let Some(old) = unique.get(&p.key()) {
+            if old.text != p.text {
+                conflicts.push(json!({"key":p.key(),"state":"CONFLICT","kind":"POST_TEXT_CHANGED","evidence_ids":[old.evidence_id,p.evidence_id]}));
+            }
+            if old.captured_at > p.captured_at {
+                continue;
+            }
+        }
+        unique.insert(p.key(), p.clone());
+    }
+    (unique.into_values().collect(), conflicts)
+}
+
+/// Deterministic lexical similarity is a topic link, never verified product identity.
+pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
+    let mut groups: Vec<(BTreeSet<String>, Vec<&SocialPost>)> = vec![];
+    for p in posts {
+        let mut t = terms(&p.text);
+        t.extend(p.hashtags.iter().map(|s| s.to_lowercase()));
+        for e in &p.entities {
+            if let Some(s) = e["value"].as_str() {
+                t.insert(s.to_lowercase());
+            }
+        }
+        let index = groups.iter().position(|(g, ps)| {
+            let intersection = t.intersection(g).count();
+            let union = t.union(g).count();
+            let temporal = p
+                .published_at
+                .zip(ps[0].published_at)
+                .is_some_and(|(a, b)| a.abs_diff(b) <= 604800);
+            temporal && intersection >= 2 && union > 0 && intersection as f64 / union as f64 >= 0.25
+        });
+        if let Some(i) = index {
+            groups[i].0.extend(t);
+            groups[i].1.push(p);
+        } else {
+            groups.push((t, vec![p]));
+        }
+    }
+    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
+}
+
+pub fn snapshot(
+    posts: &[SocialPost],
+    history: &[Value],
+    query: &str,
+    now: u64,
+    window: u64,
+    mode: &str,
+) -> Value {
+    let selected: Vec<_> = posts
+        .iter()
+        .filter(|p| p.state == EvidenceState::Observed && p.capture_mode == mode)
+        .cloned()
+        .collect();
+    let (dedup, conflicts) = deduplicate(&selected);
+    let q = terms(query);
+    let eligible: Vec<_> = dedup
+        .iter()
+        .filter(|p| {
+            p.published_at
+                .is_some_and(|t| t > now.saturating_sub(window) && t <= now)
+                && q.is_subset(&terms(&p.text))
+        })
+        .cloned()
+        .collect();
+    let platforms: BTreeSet<_> = eligible.iter().map(|p| p.platform.clone()).collect();
+    let sources: BTreeSet<_> = eligible.iter().map(|p| p.source_url.clone()).collect();
+    let publishers: BTreeSet<_> = eligible
+        .iter()
+        .filter_map(|p| p.publisher.clone())
+        .collect();
+    let originals = eligible
+        .iter()
+        .filter(|p| p.propagation == "ORIGINAL")
+        .count();
+    let ids: Vec<_> = eligible.iter().map(|p| p.evidence_id.clone()).collect();
+    let n = eligible.len();
+    let last = history.last();
+    let velocity = last.and_then(|v| {
+        derivative(
+            v["mention_count"].as_f64()?,
+            n as f64,
+            v["captured_at"].as_u64()?,
+            now,
+        )
+    });
+    let acceleration = last.and_then(|v| {
+        derivative(
+            v["velocity"]["value"].as_f64()?,
+            velocity?,
+            v["captured_at"].as_u64()?,
+            now,
+        )
+    });
+    let persistence = if history.is_empty() {
+        None
+    } else {
+        Some(
+            history
+                .iter()
+                .filter(|s| s["mention_count"].as_u64().is_some_and(|v| v > 0))
+                .count() as f64
+                / history.len() as f64,
+        )
+    };
+    let previous_ids: BTreeSet<_> = last
+        .and_then(|v| v["post_keys"].as_array())
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_str)
+        .collect();
+    let novelty = last.map(|_| {
+        eligible
+            .iter()
+            .filter(|p| !previous_ids.contains(p.key().as_str()))
+            .count()
+    });
+    let metric = |value: Option<f64>, normalization: &str, denom: Value| json!({"value":value,"state":if value.is_some(){"DERIVED"}else{"UNKNOWN"},"window_seconds":window,"denominator":denom,"source_count":sources.len(),"evidence_ids":ids,"normalization":normalization,"confidence":"UNCALIBRATED_SAMPLED_EVIDENCE"});
+    let latest = eligible.iter().filter_map(|p| p.published_at).max();
+    let mut components = vec![
+        json!({"name":"velocity","weight":0.3,"metric":metric(velocity.map(|v|v.max(0.)/(1.+v.max(0.))),"POSITIVE_CAPTURED_WINDOW_COUNT_DELTA_SATURATION",json!(last.map(|s|now.saturating_sub(s["captured_at"].as_u64().unwrap_or(now)))))}),
+        json!({"name":"acceleration","weight":0.15,"metric":metric(acceleration.map(|v|v.max(0.)/(1.+v.max(0.))),"POSITIVE_VELOCITY_DELTA_SATURATION",json!("hours between snapshots"))}),
+        json!({"name":"persistence","weight":0.15,"metric":metric(persistence,"NONEMPTY_PRIOR_SNAPSHOTS_RATIO",json!(history.len()))}),
+        json!({"name":"source_diversity","weight":0.1,"metric":metric(Some(sources.len() as f64/(sources.len()+1) as f64),"DISTINCT_URLS_NOT_INDEPENDENT_PUBLISHERS",json!(sources.len()+1))}),
+        json!({"name":"platform_diversity","weight":0.1,"metric":metric(Some(platforms.len() as f64/(platforms.len()+1) as f64),"DISTINCT_PLATFORM_LABELS",json!(platforms.len()+1))}),
+        json!({"name":"novelty","weight":0.1,"metric":metric(novelty.map(|v|v as f64/n.max(1) as f64),"NEW_POST_IDS_OVER_WINDOW_POSTS",json!(n))}),
+        json!({"name":"cross_platform_recurrence","weight":0.1,"metric":metric(Some(if platforms.len()>1{1.}else{0.}),"SAME_QUERY_PRESENT_ON_MULTIPLE_PLATFORMS_NOT_ORIGINAL_SOURCE_INDEPENDENCE",json!(platforms.len()))}),
+    ];
+    components.push(json!({"name":"engagement_growth","weight":0.,"metric":metric(None,"NEEDS_COMPATIBLE_POST_LEVEL_COUNTER_HISTORY",Value::Null)}));
+    let coverage = components
+        .iter()
+        .filter(|c| c["metric"]["value"].is_number())
+        .map(|c| c["weight"].as_f64().unwrap())
+        .sum::<f64>();
+    let score = components
+        .iter()
+        .filter_map(|c| Some(c["weight"].as_f64()? * c["metric"]["value"].as_f64()?))
+        .sum::<f64>();
+    let state = if n < 2 {
+        "INSUFFICIENT_EVIDENCE"
+    } else if acceleration.is_some_and(|v| v > 0.) {
+        "ACCELERATING"
+    } else if velocity.is_some_and(|v| v < 0.) {
+        "COOLING"
+    } else if persistence.is_some_and(|v| v >= 0.75) {
+        "PERSISTENT"
+    } else if velocity.is_some_and(|v| v > 0.) {
+        "EMERGING"
+    } else {
+        "DISCOVERED"
+    };
+    let mut result = json!({"query":query,"capture_mode":mode,"captured_at":now,"window_seconds":window,"window_start_exclusive":now.saturating_sub(window),"window_end_inclusive":now,"mention_count":n,"observation_count":n,"unique_sources":sources.len(),"platform_count":platforms.len(),"platforms":platforms,"publisher_count":publishers.len(),"publishers":publishers,"independent_original_publishers":{"state":"UNKNOWN","value":null},"original_post_count":originals,"post_keys":eligible.iter().map(SocialPost::key).collect::<Vec<_>>(),"evidence_ids":ids,"start_time":eligible.iter().filter_map(|p|p.published_at).min(),"last_observed_time":latest,"velocity":metric(velocity,"DELTA_CAPTURED_WINDOW_MENTIONS_PER_HOUR",json!(last.map(|s|now.saturating_sub(s["captured_at"].as_u64().unwrap_or(now))))),"acceleration":metric(acceleration,"DELTA_VELOCITY_PER_HOUR",json!("actual snapshot hours")),"persistence":metric(persistence,"NONEMPTY_PRIOR_SNAPSHOTS_RATIO",json!(history.len())),"novelty":metric(novelty.map(|v|v as f64),"NEW_POST_IDENTITIES",json!(n)),"time_decay":metric(latest.and_then(|t|decay(now-t,86400)),"HEURISTIC_ONE_DAY_HALF_LIFE",json!(86400)),"score":{"value":score,"state":"DERIVED","components":components,"known_weight_coverage":coverage,"policy":"EXPLICIT_HEURISTIC_V1_UNKNOWN_COMPONENTS_UNSCORED_NOT_ZERO","learned":false},"state":state,"clusters":clusters(&eligible),"engagement_observations":eligible.iter().map(|p|json!({"post_key":p.key(),"platform":p.platform,"metrics":p.engagement,"evidence_id":p.evidence_id,"missing":"UNKNOWN","comparability":"PLATFORM_SPECIFIC_COUNTERS_NOT_SUMMED"})).collect::<Vec<_>>(),"sentiment":eligible.iter().map(sentiment).collect::<Vec<_>>(),"entity_links":eligible.iter().flat_map(|p|p.entities.iter()).collect::<Vec<_>>(),"commerce_links":[],"conflicts":conflicts,"unknowns":["Population coverage","Independent publisher verification","Sales/search demand/conversion/revenue","Semantic embedding similarity","Engagement growth without compatible counter history"],"timestamp_unknown_excluded":dedup.iter().filter(|p|p.published_at.is_none()).count(),"sampling":"Bounded retrieved sample, not total platform mentions; velocity includes capture coverage changes","simulation_contribution":0});
+    let growth = last.and_then(|old| runtime::compatible_engagement_delta(old, &result));
+    result["engagement_growth"] = metric(
+        growth,
+        "MAX_COMPATIBLE_SAME_POST_SAME_PLATFORM_COUNTER_DELTA_NOT_AGGREGATE",
+        json!("matching observed counters"),
+    );
+    result["cluster_growth"] = metric(
+        last.map(|old| {
+            result["clusters"].as_array().map_or(0, Vec::len) as f64
+                - old["clusters"].as_array().map_or(0, Vec::len) as f64
+        }),
+        "DELTA_LEXICAL_CLUSTER_COUNT",
+        json!("prior snapshot"),
+    );
+    let mut recurrence: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for p in &eligible {
+        for e in &p.entities {
+            if let Some(v) = e["value"].as_str() {
+                recurrence
+                    .entry(v.to_owned())
+                    .or_default()
+                    .insert(p.platform.clone());
+            }
+        }
+    }
+    result["entity_recurrence"]=json!(recurrence.into_iter().map(|(value,platforms)|json!({"value":value,"platform_count":platforms.len(),"platforms":platforms,"state":"DERIVED","identity_state":"SOURCE_ASSERTED","evidence_ids":ids})).collect::<Vec<_>>());
+    result
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn independent_social_donor_oracles() {
+        let fixture: Value = serde_json::from_str(include_str!(
+            "../../../research/commerce/social-oracle-fixtures.json"
+        ))
+        .unwrap();
+        assert_eq!(fixture["families"].as_array().unwrap().len(), 2);
+        assert_eq!(fixture["cases"].as_array().unwrap().len(), 560);
+        for c in fixture["cases"].as_array().unwrap() {
+            let i = &c["input"];
+            if c["family"] == "rank_exposure" {
+                let ranks: Vec<_> = i["ranks"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| v.as_u64().unwrap())
+                    .collect();
+                let w = i["weights"].as_array().unwrap();
+                let actual = rank_exposure(
+                    &ranks,
+                    i["count"].as_u64().unwrap(),
+                    i["threshold"].as_u64().unwrap(),
+                    [
+                        w[0].as_f64().unwrap(),
+                        w[1].as_f64().unwrap(),
+                        w[2].as_f64().unwrap(),
+                    ],
+                );
+                assert!((actual - c["expected"].as_f64().unwrap()).abs() < 1e-9);
+            } else {
+                assert_eq!(threshold_events(i), c["expected"]);
+            }
+        }
+    }
+    #[test]
+    fn actual_timestamps_and_decay() {
+        assert_eq!(derivative(2., 6., 100, 7300), Some(2.));
+        assert_eq!(derivative(2., 6., 100, 100), None);
+        assert_eq!(derivative(2., 6., 100, 99), None);
+        assert_eq!(derivative(1., 3., 100, 3700), Some(2.));
+        assert_eq!(decay(86400, 86400), Some(0.5));
+        assert_eq!(decay(1, 0), None);
+    }
+}

@@ -28,7 +28,7 @@ FACETS = {'network-behavior':r'https?://|fetch\(|requests\.|httpx|axios',
  'process-model':r'(?i)subprocess|spawn\(|exec\(|stdio|StdioServerTransport',
  'protocols':r'(?i)StreamableHTTP|SSEServerTransport|FastMCP|McpServer|jsonrpc'}
 def safe_excerpt(line):
- for pattern in [r'AKIA[0-9A-Z]{16}',r'(?<![A-Za-z0-9])gh[pousr]_[A-Za-z0-9]{25,}',r'(?<![A-Za-z0-9])sk-(?:proj-)?[A-Za-z0-9_-]{25,}',r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']:
+ for pattern in [r"https://hooks\.slack\.com/services/[^\s\"'<>\\)]+",r'AKIA[0-9A-Z]{16}',r'(?<![A-Za-z0-9])gh[pousr]_[A-Za-z0-9]{25,}',r'(?<![A-Za-z0-9])sk-(?:proj-)?[A-Za-z0-9_-]{25,}',r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']:
   line=re.sub(pattern,'[REDACTED_CREDENTIAL_LIKE_LITERAL]',line)
  return line[:400]
 

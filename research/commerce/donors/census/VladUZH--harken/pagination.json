@@ -1,0 +1,1397 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "README.md",
+      "line_start": 90,
+      "line_end": 90,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Harken keeps forward catch-up and historical cursors for each keyword/source pair. Fetch older result pages without re-walking the same history:"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Cursor progress is committed only after the fetched mentions are stored, so an interrupted backfill safely resumes on the next run. Historical mentions do not trigger new-mention alerts. The dashboard also lets you add a keyword, choose sources, scan latest results, and request a three-page backfill without using the CLI."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 233,
+      "line_end": 233,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Adding a source is one small class implementing `fetch()`. Cursor-aware sources can additionally implement `fetch_page()` — see [`src/harken/sources/`](src/harken/sources/)."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 270,
+      "line_end": 270,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "X accepts `HARKEN_X_BEARER_TOKEN`; YouTube accepts `HARKEN_YOUTUBE_API_KEY`. Both adapters support incremental time boundaries and persisted pagination cursors. Harken never logs either credential. See the official [X recent-search documentation](https://docs.x.com/x-api/posts/search/integrate/overview) and [YouTube `search.list` reference](https://developers.google.com/youtube/v3/docs/search/list"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 298,
+      "line_end": 298,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [x] **Historical backfill and per-keyword/source pagination cursors**."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 310,
+      "line_end": 310,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [x] **X/Twitter and YouTube keyed sources** with incremental boundaries and pagination."
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 154,
+      "line_end": 154,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"Fetch older result pages using durable per-source cursors.\"\"\""
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "70a68c569dd4748aea48a58258c8942f94377a77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        offset-less timestamps. Left naive, they later blow up when compared"
+    },
+    {
+      "source_path": "src/harken/models.py",
+      "line_start": 55,
+      "line_end": 55,
+      "blob_hash": "70a68c569dd4748aea48a58258c8942f94377a77",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        by the host's local offset when normalised for cursor bounds. Anchoring"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 133,
+      "line_end": 133,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                cursor = ("
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    state.get(\"backfill_cursor\") if backfill else state.get(\"incremental_cursor\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                next_cursor: str | None = cursor"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 151,
+      "line_end": 151,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        cursor=cursor,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 156,
+      "line_end": 156,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    next_cursor = page.next_cursor"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    if not next_cursor:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 159,
+      "line_end": 159,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    cursor = next_cursor"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 164,
+      "line_end": 164,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                successful[name] = (unique_mentions, next_cursor, incremental_since)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 167,
+      "line_end": 167,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    result.backfill_complete[name] = next_cursor is None"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 193,
+      "line_end": 193,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        for name, (mentions, next_cursor, incremental_since) in successful.items():"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 199,
+      "line_end": 199,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                next_cursor=next_cursor,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 467,
+      "line_end": 467,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 480,
+      "line_end": 480,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    cursor=cursor,"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "2910f07ed878fad04aa7ef6f986f75de6090c173",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    \"\"\"One source page plus an opaque cursor for the next, older page.\"\"\""
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line_start": 22,
+      "line_end": 22,
+      "blob_hash": "2910f07ed878fad04aa7ef6f986f75de6090c173",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    next_cursor: str | None = None"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "2910f07ed878fad04aa7ef6f986f75de6090c173",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "2910f07ed878fad04aa7ef6f986f75de6090c173",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        The default keeps older source plugins working. Cursor-aware adapters"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "edb25049c04505c3c503529f42cf73d0500cbb7f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "edb25049c04505c3c503529f42cf73d0500cbb7f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "edb25049c04505c3c503529f42cf73d0500cbb7f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"cursor\"] = cursor"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "edb25049c04505c3c503529f42cf73d0500cbb7f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return FetchPage(mentions, data.get(\"cursor\"))"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "7e7b465bd76ca393337f482461c0facc9447c894",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "7e7b465bd76ca393337f482461c0facc9447c894",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "7e7b465bd76ca393337f482461c0facc9447c894",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            boundaries.append(f\"created_at_i<={int(cursor)}\")"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "7e7b465bd76ca393337f482461c0facc9447c894",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor = str(min(timestamps)) if has_more and timestamps else None"
+    },
+    {
+      "source_path": "src/harken/sources/hackernews.py",
+      "line_start": 88,
+      "line_end": 88,
+      "blob_hash": "7e7b465bd76ca393337f482461c0facc9447c894",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return FetchPage(mentions, next_cursor)"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"max_id\"] = cursor"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor = None"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            next_cursor = statuses[-1].get(\"id\")"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return FetchPage(mentions, next_cursor)"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"after\"] = cursor"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"todate\"] = int(cursor)"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 91,
+      "line_end": 91,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # `todate` is inclusive; cursor at the page's oldest second (not min-1)"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor = str(min(timestamps)) if data.get(\"has_more\") and timestamps else None"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 96,
+      "line_end": 96,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return FetchPage(mentions, next_cursor)"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 45,
+      "line_end": 45,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"next_token\"] = cursor"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        # `next_token` advances past all of them, so trimming to a smaller"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return FetchPage(mentions, (data.get(\"meta\") or {}).get(\"next_token\"))"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "affa071c2764e30f67af4a6d7580d067834adbc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        cursor: str | None = None,"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "affa071c2764e30f67af4a6d7580d067834adbc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if cursor:"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "affa071c2764e30f67af4a6d7580d067834adbc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            params[\"pageToken\"] = cursor"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    incremental_cursor TEXT,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    backfill_cursor    TEXT,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 265,
+      "line_end": 265,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 289,
+      "line_end": 289,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 297,
+      "line_end": 297,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 326,
+      "line_end": 326,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 352,
+      "line_end": 352,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 362,
+      "line_end": 362,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 374,
+      "line_end": 374,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 388,
+      "line_end": 388,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 403,
+      "line_end": 403,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 425,
+      "line_end": 425,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 448,
+      "line_end": 448,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 474,
+      "line_end": 474,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 489,
+      "line_end": 489,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    ORDER BY created_at DESC LIMIT -1 OFFSET 20"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 502,
+      "line_end": 502,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 517,
+      "line_end": 517,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 522,
+      "line_end": 522,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def _ensure_another_admin(cur: sqlite3.Cursor, excluded_user_id: int) -> None:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 545,
+      "line_end": 545,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 628,
+      "line_end": 628,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 667,
+      "line_end": 667,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 685,
+      "line_end": 685,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 710,
+      "line_end": 710,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 725,
+      "line_end": 725,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 738,
+      "line_end": 738,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor: str | None,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 741,
+      "line_end": 741,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Advance a source cursor after its fetched rows have been committed.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 747,
+      "line_end": 747,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        incremental_cursor = state.get(\"incremental_cursor\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 749,
+      "line_end": 749,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        backfill_cursor = state.get(\"backfill_cursor\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 753,
+      "line_end": 753,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            backfill_cursor = next_cursor"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 754,
+      "line_end": 754,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            backfill_complete = next_cursor is None"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 757,
+      "line_end": 757,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            # page is historical, so it seeds the backfill cursor rather than"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 759,
+      "line_end": 759,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            backfill_cursor = next_cursor"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 760,
+      "line_end": 760,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            backfill_complete = next_cursor is None"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 761,
+      "line_end": 761,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            incremental_cursor = None"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 764,
+      "line_end": 764,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            incremental_cursor = next_cursor"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 767,
+      "line_end": 767,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if next_cursor and incremental_since"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 772,
+      "line_end": 772,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 776,
+      "line_end": 776,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    (query, source, newest_at, oldest_at, incremental_cursor,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 777,
+      "line_end": 777,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                     incremental_since, backfill_cursor, backfill_complete,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 783,
+      "line_end": 783,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    incremental_cursor = excluded.incremental_cursor,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 785,
+      "line_end": 785,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    backfill_cursor = excluded.backfill_cursor,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 795,
+      "line_end": 795,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    incremental_cursor,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 797,
+      "line_end": 797,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    backfill_cursor,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 809,
+      "line_end": 809,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Persist a safe, inspectable source error without moving any cursor.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 810,
+      "line_end": 810,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 837,
+      "line_end": 837,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 888,
+      "line_end": 888,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 896,
+      "line_end": 896,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 913,
+      "line_end": 913,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 931,
+      "line_end": 931,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 954,
+      "line_end": 954,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 978,
+      "line_end": 978,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1027,
+      "line_end": 1027,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1038,
+      "line_end": 1038,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1060,
+      "line_end": 1060,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1073,
+      "line_end": 1073,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1113,
+      "line_end": 1113,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1135,
+      "line_end": 1135,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1156,
+      "line_end": 1156,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1175,
+      "line_end": 1175,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1210,
+      "line_end": 1210,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1239,
+      "line_end": 1239,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1252,
+      "line_end": 1252,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1261,
+      "line_end": 1261,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1295,
+      "line_end": 1295,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1300,
+      "line_end": 1300,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1320,
+      "line_end": 1320,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1355,
+      "line_end": 1355,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1385,
+      "line_end": 1385,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        with closing(self._conn.cursor()) as cur:"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  cursor: pointer; transition: border-color .15s, box-shadow .15s;"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  min-height: 39px; padding: 0 14px; cursor: pointer;"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": ".scan-button:disabled { cursor: wait; opacity: .5; }"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 241,
+      "line_end": 241,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  flex: 0 0 auto; padding: 0; color: var(--faint); background: none; border: 0; cursor: pointer;"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 266,
+      "line_end": 266,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  border-radius: 8px; cursor: pointer; font-size: 12.5px;"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 291,
+      "line_end": 291,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "  border-radius: 999px; padding: 6px 12px; cursor: pointer;"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 347,
+      "line_end": 347,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": ".logout-form button { border: 0; background: none; color: var(--faint); font: 600 .62rem/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; white-space: nowrap; cursor: pointer; padding: .45rem .2rem; }"
+    },
+    {
+      "source_path": "src/harken/web/static/style.css",
+      "line_start": 349,
+      "line_end": 349,
+      "blob_hash": "af616bd54e92462f4ff54b9e8c54f2fca5214961",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": ".scan-button:disabled, input:disabled { cursor: not-allowed; opacity: .48; }"
+    },
+    {
+      "source_path": "src/harken/web/templates/dashboard.html",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "83a9b1cef2e35663d0c9fea1c3ed6e5c995280bf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      <span class=\"scan-hint\">Latest scans catch up from saved cursors; backfill walks into older history.</span>"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 98,
+      "line_end": 98,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_backfill_command_resumes_saved_source_cursor(tmp_path):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_backfill_cursor_survives_restart_and_completes(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 106,
+      "line_end": 106,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        def fetch_page(self, query, limit=50, *, cursor=None, since=None):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            type(self).calls.append((cursor, since))"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 113,
+      "line_end": 113,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            text, next_cursor, created_at = pages[cursor]"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                next_cursor,"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 134,
+      "line_end": 134,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert pipe.store.source_state(\"acme\", \"paged\")[\"backfill_cursor\"] == \"older-1\""
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 141,
+      "line_end": 141,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert pipe.store.source_state(\"acme\", \"paged\")[\"backfill_cursor\"] == \"older-2\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 64,
+      "line_end": 64,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    page = HackerNewsSource().fetch_page(\"acme\", limit=1, cursor=\"1700000100\", since=since)"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 70,
+      "line_end": 70,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert page.next_cursor == \"1700000000\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 141,
+      "line_end": 141,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_bluesky_page_preserves_api_cursor_and_since_boundary():"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 143,
+      "line_end": 143,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        return_value=httpx.Response(200, json={\"posts\": [], \"cursor\": \"next-page\"})"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    page = BlueskySource().fetch_page(\"acme\", cursor=\"current-page\", since=since)"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 148,
+      "line_end": 148,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert params[\"cursor\"] == \"current-page\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 150,
+      "line_end": 150,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert page.next_cursor == \"next-page\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_youtube_parses_video_search_and_pagination():"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 258,
+      "line_end": 258,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"acme\", limit=25, cursor=\"current\", since=since"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 267,
+      "line_end": 267,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert page.next_cursor == \"older-videos\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 275,
+      "line_end": 275,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_x_parses_posts_authors_metrics_and_pagination():"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 290,
+      "line_end": 290,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"meta\": {\"next_token\": \"older-posts\"},"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 296,
+      "line_end": 296,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"acme\", limit=5, cursor=\"current\", since=since"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert params[\"next_token\"] == \"current\""
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 304,
+      "line_end": 304,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert page.next_cursor == \"older-posts\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 334,
+      "line_end": 334,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_source_state_keeps_forward_and_backfill_cursors_separate(tmp_path):"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 335,
+      "line_end": 335,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    db = Store(tmp_path / \"cursors.db\")"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 340,
+      "line_end": 340,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"acme\", \"hackernews\", [first], mode=\"incremental\", next_cursor=\"older-1\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 343,
+      "line_end": 343,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"backfill_cursor\"] == \"older-1\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 344,
+      "line_end": 344,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"incremental_cursor\"] is None"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 355,
+      "line_end": 355,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor=\"forward-2\","
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 359,
+      "line_end": 359,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"incremental_cursor\"] == \"forward-2\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 361,
+      "line_end": 361,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"backfill_cursor\"] == \"older-1\""
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 368,
+      "line_end": 368,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        next_cursor=None,"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 371,
+      "line_end": 371,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    db.record_source_success(\"acme\", \"hackernews\", [], mode=\"backfill\", next_cursor=None)"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 373,
+      "line_end": 373,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"incremental_cursor\"] is None"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 375,
+      "line_end": 375,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert state[\"backfill_cursor\"] is None"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 489,
+      "line_end": 489,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        def fetch_page(self, query, limit=50, *, cursor=None, since=None):"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 551,
+      "line_end": 551,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        def fetch_page(self, query, limit=50, *, cursor=None, since=None):"
+    }
+  ]
+}

@@ -1,0 +1,6526 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "api/main.py",
+      "line": 24,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 25,
+      "text": "import os"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 26,
+      "text": "import sys"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 27,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 28,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 29,
+      "text": "import uvicorn"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 30,
+      "text": "from fastapi import FastAPI"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 31,
+      "text": "from fastapi.middleware.cors import CORSMiddleware"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 32,
+      "text": "from fastapi.staticfiles import StaticFiles"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 33,
+      "text": "from fastapi.responses import FileResponse"
+    },
+    {
+      "source_path": "api/main.py",
+      "line": 35,
+      "text": "from .routers import crawler_router, data_router, websocket_router"
+    },
+    {
+      "source_path": "api/routers/__init__.py",
+      "line": 19,
+      "text": "from .crawler import router as crawler_router"
+    },
+    {
+      "source_path": "api/routers/__init__.py",
+      "line": 20,
+      "text": "from .data import router as data_router"
+    },
+    {
+      "source_path": "api/routers/__init__.py",
+      "line": 21,
+      "text": "from .websocket import router as websocket_router"
+    },
+    {
+      "source_path": "api/routers/crawler.py",
+      "line": 19,
+      "text": "from fastapi import APIRouter, HTTPException"
+    },
+    {
+      "source_path": "api/routers/crawler.py",
+      "line": 21,
+      "text": "from ..schemas import CrawlerStartRequest, CrawlerStatusResponse"
+    },
+    {
+      "source_path": "api/routers/crawler.py",
+      "line": 22,
+      "text": "from ..services import crawler_manager"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 19,
+      "text": "import os"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 20,
+      "text": "import json"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 21,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 22,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 24,
+      "text": "from fastapi import APIRouter, HTTPException"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 25,
+      "text": "from fastapi.responses import FileResponse"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 125,
+      "text": "import csv"
+    },
+    {
+      "source_path": "api/routers/data.py",
+      "line": 138,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "api/routers/websocket.py",
+      "line": 19,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "api/routers/websocket.py",
+      "line": 20,
+      "text": "from typing import Set, Optional"
+    },
+    {
+      "source_path": "api/routers/websocket.py",
+      "line": 22,
+      "text": "from fastapi import APIRouter, WebSocket, WebSocketDisconnect"
+    },
+    {
+      "source_path": "api/routers/websocket.py",
+      "line": 24,
+      "text": "from ..services import crawler_manager"
+    },
+    {
+      "source_path": "api/schemas/__init__.py",
+      "line": 19,
+      "text": "from .crawler import (\n    PlatformEnum,\n    LoginTypeEnum,\n    CrawlerTypeEnum,\n    SaveDataOptionEnum,\n    CrawlerStartRequest,\n    CrawlerStatusResponse,\n    LogEntry,\n)"
+    },
+    {
+      "source_path": "api/schemas/crawler.py",
+      "line": 19,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "api/schemas/crawler.py",
+      "line": 20,
+      "text": "from typing import Optional, Literal"
+    },
+    {
+      "source_path": "api/schemas/crawler.py",
+      "line": 21,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "api/services/__init__.py",
+      "line": 19,
+      "text": "from .crawler_manager import CrawlerManager, crawler_manager"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 19,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 20,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 21,
+      "text": "import signal"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 22,
+      "text": "import os"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 23,
+      "text": "from typing import Optional, List"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 24,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 25,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "api/services/crawler_manager.py",
+      "line": 27,
+      "text": "from ..schemas import CrawlerStartRequest, LogEntry"
+    },
+    {
+      "source_path": "base/base_crawler.py",
+      "line": 20,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "base/base_crawler.py",
+      "line": 21,
+      "text": "from typing import Dict, Optional"
+    },
+    {
+      "source_path": "base/base_crawler.py",
+      "line": 23,
+      "text": "from playwright.async_api import BrowserContext, BrowserType, Playwright"
+    },
+    {
+      "source_path": "cache/abs_cache.py",
+      "line": 27,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "cache/abs_cache.py",
+      "line": 28,
+      "text": "from typing import Any, List, Optional"
+    },
+    {
+      "source_path": "cache/cache_factory.py",
+      "line": 43,
+      "text": "from .local_cache import ExpiringLocalCache"
+    },
+    {
+      "source_path": "cache/cache_factory.py",
+      "line": 46,
+      "text": "from .redis_cache import RedisCache"
+    },
+    {
+      "source_path": "cache/local_cache.py",
+      "line": 27,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "cache/local_cache.py",
+      "line": 28,
+      "text": "import time"
+    },
+    {
+      "source_path": "cache/local_cache.py",
+      "line": 29,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "cache/local_cache.py",
+      "line": 31,
+      "text": "from cache.abs_cache import AbstractCache"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 26,
+      "text": "import pickle"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 27,
+      "text": "import time"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 28,
+      "text": "from typing import Any, List"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 30,
+      "text": "from redis import Redis"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 31,
+      "text": "from redis.exceptions import ResponseError"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 33,
+      "text": "from cache.abs_cache import AbstractCache"
+    },
+    {
+      "source_path": "cache/redis_cache.py",
+      "line": 34,
+      "text": "from config import db_config"
+    },
+    {
+      "source_path": "cmd_arg/__init__.py",
+      "line": 21,
+      "text": "from .arg import *"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 25,
+      "text": "import re"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 26,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 27,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 28,
+      "text": "from typing import Iterable, Optional, Sequence, Type, TypeVar"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 30,
+      "text": "import typer"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 31,
+      "text": "from typing_extensions import Annotated"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 33,
+      "text": "import config"
+    },
+    {
+      "source_path": "cmd_arg/arg.py",
+      "line": 34,
+      "text": "from tools.utils import str2bool"
+    },
+    {
+      "source_path": "config/__init__.py",
+      "line": 21,
+      "text": "from .base_config import *"
+    },
+    {
+      "source_path": "config/__init__.py",
+      "line": 22,
+      "text": "from .db_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 146,
+      "text": "from .bilibili_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 147,
+      "text": "from .xhs_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 148,
+      "text": "from .dy_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 149,
+      "text": "from .ks_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 150,
+      "text": "from .weibo_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 151,
+      "text": "from .tieba_config import *"
+    },
+    {
+      "source_path": "config/base_config.py",
+      "line": 152,
+      "text": "from .zhihu_config import *"
+    },
+    {
+      "source_path": "config/db_config.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "database/db.py",
+      "line": 23,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "database/db.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "database/db.py",
+      "line": 25,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "database/db.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "database/db.py",
+      "line": 33,
+      "text": "from database.db_session import create_tables"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 19,
+      "text": "from sqlalchemy import text"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 20,
+      "text": "from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 21,
+      "text": "from sqlalchemy.orm import sessionmaker"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 22,
+      "text": "from contextlib import asynccontextmanager"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 23,
+      "text": "from .models import Base"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 24,
+      "text": "import config"
+    },
+    {
+      "source_path": "database/db_session.py",
+      "line": 25,
+      "text": "from config.db_config import mysql_db_config, sqlite_db_config, postgres_db_config"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 27,
+      "text": "from sqlalchemy import create_engine, Column, Integer, Text, String, BigInteger"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 28,
+      "text": "from sqlalchemy.ext.declarative import declarative_base"
+    },
+    {
+      "source_path": "database/models.py",
+      "line": 29,
+      "text": "from sqlalchemy.orm import sessionmaker"
+    },
+    {
+      "source_path": "database/mongodb_store_base.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "database/mongodb_store_base.py",
+      "line": 21,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "database/mongodb_store_base.py",
+      "line": 22,
+      "text": "from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase, AsyncIOMotorCollection"
+    },
+    {
+      "source_path": "database/mongodb_store_base.py",
+      "line": 23,
+      "text": "from config import db_config"
+    },
+    {
+      "source_path": "database/mongodb_store_base.py",
+      "line": 24,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "docs/.vitepress/config.mjs",
+      "line": 1,
+      "text": "import {defineConfig} from 'vitepress'"
+    },
+    {
+      "source_path": "docs/.vitepress/config.mjs",
+      "line": 2,
+      "text": "import {withMermaid} from 'vitepress-plugin-mermaid'"
+    },
+    {
+      "source_path": "docs/.vitepress/theme/index.js",
+      "line": 2,
+      "text": "import DefaultTheme from 'vitepress/theme'"
+    },
+    {
+      "source_path": "docs/.vitepress/theme/index.js",
+      "line": 3,
+      "text": "import MyLayout from './MyLayout.vue'"
+    },
+    {
+      "source_path": "main.py",
+      "line": 20,
+      "text": "import sys"
+    },
+    {
+      "source_path": "main.py",
+      "line": 21,
+      "text": "import io"
+    },
+    {
+      "source_path": "main.py",
+      "line": 32,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "main.py",
+      "line": 33,
+      "text": "from typing import Optional, Type"
+    },
+    {
+      "source_path": "main.py",
+      "line": 35,
+      "text": "import cmd_arg"
+    },
+    {
+      "source_path": "main.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "main.py",
+      "line": 37,
+      "text": "from database import db"
+    },
+    {
+      "source_path": "main.py",
+      "line": 38,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 39,
+      "text": "from media_platform.bilibili import BilibiliCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 40,
+      "text": "from media_platform.douyin import DouYinCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 41,
+      "text": "from media_platform.kuaishou import KuaishouCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 42,
+      "text": "from media_platform.tieba import TieBaCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 43,
+      "text": "from media_platform.weibo import WeiboCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 44,
+      "text": "from media_platform.xhs import XiaoHongShuCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 45,
+      "text": "from media_platform.zhihu import ZhihuCrawler"
+    },
+    {
+      "source_path": "main.py",
+      "line": 46,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "main.py",
+      "line": 47,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "main.py",
+      "line": 78,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "main.py",
+      "line": 146,
+      "text": "from tools.app_runner import run"
+    },
+    {
+      "source_path": "media_downloader/__init__.py",
+      "line": 26,
+      "text": "from .downloader import MediaDownloader"
+    },
+    {
+      "source_path": "media_downloader/__init__.py",
+      "line": 27,
+      "text": "from .ffmpeg import ffmpeg_path, is_available as is_ffmpeg_available, merge_audio_video"
+    },
+    {
+      "source_path": "media_downloader/__init__.py",
+      "line": 28,
+      "text": "from .types import (\n    MediaDownloadError,\n    MediaFatalError,\n    MediaItem,\n    MediaRetryableError,\n    MediaType,\n)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 36,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 37,
+      "text": "import logging"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 38,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 39,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 40,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 41,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 42,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 43,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 44,
+      "text": "from typing import Iterable, Mapping, Optional, Sequence"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 45,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 47,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 49,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 51,
+      "text": "from .ffmpeg import merge_audio_video"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 52,
+      "text": "from .paths import (\n    ALLOWED_EXTENSIONS,\n    build_file_path,\n    build_media_dir,\n    build_media_path,\n    ensure_within,\n    guess_extension,\n    redact_url,\n    sanitize_component,\n    url_fingerprint,\n)"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 63,
+      "text": "from .types import MediaDownloadError, MediaFatalError, MediaItem, MediaRetryableError, MediaType"
+    },
+    {
+      "source_path": "media_downloader/downloader.py",
+      "line": 158,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 28,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 29,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 30,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 31,
+      "text": "import logging"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 32,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 33,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "media_downloader/ffmpeg.py",
+      "line": 35,
+      "text": "from .types import MediaDownloadError"
+    },
+    {
+      "source_path": "media_downloader/paths.py",
+      "line": 27,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "media_downloader/paths.py",
+      "line": 28,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_downloader/paths.py",
+      "line": 29,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "media_downloader/paths.py",
+      "line": 30,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_downloader/paths.py",
+      "line": 31,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "media_downloader/types.py",
+      "line": 27,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "media_downloader/types.py",
+      "line": 28,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_downloader/types.py",
+      "line": 29,
+      "text": "from typing import Mapping, Optional, Tuple"
+    },
+    {
+      "source_path": "media_platform/bilibili/__init__.py",
+      "line": 26,
+      "text": "from .core import *"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 24,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 25,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 26,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 27,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, Union"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 28,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 30,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 31,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 32,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 34,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 35,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 36,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 37,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 40,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 42,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 43,
+      "text": "from .field import CommentOrderType, SearchOrderType"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 44,
+      "text": "from .help import BilibiliSign"
+    },
+    {
+      "source_path": "media_platform/bilibili/client.py",
+      "line": 45,
+      "text": "from .media import DASH_FNVAL"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 26,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 27,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 29,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 30,
+      "text": "from typing import Dict, List, Optional, Tuple, Union"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 31,
+      "text": "from datetime import datetime, timedelta"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 32,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 34,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 41,
+      "text": "from playwright._impl._errors import TargetClosedError"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 43,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 44,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 45,
+      "text": "from media_downloader import MediaDownloader, is_ffmpeg_available"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 46,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 47,
+      "text": "from store import bilibili as bilibili_store"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 48,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 49,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 50,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 52,
+      "text": "from . import media as bili_media"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 53,
+      "text": "from .client import BilibiliClient"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 54,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 55,
+      "text": "from .field import SearchOrderType"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 56,
+      "text": "from .help import parse_video_info_from_url, parse_creator_info_from_url"
+    },
+    {
+      "source_path": "media_platform/bilibili/core.py",
+      "line": 57,
+      "text": "from .login import BilibiliLogin"
+    },
+    {
+      "source_path": "media_platform/bilibili/exception.py",
+      "line": 26,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/bilibili/field.py",
+      "line": 26,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 26,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 27,
+      "text": "import urllib.parse"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 28,
+      "text": "from hashlib import md5"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 29,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 31,
+      "text": "from model.m_bilibili import VideoUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/bilibili/help.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 26,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 27,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 28,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 29,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 31,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 32,
+      "text": "from playwright.async_api import TimeoutError as PlaywrightTimeoutError"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 33,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/bilibili/login.py",
+      "line": 38,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/bilibili/media.py",
+      "line": 31,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "media_platform/bilibili/media.py",
+      "line": 33,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/bilibili/media.py",
+      "line": 34,
+      "text": "from media_downloader import MediaItem, MediaType"
+    },
+    {
+      "source_path": "media_platform/douyin/__init__.py",
+      "line": 21,
+      "text": "from .core import DouYinCrawler"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 21,
+      "text": "import copy"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 23,
+      "text": "import urllib.parse"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 24,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, Union, Optional"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 26,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 27,
+      "text": "from playwright.async_api import BrowserContext"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 29,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 30,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 31,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 32,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 33,
+      "text": "from var import request_keyword_var"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 36,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 38,
+      "text": "from .exception import *"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 39,
+      "text": "from .field import *"
+    },
+    {
+      "source_path": "media_platform/douyin/client.py",
+      "line": 40,
+      "text": "from .help import *"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 22,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 23,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 24,
+      "text": "from typing import Any, Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 26,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 34,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 35,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 36,
+      "text": "from media_downloader import MediaDownloader"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 37,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 38,
+      "text": "from store import douyin as douyin_store"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 39,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 40,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 41,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 43,
+      "text": "from . import media as douyin_media"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 44,
+      "text": "from .client import DouYinClient"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 45,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 46,
+      "text": "from .field import PublishTimeType"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 47,
+      "text": "from .help import parse_video_info_from_url, parse_creator_info_from_url"
+    },
+    {
+      "source_path": "media_platform/douyin/core.py",
+      "line": 48,
+      "text": "from .login import DouYinLogin"
+    },
+    {
+      "source_path": "media_platform/douyin/exception.py",
+      "line": 21,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/douyin/field.py",
+      "line": 21,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 27,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 28,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 29,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 31,
+      "text": "import execjs"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 32,
+      "text": "from playwright.async_api import Page"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 34,
+      "text": "from model.m_douyin import VideoUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/douyin/help.py",
+      "line": 35,
+      "text": "from tools.crawler_util import extract_url_params_to_dict"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 22,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 24,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 26,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 27,
+      "text": "from playwright.async_api import TimeoutError as PlaywrightTimeoutError"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 28,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 31,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 32,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 33,
+      "text": "from cache.cache_factory import CacheFactory"
+    },
+    {
+      "source_path": "media_platform/douyin/login.py",
+      "line": 34,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/douyin/media.py",
+      "line": 28,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "media_platform/douyin/media.py",
+      "line": 30,
+      "text": "from media_downloader import MediaItem, MediaType"
+    },
+    {
+      "source_path": "media_platform/kuaishou/__init__.py",
+      "line": 22,
+      "text": "from .core import KuaishouCrawler"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 22,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 23,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 24,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 25,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 26,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 28,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 29,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 31,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 32,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 33,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 34,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 35,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 38,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 40,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 41,
+      "text": "from .graphql import KuaiShouGraphQL"
+    },
+    {
+      "source_path": "media_platform/kuaishou/client.py",
+      "line": 42,
+      "text": "from .help import get_ks_sign_from_playwright"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 22,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 23,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 24,
+      "text": "import time"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 25,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 26,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 28,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 38,
+      "text": "from media_downloader import MediaDownloader"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 39,
+      "text": "from model.m_kuaishou import VideoUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 40,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 41,
+      "text": "from store import kuaishou as kuaishou_store"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 42,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 43,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 44,
+      "text": "from var import comment_tasks_var, crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 46,
+      "text": "from . import media as kuaishou_media"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 47,
+      "text": "from .client import KuaiShouClient"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 48,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 49,
+      "text": "from .help import (\n    KS_SIGN_CAPTURE_SCRIPT,\n    parse_video_info_from_url,\n    parse_creator_info_from_url,\n)"
+    },
+    {
+      "source_path": "media_platform/kuaishou/core.py",
+      "line": 54,
+      "text": "from .login import KuaishouLogin"
+    },
+    {
+      "source_path": "media_platform/kuaishou/exception.py",
+      "line": 21,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/kuaishou/graphql.py",
+      "line": 23,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "media_platform/kuaishou/help.py",
+      "line": 23,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/kuaishou/help.py",
+      "line": 25,
+      "text": "from playwright.async_api import Page"
+    },
+    {
+      "source_path": "media_platform/kuaishou/help.py",
+      "line": 27,
+      "text": "from model.m_kuaishou import VideoUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 22,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 24,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 26,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 27,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 31,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/kuaishou/login.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/kuaishou/media.py",
+      "line": 28,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "media_platform/kuaishou/media.py",
+      "line": 30,
+      "text": "from media_downloader import MediaItem, MediaType"
+    },
+    {
+      "source_path": "media_platform/tieba/__init__.py",
+      "line": 22,
+      "text": "from .core import TieBaCrawler"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 21,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 23,
+      "text": "from typing import Any, Callable, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 24,
+      "text": "from urllib.parse import urlencode, quote, parse_qs, unquote, urlparse"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 26,
+      "text": "import requests"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 27,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 28,
+      "text": "from tenacity import RetryError, retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 31,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 32,
+      "text": "from model.m_baidu_tieba import TiebaComment, TiebaCreator, TiebaNote"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 33,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 34,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 36,
+      "text": "from .field import SearchNoteType, SearchSortType"
+    },
+    {
+      "source_path": "media_platform/tieba/client.py",
+      "line": 37,
+      "text": "from .help import TieBaExtractor"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 22,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 23,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 24,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 26,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 34,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 35,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 36,
+      "text": "from model.m_baidu_tieba import TiebaCreator, TiebaNote"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 37,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, ProxyIpPool, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 38,
+      "text": "from store import tieba as tieba_store"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 39,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 40,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 41,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 43,
+      "text": "from .client import BaiduTieBaClient"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 44,
+      "text": "from .field import SearchNoteType, SearchSortType"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 45,
+      "text": "from .help import TieBaExtractor"
+    },
+    {
+      "source_path": "media_platform/tieba/core.py",
+      "line": 46,
+      "text": "from .login import BaiduTieBaLogin"
+    },
+    {
+      "source_path": "media_platform/tieba/field.py",
+      "line": 21,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 22,
+      "text": "import html"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 23,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 24,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 25,
+      "text": "from typing import Any, Dict, List, Tuple"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 26,
+      "text": "from urllib.parse import parse_qs, quote, unquote, urljoin"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 28,
+      "text": "from parsel import Selector"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 30,
+      "text": "from constant import baidu_tieba as const"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 31,
+      "text": "from model.m_baidu_tieba import TiebaComment, TiebaCreator, TiebaNote"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/tieba/help.py",
+      "line": 33,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 22,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 24,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 26,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 27,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 31,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/tieba/login.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/weibo/__init__.py",
+      "line": 25,
+      "text": "from .client import WeiboClient"
+    },
+    {
+      "source_path": "media_platform/weibo/__init__.py",
+      "line": 26,
+      "text": "from .core import WeiboCrawler"
+    },
+    {
+      "source_path": "media_platform/weibo/__init__.py",
+      "line": 27,
+      "text": "from .login import WeiboLogin"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 26,
+      "text": "import copy"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 28,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 29,
+      "text": "from typing import TYPE_CHECKING, Callable, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 30,
+      "text": "from urllib.parse import parse_qs, unquote, urlencode"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 32,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 33,
+      "text": "from httpx import Response"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 34,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 35,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 36,
+      "text": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 38,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 39,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 40,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 43,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 45,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/weibo/client.py",
+      "line": 46,
+      "text": "from .field import SearchType"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 26,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 28,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 29,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 31,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 39,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 40,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 41,
+      "text": "from media_downloader import MediaDownloader"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 42,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 43,
+      "text": "from store import weibo as weibo_store"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 44,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 45,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 46,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 48,
+      "text": "from . import media as weibo_media"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 49,
+      "text": "from .client import WeiboClient"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 50,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 51,
+      "text": "from .field import SearchType"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 52,
+      "text": "from .help import filter_search_result_card"
+    },
+    {
+      "source_path": "media_platform/weibo/core.py",
+      "line": 53,
+      "text": "from .login import WeiboLogin"
+    },
+    {
+      "source_path": "media_platform/weibo/exception.py",
+      "line": 26,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/weibo/field.py",
+      "line": 25,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/weibo/help.py",
+      "line": 26,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 26,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 27,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 28,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 29,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 31,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 32,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 35,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 36,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/weibo/login.py",
+      "line": 37,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/weibo/media.py",
+      "line": 30,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "media_platform/weibo/media.py",
+      "line": 31,
+      "text": "from urllib.parse import urlsplit"
+    },
+    {
+      "source_path": "media_platform/weibo/media.py",
+      "line": 33,
+      "text": "from media_downloader import MediaItem, MediaType"
+    },
+    {
+      "source_path": "media_platform/xhs/__init__.py",
+      "line": 21,
+      "text": "from .core import XiaoHongShuCrawler"
+    },
+    {
+      "source_path": "media_platform/xhs/__init__.py",
+      "line": 22,
+      "text": "from .field import *"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 21,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 22,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 23,
+      "text": "from urllib.parse import quote, urlencode"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 25,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 26,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 27,
+      "text": "from tenacity import (\n    RetryError,\n    retry,\n    retry_if_not_exception_type,\n    stop_after_attempt,\n    wait_fixed,\n)"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 34,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 38,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 39,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 42,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 44,
+      "text": "from .exception import (\n    DataFetchError,\n    IPBlockError,\n    NoteNotFoundError,\n    PlatformAccessError,\n)"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 50,
+      "text": "from .field import SearchNoteType, SearchSortType"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 51,
+      "text": "from .help import get_search_id"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 52,
+      "text": "from .extractor import XiaoHongShuExtractor"
+    },
+    {
+      "source_path": "media_platform/xhs/client.py",
+      "line": 53,
+      "text": "from .playwright_sign import sign_with_xhshow"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 20,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 22,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 23,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 24,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 26,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 33,
+      "text": "from tenacity import RetryError"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 35,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 36,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 37,
+      "text": "from media_downloader import MediaDownloader"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 38,
+      "text": "from model.m_xiaohongshu import NoteUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 39,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 40,
+      "text": "from store import xhs as xhs_store"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 41,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 42,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 43,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 45,
+      "text": "from . import media as xhs_media"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 46,
+      "text": "from .client import XiaoHongShuClient"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 47,
+      "text": "from .exception import (\n    DataFetchError,\n    IPBlockError,\n    NoteNotFoundError,\n    PlatformAccessError,\n)"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 53,
+      "text": "from .field import SearchSortType"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 54,
+      "text": "from .help import parse_note_info_from_note_url, parse_creator_info_from_url, get_search_id"
+    },
+    {
+      "source_path": "media_platform/xhs/core.py",
+      "line": 55,
+      "text": "from .login import XiaoHongShuLogin"
+    },
+    {
+      "source_path": "media_platform/xhs/exception.py",
+      "line": 21,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/xhs/extractor.py",
+      "line": 20,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/xhs/extractor.py",
+      "line": 21,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/xhs/extractor.py",
+      "line": 22,
+      "text": "from typing import Dict, Optional"
+    },
+    {
+      "source_path": "media_platform/xhs/extractor.py",
+      "line": 24,
+      "text": "import humps"
+    },
+    {
+      "source_path": "media_platform/xhs/field.py",
+      "line": 21,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/xhs/field.py",
+      "line": 22,
+      "text": "from typing import NamedTuple"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 21,
+      "text": "import ctypes"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 23,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 24,
+      "text": "import time"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 25,
+      "text": "import urllib.parse"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 27,
+      "text": "from model.m_xiaohongshu import NoteUrlInfo, CreatorUrlInfo"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 28,
+      "text": "from tools.crawler_util import extract_url_params_to_dict"
+    },
+    {
+      "source_path": "media_platform/xhs/help.py",
+      "line": 336,
+      "text": "import re"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 22,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 24,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 26,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 27,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 31,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 32,
+      "text": "from cache.cache_factory import CacheFactory"
+    },
+    {
+      "source_path": "media_platform/xhs/login.py",
+      "line": 33,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/xhs/media.py",
+      "line": 28,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "media_platform/xhs/media.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/xhs/media.py",
+      "line": 31,
+      "text": "from media_downloader import MediaItem, MediaType"
+    },
+    {
+      "source_path": "media_platform/xhs/playwright_sign.py",
+      "line": 28,
+      "text": "from typing import Any, Dict, Optional, Union"
+    },
+    {
+      "source_path": "media_platform/xhs/playwright_sign.py",
+      "line": 30,
+      "text": "from .xhs_sign import get_trace_id"
+    },
+    {
+      "source_path": "media_platform/xhs/playwright_sign.py",
+      "line": 51,
+      "text": "from xhshow import Xhshow"
+    },
+    {
+      "source_path": "media_platform/xhs/xhs_sign.py",
+      "line": 22,
+      "text": "import ctypes"
+    },
+    {
+      "source_path": "media_platform/xhs/xhs_sign.py",
+      "line": 23,
+      "text": "import random"
+    },
+    {
+      "source_path": "media_platform/xhs/xhs_sign.py",
+      "line": 24,
+      "text": "from urllib.parse import quote"
+    },
+    {
+      "source_path": "media_platform/zhihu/__init__.py",
+      "line": 22,
+      "text": "from .core import ZhihuCrawler"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 23,
+      "text": "from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 24,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 26,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 27,
+      "text": "from httpx import Response"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 28,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 29,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 30,
+      "text": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 32,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 33,
+      "text": "from base.base_crawler import AbstractApiClient"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 34,
+      "text": "from constant import zhihu as zhihu_constant"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 35,
+      "text": "from model.m_zhihu import ZhihuComment, ZhihuContent, ZhihuCreator"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 36,
+      "text": "from proxy.proxy_mixin import ProxyRefreshMixin"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 37,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 40,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 42,
+      "text": "from .exception import DataFetchError, ForbiddenError"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 43,
+      "text": "from .field import SearchSort, SearchTime, SearchType"
+    },
+    {
+      "source_path": "media_platform/zhihu/client.py",
+      "line": 44,
+      "text": "from .help import ZhihuExtractor, sign"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 22,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 25,
+      "text": "from asyncio import Task"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 26,
+      "text": "from typing import Dict, List, Optional, Tuple, cast"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 28,
+      "text": "from playwright.async_api import (\n    BrowserContext,\n    BrowserType,\n    Page,\n    Playwright,\n    async_playwright,\n)"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 37,
+      "text": "from constant import zhihu as constant"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 38,
+      "text": "from base.base_crawler import AbstractCrawler"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 39,
+      "text": "from model.m_zhihu import ZhihuContent, ZhihuCreator"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 40,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel, create_ip_pool"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 41,
+      "text": "from store import zhihu as zhihu_store"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 42,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 43,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 44,
+      "text": "from var import crawler_type_var, source_keyword_var"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 46,
+      "text": "from .client import ZhiHuClient"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 47,
+      "text": "from .exception import DataFetchError"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 48,
+      "text": "from .help import ZhihuExtractor, judge_zhihu_url"
+    },
+    {
+      "source_path": "media_platform/zhihu/core.py",
+      "line": 49,
+      "text": "from .login import ZhiHuLogin"
+    },
+    {
+      "source_path": "media_platform/zhihu/exception.py",
+      "line": 21,
+      "text": "from httpx import RequestError"
+    },
+    {
+      "source_path": "media_platform/zhihu/field.py",
+      "line": 21,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "media_platform/zhihu/field.py",
+      "line": 22,
+      "text": "from typing import NamedTuple"
+    },
+    {
+      "source_path": "media_platform/zhihu/field.py",
+      "line": 24,
+      "text": "from constant import zhihu as zhihu_constant"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 23,
+      "text": "from typing import Dict, List, Optional"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 24,
+      "text": "from urllib.parse import parse_qs, urlparse"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 26,
+      "text": "import execjs"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 27,
+      "text": "from parsel import Selector"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 29,
+      "text": "from constant import zhihu as zhihu_constant"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 30,
+      "text": "from model.m_zhihu import ZhihuComment, ZhihuContent, ZhihuCreator"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 31,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 32,
+      "text": "from tools.crawler_util import extract_text_from_html"
+    },
+    {
+      "source_path": "media_platform/zhihu/help.py",
+      "line": 33,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 22,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 23,
+      "text": "import functools"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 25,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 27,
+      "text": "from playwright.async_api import BrowserContext, Page"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 28,
+      "text": "from tenacity import (RetryError, retry, retry_if_result, stop_after_attempt,\n                      wait_fixed)"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 31,
+      "text": "import config"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 32,
+      "text": "from base.base_crawler import AbstractLogin"
+    },
+    {
+      "source_path": "media_platform/zhihu/login.py",
+      "line": 33,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "model/m_baidu_tieba.py",
+      "line": 22,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "model/m_baidu_tieba.py",
+      "line": 24,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "model/m_bilibili.py",
+      "line": 32,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "model/m_douyin.py",
+      "line": 23,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "model/m_kuaishou.py",
+      "line": 23,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "model/m_xiaohongshu.py",
+      "line": 24,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "model/m_zhihu.py",
+      "line": 22,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "proxy/__init__.py",
+      "line": 25,
+      "text": "from .base_proxy import *"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 26,
+      "text": "import json"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 27,
+      "text": "from abc import ABC, abstractmethod"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 28,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 31,
+      "text": "from cache.abs_cache import AbstractCache"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 32,
+      "text": "from cache.cache_factory import CacheFactory"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 33,
+      "text": "from tools.utils import utils"
+    },
+    {
+      "source_path": "proxy/base_proxy.py",
+      "line": 35,
+      "text": "from .types import IpInfoModel"
+    },
+    {
+      "source_path": "proxy/providers/__init__.py",
+      "line": 25,
+      "text": "from .jishu_http_proxy import new_jisu_http_proxy"
+    },
+    {
+      "source_path": "proxy/providers/__init__.py",
+      "line": 26,
+      "text": "from .kuaidl_proxy import new_kuai_daili_proxy"
+    },
+    {
+      "source_path": "proxy/providers/__init__.py",
+      "line": 27,
+      "text": "from .wandou_http_proxy import new_wandou_http_proxy"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 25,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 26,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 28,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 30,
+      "text": "from proxy import IpCache, IpGetError, ProxyProvider"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 31,
+      "text": "from proxy.types import IpInfoModel"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "proxy/providers/jishu_http_proxy.py",
+      "line": 33,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 25,
+      "text": "import os"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 26,
+      "text": "import re"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 27,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 29,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 30,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 31,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 33,
+      "text": "from proxy import IpCache, IpInfoModel, ProxyProvider"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 34,
+      "text": "from proxy.types import ProviderNameEnum"
+    },
+    {
+      "source_path": "proxy/providers/kuaidl_proxy.py",
+      "line": 35,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 25,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 26,
+      "text": "from urllib.parse import urlencode"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 28,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 30,
+      "text": "from proxy import IpCache, IpGetError, ProxyProvider"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 31,
+      "text": "from proxy.types import IpInfoModel"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "proxy/providers/wandou_http_proxy.py",
+      "line": 33,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 24,
+      "text": "import random"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 25,
+      "text": "import time"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 26,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 27,
+      "text": "from urllib.parse import unquote, urlparse"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 29,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 30,
+      "text": "from tenacity import retry, stop_after_attempt, wait_fixed"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 31,
+      "text": "from tools.httpx_util import make_async_client"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 33,
+      "text": "import config"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 34,
+      "text": "from proxy.providers import (\n    new_kuai_daili_proxy,\n    new_wandou_http_proxy,\n)"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 38,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 40,
+      "text": "from .base_proxy import ProxyProvider"
+    },
+    {
+      "source_path": "proxy/proxy_ip_pool.py",
+      "line": 41,
+      "text": "from .types import IpInfoModel, ProviderNameEnum"
+    },
+    {
+      "source_path": "proxy/proxy_mixin.py",
+      "line": 26,
+      "text": "from typing import TYPE_CHECKING, Optional"
+    },
+    {
+      "source_path": "proxy/proxy_mixin.py",
+      "line": 28,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "proxy/proxy_mixin.py",
+      "line": 31,
+      "text": "from proxy.proxy_ip_pool import ProxyIpPool"
+    },
+    {
+      "source_path": "proxy/types.py",
+      "line": 25,
+      "text": "import time"
+    },
+    {
+      "source_path": "proxy/types.py",
+      "line": 26,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "proxy/types.py",
+      "line": 27,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "proxy/types.py",
+      "line": 29,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 21,
+      "text": "import re"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 22,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 24,
+      "text": "import uvicorn"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 25,
+      "text": "from fastapi import FastAPI, HTTPException, status"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 26,
+      "text": "from pydantic import BaseModel"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 28,
+      "text": "import config"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 29,
+      "text": "from cache.abs_cache import AbstractCache"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 30,
+      "text": "from cache.cache_factory import CacheFactory"
+    },
+    {
+      "source_path": "recv_sms.py",
+      "line": 31,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "store/bilibili/__init__.py",
+      "line": 25,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/bilibili/__init__.py",
+      "line": 27,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/bilibili/__init__.py",
+      "line": 28,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/bilibili/__init__.py",
+      "line": 29,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "store/bilibili/__init__.py",
+      "line": 31,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 26,
+      "text": "import csv"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 28,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 29,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 30,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 32,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 33,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 34,
+      "text": "from sqlalchemy.orm import sessionmaker"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 38,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 39,
+      "text": "from database.models import BilibiliVideoComment, BilibiliVideo, BilibiliUpDynamic"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 40,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 41,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 42,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 43,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/bilibili/_store_impl.py",
+      "line": 379,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 24,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 26,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 27,
+      "text": "from media_platform.douyin.media import extract_cover_url, extract_image_urls, extract_video_urls"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 28,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 29,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "store/douyin/__init__.py",
+      "line": 31,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 26,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 27,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 28,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 29,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 31,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 33,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 34,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 35,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 36,
+      "text": "from database.models import DouyinAweme, DouyinAwemeComment"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 37,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 38,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 39,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 40,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/douyin/_store_impl.py",
+      "line": 270,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 34,
+      "text": "import threading"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 35,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 36,
+      "text": "from typing import Dict, List, Any"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 37,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 40,
+      "text": "import openpyxl"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 41,
+      "text": "from openpyxl.styles import Font, PatternFill, Alignment, Border, Side"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 42,
+      "text": "from openpyxl.utils import get_column_letter"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 47,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 48,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "store/excel_store_base.py",
+      "line": 49,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/kuaishou/__init__.py",
+      "line": 25,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/kuaishou/__init__.py",
+      "line": 27,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/kuaishou/__init__.py",
+      "line": 28,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/kuaishou/__init__.py",
+      "line": 29,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "store/kuaishou/__init__.py",
+      "line": 31,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 26,
+      "text": "import csv"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 28,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 29,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 30,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 31,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 33,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 34,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 38,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 39,
+      "text": "from database.models import KuaishouVideo, KuaishouVideoComment"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 40,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 41,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 42,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/kuaishou/_store_impl.py",
+      "line": 239,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/tieba/__init__.py",
+      "line": 22,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/tieba/__init__.py",
+      "line": 24,
+      "text": "from model.m_baidu_tieba import TiebaComment, TiebaCreator, TiebaNote"
+    },
+    {
+      "source_path": "store/tieba/__init__.py",
+      "line": 25,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/tieba/__init__.py",
+      "line": 27,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 26,
+      "text": "import csv"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 28,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 29,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 30,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 32,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 33,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 34,
+      "text": "from sqlalchemy.ext.asyncio import AsyncSession"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 38,
+      "text": "from database.models import TiebaNote, TiebaComment"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 39,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 40,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 41,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 42,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 43,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/tieba/_store_impl.py",
+      "line": 255,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/weibo/__init__.py",
+      "line": 25,
+      "text": "import re"
+    },
+    {
+      "source_path": "store/weibo/__init__.py",
+      "line": 26,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/weibo/__init__.py",
+      "line": 28,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "store/weibo/__init__.py",
+      "line": 29,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/weibo/__init__.py",
+      "line": 31,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 26,
+      "text": "import csv"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 28,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 29,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 30,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 32,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 33,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 34,
+      "text": "from sqlalchemy.ext.asyncio import AsyncSession"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 38,
+      "text": "from database.models import WeiboNote, WeiboNoteComment"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 39,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 40,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 41,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 42,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 43,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/weibo/_store_impl.py",
+      "line": 301,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 24,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 26,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 27,
+      "text": "from media_platform.xhs.media import extract_video_urls"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 28,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 29,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "store/xhs/__init__.py",
+      "line": 31,
+      "text": "from ._store_impl import *"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 24,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 25,
+      "text": "from typing import List, Dict, Any"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 27,
+      "text": "from sqlalchemy import select, update, delete"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 28,
+      "text": "from sqlalchemy.ext.asyncio import AsyncSession"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 29,
+      "text": "from sqlalchemy.orm import Session"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 31,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 32,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 33,
+      "text": "from database.models import XhsNote, XhsNoteComment"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 35,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 36,
+      "text": "from tools.time_util import get_current_timestamp"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 37,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 38,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 39,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 40,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/xhs/_store_impl.py",
+      "line": 306,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 22,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 24,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 25,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 26,
+      "text": "from model.m_zhihu import ZhihuComment, ZhihuContent, ZhihuCreator"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 27,
+      "text": "from ._store_impl import (ZhihuCsvStoreImplement,\n                                          ZhihuDbStoreImplement,\n                                          ZhihuJsonStoreImplement,\n                                          ZhihuJsonlStoreImplement,\n                                          ZhihuSqliteStoreImplement,\n                                          ZhihuMongoStoreImplement,\n                                          ZhihuExcelStoreImplement)"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 34,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "store/zhihu/__init__.py",
+      "line": 35,
+      "text": "from var import source_keyword_var"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 25,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 26,
+      "text": "import csv"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 28,
+      "text": "import os"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 29,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 30,
+      "text": "from typing import Dict"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 32,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 33,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 34,
+      "text": "from sqlalchemy.ext.asyncio import AsyncSession"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 36,
+      "text": "import config"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 37,
+      "text": "from base.base_crawler import AbstractStore"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 38,
+      "text": "from database.db_session import get_session"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 39,
+      "text": "from database.models import ZhihuContent, ZhihuComment"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 40,
+      "text": "from tools import utils, words"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 41,
+      "text": "from var import crawler_type_var"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 42,
+      "text": "from tools.async_file_writer import AsyncFileWriter"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 43,
+      "text": "from database.mongodb_store_base import MongoDBStoreBase"
+    },
+    {
+      "source_path": "store/zhihu/_store_impl.py",
+      "line": 246,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 25,
+      "text": "import sys"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 26,
+      "text": "from sqlalchemy import create_engine, inspect as sqlalchemy_inspect"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 27,
+      "text": "from sqlalchemy.schema import MetaData"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 32,
+      "text": "from config.db_config import mysql_db_config, sqlite_db_config"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 33,
+      "text": "from database.models import Base"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 138,
+      "text": "from alembic.migration import MigrationContext"
+    },
+    {
+      "source_path": "test/test_db_sync.py",
+      "line": 139,
+      "text": "from alembic.operations import Operations"
+    },
+    {
+      "source_path": "test/test_expiring_local_cache.py",
+      "line": 27,
+      "text": "import time"
+    },
+    {
+      "source_path": "test/test_expiring_local_cache.py",
+      "line": 28,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "test/test_expiring_local_cache.py",
+      "line": 30,
+      "text": "from cache.local_cache import ExpiringLocalCache"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 19,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 20,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 21,
+      "text": "import sys"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 22,
+      "text": "import os"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 23,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 27,
+      "text": "from database.mongodb_store_base import MongoDBConnection, MongoDBStoreBase"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 28,
+      "text": "from store.xhs._store_impl import XhsMongoStoreImplement"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 29,
+      "text": "from store.douyin._store_impl import DouyinMongoStoreImplement"
+    },
+    {
+      "source_path": "test/test_mongodb_integration.py",
+      "line": 30,
+      "text": "from config import db_config"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 25,
+      "text": "import time"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 26,
+      "text": "from unittest import IsolatedAsyncioTestCase"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 27,
+      "text": "from unittest.mock import AsyncMock, MagicMock"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 29,
+      "text": "from proxy.proxy_ip_pool import create_ip_pool, ProxyIpPool"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 30,
+      "text": "from proxy.types import IpInfoModel"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 275,
+      "text": "from proxy.proxy_ip_pool import IpProxyProvider"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 276,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "test/test_proxy_ip_pool.py",
+      "line": 285,
+      "text": "from proxy.proxy_ip_pool import create_ip_pool"
+    },
+    {
+      "source_path": "test/test_redis_cache.py",
+      "line": 27,
+      "text": "import time"
+    },
+    {
+      "source_path": "test/test_redis_cache.py",
+      "line": 28,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "test/test_redis_cache.py",
+      "line": 30,
+      "text": "from cache.redis_cache import RedisCache"
+    },
+    {
+      "source_path": "test/test_utils.py",
+      "line": 23,
+      "text": "from unittest.mock import AsyncMock"
+    },
+    {
+      "source_path": "test/test_utils.py",
+      "line": 25,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "test/test_utils.py",
+      "line": 27,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/conftest.py",
+      "line": 25,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 22,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 23,
+      "text": "import time"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 24,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 25,
+      "text": "from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 26,
+      "text": "from typing import Dict, List, Optional, Tuple"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 27,
+      "text": "from urllib.parse import parse_qs, urlsplit"
+    },
+    {
+      "source_path": "tests/media_server.py",
+      "line": 212,
+      "text": "import gzip"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 2,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 3,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 4,
+      "text": "from unittest.mock import AsyncMock, patch"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 5,
+      "text": "from fastapi.testclient import TestClient"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 6,
+      "text": "from cmd_arg import parse_cmd"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 7,
+      "text": "from api.schemas import CrawlerStartRequest, PlatformEnum, LoginTypeEnum, CrawlerTypeEnum"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 8,
+      "text": "from api.services.crawler_manager import CrawlerManager"
+    },
+    {
+      "source_path": "tests/test_api_limits.py",
+      "line": 9,
+      "text": "from api.main import app"
+    },
+    {
+      "source_path": "tests/test_bilibili_client_comments.py",
+      "line": 10,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_bilibili_client_comments.py",
+      "line": 12,
+      "text": "from media_platform.bilibili.client import BilibiliClient"
+    },
+    {
+      "source_path": "tests/test_bilibili_login_state.py",
+      "line": 22,
+      "text": "from media_platform.bilibili.login import is_login_cookie_refreshed"
+    },
+    {
+      "source_path": "tests/test_cdp_browser.py",
+      "line": 2,
+      "text": "from unittest.mock import AsyncMock, MagicMock"
+    },
+    {
+      "source_path": "tests/test_cdp_browser.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cdp_browser.py",
+      "line": 6,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_cdp_browser.py",
+      "line": 7,
+      "text": "from tools.cdp_browser import CDPBrowserManager"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_media.py",
+      "line": 18,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_media.py",
+      "line": 19,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_media.py",
+      "line": 20,
+      "text": "from cmd_arg import parse_cmd"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_tieba.py",
+      "line": 3,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_tieba.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_tieba.py",
+      "line": 5,
+      "text": "from cmd_arg import parse_cmd"
+    },
+    {
+      "source_path": "tests/test_cmd_arg_tieba.py",
+      "line": 6,
+      "text": "from media_platform.tieba import TieBaCrawler"
+    },
+    {
+      "source_path": "tests/test_douyin_argus_header.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_douyin_argus_header.py",
+      "line": 25,
+      "text": "from media_platform.douyin.client import DOUYIN_ARGUS_HEADER_VALUE, DouYinClient"
+    },
+    {
+      "source_path": "tests/test_douyin_aweme_detail_params.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_douyin_aweme_detail_params.py",
+      "line": 25,
+      "text": "from media_platform.douyin.client import DouYinClient"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 30,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 32,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 33,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 34,
+      "text": "from sqlalchemy.ext.asyncio import create_async_engine"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 35,
+      "text": "from sqlalchemy.pool import StaticPool"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 37,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 38,
+      "text": "import store.douyin as ds"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 39,
+      "text": "from database import db_session"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 40,
+      "text": "from database.models import Base, DouyinAweme, DouyinAwemeComment"
+    },
+    {
+      "source_path": "tests/test_douyin_no_user_info.py",
+      "line": 41,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 24,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 25,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 26,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 27,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 28,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 31,
+      "text": "import openpyxl"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 36,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "tests/test_excel_store.py",
+      "line": 194,
+      "text": "import openpyxl"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 15,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 16,
+      "text": "import contextlib"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 17,
+      "text": "import types"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 19,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 21,
+      "text": "import store.kuaishou as ks"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 22,
+      "text": "from store.kuaishou import update_kuaishou_video, update_ks_video_comment"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 23,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 219,
+      "text": "from sqlalchemy import select"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 220,
+      "text": "from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 221,
+      "text": "from sqlalchemy.orm import sessionmaker"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 222,
+      "text": "from sqlalchemy.pool import StaticPool"
+    },
+    {
+      "source_path": "tests/test_kuaishou_no_user_info.py",
+      "line": 224,
+      "text": "from database.models import Base, KuaishouVideo, KuaishouVideoComment"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 24,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 25,
+      "text": "import random"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 26,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 27,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 28,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 30,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 34,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_kuaishou_unavailable_video.py",
+      "line": 35,
+      "text": "from media_platform.kuaishou.core import KuaishouCrawler"
+    },
+    {
+      "source_path": "tests/test_kuaishou_url_parse.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_kuaishou_url_parse.py",
+      "line": 25,
+      "text": "from media_platform.kuaishou.help import parse_video_info_from_url"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 18,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 19,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 20,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 22,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 23,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 24,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 26,
+      "text": "from media_platform.bilibili.core import BilibiliCrawler"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 27,
+      "text": "from media_platform.douyin.core import DouYinCrawler"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 28,
+      "text": "from media_platform.kuaishou.core import KuaishouCrawler"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 29,
+      "text": "from media_platform.weibo.core import WeiboCrawler"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 30,
+      "text": "from media_platform.xhs.core import XiaoHongShuCrawler"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 31,
+      "text": "from tests.media_server import DEFAULT_CONTENT, MediaTestServer, start_server"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 261,
+      "text": "import media_platform.bilibili.core as bili_core"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 262,
+      "text": "from media_platform.bilibili.media import DASH_FNVAL, MP4_FNVAL"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 333,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 334,
+      "text": "import media_platform.bilibili.core as bili_core"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 373,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 374,
+      "text": "import media_platform.bilibili.core as bili_core"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 411,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_core_integration.py",
+      "line": 412,
+      "text": "import media_platform.bilibili.core as bili_core"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 18,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 19,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 20,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 22,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 23,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 25,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 27,
+      "text": "from media_downloader import MediaDownloader, MediaItem, MediaType"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 28,
+      "text": "from media_downloader.paths import (\n    build_media_dir,\n    build_media_path,\n    ensure_within,\n    guess_extension,\n    redact_url,\n    sanitize_component,\n    url_fingerprint,\n)"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 37,
+      "text": "from tests.media_server import DEFAULT_CONTENT, MediaTestServer, start_server"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 99,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 448,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_downloader.py",
+      "line": 696,
+      "text": "import media_downloader.downloader as downloader_module"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 24,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 25,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 26,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 28,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 29,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 30,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 32,
+      "text": "from media_downloader import MediaDownloader, is_ffmpeg_available"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 33,
+      "text": "from media_platform.bilibili import media as bili_media"
+    },
+    {
+      "source_path": "tests/test_media_e2e.py",
+      "line": 34,
+      "text": "from media_platform.bilibili.help import BilibiliSign"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 18,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 19,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 21,
+      "text": "from media_downloader import MediaType"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 22,
+      "text": "from media_platform.bilibili import media as bili_media"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 23,
+      "text": "from media_platform.douyin import media as douyin_media"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 24,
+      "text": "from media_platform.kuaishou import media as kuaishou_media"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 25,
+      "text": "from media_platform.weibo import media as weibo_media"
+    },
+    {
+      "source_path": "tests/test_media_extractors.py",
+      "line": 26,
+      "text": "from media_platform.xhs import media as xhs_media"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 18,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 19,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 20,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 21,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 25,
+      "text": "from media_downloader import merge_audio_video"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 26,
+      "text": "from media_downloader.ffmpeg import ffmpeg_path, is_available"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 27,
+      "text": "from media_downloader.types import MediaDownloadError"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 108,
+      "text": "import media_downloader.ffmpeg as ffmpeg_module"
+    },
+    {
+      "source_path": "tests/test_media_ffmpeg.py",
+      "line": 134,
+      "text": "import media_downloader.ffmpeg as ffmpeg_module"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 11,
+      "text": "import re"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 12,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 13,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 15,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 34,
+      "text": "import database.models as m"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 35,
+      "text": "from sqlalchemy.orm import class_mapper"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 48,
+      "text": "import database.models as m"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 56,
+      "text": "import database.models as m"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 57,
+      "text": "from sqlalchemy.orm import class_mapper"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 88,
+      "text": "from tools.user_hash import anonymize_user_id, mask_nickname"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 100,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 101,
+      "text": "import store.xhs as xs"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 133,
+      "text": "from media_platform.tieba.help import TieBaExtractor"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 149,
+      "text": "from media_platform.tieba.help import TieBaExtractor"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 150,
+      "text": "from model.m_baidu_tieba import TiebaNote"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 165,
+      "text": "from media_platform.zhihu.help import ZhihuExtractor"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 166,
+      "text": "from model.m_zhihu import ZhihuContent"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 184,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 185,
+      "text": "from store.bilibili import update_bilibili_video"
+    },
+    {
+      "source_path": "tests/test_no_user_info.py",
+      "line": 201,
+      "text": "import store.bilibili as bs"
+    },
+    {
+      "source_path": "tests/test_static_proxy_provider.py",
+      "line": 2,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_static_proxy_provider.py",
+      "line": 4,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_static_proxy_provider.py",
+      "line": 5,
+      "text": "from proxy.proxy_ip_pool import StaticProxyProvider, create_ip_pool"
+    },
+    {
+      "source_path": "tests/test_static_proxy_provider.py",
+      "line": 6,
+      "text": "from proxy.types import ProviderNameEnum"
+    },
+    {
+      "source_path": "tests/test_store_factory.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_store_factory.py",
+      "line": 24,
+      "text": "from unittest.mock import patch, MagicMock"
+    },
+    {
+      "source_path": "tests/test_store_factory.py",
+      "line": 26,
+      "text": "from store.xhs import XhsStoreFactory"
+    },
+    {
+      "source_path": "tests/test_store_factory.py",
+      "line": 27,
+      "text": "from store.xhs._store_impl import (\n    XhsCsvStoreImplement,\n    XhsJsonStoreImplement,\n    XhsJsonlStoreImplement,\n    XhsDbStoreImplement,\n    XhsSqliteStoreImplement,\n    XhsMongoStoreImplement,\n    XhsExcelStoreImplement\n)"
+    },
+    {
+      "source_path": "tests/test_store_factory.py",
+      "line": 36,
+      "text": "from store.excel_store_base import ExcelStoreBase"
+    },
+    {
+      "source_path": "tests/test_tieba_client_pagination.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_tieba_client_pagination.py",
+      "line": 5,
+      "text": "from media_platform.tieba.client import BaiduTieBaClient"
+    },
+    {
+      "source_path": "tests/test_tieba_client_pagination.py",
+      "line": 6,
+      "text": "from model.m_baidu_tieba import TiebaComment, TiebaNote"
+    },
+    {
+      "source_path": "tests/test_tieba_extractor.py",
+      "line": 3,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_tieba_extractor.py",
+      "line": 5,
+      "text": "from media_platform.tieba.help import TieBaExtractor"
+    },
+    {
+      "source_path": "tests/test_tieba_extractor.py",
+      "line": 6,
+      "text": "from model.m_baidu_tieba import TiebaComment"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 23,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 112,
+      "text": "import store.weibo as wb"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 126,
+      "text": "import store.weibo as wb"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 166,
+      "text": "import store.weibo as wb"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 210,
+      "text": "from sqlalchemy import create_engine"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 211,
+      "text": "from sqlalchemy.orm import sessionmaker"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 213,
+      "text": "import store.weibo as wb"
+    },
+    {
+      "source_path": "tests/test_weibo_no_user_info.py",
+      "line": 214,
+      "text": "from database.models import Base, WeiboNote, WeiboNoteComment"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 17,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 18,
+      "text": "from unittest.mock import AsyncMock"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 20,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 22,
+      "text": "import config"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 23,
+      "text": "from media_platform.xhs.core import XiaoHongShuCrawler"
+    },
+    {
+      "source_path": "tests/test_xhs_core_access_error.py",
+      "line": 24,
+      "text": "from media_platform.xhs.exception import IPBlockError, PlatformAccessError"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 4,
+      "text": "from unittest.mock import AsyncMock, Mock"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 6,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 7,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 8,
+      "text": "from tenacity import RetryError"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 10,
+      "text": "from media_platform.xhs.client import XiaoHongShuClient"
+    },
+    {
+      "source_path": "tests/test_xhs_raw_response_errors.py",
+      "line": 11,
+      "text": "from media_platform.xhs.exception import IPBlockError, PlatformAccessError"
+    },
+    {
+      "source_path": "tools/app_runner.py",
+      "line": 23,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tools/app_runner.py",
+      "line": 24,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/app_runner.py",
+      "line": 25,
+      "text": "import signal"
+    },
+    {
+      "source_path": "tools/app_runner.py",
+      "line": 26,
+      "text": "from collections.abc import Awaitable, Callable"
+    },
+    {
+      "source_path": "tools/app_runner.py",
+      "line": 27,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 19,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 20,
+      "text": "import csv"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 21,
+      "text": "import json"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 22,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 23,
+      "text": "import pathlib"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 24,
+      "text": "from typing import Dict, List"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 25,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 26,
+      "text": "import config"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 27,
+      "text": "from tools.utils import utils"
+    },
+    {
+      "source_path": "tools/async_file_writer.py",
+      "line": 28,
+      "text": "from tools.words import AsyncWordCloudGenerator"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 22,
+      "text": "import platform"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 23,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 24,
+      "text": "import time"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 25,
+      "text": "import socket"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 26,
+      "text": "import signal"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 27,
+      "text": "from typing import Optional, List, Tuple"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 28,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 29,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tools/browser_launcher.py",
+      "line": 31,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 21,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 22,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 23,
+      "text": "import socket"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 24,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 25,
+      "text": "import signal"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 26,
+      "text": "import atexit"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 27,
+      "text": "from typing import Optional, Dict, Any"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 28,
+      "text": "from playwright.async_api import Browser, BrowserContext, Playwright"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 30,
+      "text": "import config"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 31,
+      "text": "from tools.browser_launcher import BrowserLauncher"
+    },
+    {
+      "source_path": "tools/cdp_browser.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 26,
+      "text": "import base64"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 27,
+      "text": "import json"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 28,
+      "text": "import random"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 29,
+      "text": "import re"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 30,
+      "text": "import urllib"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 31,
+      "text": "import urllib.parse"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 32,
+      "text": "from io import BytesIO"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 33,
+      "text": "from typing import Dict, List, Optional, Tuple, cast"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 35,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 36,
+      "text": "from PIL import Image, ImageDraw, ImageShow"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 37,
+      "text": "from playwright.async_api import BrowserContext, Cookie, Page"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 39,
+      "text": "from . import utils"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 40,
+      "text": "from .httpx_util import make_async_client"
+    },
+    {
+      "source_path": "tools/crawler_util.py",
+      "line": 192,
+      "text": "from proxy.proxy_ip_pool import IpInfoModel"
+    },
+    {
+      "source_path": "tools/easing.py",
+      "line": 25,
+      "text": "import math"
+    },
+    {
+      "source_path": "tools/easing.py",
+      "line": 26,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "tools/easing.py",
+      "line": 28,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "tools/file_header_manager.py",
+      "line": 29,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/file_header_manager.py",
+      "line": 30,
+      "text": "import re"
+    },
+    {
+      "source_path": "tools/file_header_manager.py",
+      "line": 31,
+      "text": "import sys"
+    },
+    {
+      "source_path": "tools/file_header_manager.py",
+      "line": 32,
+      "text": "from typing import List, Tuple"
+    },
+    {
+      "source_path": "tools/file_header_manager.py",
+      "line": 242,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "tools/httpx_util.py",
+      "line": 2,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tools/httpx_util.py",
+      "line": 3,
+      "text": "import config"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 25,
+      "text": "import os"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 26,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 27,
+      "text": "from urllib.parse import urlparse"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 29,
+      "text": "import cv2"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 30,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 31,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "tools/slider_util.py",
+      "line": 182,
+      "text": "from . import easing"
+    },
+    {
+      "source_path": "tools/time_util.py",
+      "line": 26,
+      "text": "import time"
+    },
+    {
+      "source_path": "tools/time_util.py",
+      "line": 27,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "tools/user_hash.py",
+      "line": 8,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tools/utils.py",
+      "line": 21,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "tools/utils.py",
+      "line": 22,
+      "text": "import logging"
+    },
+    {
+      "source_path": "tools/utils.py",
+      "line": 24,
+      "text": "from .crawler_util import *"
+    },
+    {
+      "source_path": "tools/utils.py",
+      "line": 25,
+      "text": "from .slider_util import *"
+    },
+    {
+      "source_path": "tools/utils.py",
+      "line": 26,
+      "text": "from .time_util import *"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 21,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 23,
+      "text": "import logging"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 24,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 26,
+      "text": "import aiofiles"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 27,
+      "text": "import jieba"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 28,
+      "text": "import matplotlib.pyplot as plt"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 29,
+      "text": "from wordcloud import WordCloud"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 31,
+      "text": "import config"
+    },
+    {
+      "source_path": "tools/words.py",
+      "line": 32,
+      "text": "from tools import utils"
+    },
+    {
+      "source_path": "var.py",
+      "line": 21,
+      "text": "from asyncio.tasks import Task"
+    },
+    {
+      "source_path": "var.py",
+      "line": 22,
+      "text": "from contextvars import ContextVar"
+    },
+    {
+      "source_path": "var.py",
+      "line": 23,
+      "text": "from typing import List"
+    },
+    {
+      "source_path": "var.py",
+      "line": 25,
+      "text": "import aiomysql"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 1,
+      "text": "import { useState } from 'react'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 2,
+      "text": "import { Toaster } from 'sonner'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 3,
+      "text": "import { Sidebar } from '@/components/layout/Sidebar'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 4,
+      "text": "import { MainContent } from '@/components/layout/MainContent'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 5,
+      "text": "import { AuthorFooter } from '@/components/layout/AuthorFooter'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 6,
+      "text": "import { CrawlerConfigPanel } from '@/components/config/CrawlerConfigPanel'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 7,
+      "text": "import { EnvironmentCheck, isEnvChecked } from '@/components/env/EnvironmentCheck'"
+    },
+    {
+      "source_path": "webui/src/App.tsx",
+      "line": 8,
+      "text": "import { LicenseDisclaimer, isLicenseAccepted } from '@/components/license/LicenseDisclaimer'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 1,
+      "text": "import type { ComponentType, ReactNode, KeyboardEvent } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 2,
+      "text": "import { useState } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 3,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 4,
+      "text": "import { Database, Globe, Image as ImageIcon, KeyRound, MessageSquare, Play, Square, X } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 5,
+      "text": "import { Label } from '@/components/ui/label'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 6,
+      "text": "import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 7,
+      "text": "import { Input } from '@/components/ui/input'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 8,
+      "text": "import { Checkbox } from '@/components/ui/checkbox'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 9,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 10,
+      "text": "import { useCrawlerStore } from '@/store/crawlerStore'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 11,
+      "text": "import { usePlatforms, useConfigOptions, useStartCrawler, useStopCrawler } from '@/hooks/useCrawler'"
+    },
+    {
+      "source_path": "webui/src/components/config/CrawlerConfigPanel.tsx",
+      "line": 12,
+      "text": "import { ParsedIdList } from './ParsedIdList'"
+    },
+    {
+      "source_path": "webui/src/components/config/ParsedIdList.tsx",
+      "line": 1,
+      "text": "import { useMemo } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/config/ParsedIdList.tsx",
+      "line": 2,
+      "text": "import { Check, AlertTriangle, X } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/config/ParsedIdList.tsx",
+      "line": 3,
+      "text": "import { parseMultipleUrls, type ParsedId } from '@/lib/urlParser'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 1,
+      "text": "import { useState, useEffect, useRef } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 3,
+      "text": "import { ChevronDown, ChevronUp, Trash2, RefreshCw } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 4,
+      "text": "import { TerminalLine } from './TerminalLine'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 5,
+      "text": "import { useCrawlerStore } from '@/store/crawlerStore'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 6,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/console/Terminal.tsx",
+      "line": 7,
+      "text": "import { DataExplorerDialog } from '@/components/data/DataExplorerDialog'"
+    },
+    {
+      "source_path": "webui/src/components/console/TerminalLine.tsx",
+      "line": 1,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/console/TerminalLine.tsx",
+      "line": 2,
+      "text": "import type { LogEntry } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 1,
+      "text": "import { useState, useMemo } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 2,
+      "text": "import { useQuery } from '@tanstack/react-query'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 3,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 4,
+      "text": "import { FolderOpen, RefreshCw } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 5,
+      "text": "import { dataApi } from '@/lib/api'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 6,
+      "text": "import { FileCard } from './FileCard'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 7,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorer.tsx",
+      "line": 8,
+      "text": "import { Badge } from '@/components/ui/badge'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorerDialog.tsx",
+      "line": 1,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorerDialog.tsx",
+      "line": 2,
+      "text": "import { Database } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorerDialog.tsx",
+      "line": 3,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorerDialog.tsx",
+      "line": 4,
+      "text": "import {\n  Dialog,\n  DialogContent,\n  DialogHeader,\n  DialogTitle,\n  DialogTrigger,\n} from '@/components/ui/dialog'"
+    },
+    {
+      "source_path": "webui/src/components/data/DataExplorerDialog.tsx",
+      "line": 11,
+      "text": "import { DataExplorer } from './DataExplorer'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 1,
+      "text": "import { useState } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 3,
+      "text": "import { FileJson, FileSpreadsheet, FileText, Download, Eye } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 4,
+      "text": "import { Card, CardContent } from '@/components/ui/card'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 5,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 6,
+      "text": "import { Badge } from '@/components/ui/badge'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 7,
+      "text": "import { dataApi } from '@/lib/api'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 8,
+      "text": "import { formatFileSize, formatDateTime } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 9,
+      "text": "import { DataPreviewDialog } from './preview/DataPreviewDialog'"
+    },
+    {
+      "source_path": "webui/src/components/data/FileCard.tsx",
+      "line": 10,
+      "text": "import type { DataFile } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 1,
+      "text": "import { useQuery } from '@tanstack/react-query'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 3,
+      "text": "import { Download } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 4,
+      "text": "import {\n  Dialog,\n  DialogContent,\n  DialogHeader,\n  DialogTitle,\n} from '@/components/ui/dialog'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 10,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 11,
+      "text": "import { Badge } from '@/components/ui/badge'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 12,
+      "text": "import { dataApi } from '@/lib/api'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 13,
+      "text": "import { DataPreviewTable } from './DataPreviewTable'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+      "line": 14,
+      "text": "import type { DataFile } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewTable.tsx",
+      "line": 1,
+      "text": "import { useMemo, useState } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewTable.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewTable.tsx",
+      "line": 3,
+      "text": "import { Search } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewTable.tsx",
+      "line": 4,
+      "text": "import { ScrollArea } from '@/components/ui/scroll-area'"
+    },
+    {
+      "source_path": "webui/src/components/data/preview/DataPreviewTable.tsx",
+      "line": 5,
+      "text": "import { Input } from '@/components/ui/input'"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line": 1,
+      "text": "import { useState, useEffect } from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line": 3,
+      "text": "import { CheckCircle, XCircle, Loader2, RefreshCw, AlertTriangle } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line": 4,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/env/EnvironmentCheck.tsx",
+      "line": 5,
+      "text": "import { envApi, EnvCheckResult } from '@/lib/api'"
+    },
+    {
+      "source_path": "webui/src/components/layout/AuthorFooter.tsx",
+      "line": 1,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/layout/AuthorFooter.tsx",
+      "line": 2,
+      "text": "import { Sparkles, Heart } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/layout/LanguageSwitch.tsx",
+      "line": 1,
+      "text": "import { Globe } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/layout/LanguageSwitch.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/layout/LanguageSwitch.tsx",
+      "line": 3,
+      "text": "import {\n  Select,\n  SelectContent,\n  SelectItem,\n  SelectTrigger,\n  SelectValue,\n} from '@/components/ui/select'"
+    },
+    {
+      "source_path": "webui/src/components/layout/MainContent.tsx",
+      "line": 1,
+      "text": "import { Terminal } from '@/components/console/Terminal'"
+    },
+    {
+      "source_path": "webui/src/components/layout/MainContent.tsx",
+      "line": 2,
+      "text": "import { useLogWebSocket } from '@/hooks/useWebSocket'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 1,
+      "text": "import { Bug, Wifi, AlertTriangle, Github } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 2,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 3,
+      "text": "import { Badge } from '@/components/ui/badge'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 4,
+      "text": "import { useCrawlerStore } from '@/store/crawlerStore'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 5,
+      "text": "import { useCrawlerStatus } from '@/hooks/useCrawler'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 6,
+      "text": "import { LanguageSwitch } from './LanguageSwitch'"
+    },
+    {
+      "source_path": "webui/src/components/layout/Sidebar.tsx",
+      "line": 7,
+      "text": "import { ThemeToggle } from './ThemeToggle'"
+    },
+    {
+      "source_path": "webui/src/components/layout/ThemeToggle.tsx",
+      "line": 1,
+      "text": "import { Sun, Moon, Monitor } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/layout/ThemeToggle.tsx",
+      "line": 2,
+      "text": "import { useThemeStore } from '@/store/themeStore'"
+    },
+    {
+      "source_path": "webui/src/components/layout/ThemeToggle.tsx",
+      "line": 3,
+      "text": "import {\n  Select,\n  SelectContent,\n  SelectItem,\n  SelectTrigger,\n  SelectValue,\n} from '@/components/ui/select'"
+    },
+    {
+      "source_path": "webui/src/components/license/LicenseDisclaimer.tsx",
+      "line": 1,
+      "text": "import { useTranslation } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/components/license/LicenseDisclaimer.tsx",
+      "line": 2,
+      "text": "import { ShieldAlert, ExternalLink } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/license/LicenseDisclaimer.tsx",
+      "line": 3,
+      "text": "import { Button } from '@/components/ui/button'"
+    },
+    {
+      "source_path": "webui/src/components/ui/accordion.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/accordion.tsx",
+      "line": 2,
+      "text": "import * as AccordionPrimitive from '@radix-ui/react-accordion'"
+    },
+    {
+      "source_path": "webui/src/components/ui/accordion.tsx",
+      "line": 3,
+      "text": "import { ChevronDown } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/accordion.tsx",
+      "line": 4,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/badge.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/badge.tsx",
+      "line": 2,
+      "text": "import { cva, type VariantProps } from 'class-variance-authority'"
+    },
+    {
+      "source_path": "webui/src/components/ui/badge.tsx",
+      "line": 3,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/button.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/button.tsx",
+      "line": 2,
+      "text": "import { Slot } from '@radix-ui/react-slot'"
+    },
+    {
+      "source_path": "webui/src/components/ui/button.tsx",
+      "line": 3,
+      "text": "import { cva, type VariantProps } from 'class-variance-authority'"
+    },
+    {
+      "source_path": "webui/src/components/ui/button.tsx",
+      "line": 4,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/card.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/card.tsx",
+      "line": 2,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/checkbox.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/checkbox.tsx",
+      "line": 2,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/checkbox.tsx",
+      "line": 3,
+      "text": "import { Check } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/dialog.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/dialog.tsx",
+      "line": 2,
+      "text": "import * as DialogPrimitive from '@radix-ui/react-dialog'"
+    },
+    {
+      "source_path": "webui/src/components/ui/dialog.tsx",
+      "line": 3,
+      "text": "import { X } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/dialog.tsx",
+      "line": 4,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/input.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/input.tsx",
+      "line": 2,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/label.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/label.tsx",
+      "line": 2,
+      "text": "import * as LabelPrimitive from '@radix-ui/react-label'"
+    },
+    {
+      "source_path": "webui/src/components/ui/label.tsx",
+      "line": 3,
+      "text": "import { cva, type VariantProps } from 'class-variance-authority'"
+    },
+    {
+      "source_path": "webui/src/components/ui/label.tsx",
+      "line": 4,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/scroll-area.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/scroll-area.tsx",
+      "line": 2,
+      "text": "import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area'"
+    },
+    {
+      "source_path": "webui/src/components/ui/scroll-area.tsx",
+      "line": 3,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/select.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/select.tsx",
+      "line": 2,
+      "text": "import * as SelectPrimitive from '@radix-ui/react-select'"
+    },
+    {
+      "source_path": "webui/src/components/ui/select.tsx",
+      "line": 3,
+      "text": "import { Check, ChevronDown, ChevronUp } from 'lucide-react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/select.tsx",
+      "line": 4,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/components/ui/tabs.tsx",
+      "line": 1,
+      "text": "import * as React from 'react'"
+    },
+    {
+      "source_path": "webui/src/components/ui/tabs.tsx",
+      "line": 2,
+      "text": "import * as TabsPrimitive from '@radix-ui/react-tabs'"
+    },
+    {
+      "source_path": "webui/src/components/ui/tabs.tsx",
+      "line": 3,
+      "text": "import { cn } from '@/lib/utils'"
+    },
+    {
+      "source_path": "webui/src/hooks/useCrawler.ts",
+      "line": 1,
+      "text": "import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'"
+    },
+    {
+      "source_path": "webui/src/hooks/useCrawler.ts",
+      "line": 2,
+      "text": "import { toast } from 'sonner'"
+    },
+    {
+      "source_path": "webui/src/hooks/useCrawler.ts",
+      "line": 3,
+      "text": "import { crawlerApi, configApi } from '@/lib/api'"
+    },
+    {
+      "source_path": "webui/src/hooks/useCrawler.ts",
+      "line": 4,
+      "text": "import { useCrawlerStore } from '@/store/crawlerStore'"
+    },
+    {
+      "source_path": "webui/src/hooks/useCrawler.ts",
+      "line": 5,
+      "text": "import type { CrawlerConfig } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/hooks/useWebSocket.ts",
+      "line": 1,
+      "text": "import { useEffect, useRef } from 'react'"
+    },
+    {
+      "source_path": "webui/src/hooks/useWebSocket.ts",
+      "line": 2,
+      "text": "import { useCrawlerStore } from '@/store/crawlerStore'"
+    },
+    {
+      "source_path": "webui/src/hooks/useWebSocket.ts",
+      "line": 3,
+      "text": "import type { LogEntry } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 1,
+      "text": "import i18n from 'i18next'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 2,
+      "text": "import { initReactI18next } from 'react-i18next'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 3,
+      "text": "import LanguageDetector from 'i18next-browser-languagedetector'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 6,
+      "text": "import zhCommon from './locales/zh-CN/common.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 7,
+      "text": "import zhConfig from './locales/zh-CN/config.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 8,
+      "text": "import zhTerminal from './locales/zh-CN/terminal.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 9,
+      "text": "import zhData from './locales/zh-CN/data.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 10,
+      "text": "import zhEnv from './locales/zh-CN/env.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 11,
+      "text": "import zhLicense from './locales/zh-CN/license.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 14,
+      "text": "import enCommon from './locales/en-US/common.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 15,
+      "text": "import enConfig from './locales/en-US/config.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 16,
+      "text": "import enTerminal from './locales/en-US/terminal.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 17,
+      "text": "import enData from './locales/en-US/data.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 18,
+      "text": "import enEnv from './locales/en-US/env.json'"
+    },
+    {
+      "source_path": "webui/src/i18n/index.ts",
+      "line": 19,
+      "text": "import enLicense from './locales/en-US/license.json'"
+    },
+    {
+      "source_path": "webui/src/lib/api.ts",
+      "line": 1,
+      "text": "import axios from 'axios'"
+    },
+    {
+      "source_path": "webui/src/lib/utils.ts",
+      "line": 1,
+      "text": "import { type ClassValue, clsx } from 'clsx'"
+    },
+    {
+      "source_path": "webui/src/lib/utils.ts",
+      "line": 2,
+      "text": "import { twMerge } from 'tailwind-merge'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 1,
+      "text": "import React from 'react'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 2,
+      "text": "import ReactDOM from 'react-dom/client'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 3,
+      "text": "import { QueryClient, QueryClientProvider } from '@tanstack/react-query'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 4,
+      "text": "import App from './App'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 5,
+      "text": "import './index.css'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 6,
+      "text": "import './i18n'"
+    },
+    {
+      "source_path": "webui/src/main.tsx",
+      "line": 8,
+      "text": "import './store/themeStore'"
+    },
+    {
+      "source_path": "webui/src/store/crawlerStore.ts",
+      "line": 1,
+      "text": "import { create } from 'zustand'"
+    },
+    {
+      "source_path": "webui/src/store/crawlerStore.ts",
+      "line": 2,
+      "text": "import type { LogEntry, CrawlerConfig } from '@/types/crawler'"
+    },
+    {
+      "source_path": "webui/src/store/themeStore.ts",
+      "line": 1,
+      "text": "import { create } from 'zustand'"
+    },
+    {
+      "source_path": "webui/tailwind.config.ts",
+      "line": 1,
+      "text": "import type { Config } from 'tailwindcss'"
+    },
+    {
+      "source_path": "webui/vite.config.ts",
+      "line": 1,
+      "text": "import { defineConfig } from 'vite'"
+    },
+    {
+      "source_path": "webui/vite.config.ts",
+      "line": 2,
+      "text": "import react from '@vitejs/plugin-react'"
+    },
+    {
+      "source_path": "webui/vite.config.ts",
+      "line": 3,
+      "text": "import path from 'path'"
+    }
+  ],
+  "call_edges": []
+}

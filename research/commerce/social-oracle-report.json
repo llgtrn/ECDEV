@@ -1,0 +1,42 @@
+{
+  "status": "PASS",
+  "families": 2,
+  "cases": 560,
+  "fixture": "research/commerce/social-oracle-fixtures.json",
+  "fixture_sha256": "29830d5b0c8a40dda71c1e9739d4a908eb41e380a03b796f3617ebb8d9859657",
+  "native_test": "domain/commerce/src/social.rs::independent_social_donor_oracles",
+  "native_source_sha256": "480a4b8a020da7f648c665a491a49140ea81ab9a9af89af6f92c3f0108f0e74b",
+  "donor_families": [
+    {
+      "donor": "sansan0--TrendRadar",
+      "commit": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source": "trendradar/core/analyzer.py",
+      "symbols": [
+        "calculate_news_weight"
+      ],
+      "sha256": "9750c8c5457e90b744b069d4905f5eac88ad8c8fa26509f3ec16c92d6d5a601b",
+      "execution": "Unmodified selected AST nodes from pinned Git blob; no module imports/network/runtime integration",
+      "scope": "Bounded numeric behavior only; not whole donor parity",
+      "case_count": 240,
+      "test_source": "No donor test found for selected symbol in pinned test inventory; generated bounded inputs execute donor independently",
+      "known_differences": "Unsigned native inputs; oracle domain uses positive ranks and nonnegative counts. Negative inputs and the whole ranking system are outside scope"
+    },
+    {
+      "donor": "VladUZH--harken",
+      "commit": "d0710a427dbbe712594ef3a6c25112e1d14cc027",
+      "source": "src/harken/thresholds.py",
+      "symbols": [
+        "ThresholdEvent",
+        "evaluate_thresholds"
+      ],
+      "sha256": "3a1dba75c816e79c9d389d77255de0c5ba65f5199953607e780649b90435a7e0",
+      "execution": "Unmodified selected AST nodes from pinned Git blob; no module imports/network/runtime integration",
+      "scope": "Bounded numeric behavior only; not whole donor parity",
+      "case_count": 320,
+      "test_source": "tests/test_thresholds.py",
+      "test_sha256": "4f5e6b12fa976e4358ace99f4625ca0cd5868b49e3c231361b803e2a697ebbe9",
+      "known_differences": "Compare event activation only; donor notification prose and rounded payload presentation are outside oracle scope"
+    }
+  ],
+  "whole_donor_parity": false
+}

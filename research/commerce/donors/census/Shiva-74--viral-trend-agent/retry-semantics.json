@@ -1,0 +1,101 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "README.md",
+      "line_start": 153,
+      "line_end": 153,
+      "blob_hash": "ad91712a5edecd5a32127a2dcc578ea7e3e50b76",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "│   ├── base.py                  # Base fetcher with retry, geo-filter, dedup"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Handles: HTTP requests with retries, deduplication,"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries: int = 3, backoff: float = 2.0) -> Optional[requests.Response]:"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"GET with exponential backoff retry.\"\"\""
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        for attempt in range(retries):"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    wait = backoff ** (attempt + 2)"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    time.sleep(backoff ** attempt)"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                time.sleep(backoff ** attempt)"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                time.sleep(backoff ** attempt)"
+    },
+    {
+      "source_path": "fetchers/base.py",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "6e9be0639e31837197f179d21d6c3c00c70557d7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        logger.error(f\"{self.source_name} all {retries} retries failed for {url}\")"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "dcd3ce66670dd1cb7dd1be20543b566a537aeefa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                # Mark as embedded so we don't keep retrying"
+    },
+    {
+      "source_path": "processing/embedder.py",
+      "line_start": 142,
+      "line_end": 142,
+      "blob_hash": "dcd3ce66670dd1cb7dd1be20543b566a537aeefa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                # Mark failed posts so we retry next cycle"
+    }
+  ]
+}

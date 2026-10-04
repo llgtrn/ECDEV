@@ -1,0 +1,749 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": ".env.example",
+      "line_start": 17,
+      "line_end": 17,
+      "blob_hash": "8a3b5d08a339f4fc068df1f87ca30f7fc20d3417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# Retry network errors, HTTP 429, and HTTP 5xx with exponential backoff"
+    },
+    {
+      "source_path": ".env.example",
+      "line_start": 18,
+      "line_end": 18,
+      "blob_hash": "8a3b5d08a339f4fc068df1f87ca30f7fc20d3417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# HARKEN_RETRIES=2"
+    },
+    {
+      "source_path": ".env.example",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "8a3b5d08a339f4fc068df1f87ca30f7fc20d3417",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "# HARKEN_RETRY_BACKOFF=1.0"
+    },
+    {
+      "source_path": "Dockerfile",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "e18d764e79ae24efd247416b475b2c4036cbe079",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \\"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Operational probes are available at `/health` (including a SQLite read/write check) and `/metrics` (Prometheus text format). Metrics include stored mention/query/alert counts plus durable per-source scan, error, retry, fetched-page, fetched-mention, and latency totals. Per-source counters live in SQLite, so they survive service restarts."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Set `HARKEN_LOG_FORMAT=json` for one JSON object per application event, suitable for Docker or a log collector. Source scan completion and retry events include the source, query, mode, outcome, item/page counts, retries, and duration; alert credentials are never logged. `HARKEN_LOG_LEVEL` accepts `DEBUG`, `INFO`, `WARNING`, `ERROR`, or `CRITICAL`."
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| Stack Overflow | ✅ | Public Stack Exchange question search; Harken preserves API backoff and anonymous quota state. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 245,
+      "line_end": 245,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `HARKEN_RETRIES` | `2` | Retries for network, HTTP 429, and HTTP 5xx failures. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 246,
+      "line_end": 246,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "| `HARKEN_RETRY_BACKOFF` | `1.0` | Initial exponential-backoff delay in seconds. |"
+    },
+    {
+      "source_path": "README.md",
+      "line_start": 306,
+      "line_end": 306,
+      "blob_hash": "fb113ca9ad2f1d1781f4b70c629d1204caf95b43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- [x] **Bounded polling retries** with exponential backoff and `Retry-After` handling."
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 124,
+      "line_end": 124,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        _print_retries(result)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 172,
+      "line_end": 172,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        _print_retries(result)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                _print_retries(result)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 843,
+      "line_end": 843,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        pending = f\" ({pending_count} queued for retry)\" if pending_count else \"\""
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 852,
+      "line_end": 852,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _print_retries(result) -> None:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 853,
+      "line_end": 853,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    for source, count in result.retry_counts.items():"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 130,
+      "line_end": 130,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    source_retries: int = field(default_factory=lambda: _nonnegative_env_int(\"HARKEN_RETRIES\", 2))"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 131,
+      "line_end": 131,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retry_backoff: float = field("
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 132,
+      "line_end": 132,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        default_factory=lambda: _positive_env_float(\"HARKEN_RETRY_BACKOFF\", 1.0)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retry_counts: dict[str, int] = field(default_factory=dict)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 146,
+      "line_end": 146,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    page = self._fetch_with_retries("
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 236,
+      "line_end": 236,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retries = result.retry_counts.get(source, 0)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 242,
+      "line_end": 242,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=retries,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 255,
+      "line_end": 255,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=retries,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 460,
+      "line_end": 460,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    def _fetch_with_retries("
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 470,
+      "line_end": 470,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retries = max(0, self.config.source_retries)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 485,
+      "line_end": 485,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                if attempt >= retries or not _retryable_source_error(exc):"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 487,
+      "line_end": 487,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                delay = _retry_delay(exc, self.config.retry_backoff, attempt)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 489,
+      "line_end": 489,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                total_retries = result.retry_counts.get(name, 0) + 1"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 490,
+      "line_end": 490,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                result.retry_counts[name] = total_retries"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 493,
+      "line_end": 493,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    \"source_fetch_retry\","
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 498,
+      "line_end": 498,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    total_retries=total_retries,"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 558,
+      "line_end": 558,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _retryable_source_error(exc: Exception) -> bool:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 567,
+      "line_end": 567,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def _retry_delay(exc: Exception, backoff: float, attempt: int) -> float:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 569,
+      "line_end": 569,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retry_after = exc.response.headers.get(\"retry-after\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 570,
+      "line_end": 570,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if retry_after:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 572,
+      "line_end": 572,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                return min(max(float(retry_after), 0.0), 60.0)"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 575,
+      "line_end": 575,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    return min(backoff * (2**attempt), 60.0)"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # Backoff and anonymous daily quota apply to the calling process, even though"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 21,
+      "line_end": 21,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    _backoff_until = 0.0"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 35,
+      "line_end": 35,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        remaining = self._backoff_until - time.monotonic()"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(f\"Stack Exchange API requested backoff ({remaining:.0f}s remaining)\")"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if data.get(\"backoff\"):"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 59,
+      "line_end": 59,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            type(self)._backoff_until = time.monotonic() + max(int(data[\"backoff\"]), 0)"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 109,
+      "line_end": 109,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    retries_total          INTEGER NOT NULL DEFAULT 0,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    last_retries           INTEGER NOT NULL DEFAULT 0,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 828,
+      "line_end": 828,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        retries: int,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 833,
+      "line_end": 833,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if duration_seconds < 0 or min(fetched, pages, retries) < 0:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 842,
+      "line_end": 842,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                     retries_total, duration_seconds_total, last_duration_seconds,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 843,
+      "line_end": 843,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                     last_fetched, last_pages, last_retries, last_success, last_scan_at,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 851,
+      "line_end": 851,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    retries_total = source_metrics.retries_total + excluded.retries_total,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 857,
+      "line_end": 857,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    last_retries = excluded.last_retries,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 871,
+      "line_end": 871,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    retries,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 876,
+      "line_end": 876,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    retries,"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 950,
+      "line_end": 950,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Record a sanitized error while leaving the batch pending for retry.\"\"\""
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 324,
+      "line_end": 324,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                headers={\"Retry-After\": \"300\"},"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 458,
+      "line_end": 458,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"harken_source_retries_total\","
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 461,
+      "line_end": 461,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"retries_total\","
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line_start": 227,
+      "line_end": 227,
+      "blob_hash": "e74f715ed9283266193972dcd98eb47cff202740",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_pipeline_retries_failed_alert_without_duplicate_delivery(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line_start": 268,
+      "line_end": 268,
+      "blob_hash": "e74f715ed9283266193972dcd98eb47cff202740",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_pipeline_retries_email_without_duplicate_delivery(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    monkeypatch.setenv(\"HARKEN_RETRIES\", \"0\")"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "71023be822015a0b2467861a06ec2731fa825a10",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        (\"HARKEN_RETRIES\", \"-1\", \"at least 0\"),"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "71023be822015a0b2467861a06ec2731fa825a10",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        (\"HARKEN_RETRY_BACKOFF\", \"0\", \"greater than 0\"),"
+    },
+    {
+      "source_path": "tests/test_config.py",
+      "line_start": 171,
+      "line_end": 171,
+      "blob_hash": "71023be822015a0b2467861a06ec2731fa825a10",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_retry_settings_are_validated(monkeypatch, name, value, message):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    cfg = Config(db_path=str(tmp_path / \"t.db\"), sources=[\"hackernews\"], source_retries=0)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    cfg = Config(db_path=str(tmp_path / \"t.db\"), sources=[\"hackernews\"], source_retries=0)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 129,
+      "line_end": 129,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    config = Config(db_path=path, sources=[\"paged\"], source_retries=0)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 214,
+      "line_end": 214,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_retryable_source_errors_use_bounded_exponential_backoff(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 244,
+      "line_end": 244,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            db_path=str(tmp_path / \"retry.db\"),"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 246,
+      "line_end": 246,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            source_retries=2,"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 247,
+      "line_end": 247,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retry_backoff=0.25,"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 252,
+      "line_end": 252,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert result.retry_counts == {\"flaky\": 2}"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 254,
+      "line_end": 254,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert pipe.store.source_metrics()[0][\"retries_total\"] == 2"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 258,
+      "line_end": 258,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_retry_after_header_is_honored(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 271,
+      "line_end": 271,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                response = httpx.Response(429, headers={\"Retry-After\": \"7\"}, request=request)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 282,
+      "line_end": 282,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            source_retries=1,"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 291,
+      "line_end": 291,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_nonretryable_source_error_fails_immediately(tmp_path, monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 311,
+      "line_end": 311,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            source_retries=3,"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 173,
+      "line_end": 173,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_stackoverflow_parses_questions_and_preserves_backoff(monkeypatch):"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 174,
+      "line_end": 174,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._backoff_until = 0"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 192,
+      "line_end": 192,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"backoff\": 30,"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 203,
+      "line_end": 203,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    with pytest.raises(RuntimeError, match=\"backoff\"):"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 206,
+      "line_end": 206,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._backoff_until = 0"
+    },
+    {
+      "source_path": "tests/test_sources.py",
+      "line_start": 212,
+      "line_end": 212,
+      "blob_hash": "46c5a1010e92ce713f15fa015137341b19c16ef2",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    StackOverflowSource._backoff_until = 0"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 215,
+      "line_end": 215,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=0,"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 223,
+      "line_end": 223,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=2,"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 232,
+      "line_end": 232,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=0,"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 243,
+      "line_end": 243,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert hackernews[\"retries_total\"] == 2"
+    },
+    {
+      "source_path": "tests/test_store.py",
+      "line_start": 256,
+      "line_end": 256,
+      "blob_hash": "d55afedabc9505d313735b30f1de85113e603e43",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                \"hackernews\", duration_seconds=-1, fetched=0, pages=0, retries=0"
+    },
+    {
+      "source_path": "tests/test_thresholds.py",
+      "line_start": 87,
+      "line_end": 87,
+      "blob_hash": "45c1b4812c5131f60690a8482560ebf4c32e0c04",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "def test_threshold_episode_dedupes_retries_clears_and_obeys_cooldown(tmp_path):"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 173,
+      "line_end": 173,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert limited.headers[\"retry-after\"] == \"300\""
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 381,
+      "line_end": 381,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            retries=2,"
+    },
+    {
+      "source_path": "tests/test_web.py",
+      "line_start": 395,
+      "line_end": 395,
+      "blob_hash": "36e56817ef9a299c9c82d61bb1c41ca926ea1619",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    assert 'harken_source_retries_total{source=\"source\\\\\"with\\\\\\\\escapes\"} 2' in response.text"
+    }
+  ]
+}

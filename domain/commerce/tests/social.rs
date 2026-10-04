@@ -1,0 +1,418 @@
+use ecdev_core::{Engine, social::*};
+use serde_json::{Value, json};
+use uuid::Uuid;
+fn post(id: &str, platform: &str, at: u64) -> SocialPost {
+    SocialPost {
+        platform: platform.into(),
+        provider: "test-native-social".into(),
+        source_url: format!("https://example.org/{id}"),
+        native_id: id.into(),
+        thread_id: None,
+        author_id: Some("author".into()),
+        publisher: None,
+        published_at: Some(at),
+        captured_at: 10000,
+        text: "matcha glass good".into(),
+        language: Some("en".into()),
+        media: vec![],
+        hashtags: vec!["matcha".into()],
+        mentions: vec![],
+        entities: vec![
+            json!({"kind":"URL","value":"https://example.org/product","identity_state":"SOURCE_ASSERTED"}),
+        ],
+        propagation: "ORIGINAL".into(),
+        parent_id: None,
+        engagement: SocialEngagement {
+            views: None,
+            likes: Some(0),
+            comments: None,
+            reposts: None,
+            favorites: None,
+            followers: None,
+        },
+        raw_hash: "a".repeat(64),
+        raw_locator: "/items/0".into(),
+        extraction_method: "FIXTURE".into(),
+        state: EvidenceState::Observed,
+        capture_mode: "FIXTURE".into(),
+        evidence_id: format!("evidence-{platform}-{id}"),
+        freshness_seconds: 10000_u64.checked_sub(at),
+        origin_evidence_id: None,
+    }
+}
+fn root() -> std::path::PathBuf {
+    std::env::temp_dir().join(format!("ecdev-social-{}", Uuid::new_v4()))
+}
+#[test]
+fn unknown_counter_is_not_zero() {
+    let p = post("1", "HACKER_NEWS", 9000);
+    let v = serde_json::to_value(p).unwrap();
+    assert_eq!(v["engagement"]["likes"], 0);
+    assert!(v["engagement"]["views"].is_null());
+}
+#[test]
+fn simulated_and_untrusted_states_cannot_be_observations() {
+    let p = post("1", "HACKER_NEWS", 9000);
+    for state in [
+        EvidenceState::Simulated,
+        EvidenceState::Derived,
+        EvidenceState::Estimated,
+        EvidenceState::Unknown,
+        EvidenceState::Conflict,
+    ] {
+        let mut fake = p.clone();
+        fake.state = state;
+        assert!(fake.validate().is_err());
+        assert_eq!(
+            snapshot(&[fake], &[], "matcha", 10000, 86400, "FIXTURE")["mention_count"],
+            0
+        );
+    }
+    let mut live = p;
+    live.capture_mode = "LIVE".into();
+    assert_eq!(
+        snapshot(&[live], &[], "matcha", 10000, 86400, "FIXTURE")["mention_count"],
+        0
+    );
+}
+#[test]
+fn duplicate_resolution_preserves_repost_conflicts() {
+    let a = post("1", "BLUESKY", 9000);
+    let mut b = a.clone();
+    b.text = "matcha glass bad".into();
+    b.captured_at = 11000;
+    b.propagation = "REPOST".into();
+    b.parent_id = Some("original".into());
+    let (posts, conflicts) = deduplicate(&[a, b]);
+    assert_eq!(posts.len(), 1);
+    assert_eq!(posts[0].parent_id.as_deref(), Some("original"));
+    assert_eq!(posts[0].propagation, "REPOST");
+    assert_eq!(conflicts.len(), 1);
+}
+#[test]
+fn entity_identity_is_conservative() {
+    let a = json!({"kind":"TOPIC","value":"matcha cup"});
+    let b = json!({"kind":"TOPIC","value":"glass matcha cup"});
+    assert_eq!(entity_link(&a, &b), IdentityState::DerivedWeakMatch);
+    let g = json!({"kind":"GTIN","value":"1234567890128"});
+    assert_eq!(entity_link(&g, &g), IdentityState::ExactIdentifier);
+    let bad = json!({"kind":"GTIN","value":"1234567890129"});
+    assert_eq!(entity_link(&bad, &bad), IdentityState::Conflict);
+    let a = json!({"kind":"ASIN","value":"B012345678","market":"JP"});
+    let b = json!({"kind":"ASIN","value":"B012345678","market":"US"});
+    assert_ne!(entity_link(&a, &b), IdentityState::ExactIdentifier);
+}
+#[test]
+fn temporal_windows_velocity_acceleration_transparency() {
+    let a = post("1", "HACKER_NEWS", 9000);
+    let s1 = snapshot(
+        std::slice::from_ref(&a),
+        &[],
+        "matcha",
+        10000,
+        86400,
+        "FIXTURE",
+    );
+    assert!(s1["velocity"]["value"].is_null());
+    let b = post("2", "BLUESKY", 12000);
+    let s2 = snapshot(
+        &[a.clone(), b.clone()],
+        std::slice::from_ref(&s1),
+        "matcha",
+        13600,
+        86400,
+        "FIXTURE",
+    );
+    assert_eq!(s2["velocity"]["value"], 1.);
+    let c = post("3", "BLUESKY", 14000);
+    let d = post("4", "HACKER_NEWS", 15000);
+    let s3 = snapshot(&[a, b, c, d], &[s1, s2], "matcha", 17200, 86400, "FIXTURE");
+    assert_eq!(s3["velocity"]["value"], 2.);
+    assert_eq!(s3["acceleration"]["value"], 1.);
+    assert_eq!(s3["platform_count"], 2);
+    assert_eq!(s3["publisher_count"], 0);
+    assert_eq!(s3["independent_original_publishers"]["state"], "UNKNOWN");
+    for c in s3["score"]["components"].as_array().unwrap() {
+        for k in [
+            "value",
+            "window_seconds",
+            "denominator",
+            "source_count",
+            "evidence_ids",
+            "normalization",
+            "confidence",
+            "state",
+        ] {
+            assert!(c["metric"].get(k).is_some(), "missing {k}");
+        }
+    }
+    assert_eq!(s3["score"]["learned"], false);
+    assert_eq!(s3["simulation_contribution"], 0);
+}
+#[test]
+fn clustering_keeps_evidence_and_unknown_timestamps() {
+    let a = post("1", "HACKER_NEWS", 9000);
+    let b = post("2", "BLUESKY", 9200);
+    let mut c = post("3", "HACKER_NEWS", 9100);
+    c.text = "unrelated rocket engineering".into();
+    c.hashtags.clear();
+    c.entities.clear();
+    assert_eq!(clusters(&[a.clone(), b.clone(), c]).len(), 2);
+    let mut unknown = b;
+    unknown.published_at = None;
+    let s = snapshot(&[a, unknown], &[], "matcha", 10000, 86400, "FIXTURE");
+    assert_eq!(s["mention_count"], 1);
+    assert_eq!(s["timestamp_unknown_excluded"], 1);
+    assert!(
+        !s["clusters"][0]["source_edges"]
+            .as_array()
+            .unwrap()
+            .is_empty()
+    );
+}
+#[test]
+fn sentiment_is_secondary_and_language_scoped() {
+    let mut p = post("1", "BLUESKY", 9000);
+    assert_eq!(sentiment(&p)["label"], "POSITIVE");
+    p.text = "love this but awful".into();
+    assert_eq!(sentiment(&p)["label"], "MIXED");
+    p.language = Some("ja".into());
+    assert_eq!(sentiment(&p)["label"], "UNKNOWN");
+}
+#[test]
+fn engagement_growth_compares_same_post_platform_counter() {
+    let p = post("1", "BLUESKY", 9000);
+    let s1 = snapshot(
+        std::slice::from_ref(&p),
+        &[],
+        "matcha",
+        10000,
+        86400,
+        "FIXTURE",
+    );
+    let mut p2 = p;
+    p2.engagement.likes = Some(4);
+    let s2 = snapshot(&[p2], &[s1], "matcha", 13600, 86400, "FIXTURE");
+    assert_eq!(s2["engagement_growth"]["value"], 4.);
+    assert_eq!(
+        s2["engagement_observations"][0]["metrics"]["views"],
+        Value::Null
+    );
+}
+#[test]
+fn watch_policy_rejects_noise_failures_and_incomplete_disappearance() {
+    use ecdev_core::social::runtime::watch_events;
+    let a = post("1", "BLUESKY", 9000);
+    let mut before = snapshot(
+        std::slice::from_ref(&a),
+        &[],
+        "matcha",
+        10000,
+        86400,
+        "FIXTURE",
+    );
+    before["source_complete"] = json!(true);
+    let mut after = before.clone();
+    after["mention_count"] = json!(4);
+    after["platform_count"] = json!(2);
+    after["captured_at"] = json!(13600);
+    let policy = json!({"minimum_mentions":3,"threshold":1,"triggers":["TOPIC_MENTION_GROWTH","CROSS_PLATFORM_APPEARANCE"]});
+    assert_eq!(
+        watch_events(&before, &after, &policy)
+            .as_array()
+            .unwrap()
+            .len(),
+        2
+    );
+    after["source_complete"] = json!(false);
+    assert_eq!(watch_events(&before, &after, &policy), json!([]));
+    after["source_complete"] = json!(true);
+    after["mention_count"] = json!(2);
+    assert_eq!(watch_events(&before, &after, &policy), json!([]));
+    before["mention_count"] = json!(10);
+    after["mention_count"] = json!(0);
+    after["captured_at"] = json!(100000);
+    assert_eq!(
+        watch_events(
+            &before,
+            &after,
+            &json!({"triggers":["TREND_DISAPPEARANCE"]})
+        ),
+        json!([])
+    );
+}
+#[test]
+fn watch_and_simulation_boundary_persist_after_restart() {
+    let path = root();
+    let engine = Engine::open(&path).unwrap();
+    let watch=engine.trend_watch(json!({"query":"matcha","research":{"query":"matcha","sources":[{"platform":"HACKER_NEWS"}]},"triggers":["TOPIC_MENTION_GROWTH"],"interval_seconds":60,"enabled":false})).unwrap();
+    drop(engine);
+    let engine = Engine::open(&path).unwrap();
+    assert_eq!(
+        engine.trend_watch(json!({"action":"list"})).unwrap()[0]["watch_id"],
+        watch["watch_id"]
+    );
+    assert_eq!(
+        engine.trend_watch_tick(u64::MAX / 2).unwrap()["status"],
+        "NO_DUE_TREND_WATCH"
+    );
+    let invalid = ForecastScenario {
+        id: "sim".into(),
+        seed_snapshot_id: "none".into(),
+        question: "future".into(),
+        population: vec![],
+        posts: vec![SimulatedPost {
+            actor_id: "1".into(),
+            text: "matcha".into(),
+            state: EvidenceState::Observed,
+        }],
+        reactions: vec![],
+        state: EvidenceState::Simulated,
+    };
+    assert!(engine.store_social_scenario(invalid).is_err());
+    assert!(
+        engine.trend_inspect(json!({})).unwrap()["snapshots"]
+            .as_array()
+            .unwrap()
+            .is_empty()
+    );
+    drop(engine);
+    std::fs::remove_dir_all(path).unwrap();
+}
+#[test]
+fn allocator_redundancy_and_zero_paid_gate() {
+    let a = json!({"candidate_id":"candidate","action":"PUBLIC_SOCIAL_QUERY","provider":"native-social","class":"PUBLIC","target_unknown":"social","evidence_gap":"topic-evidence","source_group":"HN","expected_cost_minor":0,"expected_requests":1,"expected_latency_ms":100,"uncertainty_reduction_points":10});
+    let mut b = a.clone();
+    b["provider"] = json!("alternative");
+    let mut paid = a.clone();
+    paid["class"] = json!("PAID");
+    paid["expected_cost_minor"] = json!(1);
+    let result = ecdev_core::planner::allocate_information_actions(&[a, b, paid], 0, 10);
+    assert_eq!(result["selected_actions"].as_array().unwrap().len(), 1);
+    assert!(
+        result["skipped"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|r| r["reason"] == "PAID_BUDGET_ZERO")
+    );
+    assert!(
+        result["skipped"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|r| r["reason"] == "REDUNDANT_EVIDENCE_GAP_SOURCE")
+    );
+}
+
+#[test]
+fn expired_trend_watch_leases_recover_and_stale_workers_cannot_publish() {
+    use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
+    use std::sync::Arc;
+    struct FencedProvider(std::path::PathBuf);
+    impl Provider for FencedProvider {
+        fn id(&self) -> &str {
+            "native-social"
+        }
+        fn metadata(&self) -> Value {
+            json!({"class":"PUBLIC","cost_minor":0})
+        }
+        fn normalize_query(&self, q: &Value) -> Result<Value, String> {
+            Ok(q.clone())
+        }
+        fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+            let db = rusqlite::Connection::open(&self.0).unwrap();
+            db.execute(
+                "UPDATE trend_watches SET lease_token='RECLAIMED_BY_ANOTHER_WORKER'",
+                [],
+            )
+            .unwrap();
+            Err("SOURCE_UNAVAILABLE_TEST_NO_NETWORK".into())
+        }
+    }
+    let path = root();
+    let engine = Engine::open(&path).unwrap();
+    let watch=engine.trend_watch(json!({"query":"matcha","research":{"query":"matcha","sources":[{"platform":"HACKER_NEWS"}]},"triggers":["TOPIC_MENTION_GROWTH"],"interval_seconds":60,"enabled":true})).unwrap();
+    let dbpath = path.join(".ynventa/materialized/runtime/ecdev.sqlite");
+    let db = rusqlite::Connection::open(&dbpath).unwrap();
+    db.execute(
+        "UPDATE trend_watches SET next_due=0,lease_until=1000,lease_token='OLD'",
+        [],
+    )
+    .unwrap();
+    assert_eq!(
+        engine.trend_watch_tick(100).unwrap()["status"],
+        "NO_DUE_TREND_WATCH"
+    );
+    let recovered = engine.trend_watch_tick(1001).unwrap();
+    assert_eq!(recovered["watch_id"], watch["watch_id"]);
+    assert!(recovered["baseline"].is_null());
+    assert_eq!(recovered["events"], json!([]));
+    db.execute("UPDATE trend_watches SET next_due=0,lease_until=0", [])
+        .unwrap();
+    let fenced = Engine::open(&path)
+        .unwrap()
+        .with_provider(Arc::new(FencedProvider(dbpath)));
+    assert_eq!(
+        fenced.trend_watch_tick(2000).unwrap_err(),
+        "STALE_TREND_WATCH_LEASE"
+    );
+    drop(fenced);
+    drop(db);
+    drop(engine);
+    std::fs::remove_dir_all(path).unwrap();
+}
+
+#[test]
+fn nine_watch_trigger_contracts_preserve_baseline_and_counter_scope() {
+    use ecdev_core::social::runtime::watch_events;
+    let before = json!({"query":"matcha","capture_mode":"FIXTURE","window_seconds":60,"source_complete":true,"population_complete":true,"captured_at":100,"mention_count":3,"platform_count":1,"unique_sources":1,"velocity":{"value":0},"acceleration":{"value":0},"entity_links":[],"sentiment":[{"label":"POSITIVE"},{"label":"POSITIVE"},{"label":"POSITIVE"}],"engagement_observations":[{"post_key":"p","platform":"BLUESKY","metrics":{"likes":0}}]});
+    let mut after = before.clone();
+    after["mention_count"] = json!(6);
+    after["platform_count"] = json!(2);
+    after["unique_sources"] = json!(3);
+    after["captured_at"] = json!(200);
+    after["velocity"]["value"] = json!(2);
+    after["acceleration"]["value"] = json!(2);
+    after["entity_links"] = json!([{"kind":"URL","value":"https://example.org"}]);
+    after["sentiment"] = json!([{"label":"NEGATIVE"},{"label":"NEGATIVE"},{"label":"NEGATIVE"}]);
+    after["engagement_observations"][0]["metrics"]["likes"] = json!(3);
+    let triggers = [
+        "TOPIC_MENTION_GROWTH",
+        "ENTITY_GROWTH",
+        "CROSS_PLATFORM_APPEARANCE",
+        "VELOCITY_THRESHOLD",
+        "ACCELERATION_THRESHOLD",
+        "NEW_SOURCE_APPEARANCE",
+        "SENTIMENT_REGIME_CHANGE",
+        "ENGAGEMENT_SPIKE",
+    ];
+    let policy = json!({"minimum_mentions":3,"threshold":1,"triggers":triggers});
+    assert_eq!(
+        watch_events(&before, &after, &policy)
+            .as_array()
+            .unwrap()
+            .len(),
+        8
+    );
+    after["engagement_observations"][0]["platform"] = json!("HACKER_NEWS");
+    assert_eq!(
+        watch_events(&before, &after, &policy)
+            .as_array()
+            .unwrap()
+            .len(),
+        7
+    );
+    after["mention_count"] = json!(0);
+    assert_eq!(
+        watch_events(
+            &before,
+            &after,
+            &json!({"minimum_mentions":3,"triggers":["TREND_DISAPPEARANCE"]})
+        )
+        .as_array()
+        .unwrap()
+        .len(),
+        1
+    );
+}

@@ -1,0 +1,1576 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "main.py",
+      "line": 21,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "main.py",
+      "line": 22,
+      "text": "import json"
+    },
+    {
+      "source_path": "main.py",
+      "line": 23,
+      "text": "import os"
+    },
+    {
+      "source_path": "main.py",
+      "line": 24,
+      "text": "import sys"
+    },
+    {
+      "source_path": "main.py",
+      "line": 25,
+      "text": "import time"
+    },
+    {
+      "source_path": "main.py",
+      "line": 27,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "main.py",
+      "line": 28,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "main.py",
+      "line": 31,
+      "text": "from support.config import (\n    NICHES,\n    TOP_N_CLUSTERS,\n    TOP_POSTS_PER_CLUSTER,\n    OUTPUT_DIR,\n    OUTPUT_FILE,\n    GEMINI_MODEL,\n)"
+    },
+    {
+      "source_path": "main.py",
+      "line": 39,
+      "text": "from support.database_util import connect_database, get_posts_by_niche, get_embeddings_by_niche"
+    },
+    {
+      "source_path": "main.py",
+      "line": 41,
+      "text": "from support.clustering.weekly_hdbscan import (\n    cluster_embeddings,\n    score_clusters,\n    select_top_posts,\n)"
+    },
+    {
+      "source_path": "main.py",
+      "line": 46,
+      "text": "from support.clustering.gemini_trends import (\n    build_cluster_context,\n    build_prompt,\n    call_gemini,\n    parse_gemini_response,\n)"
+    },
+    {
+      "source_path": "support/backend/database.py",
+      "line": 9,
+      "text": "import json"
+    },
+    {
+      "source_path": "support/backend/database.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "support/backend/database.py",
+      "line": 11,
+      "text": "from functools import lru_cache"
+    },
+    {
+      "source_path": "support/backend/database.py",
+      "line": 13,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 20,
+      "text": "import os"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 21,
+      "text": "import sys"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 22,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 29,
+      "text": "from fastapi import FastAPI, HTTPException, Query"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 30,
+      "text": "from fastapi.middleware.cors import CORSMiddleware"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 31,
+      "text": "import uvicorn"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 33,
+      "text": "from config import API_HOST, API_PORT, CORS_ORIGINS, GEMINI_MODEL"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 34,
+      "text": "from backend.models import (\n    TrendResponse,\n    WeekResult,\n    AllNichesSummary,\n    NicheSummary,\n    HealthResponse,\n)"
+    },
+    {
+      "source_path": "support/backend/main.py",
+      "line": 41,
+      "text": "from backend.database import (\n    get_available_niches,\n    get_niche_results,\n    get_niche_week,\n    get_all_summaries,\n    get_metadata,\n    reload_trends,\n)"
+    },
+    {
+      "source_path": "support/backend/models.py",
+      "line": 5,
+      "text": "from pydantic import BaseModel, Field"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 10,
+      "text": "import os"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 11,
+      "text": "import sys"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 12,
+      "text": "import json"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 14,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 15,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 20,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 21,
+      "text": "import google.generativeai as genai"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 22,
+      "text": "from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS, CountVectorizer"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 24,
+      "text": "from config import GEMINI_API_KEY, GEMINI_MODEL"
+    },
+    {
+      "source_path": "support/clustering/gemini_trends.py",
+      "line": 86,
+      "text": "import spacy"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 12,
+      "text": "import sys"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 17,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 18,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 19,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 20,
+      "text": "import umap"
+    },
+    {
+      "source_path": "support/clustering/weekly_hdbscan.py",
+      "line": 22,
+      "text": "from config import (\n    HDBSCAN_MIN_CLUSTER_SIZE,\n    HDBSCAN_MIN_SAMPLES,\n    HDBSCAN_METRIC,\n    UMAP_N_COMPONENTS,\n    UMAP_N_NEIGHBORS,\n    UMAP_MIN_DIST,\n    UMAP_METRIC,\n    W_SCORE,\n    W_COMMENTS,\n    W_UPVOTE,\n    TOP_N_CLUSTERS,\n    TOP_POSTS_PER_CLUSTER,\n)"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 7,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 8,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 9,
+      "text": "from sklearn.cluster import KMeans, AgglomerativeClustering"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 10,
+      "text": "from sklearn.mixture import GaussianMixture"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 11,
+      "text": "from sklearn.metrics import silhouette_score, calinski_harabasz_score, davies_bouldin_score"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 12,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 13,
+      "text": "import umap"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 15,
+      "text": "from config import (\n    HDBSCAN_MIN_CLUSTER_SIZE, HDBSCAN_MIN_SAMPLES, HDBSCAN_METRIC,\n    UMAP_N_COMPONENTS, UMAP_N_NEIGHBORS, UMAP_MIN_DIST, UMAP_METRIC,\n)"
+    },
+    {
+      "source_path": "support/compare_clustering.py",
+      "line": 19,
+      "text": "from database_util import connect_database, get_posts_by_niche, get_embeddings_by_niche"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 14,
+      "text": "import time"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 15,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 16,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 17,
+      "text": "from sklearn.cluster import KMeans, AgglomerativeClustering"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 18,
+      "text": "from sklearn.mixture import GaussianMixture"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 19,
+      "text": "from sklearn.metrics import (\n    silhouette_score,\n    calinski_harabasz_score,\n    davies_bouldin_score,\n    adjusted_rand_score,\n    normalized_mutual_info_score,\n)"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 26,
+      "text": "from sklearn.preprocessing import LabelEncoder"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 27,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 28,
+      "text": "import umap"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 30,
+      "text": "from config import (\n    HDBSCAN_MIN_CLUSTER_SIZE, HDBSCAN_MIN_SAMPLES, HDBSCAN_METRIC,\n    UMAP_N_COMPONENTS, UMAP_N_NEIGHBORS, UMAP_MIN_DIST, UMAP_METRIC,\n    NICHES,\n)"
+    },
+    {
+      "source_path": "support/compare_clustering_full.py",
+      "line": 35,
+      "text": "from database_util import connect_database, get_posts_by_niche, get_embeddings_by_niche"
+    },
+    {
+      "source_path": "support/config.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "support/config.py",
+      "line": 8,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 11,
+      "text": "import os, sys"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 14,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 15,
+      "text": "import psycopg2"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 16,
+      "text": "from psycopg2.extras import execute_batch"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 17,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/database_util.py",
+      "line": 18,
+      "text": "from config import DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 1,
+      "text": "import js from \"@eslint/js\";"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 2,
+      "text": "import eslintPluginPrettier from \"eslint-plugin-prettier/recommended\";"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 3,
+      "text": "import globals from \"globals\";"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 4,
+      "text": "import reactHooks from \"eslint-plugin-react-hooks\";"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 5,
+      "text": "import reactRefresh from \"eslint-plugin-react-refresh\";"
+    },
+    {
+      "source_path": "support/frontend/eslint.config.js",
+      "line": 6,
+      "text": "import tseslint from \"typescript-eslint\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/accordion.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/accordion.tsx",
+      "line": 2,
+      "text": "import * as AccordionPrimitive from \"@radix-ui/react-accordion\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/accordion.tsx",
+      "line": 3,
+      "text": "import { ChevronDown } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/accordion.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert-dialog.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert-dialog.tsx",
+      "line": 2,
+      "text": "import * as AlertDialogPrimitive from \"@radix-ui/react-alert-dialog\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert-dialog.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert-dialog.tsx",
+      "line": 5,
+      "text": "import { buttonVariants } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert.tsx",
+      "line": 2,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/alert.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/aspect-ratio.tsx",
+      "line": 1,
+      "text": "import * as AspectRatioPrimitive from \"@radix-ui/react-aspect-ratio\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/avatar.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/avatar.tsx",
+      "line": 4,
+      "text": "import * as AvatarPrimitive from \"@radix-ui/react-avatar\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/avatar.tsx",
+      "line": 6,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/badge.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/badge.tsx",
+      "line": 2,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/badge.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/breadcrumb.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/breadcrumb.tsx",
+      "line": 2,
+      "text": "import { Slot } from \"@radix-ui/react-slot\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/breadcrumb.tsx",
+      "line": 3,
+      "text": "import { ChevronRight, MoreHorizontal } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/breadcrumb.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/button.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/button.tsx",
+      "line": 2,
+      "text": "import { Slot } from \"@radix-ui/react-slot\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/button.tsx",
+      "line": 3,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/button.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/calendar.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/calendar.tsx",
+      "line": 4,
+      "text": "import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/calendar.tsx",
+      "line": 5,
+      "text": "import { DayButton, DayPicker, getDefaultClassNames } from \"react-day-picker\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/calendar.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/calendar.tsx",
+      "line": 8,
+      "text": "import { Button, buttonVariants } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/card.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/card.tsx",
+      "line": 3,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/carousel.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/carousel.tsx",
+      "line": 2,
+      "text": "import useEmblaCarousel, { type UseEmblaCarouselType } from \"embla-carousel-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/carousel.tsx",
+      "line": 3,
+      "text": "import { ArrowLeft, ArrowRight } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/carousel.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/carousel.tsx",
+      "line": 6,
+      "text": "import { Button } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/chart.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/chart.tsx",
+      "line": 2,
+      "text": "import * as RechartsPrimitive from \"recharts\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/chart.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/checkbox.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/checkbox.tsx",
+      "line": 2,
+      "text": "import * as CheckboxPrimitive from \"@radix-ui/react-checkbox\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/checkbox.tsx",
+      "line": 3,
+      "text": "import { Check } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/checkbox.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/collapsible.tsx",
+      "line": 3,
+      "text": "import * as CollapsiblePrimitive from \"@radix-ui/react-collapsible\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 4,
+      "text": "import { type DialogProps } from \"@radix-ui/react-dialog\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 5,
+      "text": "import { Command as CommandPrimitive } from \"cmdk\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 6,
+      "text": "import { Search } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 8,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/command.tsx",
+      "line": 9,
+      "text": "import { Dialog, DialogContent } from \"@/components/ui/dialog\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/context-menu.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/context-menu.tsx",
+      "line": 2,
+      "text": "import * as ContextMenuPrimitive from \"@radix-ui/react-context-menu\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/context-menu.tsx",
+      "line": 3,
+      "text": "import { Check, ChevronRight, Circle } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/context-menu.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dialog.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dialog.tsx",
+      "line": 4,
+      "text": "import * as DialogPrimitive from \"@radix-ui/react-dialog\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dialog.tsx",
+      "line": 5,
+      "text": "import { X } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dialog.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/drawer.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/drawer.tsx",
+      "line": 2,
+      "text": "import { Drawer as DrawerPrimitive } from \"vaul\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/drawer.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dropdown-menu.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dropdown-menu.tsx",
+      "line": 4,
+      "text": "import * as DropdownMenuPrimitive from \"@radix-ui/react-dropdown-menu\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dropdown-menu.tsx",
+      "line": 5,
+      "text": "import { Check, ChevronRight, Circle } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/dropdown-menu.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 2,
+      "text": "import * as LabelPrimitive from \"@radix-ui/react-label\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 3,
+      "text": "import { Slot } from \"@radix-ui/react-slot\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 4,
+      "text": "import {\r\n  Controller,\r\n  FormProvider,\r\n  useFormContext,\r\n  type ControllerProps,\r\n  type FieldPath,\r\n  type FieldValues,\r\n} from \"react-hook-form\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 13,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/form.tsx",
+      "line": 14,
+      "text": "import { Label } from \"@/components/ui/label\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/hover-card.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/hover-card.tsx",
+      "line": 2,
+      "text": "import * as HoverCardPrimitive from \"@radix-ui/react-hover-card\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/hover-card.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input-otp.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input-otp.tsx",
+      "line": 2,
+      "text": "import { OTPInput, OTPInputContext } from \"input-otp\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input-otp.tsx",
+      "line": 3,
+      "text": "import { Minus } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input-otp.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/input.tsx",
+      "line": 3,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/label.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/label.tsx",
+      "line": 4,
+      "text": "import * as LabelPrimitive from \"@radix-ui/react-label\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/label.tsx",
+      "line": 5,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/label.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/menubar.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/menubar.tsx",
+      "line": 2,
+      "text": "import * as MenubarPrimitive from \"@radix-ui/react-menubar\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/menubar.tsx",
+      "line": 3,
+      "text": "import { Check, ChevronRight, Circle } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/menubar.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/navigation-menu.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/navigation-menu.tsx",
+      "line": 2,
+      "text": "import * as NavigationMenuPrimitive from \"@radix-ui/react-navigation-menu\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/navigation-menu.tsx",
+      "line": 3,
+      "text": "import { cva } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/navigation-menu.tsx",
+      "line": 4,
+      "text": "import { ChevronDown } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/navigation-menu.tsx",
+      "line": 6,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/pagination.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/pagination.tsx",
+      "line": 2,
+      "text": "import { ChevronLeft, ChevronRight, MoreHorizontal } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/pagination.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/pagination.tsx",
+      "line": 5,
+      "text": "import { ButtonProps, buttonVariants } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/popover.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/popover.tsx",
+      "line": 2,
+      "text": "import * as PopoverPrimitive from \"@radix-ui/react-popover\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/popover.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/progress.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/progress.tsx",
+      "line": 4,
+      "text": "import * as ProgressPrimitive from \"@radix-ui/react-progress\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/progress.tsx",
+      "line": 6,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/radio-group.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/radio-group.tsx",
+      "line": 2,
+      "text": "import * as RadioGroupPrimitive from \"@radix-ui/react-radio-group\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/radio-group.tsx",
+      "line": 3,
+      "text": "import { Circle } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/radio-group.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/resizable.tsx",
+      "line": 1,
+      "text": "import { GripVertical } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/resizable.tsx",
+      "line": 2,
+      "text": "import { Group, Panel, Separator } from \"react-resizable-panels\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/resizable.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/scroll-area.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/scroll-area.tsx",
+      "line": 2,
+      "text": "import * as ScrollAreaPrimitive from \"@radix-ui/react-scroll-area\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/scroll-area.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/select.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/select.tsx",
+      "line": 4,
+      "text": "import * as SelectPrimitive from \"@radix-ui/react-select\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/select.tsx",
+      "line": 5,
+      "text": "import { Check, ChevronDown, ChevronUp } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/select.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/separator.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/separator.tsx",
+      "line": 2,
+      "text": "import * as SeparatorPrimitive from \"@radix-ui/react-separator\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/separator.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sheet.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sheet.tsx",
+      "line": 4,
+      "text": "import * as SheetPrimitive from \"@radix-ui/react-dialog\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sheet.tsx",
+      "line": 5,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sheet.tsx",
+      "line": 6,
+      "text": "import { X } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sheet.tsx",
+      "line": 8,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 2,
+      "text": "import { Slot } from \"@radix-ui/react-slot\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 3,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 4,
+      "text": "import { PanelLeft } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 6,
+      "text": "import { useIsMobile } from \"@/hooks/use-mobile\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 8,
+      "text": "import { Button } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 9,
+      "text": "import { Input } from \"@/components/ui/input\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 10,
+      "text": "import { Separator } from \"@/components/ui/separator\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 11,
+      "text": "import {\r\n  Sheet,\r\n  SheetContent,\r\n  SheetDescription,\r\n  SheetHeader,\r\n  SheetTitle,\r\n} from \"@/components/ui/sheet\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 18,
+      "text": "import { Skeleton } from \"@/components/ui/skeleton\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sidebar.tsx",
+      "line": 19,
+      "text": "import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from \"@/components/ui/tooltip\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/skeleton.tsx",
+      "line": 1,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/slider.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/slider.tsx",
+      "line": 2,
+      "text": "import * as SliderPrimitive from \"@radix-ui/react-slider\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/slider.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/sonner.tsx",
+      "line": 1,
+      "text": "import { Toaster as Sonner } from \"sonner\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/switch.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/switch.tsx",
+      "line": 2,
+      "text": "import * as SwitchPrimitives from \"@radix-ui/react-switch\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/switch.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/table.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/table.tsx",
+      "line": 3,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tabs.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tabs.tsx",
+      "line": 2,
+      "text": "import * as TabsPrimitive from \"@radix-ui/react-tabs\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tabs.tsx",
+      "line": 4,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/textarea.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/textarea.tsx",
+      "line": 3,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle-group.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle-group.tsx",
+      "line": 4,
+      "text": "import * as ToggleGroupPrimitive from \"@radix-ui/react-toggle-group\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle-group.tsx",
+      "line": 5,
+      "text": "import { type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle-group.tsx",
+      "line": 7,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle-group.tsx",
+      "line": 8,
+      "text": "import { toggleVariants } from \"@/components/ui/toggle\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle.tsx",
+      "line": 2,
+      "text": "import * as TogglePrimitive from \"@radix-ui/react-toggle\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle.tsx",
+      "line": 3,
+      "text": "import { cva, type VariantProps } from \"class-variance-authority\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/toggle.tsx",
+      "line": 5,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tooltip.tsx",
+      "line": 3,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tooltip.tsx",
+      "line": 4,
+      "text": "import * as TooltipPrimitive from \"@radix-ui/react-tooltip\";"
+    },
+    {
+      "source_path": "support/frontend/src/components/ui/tooltip.tsx",
+      "line": 6,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/hooks/use-mobile.tsx",
+      "line": 1,
+      "text": "import * as React from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/lib/utils.ts",
+      "line": 1,
+      "text": "import { clsx, type ClassValue } from \"clsx\";"
+    },
+    {
+      "source_path": "support/frontend/src/lib/utils.ts",
+      "line": 2,
+      "text": "import { twMerge } from \"tailwind-merge\";"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 11,
+      "text": "import { Route as rootRouteImport } from './routes/__root'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 12,
+      "text": "import { Route as ExploreRouteImport } from './routes/explore'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 13,
+      "text": "import { Route as IndexRouteImport } from './routes/index'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 14,
+      "text": "import { Route as ExploreNicheRouteImport } from './routes/explore.$niche'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 15,
+      "text": "import { Route as ExploreNicheWeekNumberRouteImport } from './routes/explore.$niche.$weekNumber'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 143,
+      "text": "import type { getRouter } from './router.tsx'"
+    },
+    {
+      "source_path": "support/frontend/src/routeTree.gen.ts",
+      "line": 144,
+      "text": "import type { createStart } from '@tanstack/react-start'"
+    },
+    {
+      "source_path": "support/frontend/src/router.tsx",
+      "line": 1,
+      "text": "import { createRouter, useRouter } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/router.tsx",
+      "line": 2,
+      "text": "import { routeTree } from \"./routeTree.gen\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/__root.tsx",
+      "line": 1,
+      "text": "import { Outlet, Link, createRootRoute, HeadContent, Scripts } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/__root.tsx",
+      "line": 3,
+      "text": "import { Toaster } from \"@/components/ui/sonner\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/__root.tsx",
+      "line": 4,
+      "text": "import appCss from \"../styles.css?url\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 1,
+      "text": "import { Link, createFileRoute } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 2,
+      "text": "import { ArrowLeft, ChevronDown, ChevronRight, ExternalLink } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 3,
+      "text": "import { useEffect, useMemo, useState } from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 4,
+      "text": "import { toast } from \"sonner\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 6,
+      "text": "import { Button } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 7,
+      "text": "import { Skeleton } from \"@/components/ui/skeleton\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 8,
+      "text": "import { fetchTrends, getNicheLabel, type Trend, type WeekResult } from \"@/lib/trend-api\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+      "line": 9,
+      "text": "import { cn } from \"@/lib/utils\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 1,
+      "text": "import { Link, Outlet, createFileRoute, useLocation } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 2,
+      "text": "import { ArrowLeft, ChevronRight } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 3,
+      "text": "import { useEffect, useState } from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 4,
+      "text": "import { toast } from \"sonner\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 6,
+      "text": "import { Button } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 7,
+      "text": "import { Skeleton } from \"@/components/ui/skeleton\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.$niche.tsx",
+      "line": 8,
+      "text": "import { fetchTrends, getNicheLabel, type WeekResult } from \"@/lib/trend-api\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 1,
+      "text": "import { Link, Outlet, createFileRoute, useLocation } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 2,
+      "text": "import { ArrowRight } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 3,
+      "text": "import { useEffect, useState } from \"react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 4,
+      "text": "import { toast } from \"sonner\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 6,
+      "text": "import { Skeleton } from \"@/components/ui/skeleton\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/explore.tsx",
+      "line": 7,
+      "text": "import { fetchNiches, getNicheLabel, nicheMeta, type NicheSummary } from \"@/lib/trend-api\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/index.tsx",
+      "line": 1,
+      "text": "import { Link, createFileRoute } from \"@tanstack/react-router\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/index.tsx",
+      "line": 2,
+      "text": "import { ArrowRight, Sparkles } from \"lucide-react\";"
+    },
+    {
+      "source_path": "support/frontend/src/routes/index.tsx",
+      "line": 4,
+      "text": "import { Button } from \"@/components/ui/button\";"
+    },
+    {
+      "source_path": "support/frontend/src/styles.css",
+      "line": 1,
+      "text": "@import url(\"https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap\");"
+    },
+    {
+      "source_path": "support/frontend/src/styles.css",
+      "line": 2,
+      "text": "@import \"tailwindcss\" source(none);"
+    },
+    {
+      "source_path": "support/frontend/src/styles.css",
+      "line": 4,
+      "text": "@import \"tw-animate-css\";"
+    },
+    {
+      "source_path": "support/frontend/vite.config.ts",
+      "line": 7,
+      "text": "import { defineConfig } from \"@lovable.dev/vite-tanstack-config\";"
+    },
+    {
+      "source_path": "support/generate_embeddings.py",
+      "line": 7,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/generate_embeddings.py",
+      "line": 8,
+      "text": "from sentence_transformers import SentenceTransformer"
+    },
+    {
+      "source_path": "support/generate_embeddings.py",
+      "line": 9,
+      "text": "from database_util import (\n    connect_database, \n    get_posts_by_niche, \n    insert_embeddings,\n    table_stats\n)"
+    },
+    {
+      "source_path": "support/generate_embeddings.py",
+      "line": 15,
+      "text": "from tqdm import tqdm"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 25,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 26,
+      "text": "import itertools"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 27,
+      "text": "import time"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 28,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 30,
+      "text": "import numpy as np"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 31,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 32,
+      "text": "import hdbscan"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 33,
+      "text": "import umap"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 34,
+      "text": "from sklearn.metrics import (\n    silhouette_score,\n    calinski_harabasz_score,\n    davies_bouldin_score,\n    adjusted_rand_score,\n    normalized_mutual_info_score,\n)"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 41,
+      "text": "from sklearn.preprocessing import LabelEncoder"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 43,
+      "text": "from config import NICHES, UMAP_MIN_DIST, UMAP_METRIC, HDBSCAN_METRIC"
+    },
+    {
+      "source_path": "support/gridsearch_hdbscan.py",
+      "line": 44,
+      "text": "from database_util import connect_database, get_posts_by_niche, get_embeddings_by_niche"
+    },
+    {
+      "source_path": "support/load_reddit_data.py",
+      "line": 7,
+      "text": "import pandas as pd"
+    },
+    {
+      "source_path": "support/load_reddit_data.py",
+      "line": 8,
+      "text": "from database_util import connect_database, insert_posts_from_df, table_stats"
+    },
+    {
+      "source_path": "support/load_reddit_data.py",
+      "line": 9,
+      "text": "from config import RAW_CSV_PATH"
+    },
+    {
+      "source_path": "support/preprocessing/text_cleaner.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "support/scrape_reddit.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "support/scrape_reddit.py",
+      "line": 2,
+      "text": "import requests"
+    },
+    {
+      "source_path": "support/scrape_reddit.py",
+      "line": 3,
+      "text": "import time"
+    },
+    {
+      "source_path": "support/scrape_reddit.py",
+      "line": 4,
+      "text": "from datetime import datetime, timedelta, timezone"
+    },
+    {
+      "source_path": "support/setup_database.py",
+      "line": 7,
+      "text": "from database_util import (\n    create_database, \n    connect_database, \n    enable_pgvector,\n    create_all_tables,\n    table_stats\n)"
+    },
+    {
+      "source_path": "support/test_connection.py",
+      "line": 1,
+      "text": "import psycopg2"
+    },
+    {
+      "source_path": "support/test_connection.py",
+      "line": 2,
+      "text": "from config import DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME"
+    }
+  ],
+  "call_edges": []
+}

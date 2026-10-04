@@ -1,0 +1,2926 @@
+{
+  "status": "PARTIAL",
+  "imports": [
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 6,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 12,
+      "text": "from flask import Flask, request"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 13,
+      "text": "from flask_cors import CORS"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 15,
+      "text": "from .config import Config"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 16,
+      "text": "from .utils.logger import setup_logger, get_logger"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 46,
+      "text": "from .services.simulation_runner import SimulationRunner"
+    },
+    {
+      "source_path": "backend/app/__init__.py",
+      "line": 66,
+      "text": "from .api import graph_bp, simulation_bp, report_bp"
+    },
+    {
+      "source_path": "backend/app/api/__init__.py",
+      "line": 5,
+      "text": "from flask import Blueprint"
+    },
+    {
+      "source_path": "backend/app/api/__init__.py",
+      "line": 11,
+      "text": "from . import graph"
+    },
+    {
+      "source_path": "backend/app/api/__init__.py",
+      "line": 12,
+      "text": "from . import simulation"
+    },
+    {
+      "source_path": "backend/app/api/__init__.py",
+      "line": 13,
+      "text": "from . import report"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 7,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 8,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 9,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 10,
+      "text": "from contextlib import ExitStack, nullcontext"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 11,
+      "text": "from flask import request, jsonify"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 12,
+      "text": "from zep_cloud import NotFoundError"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 14,
+      "text": "from . import graph_bp"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 15,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 16,
+      "text": "from ..services.ontology_generator import OntologyGenerator"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 17,
+      "text": "from ..services.graph_builder import BatchSubmission, GraphBuilderService"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 18,
+      "text": "from ..services.text_processor import TextProcessor"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 19,
+      "text": "from ..utils.file_parser import FileParser"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 20,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 21,
+      "text": "from ..utils.locale import t, get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 22,
+      "text": "from ..utils.zep_lifecycle import get_graph_readers, graph_lifecycle_lock"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 23,
+      "text": "from ..models.task import TaskManager, TaskStatus"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 24,
+      "text": "from ..models.project import ProjectManager, ProjectStatus"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 25,
+      "text": "from ..services.simulation_manager import SimulationManager"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 26,
+      "text": "from ..services.simulation_runner import SimulationRunner, RunnerStatus"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 27,
+      "text": "from ..services.zep_graph_memory_updater import ZepGraphMemoryManager"
+    },
+    {
+      "source_path": "backend/app/api/graph.py",
+      "line": 28,
+      "text": "from ..utils.llm_client import LLMResponseError"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 7,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 8,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 9,
+      "text": "from flask import request, jsonify, send_file"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 11,
+      "text": "from . import report_bp"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 12,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 13,
+      "text": "from ..services.report_agent import ReportAgent, ReportManager, ReportStatus"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 14,
+      "text": "from ..services.simulation_manager import SimulationManager"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 15,
+      "text": "from ..services.simulation_runner import SimulationRunner, RunnerStatus"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 16,
+      "text": "from ..services.zep_graph_memory_updater import ZepGraphMemoryManager"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 17,
+      "text": "from ..models.project import ProjectManager, ProjectStatus"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 18,
+      "text": "from ..models.task import TaskManager, TaskStatus"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 19,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 20,
+      "text": "from ..utils.locale import t, get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 21,
+      "text": "from ..utils.zep_lifecycle import (\n    graph_lifecycle_lock,\n    register_graph_reader,\n    unregister_graph_reader,\n)"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 156,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 537,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 1079,
+      "text": "from ..services.zep_tools import ZepToolsService"
+    },
+    {
+      "source_path": "backend/app/api/report.py",
+      "line": 1123,
+      "text": "from ..services.zep_tools import ZepToolsService"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 7,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 8,
+      "text": "from contextlib import nullcontext"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 9,
+      "text": "from flask import request, jsonify, send_file"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 11,
+      "text": "from . import simulation_bp"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 12,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 13,
+      "text": "from ..services.zep_entity_reader import ZepEntityReader"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 14,
+      "text": "from ..services.oasis_profile_generator import OasisProfileGenerator"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 15,
+      "text": "from ..services.simulation_manager import SimulationManager, SimulationStatus"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 16,
+      "text": "from ..services.simulation_runner import (\n    SimulationRunner,\n    RunnerStatus,\n    SimulationStopPending,\n)"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 21,
+      "text": "from ..services.zep_graph_memory_updater import ZepGraphMemoryManager"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 22,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 23,
+      "text": "from ..utils.locale import t, get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 24,
+      "text": "from ..utils.zep_lifecycle import get_graph_readers, graph_lifecycle_lock"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 25,
+      "text": "from ..models.project import ProjectManager"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 286,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 287,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 323,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 357,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 430,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 431,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 432,
+      "text": "from ..models.task import TaskManager, TaskStatus"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 433,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 705,
+      "text": "from ..models.task import TaskManager"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 865,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 866,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 1091,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 1092,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 1093,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 1202,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 1203,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 2183,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/app/api/simulation.py",
+      "line": 2258,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/app/config.py",
+      "line": 3,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/config.py",
+      "line": 4,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "backend/app/config.py",
+      "line": 74,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "backend/app/models/__init__.py",
+      "line": 5,
+      "text": "from .task import TaskManager, TaskStatus"
+    },
+    {
+      "source_path": "backend/app/models/__init__.py",
+      "line": 6,
+      "text": "from .project import Project, ProjectStatus, ProjectManager"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 7,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 8,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 9,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 10,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 11,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 12,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 13,
+      "text": "from dataclasses import dataclass, field, asdict"
+    },
+    {
+      "source_path": "backend/app/models/project.py",
+      "line": 14,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 6,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 7,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 8,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 9,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 10,
+      "text": "from typing import Dict, Any, Optional"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 13,
+      "text": "from ..utils.locale import t"
+    },
+    {
+      "source_path": "backend/app/models/task.py",
+      "line": 176,
+      "text": "from datetime import timedelta"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 5,
+      "text": "from .ontology_generator import OntologyGenerator"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 6,
+      "text": "from .graph_builder import GraphBuilderService"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 7,
+      "text": "from .text_processor import TextProcessor"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 8,
+      "text": "from .zep_entity_reader import ZepEntityReader, EntityNode, FilteredEntities"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 9,
+      "text": "from .oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 10,
+      "text": "from .simulation_manager import SimulationManager, SimulationState, SimulationStatus"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 11,
+      "text": "from .simulation_config_generator import (\n    SimulationConfigGenerator, \n    SimulationParameters,\n    AgentActivityConfig,\n    TimeSimulationConfig,\n    EventConfig,\n    PlatformConfig\n)"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 19,
+      "text": "from .simulation_runner import (\n    SimulationRunner,\n    SimulationRunState,\n    RunnerStatus,\n    AgentAction,\n    RoundSummary\n)"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 26,
+      "text": "from .zep_graph_memory_updater import (\n    ZepGraphMemoryUpdater,\n    ZepGraphMemoryManager,\n    AgentActivity\n)"
+    },
+    {
+      "source_path": "backend/app/services/__init__.py",
+      "line": 31,
+      "text": "from .simulation_ipc import (\n    SimulationIPCClient,\n    SimulationIPCServer,\n    IPCCommand,\n    IPCResponse,\n    CommandType,\n    CommandStatus\n)"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 6,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 7,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 8,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 9,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 10,
+      "text": "from typing import Dict, Any, List, Optional, Callable"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 13,
+      "text": "from zep_cloud import BatchAddItem, EntityEdgeSourceTarget, NotFoundError"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 15,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 16,
+      "text": "from ..models.task import TaskManager, TaskStatus"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 17,
+      "text": "from ..utils.zep_paging import fetch_all_nodes, fetch_all_edges"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 18,
+      "text": "from ..utils.ontology import (\n    MAX_ONTOLOGY_TYPES,\n    RESERVED_ONTOLOGY_ATTRIBUTE_NAMES,\n    normalize_ontology_attributes,\n    normalize_ontology_source_targets,\n)"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 24,
+      "text": "from ..utils.zep import (\n    ZEP_INGESTION_WAIT_TIMEOUT_SECONDS,\n    call_zep_read_with_retry,\n    get_zep_client,\n    is_retryable_zep_error,\n)"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 30,
+      "text": "from .text_processor import TextProcessor"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 31,
+      "text": "from ..utils.locale import t, get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 214,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 315,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 316,
+      "text": "from typing import Optional"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 317,
+      "text": "from pydantic import Field"
+    },
+    {
+      "source_path": "backend/app/services/graph_builder.py",
+      "line": 318,
+      "text": "from zep_cloud.external_clients.ontology import EntityModel, EntityText, EdgeModel"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 11,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 12,
+      "text": "import random"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 14,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 15,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 16,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 18,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 19,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 20,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 21,
+      "text": "from ..utils.locale import get_language_instruction, get_locale, set_locale, t"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 22,
+      "text": "from ..utils.openai_chat_compat import create_chat_completion, extract_chat_completion_text"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 23,
+      "text": "from ..utils.zep import (\n    call_zep_read_with_retry,\n    get_zep_client,\n    is_retryable_zep_error,\n    normalize_zep_search_query,\n)"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 29,
+      "text": "from .zep_entity_reader import EntityNode, ZepEntityReader"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 361,
+      "text": "import concurrent.futures"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 619,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 629,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 652,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 920,
+      "text": "import concurrent.futures"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 921,
+      "text": "from threading import Lock"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 952,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/app/services/oasis_profile_generator.py",
+      "line": 1129,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 7,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 9,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 10,
+      "text": "from ..utils.llm_client import LLMClient"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 11,
+      "text": "from ..utils.locale import get_language_instruction"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 12,
+      "text": "from ..utils.file_parser import split_text_into_chunks"
+    },
+    {
+      "source_path": "backend/app/services/ontology_generator.py",
+      "line": 13,
+      "text": "from ..utils.ontology import (\n    MAX_ONTOLOGY_TYPES,\n    normalize_ontology_attributes,\n    normalize_ontology_source_targets,\n)"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 12,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 13,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 14,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 15,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 16,
+      "text": "from typing import Dict, Any, List, Optional, Callable"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 17,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 18,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 19,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 21,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 22,
+      "text": "from ..utils.llm_client import LLMClient"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 23,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 24,
+      "text": "from ..utils.locale import get_language_instruction, t"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 25,
+      "text": "from .zep_tools import (\n    ZepToolsService, \n    SearchResult, \n    InsightForgeResult, \n    PanoramaResult,\n    InterviewResult\n)"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 337,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 368,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 1602,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 2193,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 2363,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/report_agent.py",
+      "line": 2597,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 13,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 14,
+      "text": "import math"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 15,
+      "text": "from typing import Dict, Any, List, Optional, Callable"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 16,
+      "text": "from dataclasses import dataclass, field, asdict"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 17,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 19,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 21,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 22,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 23,
+      "text": "from ..utils.locale import get_language_instruction, t"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 24,
+      "text": "from ..utils.openai_chat_compat import create_chat_completion, extract_chat_completion_text"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 25,
+      "text": "from .zep_entity_reader import EntityNode, ZepEntityReader"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 437,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 480,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/simulation_config_generator.py",
+      "line": 505,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 12,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 13,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 14,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 15,
+      "text": "from typing import Dict, Any, Optional, List"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 16,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 17,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 18,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/services/simulation_ipc.py",
+      "line": 20,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 7,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 9,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 10,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 11,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 12,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 13,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 15,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 16,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 17,
+      "text": "from .zep_entity_reader import ZepEntityReader, FilteredEntities"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 18,
+      "text": "from .oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 19,
+      "text": "from .simulation_config_generator import SimulationConfigGenerator, SimulationParameters"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 20,
+      "text": "from ..utils.locale import t"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 227,
+      "text": "import uuid"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 472,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/services/simulation_manager.py",
+      "line": 523,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 8,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 9,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 10,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 11,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 12,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 13,
+      "text": "import signal"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 14,
+      "text": "import atexit"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 15,
+      "text": "from typing import Dict, Any, List, Optional, Union"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 16,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 17,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 18,
+      "text": "from enum import Enum"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 19,
+      "text": "from queue import Queue"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 21,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 22,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 23,
+      "text": "from ..utils.locale import get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 24,
+      "text": "from ..utils.zep import (\n    ZEP_HTTP_REQUEST_TIMEOUT_SECONDS,\n    ZEP_INGESTION_WAIT_TIMEOUT_SECONDS,\n)"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 28,
+      "text": "from .zep_graph_memory_updater import ZepGraphMemoryManager"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 29,
+      "text": "from .simulation_ipc import SimulationIPCClient, CommandType, IPCResponse"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 257,
+      "text": "from .simulation_manager import SimulationManager, SimulationStatus"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 1387,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "backend/app/services/simulation_runner.py",
+      "line": 1933,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/app/services/text_processor.py",
+      "line": 5,
+      "text": "from typing import List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/text_processor.py",
+      "line": 6,
+      "text": "from ..utils.file_parser import FileParser, split_text_into_chunks"
+    },
+    {
+      "source_path": "backend/app/services/text_processor.py",
+      "line": 49,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 6,
+      "text": "from typing import Dict, Any, List, Optional, Set, Callable, TypeVar"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 7,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 8,
+      "text": "from zep_cloud import NotFoundError"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 10,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 11,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 12,
+      "text": "from ..utils.zep_paging import fetch_all_nodes, fetch_all_edges"
+    },
+    {
+      "source_path": "backend/app/services/zep_entity_reader.py",
+      "line": 13,
+      "text": "from ..utils.zep import call_zep_read_with_retry, get_zep_client"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 7,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 8,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 9,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 10,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 11,
+      "text": "from queue import Queue, Empty"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 13,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 14,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 15,
+      "text": "from ..utils.locale import get_locale, set_locale"
+    },
+    {
+      "source_path": "backend/app/services/zep_graph_memory_updater.py",
+      "line": 16,
+      "text": "from ..utils.zep import (\n    ZEP_INGESTION_WAIT_TIMEOUT_SECONDS,\n    call_zep_read_with_retry,\n    get_zep_client,\n)"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 11,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 12,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 13,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 14,
+      "text": "from dataclasses import dataclass, field"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 15,
+      "text": "from zep_cloud import NotFoundError"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 17,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 18,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 19,
+      "text": "from ..utils.llm_client import LLMClient"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 20,
+      "text": "from ..utils.locale import get_locale, t"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 21,
+      "text": "from ..utils.zep_paging import fetch_all_nodes, fetch_all_edges"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 22,
+      "text": "from ..utils.zep import (\n    call_zep_read_with_retry,\n    get_zep_client,\n    normalize_zep_search_limit,\n    normalize_zep_search_query,\n)"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1305,
+      "text": "from .simulation_runner import SimulationRunner"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1421,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1467,
+      "text": "import traceback"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1490,
+      "text": "import re as _re"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1505,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/services/zep_tools.py",
+      "line": 1506,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/app/utils/__init__.py",
+      "line": 5,
+      "text": "from .file_parser import FileParser"
+    },
+    {
+      "source_path": "backend/app/utils/__init__.py",
+      "line": 6,
+      "text": "from .llm_client import LLMClient"
+    },
+    {
+      "source_path": "backend/app/utils/__init__.py",
+      "line": 7,
+      "text": "from .locale import t, get_locale, set_locale, get_language_instruction"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 7,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 8,
+      "text": "from typing import List, Optional"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 38,
+      "text": "from charset_normalizer import from_bytes"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 48,
+      "text": "import chardet"
+    },
+    {
+      "source_path": "backend/app/utils/file_parser.py",
+      "line": 114,
+      "text": "import fitz"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 6,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 7,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 8,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 9,
+      "text": "from typing import Optional, Dict, Any, List"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 10,
+      "text": "from openai import OpenAI"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 12,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/utils/llm_client.py",
+      "line": 13,
+      "text": "from .openai_chat_compat import create_chat_completion, extract_chat_completion_text"
+    },
+    {
+      "source_path": "backend/app/utils/locale.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/app/utils/locale.py",
+      "line": 2,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/utils/locale.py",
+      "line": 3,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/utils/locale.py",
+      "line": 4,
+      "text": "from flask import request, has_request_context"
+    },
+    {
+      "source_path": "backend/app/utils/logger.py",
+      "line": 6,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/utils/logger.py",
+      "line": 7,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/app/utils/logger.py",
+      "line": 8,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/app/utils/logger.py",
+      "line": 9,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/app/utils/logger.py",
+      "line": 10,
+      "text": "from logging.handlers import RotatingFileHandler"
+    },
+    {
+      "source_path": "backend/app/utils/ontology.py",
+      "line": 3,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "backend/app/utils/openai_chat_compat.py",
+      "line": 10,
+      "text": "from typing import Any, Dict, List, Optional"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 7,
+      "text": "import random"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 8,
+      "text": "import functools"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 9,
+      "text": "from typing import Callable, Any, Optional, Type, Tuple"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 10,
+      "text": "from ..utils.logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/utils/retry.py",
+      "line": 92,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 6,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 7,
+      "text": "from functools import lru_cache"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 8,
+      "text": "from typing import Any, Callable, TypeVar"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 10,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 11,
+      "text": "from zep_cloud.client import Zep"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 12,
+      "text": "from zep_cloud.core.api_error import ApiError as ZepApiError"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 14,
+      "text": "from ..config import Config"
+    },
+    {
+      "source_path": "backend/app/utils/zep.py",
+      "line": 15,
+      "text": "from .logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/utils/zep_lifecycle.py",
+      "line": 9,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/app/utils/zep_paging.py",
+      "line": 5,
+      "text": "from collections.abc import Callable"
+    },
+    {
+      "source_path": "backend/app/utils/zep_paging.py",
+      "line": 6,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "backend/app/utils/zep_paging.py",
+      "line": 8,
+      "text": "from zep_cloud.client import Zep"
+    },
+    {
+      "source_path": "backend/app/utils/zep_paging.py",
+      "line": 10,
+      "text": "from .logger import get_logger"
+    },
+    {
+      "source_path": "backend/app/utils/zep_paging.py",
+      "line": 11,
+      "text": "from .zep import call_zep_read_with_retry"
+    },
+    {
+      "source_path": "backend/run.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/run.py",
+      "line": 6,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/run.py",
+      "line": 21,
+      "text": "from app import create_app"
+    },
+    {
+      "source_path": "backend/run.py",
+      "line": 22,
+      "text": "from app.config import Config"
+    },
+    {
+      "source_path": "backend/scripts/action_logger.py",
+      "line": 15,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/action_logger.py",
+      "line": 16,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/action_logger.py",
+      "line": 17,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/scripts/action_logger.py",
+      "line": 18,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/scripts/action_logger.py",
+      "line": 19,
+      "text": "from typing import Dict, Any, Optional"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 32,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 33,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 50,
+      "text": "import builtins"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 67,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 68,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 69,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 70,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 71,
+      "text": "import multiprocessing"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 72,
+      "text": "import random"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 73,
+      "text": "import signal"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 74,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 75,
+      "text": "import warnings"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 76,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 77,
+      "text": "from typing import Dict, Any, List, Optional, Tuple"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 93,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 154,
+      "text": "import shutil"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 158,
+      "text": "from action_logger import SimulationLogManager, PlatformActionLogger"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 161,
+      "text": "from camel.models import ModelFactory"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 162,
+      "text": "from camel.types import ModelPlatformType"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 163,
+      "text": "import oasis"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 164,
+      "text": "from oasis import (\n        ActionType,\n        LLMAction,\n        ManualAction,\n        generate_twitter_agent_graph,\n        generate_reddit_agent_graph\n    )"
+    },
+    {
+      "source_path": "backend/scripts/run_parallel_simulation.py",
+      "line": 1695,
+      "text": "from multiprocessing import resource_tracker"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 16,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 17,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 18,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 19,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 20,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 21,
+      "text": "import random"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 22,
+      "text": "import signal"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 24,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 25,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 26,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 40,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 50,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 119,
+      "text": "from camel.models import ModelFactory"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 120,
+      "text": "from camel.types import ModelPlatformType"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 121,
+      "text": "import oasis"
+    },
+    {
+      "source_path": "backend/scripts/run_reddit_simulation.py",
+      "line": 122,
+      "text": "from oasis import (\n        ActionType,\n        LLMAction,\n        ManualAction,\n        generate_reddit_agent_graph\n    )"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 16,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 17,
+      "text": "import asyncio"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 18,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 19,
+      "text": "import logging"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 20,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 21,
+      "text": "import random"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 22,
+      "text": "import signal"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 23,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 24,
+      "text": "import sqlite3"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 25,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 26,
+      "text": "from typing import Dict, Any, List, Optional"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 40,
+      "text": "from dotenv import load_dotenv"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 50,
+      "text": "import re"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 119,
+      "text": "from camel.models import ModelFactory"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 120,
+      "text": "from camel.types import ModelPlatformType"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 121,
+      "text": "import oasis"
+    },
+    {
+      "source_path": "backend/scripts/run_twitter_simulation.py",
+      "line": 122,
+      "text": "from oasis import (\n        ActionType,\n        LLMAction,\n        ManualAction,\n        generate_twitter_agent_graph\n    )"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 8,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 9,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 11,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 12,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "backend/scripts/test_profile_format.py",
+      "line": 17,
+      "text": "from app.services.oasis_profile_generator import OasisProfileGenerator, OasisAgentProfile"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 13,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 14,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 15,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 16,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 17,
+      "text": "import time"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 18,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 19,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 20,
+      "text": "from typing import Any, Iterable"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 27,
+      "text": "from zep_cloud import BatchAddItem"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 28,
+      "text": "from zep_cloud.types import SearchFilters"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 30,
+      "text": "from app.services.graph_builder import BatchSubmission, GraphBuilderService"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 31,
+      "text": "from app.services.zep_entity_reader import ZepEntityReader"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 32,
+      "text": "from app.services.zep_graph_memory_updater import AgentActivity, ZepGraphMemoryUpdater"
+    },
+    {
+      "source_path": "backend/scripts/validate_zep_cloud_integration.py",
+      "line": 33,
+      "text": "from app.utils.zep_paging import fetch_all_edges, fetch_all_nodes"
+    },
+    {
+      "source_path": "backend/tests/test_llm_json_responses.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_llm_json_responses.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_llm_json_responses.py",
+      "line": 5,
+      "text": "from app.utils.llm_client import LLMClient, LLMResponseError"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_api_errors.py",
+      "line": 1,
+      "text": "import io"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_api_errors.py",
+      "line": 3,
+      "text": "from app import create_app"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_api_errors.py",
+      "line": 4,
+      "text": "from app.api import graph as graph_api"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_api_errors.py",
+      "line": 5,
+      "text": "from app.models.project import ProjectManager, ProjectStatus"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_api_errors.py",
+      "line": 6,
+      "text": "from app.utils.llm_client import LLMResponseError"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_attributes.py",
+      "line": 1,
+      "text": "from app.services.ontology_generator import OntologyGenerator"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_attributes.py",
+      "line": 2,
+      "text": "from app.services.graph_builder import GraphBuilderService"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_attributes.py",
+      "line": 3,
+      "text": "from app.utils.ontology import (\n    MAX_ONTOLOGY_ATTRIBUTES,\n    MAX_ONTOLOGY_SOURCE_TARGETS,\n    normalize_ontology_attribute,\n    normalize_ontology_attributes,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_attributes.py",
+      "line": 9,
+      "text": "from zep_cloud.external_clients.ontology import (\n    edge_model_to_api_schema,\n    entity_model_to_api_schema,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_ontology_generator.py",
+      "line": 1,
+      "text": "from app.services.ontology_generator import OntologyGenerator"
+    },
+    {
+      "source_path": "backend/tests/test_openai_chat_compat.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_openai_chat_compat.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_openai_chat_compat.py",
+      "line": 5,
+      "text": "from app.utils.openai_chat_compat import (\n    create_chat_completion,\n    extract_chat_completion_text,\n    is_gpt5_family,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_platform_profiles.py",
+      "line": 1,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/tests/test_platform_profiles.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/tests/test_platform_profiles.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_platform_profiles.py",
+      "line": 6,
+      "text": "from app.services.simulation_manager import SimulationManager, SimulationState"
+    },
+    {
+      "source_path": "backend/tests/test_profile_field_normalization.py",
+      "line": 1,
+      "text": "import csv"
+    },
+    {
+      "source_path": "backend/tests/test_profile_field_normalization.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/tests/test_profile_field_normalization.py",
+      "line": 4,
+      "text": "from app.services.oasis_profile_generator import (\n    OasisAgentProfile,\n    OasisProfileGenerator,\n    _coerce_to_str,\n    _coerce_to_str_list,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_report_tool_result_sanitizer.py",
+      "line": 1,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_report_tool_result_sanitizer.py",
+      "line": 3,
+      "text": "from app.services.report_agent import ReportAgent"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 1,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 5,
+      "text": "from app import create_app"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 6,
+      "text": "from app.config import Config"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 7,
+      "text": "from app.services import simulation_manager as simulation_manager_module"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 8,
+      "text": "from app.services.simulation_manager import (\n    SimulationManager,\n    SimulationState,\n    SimulationStatus,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_simulation_prepare_failure.py",
+      "line": 13,
+      "text": "from app.services.zep_entity_reader import FilteredEntities"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 4,
+      "text": "import httpx"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 6,
+      "text": "from zep_cloud import Zep"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 7,
+      "text": "from zep_cloud.core.api_error import ApiError as ZepApiError"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 9,
+      "text": "from app.services import graph_builder as graph_builder_module"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 10,
+      "text": "from app.services.graph_builder import BatchSubmission, GraphBuilderService"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 11,
+      "text": "from app.services.oasis_profile_generator import OasisProfileGenerator"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 12,
+      "text": "from app.services.zep_entity_reader import EntityNode, ZepEntityReader"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_contracts.py",
+      "line": 13,
+      "text": "from app.services.zep_tools import ZepToolsService"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 1,
+      "text": "import os"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 2,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 3,
+      "text": "import sys"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 4,
+      "text": "import textwrap"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 5,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 6,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 50,
+      "text": "from scripts import validate_zep_cloud_integration as validation"
+    },
+    {
+      "source_path": "backend/tests/test_zep_cloud_validation_script.py",
+      "line": 85,
+      "text": "from scripts import validate_zep_cloud_integration as validation"
+    },
+    {
+      "source_path": "backend/tests/test_zep_edge_paging.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_edge_paging.py",
+      "line": 3,
+      "text": "from app.utils import zep_paging"
+    },
+    {
+      "source_path": "backend/tests/test_zep_edge_paging.py",
+      "line": 109,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_entity_reader_edges.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_entity_reader_edges.py",
+      "line": 3,
+      "text": "from app.services.zep_entity_reader import ZepEntityReader"
+    },
+    {
+      "source_path": "backend/tests/test_zep_entity_reader_edges.py",
+      "line": 4,
+      "text": "from zep_cloud.graph.node.client import NodeClient"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 1,
+      "text": "from datetime import datetime"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 2,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 4,
+      "text": "from flask import Flask"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 5,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 7,
+      "text": "from app.api import graph as graph_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 8,
+      "text": "from app.api import simulation as simulation_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 9,
+      "text": "from app.models.project import Project, ProjectStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 10,
+      "text": "from app.services.simulation_manager import SimulationStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_lifecycle.py",
+      "line": 11,
+      "text": "from app.models.task import TaskStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 2,
+      "text": "import threading"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 3,
+      "text": "from queue import Queue"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 5,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 7,
+      "text": "from app.services import zep_graph_memory_updater as updater_module"
+    },
+    {
+      "source_path": "backend/tests/test_zep_graph_memory_updater.py",
+      "line": 8,
+      "text": "from app.services.zep_graph_memory_updater import (\n    AgentActivity,\n    ZepGraphMemoryManager,\n    ZepGraphMemoryUpdater,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 3,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 4,
+      "text": "from flask import Flask"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 6,
+      "text": "from app.api import graph as graph_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 7,
+      "text": "from app.api import report as report_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 8,
+      "text": "from app.api import simulation as simulation_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 9,
+      "text": "from app.models.project import ProjectStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 10,
+      "text": "from app.services.simulation_manager import SimulationStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 11,
+      "text": "from app.services.simulation_runner import RunnerStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_report_barrier.py",
+      "line": 12,
+      "text": "from app.utils.zep_lifecycle import (\n    get_graph_readers,\n    unregister_graph_reader,\n)"
+    },
+    {
+      "source_path": "backend/tests/test_zep_retry_and_client.py",
+      "line": 1,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "backend/tests/test_zep_retry_and_client.py",
+      "line": 2,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_retry_and_client.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_retry_and_client.py",
+      "line": 5,
+      "text": "from zep_cloud.core.api_error import ApiError as ZepApiError"
+    },
+    {
+      "source_path": "backend/tests/test_zep_retry_and_client.py",
+      "line": 7,
+      "text": "from app.utils import zep"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 1,
+      "text": "from types import SimpleNamespace"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 2,
+      "text": "import json"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 4,
+      "text": "import pytest"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 5,
+      "text": "from flask import Flask"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 7,
+      "text": "from app.api import simulation as simulation_api"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 8,
+      "text": "from app.services import simulation_runner as runner_module"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 9,
+      "text": "from app.services.simulation_manager import SimulationStatus"
+    },
+    {
+      "source_path": "backend/tests/test_zep_simulation_barrier.py",
+      "line": 10,
+      "text": "from app.services.simulation_runner import (\n    RunnerStatus,\n    SimulationRunState,\n    SimulationRunner,\n    SimulationStopPending,\n)"
+    },
+    {
+      "source_path": "frontend/src/api/graph.js",
+      "line": 1,
+      "text": "import service from './index'"
+    },
+    {
+      "source_path": "frontend/src/api/index.js",
+      "line": 1,
+      "text": "import axios from 'axios'"
+    },
+    {
+      "source_path": "frontend/src/api/index.js",
+      "line": 2,
+      "text": "import i18n from '../i18n'"
+    },
+    {
+      "source_path": "frontend/src/api/report.js",
+      "line": 1,
+      "text": "import service from './index'"
+    },
+    {
+      "source_path": "frontend/src/api/simulation.js",
+      "line": 1,
+      "text": "import service from './index'"
+    },
+    {
+      "source_path": "frontend/src/i18n/index.js",
+      "line": 1,
+      "text": "import { createI18n } from 'vue-i18n'"
+    },
+    {
+      "source_path": "frontend/src/i18n/index.js",
+      "line": 2,
+      "text": "import languages from '../../../locales/languages.json'"
+    },
+    {
+      "source_path": "frontend/src/main.js",
+      "line": 1,
+      "text": "import { createApp } from 'vue'"
+    },
+    {
+      "source_path": "frontend/src/main.js",
+      "line": 2,
+      "text": "import App from './App.vue'"
+    },
+    {
+      "source_path": "frontend/src/main.js",
+      "line": 3,
+      "text": "import router from './router'"
+    },
+    {
+      "source_path": "frontend/src/main.js",
+      "line": 4,
+      "text": "import i18n from './i18n'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 1,
+      "text": "import { createRouter, createWebHistory } from 'vue-router'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 2,
+      "text": "import Home from '../views/Home.vue'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 3,
+      "text": "import Process from '../views/MainView.vue'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 4,
+      "text": "import SimulationView from '../views/SimulationView.vue'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 5,
+      "text": "import SimulationRunView from '../views/SimulationRunView.vue'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 6,
+      "text": "import ReportView from '../views/ReportView.vue'"
+    },
+    {
+      "source_path": "frontend/src/router/index.js",
+      "line": 7,
+      "text": "import InteractionView from '../views/InteractionView.vue'"
+    },
+    {
+      "source_path": "frontend/src/store/pendingUpload.js",
+      "line": 5,
+      "text": "import { reactive } from 'vue'"
+    },
+    {
+      "source_path": "frontend/vite.config.js",
+      "line": 1,
+      "text": "import { defineConfig } from 'vite'"
+    },
+    {
+      "source_path": "frontend/vite.config.js",
+      "line": 2,
+      "text": "import vue from '@vitejs/plugin-vue'"
+    },
+    {
+      "source_path": "frontend/vite.config.js",
+      "line": 3,
+      "text": "import path from 'path'"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 10,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 11,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 12,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 13,
+      "text": "import urllib.error"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 14,
+      "text": "import urllib.request"
+    },
+    {
+      "source_path": "scripts/fetch_star_count.py",
+      "line": 15,
+      "text": "from typing import Any"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 12,
+      "text": "import argparse"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 13,
+      "text": "import base64"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 14,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 15,
+      "text": "import html"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 16,
+      "text": "import json"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 17,
+      "text": "import math"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 18,
+      "text": "import os"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 19,
+      "text": "import re"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 20,
+      "text": "import stat"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 21,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 22,
+      "text": "import sys"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 23,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 24,
+      "text": "import xml.etree.ElementTree as ET"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 25,
+      "text": "from collections import Counter"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 26,
+      "text": "from dataclasses import dataclass"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 27,
+      "text": "from datetime import date, datetime, time, timedelta, timezone"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 28,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "scripts/star_history.py",
+      "line": 29,
+      "text": "from typing import Any, Mapping, Protocol, Sequence"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 1,
+      "text": "import ast"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 2,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 3,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 4,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 5,
+      "text": "import threading"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 6,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 7,
+      "text": "from contextlib import redirect_stderr, redirect_stdout"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 8,
+      "text": "from http.server import BaseHTTPRequestHandler, HTTPServer"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 9,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 10,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_local_star_count_fetch.py",
+      "line": 12,
+      "text": "from scripts import fetch_star_count"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 1,
+      "text": "import base64"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 2,
+      "text": "import hashlib"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 3,
+      "text": "import io"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 4,
+      "text": "import json"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 5,
+      "text": "import os"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 6,
+      "text": "import subprocess"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 7,
+      "text": "import tempfile"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 8,
+      "text": "import unittest"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 9,
+      "text": "import xml.etree.ElementTree as ET"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 10,
+      "text": "from contextlib import redirect_stderr, redirect_stdout"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 11,
+      "text": "from copy import deepcopy"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 12,
+      "text": "from datetime import datetime, timezone"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 13,
+      "text": "from pathlib import Path"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 14,
+      "text": "from unittest.mock import patch"
+    },
+    {
+      "source_path": "tests/test_local_star_history.py",
+      "line": 16,
+      "text": "from scripts import star_history"
+    }
+  ],
+  "call_edges": []
+}

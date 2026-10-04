@@ -5,8 +5,16 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,31);
+ const tools=await client.listTools();assert.equal(tools.tools.length,36);
  for(const name of ['ecdev.product.discover','ecdev.product.inspect','ecdev.product.compare','ecdev.provider.status','ecdev.monitor.create','ecdev.monitor.status'])assert.ok(tools.tools.some(t=>t.name===name),name);
+ const social=await client.callTool({name:'ecdev.trend.discover',arguments:{query:'matcha',fixture_now:10000,sources:[{platform:'HACKER_NEWS',fixture_raw:JSON.stringify({hits:[{objectID:'sdk-1',title:'matcha glass',created_at_i:9000}]})}]}});
+ // HN IDs are strictly numeric; malformed input must fail rather than create an observation.
+ assert.equal(social.isError,false);assert.equal(social.structuredContent.source_complete,false);assert.match(social.structuredContent.provider_failures[0].reason,/INVALID_HN_ID/);
+ const trend=await client.callTool({name:'ecdev.trend.discover',arguments:{query:'matcha',fixture_now:10000,sources:[{platform:'HACKER_NEWS',fixture_raw:JSON.stringify({hits:[{objectID:'101',title:'matcha glass',created_at_i:9000,points:0},{objectID:'102',title:'matcha glass',created_at_i:9100}]})}]}});
+ assert.equal(trend.isError,false);assert.equal(trend.structuredContent.capture_mode,'FIXTURE');assert.equal(trend.structuredContent.mention_count,2);assert.equal(trend.structuredContent.budget_usage.request_count,0);assert.equal(trend.structuredContent.simulation_contribution,0);
+ const trendEvidence=await client.callTool({name:'ecdev.trend.explain',arguments:{snapshot_id:trend.structuredContent.snapshot_id}});assert.equal(trendEvidence.isError,false);assert.equal(trendEvidence.structuredContent.observed_source_evidence.length,2);assert.equal(trendEvidence.structuredContent.score.learned,false);
+ const trendWatch=await client.callTool({name:'ecdev.trend.watch',arguments:{query:'SDK social disabled watch',research:{query:'SDK social disabled watch',sources:[{platform:'HACKER_NEWS'}]},triggers:['TOPIC_MENTION_GROWTH'],interval_seconds:60,enabled:false}});assert.equal(trendWatch.isError,false);assert.equal(trendWatch.structuredContent.enabled,false);
+ for(const name of ['ecdev.trend.discover','ecdev.trend.inspect','ecdev.trend.compare','ecdev.trend.watch','ecdev.trend.explain'])assert.ok(tools.tools.some(t=>t.name===name),name);
  const status=await client.callTool({name:'ecdev.system.status',arguments:{}});
  assert.equal(status.isError,false);assert.equal(status.structuredContent.name,'ECDEV');
  const providers=await (await fetch(base+'/api/providers')).json();

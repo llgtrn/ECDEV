@@ -190,6 +190,10 @@ pub fn allocate_information_actions(
             v["uncertainty_reduction_points"].as_f64().unwrap_or(0.0)
                 / (v["expected_requests"].as_f64().unwrap_or(1.0)
                     + v["expected_latency_ms"].as_f64().unwrap_or(0.0) / 1000.0
+                    + v["source_redundancy_penalty"]
+                        .as_f64()
+                        .unwrap_or(0.0)
+                        .max(0.0)
                     + v["expected_cost_minor"].as_f64().unwrap_or(0.0))
         };
         score(b)
@@ -206,9 +210,21 @@ pub fn allocate_information_actions(
     });
     let mut selected = vec![];
     let mut selected_keys = BTreeSet::new();
+    let mut selected_gaps = BTreeSet::new();
     let mut requests_used = 0_u64;
     let mut money_used = 0_u64;
     for action in &actions {
+        let gap = action["evidence_gap"].as_str().map(|g| {
+            (
+                action["candidate_id"].to_string(),
+                g.to_owned(),
+                action["source_group"].to_string(),
+            )
+        });
+        if gap.as_ref().is_some_and(|g| selected_gaps.contains(g)) {
+            skipped.push(json!({"action":action,"reason":"REDUNDANT_EVIDENCE_GAP_SOURCE"}));
+            continue;
+        }
         let target = action["url"]
             .as_str()
             .map(str::to_owned)
@@ -237,6 +253,9 @@ pub fn allocate_information_actions(
             continue;
         }
         selected_keys.insert(key);
+        if let Some(gap) = gap {
+            selected_gaps.insert(gap);
+        }
         requests_used = next_requests.unwrap();
         money_used = next_money.unwrap();
         selected.push(action.clone());

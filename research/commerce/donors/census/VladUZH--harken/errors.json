@@ -1,0 +1,1917 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 47,
+      "line_end": 47,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_SMTP_HOST must be a non-empty hostname\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_SMTP_PORT must be between 1 and 65535\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 51,
+      "line_end": 51,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_SMTP_SECURITY must be starttls, ssl, or none\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_EMAIL_TO must contain at least one address\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_SMTP_USERNAME and HARKEN_SMTP_PASSWORD must be set together\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"SMTP timeout must be greater than 0\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 157,
+      "line_end": 157,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except httpx.HTTPStatusError as exc:"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 158,
+      "line_end": 158,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise WebhookDeliveryError(f\"webhook returned HTTP {exc.response.status_code}\") from None"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 159,
+      "line_end": 159,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except httpx.RequestError as exc:"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 160,
+      "line_end": 160,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise WebhookDeliveryError(f\"webhook request failed: {type(exc).__name__}\") from None"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 198,
+      "line_end": 198,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except smtplib.SMTPResponseException as exc:"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 199,
+      "line_end": 199,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise EmailDeliveryError(f\"SMTP server returned {exc.smtp_code}\") from None"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (smtplib.SMTPException, OSError) as exc:"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 201,
+      "line_end": 201,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise EmailDeliveryError(f\"email delivery failed: {type(exc).__name__}\") from None"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 207,
+      "line_end": 207,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"HARKEN_WEBHOOK_URL must be an absolute http(s) URL\")"
+    },
+    {
+      "source_path": "src/harken/alerts.py",
+      "line_start": 216,
+      "line_end": 216,
+      "blob_hash": "89ccf51089acd878dacb75cad0656ca0e878b0df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{variable} contains an invalid email address\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 19,
+      "line_end": 19,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"username must be 1-64 characters and use letters, numbers, or . _ @ + -\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"role must be one of {', '.join(ROLES)}\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"password must be at least 12 characters\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"password must be at most 1024 characters\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"PBKDF2 iterations must be between 100000 and 2000000\")"
+    },
+    {
+      "source_path": "src/harken/auth.py",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "9f2300eb8d7415ab43f8b97325fdb1273006f244",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (TypeError, ValueError):"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 53,
+      "line_end": 53,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit()"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 141,
+      "line_end": 141,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)  # every configured source failed — nothing was fetched"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 221,
+      "line_end": 221,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except KeyboardInterrupt:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 223,
+      "line_end": 223,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except Exception as e:  # a single scan failing must not kill the watcher"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 243,
+      "line_end": 243,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except KeyboardInterrupt:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 263,
+      "line_end": 263,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 266,
+      "line_end": 266,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 337,
+      "line_end": 337,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 338,
+      "line_end": 338,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 343,
+      "line_end": 343,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 344,
+      "line_end": 344,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 356,
+      "line_end": 356,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 357,
+      "line_end": 357,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 361,
+      "line_end": 361,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(f\"unknown user: {username}\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 375,
+      "line_end": 375,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 376,
+      "line_end": 376,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(str(exc), param_hint=\"role\") from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 380,
+      "line_end": 380,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(f\"unknown user: {username}\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 383,
+      "line_end": 383,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 384,
+      "line_end": 384,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 419,
+      "line_end": 419,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(f\"unknown user: {username}\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 422,
+      "line_end": 422,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 423,
+      "line_end": 423,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 460,
+      "line_end": 460,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(\"format must be table or json\", param_hint=\"--format\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 463,
+      "line_end": 463,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (OSError, ValueError) as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 464,
+      "line_end": 464,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(str(exc), param_hint=\"--dataset\") from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 525,
+      "line_end": 525,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 559,
+      "line_end": 559,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 560,
+      "line_end": 560,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc), param_hint=\"name\") from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 576,
+      "line_end": 576,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 577,
+      "line_end": 577,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 592,
+      "line_end": 592,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 593,
+      "line_end": 593,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 596,
+      "line_end": 596,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 616,
+      "line_end": 616,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 617,
+      "line_end": 617,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 620,
+      "line_end": 620,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 634,
+      "line_end": 634,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 648,
+      "line_end": 648,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(\"format must be json or csv\", param_hint=\"--format\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 652,
+      "line_end": 652,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 656,
+      "line_end": 656,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 666,
+      "line_end": 666,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except OSError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 668,
+      "line_end": 668,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 682,
+      "line_end": 682,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except (FileExistsError, ValueError) as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 683,
+      "line_end": 683,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc), param_hint=\"output\") from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 684,
+      "line_end": 684,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except (OSError, sqlite3.Error) as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 686,
+      "line_end": 686,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 704,
+      "line_end": 704,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.Exit(1)"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 733,
+      "line_end": 733,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(\"transport must be webhook or email\", param_hint=\"--transport\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 736,
+      "line_end": 736,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(\"kind must be negative, volume, or sentiment\", param_hint=\"--kind\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 741,
+      "line_end": 741,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter("
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 745,
+      "line_end": 745,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter("
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 775,
+      "line_end": 775,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 777,
+      "line_end": 777,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.Exit(1) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 796,
+      "line_end": 796,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(f\"unknown user: {username}\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 799,
+      "line_end": 799,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 800,
+      "line_end": 800,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 808,
+      "line_end": 808,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise typer.BadParameter(\"query must not be empty\", param_hint=\"query\")"
+    },
+    {
+      "source_path": "src/harken/cli.py",
+      "line_start": 817,
+      "line_end": 817,
+      "blob_hash": "2783e925d5fd0ac853c8919e43c22aaad57fb9ae",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise typer.BadParameter(\"provide at least one source\", param_hint=\"--sources\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be an integer (got {raw!r})\") from exc"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 41,
+      "line_end": 41,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be at least 1 (got {value})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 49,
+      "line_end": 49,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 50,
+      "line_end": 50,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be an integer (got {raw!r})\") from exc"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 52,
+      "line_end": 52,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be at least 0 (got {value})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 60,
+      "line_end": 60,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 61,
+      "line_end": 61,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be a number (got {raw!r})\") from exc"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 63,
+      "line_end": 63,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be greater than 0 (got {value})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 71,
+      "line_end": 71,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be a number (got {raw!r})\") from exc"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 74,
+      "line_end": 74,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be at least 0 (got {value})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 82,
+      "line_end": 82,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{name} must be one of {expected} (got {value!r})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    raise ValueError(f\"{name} must be true or false (got {raw!r})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 114,
+      "line_end": 114,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"HARKEN_LOG_LEVEL must be one of {expected} (got {value!r})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 211,
+      "line_end": 211,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"HARKEN_SMTP_PORT must be at most 65535 (got {self.smtp_port})\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 220,
+      "line_end": 220,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError("
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 224,
+      "line_end": 224,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_SMTP_USERNAME and HARKEN_SMTP_PASSWORD must be set together\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"HARKEN_AUTH_USERNAME and HARKEN_AUTH_PASSWORD must be set together\")"
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 228,
+      "line_end": 228,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError("
+    },
+    {
+      "source_path": "src/harken/config.py",
+      "line_start": 232,
+      "line_end": 232,
+      "blob_hash": "52bd84663d292290e77f2bc3011849143e9f8129",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError("
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 36,
+      "line_end": 36,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except json.JSONDecodeError as exc:"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"invalid JSON in {origin}: {exc.msg}\") from exc"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{origin} must contain a JSON object\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 42,
+      "line_end": 42,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{origin} must contain a non-empty examples list\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 48,
+      "line_end": 48,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"example {index} must be an object\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 54,
+      "line_end": 54,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"example {index} has a missing or duplicate id\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 56,
+      "line_end": 56,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"example {example_id} must have non-empty text\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 58,
+      "line_end": 58,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"example {example_id} label must be one of {', '.join(_LABELS)}\")"
+    },
+    {
+      "source_path": "src/harken/evaluate.py",
+      "line_start": 69,
+      "line_end": 69,
+      "blob_hash": "13094ceb878894c44fd974028d2086e829df9bde",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(f\"{origin} must have a name and positive integer version\")"
+    },
+    {
+      "source_path": "src/harken/llm/__init__.py",
+      "line_start": 31,
+      "line_end": 31,
+      "blob_hash": "e449a7a50ab817204a6aaa167478d9df8403d9c7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError("
+    },
+    {
+      "source_path": "src/harken/llm/anthropic_provider.py",
+      "line_start": 32,
+      "line_end": 32,
+      "blob_hash": "d0b149c6f434723e2fc501b001766e8de3edb43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ImportError as e:  # pragma: no cover - optional dep"
+    },
+    {
+      "source_path": "src/harken/llm/anthropic_provider.py",
+      "line_start": 33,
+      "line_end": 33,
+      "blob_hash": "d0b149c6f434723e2fc501b001766e8de3edb43a",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise RuntimeError("
+    },
+    {
+      "source_path": "src/harken/llm/base.py",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "1003b9d37bd2caba30cb25b6ef0626363910086c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise NotImplementedError"
+    },
+    {
+      "source_path": "src/harken/llm/null.py",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "86cdca37fac2d067587762446390f5757cf9167d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise RuntimeError("
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line_start": 57,
+      "line_end": 57,
+      "blob_hash": "bb97a81caa7cd20768c4fc46ad9a5c9ba9f37c8d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"log format must be console or json\")"
+    },
+    {
+      "source_path": "src/harken/observability.py",
+      "line_start": 62,
+      "line_end": 62,
+      "blob_hash": "bb97a81caa7cd20768c4fc46ad9a5c9ba9f37c8d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"log level must be DEBUG, INFO, WARNING, ERROR, or CRITICAL\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"query must not be empty\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 99,
+      "line_end": 99,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"at least one source must be configured\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 101,
+      "line_end": 101,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"pages must be between 1 and 20\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 168,
+      "line_end": 168,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except Exception as e:  # isolate per-source failures"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 298,
+      "line_end": 298,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 323,
+      "line_end": 323,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 338,
+      "line_end": 338,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 368,
+      "line_end": 368,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 397,
+      "line_end": 397,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise RuntimeError("
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 424,
+      "line_end": 424,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise ValueError(\"provider returned an incomplete sentiment response\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 428,
+      "line_end": 428,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        raise ValueError(\"provider returned an invalid sentiment item\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 432,
+      "line_end": 432,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    except (KeyError, TypeError, ValueError) as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 433,
+      "line_end": 433,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        raise ValueError("
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 437,
+      "line_end": 437,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        raise ValueError(\"provider sentiment score must be between -1 and 1\")"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 443,
+      "line_end": 443,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 484,
+      "line_end": 484,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 537,
+      "line_end": 537,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception as exc:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 553,
+      "line_end": 553,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (json.JSONDecodeError, ValueError):"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 573,
+      "line_end": 573,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError:"
+    },
+    {
+      "source_path": "src/harken/pipeline.py",
+      "line_start": 583,
+      "line_end": 583,
+      "blob_hash": "15bd6811fe9f383145af79ea65566ab55971ec8c",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/sources/base.py",
+      "line_start": 44,
+      "line_end": 44,
+      "blob_hash": "2910f07ed878fad04aa7ef6f986f75de6090c173",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise NotImplementedError"
+    },
+    {
+      "source_path": "src/harken/sources/bluesky.py",
+      "line_start": 75,
+      "line_end": 75,
+      "blob_hash": "edb25049c04505c3c503529f42cf73d0500cbb7f",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/sources/mastodon.py",
+      "line_start": 80,
+      "line_end": 80,
+      "blob_hash": "bc8ec5c0e18b98f1ec454d2ffe5f58965c82bacf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 85,
+      "line_end": 85,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError("
+    },
+    {
+      "source_path": "src/harken/sources/reddit.py",
+      "line_start": 97,
+      "line_end": 97,
+      "blob_hash": "bd7d01d4ef723b58aa43532d236075ab740550df",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"Reddit OAuth response did not contain an access token\")"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line_start": 30,
+      "line_end": 30,
+      "blob_hash": "81bbe073b13c4c2cc1c1a665ee40cceaff5c0408",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"RSS requires at least one URL in HARKEN_RSS_FEEDS\")"
+    },
+    {
+      "source_path": "src/harken/sources/rss.py",
+      "line_start": 38,
+      "line_end": 38,
+      "blob_hash": "81bbe073b13c4c2cc1c1a665ee40cceaff5c0408",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                except httpx.HTTPError:"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(f\"Stack Exchange API requested backoff ({remaining:.0f}s remaining)\")"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 39,
+      "line_end": 39,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"Stack Exchange API daily quota is exhausted\")"
+    },
+    {
+      "source_path": "src/harken/sources/stackoverflow.py",
+      "line_start": 102,
+      "line_end": 102,
+      "blob_hash": "418cd9955ea61445058466061055dd2ac17f0dcc",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (TypeError, ValueError, OSError):"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"X requires HARKEN_X_BEARER_TOKEN\")"
+    },
+    {
+      "source_path": "src/harken/sources/x.py",
+      "line_start": 94,
+      "line_end": 94,
+      "blob_hash": "858b2668109b8b95990704dad2479cf80b77edbb",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError:"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line_start": 34,
+      "line_end": 34,
+      "blob_hash": "affa071c2764e30f67af4a6d7580d067834adbc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"YouTube requires HARKEN_YOUTUBE_API_KEY\")"
+    },
+    {
+      "source_path": "src/harken/sources/youtube.py",
+      "line_start": 79,
+      "line_end": 79,
+      "blob_hash": "affa071c2764e30f67af4a6d7580d067834adbc0",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except ValueError:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 231,
+      "line_end": 231,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise RuntimeError(f\"Unsupported Harken database schema: primary key {primary_key}\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 264,
+      "line_end": 264,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        \"\"\"Raise if SQLite cannot execute a read and a small write transaction.\"\"\""
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 278,
+      "line_end": 278,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"backup destination must differ from the active database\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 280,
+      "line_end": 280,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise FileExistsError(f\"backup already exists: {target}\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 330,
+      "line_end": 330,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise ValueError(\"the first active user must be an admin\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 340,
+      "line_end": 340,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except sqlite3.IntegrityError as exc:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 342,
+      "line_end": 342,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f\"user already exists: {username}\") from exc"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 343,
+      "line_end": 343,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 348,
+      "line_end": 348,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"created user could not be read\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 418,
+      "line_end": 418,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 442,
+      "line_end": 442,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 460,
+      "line_end": 460,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except Exception:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 531,
+      "line_end": 531,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"cannot remove or demote the last active admin\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 624,
+      "line_end": 624,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"query must not be empty\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 626,
+      "line_end": 626,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"at least one source must be configured\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 632,
+      "line_end": 632,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise ValueError(f\"unknown project: {project_id}\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 662,
+      "line_end": 662,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"project name must not be empty\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 664,
+      "line_end": 664,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"project name must be at most 100 characters\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 674,
+      "line_end": 674,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except sqlite3.IntegrityError as exc:"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 676,
+      "line_end": 676,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(f'a project named \"{normalized}\" already exists') from exc"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 683,
+      "line_end": 683,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"query must not be empty\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 688,
+      "line_end": 688,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise ValueError(f\"unknown project: {project_id}\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 691,
+      "line_end": 691,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise ValueError(f'unknown tracked query: \"{normalized}\"')"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 708,
+      "line_end": 708,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"keywords cannot be removed from the Default project\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 724,
+      "line_end": 724,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"the Default project cannot be deleted\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 834,
+      "line_end": 834,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"source metric values must not be negative\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 930,
+      "line_end": 930,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"limit must be at least 1\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1206,
+      "line_end": 1206,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"alert windows must be at least 1\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1247,
+      "line_end": 1247,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        except (TypeError, json.JSONDecodeError):"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1274,
+      "line_end": 1274,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"limit must be at least 1\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1276,
+      "line_end": 1276,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"query and project_id are mutually exclusive\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1379,
+      "line_end": 1379,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise ValueError(\"limit must be at least 1\")"
+    },
+    {
+      "source_path": "src/harken/store.py",
+      "line_start": 1400,
+      "line_end": 1400,
+      "blob_hash": "6fb860ac9c994d3ef859d4f2916a6741716c4c3e",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"query and project_id are mutually exclusive\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 103,
+      "line_end": 103,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"max_points and max_ticks must be positive\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 197,
+      "line_end": 197,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"HARKEN_AUTH_USERNAME and HARKEN_AUTH_PASSWORD must be set together\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 200,
+      "line_end": 200,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise ValueError(\"basic auth mode requires a username and password\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 216,
+      "line_end": 216,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Invalid CSRF token\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 223,
+      "line_end": 223,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Operator role required\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 285,
+      "line_end": 285,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=404, detail=\"Not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 288,
+      "line_end": 288,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=413, detail=\"Login request is too large\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 298,
+      "line_end": 298,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Cross-origin request rejected\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 300,
+      "line_end": 300,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Invalid CSRF token\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 376,
+      "line_end": 376,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=404, detail=\"Not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 381,
+      "line_end": 381,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Cross-origin request rejected\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 383,
+      "line_end": 383,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=403, detail=\"Invalid CSRF token\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 505,
+      "line_end": 505,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=\"Project not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 588,
+      "line_end": 588,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=422, detail=\"Choose a query or a project, not both\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 590,
+      "line_end": 590,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=\"Project not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 607,
+      "line_end": 607,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=422, detail=\"Choose a query or a project, not both\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 609,
+      "line_end": 609,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=\"Project not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 626,
+      "line_end": 626,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=422, detail=\"Query must not be empty\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 631,
+      "line_end": 631,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=422, detail=\"Select at least one source\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 634,
+      "line_end": 634,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=422, detail=f\"Unknown source(s): {', '.join(unknown)}\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 636,
+      "line_end": 636,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise HTTPException(status_code=422, detail=\"Mode must be incremental or backfill\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 642,
+      "line_end": 642,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                    raise HTTPException(status_code=404, detail=\"Project not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 685,
+      "line_end": 685,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 686,
+      "line_end": 686,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=409, detail=str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 702,
+      "line_end": 702,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 703,
+      "line_end": 703,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 720,
+      "line_end": 720,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 721,
+      "line_end": 721,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=409, detail=str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 723,
+      "line_end": 723,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=\"Keyword is not in this project\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 736,
+      "line_end": 736,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            except ValueError as exc:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 737,
+      "line_end": 737,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=409, detail=str(exc)) from exc"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 739,
+      "line_end": 739,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise HTTPException(status_code=404, detail=\"Project not found\")"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 808,
+      "line_end": 808,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 825,
+      "line_end": 825,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except (ValueError, UnicodeDecodeError):"
+    },
+    {
+      "source_path": "src/harken/web/app.py",
+      "line_start": 868,
+      "line_end": 868,
+      "blob_hash": "80dbc3acdb87f7ae9ce7f6f5a30524c5b1dcdfcf",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    except ValueError:"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 46,
+      "line_end": 46,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "          throw new Error(detail);"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 65,
+      "line_end": 65,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      } catch (error) {"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 95,
+      "line_end": 95,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      if (!response.ok) throw new Error(payload.detail || `HTTP ${response.status}`);"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 107,
+      "line_end": 107,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      } catch (error) {"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 120,
+      "line_end": 120,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      } catch (error) {"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 132,
+      "line_end": 132,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 147,
+      "line_end": 147,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        } catch (error) {"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 210,
+      "line_end": 210,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "      if (!res.ok) throw new Error(`HTTP ${res.status}`);"
+    },
+    {
+      "source_path": "src/harken/web/static/app.js",
+      "line_start": 217,
+      "line_end": 217,
+      "blob_hash": "af32bf1a3a0e061a9d0bf1fa9510cef1b4d227e8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    } catch (e) {"
+    },
+    {
+      "source_path": "src/harken/web/static/fonts/OFL.txt",
+      "line_start": 72,
+      "line_end": 72,
+      "blob_hash": "e0fedd6cff1072682fc796ae9df442f5d7f5cdb4",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "Modified Version, except to acknowledge the contribution(s) of the"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line_start": 188,
+      "line_end": 188,
+      "blob_hash": "e74f715ed9283266193972dcd98eb47cff202740",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        raise OSError(\"connection failed while using super-secret-password\")"
+    },
+    {
+      "source_path": "tests/test_alerts.py",
+      "line_start": 284,
+      "line_end": 284,
+      "blob_hash": "e74f715ed9283266193972dcd98eb47cff202740",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"SMTP temporarily unavailable\")"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 66,
+      "line_end": 66,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    # regression test: `report` used to raise typer.Exit(1) before reaching"
+    },
+    {
+      "source_path": "tests/test_cli.py",
+      "line_start": 450,
+      "line_end": 450,
+      "blob_hash": "8b07bec3540f9e09d98c366f3c16920c026f8bf7",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"database is locked\")"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 192,
+      "line_end": 192,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"model offline\")"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 226,
+      "line_end": 226,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise httpx.ConnectError("
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 272,
+      "line_end": 272,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                raise httpx.HTTPStatusError(\"rate limited\", request=request, response=response)"
+    },
+    {
+      "source_path": "tests/test_pipeline.py",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "215afad5109d349770463afe087b205750371000",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            raise RuntimeError(\"credentials missing\")"
+    }
+  ]
+}

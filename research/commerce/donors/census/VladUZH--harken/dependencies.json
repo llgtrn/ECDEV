@@ -1,0 +1,116 @@
+[
+  {
+    "source_path": "Dockerfile",
+    "blob_hash": "e18d764e79ae24efd247416b475b2c4036cbe079",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "pyproject.toml",
+    "blob_hash": "36f36137558aa4c699d92e4959911e36492c4135",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "project": {
+        "name": "harken",
+        "version": "0.1.0",
+        "description": "Self-hosted social listening — hear what the internet says about you, on your own box.",
+        "readme": "README.md",
+        "requires-python": ">=3.10",
+        "license": {
+          "text": "MIT"
+        },
+        "authors": [
+          {
+            "name": "Harken contributors"
+          }
+        ],
+        "keywords": [
+          "social-listening",
+          "brand-monitoring",
+          "mention-tracking",
+          "self-hosted",
+          "sentiment-analysis",
+          "hacker-news",
+          "reddit"
+        ],
+        "classifiers": [
+          "License :: OSI Approved :: MIT License",
+          "Programming Language :: Python :: 3",
+          "Topic :: Internet",
+          "Topic :: Text Processing :: Linguistic"
+        ],
+        "dependencies": [
+          "httpx>=0.27",
+          "feedparser>=6.0",
+          "fastapi>=0.110",
+          "uvicorn>=0.29",
+          "jinja2>=3.1",
+          "typer>=0.12",
+          "rich>=13.7",
+          "pydantic>=2.6",
+          "python-dotenv>=1.0"
+        ],
+        "optional-dependencies": {
+          "dev": [
+            "pytest>=8.0",
+            "pytest-asyncio>=0.23",
+            "respx>=0.21",
+            "httpx2>=2.7",
+            "ruff>=0.5"
+          ]
+        },
+        "scripts": {
+          "harken": "harken.cli:app"
+        },
+        "urls": {
+          "Homepage": "https://github.com/VladUZH/harken",
+          "Repository": "https://github.com/VladUZH/harken"
+        }
+      },
+      "build-system": {
+        "requires": [
+          "hatchling"
+        ],
+        "build-backend": "hatchling.build"
+      },
+      "tool": {
+        "hatch": {
+          "build": {
+            "targets": {
+              "wheel": {
+                "packages": [
+                  "src/harken"
+                ]
+              }
+            }
+          }
+        },
+        "pytest": {
+          "ini_options": {
+            "asyncio_mode": "auto",
+            "testpaths": [
+              "tests"
+            ]
+          }
+        },
+        "ruff": {
+          "line-length": 100,
+          "target-version": "py310",
+          "lint": {
+            "select": [
+              "E",
+              "F",
+              "I",
+              "UP",
+              "B"
+            ],
+            "ignore": [
+              "E501"
+            ]
+          }
+        }
+      }
+    }
+  }
+]
