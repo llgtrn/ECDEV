@@ -61,7 +61,30 @@ impl Engine {
         serde_json::from_slice(&fs::read(self.root.join(path)).map_err(error)?).map_err(error)
     }
     pub fn registry(&self) -> Result<Value, String> {
-        self.read_json("research/commerce/donors/registry.json")
+        let mut registry = self.read_json("research/commerce/donors/registry.json")?;
+        let review = self
+            .read_json("research/commerce/donor-lifecycle-review.json")
+            .ok();
+        for donor in registry["donors"]
+            .as_array_mut()
+            .ok_or("Invalid registry")?
+        {
+            let recorded = review
+                .as_ref()
+                .and_then(|r| r["donors"].as_array())
+                .and_then(|rows| {
+                    rows.iter().find(|r| {
+                        r["donor_id"] == donor["donor_id"] && r["commit_sha"] == donor["commit_sha"]
+                    })
+                });
+            donor["lifecycle_review"] = match recorded {
+                Some(row) => {
+                    json!({"status":"RECORDED_CANONICAL_ASSESSMENT","assessment":row["canonical_assessment"],"full_semantic_census":row["full_semantic_census"],"full_absorption":row["full_absorption"],"extinct":row["extinct"],"review_scope":row["review_scope"],"source":"research/commerce/donor-lifecycle-review.json","freshness":"RECORDED_REVIEW_NOT_DYNAMIC_ASSESSMENT"})
+                }
+                None => json!({"status":"UNKNOWN_NO_MATCHING_LOCKED_REVIEW","assessment":null}),
+            };
+        }
+        Ok(registry)
     }
     pub fn metrics(&self) -> Result<Value, String> {
         let registry = self.registry()?;

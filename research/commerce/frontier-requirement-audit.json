@@ -1,0 +1,1777 @@
+{
+  "status": "PASS_REQUESTED_16_CONCEPTS_SOURCE_AND_NATIVE_PROOF_MAPPING",
+  "requirement": 2,
+  "source_review": "research/commerce/frontier-source-review.json",
+  "contract_index_base": 0,
+  "concepts": [
+    {
+      "concept": "URL frontier",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        2,
+        7
+      ],
+      "symbols": [
+        "fetchNextRequest",
+        "fetch_next_request"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "request queue",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        1,
+        2
+      ],
+      "symbols": [
+        "addRequest",
+        "fetchNextRequest"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::locked_crawlee_queue_oracle",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "unique-key generation",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        0
+      ],
+      "symbols": [
+        "computeUniqueKey"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::identity_preserves_product_parameters_and_normalizes_safe_variants",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "deduplication",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        1,
+        5
+      ],
+      "symbols": [
+        "addRequest",
+        "add_batch_of_requests"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "pending state",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        5
+      ],
+      "symbols": [
+        "add_batch_of_requests"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "leased/in-progress state",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        7,
+        10
+      ],
+      "symbols": [
+        "fetch_next_request",
+        "set_expected_request_processing_time"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::deliberate_process_interruption_recovers_expired_lease",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "handled state",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        3,
+        8
+      ],
+      "symbols": [
+        "markRequestAsHandled",
+        "mark_request_as_handled"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "retry",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        13,
+        14
+      ],
+      "symbols": [
+        "canRequestBeRetried",
+        "requestFunctionErrorHandler"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::retries_obey_backoff_retry_after_and_exhaustion",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "reclaim",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        4,
+        9
+      ],
+      "symbols": [
+        "reclaimRequest",
+        "reclaim_request"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::reclaim_is_fenced_and_cannot_evade_retry_exhaustion",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "failure",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        14
+      ],
+      "symbols": [
+        "requestFunctionErrorHandler"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::retries_obey_backoff_retry_after_and_exhaustion",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "priority",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        6
+      ],
+      "symbols": [
+        "ordered_candidate_keys"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "cancellation",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        15,
+        16
+      ],
+      "symbols": [
+        "stop",
+        "teardown"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::independent_workers_fenced_origin_global_limits_cancellation_and_deadline",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "persistence",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        12
+      ],
+      "symbols": [
+        "persist_state"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::deliberate_process_interruption_recovers_expired_lease",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "concurrency",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        17,
+        18
+      ],
+      "symbols": [
+        "hasCapacityForTask",
+        "tryRegisterTaskStart"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::independent_workers_fenced_origin_global_limits_cancellation_and_deadline",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "domain throttling",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        19,
+        20
+      ],
+      "symbols": [
+        "checkReadiness",
+        "#recordRateLimit"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::depth_url_and_attempt_budgets_and_throttle_are_durable",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    },
+    {
+      "concept": "backpressure",
+      "status": "SOURCE_SYMBOLS_AND_NATIVE_REGRESSION_REVIEWED",
+      "source_review_contract_indices": [
+        17,
+        18
+      ],
+      "symbols": [
+        "hasCapacityForTask",
+        "tryRegisterTaskStart"
+      ],
+      "native_test": "domain/commerce/tests/frontier.rs::independent_workers_fenced_origin_global_limits_cancellation_and_deadline",
+      "donor_test_inventory": [
+        "test/core/storages/request_queue.test.ts",
+        "test/core/crawlers/basic_crawler.test.ts",
+        "test/core/autoscaling/concurrency_system.test.ts",
+        "packages/basic-crawler/test/throttling_request_manager.test.ts",
+        "test/core/request_list.test.ts"
+      ]
+    }
+  ],
+  "donor_tests": [
+    {
+      "path": "test/core/storages/request_queue.test.ts",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "blob_hash": "6ad7202ae2d084cb33b860ac24bd138e8794d1b4",
+      "sha256": "ef6a579bd9a7bba48ca0ad02ae934feb028d265814e97a8ff2462b71d38bf040",
+      "test_titles": [
+        {
+          "name": "RequestQueue remote",
+          "line": 25
+        },
+        {
+          "name": "adding a request makes it fetchable; fetching again returns null while in progress",
+          "line": 31
+        },
+        {
+          "name": "adding the same uniqueKey twice does not duplicate and is served from the local cache",
+          "line": 47
+        },
+        {
+          "name": "a handled request is not fetched again and checkReadiness() reports finished",
+          "line": 77
+        },
+        {
+          "name": "a reclaimed request is fetched again; reclaim with forefront returns it to the front",
+          "line": 91
+        },
+        {
+          "name": "addRequests processes requests and reports processed/unprocessed",
+          "line": 110
+        },
+        {
+          "name": "addRequestsBatched warns about and skips requests the backend rejects, without retrying",
+          "line": 137
+        },
+        {
+          "name": "addRequestsBatched does not re-submit already enqueued requests beyond the initial batch (#3120)",
+          "line": 166
+        },
+        {
+          "name": "fetchNextRequest order respects forefront enqueues",
+          "line": 192
+        },
+        {
+          "name": "checkReadiness() distinguishes a fetchable queue from an in-progress one",
+          "line": 227
+        },
+        {
+          "name": "recordPacingSignal() reports that a plain queue paces nothing",
+          "line": 242
+        },
+        {
+          "name": "should accept plain object in addRequest()",
+          "line": 267
+        },
+        {
+          "name": "should return correct handledCount",
+          "line": 284
+        },
+        {
+          "name": "getInfo() should work",
+          "line": 296
+        },
+        {
+          "name": "drop() works",
+          "line": 321
+        },
+        {
+          "name": "Request.userData.__crawlee internal object is non-enumerable and always defined",
+          "line": 330
+        },
+        {
+          "name": "setExpectedRequestProcessingTimeSecs",
+          "line": 379
+        },
+        {
+          "name": "forwards the value to the client, but only ever raises it",
+          "line": 380
+        },
+        {
+          "name": "extendRequestProcessingTimeSecs",
+          "line": 402
+        },
+        {
+          "name": "forwards the request id and extension to the backend",
+          "line": 403
+        },
+        {
+          "name": "resolves to false when the backend does not implement per-request locking",
+          "line": 424
+        },
+        {
+          "name": "stats",
+          "line": 434
+        },
+        {
+          "name": "start at zero",
+          "line": 435
+        },
+        {
+          "name": "count writes on add, handle and reclaim",
+          "line": 440
+        },
+        {
+          "name": "count head reads on fetchNextRequest",
+          "line": 453
+        },
+        {
+          "name": "RequestQueue with requestsFromUrl",
+          "line": 465
+        },
+        {
+          "name": "should correctly load list from hosted files in correct order",
+          "line": 471
+        },
+        {
+          "name": "should use regex parameter to parse urls",
+          "line": 500
+        },
+        {
+          "name": "should fix gdoc sharing url in `requestsFromUrl` automatically (GH issue #639)",
+          "line": 524
+        },
+        {
+          "name": "should handle requestsFromUrl with no URLs",
+          "line": 552
+        },
+        {
+          "name": "should use the defined proxy server when using `requestsFromUrl`",
+          "line": 567
+        },
+        {
+          "name": "RequestQueue (request lifecycle)",
+          "line": 588
+        },
+        {
+          "name": "each request is fetched for processing exactly once",
+          "line": 614
+        },
+        {
+          "name": "a fetched request is not served again until it is reclaimed",
+          "line": 627
+        },
+        {
+          "name": "a handled request is never served again",
+          "line": 644
+        },
+        {
+          "name": "`fetchNextRequest` order respects `forefront` enqueues",
+          "line": 655
+        },
+        {
+          "name": "`reclaimRequest` with `forefront` respects the request ordering",
+          "line": 683
+        },
+        {
+          "name": "RequestQueue background batches",
+          "line": 716
+        },
+        {
+          "name": "a failing background batch rejects instead of hanging, and stops blocking checkReadiness()",
+          "line": 721
+        },
+        {
+          "name": "MemoryStorageBackend request queue",
+          "line": 747
+        },
+        {
+          "name": "head operations do not scan already-handled requests",
+          "line": 748
+        }
+      ],
+      "execution": "SOURCE_REVIEWED_NOT_EXECUTED_DONOR_SUITE"
+    },
+    {
+      "path": "test/core/crawlers/basic_crawler.test.ts",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "blob_hash": "67610e299b71f2bb6ef131c8a0bce76a39213cec",
+      "sha256": "a5baaf1a32f8a41cc17c6f1d3b16ceb3f97052af52531abcdbf2bdd52d2b4592",
+      "test_titles": [
+        {
+          "name": "BasicCrawler",
+          "line": 65
+        },
+        {
+          "name": "constructor eagerly resolves the configuration, avoiding a later implicit-configuration warning",
+          "line": 104
+        },
+        {
+          "name": "crawler-scoped service locator inherits ambient services that are not explicitly overridden",
+          "line": 118
+        },
+        {
+          "name": "does not leak sigint events",
+          "line": 136
+        },
+        {
+          "name": "setStatusMessage emits a STATUS_MESSAGE event",
+          "line": 150
+        },
+        {
+          "name": "run() broadcasts start and terminal STATUS_MESSAGE events",
+          "line": 172
+        },
+        {
+          "name": "should run in parallel thru all the requests",
+          "line": 192
+        },
+        {
+          "name": "accepts a `requestManager` and crawls from it",
+          "line": 217
+        },
+        {
+          "name": "folds a supplied concurrencySystem into its pool and never tears the system down",
+          "line": 234
+        },
+        {
+          "name": "identifies itself to its concurrency system by its own id",
+          "line": 269
+        },
+        {
+          "name": "two crawlers sharing a ConcurrencySystem cap their combined concurrency",
+          "line": 304
+        },
+        {
+          "name": "should allow using run method multiple times",
+          "line": 337
+        },
+        {
+          "name": "builds a fresh owned ConcurrencySystem for every run",
+          "line": 365
+        },
+        {
+          "name": "running tracks the run in progress",
+          "line": 387
+        },
+        {
+          "name": "pause(), resume() and stop() warn once the run has finished",
+          "line": 402
+        },
+        {
+          "name": "stops the owned ConcurrencySystem when startup fails after it was started",
+          "line": 422
+        },
+        {
+          "name": "a startup that fails before the crawl leaves the instance runnable",
+          "line": 445
+        },
+        {
+          "name": "should process 4 requests total when calling run() twice with maxRequestsPerCrawl: 2",
+          "line": 467
+        },
+        {
+          "name": "a crawl that processes nothing",
+          "line": 506
+        },
+        {
+          "name": "leaves already handled requests alone and says so",
+          "line": 523
+        },
+        {
+          "name": "re-crawls the requests when the queue is purged in between",
+          "line": 530
+        },
+        {
+          "name": "warns a crawler on its first run, over a queue another crawler exhausted",
+          "line": 539
+        },
+        {
+          "name": "says nothing when there was nothing to crawl in the first place",
+          "line": 552
+        },
+        {
+          "name": "addRequests should respect maxCrawlDepth",
+          "line": 563
+        },
+        {
+          "name": "enqueueLinks should respect maxCrawlDepth",
+          "line": 589
+        },
+        {
+          "name": "addRequests() filters",
+          "line": 615
+        },
+        {
+          "name": "should generate requests with maxCrawlDepth",
+          "line": 652
+        },
+        {
+          "name": "should skip requests with crawlDepth exceeding maxCrawlDepth",
+          "line": 663
+        },
+        {
+          "name": "should respect user provided transformRequestFunction",
+          "line": 679
+        },
+        {
+          "name": "should report depth-limited requests with reason ",
+          "line": 712
+        },
+        {
+          "name": "addRequests() background skip reporting",
+          "line": 736
+        },
+        {
+          "name": "reports filtered requests discovered in background batches",
+          "line": 737
+        },
+        {
+          "name": "background onSkippedRequest rejection rejects the background completion promise",
+          "line": 763
+        },
+        {
+          "name": "a background onSkippedRequest rejection stays handled when nobody awaits the addition",
+          "line": 790
+        },
+        {
+          "name": "drains foreground and background robots.txt skips exactly once",
+          "line": 834
+        },
+        {
+          "name": "addCrawlDepthRequestGenerator() should generate requests with maxCrawlDepth",
+          "line": 874
+        },
+        {
+          "name": "concurrency shortcuts configure the default system; an injected system is used as-is",
+          "line": 901
+        },
+        {
+          "name": "auto-saved state object",
+          "line": 956
+        },
+        {
+          "name": "print a warning on sharing state between two crawlers",
+          "line": 983
+        },
+        {
+          "name": "shared-state warning is emitted only once regardless of crawler count",
+          "line": 1011
+        },
+        {
+          "name": "crawlers with explicit id have isolated state",
+          "line": 1049
+        },
+        {
+          "name": "should retry failed requests",
+          "line": 1136
+        },
+        {
+          "name": "should retry failed requests based on `request.maxRetries`",
+          "line": 1180
+        },
+        {
+          "name": "should not retry requests with noRetry set to true",
+          "line": 1214
+        },
+        {
+          "name": "should correctly track request.state",
+          "line": 1265
+        },
+        {
+          "name": "should use errorHandler",
+          "line": 1296
+        },
+        {
+          "name": "should allow to handle failed requests",
+          "line": 1338
+        },
+        {
+          "name": "should not retry on NonRetryableError",
+          "line": 1379
+        },
+        {
+          "name": "noRetry after calling errorHandler",
+          "line": 1417
+        },
+        {
+          "name": "should crash on CriticalError",
+          "line": 1440
+        },
+        {
+          "name": "should crash on MissingRouteError",
+          "line": 1466
+        },
+        {
+          "name": "should correctly combine RequestList and RequestQueue",
+          "line": 1492
+        },
+        {
+          "name": "does not start a task while the request manager is not ready",
+          "line": 1574
+        },
+        {
+          "name": "should be possible to override isFinishedFunction and isTaskReadyFunction via taskLoopOptions",
+          "line": 1601
+        },
+        {
+          "name": "keepAlive",
+          "line": 1670
+        },
+        {
+          "name": "pause() suspends dispatch without ending the run, resume() picks it back up",
+          "line": 1717
+        },
+        {
+          "name": "pause() and resume() warn instead of throwing on a crawler that is not running",
+          "line": 1760
+        },
+        {
+          "name": "exposes the concurrency system it is running against",
+          "line": 1775
+        },
+        {
+          "name": "should support maxRequestsPerCrawl parameter",
+          "line": 1794
+        },
+        {
+          "name": "should timeout after requestHandlerTimeoutSecs",
+          "line": 1847
+        },
+        {
+          "name": "context.extendTimeout buys a running handler more time",
+          "line": 1868
+        },
+        {
+          "name": "context.extendTimeout also holds off the internal timeout",
+          "line": 1894
+        },
+        {
+          "name": "context.extendTimeout prolongs the request lock on a locking request manager",
+          "line": 1924
+        },
+        {
+          "name": "a route can override requestHandlerTimeoutSecs, other routes keep the default",
+          "line": 1960
+        },
+        {
+          "name": "internal timeout catches a request stuck outside the timed phases",
+          "line": 2006
+        },
+        {
+          "name": "the internal timeout does not cut a request handler short of its own timeout",
+          "line": 2052
+        },
+        {
+          "name": "an error handler outliving the internal timeout does not crash the crawler",
+          "line": 2079
+        },
+        {
+          "name": "a timed out error handler still uses up a retry",
+          "line": 2105
+        },
+        {
+          "name": "the request timeout does not fire while the error handler is running",
+          "line": 2126
+        },
+        {
+          "name": "a skipped request whose markRequestAsHandled times out does not crash the crawler",
+          "line": 2159
+        },
+        {
+          "name": "warns when the internal timeout is shorter than the phase timeouts",
+          "line": 2188
+        },
+        {
+          "name": "timeouted request should not access storages",
+          "line": 2210
+        },
+        {
+          "name": "limits requestHandlerTimeoutSecs and derived vars to a valid value",
+          "line": 2238
+        },
+        {
+          "name": "should not log stack trace for timeout errors by default",
+          "line": 2267
+        },
+        {
+          "name": "should log stack trace for non-timeout errors only when request will no longer be retried by default",
+          "line": 2304
+        },
+        {
+          "name": "\\n",
+          "line": 2327
+        },
+        {
+          "name": "should log stack trace for timeout errors when verbose log is enabled",
+          "line": 2342
+        },
+        {
+          "name": "should log stack trace for non-timeout errors when verbose log is enabled",
+          "line": 2384
+        },
+        {
+          "name": "Uses SessionPool",
+          "line": 2427
+        },
+        {
+          "name": "persists statistics and the session pool once when finishing",
+          "line": 2428
+        },
+        {
+          "name": "persists the session pool once with a shared event manager",
+          "line": 2443
+        },
+        {
+          "name": "should use SessionPool",
+          "line": 2461
+        },
+        {
+          "name": "should use pass options to sessionPool",
+          "line": 2488
+        },
+        {
+          "name": "should accept a pre-initialized SessionPool instance",
+          "line": 2511
+        },
+        {
+          "name": "should not tear down an injected SessionPool",
+          "line": 2533
+        },
+        {
+          "name": "should share sessions across crawlers using the same SessionPool",
+          "line": 2550
+        },
+        {
+          "name": "statistics injection",
+          "line": 2585
+        },
+        {
+          "name": "uses the crawler-built default when no instance is supplied",
+          "line": 2586
+        },
+        {
+          "name": "records into a supplied Statistics instance",
+          "line": 2595
+        },
+        {
+          "name": "drives a foreign IStatistics implementation through the interface alone",
+          "line": 2610
+        },
+        {
+          "name": "exposes the custom state fields of a supplied instance on crawler.statistics",
+          "line": 2645
+        },
+        {
+          "name": "does not reset a supplied instance between runs, but does reset a default",
+          "line": 2666
+        },
+        {
+          "name": "proxyConfiguration",
+          "line": 2697
+        },
+        {
+          "name": "assigns a proxyInfo from the proxyConfiguration to each Session and exposes it on the context",
+          "line": 2698
+        },
+        {
+          "name": "reuses the same Session across multiple requests when the pool is restricted",
+          "line": 2728
+        },
+        {
+          "name": "extendContext",
+          "line": 2759
+        },
+        {
+          "name": "registerDeferredCleanup runs after the error handler, even when the context pipeline itself fails",
+          "line": 2775
+        },
+        {
+          "name": "sendRequest",
+          "line": 2798
+        },
+        {
+          "name": "works",
+          "line": 2822
+        },
+        {
+          "name": "forwards ignoreTlsErrors to the http client",
+          "line": 2849
+        },
+        {
+          "name": "proxyUrl TypeScript support",
+          "line": 2870
+        },
+        {
+          "name": "Request enqueuing limits with maxRequestsPerCrawl",
+          "line": 2883
+        },
+        {
+          "name": "should not enqueue more requests than maxRequestsPerCrawl allows",
+          "line": 2884
+        },
+        {
+          "name": "should not enqueue more requests than maxRequestsPerCrawl allows across multiple addRequests calls",
+          "line": 2917
+        },
+        {
+          "name": "should respect robots.txt when limiting requests",
+          "line": 2965
+        },
+        {
+          "name": "robots.txt crawl-delay",
+          "line": 3057
+        },
+        {
+          "name": "is applied when a ThrottlingRequestManager covers the domain",
+          "line": 3065
+        },
+        {
+          "name": "warns naming the options that would honour it when nothing paces the domain",
+          "line": 3087
+        },
+        {
+          "name": "warns naming the domain when it is missing from the manager `domains` list",
+          "line": 3098
+        },
+        {
+          "name": "is honoured for requests that started life in a `requestList`",
+          "line": 3114
+        },
+        {
+          "name": "sameDomainDelaySecs",
+          "line": 3143
+        },
+        {
+          "name": "spaces out requests to one site, subdomains included",
+          "line": 3158
+        },
+        {
+          "name": "does not re-enqueue the requests it delays",
+          "line": 3177
+        },
+        {
+          "name": "paces requests that came from a `requestList`, and still finishes the crawl",
+          "line": 3197
+        },
+        {
+          "name": "a second run() does not crawl the same requests again",
+          "line": 3207
+        },
+        {
+          "name": "wraps a user `requestManager` rather than replacing it",
+          "line": 3223
+        },
+        {
+          "name": "hands the delay to a manager that paces requests itself",
+          "line": 3239
+        },
+        {
+          "name": "reaches a pacing manager through a wrapper",
+          "line": 3258
+        },
+        {
+          "name": "refuses a manager that paces only some of the domains it holds",
+          "line": 3279
+        },
+        {
+          "name": "enqueueLinks should respect custom user-agent robots.txt rules",
+          "line": 3298
+        },
+        {
+          "name": "enqueueLinks forwards respectRobotsTxtFile.userAgent to the robots.txt check",
+          "line": 3348
+        },
+        {
+          "name": "enqueueLinks should respect maxRequestsPerCrawl",
+          "line": 3371
+        },
+        {
+          "name": "enqueueLinks limit log message should only be logged once",
+          "line": 3414
+        },
+        {
+          "name": "enqueueLinks limit log message should be logged again on subsequent runs",
+          "line": 3442
+        },
+        {
+          "name": "enqueueLinks limit log message should be logged once per request handler, not once per run",
+          "line": 3473
+        },
+        {
+          "name": "maxCrawlDepth limit log message should only be logged once",
+          "line": 3502
+        },
+        {
+          "name": "should not count duplicate URLs toward maxRequestsPerCrawl limit (addRequests)",
+          "line": 3539
+        },
+        {
+          "name": "addRequestsBatched with maxNewRequests should correctly report requestsOverLimit for array input",
+          "line": 3563
+        },
+        {
+          "name": "addRequestsBatched with maxNewRequests should correctly report requestsOverLimit for generator input",
+          "line": 3585
+        },
+        {
+          "name": "should not count duplicate URLs toward maxRequestsPerCrawl limit (enqueueLinks)",
+          "line": 3606
+        },
+        {
+          "name": "enqueueLinks should respect maxRequestsPerCrawl when passed an explicitly undefined limit",
+          "line": 3635
+        },
+        {
+          "name": "enqueueLinks should clamp an explicit limit to the remaining maxRequestsPerCrawl budget",
+          "line": 3676
+        },
+        {
+          "name": "enqueueLinks should keep reporting skipped requests when the user passes onSkippedRequest",
+          "line": 3708
+        },
+        {
+          "name": "transactional storage",
+          "line": 3746
+        },
+        {
+          "name": "a failing request handler leaves no dataset/KVS writes, but write-through enqueues survive",
+          "line": 3747
+        },
+        {
+          "name": "a retried handler does not double-write, and the deferred queue policy reaches the transaction",
+          "line": 3772
+        },
+        {
+          "name": "errorHandler and failedRequestHandler writes reach real storage",
+          "line": 3805
+        },
+        {
+          "name": "transactionalStorage: false disables the mechanism entirely",
+          "line": 3829
+        },
+        {
+          "name": "afterStorageCommit runs for the attempt whose writes were committed",
+          "line": 3846
+        },
+        {
+          "name": "a callback that throws after a successful commit does not retry the request",
+          "line": 3869
+        },
+        {
+          "name": "afterStorageCommit turns a rejected write into a non-retryable request failure",
+          "line": 3904
+        },
+        {
+          "name": "afterStorageCommit throws when transactional storage is disabled",
+          "line": 3937
+        },
+        {
+          "name": "an unclosed transaction on a normal pipeline return is discarded and logged",
+          "line": 3956
+        },
+        {
+          "name": "the crawler never fetches the next request inside a storage transaction",
+          "line": 3973
+        },
+        {
+          "name": "onSkippedRequest bookkeeping survives an in-pipeline robots.txt skip",
+          "line": 4018
+        },
+        {
+          "name": "a crawler started from inside a request handler runs outside the caller transaction",
+          "line": 4045
+        },
+        {
+          "name": "a nested crawl is not cancelled by the calling request handler timing out",
+          "line": 4068
+        },
+        {
+          "name": "an unrecognized write policy is rejected instead of falling back to the default",
+          "line": 4092
+        },
+        {
+          "name": "addRequests input validation",
+          "line": 4107
+        },
+        {
+          "name": "should throw error when passed a non-iterable value",
+          "line": 4108
+        },
+        {
+          "name": "Dataset helpers, crawler parallelism",
+          "line": 4119
+        },
+        {
+          "name": "should expose default Dataset methods",
+          "line": 4129
+        },
+        {
+          "name": "export data",
+          "line": 4137
+        },
+        {
+          "name": "exports do not fail on empty dataset",
+          "line": 4172
+        },
+        {
+          "name": "should expose pushData helper",
+          "line": 4187
+        },
+        {
+          "name": "crawler.exportData works with `collectAllKeys`",
+          "line": 4201
+        },
+        {
+          "name": "Crawlers with different storage backends don",
+          "line": 4214
+        },
+        {
+          "name": "Crawlers with different storage backends run separately",
+          "line": 4231
+        },
+        {
+          "name": "schema validation on add",
+          "line": 4252
+        },
+        {
+          "name": "crawler.addRequests rejects userData that does not match the label schema",
+          "line": 4262
+        },
+        {
+          "name": "crawler.run rejects userData that does not match the label schema",
+          "line": 4272
+        },
+        {
+          "name": "crawler.addRequests accepts matching userData",
+          "line": 4280
+        },
+        {
+          "name": "crawler.addRequests excludes the Crawlee-managed label when validating (strict schemas)",
+          "line": 4289
+        },
+        {
+          "name": "a schema that declares the label opts into validating it",
+          "line": 4303
+        },
+        {
+          "name": "a schema declaring the label reports only genuine issues",
+          "line": 4319
+        },
+        {
+          "name": "the parsed (coerced) userData is what gets stored in the queue",
+          "line": 4336
+        },
+        {
+          "name": "a defaultRoute schema validates userData added for unregistered labels",
+          "line": 4354
+        },
+        {
+          "name": "context.addRequests validates userData against the label schema",
+          "line": 4379
+        },
+        {
+          "name": "requests with a label that has no registered schema are not validated",
+          "line": 4399
+        },
+        {
+          "name": "a plain (non-router) requestHandler skips validation entirely",
+          "line": 4410
+        },
+        {
+          "name": "validation runs at the crawler level; direct requestQueue calls bypass it",
+          "line": 4419
+        }
+      ],
+      "execution": "SOURCE_REVIEWED_NOT_EXECUTED_DONOR_SUITE"
+    },
+    {
+      "path": "test/core/autoscaling/concurrency_system.test.ts",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "blob_hash": "edf949ea88b6795c906c07335fa6515bc5ce2267",
+      "sha256": "c96841f548b0aa2239d08f8bf1ad03b79f1e77594b83f8ba591e2b36f43a89e1",
+      "test_titles": [
+        {
+          "name": "ConcurrencySystem",
+          "line": 20
+        },
+        {
+          "name": "budget accounting",
+          "line": 31
+        },
+        {
+          "name": "hasCapacityForTask() gates on desired concurrency",
+          "line": 32
+        },
+        {
+          "name": "tryRegisterTaskStart() refuses to book past the budget",
+          "line": 49
+        },
+        {
+          "name": "tryRegisterTaskStart() enforces maxTasksPerMinute",
+          "line": 63
+        },
+        {
+          "name": "maxTasksPerMinute === Infinity never limits",
+          "line": 76
+        },
+        {
+          "name": "runtime tuning",
+          "line": 86
+        },
+        {
+          "name": "lowering maxConcurrency takes effect immediately",
+          "line": 87
+        },
+        {
+          "name": "raising minConcurrency takes effect immediately",
+          "line": 102
+        },
+        {
+          "name": "the maximum wins a contradictory pair of bounds",
+          "line": 110
+        },
+        {
+          "name": "the constructor honours both bounds",
+          "line": 119
+        },
+        {
+          "name": "load signals",
+          "line": 127
+        },
+        {
+          "name": "signals are told the widest window they will be sampled over",
+          "line": 128
+        },
+        {
+          "name": "a custom signal cannot shadow an enabled built-in, but can replace a disabled one",
+          "line": 163
+        },
+        {
+          "name": "built-in signals can be switched off with `false`",
+          "line": 200
+        },
+        {
+          "name": "switching every built-in signal off leaves the system permanently idle",
+          "line": 222
+        },
+        {
+          "name": "a SnapshotStore-based signal sizes its retention from the start context",
+          "line": 246
+        },
+        {
+          "name": "a restarted built-in signal is not judged on measurements from before the downtime",
+          "line": 278
+        },
+        {
+          "name": "lifecycle",
+          "line": 308
+        },
+        {
+          "name": "start()/stop() are idempotent",
+          "line": 309
+        },
+        {
+          "name": "stop() is a no-op when never started",
+          "line": 324
+        },
+        {
+          "name": "isRunning reflects the lifecycle",
+          "line": 331
+        },
+        {
+          "name": "concurrent start() calls await a single startup",
+          "line": 342
+        },
+        {
+          "name": "a failed startup leaves nothing running and can be retried",
+          "line": 378
+        },
+        {
+          "name": "start() after stop() restarts the system",
+          "line": 409
+        },
+        {
+          "name": "a restart does not inherit the previous session\\u2019s per-minute task count",
+          "line": 423
+        },
+        {
+          "name": "capacity queried on a stopped system warns once per session",
+          "line": 444
+        },
+        {
+          "name": "stop() called mid-startup still tears the system down",
+          "line": 473
+        },
+        {
+          "name": "a pool refuses to run against a system that was never started",
+          "line": 504
+        },
+        {
+          "name": "a pool runs happily against a started system",
+          "line": 522
+        },
+        {
+          "name": "a governor with no startup lifecycle is accepted",
+          "line": 541
+        },
+        {
+          "name": "shared across pools",
+          "line": 565
+        },
+        {
+          "name": "a shared system caps the combined concurrency of two pools",
+          "line": 566
+        },
+        {
+          "name": "a pool that ran out of work finishes while another one saturates the shared budget",
+          "line": 601
+        },
+        {
+          "name": "every capacity query and booking tells the governor which pool it is for",
+          "line": 651
+        },
+        {
+          "name": "a task, its booking and its release all carry the same id",
+          "line": 697
+        },
+        {
+          "name": "tuning a shared governor is reflected by every borrowing pool",
+          "line": 751
+        }
+      ],
+      "execution": "SOURCE_REVIEWED_NOT_EXECUTED_DONOR_SUITE"
+    },
+    {
+      "path": "packages/basic-crawler/test/throttling_request_manager.test.ts",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "blob_hash": "92494a6e7cce99e817a150326021ec56dd072d7b",
+      "sha256": "e657994db9c09527e1f971c6f2520acc5a986996e353c7029a89a61b51fb1618",
+      "test_titles": [
+        {
+          "name": "ThrottlingRequestManager",
+          "line": 19
+        },
+        {
+          "name": "Routing: requests to configured domains route to sub-managers, others to inner queue",
+          "line": 62
+        },
+        {
+          "name": "Routing: a configured domain matches however its hostname is spelled",
+          "line": 87
+        },
+        {
+          "name": "rejects a domain that is not a hostname",
+          "line": 106
+        },
+        {
+          "name": "addRequestsBatched routing",
+          "line": 113
+        },
+        {
+          "name": "addRequestsBatched consumes the input lazily and honours maxNewRequests",
+          "line": 130
+        },
+        {
+          "name": "addRequestsBatched keeps checkReadiness() from reporting finished while background batches are landing",
+          "line": 152
+        },
+        {
+          "name": "addRequestsBatched surfaces a background failure without an unhandled rejection",
+          "line": 177
+        },
+        {
+          "name": "addRequestsBatched in a transaction",
+          "line": 201
+        },
+        {
+          "name": "deferred: every batch is rolled back, not just the first",
+          "line": 204
+        },
+        {
+          "name": "write-through: batches that outlive the transaction stay out of its journal",
+          "line": 223
+        },
+        {
+          "name": "warns that requestsFromUrl sources cannot be domain-routed",
+          "line": 240
+        },
+        {
+          "name": "a request fetched from the inner manager is handed back to it",
+          "line": 261
+        },
+        {
+          "name": "a request the inner manager holds is paced by its domain like any other",
+          "line": 277
+        },
+        {
+          "name": "a domain being held back does not stop the inner manager serving the others",
+          "line": 303
+        },
+        {
+          "name": "the backlog a throttled domain has in the inner manager is moved out of it, not walked again",
+          "line": 320
+        },
+        {
+          "name": "a request whose migration fails goes back to the inner manager instead of being stranded",
+          "line": 354
+        },
+        {
+          "name": "a lazily-opened inner manager",
+          "line": 378
+        },
+        {
+          "name": "is resolved once, so a whole batch lands in - and is handed back to - one instance",
+          "line": 384
+        },
+        {
+          "name": "is not forced by bookkeeping",
+          "line": 409
+        },
+        {
+          "name": "receives an expected-processing-time hint given before it was resolved",
+          "line": 421
+        },
+        {
+          "name": "is opened by checkReadiness(), so requests left in it by a previous run are not missed",
+          "line": 434
+        },
+        {
+          "name": "is exposed by innerManager only once resolved, which reading it never triggers",
+          "line": 447
+        },
+        {
+          "name": "omitted entirely",
+          "line": 461
+        },
+        {
+          "name": "opens the default queue on first use, and not before",
+          "line": 462
+        },
+        {
+          "name": "routes throttled domains by domain as usual",
+          "line": 473
+        },
+        {
+          "name": "is honoured by `requestManagerOpener`, so the default is not hardcoded",
+          "line": 490
+        },
+        {
+          "name": "extendRequestProcessingTimeSecs reaches the manager holding the request without disturbing its routing",
+          "line": 508
+        },
+        {
+          "name": "recordPacingSignal enforces throttling and fair scheduling",
+          "line": 554
+        },
+        {
+          "name": "a burst of concurrent 429s advances the backoff only once",
+          "line": 584
+        },
+        {
+          "name": "the backoff decays once the domain has stopped rate-limiting",
+          "line": 603
+        },
+        {
+          "name": "caps the delay at maxDelaySecs",
+          "line": 626
+        },
+        {
+          "name": "fetchNextRequest does not block while a domain is throttled",
+          "line": 639
+        },
+        {
+          "name": "picks up requests left in per-domain sub-queues by a previous run (if purgeOnStart is not enabled)",
+          "line": 655
+        },
+        {
+          "name": "purge empties per-domain sub-queues it has not touched yet",
+          "line": 670
+        },
+        {
+          "name": "purges its own queues even when the wrapped manager refuses",
+          "line": 685
+        },
+        {
+          "name": "stall detection",
+          "line": 700
+        },
+        {
+          "name": "gives up on a domain that never lets a request through",
+          "line": 719
+        },
+        {
+          "name": "a lapsed backoff does not let a stalling domain pass for progress",
+          "line": 733
+        },
+        {
+          "name": "work elsewhere outranks a stalling domain",
+          "line": 749
+        },
+        {
+          "name": "a handled request resets the clock",
+          "line": 760
+        },
+        {
+          "name": "work the inner manager holds keeps a stalling domain in view",
+          "line": 773
+        },
+        {
+          "name": "a domain that has run out of work is finished, not stalled",
+          "line": 798
+        },
+        {
+          "name": "a domain that has been idle for longer than the window is not stalled by its first 429",
+          "line": 806
+        },
+        {
+          "name": "a domain that was never rate-limited is never stalled",
+          "line": 824
+        },
+        {
+          "name": "a domain that stopped rate-limiting a while ago is being waited out, not stalled",
+          "line": 831
+        },
+        {
+          "name": "a crawl-delay does not swallow the 429 backoff",
+          "line": 844
+        },
+        {
+          "name": "concurrent fetches cannot dispatch past the crawl-delay",
+          "line": 871
+        },
+        {
+          "name": "a domain that hands over nothing does not spend its crawl-delay slot",
+          "line": 904
+        },
+        {
+          "name": "domains: ",
+          "line": 924
+        },
+        {
+          "name": "gives every domain a queue of its own, the first time it is seen",
+          "line": 925
+        },
+        {
+          "name": "backs off a domain nobody listed",
+          "line": 937
+        },
+        {
+          "name": "paces one domain without holding back the others",
+          "line": 950
+        },
+        {
+          "name": "a longer robots.txt crawl-delay wins over the floor",
+          "line": 974
+        },
+        {
+          "name": "throttleBy: registrableDomain gives a site and its subdomains one clock",
+          "line": 1000
+        },
+        {
+          "name": "hosts with no registrable domain are still paced per hostname",
+          "line": 1016
+        },
+        {
+          "name": "refuses to throttle more domains than maxThrottledDomains",
+          "line": 1032
+        },
+        {
+          "name": "a batch that overflows maxThrottledDomains still stores the requests that fit",
+          "line": 1045
+        },
+        {
+          "name": "a restart reopens the queues of domains the previous run discovered",
+          "line": 1061
+        },
+        {
+          "name": "a domain is recorded before its first request lands in the sub-queue",
+          "line": 1073
+        },
+        {
+          "name": "recordPacingSignal sets crawl-delay successfully",
+          "line": 1101
+        },
+        {
+          "name": "pacing signal scope",
+          "line": 1129
+        },
+        {
+          "name": "a signal narrower than the grouping is honoured across the whole group",
+          "line": 1130
+        },
+        {
+          "name": "a signal wider than the grouping throws instead of being under-applied",
+          "line": 1156
+        },
+        {
+          "name": "a scope it does not speak throws",
+          "line": 1170
+        },
+        {
+          "name": "an unscoped signal is applied at the grouping, whatever that is",
+          "line": 1179
+        },
+        {
+          "name": "reason: ",
+          "line": 1194
+        },
+        {
+          "name": "paces every domain the manager covers, declared or not",
+          "line": 1198
+        },
+        {
+          "name": "is a floor, so a longer configured delay stands",
+          "line": 1214
+        },
+        {
+          "name": "a manager that paces nothing reports it as unhandled",
+          "line": 1231
+        },
+        {
+          "name": "a manager that paces only some domains throws instead of leaving the rest unpaced",
+          "line": 1238
+        },
+        {
+          "name": "a floor at a finer grain than the grouping throws, like any other signal",
+          "line": 1248
+        }
+      ],
+      "execution": "SOURCE_REVIEWED_NOT_EXECUTED_DONOR_SUITE"
+    },
+    {
+      "path": "test/core/request_list.test.ts",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "blob_hash": "b94d4c5522b840f333f7ef70f6f5f2b3b2c4a1dc",
+      "sha256": "01b6944cb3d19a54549159c4e44014e9fb8e5b83e9a34dc237d5cc27a271bae2",
+      "test_titles": [
+        {
+          "name": "RequestList",
+          "line": 48
+        },
+        {
+          "name": "should not accept to pages with same uniqueKey",
+          "line": 64
+        },
+        {
+          "name": "must be initialized before using any of the methods",
+          "line": 83
+        },
+        {
+          "name": "should correctly initialize itself",
+          "line": 101
+        },
+        {
+          "name": "`RequestList` is `for .. await` iterable",
+          "line": 144
+        },
+        {
+          "name": "should correctly load list from hosted files in correct order",
+          "line": 162
+        },
+        {
+          "name": "should use regex parameter to parse urls",
+          "line": 193
+        },
+        {
+          "name": "should fix gdoc sharing url in `requestsFromUrl` automatically (GH issue #639)",
+          "line": 219
+        },
+        {
+          "name": "should handle requestsFromUrl with no URLs",
+          "line": 246
+        },
+        {
+          "name": "should use the defined proxy server when using `requestsFromUrl`",
+          "line": 265
+        },
+        {
+          "name": "tracks in-progress requests through the crawl lifecycle",
+          "line": 288
+        },
+        {
+          "name": "should correctly persist its state when persistStateKey is set",
+          "line": 328
+        },
+        {
+          "name": "a persisted record that does not match the sources fails validation",
+          "line": 371
+        },
+        {
+          "name": "a persisted record takes precedence over the state option",
+          "line": 383
+        },
+        {
+          "name": "teardown removes the persist state listener when persistStateKey is set",
+          "line": 402
+        },
+        {
+          "name": "should correctly persist its sources when persistRequestsKey is set",
+          "line": 418
+        },
+        {
+          "name": "should correctly persist sources from requestsFromUrl if persistRequestsKey is set",
+          "line": 457
+        },
+        {
+          "name": "handles correctly inconsistent inProgress fields in state",
+          "line": 492
+        },
+        {
+          "name": "it gets correct length()",
+          "line": 528
+        },
+        {
+          "name": "it gets correct handledCount()",
+          "line": 544
+        },
+        {
+          "name": "should correctly keep duplicate URLs while keepDuplicateUrls is set",
+          "line": 569
+        },
+        {
+          "name": "Apify.RequestList.open()",
+          "line": 605
+        },
+        {
+          "name": "should work",
+          "line": 609
+        },
+        {
+          "name": "should work with string sources",
+          "line": 630
+        },
+        {
+          "name": "should correctly pass options",
+          "line": 651
+        },
+        {
+          "name": "should work with null name",
+          "line": 679
+        },
+        {
+          "name": "memory consumption does not spike",
+          "line": 717
+        },
+        {
+          "name": "Request",
+          "line": 739
+        },
+        {
+          "name": "alwaysEnqueue makes requests to the same URL have different unique keys",
+          "line": 740
+        },
+        {
+          "name": "alwaysEnqueue throws when combined with a custom uniqueKey",
+          "line": 747
+        }
+      ],
+      "execution": "SOURCE_REVIEWED_NOT_EXECUTED_DONOR_SUITE"
+    }
+  ],
+  "oracle": "research/commerce/frontier-oracle-proof.json",
+  "limitations": [
+    "Donor test titles and bodies are inspected sources; the donor whole test suite was not executed",
+    "Native URL identity deliberately preserves product parameters; full computeUniqueKey parity is not claimed",
+    "Native origin pacing differs from registrable-domain pacing",
+    "Retry budget/backoff/failure states are native policy; donor RetryRequestError override semantics are not adopted",
+    "Bounded queue oracle covers deduplication, reclaim and re-fetch, priority, lease expiration/reopen and handled states; full dynamic crawler autoscaling is not required or claimed"
+  ]
+}

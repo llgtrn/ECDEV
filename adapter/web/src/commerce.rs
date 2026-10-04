@@ -175,6 +175,48 @@ fn field(value: Value, mut evidence: Vec<Value>) -> Value {
 }
 
 pub fn page_metadata(doc: &Html, base: &Url, products: &[Value], hash: &str) -> Value {
+    let mut page_assertions = vec![];
+    for (meta_index, element) in doc.select(&Selector::parse("meta").unwrap()).enumerate() {
+        let Some(raw_content) = element.value().attr("content") else {
+            continue;
+        };
+        let content = raw_content.trim();
+        if content.is_empty() {
+            continue;
+        }
+        // Preserve both attribute declarations and repeated tags instead of donor last/first wins.
+        for attribute in ["name", "property"] {
+            let Some(raw_property) = element.value().attr(attribute) else {
+                continue;
+            };
+            let property = raw_property.trim().to_ascii_lowercase().replace('.', ":");
+            let field = match property.as_str() {
+                "title"
+                | "dc:title"
+                | "dcterm:title"
+                | "dcterms:title"
+                | "twitter:title"
+                | "parsely-title"
+                | "weibo:article:title"
+                | "weibo:webpage:title" => "title",
+                "description"
+                | "dc:description"
+                | "dcterm:description"
+                | "dcterms:description"
+                | "twitter:description"
+                | "weibo:article:description"
+                | "weibo:webpage:description" => "description",
+                _ => continue,
+            };
+            page_assertions.push(json!({"field":field,"property":property,"raw_property":raw_property,"attribute":attribute,"value":content,"raw_value":raw_content,"source":"HTML_META","page":base.as_str(),"selector":"meta","match_index":meta_index,"raw_capture_sha256":hash}));
+        }
+    }
+    let document_titles: Vec<_> = doc.select(&Selector::parse("title").unwrap()).enumerate()
+        .filter_map(|(index, element)| {
+            let text = element.text().collect::<String>();
+            let title = text.trim();
+            (!title.is_empty()).then(|| json!({"value":title,"raw_value":text,"source":"HTML_TITLE","page":base.as_str(),"selector":"title","match_index":index,"raw_capture_sha256":hash,"derivation":"DOCUMENT_TITLE_FALLBACK_NOT_VERIFIED_PRODUCT_NAME"}))
+        }).collect();
     let mut og = vec![];
     for element in doc.select(&Selector::parse("meta[property],meta[name]").unwrap()) {
         let property = element
@@ -266,7 +308,7 @@ pub fn page_metadata(doc: &Html, base: &Url, products: &[Value], hash: &str) -> 
         signals.push("NO_RECOGNIZED_COMMERCE_SIGNALS");
         "UNKNOWN"
     };
-    json!({"classification":{"role":role,"method":"DETERMINISTIC_HEURISTIC_V1","signals":signals,"page":base.as_str(),"raw_capture_sha256":hash,"confidence":"HEURISTIC_NOT_TRAINED_MODEL","heading":h1},"open_graph":og,"canonical_urls":canonicals})
+    json!({"classification":{"role":role,"method":"DETERMINISTIC_HEURISTIC_V1","signals":signals,"page":base.as_str(),"raw_capture_sha256":hash,"confidence":"HEURISTIC_NOT_TRAINED_MODEL","heading":h1},"open_graph":og,"page_assertions":page_assertions,"document_titles":document_titles,"canonical_urls":canonicals})
 }
 
 #[cfg(test)]

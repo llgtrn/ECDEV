@@ -127,6 +127,35 @@ pub fn enrich(
             "OBSERVED",
         );
     }
+    for name in ["title", "description"] {
+        merge(
+            product,
+            name,
+            metadata["page_assertions"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter(|assertion| assertion["field"] == name)
+                .cloned()
+                .map(associated)
+                .collect(),
+            "OBSERVED",
+        );
+    }
+    if product["fields"]["title"]["status"] == "UNKNOWN" {
+        merge(
+            product,
+            "title",
+            metadata["document_titles"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .cloned()
+                .map(associated)
+                .collect(),
+            "DERIVED",
+        );
+    }
     let images = assertions(metadata, "og:image");
     if product["fields"]["images"]["value"].is_null() && !images.is_empty() {
         let urls: Vec<_> = images.iter().map(|o| o["value"].clone()).collect();
@@ -259,6 +288,64 @@ pub fn enrich(
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn named_metadata_preserves_repeated_claims_conflicts_and_exact_locators() {
+        let html = r#"<meta name="viewport" content="width=device-width"><meta name=" DC.Description " content=" First &amp; second "><meta property="twitter:description" content="Another description"><meta name="description" content=""><meta name="title" content="Cup"><script type="application/ld+json">{"@type":"Product","name":"Cup"}</script>"#;
+        let result = crate::extract(html, "https://shop.example/cup").unwrap();
+        let field = &result["products"][0]["fields"]["description"];
+        assert_eq!(field["status"], "CONFLICT");
+        assert!(field["value"].is_null());
+        let evidence = field["evidence"].as_array().unwrap();
+        assert_eq!(evidence.len(), 2);
+        assert_eq!(evidence[0]["value"], "First & second");
+        assert_eq!(evidence[0]["raw_property"], " DC.Description ");
+        assert_eq!(evidence[0]["match_index"], 1);
+        assert_eq!(evidence[1]["match_index"], 2);
+        assert_eq!(evidence[0]["selector"], "meta");
+        assert_eq!(
+            result["products"][0]["fields"]["title"]["status"],
+            "OBSERVED"
+        );
+        let tags: Vec<_> = scraper::Html::parse_document(html)
+            .select(&scraper::Selector::parse("meta").unwrap())
+            .map(|e| e.value().attr("content").unwrap().to_owned())
+            .collect();
+        for e in evidence {
+            assert_eq!(
+                tags[e["match_index"].as_u64().unwrap() as usize],
+                e["raw_value"].as_str().unwrap()
+            );
+            assert_eq!(e["raw_capture_sha256"], result["content_hash"]);
+        }
+    }
+    #[test]
+    fn document_title_fallback_requires_single_product_and_remains_derived() {
+        let title = "<title> Cup &amp; saucer </title>";
+        assert!(
+            crate::extract(title, "https://shop.example/article").unwrap()["products"]
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+        let one =
+            format!("{title}<script type='application/ld+json'>{{\"@type\":\"Product\"}}</script>");
+        let result = crate::extract(&one, "https://shop.example/cup").unwrap();
+        assert_eq!(
+            result["products"][0]["fields"]["title"]["status"],
+            "DERIVED"
+        );
+        assert_eq!(
+            result["products"][0]["fields"]["title"]["value"],
+            "Cup & saucer"
+        );
+        let many = format!(
+            "{title}<meta name='description' content='Catalog'><script type='application/ld+json'>[{{\"@type\":\"Product\",\"name\":\"A\"}},{{\"@type\":\"Product\",\"name\":\"B\"}}]</script>"
+        );
+        let result = crate::extract(&many, "https://shop.example/catalog").unwrap();
+        for p in result["products"].as_array().unwrap() {
+            assert_eq!(p["fields"]["description"]["status"], "UNKNOWN");
+        }
+    }
     #[test]
     fn breadcrumb_and_shipping_fields_resolve_to_source_assertions() {
         let html = r#"<script type="application/ld+json">{"@graph":[{"@type":"BreadcrumbList","itemListElement":[{"position":1,"name":"Kitchen"}]},{"@type":"Product","name":"Cup","offers":{"shippingDetails":{"shippingDestination":{"addressCountry":"JP"}}}}]}</script>"#;

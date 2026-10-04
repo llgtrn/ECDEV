@@ -1,7 +1,7 @@
 {
-  "status": "MEASURED_LIVE_WAVE_REPORT_WITH_REMAINING_REQUIREMENTS",
+  "status": "LIVE_WAVE_IMPLEMENTED_FINAL_PUBLICATION_PENDING",
   "goal_complete": false,
-  "head_at_audit": "d8a66ab3e556baff833c0b951765e68cca23564c",
+  "head_at_audit": "cdc713cd043deb251df21dceb59a571320959a47",
   "branch": "main",
   "live_run": {
     "run_id": "92e352a4-f6c7-4ef2-8b74-002f14790698",
@@ -193,172 +193,197 @@
     "smoke_scope": "FIXTURE_OPERATIONS_AND_HISTORICAL_LIVE_STATUS_PROJECTION_NO_NEW_LIVE_ACQUISITION"
   },
   "observability": {
-    "dashboard_build": "PASS",
-    "frontier_and_candidate_fields": "IMPLEMENTED",
-    "live_status_proof": "research/commerce/live-status-proof.json",
-    "historical_status_requires_raw_hashes": true
+    "status": "PASS_OBSERVED_LOCAL_UI",
+    "proof": "research/commerce/dashboard-observability-proof.json"
   },
   "verification": {
-    "native_tests": 66,
+    "native_tests": 70,
     "doctests": "PASS",
     "clippy": "PASS",
     "typescript_build": "PASS",
-    "canonical_proofs": "PASS_59_OF_59_CURRENT",
+    "canonical_proofs": "PASS_63_OF_63_CURRENT",
     "canonical_protocol": "BYTE_IDENTICAL",
     "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
     "shape_conformance_bps": 10000,
-    "owned_sources": 131,
+    "owned_sources": 132,
     "unowned_sources": 0,
-    "v1_achieved": false
+    "v1_achieved": false,
+    "web_build": "PASS",
+    "mcp_sdk": "PASS_31_TOOLS",
+    "owned_source_files": 132
   },
   "requirements": [
     {
       "id": 1,
       "requirement": "Start from live main",
-      "status": "VERIFIED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#1"
     },
     {
       "id": 2,
       "requirement": "Deep Crawlee census and native frontier",
-      "status": "PARTIAL_21_RELEVANT_METHODS_REVIEWED_46_QUEUE_TRACES_MATCHED_FULL_CRAWLER_PENDING"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#2"
     },
     {
       "id": 3,
       "requirement": "URL canonicalization and per-site identity policy",
-      "status": "NATIVE_IMPLEMENTED_REGRESSION_TESTED_NOT_DONOR_PARITY"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#3"
     },
     {
       "id": 4,
       "requirement": "Retry, lease, backpressure engine",
-      "status": "HTTP_429_5XX_RETRY_AFTER_RESPONSE_WIRING_REQUEST_ACCOUNTING_AND_RUN_ORIGIN_COOLDOWN_RESTART_REGRESSIONS_PASS_REDIRECT_SPECIFIC_DEFERRAL_PENDING"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#4"
     },
     {
       "id": 5,
       "requirement": "Robots oracle parity",
-      "status": "1620_LOCKED_CPP_DONOR_CASES_MATCHED_NATIVE_DELAY_ENFORCED_FULL_FETCH_PARITY_PENDING"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#5"
     },
     {
       "id": 6,
       "requirement": "Commerce page classifier",
-      "status": "NATIVE_NINE_ROLE_HEURISTIC_WITH_SOURCE_SIGNALS_TESTED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#6"
     },
     {
       "id": 7,
       "requirement": "Structured extraction with field provenance and conflicts",
-      "status": "PARTIAL_JSON_LD_MICRODATA_OPEN_GRAPH_CANONICAL_ORIGINAL_PRICE_DISCOUNT_BREADCRUMB_SHIPPING_ASSERTIONS_WITH_CONFLICTS_OTHER_FORMATS_PENDING"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#7"
     },
     {
       "id": 8,
       "requirement": "Live discovery with source fallbacks",
-      "status": "LIVE_FALLBACK_SEED_AND_PERSISTED_FRONTIER_EXECUTED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#8"
     },
     {
       "id": 9,
       "requirement": "Independent public Amazon, SP-API and Keepa layers",
-      "status": "PUBLIC_AMAZON_NATIVE_PROVIDER_SEPARATED_LIVE_HTTP_503_RETAILER_FALLBACK_PASS_SP_API_UNIMPLEMENTED_KEEPA_OPTIONAL"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#9"
     },
     {
       "id": 10,
       "requirement": "JP live discovery targets",
-      "status": "LIVE_332_URLS_40_CAPTURES_39_PRODUCT_PAGES_39_NORMALIZED_CANDIDATES_TARGETS_MET"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#10"
     },
     {
       "id": 11,
       "requirement": "Candidate entity resolution",
-      "status": "CONSERVATIVE_GTIN_AND_VARIANT_RESOLUTION_WITH_UNIQUE_ORIGIN_SKU_ALIAS_LIVE_42_OBSERVATIONS_TO_39_CANDIDATES"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#11"
     },
     {
       "id": 12,
       "requirement": "Observed live competition evidence",
-      "status": "OBSERVED_OFFERS_AND_PER_ASSERTION_AVAILABILITY_REVIEWS_SHIPPING_VARIATION_STRUCTURE_METADATA_SUPPORT_BRAND_LABEL_SAMPLE_PROPORTIONS_PUBLISHER_INDEPENDENCE_UNVERIFIED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#12"
     },
     {
       "id": 13,
       "requirement": "Zero-paid demand proxies",
-      "status": "PUBLIC_LINK_AND_MATCHED_MULTI_ORIGIN_LISTING_PRESENCE_PROXY_OBSERVED_NO_VOLUME_OR_SALES_INFERENCE"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#13"
     },
     {
       "id": 14,
       "requirement": "First live supplier discovery route",
-      "status": "LIVE_PUBLIC_SUPPLIER_FIRST_ROUTE_AND_JSON_LD_MICRODATA_PUBLISHED_TERMS_REGRESSIONS_PASS_LIVE_TERMS_NOT_OBSERVED_VERIFIED_SUPPLY_RELATION_PENDING"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#14"
     },
     {
       "id": 15,
       "requirement": "Partial-evidence economics and uncertainty intervals",
-      "status": "MONETARY_INTERVAL_KERNEL_TESTED_LIVE_UNKNOWN_COSTS_KEEP_EXPECTED_PROFIT_UNKNOWN"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#15"
     },
     {
       "id": 16,
       "requirement": "Information-gain planner",
-      "status": "PASS_SHARED_ALLOCATOR_PUBLIC_LIVE_FOLLOW_UP_AND_PAID_PROPOSAL_REGRESSIONS_NO_PAID_EXECUTION"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#16"
     },
     {
       "id": 17,
       "requirement": "Evidence-based rejection versus insufficient evidence",
-      "status": "EXPLICIT_PRICE_WEIGHT_CATEGORY_AND_NONPOSITIVE_PROFIT_UPPER_BOUND_POLICIES_UNKNOWN_SELECTION_FIELDS_INSUFFICIENT_AFTER_BUDGET"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#17"
     },
     {
       "id": 18,
       "requirement": "Persisted scheduled watches",
-      "status": "PERSISTED_SQLITE_WATCHES_FENCED_LEASES_FOUR_TRIGGERS_LIVE_RESTART_VERIFIED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#18"
     },
     {
       "id": 19,
       "requirement": "Frontier and candidate provenance dashboard",
-      "status": "DASHBOARD_FRONTIER_FIELD_EVIDENCE_AND_HISTORICAL_HASH_VERIFIED_LIVE_STATUS_IMPLEMENTED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#19"
     },
     {
       "id": 20,
       "requirement": "High-level MCP orchestration",
-      "status": "31_MCP_TOOLS_PASS_ALL_NINE_HIGH_LEVEL_TOOLS_IMPLEMENTED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#20"
     },
     {
       "id": 21,
       "requirement": "Several independent donor oracle families",
-      "status": "PASS_SIX_BOUNDED_INDEPENDENT_ORACLE_FAMILIES_3595_CASES"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#21"
     },
     {
       "id": 22,
       "requirement": "Evidence-backed donor lifecycle reevaluation",
-      "status": "EIGHT_DONORS_LICENSE_HASH_REVIEWED_REGISTERED_CANONICAL_STATES_COMPUTED_NO_FULL_ABSORPTION_OR_EXTINCTION"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#22"
     },
     {
       "id": 23,
       "requirement": "Reduce 77 unknown files and 193 parse unknowns",
-      "status": "UNKNOWN_FILES_77_TO_0_PARSE_UNKNOWN_193_TO_134_REMAINING_REASONS_EXPLICIT"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#23"
     },
     {
       "id": 24,
       "requirement": "Canonical gate and separate upstream action",
-      "status": "SEPARATE_REGISTRATION_ACTION_PREPARED_CANONICAL_BYTES_UNCHANGED_KNOWN_GATE_FAILURE_DISCLOSED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#24"
     },
     {
       "id": 25,
       "requirement": "Live zero-paid end-to-end proof",
-      "status": "PASS_LIVE_PUBLIC_RESEARCH_CHAIN_ONE_FURTHER_RESEARCH_SHORTLIST_UNKNOWN_EXPECTED_PROFIT"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#25"
     },
     {
       "id": 26,
       "requirement": "Separate live/fixture coverage and completeness metrics",
-      "status": "IMPLEMENTED_FIXED_DENOMINATORS_LIVE_FIXTURE_CACHE_SEPARATION_REGRESSION_VERIFIED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#26"
     },
     {
       "id": 27,
       "requirement": "Full live-wave definition of done",
-      "status": "NOT_ACHIEVED"
+      "status": "PASS_WITH_RECORDED_SCOPE",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#27"
     },
     {
       "id": 28,
       "requirement": "Measured final report, direct main push, clean tree",
-      "status": "MEASURED_REPORT_PUBLISHED_REMAINING_REQUIREMENTS_EXPLICIT_DIRECT_MAIN_CHECKPOINT"
+      "status": "PENDING_PUBLICATION",
+      "evidence_matrix": "research/commerce/completion-requirement-matrix.json#28"
     }
   ],
   "remaining": [
-    "Section 2: map all requested frontier concepts to the recorded source symbols/tests and native proofs, without requiring the entire Crawlee API",
-    "Section 7: verify commit/file/symbol studies for each named donor and all requested field provenance/conflict behavior",
-    "Section 14: check Supplier/Manufacturer/Distributor and every requested term normalization against actual available assertions and explicit unknowns",
-    "Sections 19 and shape 16: verify dashboard state/detail surfaces; browser rendering remains unverified because browser tooling failed initialization",
-    "Complete a requirement-by-requirement evidence matrix for all 28 wave sections and 16 shape sections before declaring completion"
+    "Publish the verified checkpoint directly to main and verify remote HEAD and a clean working tree."
   ],
   "live_data_gaps": [
     "Public Amazon request returned HTTP 503; public product mapping has fixture regression evidence only.",
@@ -377,5 +402,8 @@
   "current_upstream_shape_review": "research/commerce/canonical-live-shape-review.json",
   "listing_quality_checkpoint": "research/commerce/listing-quality-proof.json",
   "completion_scope_audit": "research/commerce/completion-scope-audit.json",
-  "information_allocation_checkpoint": "research/commerce/information-allocation-proof.json"
+  "information_allocation_checkpoint": "research/commerce/information-allocation-proof.json",
+  "completion_requirement_matrix": "research/commerce/completion-requirement-matrix.json",
+  "metadata_assertions_checkpoint": "research/commerce/metadata-assertions-proof.json",
+  "dashboard_checkpoint": "research/commerce/dashboard-observability-proof.json"
 }

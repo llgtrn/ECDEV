@@ -2,6 +2,16 @@
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
+/// Cache events count logical acquisitions, including failed attempts, rather than wire requests.
+/// Empty or incompletely classified ledgers cannot establish a hit ratio.
+pub fn cache_metrics(calls: &[Value], mode: &str) -> Value {
+    let hits = calls.iter().filter(|c| c["cache_hit"] == true).count();
+    let misses = calls.iter().filter(|c| c["cache_hit"] == false).count();
+    let unknown = calls.len() - hits - misses;
+    let ratio = (!calls.is_empty() && unknown == 0).then(|| hits * 10000 / calls.len());
+    json!({"scope":"THIS_RUN_LOGICAL_ACQUISITIONS_INCLUDING_FAILED_ATTEMPTS","evidence_mode":mode,"hit_count":hits,"miss_count":misses,"unknown_count":unknown,"acquisition_denominator":calls.len(),"hit_ratio_bps":ratio,"interpretation":"Cache reuse is not new live IO or research completeness; wire requests are accounted separately."})
+}
+
 const PRODUCT_FIELDS: &[&str] = &[
     "title",
     "brand",
@@ -200,6 +210,25 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn cache_ratios_keep_empty_unknown_and_fixture_ledgers_distinct() {
+        let calls = vec![
+            json!({"cache_hit":true,"request_count":0}),
+            json!({"cache_hit":false,"status":"FAILED","request_count":2}),
+            json!({"cache_hit":false,"request_count":7}),
+        ];
+        let metric = cache_metrics(&calls, "LIVE");
+        assert_eq!(metric["hit_count"], 1);
+        assert_eq!(metric["miss_count"], 2);
+        assert_eq!(metric["acquisition_denominator"], 3);
+        assert_eq!(metric["hit_ratio_bps"], 3333);
+        assert!(cache_metrics(&[], "CACHED")["hit_ratio_bps"].is_null());
+        assert!(
+            cache_metrics(&[json!({"cache_hit":true}), json!({})], "LIVE")["hit_ratio_bps"]
+                .is_null()
+        );
+        assert_eq!(cache_metrics(&calls, "FIXTURE")["evidence_mode"], "FIXTURE");
+    }
     #[test]
     fn per_listing_quality_preserves_claims_and_missing_variations() {
         let hash = "a".repeat(64);

@@ -157,6 +157,44 @@ fn reclaim_is_fenced_and_cannot_evade_retry_exhaustion() {
     assert!(f.lease("reclaim", 8).unwrap().is_none());
 }
 
+#[test]
+fn origin_status_counts_partition_the_durable_frontier() {
+    let database = path();
+    let mut frontier = Frontier::open(&database).unwrap();
+    frontier.create_run("origins", &limits()).unwrap();
+    for address in [
+        "https://a.example/1",
+        "https://a.example/2",
+        "https://b.example/1",
+    ] {
+        frontier.enqueue("origins", &url(address), 0, 0).unwrap();
+    }
+    let lease = frontier.lease("origins", 2).unwrap().unwrap();
+    frontier.complete(&lease, 3, &json!({})).unwrap();
+    let first = frontier.status("origins").unwrap();
+    assert_eq!(first["origins"].as_array().unwrap().len(), 2);
+    assert_eq!(first["origins"][0]["origin"], "https://a.example");
+    assert_eq!(first["origins"][0]["url_count"], 2);
+    assert_eq!(first["origins"][0]["states"]["HANDLED"], 1);
+    assert_eq!(first["origins"][0]["states"]["PENDING"], 1);
+    assert_eq!(first["origins"][1]["url_count"], 1);
+    drop(frontier);
+    let reopened = Frontier::open(&database).unwrap();
+    assert_eq!(
+        reopened.status("origins").unwrap()["origins"],
+        first["origins"]
+    );
+    for state in first["states"].as_object().unwrap().keys() {
+        let sum: u64 = first["origins"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|o| o["states"][state].as_u64().unwrap())
+            .sum();
+        assert_eq!(sum, first["states"][state].as_u64().unwrap());
+    }
+}
+
 fn limits() -> CrawlLimits {
     CrawlLimits {
         max_pages: 50,

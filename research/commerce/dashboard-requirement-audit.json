@@ -1,0 +1,56 @@
+{
+  "status": "IDENTIFIED_DASHBOARD_GAPS_IMPLEMENTED_AND_BROWSER_VERIFIED",
+  "goal_complete": false,
+  "requirement": "Live-wave section 19 and canonical-shape section 16 dashboard behavior",
+  "head_reviewed": "cdc713cd043deb251df21dceb59a571320959a47",
+  "review_kind": "CURRENT_SOURCE_INSPECTION_NOT_BROWSER_RENDER_VERIFICATION",
+  "findings": [
+    {
+      "requirement": "domains",
+      "source": "apps/web/src/app.ts::render Research branch",
+      "evidence": "The research result projection includes frontier, funnel, accounting totals, coverage, completeness and candidates, but omits observed_sample.origins_observed. Frontier.status also does not return per-origin counts.",
+      "required_action": "Show explicitly scoped captured origins and provide frontier origin counts if presenting pending-domain coverage. Do not describe observed origins as independent publishers."
+    },
+    {
+      "requirement": "cache hit ratio",
+      "source": "apps/web/src/app.ts::render Research and Provider calls branches",
+      "evidence": "The Provider calls table shows individual cache_hit flags. The per-run research view does not show an aggregate hit ratio or its denominator.",
+      "required_action": "Expose a per-run cache-hit metric with numerator, denominator and empty-run unknown handling. Identify whether the denominator includes failed logical acquisitions; separate fixture, cached and live provenance."
+    },
+    {
+      "requirement": "donor absorption",
+      "source": "apps/web/src/app.ts::render Ynventa branch",
+      "evidence": "Each donor row uses the literal NOT_STARTED for Absorption even though research/commerce/donor-lifecycle-review.json records evidence-backed canonical states. Overview reports only aggregate absorbed/oracle/extinct counts.",
+      "required_action": "Use the canonical lifecycle projection for each donor and retain its evidence scope. Preserve full-absorption and extinction counts without promoting bounded proofs to whole-donor claims."
+    },
+    {
+      "requirement": "dashboard works",
+      "source": "apps/web/src/app.ts text literals",
+      "evidence": "Several labels contain encoding-corrupted separators and apostrophes. TypeScript compilation does not establish that displayed labels are readable. Browser tooling failed initialization previously, so rendering remains unverified.",
+      "required_action": "Repair the literals using explicit UTF-8 handling, build the dashboard, and verify the displayed research/detail/accounting surfaces. Record visual verification limitations if browser tooling remains unavailable."
+    }
+  ],
+  "verified_supplier_scope": {
+    "requirement": 14,
+    "sources": [
+      "adapter/web/src/supplier.rs",
+      "adapter/web/src/supplier_terms.rs"
+    ],
+    "finding": "Visible public language maps supplier, manufacturer, distributor and customization claims with source locators. Explicit structured organization offers map published offer, eligible order quantity, unit price, currency, lead time, origin, shipping details and certification claims. Unobserved or unverified commercial facts remain UNKNOWN.",
+    "limits": "This source check does not prove all input formats, negotiated quotations or independently verified supplier relationships. The separate live supplier proof establishes the first legitimate public route."
+  },
+  "publication_block": {
+    "action": "Stage the metadata checkpoint and refresh all 61 declared canonical proofs before direct-main publication",
+    "executed": false,
+    "reason": "Automatic approval review could not complete because the account usage limit was reached",
+    "unsafe_action_determination": false,
+    "required_external_change": "Restore account allowance or wait for the approval service's reported reset before retrying the gated action",
+    "resolved": true,
+    "resolution": "Approval service accepted build, staging and canonical proof execution on 2026-10-04; earlier rejected command did not execute."
+  },
+  "resolution_evidence": "research/commerce/dashboard-observability-proof.json",
+  "additional_browser_findings_fixed": [
+    "Stale unavailable-live-acquisition banner",
+    "Asynchronous Overview response appended into another view"
+  ]
+}

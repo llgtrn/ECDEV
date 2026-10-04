@@ -505,8 +505,34 @@ impl Frontier {
                 |r| r.get(0),
             )
             .map_err(err)?;
+        let mut origins =
+            std::collections::BTreeMap::<String, serde_json::Map<String, Value>>::new();
+        let mut origin_rows = self.db.prepare("SELECT origin,state,count(*) FROM crawl_urls WHERE run_id=?1 GROUP BY origin,state ORDER BY origin,state").map_err(err)?;
+        for row in origin_rows
+            .query_map([run], |r| {
+                Ok((
+                    r.get::<_, String>(0)?,
+                    r.get::<_, String>(1)?,
+                    r.get::<_, u64>(2)?,
+                ))
+            })
+            .map_err(err)?
+        {
+            let (origin, state, count) = row.map_err(err)?;
+            let counts = origins
+                .entry(origin)
+                .or_insert_with(|| states.keys().map(|s| (s.clone(), json!(0))).collect());
+            counts.insert(state, json!(count));
+        }
+        let origins: Vec<_> = origins
+            .into_iter()
+            .map(|(origin, counts)| {
+                let urls: u64 = counts.values().filter_map(Value::as_u64).sum();
+                json!({"origin":origin,"url_count":urls,"states":counts})
+            })
+            .collect();
         Ok(
-            json!({"run_id":run,"states":states,"acquisition_attempts":starts,"retry_events":retries,"cancelled":cancelled,"limits":serde_json::from_str::<Value>(&limits).map_err(err)?}),
+            json!({"run_id":run,"states":states,"origins":origins,"origin_scope":"ENQUEUED_URLS_IN_THIS_FRONTIER_RUN_NOT_INDEPENDENT_PUBLISHERS","acquisition_attempts":starts,"retry_events":retries,"cancelled":cancelled,"limits":serde_json::from_str::<Value>(&limits).map_err(err)?}),
         )
     }
     /// Captures are committed with HANDLED so an interrupted report can be rebuilt.

@@ -1,0 +1,290 @@
+{
+  "status": "FIVE_NAMED_EXTRACTION_DONORS_STUDIED",
+  "required_wave_section": 7,
+  "contracts": [
+    {
+      "donor_id": "mozilla--readability",
+      "commit_sha": "ab4027a8b37669745016869a37a504727992b2ba",
+      "source_path": "Readability.js",
+      "blob_hash": "5cff4540c63fa2dd1471804ac7c919bd988638ce",
+      "content_sha256": "e9330028c8a5a4aa7d75147be2605d520f7f213c7b28474947dc0e9c984e9bed",
+      "symbol": "_getArticleMetadata(jsonld)",
+      "line_start": 1783,
+      "reviewed_excerpt": "  _getArticleMetadata(jsonld) {\n    var metadata = {};\n    var values = {};\n    var metaElements = this._doc.getElementsByTagName(\"meta\");\n\n    // property is a space-separated list of values\n    var propertyPattern =\n      /\\s*(article|dc|dcterm|og|twitter)\\s*:\\s*(author|creator|description|published_time|title|site_name)\\s*/gi;\n\n    // name is a single value\n    var namePattern =\n      /^\\s*(?:(dc|dcterm|og|twitter|parsely|weibo:(article|webpage))\\s*[-\\.:]\\s*)?(author|creator|pub-date|description|title|site_name)\\s*$/i;\n\n    // Find description tags.\n    this._forEachNode(metaElements, function (element) {",
+      "behavior_contract": "Metadata names are trimmed, case-folded and dotted DC names normalized. Title/excerpt precedence includes JSON-LD, Dublin Core, OpenGraph, standard and Twitter metadata. Empty content is ignored and entities decoded. The donor overwrites repeated names and selects a preferred source; ECDEV preserves individual assertions and conflicts instead.",
+      "donor_test_files": [
+        {
+          "source_path": "test/test-readability.js",
+          "blob_hash": "ebd4e618ca668597e4995911c9f7fbcc92e7bfba",
+          "sha256": "997d0e031048819c9ff150f61474f9e02378f1cb2f414f5dc2efb1c7a95ca284",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        },
+        {
+          "source_path": "test/test-pages/003-metadata-preferred/source.html",
+          "blob_hash": "c7275b3b29565a9412afdc3e7e8777a9a5913870",
+          "sha256": "81e8b8ff46de540626bd23ce9395241764aaf2118d31fc47fa43826579812ce4",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        },
+        {
+          "source_path": "test/test-pages/003-metadata-preferred/expected-metadata.json",
+          "blob_hash": "c21bd5c3aa599c39e14f88b041c385869bc5fb9e",
+          "sha256": "9be85460bf057323bbe4931b15fa1ee26b5d2d588e6e2883d262895b750ae38e",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/commerce.rs",
+        "adapter/web/src/page_product.rs"
+      ],
+      "native_regressions": [
+        "named_metadata_preserves_repeated_claims_conflicts_and_exact_locators"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "mozilla--readability",
+      "commit_sha": "ab4027a8b37669745016869a37a504727992b2ba",
+      "source_path": "Readability.js",
+      "blob_hash": "5cff4540c63fa2dd1471804ac7c919bd988638ce",
+      "content_sha256": "e9330028c8a5a4aa7d75147be2605d520f7f213c7b28474947dc0e9c984e9bed",
+      "symbol": "_getArticleTitle()",
+      "line_start": 573,
+      "reviewed_excerpt": "  _getArticleTitle() {\n    var doc = this._doc;\n    var curTitle = \"\";\n    var origTitle = \"\";\n\n    try {\n      curTitle = origTitle = doc.title.trim();\n\n      // If they had an element with id \"title\" in their HTML\n      if (typeof curTitle !== \"string\") {\n        curTitle = origTitle = this._getInnerText(\n          doc.getElementsByTagName(\"title\")[0]\n        );\n      }\n    } catch (e) {",
+      "behavior_contract": "Document title supplies a fallback; donor separator and heading heuristics target article titles. ECDEV keeps the complete decoded document title, only when a single identified product lacks a title assertion, and marks it DERIVED. It does not strip seller suffixes or turn an article into a product.",
+      "donor_test_files": [
+        {
+          "source_path": "test/test-readability.js",
+          "blob_hash": "ebd4e618ca668597e4995911c9f7fbcc92e7bfba",
+          "sha256": "997d0e031048819c9ff150f61474f9e02378f1cb2f414f5dc2efb1c7a95ca284",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/page_product.rs"
+      ],
+      "native_regressions": [
+        "document_title_fallback_requires_single_product_and_remains_derived"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/src/scraper/scrapeURL/lib/extractMetadata.ts",
+      "blob_hash": "2a94af8834f2fec8ee25fe89fa787397cdf0cd7f",
+      "content_sha256": "779588487b88fb822e2a520667fddba8faec632edd6c16d30e71f4495e0b9119",
+      "symbol": "export async function extractMetadata(",
+      "line_start": 32,
+      "reviewed_excerpt": "export async function extractMetadata(\n  meta: Meta,\n  html: string,\n): Promise<Partial<Document[\"metadata\"]>> {\n  try {\n    return await extractMetadataRust(meta, html);\n  } catch (error) {\n    meta.logger.warn(\n      \"Failed to call html-transformer! Falling back to cheerio...\",\n      {\n        error,\n        module: \"scrapeURL\",\n        method: \"extractMetadata\",\n      },\n    );",
+      "behavior_contract": "Rust metadata extraction is attempted first and Cheerio used on failure. Standard description and OpenGraph/DC fields are extracted, custom repeated metadata accumulated; descriptions concatenate while other duplicates become arrays. ECDEV absorbs deterministic metadata assertion collection, retaining exact tag/attribute locators and contradictory values, without hosted Firecrawl, an LLM, concatenated fact selection or its runtime package.",
+      "donor_test_files": [
+        {
+          "source_path": "apps/api/src/__tests__/snips/metadata-concat.test.ts",
+          "blob_hash": "f146e781d99145b38389c423c3e0cce366eda1c0",
+          "sha256": "24f739645ad9c9a457709b619b25263fd301bb434533bd88fd69663c62af8a71",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/commerce.rs",
+        "adapter/web/src/page_product.rs"
+      ],
+      "native_regressions": [
+        "named_metadata_preserves_repeated_claims_conflicts_and_exact_locators"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapinghub--extruct",
+      "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+      "source_path": "extruct/_extruct.py",
+      "blob_hash": "51da7f4995e8589afa48bb5a520aeb0c2a8057db",
+      "content_sha256": "6b69fb0986a0ae3a148154e4cd5377b572302a63f39166d8af4fc44610c0d416",
+      "symbol": "def extract(",
+      "line_start": 22,
+      "reviewed_excerpt": "def extract(\n    htmlstring_or_tree: str | bytes | HtmlElement,\n    base_url: str | None = None,\n    encoding: str = \"UTF-8\",\n    syntaxes: list[str] = SYNTAXES,\n    errors: str = \"strict\",\n    uniform: bool = False,\n    return_html_node: bool = False,\n    schema_context: str = \"http://schema.org\",\n    with_og_array: bool = False,\n    url: str | None = None,  # deprecated\n) -> dict[str, list[dict[str, Any]]]:\n    \"\"\"\n    htmlstring: string with valid html document;\n    base_url: base url of the html document",
+      "behavior_contract": "Syntax and error policy validation precede DOM construction; independent processors preserve structured graphs, optionally normalized. ECDEV preserves JSON-LD, microdata and OpenGraph evidence independently before commerce field projection; malformed JSON errors and conflicts remain visible. RDFa, Microformats, donor repair and optional output modes are outside this replacement.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_opengraph.py",
+          "blob_hash": "4bdcc0102d826ee0ca7290adbff4174cd6bacd10",
+          "sha256": "c2272cf981f9f3225bb4729b5e18e8e9482095293f3acaf158ce085fff63a829",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        },
+        {
+          "source_path": "tests/test_uniform.py",
+          "blob_hash": "81d9284995e6ea06cc0b7e4cf029085d0574d969",
+          "sha256": "bfc3f46ac4dc03458b33f8ade53a01ebb7637330894e6de7dc3fd93096b625b7",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/lib.rs",
+        "adapter/web/src/commerce.rs",
+        "adapter/web/src/page_product.rs"
+      ],
+      "native_regressions": [
+        "microdata_products_and_cross_format_conflicts_retain_evidence",
+        "standalone_meta_and_cross_format_conflicts_are_explicit"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapinghub--extruct",
+      "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+      "source_path": "extruct/w3cmicrodata.py",
+      "blob_hash": "0a7dbe6abff9c85ae7a5118200125a9cad3b9b08",
+      "content_sha256": "fc17fc26a4d76ab38d9550d3b3cb120ee83b82ca9802c6b381726e9ae3d3b3ef",
+      "symbol": "class LxmlMicrodataExtractor",
+      "line_start": 46,
+      "reviewed_excerpt": "class LxmlMicrodataExtractor:\n    # iterate in document order (used below for fast get_docid)\n    _xp_item = lxml.etree.XPath(\"descendant-or-self::*[@itemscope]\")\n    _xp_prop = lxml.etree.XPath(\n        \"\"\"set:difference(\n            .//*[@itemprop],\n            .//*[@itemscope]//*[@itemprop])\"\"\",\n        namespaces={\"set\": \"http://exslt.org/sets\"},\n    )\n    _xp_clean_text = lxml.etree.XPath(\n        \"descendant-or-self::*[not(self::script or self::style)]/text()\"\n    )\n\n    def __init__(\n        self, nested=True, strict=False, add_text_content=False, add_html_node=False",
+      "behavior_contract": "Nested scopes, itemrefs, repeated properties, HTML value tags, relative URLs and cleaned text produce a graph. ECDEV preserves original graph pointers and projects each identified Product separately; the bounded 132-case independent oracle is separate from this source study.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_microdata.py",
+          "blob_hash": "eda2d26ca8b315cb080317462308dea8ea8f3407",
+          "sha256": "e62652b90f737ac0428da3e6b77ab44bf44fb41a471fc340ae1379070e1a8dd6",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/microdata.rs",
+        "adapter/web/src/lib.rs"
+      ],
+      "native_regressions": [
+        "locked_extruct_microdata_oracle"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapinghub--price-parser",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+      "content_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "symbol": "def fromstring(",
+      "line_start": 28,
+      "reviewed_excerpt": "    def fromstring(\n        cls,\n        price: Optional[str],\n        currency_hint: Optional[str] = None,\n        decimal_separator: Optional[str] = None,\n        digit_group_separator: Optional[str] = None,\n    ) -> \"Price\":\n        \"\"\"\n        Given price and currency text extracted from HTML elements, return\n        ``Price`` instance, which provides a clean currency symbol and\n        price amount as a Decimal number.\n\n        ``currency_hint`` is optional; you can pass value of some element\n        which may contain currency, as a hint. If currency is present in\n        ``price`` string, it could be **preferred** over a value extracted",
+      "behavior_contract": "Currency recognition, text selection and decimal conversion are distinct stages. Donor parsing accepts a currency hint, explicit separators and free text. ECDEV only converts explicit price assertions with a supported unambiguous currency into exact minor units; it preserves raw numeric lexemes and refuses lossy fractions.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_price_parsing.py",
+          "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+          "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/price.rs",
+        "adapter/web/src/lib.rs"
+      ],
+      "native_regressions": [
+        "precision_and_ambiguous_currency_do_not_invent_money",
+        "json_numeric_prices_preserve_source_precision"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapinghub--price-parser",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_path": "price_parser/parser.py",
+      "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+      "content_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "symbol": "def extract_price_text(",
+      "line_start": 284,
+      "reviewed_excerpt": "def extract_price_text(price: str) -> Optional[str]:\n    r\"\"\"\n    Extract text of a price from a string which contains price and\n    maybe some other text. If multiple price-looking substrings are present,\n    the first is returned (FIXME: it is better to return a number\n    which is near a currency symbol).\n\n    >>> extract_price_text(\"price: $12.99\")\n    '12.99'\n    >>> extract_price_text(\"Free\")\n    '0'\n    >>> extract_price_text(\"Foo\")\n    >>> extract_price_text(\"1,235 USD\")\n    '1,235'\n",
+      "behavior_contract": "The donor selects the first numeric substring, rejects percentage-only strings, handles euro-as-decimal and treats Free as zero. ECDEV deliberately does not select a price from arbitrary marketing text or infer a free product. Explicit structured prices are parsed by the separately oracle-tested numeric kernel.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_price_parsing.py",
+          "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+          "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/price.rs"
+      ],
+      "native_regressions": [
+        "locked_price_parser_numeric_oracle"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapy--scrapy",
+      "commit_sha": "54f7ed9cccbe19db3fe6cd2252bf3c29326c67d7",
+      "source_path": "scrapy/http/response/text.py",
+      "blob_hash": "1a0b5c31775b38ffdb5b53bf359ac3b859b65485",
+      "content_sha256": "ea18916910a2138e54ab4f8e67e9c0205ddd047446a6ed2d81ed02536c53c912",
+      "symbol": "def text(self)",
+      "line_start": 114,
+      "reviewed_excerpt": "    def text(self) -> str:\n        \"\"\"Body as unicode\"\"\"\n        # access self.encoding before _cached_ubody to make sure\n        # _body_inferred_encoding is called\n        benc = self.encoding\n        if self._cached_ubody is None:\n            charset = f\"charset={benc}\"\n            self._cached_ubody = html_to_unicode(charset, self.body)[1]\n        return self._cached_ubody\n\n    def urljoin(self, url: str) -> str:\n        \"\"\"Join this Response's url with a possible relative url to form an\n        absolute interpretation of the latter.\"\"\"\n        return urljoin(get_base_url(self), url)\n",
+      "behavior_contract": "Response text consults encoding before caching decoded body and delegates to w3lib html_to_unicode. Header/body/BOM and inferred encoding are distinct. ECDEV keeps original wire hashes, uses deterministic declared encoding precedence and fails on unsupported or invalid data; statistical autodetection/replacement is not claimed. The bounded w3lib oracle is separate evidence.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_http_response_text.py",
+          "blob_hash": "d3bf4d7c0ee2282948cf3844092f083e1638c6fe",
+          "sha256": "9394eaf7e6da2b5761efd9e151dafeb28dd490f914bec6b26e54136d5f064ba5",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/document.rs",
+        "adapter/web/src/lib.rs"
+      ],
+      "native_regressions": [
+        "locked_w3lib_declared_document_oracle",
+        "declared_japanese_preserves_wire_provenance"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    },
+    {
+      "donor_id": "scrapy--scrapy",
+      "commit_sha": "54f7ed9cccbe19db3fe6cd2252bf3c29326c67d7",
+      "source_path": "scrapy/http/response/text.py",
+      "blob_hash": "1a0b5c31775b38ffdb5b53bf359ac3b859b65485",
+      "content_sha256": "ea18916910a2138e54ab4f8e67e9c0205ddd047446a6ed2d81ed02536c53c912",
+      "symbol": "def selector(self)",
+      "line_start": 169,
+      "reviewed_excerpt": "    def selector(self) -> Selector:\n        if self._cached_selector is None:\n            # circular import\n            from scrapy.selector import Selector  # noqa: PLC0415\n\n            selector = Selector(self)\n            # The weak reference lets the response be freed as soon as nothing\n            # else refers to it.\n            selector._response = weakref.ref(self)\n            self._cached_selector = selector\n        return self._cached_selector\n\n    def jmespath(self, query: str, **kwargs: Any) -> SelectorList:\n        return cast(\"SelectorList\", self.selector.jmespath(query, **kwargs))\n",
+      "behavior_contract": "A response memoizes its selector and CSS/XPath delegate through it. ECDEV owns HTML5 DOM selector traversal and retains field-level selector/match-index or structured graph pointers rather than flattening extracted values without their origin. XPath and Scrapy selector API parity are not claimed.",
+      "donor_test_files": [
+        {
+          "source_path": "tests/test_selector.py",
+          "blob_hash": "802edfd675fddcedc3b627578b367be25e534bcd",
+          "sha256": "7415fd08dce50e65fc70c35de57cb0b46f48f27eca930779358534958da52ad2",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        },
+        {
+          "source_path": "tests/test_http_response_text.py",
+          "blob_hash": "d3bf4d7c0ee2282948cf3844092f083e1638c6fe",
+          "sha256": "9394eaf7e6da2b5761efd9e151dafeb28dd490f914bec6b26e54136d5f064ba5",
+          "execution": "LOCATED_AND_REVIEWED_NOT_DONOR_SUITE_EXECUTION"
+        }
+      ],
+      "native_sources": [
+        "adapter/web/src/commerce.rs",
+        "adapter/web/src/lib.rs",
+        "adapter/web/src/page_product.rs"
+      ],
+      "native_regressions": [
+        "named_metadata_preserves_repeated_claims_conflicts_and_exact_locators"
+      ],
+      "status": "SOURCE_REVIEWED_NATIVE_COMMERCE_SUBSET",
+      "oracle_parity": "NOT_CLAIMED_BY_THIS_STUDY"
+    }
+  ],
+  "distinct_donors": 5,
+  "runtime_donor_dependencies_added": 0,
+  "oracle_families_added": 0,
+  "scope": "Relevant commerce extraction behavior; intentional conservative differences explicit. No full article extraction, hosted scrape, whole-donor parity or extinction claim.",
+  "metadata_cache_schema": 12
+}

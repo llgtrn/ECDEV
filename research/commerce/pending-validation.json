@@ -1,5 +1,5 @@
 {
-  "status": "VERIFIED_CHECKPOINT_NOT_FULL_WAVE_COMPLETION",
+  "status": "FINAL_PUBLICATION_PENDING",
   "goal_complete": false,
   "pending_implementation": [
     "Section 2: map all requested frontier concepts to the recorded source symbols/tests and native proofs, without requiring the entire Crawlee API",
@@ -39,7 +39,7 @@
     "resolved": true
   },
   "next_verification": [
-    "Complete remaining specification evidence audits; shared allocator checkpoint passed and is ready for direct main publication."
+    "Publish the verified checkpoint directly to main and verify remote HEAD and a clean working tree."
   ],
   "full_wave_remaining": [
     "Section 2: map all requested frontier concepts to the recorded source symbols/tests and native proofs, without requiring the entire Crawlee API",
@@ -50,11 +50,11 @@
   ],
   "corrected_live_normalization_proof": "research/commerce/live-jp-normalization-proof.json",
   "checkpoint_verification": {
-    "native_tests": 66,
+    "native_tests": "PASS_70_NATIVE_TESTS",
     "clippy": "PASS",
     "typescript_build": "PASS",
     "mcp_sdk_smoke": "PASS_31_TOOLS",
-    "canonical_proofs": "PASS_59_OF_59_CURRENT",
+    "canonical_proofs": "PASS_63_OF_63_CURRENT",
     "canonical_protocol": "BYTE_IDENTICAL_PASS",
     "shape_negative_cases": "PASS",
     "direct_main_commit": "VERIFIED_READY_TO_COMMIT",
@@ -74,7 +74,7 @@
     "doctests": "PASS",
     "price_number_oracle": "PASS_1235_CASES_868_DISTINCT_INPUTS",
     "page_enrichment_live": "PASS_THREE_JP_CANDIDATES_WITH_CANONICAL_URLS_ZERO_PAID",
-    "repository_shape": "PASS_131_OWNED_SOURCES_0_UNOWNED_10000_BPS",
+    "repository_shape": "PASS_132_OWNED_SOURCES_0_UNOWNED_10000_BPS",
     "numeric_price_precision": "PASS_SIX_NATIVE_CASES_AND_ONE_FRESH_LIVE_CAPTURE",
     "live_shortlist": "PASS_332_URLS_40_CAPTURES_39_CANDIDATES_ONE_FURTHER_RESEARCH_SHORTLIST",
     "public_amazon": "SEPARATE_PUBLIC_PROVIDER_LIVE_HTTP_503_NATIVE_RETAILER_FALLBACK_PASS",
@@ -83,7 +83,9 @@
     "http_retry": "PASS_SYNTHETIC_RETRY_TIMING_AND_FRESH_LIVE_RESPONSE_ACCOUNTING",
     "supplier_terms": "PASS_JSON_LD_MICRODATA_SCOPED_TERMS_CONFLICTS_PERSISTENCE_LIVE_TERMS_UNKNOWN",
     "listing_quality": "PASS_PER_ASSERTION_AVAILABILITY_SHIPPING_VARIANTS_METADATA_AND_BRAND_LABEL_DENOMINATORS",
-    "information_allocation": "PASS_SHARED_PUBLIC_ALLOCATOR_AND_FUTURE_PAID_PROPOSAL_REGRESSIONS"
+    "information_allocation": "PASS_SHARED_PUBLIC_ALLOCATOR_AND_FUTURE_PAID_PROPOSAL_REGRESSIONS",
+    "metadata_assertions": "research/commerce/metadata-assertions-proof.json",
+    "dashboard": "research/commerce/dashboard-observability-proof.json"
   },
   "previous_verified_pushed_main": "d8a66ab3e556baff833c0b951765e68cca23564c",
   "http_retry_record_validation": {
@@ -100,5 +102,25 @@
     "Cross-run and redirected-origin cooldown coordination",
     "Official SP-API acquisition when credentials become available"
   ],
-  "completion_scope_audit": "research/commerce/completion-scope-audit.json"
+  "completion_scope_audit": "research/commerce/completion-scope-audit.json",
+  "remaining": [
+    "Publish the verified checkpoint directly to main and verify remote HEAD and a clean working tree."
+  ],
+  "completion_requirement_matrix": "research/commerce/completion-requirement-matrix.json",
+  "verification": {
+    "native_tests": 70,
+    "doctests": "PASS",
+    "clippy": "PASS",
+    "typescript_build": "PASS",
+    "canonical_proofs": "PASS_63_OF_63_CURRENT",
+    "canonical_protocol": "BYTE_IDENTICAL",
+    "canonical_conformance": "30_OF_31_MISSING_UPSTREAM_ECDEV_SHARD",
+    "shape_conformance_bps": 10000,
+    "owned_sources": 132,
+    "unowned_sources": 0,
+    "v1_achieved": false,
+    "web_build": "PASS",
+    "mcp_sdk": "PASS_31_TOOLS",
+    "owned_source_files": 132
+  }
 }
