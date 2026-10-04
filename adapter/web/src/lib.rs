@@ -149,7 +149,8 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
                 };
                 let observed_offers:Vec<Value>=raw_offers.iter().enumerate().map(|(i,offer)|{
                     let currency=offer["priceCurrency"].as_str().unwrap_or("");
-                    json!({"price_minor":money(&offer["price"],currency),"raw_price":offer["price"],"currency":offer["priceCurrency"],"availability":offer["availability"],"seller":offer["seller"],"sku":offer["sku"],"url":offer["url"],"provenance":{"source":"JSON_LD","field_path":format!("Product.offers[{i}]")}})
+                    let interpretation=offer["price"].as_str().map(|raw|json!({"state":if raw.len()<=4096{"DERIVED"}else{"UNKNOWN"},"result":price::parse_price(Some(raw),offer["priceCurrency"].as_str(),None,None),"method":"FIRST_PRICE_TEXT_CURRENCY_TOKEN_AND_SEPARATOR_HEURISTICS","used_for_observed_price":false,"currency_token_is_iso_identity":false,"limitations":"First number may precede the actual price; signs may be discarded; free substring may become zero. Requires source review before commercial use."}));
+                    json!({"price_minor":money(&offer["price"],currency),"raw_price":offer["price"],"price_text_interpretation":interpretation,"currency":offer["priceCurrency"],"availability":offer["availability"],"seller":offer["seller"],"sku":offer["sku"],"url":offer["url"],"provenance":{"source":"JSON_LD","field_path":format!("Product.offers[{i}]")}})
                 }).collect();
                 let currencies: BTreeSet<_> = observed_offers
                     .iter()
@@ -557,6 +558,37 @@ mod tests {
                 );
             }
         }
+    }
+    #[test]
+    fn formatted_price_hints_preserve_unknown_observed_money_and_raw_source() {
+        let html = r#"<script type="application/ld+json">{"@type":"Product","name":"Formatted source","offers":[{"price":"$12.99","priceCurrency":"USD"},{"price":"free shipping"},{"price":1e3,"priceCurrency":"USD"}]}</script>"#;
+        let value = extract(html, "https://example.org/product").unwrap();
+        let product = &value["products"][0];
+        let offers = &product["observed_offers"];
+        assert_eq!(offers[0]["raw_price"], "$12.99");
+        assert!(offers[0]["price_minor"].is_null());
+        assert_eq!(offers[0]["price_text_interpretation"]["state"], "DERIVED");
+        assert_eq!(
+            offers[0]["price_text_interpretation"]["result"]["amount"],
+            "12.99"
+        );
+        assert_eq!(
+            offers[0]["price_text_interpretation"]["result"]["currency"],
+            "$"
+        );
+        assert_eq!(
+            offers[0]["price_text_interpretation"]["used_for_observed_price"],
+            false
+        );
+        assert_eq!(
+            offers[1]["price_text_interpretation"]["result"]["amount"],
+            "0"
+        );
+        assert!(offers[1]["price_minor"].is_null());
+        assert!(offers[1]["currency"].is_null());
+        assert_eq!(offers[2]["price_minor"], 100000);
+        assert!(offers[2]["price_text_interpretation"].is_null());
+        assert!(product["price_minor"].is_null());
     }
     #[test]
     fn conservative_policy_and_url_validation() {

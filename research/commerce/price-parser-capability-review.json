@@ -1,7 +1,7 @@
 {
   "donor_id": "scrapinghub--price-parser",
   "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
-  "status": "SOURCE_CONTRACT_REVIEW_NATIVE_FULL_API_PENDING",
+  "status": "BOUNDED_NATIVE_PUBLIC_PRICE_API_PARITY_PROVEN_WHOLE_DONOR_INCOMPLETE",
   "license": "BSD-3-Clause",
   "full_clone_files": 16,
   "source_files": 3,
@@ -112,9 +112,9 @@
     "status": "EXECUTED_UNMODIFIED_LOCKED_DONOR",
     "public_api_cases": 2937,
     "fixture": "adapter/web/tests/fixtures/price-contract.json",
-    "fixture_sha256": "1f971600e7c9cd3059e2e618c6a83bffcfd002ca20bbae4c4f2726042bff9f93",
+    "fixture_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
     "source_tests_expected_failures": "Actual donor results retained, not normative XFAIL expected values",
-    "native_comparison": "NOT_IMPLEMENTED",
+    "native_comparison": "2937_PRICE_PUBLIC_API_CASES_MATCHED",
     "limitations": [
       "Source Example digit-group override is not stored on Example; generated explicit group overrides cover the executable API independently.",
       "Helper parse_number direct nonfinite/exponent/resource cases and packaging/attrs semantics require separate coverage before full donor replacement.",
@@ -131,16 +131,32 @@
   "extinction_eligibility": {
     "whole_semantic_matrix_complete": false,
     "required_full_api_native": false,
-    "full_api_oracle_comparison": false,
+    "full_api_oracle_comparison": "BOUNDED_PUBLIC_API_CASES_ONLY",
     "callers_cut_over": false,
     "active_donor_test_oracle_import_removed": false,
     "rollback_donor_independent": false,
     "canonical_extinct": false,
     "blocking_edges": [
       "tools/commerce/price_oracle.py executes unmodified donor import and original tests",
-      "Required text/currency/full Price/float/attrs contract native implementation missing"
+      "Standalone helpers, attrs constructor/equality/repr, complete packaging and resource/nonfinite semantics still require contracts and proofs"
     ],
     "allowed_frozen_material": "Data/oracle outputs/BSD notice may remain after actual cutover; active donor imports must be retired and regression must prevent re-entry"
   },
-  "next_safe_work": "Implement independent native currency and price-text contracts against frozen independent fixture; complete public Price API and dependent caller cutover before attempting canonical extinction."
+  "next_safe_work": "Complete remaining helper/package contracts, broaden partitions and retire active donor oracle/test import after frozen regression cutover; do not declare whole extinction from 2937 bounded public API cases.",
+  "native_public_api": {
+    "implementation": "adapter/web/src/price.rs",
+    "currency_lexicon": "adapter/web/data/price-currency.json",
+    "license_notice": "adapter/web/tests/fixtures/price-parser-LICENSE.txt",
+    "production_caller": "adapter/web/src/lib.rs::products",
+    "source_fields": "raw offer.price and explicit source currency hint",
+    "derived_only": true,
+    "observed_price_conversion_changed": false,
+    "resource_limits": {
+      "input_bytes": 4096,
+      "hint_bytes": 4096,
+      "group_separator_bytes": 64,
+      "numeric_exponent_abs": 4096
+    },
+    "nonfinite_float": "UNKNOWN_NULL"
+  }
 }

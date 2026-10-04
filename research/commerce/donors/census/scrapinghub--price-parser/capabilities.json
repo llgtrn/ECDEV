@@ -1,1 +1,78 @@
-[]
+[
+  {
+    "capability": "extract.price-number",
+    "status": "VERIFIED",
+    "source_contract_scope": "Numeric format normalization including separator guessing and explicit separator overrides, exact decimal strings. Currency detection and first-price text selection are separate donor APIs, not claimed. A separate native public Price API proof now exists; this numeric proof retains its original bounded scope.",
+    "evidence": [
+      {
+        "path": "price_parser/parser.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+        "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+        "source_path": "price_parser/parser.py"
+      },
+      {
+        "path": "price_parser/_currencies.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+        "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1",
+        "source_path": "price_parser/_currencies.py"
+      },
+      {
+        "path": "tests/test_price_parsing.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+        "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966",
+        "source_path": "tests/test_price_parsing.py"
+      },
+      {
+        "path": "LICENSE",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+        "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5",
+        "source_path": "LICENSE"
+      }
+    ],
+    "native_implementation": "adapter/web/src/price.rs",
+    "oracle_cases": 1235,
+    "whole_donor_parity": false
+  },
+  {
+    "capability": "extract.price-public-api",
+    "status": "VERIFIED",
+    "source_contract_scope": "Independent bounded public Price text/currency/amount/float behavior; interpreted tokens and amounts are DERIVED, never observed money or ISO identity",
+    "evidence": [
+      {
+        "path": "price_parser/parser.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+        "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+        "source_path": "price_parser/parser.py"
+      },
+      {
+        "path": "price_parser/_currencies.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+        "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1",
+        "source_path": "price_parser/_currencies.py"
+      },
+      {
+        "path": "tests/test_price_parsing.py",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+        "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966",
+        "source_path": "tests/test_price_parsing.py"
+      },
+      {
+        "path": "LICENSE",
+        "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+        "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5",
+        "source_path": "LICENSE"
+      }
+    ],
+    "native_implementation": "adapter/web/src/price.rs",
+    "oracle_cases": 2937,
+    "whole_donor_parity": false
+  }
+]

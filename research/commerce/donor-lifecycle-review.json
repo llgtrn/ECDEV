@@ -245,9 +245,27 @@
       "canonical_assessment": {
         "donor_id": "scrapinghub--price-parser",
         "claimed": "REGISTERED",
-        "effective": "REGISTERED",
-        "stopped_by": "CENSUSED: not decomposed into any required capability",
+        "effective": "CENSUSED",
+        "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): price-parser.remaining-helper-and-package-contracts",
         "capabilities": [
+          {
+            "key": "extract.price-public-api",
+            "required": true,
+            "replacement_exists": true,
+            "native": true,
+            "native_detail": "`commerce.web-research` is native",
+            "parity_pass": true,
+            "regression_pass": true
+          },
+          {
+            "key": "price-parser.remaining-helper-and-package-contracts",
+            "required": true,
+            "replacement_exists": false,
+            "native": false,
+            "native_detail": "no replacement declared",
+            "parity_pass": false,
+            "regression_pass": false
+          },
           {
             "key": "extract.price-number",
             "required": false,
@@ -1068,5 +1086,5 @@
     "No cutover or extinction is declared.",
     "Firecrawl root license does not replace independently licensed component notices."
   ],
-  "assessment_refresh": "80 current canonical proofs; refreshed 2026-10-04"
+  "assessment_refresh": "85 current canonical proofs; refreshed local 2026-10-05"
 }

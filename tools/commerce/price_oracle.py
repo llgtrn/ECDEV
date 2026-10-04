@@ -13,6 +13,7 @@ def main():
  # Execute the actual tests module and its original Example data, without replacing donor code.
  spec=importlib.util.spec_from_file_location('locked_price_tests',DONOR/'tests/test_price_parsing.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
  if '--full-contract' in sys.argv:
+  import unicodedata
   full=[]
   for name,value in vars(module).items():
    if name.startswith('PRICE_PARSING_') and isinstance(value,list):
@@ -45,6 +46,9 @@ def main():
    cases.append(dict(name=name,input=text,currency_hint=hint,decimal_separator=separator,digit_group_separator=group,expected=expected,error=error))
   record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_FULL_PUBLIC_PRICE_API',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,scope='Actual Price.fromstring and parse_price alias behavior, exact amount/currency/amount_text/amount_float; source fixtures and generated API partitions, not native parity or extinction',native_parity=False,whole_donor_parity=False,cases=cases,currency_tokens={'safe':SAFE_CURRENCY_SYMBOLS,'unsafe':OTHER_CURRENCY_SYMBOLS,'dollar_codes':DOLLAR_CODES},limitations=['Source Example digit-group override is not stored on Example; generated explicit group overrides cover the executable API independently.','Helper parse_number direct nonfinite/exponent/resource cases and packaging/attrs semantics require separate coverage before full donor replacement.','Currency tables contain data under the locked BSD license; no executable donor code is copied into production.'])
   folder=ROOT/'adapter/web/tests/fixtures';(folder/'price-contract.json').write_text(json.dumps(record,indent=2,ensure_ascii=False,allow_nan=False)+'\n',encoding='utf-8',newline='\n')
+  data=ROOT/'adapter/web/data';data.mkdir(exist_ok=True)
+  lexicon=dict(record['currency_tokens'],license='BSD-3-Clause',notice='adapter/web/tests/fixtures/price-parser-LICENSE.txt',source_commit=COMMIT,source_sha256=sources[1]['sha256'],unicode_version=unicodedata.unidata_version,decimal_digit_starts=[i for i in range(0x110000) if unicodedata.category(chr(i))=='Nd' and unicodedata.decimal(chr(i))==0])
+  (data/'price-currency.json').write_text(json.dumps(lexicon,indent=2,ensure_ascii=False)+'\n',encoding='utf-8',newline='\n')
   print('Executed locked full public Price API oracle:',len(cases),'cases; native comparison pending');return
  inputs=[]
  for name,value in vars(module).items():
