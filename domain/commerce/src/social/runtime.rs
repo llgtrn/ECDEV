@@ -6,8 +6,41 @@ use crate::{
 use rusqlite::{Connection, params};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::{collections::BTreeSet, fs};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    fs,
+};
 use uuid::Uuid;
+// Requested source identity is narrower than a platform label for public JSON feeds.
+fn source_key(source: &Value) -> String {
+    let platform = source["platform"].as_str().unwrap_or("UNKNOWN");
+    if platform == "JSON_FEED" {
+        let canonical = source["url"]
+            .as_str()
+            .and_then(|u| url::Url::parse(u).ok())
+            .map(|mut u| {
+                u.set_fragment(None);
+                u.to_string()
+            })
+            .unwrap_or_default();
+        format!("JSON_FEED:{canonical}")
+    } else {
+        platform.to_owned()
+    }
+}
+fn post_source_key(post: &SocialPost) -> String {
+    if post.platform == "JSON_FEED" {
+        format!(
+            "JSON_FEED:{}",
+            post.native_id
+                .split_once('#')
+                .map(|(source, _)| source)
+                .unwrap_or("")
+        )
+    } else {
+        post.platform.clone()
+    }
+}
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
@@ -49,6 +82,36 @@ pub fn tool_definitions() -> Vec<Value> {
 }
 
 impl Engine {
+    fn verified_social_capture(
+        &self,
+        post: &SocialPost,
+        checked: &mut BTreeMap<String, bool>,
+    ) -> bool {
+        if post.validate().is_err() {
+            return false;
+        }
+        *checked.entry(post.raw_hash.clone()).or_insert_with(|| {
+            let path = self
+                .root
+                .join(".ynventa/materialized/runtime/social-captures")
+                .join(format!("{}.raw", post.raw_hash));
+            fs::metadata(&path).is_ok_and(|m| m.is_file() && m.len() <= 4194304)
+                && fs::read(path)
+                    .is_ok_and(|raw| format!("{:x}", Sha256::digest(raw)) == post.raw_hash)
+        })
+    }
+    fn verified_social_snapshot(
+        &self,
+        value: &Value,
+        checked: &mut BTreeMap<String, bool>,
+    ) -> bool {
+        value["captured_posts"].as_array().is_some_and(|posts| {
+            posts.iter().all(|p| {
+                serde_json::from_value::<SocialPost>(p.clone())
+                    .is_ok_and(|p| self.verified_social_capture(&p, checked))
+            })
+        })
+    }
     fn social_rows(&self, mode: &str) -> Result<Vec<SocialPost>, String> {
         let db = self.db.lock().map_err(err)?;
         let mut stmt = db
@@ -93,6 +156,10 @@ impl Engine {
             if value["captured_posts"].is_array() {
                 value["observed_source_evidence"] = value["captured_posts"].clone();
             }
+            if !self.verified_social_snapshot(&value, &mut BTreeMap::new()) {
+                return Err("SNAPSHOT_RAW_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH".into());
+            }
+            value["raw_capture_verification"] = json!("VERIFIED_LOCAL_SHA256_NO_NETWORK");
             return Ok(value);
         }
         let db = self.db.lock().map_err(err)?;
@@ -114,8 +181,15 @@ impl Engine {
             .map_err(err)?
             .map(|s| serde_json::from_str(&s.map_err(err)?).map_err(err))
             .collect();
+        let mut checked = BTreeMap::new();
+        let mut unavailable = vec![];
+        let snapshots: Vec<_> = rows?.into_iter().filter(|row| {
+            let valid = self.verified_social_snapshot(row, &mut checked);
+            if !valid { unavailable.push(json!({"snapshot_id":row["snapshot_id"],"state":"SOURCE_UNAVAILABLE","reason":"SNAPSHOT_RAW_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH"})); }
+            valid
+        }).collect();
         Ok(
-            json!({"snapshots":rows?,"watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","JSON_FEED"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
+            json!({"snapshots":snapshots,"unavailable_snapshots":unavailable,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK","watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","JSON_FEED"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
         )
     }
     pub fn trend_compare(&self, args: Value) -> Result<Value, String> {
@@ -123,9 +197,13 @@ impl Engine {
             self.trend_inspect(json!({"snapshot_id":required(&args,"before_snapshot_id")?}))?;
         let after =
             self.trend_inspect(json!({"snapshot_id":required(&args,"after_snapshot_id")?}))?;
-        if before["capture_mode"] != after["capture_mode"]
+        if before["source_scope_version"] != 2
+            || after["source_scope_version"] != 2
+            || before["capture_mode"] != after["capture_mode"]
             || before["query"] != after["query"]
             || before["window_seconds"] != after["window_seconds"]
+            || before["source_scope"] != after["source_scope"]
+            || before["source_scope_version"] != after["source_scope_version"]
         {
             return Err("INCOMPATIBLE_TREND_SNAPSHOT_SCOPE".into());
         }
@@ -166,7 +244,7 @@ impl Engine {
             "LIVE"
         };
         let request_budget = args["request_budget"].as_u64().unwrap_or(10).min(20) as usize;
-        let proposals:Vec<_>=sources.iter().enumerate().map(|(i,s)|json!({"candidate_id":query,"action":"PUBLIC_SOCIAL_QUERY","provider":"native-social","class":"PUBLIC","target_unknown":"SOCIAL_TOPIC_EVIDENCE","evidence_gap":format!("{}:{}",query,s["platform"]),"source_group":s["platform"],"url":format!("source-{i}"),"expected_cost_minor":0,"expected_requests":if fixture||mode=="CACHED"{0}else{2},"expected_latency_ms":if fixture{1}else{1000},"uncertainty_reduction_points":10})).collect();
+        let proposals:Vec<_>=sources.iter().enumerate().map(|(i,s)|json!({"candidate_id":query,"action":"PUBLIC_SOCIAL_QUERY","provider":"native-social","class":"PUBLIC","target_unknown":"SOCIAL_TOPIC_EVIDENCE","evidence_gap":format!("{}:{}",query,source_key(s)),"source_group":source_key(s),"url":format!("source-{i}"),"expected_cost_minor":0,"expected_requests":if fixture||mode=="CACHED"{0}else{2},"expected_latency_ms":if fixture{1}else{1000},"uncertainty_reduction_points":10})).collect();
         let allocation = allocate_information_actions(&proposals, 0, request_budget);
         let selected: BTreeSet<_> = allocation["selected_actions"]
             .as_array()
@@ -178,6 +256,7 @@ impl Engine {
         let mut failures = vec![];
         let mut requests = 0u64;
         let mut hits = 0u64;
+        let mut checked = BTreeMap::new();
         let run_id = Uuid::new_v4().to_string();
         for (i, source) in sources.iter().enumerate() {
             if !selected.contains(format!("source-{i}").as_str()) {
@@ -209,6 +288,13 @@ impl Engine {
                     && now.saturating_sub(created) <= 3600
                 {
                     let mut posts: Vec<SocialPost> = serde_json::from_str(&payload).map_err(err)?;
+                    if !posts
+                        .iter()
+                        .all(|p| self.verified_social_capture(p, &mut checked))
+                    {
+                        failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"CACHE_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH","request_count":0}));
+                        continue;
+                    }
                     for p in &mut posts {
                         p.capture_mode = "CACHED".into();
                         p.origin_evidence_id = Some(p.evidence_id.clone());
@@ -288,15 +374,26 @@ impl Engine {
                 }
             }
         }
-        let mut scope: Vec<String> = sources
-            .iter()
-            .map(|s| json!({"platform":s["platform"],"url":s["url"]}).to_string())
-            .collect();
-        scope.sort();
-        scope.dedup();
-        let source_scope = json!(scope);
-        let acquisition_complete =
-            failures.is_empty() && allocation["skipped"].as_array().is_some_and(Vec::is_empty);
+        // LIVE snapshots describe the completed acquisition, rather than its start time.
+        let now = if mode == "LIVE" { timestamp() } else { now };
+        let selected_scope: BTreeSet<String> = sources.iter().map(source_key).collect();
+        let source_scope = json!(selected_scope);
+        let mut posts = self.social_rows(mode)?;
+        posts.extend(captured.clone());
+        posts.retain(|post| selected_scope.contains(&post_source_key(post)));
+        let mut invalid = BTreeSet::new();
+        posts.retain(|post| {
+            let valid = self.verified_social_capture(post, &mut checked);
+            if !valid && invalid.insert(post.raw_hash.clone()) {
+                failures.push(json!({"platform":post.platform,"state":"SOURCE_UNAVAILABLE","reason":"HISTORICAL_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH","raw_hash":post.raw_hash,"request_count":0}));
+            }
+            valid
+        });
+        let allocation_complete = allocation["skipped"].as_array().is_some_and(|rows| {
+            rows.iter()
+                .all(|row| row["reason"] == "REDUNDANT_EVIDENCE_GAP_SOURCE")
+        });
+        let acquisition_complete = failures.is_empty() && allocation_complete;
         let mut history = vec![];
         {
             let db = self.db.lock().map_err(err)?;
@@ -309,26 +406,29 @@ impl Engine {
                 if acquisition_complete
                     && previous["source_complete"] == true
                     && previous["source_scope"] == source_scope
+                    && previous["source_scope_version"] == 2
+                    && self.verified_social_snapshot(&previous, &mut checked)
                 {
                     history.push(previous);
                 }
             }
         }
         history.reverse();
-        let mut posts = self.social_rows(mode)?;
-        posts.extend(captured.clone());
         let mut snap = snapshot(&posts, &history, &query, now, window, mode);
         let snapshot_id = Uuid::new_v4().to_string();
         snap["source_scope"] = source_scope;
+        snap["source_scope_version"] = json!(2);
         snap["snapshot_id"] = json!(snapshot_id);
         snap["run_id"] = json!(run_id);
+        snap["raw_capture_verification"] = json!("VERIFIED_LOCAL_SHA256_NO_NETWORK");
+        snap["acquisition_provenance"] = json!({"requested_mode":mode,"new_observation_count":if mode=="CACHED"{0}else{captured.len()},"new_live_observation_count":if mode=="LIVE" && requests>0{captured.len()}else{0},"live_acquisition_established":mode=="LIVE" && requests>0 && !captured.is_empty(),"historical_projection":"VALIDATED_RAW_CAPTURE_ONLY","cache_projection_is_new_live_acquisition":false});
         snap["provider_failures"] = json!(failures);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
         snap["source_complete"] = json!(
             snap["provider_failures"]
                 .as_array()
                 .is_some_and(Vec::is_empty)
-                && allocation["skipped"].as_array().is_some_and(Vec::is_empty)
+                && allocation_complete
         );
         snap["captured_posts"] = json!(
             super::deduplicate(&posts)
@@ -503,6 +603,8 @@ pub fn watch_events(before: &Value, after: &Value, policy: &Value) -> Value {
         || before["capture_mode"] != after["capture_mode"]
         || before["query"] != after["query"]
         || before["window_seconds"] != after["window_seconds"]
+        || before["source_scope"] != after["source_scope"]
+        || before["source_scope_version"] != after["source_scope_version"]
     {
         return json!([]);
     }

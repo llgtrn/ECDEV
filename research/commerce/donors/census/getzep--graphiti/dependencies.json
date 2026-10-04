@@ -1,0 +1,431 @@
+[
+  {
+    "source_path": "Dockerfile",
+    "blob_hash": "971eb714bd20d48e9820426fa8b8b9bb33aa4f4a",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "Makefile",
+    "blob_hash": "c2a9c8d8ea69727949e0e144fd5bb7de1c06fd06",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "examples/opentelemetry/pyproject.toml",
+    "blob_hash": "75629f0d4000c62fa5a32d0161bb17bc365e9d0f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "project": {
+        "name": "graphiti-otel-stdout-example",
+        "version": "0.1.0",
+        "requires-python": ">=3.10",
+        "dependencies": [
+          "graphiti-core",
+          "kuzu>=0.11.2",
+          "opentelemetry-api>=1.20.0",
+          "opentelemetry-sdk>=1.20.0"
+        ]
+      },
+      "tool": {
+        "uv": {
+          "sources": {
+            "graphiti-core": {
+              "path": "../..",
+              "editable": true
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/opentelemetry/uv.lock",
+    "blob_hash": "1f5d3a198c419156689b8c326f3378e856deb6ca",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "examples/quickstart/requirements.txt",
+    "blob_hash": "61fe494d7b5631cf72b99534d7a4444161ee1bc1",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "mcp_server/docker/Dockerfile",
+    "blob_hash": "b18bd638c98bdf1c33624624193e371c6643b440",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "mcp_server/pyproject.toml",
+    "blob_hash": "a2c2a55598ef84cb309fa320fc910461dfef8df4",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "project": {
+        "name": "mcp-server",
+        "version": "1.1.0",
+        "description": "Graphiti MCP Server",
+        "readme": "README.md",
+        "requires-python": ">=3.10,<4",
+        "dependencies": [
+          "mcp>=2,<3",
+          "openai>=2.41.0",
+          "graphiti-core[falkordb]>=0.30.2",
+          "pydantic-settings>=2.0.0",
+          "pyyaml>=6.0.3",
+          "typing-extensions>=4.0.0"
+        ],
+        "optional-dependencies": {
+          "azure": [
+            "azure-identity>=1.25.3"
+          ],
+          "providers": [
+            "google-genai>=2.8.0",
+            "anthropic>=0.107.1",
+            "groq>=1.2.0",
+            "voyageai>=0.3.7",
+            "sentence-transformers>=3.2.1"
+          ]
+        }
+      },
+      "tool": {
+        "pyright": {
+          "include": [
+            "src",
+            "tests"
+          ],
+          "pythonVersion": "3.10",
+          "typeCheckingMode": "basic"
+        },
+        "ruff": {
+          "line-length": 100,
+          "lint": {
+            "select": [
+              "E",
+              "F",
+              "UP",
+              "B",
+              "SIM",
+              "I"
+            ],
+            "ignore": [
+              "E501"
+            ],
+            "flake8-tidy-imports": {
+              "banned-api": {
+                "typing.TypedDict": {
+                  "msg": "Use typing_extensions.TypedDict instead."
+                }
+              }
+            }
+          },
+          "format": {
+            "quote-style": "single",
+            "indent-style": "space",
+            "docstring-code-format": true
+          }
+        }
+      },
+      "dependency-groups": {
+        "dev": [
+          "faker>=40.21.0",
+          "httpx>=0.28.1",
+          "psutil>=7.1.2",
+          "pyright>=1.1.408",
+          "pytest>=9.0.3",
+          "pytest-asyncio>=1.4.0",
+          "pytest-timeout>=2.4.0",
+          "pytest-xdist>=3.8.0",
+          "ruff>=0.15.16"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "mcp_server/uv.lock",
+    "blob_hash": "6efbe15b81b8ea962101bed9d748fe6ca7ffabec",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "pyproject.toml",
+    "blob_hash": "78cfd595428bb48f0d43f9544bc990fabbd0dc0b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "project": {
+        "name": "graphiti-core",
+        "description": "A temporal graph building library",
+        "version": "0.30.2",
+        "authors": [
+          {
+            "name": "Paul Paliychuk",
+            "email": "paul@getzep.com"
+          },
+          {
+            "name": "Preston Rasmussen",
+            "email": "preston@getzep.com"
+          },
+          {
+            "name": "Daniel Chalef",
+            "email": "daniel@getzep.com"
+          }
+        ],
+        "readme": "README.md",
+        "license": "Apache-2.0",
+        "requires-python": ">=3.10,<4",
+        "dependencies": [
+          "pydantic>=2.11.5",
+          "neo4j>=5.26.0",
+          "openai>=1.91.0",
+          "tenacity>=9.0.0",
+          "numpy>=1.0.0",
+          "python-dotenv>=1.0.1",
+          "posthog>=3.0.0"
+        ],
+        "urls": {
+          "Homepage": "https://help.getzep.com/graphiti/graphiti/overview",
+          "Repository": "https://github.com/getzep/graphiti"
+        },
+        "optional-dependencies": {
+          "anthropic": [
+            "anthropic>=0.49.0"
+          ],
+          "groq": [
+            "groq>=0.2.0"
+          ],
+          "google-genai": [
+            "google-genai>=1.62.0"
+          ],
+          "kuzu": [
+            "kuzu>=0.11.3"
+          ],
+          "falkordb": [
+            "falkordb>=1.1.2,<2.0.0"
+          ],
+          "falkordblite": [
+            "falkordblite>=0.5.0; python_version>='3.12'",
+            "redis<9; python_version>='3.12'"
+          ],
+          "voyageai": [
+            "voyageai>=0.2.3"
+          ],
+          "gliner2": [
+            "gliner2>=1.2.0; python_version>='3.11'"
+          ],
+          "neo4j-opensearch": [
+            "boto3>=1.39.16",
+            "opensearch-py>=3.0.0"
+          ],
+          "sentence-transformers": [
+            "sentence-transformers>=3.2.1"
+          ],
+          "neptune": [
+            "langchain-aws>=0.2.29",
+            "opensearch-py>=3.0.0",
+            "boto3>=1.39.16"
+          ],
+          "tracing": [
+            "opentelemetry-api>=1.20.0",
+            "opentelemetry-sdk>=1.20.0"
+          ],
+          "dev": [
+            "pyright>=1.1.404",
+            "groq>=0.2.0",
+            "anthropic>=0.49.0",
+            "google-genai>=1.8.0",
+            "falkordb>=1.1.2,<2.0.0",
+            "kuzu>=0.11.3",
+            "boto3>=1.39.16",
+            "opensearch-py>=3.0.0",
+            "langchain-aws>=0.2.29",
+            "ipykernel>=6.29.5",
+            "jupyterlab>=4.2.4",
+            "langgraph>=1.0.10",
+            "langchain-anthropic>=0.2.4",
+            "langsmith>=0.1.108",
+            "langchain-openai>=0.2.6",
+            "sentence-transformers>=3.2.1",
+            "transformers>=4.45.2",
+            "voyageai>=0.2.3",
+            "pytest>=8.3.3",
+            "pytest-asyncio>=0.24.0",
+            "pytest-xdist>=3.6.1",
+            "ruff>=0.7.1",
+            "opentelemetry-sdk>=1.20.0"
+          ]
+        }
+      },
+      "build-system": {
+        "requires": [
+          "hatchling"
+        ],
+        "build-backend": "hatchling.build"
+      },
+      "tool": {
+        "pytest": {
+          "ini_options": {
+            "pythonpath": [
+              "."
+            ]
+          }
+        },
+        "ruff": {
+          "line-length": 100,
+          "lint": {
+            "select": [
+              "E",
+              "F",
+              "UP",
+              "B",
+              "SIM",
+              "I"
+            ],
+            "ignore": [
+              "E501"
+            ],
+            "flake8-tidy-imports": {
+              "banned-api": {
+                "typing.TypedDict": {
+                  "msg": "Use typing_extensions.TypedDict instead."
+                }
+              }
+            }
+          },
+          "format": {
+            "quote-style": "single",
+            "indent-style": "space",
+            "docstring-code-format": true
+          }
+        },
+        "pyright": {
+          "include": [
+            "graphiti_core",
+            ".github/intake"
+          ],
+          "pythonVersion": "3.10",
+          "typeCheckingMode": "basic"
+        }
+      }
+    }
+  },
+  {
+    "source_path": "server/Makefile",
+    "blob_hash": "abb13c2261df2349402b2eb9709d552cee87027e",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "server/pyproject.toml",
+    "blob_hash": "d8101db4749638b1b3190cd75d8e049c24e9663c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "project": {
+        "name": "graph-service",
+        "version": "0.1.0",
+        "description": "Zep Graph service implementing Graphiti package",
+        "authors": [
+          {
+            "name": "Paul Paliychuk",
+            "email": "paul@getzep.com"
+          }
+        ],
+        "readme": "README.md",
+        "requires-python": ">=3.10",
+        "dependencies": [
+          "fastapi>=0.115.0",
+          "graphiti-core>=0.28.2",
+          "pydantic-settings>=2.4.0",
+          "uvicorn>=0.44.0",
+          "httpx>=0.28.1"
+        ],
+        "optional-dependencies": {
+          "dev": [
+            "pydantic>=2.8.2",
+            "pyright>=1.1.380",
+            "pytest>=9.0.3",
+            "python-dotenv>=1.2.2",
+            "pytest-asyncio>=0.24.0",
+            "pytest-xdist>=3.6.1",
+            "ruff>=0.6.2",
+            "fastapi-cli>=0.0.5",
+            "graphiti-core[falkordb]>=0.28.2"
+          ]
+        }
+      },
+      "build-system": {
+        "requires": [
+          "hatchling"
+        ],
+        "build-backend": "hatchling.build"
+      },
+      "tool": {
+        "hatch": {
+          "build": {
+            "targets": {
+              "wheel": {
+                "packages": [
+                  "graph_service"
+                ]
+              }
+            }
+          }
+        },
+        "pytest": {
+          "ini_options": {
+            "pythonpath": [
+              "."
+            ],
+            "markers": [
+              "integration: live end-to-end tests requiring FalkorDB and an OpenAI API key"
+            ]
+          }
+        },
+        "ruff": {
+          "line-length": 100,
+          "lint": {
+            "select": [
+              "E",
+              "F",
+              "UP",
+              "B",
+              "SIM",
+              "I"
+            ],
+            "ignore": [
+              "E501"
+            ]
+          },
+          "format": {
+            "quote-style": "single",
+            "indent-style": "space",
+            "docstring-code-format": true
+          }
+        },
+        "pyright": {
+          "include": [
+            "."
+          ],
+          "pythonVersion": "3.10",
+          "typeCheckingMode": "standard"
+        }
+      }
+    }
+  },
+  {
+    "source_path": "server/uv.lock",
+    "blob_hash": "5977b31efdfca194865e56eff62055073665ac06",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "uv.lock",
+    "blob_hash": "75017c1797555ba3134756150248a8a1bfb6750a",
+    "status": "INVENTORIED",
+    "roles": []
+  }
+]

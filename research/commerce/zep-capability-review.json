@@ -1,0 +1,1358 @@
+{
+  "donor_id": "getzep--zep",
+  "exact_pinned_commit": "e700e361cca9215a1d6db28044d460d8ca077f98",
+  "retrieved_at": "2026-10-04T13:47:11.864869+00:00",
+  "license": "Apache-2.0",
+  "license_files": [
+    {
+      "path": "LICENSE",
+      "blob_hash": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    },
+    {
+      "path": "ingestion/LICENSE",
+      "blob_hash": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    },
+    {
+      "path": "integrations/adk/typescript/LICENSE",
+      "blob_hash": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    },
+    {
+      "path": "integrations/mastra/typescript/LICENSE",
+      "blob_hash": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    },
+    {
+      "path": "integrations/vercel-ai/typescript/LICENSE",
+      "blob_hash": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    },
+    {
+      "path": "mcp/zep-mcp-server/LICENSE",
+      "blob_hash": "a0c972474b0e7e51f7b7b4a49be2b84e762313ec",
+      "sha256": "911e71d15319074b5cfa671fd77d65008b8264ab64ea6bc354df049c81f169d7",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    }
+  ],
+  "full_clone": "FULL_CLONE",
+  "submodules": "",
+  "tracked_files": 947,
+  "source_parsed": 447,
+  "source_parse_unknown": 6,
+  "source_contracts": [
+    {
+      "capability": "getzep--zep.Episode",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/types.py",
+      "source_symbol": "Episode",
+      "line_start": 29,
+      "line_end": 62,
+      "source_sha256": "cc543d81543937d8da0cdc453dfcc234663af18f5365a3cb2d459e7ea5a828a7",
+      "source_blob_hash": "76a135277c9521f9d3eaf240d6f84c788d6941d7",
+      "behavior_contract": "Validated episode text/type/source timestamp/metadata; source provenance survives SDK projection.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.Destination",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/types.py",
+      "source_symbol": "Destination",
+      "line_start": 66,
+      "line_end": 78,
+      "source_sha256": "cc543d81543937d8da0cdc453dfcc234663af18f5365a3cb2d459e7ea5a828a7",
+      "source_blob_hash": "76a135277c9521f9d3eaf240d6f84c788d6941d7",
+      "behavior_contract": "Exactly one graph_id or user_id; no silent destination fallback.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.to_graph_add_kwargs",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/types.py",
+      "source_symbol": "to_graph_add_kwargs",
+      "line_start": 94,
+      "line_end": 105,
+      "source_sha256": "cc543d81543937d8da0cdc453dfcc234663af18f5365a3cb2d459e7ea5a828a7",
+      "source_blob_hash": "76a135277c9521f9d3eaf240d6f84c788d6941d7",
+      "behavior_contract": "Omit unset optional fields; forwards to managed Zep graph API, not local persistence.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.check_timestamp",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/_validation.py",
+      "source_symbol": "check_timestamp",
+      "line_start": 94,
+      "line_end": 113,
+      "source_sha256": "5858d8bcbf555db305178f3eb5abd78d402fba0039df95e87021bb6ffe9764f8",
+      "source_blob_hash": "23a4e75a5d81a525f1660bdc15cf035b536271f1",
+      "behavior_contract": "Absent timestamp allowed; supplied value must parse and have an explicit timezone.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.FactTriple",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/triples.py",
+      "source_symbol": "FactTriple",
+      "line_start": 40,
+      "line_end": 146,
+      "source_sha256": "e982acc400cd8e177d83d319f7d9a9dc76e5689f8176edfacf73e2512f4f6f81",
+      "source_blob_hash": "0588ae98e38877435403e5434b4d73f1c2e5259e",
+      "behavior_contract": "Named fact endpoints, optional UUID identities, source-validity timestamps and metadata; SDK owns fact creation.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep._is_retryable",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/submitters/sequential.py",
+      "source_symbol": "_is_retryable",
+      "line_start": 66,
+      "line_end": 70,
+      "source_sha256": "2bd57588b61b18e154d055c07f616c18e8f2ec6653506750d3b3eb51847ef133",
+      "source_blob_hash": "3af21c44b3fe2f3186daa8740bf51e4ff95695d2",
+      "behavior_contract": "Unsent transport failures/429 retried; ambiguous writes/5xx require explicit idempotency permission.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep._retry_after_seconds",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/submitters/sequential.py",
+      "source_symbol": "_retry_after_seconds",
+      "line_start": 44,
+      "line_end": 63,
+      "source_sha256": "2bd57588b61b18e154d055c07f616c18e8f2ec6653506750d3b3eb51847ef133",
+      "source_blob_hash": "3af21c44b3fe2f3186daa8740bf51e4ff95695d2",
+      "behavior_contract": "Seconds or aware HTTP date; nonfinite/unparseable delays unavailable; elapsed delays zero.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.Pipeline",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/pipeline.py",
+      "source_symbol": "Pipeline",
+      "line_start": 103,
+      "line_end": 201,
+      "source_sha256": "74e32c4265bc717aebe9e4dd644e66c3ac9465ab8640aaebba3614395673ea4d",
+      "source_blob_hash": "7c096bab709202703bb0f755481c72f739f1fb17",
+      "behavior_contract": "Preview runs loader/transforms without SDK writes; run validates replay then uses selected submitter. Whole orchestration replacement not claimed.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--zep.AliasCanonicalizer",
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "ingestion/src/zep_ingest/transforms/canonicalizer.py",
+      "source_symbol": "AliasCanonicalizer",
+      "line_start": 49,
+      "line_end": 227,
+      "source_sha256": "e7a5620fbe4856f8d0da9076a866747bb3be6690994f6efdaee163d40cd1390b",
+      "source_blob_hash": "e08fd3fb0655cd9e0cccb5c0fba9776ba94161d9",
+      "behavior_contract": "Explicit alias rewrite/annotation with ambiguity/risky-word guards; must never silently establish commerce identity.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    }
+  ],
+  "dependency_inventory": [
+    {
+      "source_path": "benchmarks/locomo/Makefile",
+      "source_sha256": "0e95776eeafd9333a2e6f8758504115fc63fe4df596f756561939c94d00449ed",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "benchmarks/locomo/pyproject.toml",
+      "source_sha256": "9da90e75fbe647627c5db9294406d881955c9854b0da2d69a5f2a369df9ce4bc",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "zep-cloud>=0.70.0",
+        "openai>=1.0.0",
+        "pandas>=2.0.0",
+        "scipy>=1.10.0",
+        "python-dotenv>=1.0.0",
+        "pydantic>=2.0.0",
+        "pyyaml>=6.0",
+        "requests>=2.31.0",
+        "tiktoken>=0.5.0",
+        "tqdm>=4.65.0",
+        "orjson>=3.11.4",
+        "tenacity>=9.1.2"
+      ],
+      "optional_requirements": {}
+    },
+    {
+      "source_path": "benchmarks/longmemeval/pyproject.toml",
+      "source_sha256": "a953a1dfea328622d8f34959a47b92cf9222c617fc171688c3d02cdffc271134",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "zep-cloud",
+        "openai",
+        "gdown",
+        "pandas",
+        "scipy",
+        "python-dotenv",
+        "pydantic",
+        "requests"
+      ],
+      "optional_requirements": {}
+    },
+    {
+      "source_path": "examples/go/chunking-example/go.mod",
+      "source_sha256": "b6327e29bcaafdc828d59b4bbdf10b6d572741a655067bb140187c73e64d3bc1",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/go/chunking-example/go.sum",
+      "source_sha256": "9acdbc710679f0ab0add86ef3f70da421db23aef3b11e6cd47d9506aee9c99d1",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/go/go.mod",
+      "source_sha256": "17371a74e208253e84dcda52b7102d01acc343fd46a7d72aa0ae83f039f6cc81",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/go/go.sum",
+      "source_sha256": "0295a39aa33e756f2710ce81d0f0bf32a43e0dd16cee81882ab7f95722ad89c2",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/python/agent-memory-full-example/requirements.txt",
+      "source_sha256": "87cdc3d46e15c86439ab4cec3d657252d0ac92c95ff9859e38b55356c890cbf6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "altair==5.5.0",
+        "annotated-types==0.7.0",
+        "anyio==4.15.1",
+        "attrs==25.3.0",
+        "blinker==1.9.0",
+        "cachetools==6.2.0",
+        "certifi==2025.8.3",
+        "charset-normalizer==3.4.3",
+        "click==8.3.0",
+        "distro==1.9.0",
+        "gitdb==4.0.12",
+        "GitPython==3.1.55",
+        "h11==0.16.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "idna==3.19",
+        "Jinja2==3.1.6",
+        "jiter==0.16.0",
+        "jsonschema==4.25.1",
+        "jsonschema-specifications==2025.9.1",
+        "MarkupSafe==3.0.2",
+        "narwhals==2.5.0",
+        "nest_asyncio==1.6.0",
+        "numpy==2.3.3",
+        "openai==3.13.0",
+        "packaging==25.0",
+        "pandas==2.3.2",
+        "pillow==12.3.0",
+        "protobuf==6.33.5",
+        "pyarrow==23.0.1",
+        "pydantic==2.11.9",
+        "pydantic_core==2.33.2",
+        "pydeck==0.9.1",
+        "python-dateutil==2.9.0.post0",
+        "python-dotenv==1.2.2",
+        "pytz==2025.2",
+        "referencing==0.36.2",
+        "requests==2.33.0",
+        "rpds-py==0.27.1",
+        "six==1.17.0",
+        "smmap==5.0.2",
+        "sniffio==1.3.1",
+        "streamlit==1.54.0",
+        "tenacity==9.1.2",
+        "toml==0.10.2",
+        "tornado==6.5.7",
+        "tqdm==4.67.1",
+        "typing-inspection==0.4.1",
+        "typing_extensions==4.16.0",
+        "tzdata==2025.2",
+        "urllib3==2.7.0",
+        "watchdog==6.0.0",
+        "zep-cloud>=3.28.0,<4"
+      ]
+    },
+    {
+      "source_path": "examples/python/chunking-example/requirements.txt",
+      "source_sha256": "e54d694886330bc943e8a08e63f305f61625405a4e7925ce43aa55baa010b710",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "zep-cloud>=3.28.0,<4",
+        "openai>=3.13.0,<4",
+        "python-dotenv"
+      ]
+    },
+    {
+      "source_path": "examples/python/claude-prompt-caching-example/requirements.txt",
+      "source_sha256": "41a48c625c7cde49b7bbcdb3d98f901034d4ef7ebd1d8cfdd639b5e29383a59c",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "anthropic>=1.5.0,<2",
+        "zep-cloud>=3.28.0,<4",
+        "python-dotenv>=1.0.0"
+      ]
+    },
+    {
+      "source_path": "examples/python/context-templates-example/requirements.txt",
+      "source_sha256": "87cdc3d46e15c86439ab4cec3d657252d0ac92c95ff9859e38b55356c890cbf6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "altair==5.5.0",
+        "annotated-types==0.7.0",
+        "anyio==4.15.1",
+        "attrs==25.3.0",
+        "blinker==1.9.0",
+        "cachetools==6.2.0",
+        "certifi==2025.8.3",
+        "charset-normalizer==3.4.3",
+        "click==8.3.0",
+        "distro==1.9.0",
+        "gitdb==4.0.12",
+        "GitPython==3.1.55",
+        "h11==0.16.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "idna==3.19",
+        "Jinja2==3.1.6",
+        "jiter==0.16.0",
+        "jsonschema==4.25.1",
+        "jsonschema-specifications==2025.9.1",
+        "MarkupSafe==3.0.2",
+        "narwhals==2.5.0",
+        "nest_asyncio==1.6.0",
+        "numpy==2.3.3",
+        "openai==3.13.0",
+        "packaging==25.0",
+        "pandas==2.3.2",
+        "pillow==12.3.0",
+        "protobuf==6.33.5",
+        "pyarrow==23.0.1",
+        "pydantic==2.11.9",
+        "pydantic_core==2.33.2",
+        "pydeck==0.9.1",
+        "python-dateutil==2.9.0.post0",
+        "python-dotenv==1.2.2",
+        "pytz==2025.2",
+        "referencing==0.36.2",
+        "requests==2.33.0",
+        "rpds-py==0.27.1",
+        "six==1.17.0",
+        "smmap==5.0.2",
+        "sniffio==1.3.1",
+        "streamlit==1.54.0",
+        "tenacity==9.1.2",
+        "toml==0.10.2",
+        "tornado==6.5.7",
+        "tqdm==4.67.1",
+        "typing-inspection==0.4.1",
+        "typing_extensions==4.16.0",
+        "tzdata==2025.2",
+        "urllib3==2.7.0",
+        "watchdog==6.0.0",
+        "zep-cloud>=3.28.0,<4"
+      ]
+    },
+    {
+      "source_path": "examples/python/elevenlabs-zep-example/llm-proxy/requirements.txt",
+      "source_sha256": "528fb47f453ace377c8ec885eeeeb10b873dbba7226383f3d2d34ca3df363f43",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "fastapi>=0.115.0,<1",
+        "uvicorn[standard]>=0.32.0,<1",
+        "openai>=3.13.0,<4",
+        "zep-cloud>=3.28.0,<4",
+        "python-dotenv>=1.0.0,<2",
+        "httpx>=0.27.0,<1"
+      ]
+    },
+    {
+      "source_path": "examples/python/elevenlabs-zep-example/react-app/package-lock.json",
+      "source_sha256": "c7504a389f57e3fd0c7f77194098e38f1c2239df42b34ba5c02b9e1296acf595",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/python/elevenlabs-zep-example/react-app/package.json",
+      "source_sha256": "837184fdf5da149f27d4dfb469af4357c9adf341bc1d878854b963a858378f96",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@11labs/react": "^0.0.4",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "uuid": "^11.1.1"
+      },
+      "development_requirements": {
+        "@types/react": "^18.2.43",
+        "@types/react-dom": "^18.2.17",
+        "@vitejs/plugin-react": "^4.2.1",
+        "vite": "^7.3.5"
+      }
+    },
+    {
+      "source_path": "examples/python/openai-agents-sdk/pyproject.toml",
+      "source_sha256": "1ba035e8f158087dd99fae8cb8923b08f7ef81d11bdea82d2f4c935144401602",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "click>=8.1.8",
+        "openai-agents>=0.22.2,<1",
+        "packaging>=24.2",
+        "python-dotenv>=1.0.1",
+        "zep-cloud>=3.28.0,<4"
+      ],
+      "optional_requirements": {}
+    },
+    {
+      "source_path": "examples/python/requirements.txt",
+      "source_sha256": "692ddf594e223bfd81739cc689f285cf28236db6a5b54db176df87158e596d52",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "annotated-types==0.7.0",
+        "anyio==4.15.1",
+        "certifi==2025.6.15",
+        "h11==0.16.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "idna==3.19",
+        "pydantic==2.13.5",
+        "pydantic_core==2.46.5",
+        "python-dotenv==1.2.2",
+        "sniffio==1.3.1",
+        "typing-inspection==0.4.2",
+        "typing_extensions==4.16.0",
+        "zep-cloud>=3.28.0,<4",
+        "aiofiles==24.1.0",
+        "aiohappyeyeballs==2.6.1",
+        "aiohttp==3.14.1",
+        "aiosignal==1.4.0",
+        "anthropic==1.5.0",
+        "asyncer==0.0.8",
+        "attrs==25.3.0",
+        "audioop-lts==0.2.1; python_version >= \"3.13\"",
+        "backoff==2.2.1",
+        "beautifulsoup4==4.13.4",
+        "bidict==0.23.1",
+        "bs4==0.0.2",
+        "charset-normalizer==3.4.2",
+        "chevron==0.14.0",
+        "click==8.2.1",
+        "colorama==0.4.6",
+        "dataclasses-json==0.6.7",
+        "Deprecated==1.2.18",
+        "distro==1.9.0",
+        "fastapi==0.137.1",
+        "filelock==3.20.3",
+        "filetype==1.2.0",
+        "frozenlist==1.7.0",
+        "fsspec==2025.7.0",
+        "googleapis-common-protos==1.70.0",
+        "griffe==1.9.0",
+        "grpcio==1.74.0",
+        "hf-xet==1.1.5",
+        "httpx-sse==0.4.1",
+        "huggingface-hub==0.34.3",
+        "importlib_metadata==8.7.0",
+        "inflection==0.5.1",
+        "Jinja2==3.1.6",
+        "jiter==0.16.0",
+        "jsonpatch==1.33",
+        "jsonpointer==3.0.0",
+        "jsonschema==4.25.0",
+        "jsonschema-specifications==2025.4.1",
+        "langchain==1.3.9",
+        "langchain-community==0.4.1",
+        "langchain-core==1.4.7",
+        "langchain-text-splitters==1.1.2",
+        "langsmith==0.8.18",
+        "lazify==0.4.0",
+        "literalai==0.1.201",
+        "MarkupSafe==3.0.2",
+        "marshmallow==3.26.2",
+        "mcp==1.28.1",
+        "multidict==6.6.3",
+        "mypy-extensions==1.1.0",
+        "nest-asyncio==1.6.0",
+        "numpy==2.3.2",
+        "openai==3.13.0",
+        "openai-agents==0.22.2",
+        "opentelemetry-api==1.34.1",
+        "opentelemetry-exporter-otlp==1.34.1",
+        "opentelemetry-exporter-otlp-proto-common==1.34.1",
+        "opentelemetry-exporter-otlp-proto-grpc==1.34.1",
+        "opentelemetry-exporter-otlp-proto-http==1.34.1",
+        "opentelemetry-instrumentation==0.55b1",
+        "opentelemetry-proto==1.34.1",
+        "opentelemetry-sdk==1.34.1",
+        "opentelemetry-semantic-conventions==0.55b1",
+        "opentelemetry-semantic-conventions-ai==0.4.11",
+        "opentelemetry-util-http==0.55b1",
+        "orjson==3.11.7",
+        "packaging==25.0",
+        "posthog==3.25.0",
+        "propcache==0.3.2",
+        "protobuf==5.29.6",
+        "pydantic-settings==2.10.1",
+        "PyJWT==2.13.0",
+        "python-engineio==4.13.2",
+        "python-multipart==0.0.31",
+        "python-socketio==5.16.2",
+        "PyYAML==6.0.2",
+        "referencing==0.36.2",
+        "requests==2.33.0",
+        "requests-toolbelt==1.0.0",
+        "rpds-py==0.26.0",
+        "simple-websocket==1.1.0",
+        "soupsieve==2.8.4",
+        "SQLAlchemy==2.0.42",
+        "sse-starlette==3.0.2",
+        "starlette==1.3.1",
+        "syncer==2.0.3",
+        "tenacity==9.1.2",
+        "tokenizers==0.21.4",
+        "tomli==2.2.1",
+        "tqdm==4.67.1",
+        "traceloop-sdk==0.44.1",
+        "types-requests==2.32.4.20250611",
+        "typing-inspect==0.9.0",
+        "urllib3==2.7.0",
+        "uvicorn==0.35.0",
+        "watchfiles==0.20.0",
+        "wrapt==1.17.2",
+        "yarl==1.20.1",
+        "zstandard==0.23.0"
+      ]
+    },
+    {
+      "source_path": "examples/python/user-summary-instructions-example/requirements.txt",
+      "source_sha256": "87cdc3d46e15c86439ab4cec3d657252d0ac92c95ff9859e38b55356c890cbf6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "altair==5.5.0",
+        "annotated-types==0.7.0",
+        "anyio==4.15.1",
+        "attrs==25.3.0",
+        "blinker==1.9.0",
+        "cachetools==6.2.0",
+        "certifi==2025.8.3",
+        "charset-normalizer==3.4.3",
+        "click==8.3.0",
+        "distro==1.9.0",
+        "gitdb==4.0.12",
+        "GitPython==3.1.55",
+        "h11==0.16.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "idna==3.19",
+        "Jinja2==3.1.6",
+        "jiter==0.16.0",
+        "jsonschema==4.25.1",
+        "jsonschema-specifications==2025.9.1",
+        "MarkupSafe==3.0.2",
+        "narwhals==2.5.0",
+        "nest_asyncio==1.6.0",
+        "numpy==2.3.3",
+        "openai==3.13.0",
+        "packaging==25.0",
+        "pandas==2.3.2",
+        "pillow==12.3.0",
+        "protobuf==6.33.5",
+        "pyarrow==23.0.1",
+        "pydantic==2.11.9",
+        "pydantic_core==2.33.2",
+        "pydeck==0.9.1",
+        "python-dateutil==2.9.0.post0",
+        "python-dotenv==1.2.2",
+        "pytz==2025.2",
+        "referencing==0.36.2",
+        "requests==2.33.0",
+        "rpds-py==0.27.1",
+        "six==1.17.0",
+        "smmap==5.0.2",
+        "sniffio==1.3.1",
+        "streamlit==1.54.0",
+        "tenacity==9.1.2",
+        "toml==0.10.2",
+        "tornado==6.5.7",
+        "tqdm==4.67.1",
+        "typing-inspection==0.4.1",
+        "typing_extensions==4.16.0",
+        "tzdata==2025.2",
+        "urllib3==2.7.0",
+        "watchdog==6.0.0",
+        "zep-cloud>=3.28.0,<4"
+      ]
+    },
+    {
+      "source_path": "examples/python/zep-quickstart-dashboard/requirements.txt",
+      "source_sha256": "87cdc3d46e15c86439ab4cec3d657252d0ac92c95ff9859e38b55356c890cbf6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "altair==5.5.0",
+        "annotated-types==0.7.0",
+        "anyio==4.15.1",
+        "attrs==25.3.0",
+        "blinker==1.9.0",
+        "cachetools==6.2.0",
+        "certifi==2025.8.3",
+        "charset-normalizer==3.4.3",
+        "click==8.3.0",
+        "distro==1.9.0",
+        "gitdb==4.0.12",
+        "GitPython==3.1.55",
+        "h11==0.16.0",
+        "httpcore==1.0.9",
+        "httpx==0.28.1",
+        "idna==3.19",
+        "Jinja2==3.1.6",
+        "jiter==0.16.0",
+        "jsonschema==4.25.1",
+        "jsonschema-specifications==2025.9.1",
+        "MarkupSafe==3.0.2",
+        "narwhals==2.5.0",
+        "nest_asyncio==1.6.0",
+        "numpy==2.3.3",
+        "openai==3.13.0",
+        "packaging==25.0",
+        "pandas==2.3.2",
+        "pillow==12.3.0",
+        "protobuf==6.33.5",
+        "pyarrow==23.0.1",
+        "pydantic==2.11.9",
+        "pydantic_core==2.33.2",
+        "pydeck==0.9.1",
+        "python-dateutil==2.9.0.post0",
+        "python-dotenv==1.2.2",
+        "pytz==2025.2",
+        "referencing==0.36.2",
+        "requests==2.33.0",
+        "rpds-py==0.27.1",
+        "six==1.17.0",
+        "smmap==5.0.2",
+        "sniffio==1.3.1",
+        "streamlit==1.54.0",
+        "tenacity==9.1.2",
+        "toml==0.10.2",
+        "tornado==6.5.7",
+        "tqdm==4.67.1",
+        "typing-inspection==0.4.1",
+        "typing_extensions==4.16.0",
+        "tzdata==2025.2",
+        "urllib3==2.7.0",
+        "watchdog==6.0.0",
+        "zep-cloud>=3.28.0,<4"
+      ]
+    },
+    {
+      "source_path": "examples/typescript/chunking-example/package-lock.json",
+      "source_sha256": "3ab64ea516921b50ca8b54887eccd1ee2785b464b4fd82717a672f7136a2ca94",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/typescript/chunking-example/package.json",
+      "source_sha256": "6a9d5835b9a1810bb9bcc0de6f6f2a064c98fc04888a5036cf9a821a846d2034",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.28.0",
+        "commander": "^12.1.0",
+        "dotenv": "^16.4.7",
+        "openai": "^7.15.0"
+      },
+      "development_requirements": {
+        "@types/node": "^20.17.30",
+        "tsx": "^4.22.4",
+        "typescript": "^5.8.2"
+      }
+    },
+    {
+      "source_path": "examples/typescript/eve/package-lock.json",
+      "source_sha256": "3e8ec3a71d018990cf1b322205de2ab4462f9a1615d6e2bd9a655edd4689e823",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/typescript/eve/package.json",
+      "source_sha256": "3693211f5706873de014b29c6388393bb3dbbadd0f46ca246ea3109d2b17d712",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@ai-sdk/google": "^4.0.67",
+        "@getzep/zep-cloud": "^3.28.0",
+        "@vercel/connect": "0.4.3",
+        "ai": "^7.0.97",
+        "dotenv": "^17.4.2",
+        "eve": "^0.32.0",
+        "zod": "4.4.3"
+      },
+      "development_requirements": {
+        "@types/node": "^24.0.0",
+        "microsandbox": "^0.5.10",
+        "tsx": "^4.20.0",
+        "typescript": "7.0.2"
+      }
+    },
+    {
+      "source_path": "examples/typescript/langgraph/package-lock.json",
+      "source_sha256": "d663cdf73aa3d7927a26d61ae1a50cad8cf304f3304fc8289e5f9829eaadc600",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/typescript/langgraph/package.json",
+      "source_sha256": "2a050895b357239f1c5185f45d354a8abe48f510fe2010841ef3053d7657d6fa",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.28.0",
+        "@langchain/core": "^1.2.10",
+        "@langchain/langgraph": "^1.4.14",
+        "@langchain/openai": "^1.5.12",
+        "@langchain/tavily": "^1.2.0",
+        "commander": "^12.1.0",
+        "dotenv": "^16.4.7",
+        "langsmith": "^0.3.15",
+        "tsx": "^4.22.4",
+        "typescript": "^5.8.2",
+        "uuid": "^11.1.1"
+      },
+      "development_requirements": {}
+    },
+    {
+      "source_path": "examples/typescript/package-lock.json",
+      "source_sha256": "9cb46c0ad5e072ecb632691d68045055eea0cdd8ee6ecdffb850ae4c8db903b4",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/typescript/package.json",
+      "source_sha256": "fcca1d40cac2346c6b5fa6f47c2d13eb20b778d1630431bdd1ec17cde8e5434b",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.28.0",
+        "uuid": "^11.1.1"
+      },
+      "development_requirements": {
+        "@types/node": "^22.13.10",
+        "tsx": "^4.19.3",
+        "typescript": "^5.8.2"
+      }
+    },
+    {
+      "source_path": "examples/typescript/zep-graph-visualization/package.json",
+      "source_sha256": "fec65f6a0eceb6cf1c15c947b6c017350c8a238f53e3db63ca938583c6337bb3",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.28.0",
+        "@radix-ui/react-dialog": "^1.1.6",
+        "@radix-ui/react-dropdown-menu": "^2.1.6",
+        "@radix-ui/react-hover-card": "^1.1.6",
+        "@radix-ui/react-label": "^2.1.2",
+        "@radix-ui/react-popover": "^1.1.6",
+        "@radix-ui/react-slot": "^1.1.2",
+        "@radix-ui/react-switch": "^1.1.3",
+        "class-variance-authority": "^0.7.1",
+        "clsx": "^2.1.1",
+        "d3": "^7.9.0",
+        "dayjs": "^1.11.13",
+        "lucide-react": "^0.479.0",
+        "next": "15.5.21",
+        "next-themes": "^0.4.6",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "sonner": "^2.0.1",
+        "tailwind-merge": "^3.0.2",
+        "tailwindcss-animate": "^1.0.7"
+      },
+      "development_requirements": {
+        "@eslint/eslintrc": "^3",
+        "@tailwindcss/postcss": "^4",
+        "@types/d3": "^7.4.3",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "eslint": "^9",
+        "eslint-config-next": "^15.5.18",
+        "tailwindcss": "^4",
+        "typescript": "^5"
+      }
+    },
+    {
+      "source_path": "examples/typescript/zep-graph-visualization/yarn.lock",
+      "source_sha256": "1bdc61f380a6e0cc8c338a1007ad54b18241cc63fa34f0a76338ec602245495c",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "ingestion/Makefile",
+      "source_sha256": "bf5184c37a51c20755962a306cf483b876054fafefdf6b44f5fb0fa60cd0a7f8",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "ingestion/pyproject.toml",
+      "source_sha256": "49cacd44e1b136d81c2e993c774f1da7512aae86cc99333c707c2c76414b6bd2",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "zep-cloud>=3.27.0,<4",
+        "httpx>=0.21.2"
+      ],
+      "optional_requirements": {
+        "openai": [
+          "openai>=1.45.0"
+        ],
+        "anthropic": [
+          "anthropic>=0.40.0"
+        ],
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/adk/go/Makefile",
+      "source_sha256": "0985888fa5ea3c7f8ef470398ad9bb72096f4e06b45e08eff7611c785c4165eb",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/adk/go/go.mod",
+      "source_sha256": "d858675ea1a2ecd4548e5e5c309eb0c2d2eab851ea898b2866c3a49d1ba00df2",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/adk/go/go.sum",
+      "source_sha256": "669cab3c5ade2781edd44b49ad1a96d19ead4533bed0d9915cf482dbf20873ad",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/adk/python/Makefile",
+      "source_sha256": "6734e916608ab8d5f250b887fad7b8ecb17052fd3e32bc7e5b7e1899fcb941f6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/adk/python/pyproject.toml",
+      "source_sha256": "1618b947dce819ac4fc77eadab2c0bda6c852295889dff7f485a8b0c42fc6d77",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "google-adk>=1.19.0,<3",
+        "typing-extensions>=4.0.0",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/adk/typescript/package-lock.json",
+      "source_sha256": "c85e4659f29505af5449edb9a6ea493b35d141979b456ec52a59cbcd70c8a1da",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/adk/typescript/package.json",
+      "source_sha256": "f45a4675f893a74daa97e5f64523c15269c16eaa8853c2c9785eed741d73a611",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.23.0",
+        "@google/genai": "^1.37.0"
+      },
+      "development_requirements": {
+        "@google/adk": "1.2.0",
+        "@types/node": "^22.10.0",
+        "tsup": "^8.3.5",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.2",
+        "vitest": "^3.2.6"
+      }
+    },
+    {
+      "source_path": "integrations/ag2/python/Makefile",
+      "source_sha256": "70a4a09b49cb35512e5c2d5cee311996877ece82e07be2b15febbf4149d95f67",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/ag2/python/pyproject.toml",
+      "source_sha256": "f39496c68c47692e29e0580f5672ade7aeeee434d7d06a10331c6d821fa26913",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "ag2>=0.9.0,<1",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0",
+          "openai>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/autogen/python/Makefile",
+      "source_sha256": "b09c6f0bbbac9b3a353f5c0607f53119c9af84390b63a4a2593c321898f693c3",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/autogen/python/pyproject.toml",
+      "source_sha256": "8cccfde48471b796dccab9982ac3e12883bee93e7b9197f616211d90e5aa06a2",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "autogen-agentchat>=0.7.0",
+        "autogen-ext[azure,openai]>=0.7.0",
+        "azure-identity>=1.23.0",
+        "aiohttp>=3.8.0",
+        "python-dotenv>=1.0.0",
+        "python-slugify>=8.0.4",
+        "rich>=14.0.0",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/crewai/python/Makefile",
+      "source_sha256": "0aa3e52ce3ec32a9c5f4985e5494471f4c2e2f19aaae124713845653c20ceb51",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/crewai/python/pyproject.toml",
+      "source_sha256": "099cbd19ca9785ec7f303f0c924b372a07241519dd5c6fb4771431abf9a9cd48",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "crewai>=1.0.0",
+        "aiohttp>=3.8.0",
+        "python-dotenv>=1.0.0",
+        "python-slugify>=8.0.4",
+        "rich>=14.0.0",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/langgraph/python/Makefile",
+      "source_sha256": "d172dabb59396e7670e261afa33d6ea573c69233a85510194416746934290eca",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/langgraph/python/pyproject.toml",
+      "source_sha256": "e5a8bfa245593bc86af0feba1bdd20c479dbd3488cf1e060c8fe6206e1010142",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "langchain-core>=1.0",
+        "langgraph>=1.2.5",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0",
+          "langchain-openai>=1.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/livekit/python/Makefile",
+      "source_sha256": "9280b4f2cc4b8a2626b442dbd4d560086c49a6414631ee0c3268b40907101da8",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/livekit/python/examples/full-example/requirements.txt",
+      "source_sha256": "933a591b84133760ecec0c3384b78d796e35f8529b184c84001a0947a9fb539f",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "zep-livekit",
+        "livekit-agents[openai,silero]>=1.0.0",
+        "python-dotenv"
+      ]
+    },
+    {
+      "source_path": "integrations/livekit/python/pyproject.toml",
+      "source_sha256": "eba6b33933cc591ac6492c57eb31cd6a665be185dca66b7d2e2f57bde980f694",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "livekit-agents[openai,silero]>=1.0.0",
+        "zep-cloud>=3.23.0,<4",
+        "typing-extensions>=4.0.0"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/mastra/typescript/package-lock.json",
+      "source_sha256": "3fce17daf179dab6b922656c66841eeda79b98b1cb9bda736d350720206d2902",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/mastra/typescript/package.json",
+      "source_sha256": "94624294121678bdeba055f264d35585539bd27a71b87a6072347cb4d2ee045d",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.23.0",
+        "zod": "^3.25.0"
+      },
+      "development_requirements": {
+        "@eslint/js": "^9.39.4",
+        "@mastra/core": "^1.42.0",
+        "@types/node": "^22.0.0",
+        "eslint": "^9.39.4",
+        "tsup": "^8.3.0",
+        "tsx": "^4.19.0",
+        "typescript": "^5.6.0",
+        "typescript-eslint": "^8.61.1",
+        "vitest": "^3.2.6"
+      }
+    },
+    {
+      "source_path": "integrations/ms-agent-framework/python/Makefile",
+      "source_sha256": "4a085c6e219489a7adbf18aad2e0c24794825daa5313734e24fec35293d36891",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/ms-agent-framework/python/pyproject.toml",
+      "source_sha256": "bf42c47e642f85ad48a592598113d4b4915a5660b95d17aae9240e3331a9ca3f",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "agent-framework-core>=1.8.1",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "agent-framework-openai>=1.8.1",
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/pydantic-ai/python/Makefile",
+      "source_sha256": "09091cfe658897892dc07eed3b2899ad1828a566f6c4562e743eabca9bb88aca",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/pydantic-ai/python/pyproject.toml",
+      "source_sha256": "1835ba0a59a5b4b887f8ed503b1aa21bf8e40bf8560e9797c6769498570a60f4",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "pydantic-ai>=1.107,<2",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/strands/python/Makefile",
+      "source_sha256": "516993a0dd407fa9fe00068ec3608ac79c07184ad9f8113c76989b997c62d91c",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/strands/python/pyproject.toml",
+      "source_sha256": "39190cc91970efc61537dbe441bc83552d4c188fddcbc801539a0a998203e7e1",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "strands-agents>=1.45.0",
+        "zep-cloud>=3.23.0,<4"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "strands-agents[openai]>=1.45.0",
+          "pytest>=7.0.0",
+          "pytest-cov",
+          "pytest-asyncio",
+          "ruff>=0.1.0",
+          "mypy>=1.0.0"
+        ]
+      }
+    },
+    {
+      "source_path": "integrations/vercel-ai/typescript/package-lock.json",
+      "source_sha256": "8e0a03d2130dd4a7124b4fd2e4203b0ddd6fbc98c7e6367fb7556c23dc793a24",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "integrations/vercel-ai/typescript/package.json",
+      "source_sha256": "c9fd20f27ded2a23917429d9791a85ddc81dada9f9c47e30b295a111921e2097",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": {
+        "@getzep/zep-cloud": "^3.23.0"
+      },
+      "development_requirements": {
+        "@ai-sdk/openai": "^3.0.0",
+        "@eslint/js": "^9.39.4",
+        "@types/node": "^22.0.0",
+        "ai": "^6.0.0",
+        "eslint": "^9.39.4",
+        "tsup": "^8.3.0",
+        "tsx": "^4.19.0",
+        "typescript": "^5.6.0",
+        "typescript-eslint": "^8.61.1",
+        "vitest": "^3.2.6",
+        "zod": "^3.25.0"
+      }
+    },
+    {
+      "source_path": "legacy/src/go.mod",
+      "source_sha256": "3e66db9a6f53f5f0e72065e4e7943de7928eb0689707d6d3ed29f6721d8aa80e",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "legacy/src/go.sum",
+      "source_sha256": "3b13405f4b79729c4182a47a68c6cd74872885206a4e24a0edc3fd2e6b7898e0",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "mcp/zep-mcp-server/Dockerfile",
+      "source_sha256": "26213b7f766b294d2948be84fb30c329d1f75b43452bf1422a4f4f079717e272",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "mcp/zep-mcp-server/Makefile",
+      "source_sha256": "5d4603680d59c857ef122670fd725e2fe71d081b5810e62a2cc1ff92ef89b4ec",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "mcp/zep-mcp-server/go.mod",
+      "source_sha256": "da5a18ec55d413bda0cb6ab03ff4d5e8b45bd13075c347f8901e8827ed5d4268",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "mcp/zep-mcp-server/go.sum",
+      "source_sha256": "97ea5ade3c9a68f82de7fdbaef5f5562c30a69f7cea9986286db07e5feafe4b6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "pyproject.toml",
+      "source_sha256": "0348d354a3bfabcbd7f6918ae0c8d35495a2fbb2131abdf311924217b4bdb52a",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [],
+      "optional_requirements": {}
+    },
+    {
+      "source_path": "zep-eval-harness/pyproject.toml",
+      "source_sha256": "e2bb99c0e096580741e905f3bdd512189f0164c91a7eb22a2e9e93c1945eaf7c",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "python-dotenv",
+        "zep-cloud",
+        "openai",
+        "pydantic",
+        "chonkie"
+      ],
+      "optional_requirements": {}
+    }
+  ],
+  "runtime_dependencies_added": 0,
+  "native_absorption_candidates": [
+    "Explicit-zone UTC normalization at the commerce acquisition boundary"
+  ],
+  "keep_external_candidates": [
+    "Managed SDK graph calls",
+    "Generic temporal graph storage/retrieval",
+    "LLM extraction/embedding and graph drivers"
+  ],
+  "rejected_capabilities": [
+    "Silent rewriting of observed product identities through aliases",
+    "Social-to-sales/demand inference",
+    "Generic agent memory duplicated inside ECDEV",
+    "Paid or authenticated calls without credentials/permission"
+  ],
+  "unknowns": [
+    "Whole-donor semantic/API replacement coverage",
+    "Transitive dependency license closure",
+    "Compatibility between legacy Graphiti service image 0.3 and separately pinned current Graphiti source",
+    "Managed Zep Cloud implementation is not present or independently verifiable from SDK forwarding code"
+  ],
+  "overlap_with_chronica": "General temporal graph/memory orchestration is outside commerce-domain ownership; cross-shard interface needs upstream architectural review. No generic ECDEV memory backend was introduced.",
+  "overlap_with_norl": "Canonical organism module reserves cognition/backends to norl; domain evidence may feed it, but ECDEV cannot claim its cognition capabilities.",
+  "recommended_ownership": "Commerce source-time/provenance validation belongs to existing commerce.web-research adapter; generic memory/cognition remains outside this shard.",
+  "whole_donor_absorbed": false,
+  "actual_repository_purpose": "Current Zep Cloud examples/integrations, a real ingestion SDK package, benchmarks, plus legacy CE Go server; not solely examples and not current Cloud server implementation.",
+  "runtime_vs_integration": "ingestion/integrations invoke zep_cloud; legacy/src holds a server and PostgreSQL persistence with HTTP calls to a Graphiti service.",
+  "persistence_design": "Legacy Bun/PostgreSQL models for sessions/messages/users; current ingestion delegates persistence to managed graph SDK.",
+  "temporal_model": "Source-created episode timestamps and valid/invalid fact fields in SDK/legacy Graphiti DTOs; legacy database created/updated/deleted audit times are distinct.",
+  "graph_model": "Current managed graph SDK forwarding; legacy Graphiti HTTP service DTOs and explicit docker dependency.",
+  "retrieval_model": "Legacy session/memory APIs plus external Graphiti facts/search; Cloud benchmark uses SDK context retrieval.",
+  "ingestion_model": "Loader -> transforms -> validated Episode -> Sequential/Batch SDK submitter; preview has no API calls.",
+  "external_services": [
+    "Zep Cloud SDK",
+    "Legacy PostgreSQL/pgvector",
+    "Legacy Graphiti service",
+    "Neo4j and OpenAI in legacy deployment",
+    "Optional Anthropic/OpenAI contextualizers"
+  ],
+  "local_vs_managed": "Legacy CE can be deployed locally with external database/Graphiti/model dependencies; current Cloud integrations require managed-service access."
+}

@@ -480,6 +480,59 @@ mod research_tests {
         assert!(denied["velocity"]["value"].is_null());
         let changed_scope = engine.trend_discover(json!({"query":"matcha","sources":[{"platform":"JSON_FEED","url":"https://example.org/feed.json","fixture_raw":"{\"version\":\"https://jsonfeed.org/version/1.1\",\"items\":[]}"}],"fixture_now":17200})).unwrap();
         assert!(changed_scope["velocity"]["value"].is_null());
+        assert_eq!(changed_scope["mention_count"], 0);
+        let feed = |name: &str| json!({"platform":"JSON_FEED","url":format!("https://example.org/{name}.json"),"fixture_raw":json!({"version":"https://jsonfeed.org/version/1.1","items":[{"id":name,"url":format!("https://example.org/{name}/post"),"content_text":"matcha source scope","date_published":"1970-01-01T02:30:00Z"}]}).to_string()});
+        let two_feeds = engine.trend_discover(json!({"query":"matcha","sources":[feed("alpha"),feed("beta")],"fixture_now":18000})).unwrap();
+        assert_eq!(two_feeds["mention_count"], 2);
+        assert_eq!(two_feeds["source_complete"], true);
+        assert_eq!(two_feeds["budget_usage"]["request_count"], 0);
+        assert_eq!(two_feeds["platform_count"], 1);
+        assert_eq!(
+            two_feeds["independent_original_publishers"]["state"],
+            "UNKNOWN"
+        );
+        let only_alpha = engine
+            .trend_discover(json!({"query":"matcha","sources":[feed("alpha")],"fixture_now":18001}))
+            .unwrap();
+        assert_eq!(only_alpha["mention_count"], 1);
+        assert!(only_alpha["velocity"]["value"].is_null());
+
+        let raw_path = root
+            .join(".ynventa/materialized/runtime/social-captures")
+            .join(format!(
+                "{}.raw",
+                before["captured_posts"][0]["raw_hash"].as_str().unwrap()
+            ));
+        let original_raw = std::fs::read(&raw_path).unwrap();
+        std::fs::write(&raw_path, b"corrupted capture").unwrap();
+        assert!(
+            engine
+                .trend_inspect(json!({"snapshot_id":before["snapshot_id"]}))
+                .unwrap_err()
+                .contains("RAW_CAPTURE_HASH")
+        );
+        let rejected = engine.trend_discover(json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS","fixture_raw":"{\"hits\":[]}"}],"fixture_now":18002})).unwrap();
+        assert_eq!(rejected["mention_count"], 0);
+        assert_eq!(rejected["source_complete"], false);
+        assert!(rejected["velocity"]["value"].is_null());
+        assert_eq!(rejected["budget_usage"]["request_count"], 0);
+        assert_eq!(
+            rejected["acquisition_provenance"]["live_acquisition_established"],
+            false
+        );
+        assert_eq!(
+            rejected["provider_failures"][0]["reason"],
+            "HISTORICAL_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH"
+        );
+        assert!(
+            !engine.trend_inspect(json!({})).unwrap()["unavailable_snapshots"]
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+        std::fs::write(&raw_path, original_raw).unwrap();
+
+        assert!(engine.call("ecdev.trend.compare",json!({"before_snapshot_id":before["snapshot_id"],"after_snapshot_id":changed_scope["snapshot_id"]})).is_err());
         assert!(
             engine
                 .trend_discover(

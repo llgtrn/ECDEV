@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "families": 1,
+  "cases": 901,
+  "fixture": "adapter/web/tests/fixtures/graphiti-publication-time.json",
+  "fixture_sha256": "0c38f09c825679320616a9932b648c2135bec7a56d98df9ead9574ad6c730e08",
+  "native_test": "adapter/web/src/social.rs::graphiti_timezone_oracle",
+  "source_sha256": "ff641aed24fa2e04e08264d920faa2e66ec825a66abdd31cd10aa2a9779a89c6",
+  "native_source_sha256": "5a57f95b5ee0d119c17779b4ed87bf8c57511436103a441c6eacc5bfcd9de96c",
+  "whole_donor_parity": false,
+  "intentional_divergences": [
+    "Naive datetimes and RFC3339 unknown local offset -00:00 remain UNKNOWN; donor assumes UTC for naive values.",
+    "Native production publication timestamps are nonnegative integer epoch seconds; fractional precision is not retained."
+  ]
+}

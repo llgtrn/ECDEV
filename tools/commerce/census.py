@@ -28,6 +28,8 @@ FACETS = {'network-behavior':r'https?://|fetch\(|requests\.|httpx|axios',
  'process-model':r'(?i)subprocess|spawn\(|exec\(|stdio|StdioServerTransport',
  'protocols':r'(?i)StreamableHTTP|SSEServerTransport|FastMCP|McpServer|jsonrpc'}
 def safe_excerpt(line):
+ # Only this bounded prefix can be published; avoid rescanning multi-megabyte benchmark lines.
+ line=line[:800]
  for pattern in [r"https://hooks\.slack\.com/services/[^\s\"'<>\\)]+",r'AKIA[0-9A-Z]{16}',r'(?<![A-Za-z0-9])gh[pousr]_[A-Za-z0-9]{25,}',r'(?<![A-Za-z0-9])sk-(?:proj-)?[A-Za-z0-9_-]{25,}',r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']:
   line=re.sub(pattern,'[REDACTED_CREDENTIAL_LIKE_LITERAL]',line)
  return line[:400]
@@ -45,6 +47,9 @@ def jsonl(path, rows):
 
 def classify(path, data):
  parts = path.lower().split('/'); name = parts[-1]; suffix = pathlib.Path(name).suffix
+ # Pinned benchmark runners persist these as outputs, not executable/config source.
+ if 'benchmarks' in parts and any(part in {'experiments','results'} for part in parts) and suffix=='.json': return 'FIXTURE'
+ if re.search(rb'(?i)code generated[^\n]*do not edit',data[:2048]): return 'GENERATED'
  if any(p in {'vendor','vendored','node_modules','third_party','third-party'} for p in parts): return 'VENDORED'
  if any(p in {'dist','generated','__generated__'} for p in parts) or name.endswith(('.min.js','.map')): return 'GENERATED'
  if b'\0' in data: return 'BINARY'
@@ -115,7 +120,7 @@ def census(record, checkout):
   if kind in {'FIRST_PARTY_SOURCE','TEST'}:
    row['parse_status'],sy,im=parse_source(path,content); symbols+=sy; imports+=im
   text=content.decode('utf-8','replace')
-  if kind not in {'VENDORED','GENERATED','BINARY','ASSET'}:
+  if kind not in {'VENDORED','GENERATED','BINARY','ASSET','FIXTURE'}:
    for facet,pattern in FACETS.items():
     for no,line in enumerate(text.splitlines(),1):
      if re.search(pattern,line): facets[facet].append({'source_path':path,'line_start':no,'line_end':no,'blob_hash':blob,'evidence_type':'LEXICAL_CANDIDATE','excerpt':safe_excerpt(line)})

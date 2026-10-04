@@ -1,0 +1,5421 @@
+{
+  "oracle": "UNMODIFIED_LOCKED_GRAPHITI_ENSURE_UTC",
+  "donor": "getzep--graphiti",
+  "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+  "source_path": "graphiti_core/utils/datetime_utils.py",
+  "source_sha256": "ff641aed24fa2e04e08264d920faa2e66ec825a66abdd31cd10aa2a9779a89c6",
+  "source_blob_hash": "06f4057c3d6d0448db7b48046b7a1ac82dea15b6",
+  "source_symbol": "ensure_utc",
+  "scope": "Explicit RFC3339 timezone inputs, integer epoch seconds; no Graphiti model/graph/runtime/LLM execution",
+  "intentional_divergences": [
+    "Naive datetimes and RFC3339 unknown local offset -00:00 remain UNKNOWN; donor assumes UTC for naive values.",
+    "Native production publication timestamps are nonnegative integer epoch seconds; fractional precision is not retained."
+  ],
+  "cases": [
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456-23:59",
+      "expected": 172740,
+      "normalized_utc": "1970-01-02T23:59:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456-14:00",
+      "expected": 136800,
+      "normalized_utc": "1970-01-02T14:00:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456-09:30",
+      "expected": 120600,
+      "normalized_utc": "1970-01-02T09:30:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456-05:30",
+      "expected": 106200,
+      "normalized_utc": "1970-01-02T05:30:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456-01:00",
+      "expected": 90000,
+      "normalized_utc": "1970-01-02T01:00:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+00:00",
+      "expected": 86400,
+      "normalized_utc": "1970-01-02T00:00:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+01:00",
+      "expected": 82800,
+      "normalized_utc": "1970-01-01T23:00:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+05:30",
+      "expected": 66600,
+      "normalized_utc": "1970-01-01T18:30:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+05:45",
+      "expected": 65700,
+      "normalized_utc": "1970-01-01T18:15:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+09:30",
+      "expected": 52200,
+      "normalized_utc": "1970-01-01T14:30:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+14:00",
+      "expected": 36000,
+      "normalized_utc": "1970-01-01T10:00:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1970-01-02T00:00:00.123456+23:59",
+      "expected": 60,
+      "normalized_utc": "1970-01-01T00:01:00.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00-23:59",
+      "expected": 951868740,
+      "normalized_utc": "2000-02-29T23:59:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00-14:00",
+      "expected": 951832800,
+      "normalized_utc": "2000-02-29T14:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00-09:30",
+      "expected": 951816600,
+      "normalized_utc": "2000-02-29T09:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00-05:30",
+      "expected": 951802200,
+      "normalized_utc": "2000-02-29T05:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00-01:00",
+      "expected": 951786000,
+      "normalized_utc": "2000-02-29T01:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+00:00",
+      "expected": 951782400,
+      "normalized_utc": "2000-02-29T00:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+01:00",
+      "expected": 951778800,
+      "normalized_utc": "2000-02-28T23:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+05:30",
+      "expected": 951762600,
+      "normalized_utc": "2000-02-28T18:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+05:45",
+      "expected": 951761700,
+      "normalized_utc": "2000-02-28T18:15:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+09:30",
+      "expected": 951748200,
+      "normalized_utc": "2000-02-28T14:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+14:00",
+      "expected": 951732000,
+      "normalized_utc": "2000-02-28T10:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-02-29T00:00:00+23:59",
+      "expected": 951696060,
+      "normalized_utc": "2000-02-28T00:01:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59-23:59",
+      "expected": 1709337539,
+      "normalized_utc": "2024-03-01T23:58:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59-14:00",
+      "expected": 1709301599,
+      "normalized_utc": "2024-03-01T13:59:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59-09:30",
+      "expected": 1709285399,
+      "normalized_utc": "2024-03-01T09:29:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59-05:30",
+      "expected": 1709270999,
+      "normalized_utc": "2024-03-01T05:29:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59-01:00",
+      "expected": 1709254799,
+      "normalized_utc": "2024-03-01T00:59:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+00:00",
+      "expected": 1709251199,
+      "normalized_utc": "2024-02-29T23:59:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+01:00",
+      "expected": 1709247599,
+      "normalized_utc": "2024-02-29T22:59:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+05:30",
+      "expected": 1709231399,
+      "normalized_utc": "2024-02-29T18:29:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+05:45",
+      "expected": 1709230499,
+      "normalized_utc": "2024-02-29T18:14:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+09:30",
+      "expected": 1709216999,
+      "normalized_utc": "2024-02-29T14:29:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+14:00",
+      "expected": 1709200799,
+      "normalized_utc": "2024-02-29T09:59:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-02-29T23:59:59+23:59",
+      "expected": 1709164859,
+      "normalized_utc": "2024-02-29T00:00:59+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456-23:59",
+      "expected": 1709337541,
+      "normalized_utc": "2024-03-01T23:59:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456-14:00",
+      "expected": 1709301601,
+      "normalized_utc": "2024-03-01T14:00:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456-09:30",
+      "expected": 1709285401,
+      "normalized_utc": "2024-03-01T09:30:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456-05:30",
+      "expected": 1709271001,
+      "normalized_utc": "2024-03-01T05:30:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456-01:00",
+      "expected": 1709254801,
+      "normalized_utc": "2024-03-01T01:00:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+00:00",
+      "expected": 1709251201,
+      "normalized_utc": "2024-03-01T00:00:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+01:00",
+      "expected": 1709247601,
+      "normalized_utc": "2024-02-29T23:00:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+05:30",
+      "expected": 1709231401,
+      "normalized_utc": "2024-02-29T18:30:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+05:45",
+      "expected": 1709230501,
+      "normalized_utc": "2024-02-29T18:15:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+09:30",
+      "expected": 1709217001,
+      "normalized_utc": "2024-02-29T14:30:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+14:00",
+      "expected": 1709200801,
+      "normalized_utc": "2024-02-29T10:00:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-03-01T00:00:01.123456+23:59",
+      "expected": 1709164861,
+      "normalized_utc": "2024-02-29T00:01:01.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00-23:59",
+      "expected": 4107628740,
+      "normalized_utc": "2100-03-01T23:59:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00-14:00",
+      "expected": 4107592800,
+      "normalized_utc": "2100-03-01T14:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00-09:30",
+      "expected": 4107576600,
+      "normalized_utc": "2100-03-01T09:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00-05:30",
+      "expected": 4107562200,
+      "normalized_utc": "2100-03-01T05:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00-01:00",
+      "expected": 4107546000,
+      "normalized_utc": "2100-03-01T01:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+00:00",
+      "expected": 4107542400,
+      "normalized_utc": "2100-03-01T00:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+01:00",
+      "expected": 4107538800,
+      "normalized_utc": "2100-02-28T23:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+05:30",
+      "expected": 4107522600,
+      "normalized_utc": "2100-02-28T18:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+05:45",
+      "expected": 4107521700,
+      "normalized_utc": "2100-02-28T18:15:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+09:30",
+      "expected": 4107508200,
+      "normalized_utc": "2100-02-28T14:30:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+14:00",
+      "expected": 4107492000,
+      "normalized_utc": "2100-02-28T10:00:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2100-03-01T00:00:00+23:59",
+      "expected": 4107456060,
+      "normalized_utc": "2100-02-28T00:01:00+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21-23:59",
+      "expected": 3954028941,
+      "normalized_utc": "2095-04-19T05:22:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21-14:00",
+      "expected": 3953993001,
+      "normalized_utc": "2095-04-18T19:23:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21-09:30",
+      "expected": 3953976801,
+      "normalized_utc": "2095-04-18T14:53:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21-05:30",
+      "expected": 3953962401,
+      "normalized_utc": "2095-04-18T10:53:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21-01:00",
+      "expected": 3953946201,
+      "normalized_utc": "2095-04-18T06:23:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+00:00",
+      "expected": 3953942601,
+      "normalized_utc": "2095-04-18T05:23:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+01:00",
+      "expected": 3953939001,
+      "normalized_utc": "2095-04-18T04:23:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+05:30",
+      "expected": 3953922801,
+      "normalized_utc": "2095-04-17T23:53:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+05:45",
+      "expected": 3953921901,
+      "normalized_utc": "2095-04-17T23:38:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+09:30",
+      "expected": 3953908401,
+      "normalized_utc": "2095-04-17T19:53:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+14:00",
+      "expected": 3953892201,
+      "normalized_utc": "2095-04-17T15:23:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-04-18T05:23:21+23:59",
+      "expected": 3953856261,
+      "normalized_utc": "2095-04-17T05:24:21+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456-23:59",
+      "expected": 3945482075,
+      "normalized_utc": "2095-01-10T07:14:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456-14:00",
+      "expected": 3945446135,
+      "normalized_utc": "2095-01-09T21:15:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456-09:30",
+      "expected": 3945429935,
+      "normalized_utc": "2095-01-09T16:45:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456-05:30",
+      "expected": 3945415535,
+      "normalized_utc": "2095-01-09T12:45:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456-01:00",
+      "expected": 3945399335,
+      "normalized_utc": "2095-01-09T08:15:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+00:00",
+      "expected": 3945395735,
+      "normalized_utc": "2095-01-09T07:15:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+01:00",
+      "expected": 3945392135,
+      "normalized_utc": "2095-01-09T06:15:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+05:30",
+      "expected": 3945375935,
+      "normalized_utc": "2095-01-09T01:45:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+05:45",
+      "expected": 3945375035,
+      "normalized_utc": "2095-01-09T01:30:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+09:30",
+      "expected": 3945361535,
+      "normalized_utc": "2095-01-08T21:45:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+14:00",
+      "expected": 3945345335,
+      "normalized_utc": "2095-01-08T17:15:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2095-01-09T07:15:35.123456+23:59",
+      "expected": 3945309395,
+      "normalized_utc": "2095-01-08T07:16:35.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10-23:59",
+      "expected": 1043323510,
+      "normalized_utc": "2003-01-23T12:05:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10-14:00",
+      "expected": 1043287570,
+      "normalized_utc": "2003-01-23T02:06:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10-09:30",
+      "expected": 1043271370,
+      "normalized_utc": "2003-01-22T21:36:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10-05:30",
+      "expected": 1043256970,
+      "normalized_utc": "2003-01-22T17:36:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10-01:00",
+      "expected": 1043240770,
+      "normalized_utc": "2003-01-22T13:06:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+00:00",
+      "expected": 1043237170,
+      "normalized_utc": "2003-01-22T12:06:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+01:00",
+      "expected": 1043233570,
+      "normalized_utc": "2003-01-22T11:06:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+05:30",
+      "expected": 1043217370,
+      "normalized_utc": "2003-01-22T06:36:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+05:45",
+      "expected": 1043216470,
+      "normalized_utc": "2003-01-22T06:21:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+09:30",
+      "expected": 1043202970,
+      "normalized_utc": "2003-01-22T02:36:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+14:00",
+      "expected": 1043186770,
+      "normalized_utc": "2003-01-21T22:06:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2003-01-22T12:06:10+23:59",
+      "expected": 1043150830,
+      "normalized_utc": "2003-01-21T12:07:10+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45-23:59",
+      "expected": 3691406205,
+      "normalized_utc": "2086-12-22T14:36:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45-14:00",
+      "expected": 3691370265,
+      "normalized_utc": "2086-12-22T04:37:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45-09:30",
+      "expected": 3691354065,
+      "normalized_utc": "2086-12-22T00:07:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45-05:30",
+      "expected": 3691339665,
+      "normalized_utc": "2086-12-21T20:07:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45-01:00",
+      "expected": 3691323465,
+      "normalized_utc": "2086-12-21T15:37:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+00:00",
+      "expected": 3691319865,
+      "normalized_utc": "2086-12-21T14:37:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+01:00",
+      "expected": 3691316265,
+      "normalized_utc": "2086-12-21T13:37:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+05:30",
+      "expected": 3691300065,
+      "normalized_utc": "2086-12-21T09:07:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+05:45",
+      "expected": 3691299165,
+      "normalized_utc": "2086-12-21T08:52:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+09:30",
+      "expected": 3691285665,
+      "normalized_utc": "2086-12-21T05:07:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+14:00",
+      "expected": 3691269465,
+      "normalized_utc": "2086-12-21T00:37:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-12-21T14:37:45+23:59",
+      "expected": 3691233525,
+      "normalized_utc": "2086-12-20T14:38:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456-23:59",
+      "expected": 3890091325,
+      "normalized_utc": "2093-04-09T04:55:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456-14:00",
+      "expected": 3890055385,
+      "normalized_utc": "2093-04-08T18:56:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456-09:30",
+      "expected": 3890039185,
+      "normalized_utc": "2093-04-08T14:26:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456-05:30",
+      "expected": 3890024785,
+      "normalized_utc": "2093-04-08T10:26:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456-01:00",
+      "expected": 3890008585,
+      "normalized_utc": "2093-04-08T05:56:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+00:00",
+      "expected": 3890004985,
+      "normalized_utc": "2093-04-08T04:56:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+01:00",
+      "expected": 3890001385,
+      "normalized_utc": "2093-04-08T03:56:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+05:30",
+      "expected": 3889985185,
+      "normalized_utc": "2093-04-07T23:26:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+05:45",
+      "expected": 3889984285,
+      "normalized_utc": "2093-04-07T23:11:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+09:30",
+      "expected": 3889970785,
+      "normalized_utc": "2093-04-07T19:26:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+14:00",
+      "expected": 3889954585,
+      "normalized_utc": "2093-04-07T14:56:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2093-04-08T04:56:25.123456+23:59",
+      "expected": 3889918645,
+      "normalized_utc": "2093-04-07T04:57:25.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06-23:59",
+      "expected": 3094441326,
+      "normalized_utc": "2068-01-22T07:02:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06-14:00",
+      "expected": 3094405386,
+      "normalized_utc": "2068-01-21T21:03:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06-09:30",
+      "expected": 3094389186,
+      "normalized_utc": "2068-01-21T16:33:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06-05:30",
+      "expected": 3094374786,
+      "normalized_utc": "2068-01-21T12:33:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06-01:00",
+      "expected": 3094358586,
+      "normalized_utc": "2068-01-21T08:03:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+00:00",
+      "expected": 3094354986,
+      "normalized_utc": "2068-01-21T07:03:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+01:00",
+      "expected": 3094351386,
+      "normalized_utc": "2068-01-21T06:03:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+05:30",
+      "expected": 3094335186,
+      "normalized_utc": "2068-01-21T01:33:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+05:45",
+      "expected": 3094334286,
+      "normalized_utc": "2068-01-21T01:18:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+09:30",
+      "expected": 3094320786,
+      "normalized_utc": "2068-01-20T21:33:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+14:00",
+      "expected": 3094304586,
+      "normalized_utc": "2068-01-20T17:03:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2068-01-21T07:03:06+23:59",
+      "expected": 3094268646,
+      "normalized_utc": "2068-01-20T07:04:06+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11-23:59",
+      "expected": 628010711,
+      "normalized_utc": "1989-11-25T15:25:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11-14:00",
+      "expected": 627974771,
+      "normalized_utc": "1989-11-25T05:26:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11-09:30",
+      "expected": 627958571,
+      "normalized_utc": "1989-11-25T00:56:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11-05:30",
+      "expected": 627944171,
+      "normalized_utc": "1989-11-24T20:56:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11-01:00",
+      "expected": 627927971,
+      "normalized_utc": "1989-11-24T16:26:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+00:00",
+      "expected": 627924371,
+      "normalized_utc": "1989-11-24T15:26:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+01:00",
+      "expected": 627920771,
+      "normalized_utc": "1989-11-24T14:26:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+05:30",
+      "expected": 627904571,
+      "normalized_utc": "1989-11-24T09:56:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+05:45",
+      "expected": 627903671,
+      "normalized_utc": "1989-11-24T09:41:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+09:30",
+      "expected": 627890171,
+      "normalized_utc": "1989-11-24T05:56:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+14:00",
+      "expected": 627873971,
+      "normalized_utc": "1989-11-24T01:26:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1989-11-24T15:26:11+23:59",
+      "expected": 627838031,
+      "normalized_utc": "1989-11-23T15:27:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456-23:59",
+      "expected": 1211045262,
+      "normalized_utc": "2008-05-17T17:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456-14:00",
+      "expected": 1211009322,
+      "normalized_utc": "2008-05-17T07:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456-09:30",
+      "expected": 1210993122,
+      "normalized_utc": "2008-05-17T02:58:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456-05:30",
+      "expected": 1210978722,
+      "normalized_utc": "2008-05-16T22:58:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456-01:00",
+      "expected": 1210962522,
+      "normalized_utc": "2008-05-16T18:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+00:00",
+      "expected": 1210958922,
+      "normalized_utc": "2008-05-16T17:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+01:00",
+      "expected": 1210955322,
+      "normalized_utc": "2008-05-16T16:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+05:30",
+      "expected": 1210939122,
+      "normalized_utc": "2008-05-16T11:58:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+05:45",
+      "expected": 1210938222,
+      "normalized_utc": "2008-05-16T11:43:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+09:30",
+      "expected": 1210924722,
+      "normalized_utc": "2008-05-16T07:58:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+14:00",
+      "expected": 1210908522,
+      "normalized_utc": "2008-05-16T03:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2008-05-16T17:28:42.123456+23:59",
+      "expected": 1210872582,
+      "normalized_utc": "2008-05-15T17:29:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11-23:59",
+      "expected": 1873986371,
+      "normalized_utc": "2029-05-20T15:46:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11-14:00",
+      "expected": 1873950431,
+      "normalized_utc": "2029-05-20T05:47:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11-09:30",
+      "expected": 1873934231,
+      "normalized_utc": "2029-05-20T01:17:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11-05:30",
+      "expected": 1873919831,
+      "normalized_utc": "2029-05-19T21:17:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11-01:00",
+      "expected": 1873903631,
+      "normalized_utc": "2029-05-19T16:47:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+00:00",
+      "expected": 1873900031,
+      "normalized_utc": "2029-05-19T15:47:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+01:00",
+      "expected": 1873896431,
+      "normalized_utc": "2029-05-19T14:47:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+05:30",
+      "expected": 1873880231,
+      "normalized_utc": "2029-05-19T10:17:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+05:45",
+      "expected": 1873879331,
+      "normalized_utc": "2029-05-19T10:02:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+09:30",
+      "expected": 1873865831,
+      "normalized_utc": "2029-05-19T06:17:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+14:00",
+      "expected": 1873849631,
+      "normalized_utc": "2029-05-19T01:47:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2029-05-19T15:47:11+23:59",
+      "expected": 1873813691,
+      "normalized_utc": "2029-05-18T15:48:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45-23:59",
+      "expected": 3987278625,
+      "normalized_utc": "2096-05-08T01:23:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45-14:00",
+      "expected": 3987242685,
+      "normalized_utc": "2096-05-07T15:24:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45-09:30",
+      "expected": 3987226485,
+      "normalized_utc": "2096-05-07T10:54:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45-05:30",
+      "expected": 3987212085,
+      "normalized_utc": "2096-05-07T06:54:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45-01:00",
+      "expected": 3987195885,
+      "normalized_utc": "2096-05-07T02:24:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+00:00",
+      "expected": 3987192285,
+      "normalized_utc": "2096-05-07T01:24:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+01:00",
+      "expected": 3987188685,
+      "normalized_utc": "2096-05-07T00:24:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+05:30",
+      "expected": 3987172485,
+      "normalized_utc": "2096-05-06T19:54:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+05:45",
+      "expected": 3987171585,
+      "normalized_utc": "2096-05-06T19:39:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+09:30",
+      "expected": 3987158085,
+      "normalized_utc": "2096-05-06T15:54:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+14:00",
+      "expected": 3987141885,
+      "normalized_utc": "2096-05-06T11:24:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2096-05-07T01:24:45+23:59",
+      "expected": 3987105945,
+      "normalized_utc": "2096-05-06T01:25:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456-23:59",
+      "expected": 3214400377,
+      "normalized_utc": "2071-11-10T16:59:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456-14:00",
+      "expected": 3214364437,
+      "normalized_utc": "2071-11-10T07:00:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456-09:30",
+      "expected": 3214348237,
+      "normalized_utc": "2071-11-10T02:30:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456-05:30",
+      "expected": 3214333837,
+      "normalized_utc": "2071-11-09T22:30:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456-01:00",
+      "expected": 3214317637,
+      "normalized_utc": "2071-11-09T18:00:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+00:00",
+      "expected": 3214314037,
+      "normalized_utc": "2071-11-09T17:00:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+01:00",
+      "expected": 3214310437,
+      "normalized_utc": "2071-11-09T16:00:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+05:30",
+      "expected": 3214294237,
+      "normalized_utc": "2071-11-09T11:30:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+05:45",
+      "expected": 3214293337,
+      "normalized_utc": "2071-11-09T11:15:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+09:30",
+      "expected": 3214279837,
+      "normalized_utc": "2071-11-09T07:30:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+14:00",
+      "expected": 3214263637,
+      "normalized_utc": "2071-11-09T03:00:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2071-11-09T17:00:37.123456+23:59",
+      "expected": 3214227697,
+      "normalized_utc": "2071-11-08T17:01:37.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49-23:59",
+      "expected": 2995659589,
+      "normalized_utc": "2064-12-04T23:39:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49-14:00",
+      "expected": 2995623649,
+      "normalized_utc": "2064-12-04T13:40:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49-09:30",
+      "expected": 2995607449,
+      "normalized_utc": "2064-12-04T09:10:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49-05:30",
+      "expected": 2995593049,
+      "normalized_utc": "2064-12-04T05:10:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49-01:00",
+      "expected": 2995576849,
+      "normalized_utc": "2064-12-04T00:40:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+00:00",
+      "expected": 2995573249,
+      "normalized_utc": "2064-12-03T23:40:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+01:00",
+      "expected": 2995569649,
+      "normalized_utc": "2064-12-03T22:40:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+05:30",
+      "expected": 2995553449,
+      "normalized_utc": "2064-12-03T18:10:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+05:45",
+      "expected": 2995552549,
+      "normalized_utc": "2064-12-03T17:55:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+09:30",
+      "expected": 2995539049,
+      "normalized_utc": "2064-12-03T14:10:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+14:00",
+      "expected": 2995522849,
+      "normalized_utc": "2064-12-03T09:40:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-12-03T23:40:49+23:59",
+      "expected": 2995486909,
+      "normalized_utc": "2064-12-02T23:41:49+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45-23:59",
+      "expected": 3757270425,
+      "normalized_utc": "2089-01-22T22:13:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45-14:00",
+      "expected": 3757234485,
+      "normalized_utc": "2089-01-22T12:14:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45-09:30",
+      "expected": 3757218285,
+      "normalized_utc": "2089-01-22T07:44:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45-05:30",
+      "expected": 3757203885,
+      "normalized_utc": "2089-01-22T03:44:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45-01:00",
+      "expected": 3757187685,
+      "normalized_utc": "2089-01-21T23:14:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+00:00",
+      "expected": 3757184085,
+      "normalized_utc": "2089-01-21T22:14:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+01:00",
+      "expected": 3757180485,
+      "normalized_utc": "2089-01-21T21:14:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+05:30",
+      "expected": 3757164285,
+      "normalized_utc": "2089-01-21T16:44:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+05:45",
+      "expected": 3757163385,
+      "normalized_utc": "2089-01-21T16:29:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+09:30",
+      "expected": 3757149885,
+      "normalized_utc": "2089-01-21T12:44:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+14:00",
+      "expected": 3757133685,
+      "normalized_utc": "2089-01-21T08:14:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2089-01-21T22:14:45+23:59",
+      "expected": 3757097745,
+      "normalized_utc": "2089-01-20T22:15:45+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456-23:59",
+      "expected": 3590800002,
+      "normalized_utc": "2083-10-15T04:26:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456-14:00",
+      "expected": 3590764062,
+      "normalized_utc": "2083-10-14T18:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456-09:30",
+      "expected": 3590747862,
+      "normalized_utc": "2083-10-14T13:57:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456-05:30",
+      "expected": 3590733462,
+      "normalized_utc": "2083-10-14T09:57:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456-01:00",
+      "expected": 3590717262,
+      "normalized_utc": "2083-10-14T05:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+00:00",
+      "expected": 3590713662,
+      "normalized_utc": "2083-10-14T04:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+01:00",
+      "expected": 3590710062,
+      "normalized_utc": "2083-10-14T03:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+05:30",
+      "expected": 3590693862,
+      "normalized_utc": "2083-10-13T22:57:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+05:45",
+      "expected": 3590692962,
+      "normalized_utc": "2083-10-13T22:42:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+09:30",
+      "expected": 3590679462,
+      "normalized_utc": "2083-10-13T18:57:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+14:00",
+      "expected": 3590663262,
+      "normalized_utc": "2083-10-13T14:27:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2083-10-14T04:27:42.123456+23:59",
+      "expected": 3590627322,
+      "normalized_utc": "2083-10-13T04:28:42.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55-23:59",
+      "expected": 2820687955,
+      "normalized_utc": "2059-05-20T20:25:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55-14:00",
+      "expected": 2820652015,
+      "normalized_utc": "2059-05-20T10:26:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55-09:30",
+      "expected": 2820635815,
+      "normalized_utc": "2059-05-20T05:56:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55-05:30",
+      "expected": 2820621415,
+      "normalized_utc": "2059-05-20T01:56:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55-01:00",
+      "expected": 2820605215,
+      "normalized_utc": "2059-05-19T21:26:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+00:00",
+      "expected": 2820601615,
+      "normalized_utc": "2059-05-19T20:26:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+01:00",
+      "expected": 2820598015,
+      "normalized_utc": "2059-05-19T19:26:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+05:30",
+      "expected": 2820581815,
+      "normalized_utc": "2059-05-19T14:56:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+05:45",
+      "expected": 2820580915,
+      "normalized_utc": "2059-05-19T14:41:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+09:30",
+      "expected": 2820567415,
+      "normalized_utc": "2059-05-19T10:56:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+14:00",
+      "expected": 2820551215,
+      "normalized_utc": "2059-05-19T06:26:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2059-05-19T20:26:55+23:59",
+      "expected": 2820515275,
+      "normalized_utc": "2059-05-18T20:27:55+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35-23:59",
+      "expected": 642081215,
+      "normalized_utc": "1990-05-07T11:53:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35-14:00",
+      "expected": 642045275,
+      "normalized_utc": "1990-05-07T01:54:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35-09:30",
+      "expected": 642029075,
+      "normalized_utc": "1990-05-06T21:24:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35-05:30",
+      "expected": 642014675,
+      "normalized_utc": "1990-05-06T17:24:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35-01:00",
+      "expected": 641998475,
+      "normalized_utc": "1990-05-06T12:54:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+00:00",
+      "expected": 641994875,
+      "normalized_utc": "1990-05-06T11:54:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+01:00",
+      "expected": 641991275,
+      "normalized_utc": "1990-05-06T10:54:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+05:30",
+      "expected": 641975075,
+      "normalized_utc": "1990-05-06T06:24:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+05:45",
+      "expected": 641974175,
+      "normalized_utc": "1990-05-06T06:09:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+09:30",
+      "expected": 641960675,
+      "normalized_utc": "1990-05-06T02:24:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+14:00",
+      "expected": 641944475,
+      "normalized_utc": "1990-05-05T21:54:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-05-06T11:54:35+23:59",
+      "expected": 641908535,
+      "normalized_utc": "1990-05-05T11:55:35+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456-23:59",
+      "expected": 989528864,
+      "normalized_utc": "2001-05-10T21:07:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456-14:00",
+      "expected": 989492924,
+      "normalized_utc": "2001-05-10T11:08:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456-09:30",
+      "expected": 989476724,
+      "normalized_utc": "2001-05-10T06:38:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456-05:30",
+      "expected": 989462324,
+      "normalized_utc": "2001-05-10T02:38:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456-01:00",
+      "expected": 989446124,
+      "normalized_utc": "2001-05-09T22:08:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+00:00",
+      "expected": 989442524,
+      "normalized_utc": "2001-05-09T21:08:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+01:00",
+      "expected": 989438924,
+      "normalized_utc": "2001-05-09T20:08:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+05:30",
+      "expected": 989422724,
+      "normalized_utc": "2001-05-09T15:38:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+05:45",
+      "expected": 989421824,
+      "normalized_utc": "2001-05-09T15:23:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+09:30",
+      "expected": 989408324,
+      "normalized_utc": "2001-05-09T11:38:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+14:00",
+      "expected": 989392124,
+      "normalized_utc": "2001-05-09T07:08:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2001-05-09T21:08:44.123456+23:59",
+      "expected": 989356184,
+      "normalized_utc": "2001-05-08T21:09:44.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18-23:59",
+      "expected": 487401858,
+      "normalized_utc": "1985-06-12T05:24:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18-14:00",
+      "expected": 487365918,
+      "normalized_utc": "1985-06-11T19:25:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18-09:30",
+      "expected": 487349718,
+      "normalized_utc": "1985-06-11T14:55:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18-05:30",
+      "expected": 487335318,
+      "normalized_utc": "1985-06-11T10:55:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18-01:00",
+      "expected": 487319118,
+      "normalized_utc": "1985-06-11T06:25:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+00:00",
+      "expected": 487315518,
+      "normalized_utc": "1985-06-11T05:25:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+01:00",
+      "expected": 487311918,
+      "normalized_utc": "1985-06-11T04:25:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+05:30",
+      "expected": 487295718,
+      "normalized_utc": "1985-06-10T23:55:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+05:45",
+      "expected": 487294818,
+      "normalized_utc": "1985-06-10T23:40:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+09:30",
+      "expected": 487281318,
+      "normalized_utc": "1985-06-10T19:55:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+14:00",
+      "expected": 487265118,
+      "normalized_utc": "1985-06-10T15:25:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-06-11T05:25:18+23:59",
+      "expected": 487229178,
+      "normalized_utc": "1985-06-10T05:26:18+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47-23:59",
+      "expected": 2211909347,
+      "normalized_utc": "2040-02-03T19:15:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47-14:00",
+      "expected": 2211873407,
+      "normalized_utc": "2040-02-03T09:16:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47-09:30",
+      "expected": 2211857207,
+      "normalized_utc": "2040-02-03T04:46:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47-05:30",
+      "expected": 2211842807,
+      "normalized_utc": "2040-02-03T00:46:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47-01:00",
+      "expected": 2211826607,
+      "normalized_utc": "2040-02-02T20:16:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+00:00",
+      "expected": 2211823007,
+      "normalized_utc": "2040-02-02T19:16:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+01:00",
+      "expected": 2211819407,
+      "normalized_utc": "2040-02-02T18:16:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+05:30",
+      "expected": 2211803207,
+      "normalized_utc": "2040-02-02T13:46:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+05:45",
+      "expected": 2211802307,
+      "normalized_utc": "2040-02-02T13:31:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+09:30",
+      "expected": 2211788807,
+      "normalized_utc": "2040-02-02T09:46:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+14:00",
+      "expected": 2211772607,
+      "normalized_utc": "2040-02-02T05:16:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2040-02-02T19:16:47+23:59",
+      "expected": 2211736667,
+      "normalized_utc": "2040-02-01T19:17:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456-23:59",
+      "expected": 1398087527,
+      "normalized_utc": "2014-04-21T13:38:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456-14:00",
+      "expected": 1398051587,
+      "normalized_utc": "2014-04-21T03:39:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456-09:30",
+      "expected": 1398035387,
+      "normalized_utc": "2014-04-20T23:09:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456-05:30",
+      "expected": 1398020987,
+      "normalized_utc": "2014-04-20T19:09:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456-01:00",
+      "expected": 1398004787,
+      "normalized_utc": "2014-04-20T14:39:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+00:00",
+      "expected": 1398001187,
+      "normalized_utc": "2014-04-20T13:39:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+01:00",
+      "expected": 1397997587,
+      "normalized_utc": "2014-04-20T12:39:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+05:30",
+      "expected": 1397981387,
+      "normalized_utc": "2014-04-20T08:09:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+05:45",
+      "expected": 1397980487,
+      "normalized_utc": "2014-04-20T07:54:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+09:30",
+      "expected": 1397966987,
+      "normalized_utc": "2014-04-20T04:09:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+14:00",
+      "expected": 1397950787,
+      "normalized_utc": "2014-04-19T23:39:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2014-04-20T13:39:47.123456+23:59",
+      "expected": 1397914847,
+      "normalized_utc": "2014-04-19T13:40:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32-23:59",
+      "expected": 2797342832,
+      "normalized_utc": "2058-08-23T15:40:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32-14:00",
+      "expected": 2797306892,
+      "normalized_utc": "2058-08-23T05:41:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32-09:30",
+      "expected": 2797290692,
+      "normalized_utc": "2058-08-23T01:11:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32-05:30",
+      "expected": 2797276292,
+      "normalized_utc": "2058-08-22T21:11:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32-01:00",
+      "expected": 2797260092,
+      "normalized_utc": "2058-08-22T16:41:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+00:00",
+      "expected": 2797256492,
+      "normalized_utc": "2058-08-22T15:41:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+01:00",
+      "expected": 2797252892,
+      "normalized_utc": "2058-08-22T14:41:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+05:30",
+      "expected": 2797236692,
+      "normalized_utc": "2058-08-22T10:11:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+05:45",
+      "expected": 2797235792,
+      "normalized_utc": "2058-08-22T09:56:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+09:30",
+      "expected": 2797222292,
+      "normalized_utc": "2058-08-22T06:11:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+14:00",
+      "expected": 2797206092,
+      "normalized_utc": "2058-08-22T01:41:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2058-08-22T15:41:32+23:59",
+      "expected": 2797170152,
+      "normalized_utc": "2058-08-21T15:42:32+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36-23:59",
+      "expected": 2846181756,
+      "normalized_utc": "2060-03-10T22:02:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36-14:00",
+      "expected": 2846145816,
+      "normalized_utc": "2060-03-10T12:03:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36-09:30",
+      "expected": 2846129616,
+      "normalized_utc": "2060-03-10T07:33:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36-05:30",
+      "expected": 2846115216,
+      "normalized_utc": "2060-03-10T03:33:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36-01:00",
+      "expected": 2846099016,
+      "normalized_utc": "2060-03-09T23:03:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+00:00",
+      "expected": 2846095416,
+      "normalized_utc": "2060-03-09T22:03:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+01:00",
+      "expected": 2846091816,
+      "normalized_utc": "2060-03-09T21:03:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+05:30",
+      "expected": 2846075616,
+      "normalized_utc": "2060-03-09T16:33:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+05:45",
+      "expected": 2846074716,
+      "normalized_utc": "2060-03-09T16:18:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+09:30",
+      "expected": 2846061216,
+      "normalized_utc": "2060-03-09T12:33:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+14:00",
+      "expected": 2846045016,
+      "normalized_utc": "2060-03-09T08:03:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2060-03-09T22:03:36+23:59",
+      "expected": 2846009076,
+      "normalized_utc": "2060-03-08T22:04:36+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456-23:59",
+      "expected": 1235999014,
+      "normalized_utc": "2009-03-02T13:03:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456-14:00",
+      "expected": 1235963074,
+      "normalized_utc": "2009-03-02T03:04:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456-09:30",
+      "expected": 1235946874,
+      "normalized_utc": "2009-03-01T22:34:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456-05:30",
+      "expected": 1235932474,
+      "normalized_utc": "2009-03-01T18:34:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456-01:00",
+      "expected": 1235916274,
+      "normalized_utc": "2009-03-01T14:04:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+00:00",
+      "expected": 1235912674,
+      "normalized_utc": "2009-03-01T13:04:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+01:00",
+      "expected": 1235909074,
+      "normalized_utc": "2009-03-01T12:04:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+05:30",
+      "expected": 1235892874,
+      "normalized_utc": "2009-03-01T07:34:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+05:45",
+      "expected": 1235891974,
+      "normalized_utc": "2009-03-01T07:19:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+09:30",
+      "expected": 1235878474,
+      "normalized_utc": "2009-03-01T03:34:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+14:00",
+      "expected": 1235862274,
+      "normalized_utc": "2009-02-28T23:04:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2009-03-01T13:04:34.123456+23:59",
+      "expected": 1235826334,
+      "normalized_utc": "2009-02-28T13:05:34.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38-23:59",
+      "expected": 2441068418,
+      "normalized_utc": "2047-05-10T02:33:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38-14:00",
+      "expected": 2441032478,
+      "normalized_utc": "2047-05-09T16:34:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38-09:30",
+      "expected": 2441016278,
+      "normalized_utc": "2047-05-09T12:04:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38-05:30",
+      "expected": 2441001878,
+      "normalized_utc": "2047-05-09T08:04:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38-01:00",
+      "expected": 2440985678,
+      "normalized_utc": "2047-05-09T03:34:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+00:00",
+      "expected": 2440982078,
+      "normalized_utc": "2047-05-09T02:34:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+01:00",
+      "expected": 2440978478,
+      "normalized_utc": "2047-05-09T01:34:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+05:30",
+      "expected": 2440962278,
+      "normalized_utc": "2047-05-08T21:04:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+05:45",
+      "expected": 2440961378,
+      "normalized_utc": "2047-05-08T20:49:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+09:30",
+      "expected": 2440947878,
+      "normalized_utc": "2047-05-08T17:04:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+14:00",
+      "expected": 2440931678,
+      "normalized_utc": "2047-05-08T12:34:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2047-05-09T02:34:38+23:59",
+      "expected": 2440895738,
+      "normalized_utc": "2047-05-08T02:35:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37-23:59",
+      "expected": 737487037,
+      "normalized_utc": "1993-05-15T17:30:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37-14:00",
+      "expected": 737451097,
+      "normalized_utc": "1993-05-15T07:31:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37-09:30",
+      "expected": 737434897,
+      "normalized_utc": "1993-05-15T03:01:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37-05:30",
+      "expected": 737420497,
+      "normalized_utc": "1993-05-14T23:01:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37-01:00",
+      "expected": 737404297,
+      "normalized_utc": "1993-05-14T18:31:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+00:00",
+      "expected": 737400697,
+      "normalized_utc": "1993-05-14T17:31:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+01:00",
+      "expected": 737397097,
+      "normalized_utc": "1993-05-14T16:31:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+05:30",
+      "expected": 737380897,
+      "normalized_utc": "1993-05-14T12:01:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+05:45",
+      "expected": 737379997,
+      "normalized_utc": "1993-05-14T11:46:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+09:30",
+      "expected": 737366497,
+      "normalized_utc": "1993-05-14T08:01:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+14:00",
+      "expected": 737350297,
+      "normalized_utc": "1993-05-14T03:31:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-05-14T17:31:37+23:59",
+      "expected": 737314357,
+      "normalized_utc": "1993-05-13T17:32:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456-23:59",
+      "expected": 880158483,
+      "normalized_utc": "1997-11-22T00:28:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456-14:00",
+      "expected": 880122543,
+      "normalized_utc": "1997-11-21T14:29:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456-09:30",
+      "expected": 880106343,
+      "normalized_utc": "1997-11-21T09:59:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456-05:30",
+      "expected": 880091943,
+      "normalized_utc": "1997-11-21T05:59:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456-01:00",
+      "expected": 880075743,
+      "normalized_utc": "1997-11-21T01:29:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+00:00",
+      "expected": 880072143,
+      "normalized_utc": "1997-11-21T00:29:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+01:00",
+      "expected": 880068543,
+      "normalized_utc": "1997-11-20T23:29:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+05:30",
+      "expected": 880052343,
+      "normalized_utc": "1997-11-20T18:59:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+05:45",
+      "expected": 880051443,
+      "normalized_utc": "1997-11-20T18:44:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+09:30",
+      "expected": 880037943,
+      "normalized_utc": "1997-11-20T14:59:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+14:00",
+      "expected": 880021743,
+      "normalized_utc": "1997-11-20T10:29:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1997-11-21T00:29:03.123456+23:59",
+      "expected": 879985803,
+      "normalized_utc": "1997-11-20T00:30:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11-23:59",
+      "expected": 1727985251,
+      "normalized_utc": "2024-10-03T19:54:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11-14:00",
+      "expected": 1727949311,
+      "normalized_utc": "2024-10-03T09:55:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11-09:30",
+      "expected": 1727933111,
+      "normalized_utc": "2024-10-03T05:25:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11-05:30",
+      "expected": 1727918711,
+      "normalized_utc": "2024-10-03T01:25:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11-01:00",
+      "expected": 1727902511,
+      "normalized_utc": "2024-10-02T20:55:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+00:00",
+      "expected": 1727898911,
+      "normalized_utc": "2024-10-02T19:55:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+01:00",
+      "expected": 1727895311,
+      "normalized_utc": "2024-10-02T18:55:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+05:30",
+      "expected": 1727879111,
+      "normalized_utc": "2024-10-02T14:25:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+05:45",
+      "expected": 1727878211,
+      "normalized_utc": "2024-10-02T14:10:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+09:30",
+      "expected": 1727864711,
+      "normalized_utc": "2024-10-02T10:25:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+14:00",
+      "expected": 1727848511,
+      "normalized_utc": "2024-10-02T05:55:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2024-10-02T19:55:11+23:59",
+      "expected": 1727812571,
+      "normalized_utc": "2024-10-01T19:56:11+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50-23:59",
+      "expected": 2383896110,
+      "normalized_utc": "2045-07-17T09:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50-14:00",
+      "expected": 2383860170,
+      "normalized_utc": "2045-07-16T23:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50-09:30",
+      "expected": 2383843970,
+      "normalized_utc": "2045-07-16T18:52:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50-05:30",
+      "expected": 2383829570,
+      "normalized_utc": "2045-07-16T14:52:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50-01:00",
+      "expected": 2383813370,
+      "normalized_utc": "2045-07-16T10:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+00:00",
+      "expected": 2383809770,
+      "normalized_utc": "2045-07-16T09:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+01:00",
+      "expected": 2383806170,
+      "normalized_utc": "2045-07-16T08:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+05:30",
+      "expected": 2383789970,
+      "normalized_utc": "2045-07-16T03:52:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+05:45",
+      "expected": 2383789070,
+      "normalized_utc": "2045-07-16T03:37:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+09:30",
+      "expected": 2383775570,
+      "normalized_utc": "2045-07-15T23:52:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+14:00",
+      "expected": 2383759370,
+      "normalized_utc": "2045-07-15T19:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-07-16T09:22:50+23:59",
+      "expected": 2383723430,
+      "normalized_utc": "2045-07-15T09:23:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456-23:59",
+      "expected": 64924171,
+      "normalized_utc": "1972-01-22T10:29:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456-14:00",
+      "expected": 64888231,
+      "normalized_utc": "1972-01-22T00:30:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456-09:30",
+      "expected": 64872031,
+      "normalized_utc": "1972-01-21T20:00:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456-05:30",
+      "expected": 64857631,
+      "normalized_utc": "1972-01-21T16:00:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456-01:00",
+      "expected": 64841431,
+      "normalized_utc": "1972-01-21T11:30:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+00:00",
+      "expected": 64837831,
+      "normalized_utc": "1972-01-21T10:30:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+01:00",
+      "expected": 64834231,
+      "normalized_utc": "1972-01-21T09:30:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+05:30",
+      "expected": 64818031,
+      "normalized_utc": "1972-01-21T05:00:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+05:45",
+      "expected": 64817131,
+      "normalized_utc": "1972-01-21T04:45:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+09:30",
+      "expected": 64803631,
+      "normalized_utc": "1972-01-21T01:00:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+14:00",
+      "expected": 64787431,
+      "normalized_utc": "1972-01-20T20:30:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1972-01-21T10:30:31.123456+23:59",
+      "expected": 64751491,
+      "normalized_utc": "1972-01-20T10:31:31.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02-23:59",
+      "expected": 493616702,
+      "normalized_utc": "1985-08-23T03:45:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02-14:00",
+      "expected": 493580762,
+      "normalized_utc": "1985-08-22T17:46:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02-09:30",
+      "expected": 493564562,
+      "normalized_utc": "1985-08-22T13:16:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02-05:30",
+      "expected": 493550162,
+      "normalized_utc": "1985-08-22T09:16:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02-01:00",
+      "expected": 493533962,
+      "normalized_utc": "1985-08-22T04:46:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+00:00",
+      "expected": 493530362,
+      "normalized_utc": "1985-08-22T03:46:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+01:00",
+      "expected": 493526762,
+      "normalized_utc": "1985-08-22T02:46:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+05:30",
+      "expected": 493510562,
+      "normalized_utc": "1985-08-21T22:16:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+05:45",
+      "expected": 493509662,
+      "normalized_utc": "1985-08-21T22:01:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+09:30",
+      "expected": 493496162,
+      "normalized_utc": "1985-08-21T18:16:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+14:00",
+      "expected": 493479962,
+      "normalized_utc": "1985-08-21T13:46:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1985-08-22T03:46:02+23:59",
+      "expected": 493444022,
+      "normalized_utc": "1985-08-21T03:47:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05-23:59",
+      "expected": 743172485,
+      "normalized_utc": "1993-07-20T12:48:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05-14:00",
+      "expected": 743136545,
+      "normalized_utc": "1993-07-20T02:49:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05-09:30",
+      "expected": 743120345,
+      "normalized_utc": "1993-07-19T22:19:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05-05:30",
+      "expected": 743105945,
+      "normalized_utc": "1993-07-19T18:19:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05-01:00",
+      "expected": 743089745,
+      "normalized_utc": "1993-07-19T13:49:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+00:00",
+      "expected": 743086145,
+      "normalized_utc": "1993-07-19T12:49:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+01:00",
+      "expected": 743082545,
+      "normalized_utc": "1993-07-19T11:49:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+05:30",
+      "expected": 743066345,
+      "normalized_utc": "1993-07-19T07:19:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+05:45",
+      "expected": 743065445,
+      "normalized_utc": "1993-07-19T07:04:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+09:30",
+      "expected": 743051945,
+      "normalized_utc": "1993-07-19T03:19:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+14:00",
+      "expected": 743035745,
+      "normalized_utc": "1993-07-18T22:49:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1993-07-19T12:49:05+23:59",
+      "expected": 742999805,
+      "normalized_utc": "1993-07-18T12:50:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456-23:59",
+      "expected": 2089565990,
+      "normalized_utc": "2036-03-19T18:59:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456-14:00",
+      "expected": 2089530050,
+      "normalized_utc": "2036-03-19T09:00:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456-09:30",
+      "expected": 2089513850,
+      "normalized_utc": "2036-03-19T04:30:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456-05:30",
+      "expected": 2089499450,
+      "normalized_utc": "2036-03-19T00:30:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456-01:00",
+      "expected": 2089483250,
+      "normalized_utc": "2036-03-18T20:00:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+00:00",
+      "expected": 2089479650,
+      "normalized_utc": "2036-03-18T19:00:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+01:00",
+      "expected": 2089476050,
+      "normalized_utc": "2036-03-18T18:00:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+05:30",
+      "expected": 2089459850,
+      "normalized_utc": "2036-03-18T13:30:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+05:45",
+      "expected": 2089458950,
+      "normalized_utc": "2036-03-18T13:15:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+09:30",
+      "expected": 2089445450,
+      "normalized_utc": "2036-03-18T09:30:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+14:00",
+      "expected": 2089429250,
+      "normalized_utc": "2036-03-18T05:00:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2036-03-18T19:00:50.123456+23:59",
+      "expected": 2089393310,
+      "normalized_utc": "2036-03-17T19:01:50.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16-23:59",
+      "expected": 2955335596,
+      "normalized_utc": "2063-08-26T06:33:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16-14:00",
+      "expected": 2955299656,
+      "normalized_utc": "2063-08-25T20:34:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16-09:30",
+      "expected": 2955283456,
+      "normalized_utc": "2063-08-25T16:04:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16-05:30",
+      "expected": 2955269056,
+      "normalized_utc": "2063-08-25T12:04:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16-01:00",
+      "expected": 2955252856,
+      "normalized_utc": "2063-08-25T07:34:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+00:00",
+      "expected": 2955249256,
+      "normalized_utc": "2063-08-25T06:34:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+01:00",
+      "expected": 2955245656,
+      "normalized_utc": "2063-08-25T05:34:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+05:30",
+      "expected": 2955229456,
+      "normalized_utc": "2063-08-25T01:04:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+05:45",
+      "expected": 2955228556,
+      "normalized_utc": "2063-08-25T00:49:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+09:30",
+      "expected": 2955215056,
+      "normalized_utc": "2063-08-24T21:04:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+14:00",
+      "expected": 2955198856,
+      "normalized_utc": "2063-08-24T16:34:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2063-08-25T06:34:16+23:59",
+      "expected": 2955162916,
+      "normalized_utc": "2063-08-24T06:35:16+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41-23:59",
+      "expected": 283698821,
+      "normalized_utc": "1978-12-28T13:13:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41-14:00",
+      "expected": 283662881,
+      "normalized_utc": "1978-12-28T03:14:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41-09:30",
+      "expected": 283646681,
+      "normalized_utc": "1978-12-27T22:44:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41-05:30",
+      "expected": 283632281,
+      "normalized_utc": "1978-12-27T18:44:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41-01:00",
+      "expected": 283616081,
+      "normalized_utc": "1978-12-27T14:14:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+00:00",
+      "expected": 283612481,
+      "normalized_utc": "1978-12-27T13:14:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+01:00",
+      "expected": 283608881,
+      "normalized_utc": "1978-12-27T12:14:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+05:30",
+      "expected": 283592681,
+      "normalized_utc": "1978-12-27T07:44:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+05:45",
+      "expected": 283591781,
+      "normalized_utc": "1978-12-27T07:29:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+09:30",
+      "expected": 283578281,
+      "normalized_utc": "1978-12-27T03:44:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+14:00",
+      "expected": 283562081,
+      "normalized_utc": "1978-12-26T23:14:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1978-12-27T13:14:41+23:59",
+      "expected": 283526141,
+      "normalized_utc": "1978-12-26T13:15:41+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456-23:59",
+      "expected": 2533443111,
+      "normalized_utc": "2050-04-13T06:11:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456-14:00",
+      "expected": 2533407171,
+      "normalized_utc": "2050-04-12T20:12:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456-09:30",
+      "expected": 2533390971,
+      "normalized_utc": "2050-04-12T15:42:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456-05:30",
+      "expected": 2533376571,
+      "normalized_utc": "2050-04-12T11:42:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456-01:00",
+      "expected": 2533360371,
+      "normalized_utc": "2050-04-12T07:12:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+00:00",
+      "expected": 2533356771,
+      "normalized_utc": "2050-04-12T06:12:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+01:00",
+      "expected": 2533353171,
+      "normalized_utc": "2050-04-12T05:12:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+05:30",
+      "expected": 2533336971,
+      "normalized_utc": "2050-04-12T00:42:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+05:45",
+      "expected": 2533336071,
+      "normalized_utc": "2050-04-12T00:27:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+09:30",
+      "expected": 2533322571,
+      "normalized_utc": "2050-04-11T20:42:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+14:00",
+      "expected": 2533306371,
+      "normalized_utc": "2050-04-11T16:12:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-04-12T06:12:51.123456+23:59",
+      "expected": 2533270431,
+      "normalized_utc": "2050-04-11T06:13:51.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23-23:59",
+      "expected": 549829403,
+      "normalized_utc": "1987-06-04T18:23:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23-14:00",
+      "expected": 549793463,
+      "normalized_utc": "1987-06-04T08:24:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23-09:30",
+      "expected": 549777263,
+      "normalized_utc": "1987-06-04T03:54:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23-05:30",
+      "expected": 549762863,
+      "normalized_utc": "1987-06-03T23:54:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23-01:00",
+      "expected": 549746663,
+      "normalized_utc": "1987-06-03T19:24:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+00:00",
+      "expected": 549743063,
+      "normalized_utc": "1987-06-03T18:24:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+01:00",
+      "expected": 549739463,
+      "normalized_utc": "1987-06-03T17:24:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+05:30",
+      "expected": 549723263,
+      "normalized_utc": "1987-06-03T12:54:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+05:45",
+      "expected": 549722363,
+      "normalized_utc": "1987-06-03T12:39:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+09:30",
+      "expected": 549708863,
+      "normalized_utc": "1987-06-03T08:54:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+14:00",
+      "expected": 549692663,
+      "normalized_utc": "1987-06-03T04:24:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-06-03T18:24:23+23:59",
+      "expected": 549656723,
+      "normalized_utc": "1987-06-02T18:25:23+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01-23:59",
+      "expected": 686373001,
+      "normalized_utc": "1991-10-02T03:10:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01-14:00",
+      "expected": 686337061,
+      "normalized_utc": "1991-10-01T17:11:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01-09:30",
+      "expected": 686320861,
+      "normalized_utc": "1991-10-01T12:41:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01-05:30",
+      "expected": 686306461,
+      "normalized_utc": "1991-10-01T08:41:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01-01:00",
+      "expected": 686290261,
+      "normalized_utc": "1991-10-01T04:11:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+00:00",
+      "expected": 686286661,
+      "normalized_utc": "1991-10-01T03:11:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+01:00",
+      "expected": 686283061,
+      "normalized_utc": "1991-10-01T02:11:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+05:30",
+      "expected": 686266861,
+      "normalized_utc": "1991-09-30T21:41:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+05:45",
+      "expected": 686265961,
+      "normalized_utc": "1991-09-30T21:26:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+09:30",
+      "expected": 686252461,
+      "normalized_utc": "1991-09-30T17:41:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+14:00",
+      "expected": 686236261,
+      "normalized_utc": "1991-09-30T13:11:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-10-01T03:11:01+23:59",
+      "expected": 686200321,
+      "normalized_utc": "1991-09-30T03:12:01+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456-23:59",
+      "expected": 1920259960,
+      "normalized_utc": "2030-11-07T05:32:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456-14:00",
+      "expected": 1920224020,
+      "normalized_utc": "2030-11-06T19:33:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456-09:30",
+      "expected": 1920207820,
+      "normalized_utc": "2030-11-06T15:03:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456-05:30",
+      "expected": 1920193420,
+      "normalized_utc": "2030-11-06T11:03:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456-01:00",
+      "expected": 1920177220,
+      "normalized_utc": "2030-11-06T06:33:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+00:00",
+      "expected": 1920173620,
+      "normalized_utc": "2030-11-06T05:33:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+01:00",
+      "expected": 1920170020,
+      "normalized_utc": "2030-11-06T04:33:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+05:30",
+      "expected": 1920153820,
+      "normalized_utc": "2030-11-06T00:03:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+05:45",
+      "expected": 1920152920,
+      "normalized_utc": "2030-11-05T23:48:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+09:30",
+      "expected": 1920139420,
+      "normalized_utc": "2030-11-05T20:03:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+14:00",
+      "expected": 1920123220,
+      "normalized_utc": "2030-11-05T15:33:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2030-11-06T05:33:40.123456+23:59",
+      "expected": 1920087280,
+      "normalized_utc": "2030-11-05T05:34:40.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25-23:59",
+      "expected": 660466825,
+      "normalized_utc": "1990-12-06T07:00:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25-14:00",
+      "expected": 660430885,
+      "normalized_utc": "1990-12-05T21:01:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25-09:30",
+      "expected": 660414685,
+      "normalized_utc": "1990-12-05T16:31:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25-05:30",
+      "expected": 660400285,
+      "normalized_utc": "1990-12-05T12:31:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25-01:00",
+      "expected": 660384085,
+      "normalized_utc": "1990-12-05T08:01:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+00:00",
+      "expected": 660380485,
+      "normalized_utc": "1990-12-05T07:01:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+01:00",
+      "expected": 660376885,
+      "normalized_utc": "1990-12-05T06:01:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+05:30",
+      "expected": 660360685,
+      "normalized_utc": "1990-12-05T01:31:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+05:45",
+      "expected": 660359785,
+      "normalized_utc": "1990-12-05T01:16:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+09:30",
+      "expected": 660346285,
+      "normalized_utc": "1990-12-04T21:31:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+14:00",
+      "expected": 660330085,
+      "normalized_utc": "1990-12-04T17:01:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-12-05T07:01:25+23:59",
+      "expected": 660294145,
+      "normalized_utc": "1990-12-04T07:02:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37-23:59",
+      "expected": 1328876497,
+      "normalized_utc": "2012-02-10T12:21:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37-14:00",
+      "expected": 1328840557,
+      "normalized_utc": "2012-02-10T02:22:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37-09:30",
+      "expected": 1328824357,
+      "normalized_utc": "2012-02-09T21:52:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37-05:30",
+      "expected": 1328809957,
+      "normalized_utc": "2012-02-09T17:52:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37-01:00",
+      "expected": 1328793757,
+      "normalized_utc": "2012-02-09T13:22:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+00:00",
+      "expected": 1328790157,
+      "normalized_utc": "2012-02-09T12:22:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+01:00",
+      "expected": 1328786557,
+      "normalized_utc": "2012-02-09T11:22:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+05:30",
+      "expected": 1328770357,
+      "normalized_utc": "2012-02-09T06:52:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+05:45",
+      "expected": 1328769457,
+      "normalized_utc": "2012-02-09T06:37:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+09:30",
+      "expected": 1328755957,
+      "normalized_utc": "2012-02-09T02:52:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+14:00",
+      "expected": 1328739757,
+      "normalized_utc": "2012-02-08T22:22:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2012-02-09T12:22:37+23:59",
+      "expected": 1328703817,
+      "normalized_utc": "2012-02-08T12:23:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456-23:59",
+      "expected": 2526303654,
+      "normalized_utc": "2050-01-20T15:00:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456-14:00",
+      "expected": 2526267714,
+      "normalized_utc": "2050-01-20T05:01:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456-09:30",
+      "expected": 2526251514,
+      "normalized_utc": "2050-01-20T00:31:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456-05:30",
+      "expected": 2526237114,
+      "normalized_utc": "2050-01-19T20:31:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456-01:00",
+      "expected": 2526220914,
+      "normalized_utc": "2050-01-19T16:01:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+00:00",
+      "expected": 2526217314,
+      "normalized_utc": "2050-01-19T15:01:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+01:00",
+      "expected": 2526213714,
+      "normalized_utc": "2050-01-19T14:01:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+05:30",
+      "expected": 2526197514,
+      "normalized_utc": "2050-01-19T09:31:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+05:45",
+      "expected": 2526196614,
+      "normalized_utc": "2050-01-19T09:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+09:30",
+      "expected": 2526183114,
+      "normalized_utc": "2050-01-19T05:31:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+14:00",
+      "expected": 2526166914,
+      "normalized_utc": "2050-01-19T01:01:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2050-01-19T15:01:54.123456+23:59",
+      "expected": 2526130974,
+      "normalized_utc": "2050-01-18T15:02:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22-23:59",
+      "expected": 3661084162,
+      "normalized_utc": "2086-01-05T15:49:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22-14:00",
+      "expected": 3661048222,
+      "normalized_utc": "2086-01-05T05:50:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22-09:30",
+      "expected": 3661032022,
+      "normalized_utc": "2086-01-05T01:20:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22-05:30",
+      "expected": 3661017622,
+      "normalized_utc": "2086-01-04T21:20:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22-01:00",
+      "expected": 3661001422,
+      "normalized_utc": "2086-01-04T16:50:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+00:00",
+      "expected": 3660997822,
+      "normalized_utc": "2086-01-04T15:50:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+01:00",
+      "expected": 3660994222,
+      "normalized_utc": "2086-01-04T14:50:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+05:30",
+      "expected": 3660978022,
+      "normalized_utc": "2086-01-04T10:20:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+05:45",
+      "expected": 3660977122,
+      "normalized_utc": "2086-01-04T10:05:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+09:30",
+      "expected": 3660963622,
+      "normalized_utc": "2086-01-04T06:20:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+14:00",
+      "expected": 3660947422,
+      "normalized_utc": "2086-01-04T01:50:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2086-01-04T15:50:22+23:59",
+      "expected": 3660911482,
+      "normalized_utc": "2086-01-03T15:51:22+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50-23:59",
+      "expected": 2632015250,
+      "normalized_utc": "2053-05-28T03:20:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50-14:00",
+      "expected": 2631979310,
+      "normalized_utc": "2053-05-27T17:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50-09:30",
+      "expected": 2631963110,
+      "normalized_utc": "2053-05-27T12:51:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50-05:30",
+      "expected": 2631948710,
+      "normalized_utc": "2053-05-27T08:51:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50-01:00",
+      "expected": 2631932510,
+      "normalized_utc": "2053-05-27T04:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+00:00",
+      "expected": 2631928910,
+      "normalized_utc": "2053-05-27T03:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+01:00",
+      "expected": 2631925310,
+      "normalized_utc": "2053-05-27T02:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+05:30",
+      "expected": 2631909110,
+      "normalized_utc": "2053-05-26T21:51:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+05:45",
+      "expected": 2631908210,
+      "normalized_utc": "2053-05-26T21:36:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+09:30",
+      "expected": 2631894710,
+      "normalized_utc": "2053-05-26T17:51:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+14:00",
+      "expected": 2631878510,
+      "normalized_utc": "2053-05-26T13:21:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2053-05-27T03:21:50+23:59",
+      "expected": 2631842570,
+      "normalized_utc": "2053-05-26T03:22:50+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456-23:59",
+      "expected": 2998309012,
+      "normalized_utc": "2065-01-04T15:36:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456-14:00",
+      "expected": 2998273072,
+      "normalized_utc": "2065-01-04T05:37:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456-09:30",
+      "expected": 2998256872,
+      "normalized_utc": "2065-01-04T01:07:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456-05:30",
+      "expected": 2998242472,
+      "normalized_utc": "2065-01-03T21:07:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456-01:00",
+      "expected": 2998226272,
+      "normalized_utc": "2065-01-03T16:37:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+00:00",
+      "expected": 2998222672,
+      "normalized_utc": "2065-01-03T15:37:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+01:00",
+      "expected": 2998219072,
+      "normalized_utc": "2065-01-03T14:37:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+05:30",
+      "expected": 2998202872,
+      "normalized_utc": "2065-01-03T10:07:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+05:45",
+      "expected": 2998201972,
+      "normalized_utc": "2065-01-03T09:52:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+09:30",
+      "expected": 2998188472,
+      "normalized_utc": "2065-01-03T06:07:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+14:00",
+      "expected": 2998172272,
+      "normalized_utc": "2065-01-03T01:37:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2065-01-03T15:37:52.123456+23:59",
+      "expected": 2998136332,
+      "normalized_utc": "2065-01-02T15:38:52.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13-23:59",
+      "expected": 1118773393,
+      "normalized_utc": "2005-06-14T18:23:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13-14:00",
+      "expected": 1118737453,
+      "normalized_utc": "2005-06-14T08:24:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13-09:30",
+      "expected": 1118721253,
+      "normalized_utc": "2005-06-14T03:54:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13-05:30",
+      "expected": 1118706853,
+      "normalized_utc": "2005-06-13T23:54:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13-01:00",
+      "expected": 1118690653,
+      "normalized_utc": "2005-06-13T19:24:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+00:00",
+      "expected": 1118687053,
+      "normalized_utc": "2005-06-13T18:24:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+01:00",
+      "expected": 1118683453,
+      "normalized_utc": "2005-06-13T17:24:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+05:30",
+      "expected": 1118667253,
+      "normalized_utc": "2005-06-13T12:54:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+05:45",
+      "expected": 1118666353,
+      "normalized_utc": "2005-06-13T12:39:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+09:30",
+      "expected": 1118652853,
+      "normalized_utc": "2005-06-13T08:54:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+14:00",
+      "expected": 1118636653,
+      "normalized_utc": "2005-06-13T04:24:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-06-13T18:24:13+23:59",
+      "expected": 1118600713,
+      "normalized_utc": "2005-06-12T18:25:13+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46-23:59",
+      "expected": 948811366,
+      "normalized_utc": "2000-01-25T14:42:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46-14:00",
+      "expected": 948775426,
+      "normalized_utc": "2000-01-25T04:43:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46-09:30",
+      "expected": 948759226,
+      "normalized_utc": "2000-01-25T00:13:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46-05:30",
+      "expected": 948744826,
+      "normalized_utc": "2000-01-24T20:13:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46-01:00",
+      "expected": 948728626,
+      "normalized_utc": "2000-01-24T15:43:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+00:00",
+      "expected": 948725026,
+      "normalized_utc": "2000-01-24T14:43:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+01:00",
+      "expected": 948721426,
+      "normalized_utc": "2000-01-24T13:43:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+05:30",
+      "expected": 948705226,
+      "normalized_utc": "2000-01-24T09:13:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+05:45",
+      "expected": 948704326,
+      "normalized_utc": "2000-01-24T08:58:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+09:30",
+      "expected": 948690826,
+      "normalized_utc": "2000-01-24T05:13:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+14:00",
+      "expected": 948674626,
+      "normalized_utc": "2000-01-24T00:43:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-01-24T14:43:46+23:59",
+      "expected": 948638686,
+      "normalized_utc": "2000-01-23T14:44:46+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456-23:59",
+      "expected": 1831186976,
+      "normalized_utc": "2028-01-11T07:02:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456-14:00",
+      "expected": 1831151036,
+      "normalized_utc": "2028-01-10T21:03:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456-09:30",
+      "expected": 1831134836,
+      "normalized_utc": "2028-01-10T16:33:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456-05:30",
+      "expected": 1831120436,
+      "normalized_utc": "2028-01-10T12:33:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456-01:00",
+      "expected": 1831104236,
+      "normalized_utc": "2028-01-10T08:03:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+00:00",
+      "expected": 1831100636,
+      "normalized_utc": "2028-01-10T07:03:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+01:00",
+      "expected": 1831097036,
+      "normalized_utc": "2028-01-10T06:03:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+05:30",
+      "expected": 1831080836,
+      "normalized_utc": "2028-01-10T01:33:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+05:45",
+      "expected": 1831079936,
+      "normalized_utc": "2028-01-10T01:18:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+09:30",
+      "expected": 1831066436,
+      "normalized_utc": "2028-01-09T21:33:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+14:00",
+      "expected": 1831050236,
+      "normalized_utc": "2028-01-09T17:03:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-01-10T07:03:56.123456+23:59",
+      "expected": 1831014296,
+      "normalized_utc": "2028-01-09T07:04:56.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09-23:59",
+      "expected": 1655270289,
+      "normalized_utc": "2022-06-15T05:18:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09-14:00",
+      "expected": 1655234349,
+      "normalized_utc": "2022-06-14T19:19:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09-09:30",
+      "expected": 1655218149,
+      "normalized_utc": "2022-06-14T14:49:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09-05:30",
+      "expected": 1655203749,
+      "normalized_utc": "2022-06-14T10:49:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09-01:00",
+      "expected": 1655187549,
+      "normalized_utc": "2022-06-14T06:19:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+00:00",
+      "expected": 1655183949,
+      "normalized_utc": "2022-06-14T05:19:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+01:00",
+      "expected": 1655180349,
+      "normalized_utc": "2022-06-14T04:19:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+05:30",
+      "expected": 1655164149,
+      "normalized_utc": "2022-06-13T23:49:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+05:45",
+      "expected": 1655163249,
+      "normalized_utc": "2022-06-13T23:34:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+09:30",
+      "expected": 1655149749,
+      "normalized_utc": "2022-06-13T19:49:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+14:00",
+      "expected": 1655133549,
+      "normalized_utc": "2022-06-13T15:19:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2022-06-14T05:19:09+23:59",
+      "expected": 1655097609,
+      "normalized_utc": "2022-06-13T05:20:09+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44-23:59",
+      "expected": 1840078304,
+      "normalized_utc": "2028-04-23T04:51:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44-14:00",
+      "expected": 1840042364,
+      "normalized_utc": "2028-04-22T18:52:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44-09:30",
+      "expected": 1840026164,
+      "normalized_utc": "2028-04-22T14:22:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44-05:30",
+      "expected": 1840011764,
+      "normalized_utc": "2028-04-22T10:22:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44-01:00",
+      "expected": 1839995564,
+      "normalized_utc": "2028-04-22T05:52:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+00:00",
+      "expected": 1839991964,
+      "normalized_utc": "2028-04-22T04:52:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+01:00",
+      "expected": 1839988364,
+      "normalized_utc": "2028-04-22T03:52:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+05:30",
+      "expected": 1839972164,
+      "normalized_utc": "2028-04-21T23:22:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+05:45",
+      "expected": 1839971264,
+      "normalized_utc": "2028-04-21T23:07:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+09:30",
+      "expected": 1839957764,
+      "normalized_utc": "2028-04-21T19:22:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+14:00",
+      "expected": 1839941564,
+      "normalized_utc": "2028-04-21T14:52:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2028-04-22T04:52:44+23:59",
+      "expected": 1839905624,
+      "normalized_utc": "2028-04-21T04:53:44+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456-23:59",
+      "expected": 4060823883,
+      "normalized_utc": "2098-09-06T06:38:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456-14:00",
+      "expected": 4060787943,
+      "normalized_utc": "2098-09-05T20:39:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456-09:30",
+      "expected": 4060771743,
+      "normalized_utc": "2098-09-05T16:09:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456-05:30",
+      "expected": 4060757343,
+      "normalized_utc": "2098-09-05T12:09:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456-01:00",
+      "expected": 4060741143,
+      "normalized_utc": "2098-09-05T07:39:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+00:00",
+      "expected": 4060737543,
+      "normalized_utc": "2098-09-05T06:39:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+01:00",
+      "expected": 4060733943,
+      "normalized_utc": "2098-09-05T05:39:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+05:30",
+      "expected": 4060717743,
+      "normalized_utc": "2098-09-05T01:09:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+05:45",
+      "expected": 4060716843,
+      "normalized_utc": "2098-09-05T00:54:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+09:30",
+      "expected": 4060703343,
+      "normalized_utc": "2098-09-04T21:09:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+14:00",
+      "expected": 4060687143,
+      "normalized_utc": "2098-09-04T16:39:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2098-09-05T06:39:03.123456+23:59",
+      "expected": 4060651203,
+      "normalized_utc": "2098-09-04T06:40:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38-23:59",
+      "expected": 1134265298,
+      "normalized_utc": "2005-12-11T01:41:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38-14:00",
+      "expected": 1134229358,
+      "normalized_utc": "2005-12-10T15:42:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38-09:30",
+      "expected": 1134213158,
+      "normalized_utc": "2005-12-10T11:12:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38-05:30",
+      "expected": 1134198758,
+      "normalized_utc": "2005-12-10T07:12:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38-01:00",
+      "expected": 1134182558,
+      "normalized_utc": "2005-12-10T02:42:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+00:00",
+      "expected": 1134178958,
+      "normalized_utc": "2005-12-10T01:42:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+01:00",
+      "expected": 1134175358,
+      "normalized_utc": "2005-12-10T00:42:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+05:30",
+      "expected": 1134159158,
+      "normalized_utc": "2005-12-09T20:12:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+05:45",
+      "expected": 1134158258,
+      "normalized_utc": "2005-12-09T19:57:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+09:30",
+      "expected": 1134144758,
+      "normalized_utc": "2005-12-09T16:12:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+14:00",
+      "expected": 1134128558,
+      "normalized_utc": "2005-12-09T11:42:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2005-12-10T01:42:38+23:59",
+      "expected": 1134092618,
+      "normalized_utc": "2005-12-09T01:43:38+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05-23:59",
+      "expected": 2399649185,
+      "normalized_utc": "2046-01-15T17:13:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05-14:00",
+      "expected": 2399613245,
+      "normalized_utc": "2046-01-15T07:14:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05-09:30",
+      "expected": 2399597045,
+      "normalized_utc": "2046-01-15T02:44:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05-05:30",
+      "expected": 2399582645,
+      "normalized_utc": "2046-01-14T22:44:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05-01:00",
+      "expected": 2399566445,
+      "normalized_utc": "2046-01-14T18:14:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+00:00",
+      "expected": 2399562845,
+      "normalized_utc": "2046-01-14T17:14:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+01:00",
+      "expected": 2399559245,
+      "normalized_utc": "2046-01-14T16:14:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+05:30",
+      "expected": 2399543045,
+      "normalized_utc": "2046-01-14T11:44:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+05:45",
+      "expected": 2399542145,
+      "normalized_utc": "2046-01-14T11:29:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+09:30",
+      "expected": 2399528645,
+      "normalized_utc": "2046-01-14T07:44:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+14:00",
+      "expected": 2399512445,
+      "normalized_utc": "2046-01-14T03:14:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2046-01-14T17:14:05+23:59",
+      "expected": 2399476505,
+      "normalized_utc": "2046-01-13T17:15:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456-23:59",
+      "expected": 537848233,
+      "normalized_utc": "1987-01-17T02:17:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456-14:00",
+      "expected": 537812293,
+      "normalized_utc": "1987-01-16T16:18:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456-09:30",
+      "expected": 537796093,
+      "normalized_utc": "1987-01-16T11:48:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456-05:30",
+      "expected": 537781693,
+      "normalized_utc": "1987-01-16T07:48:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456-01:00",
+      "expected": 537765493,
+      "normalized_utc": "1987-01-16T03:18:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+00:00",
+      "expected": 537761893,
+      "normalized_utc": "1987-01-16T02:18:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+01:00",
+      "expected": 537758293,
+      "normalized_utc": "1987-01-16T01:18:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+05:30",
+      "expected": 537742093,
+      "normalized_utc": "1987-01-15T20:48:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+05:45",
+      "expected": 537741193,
+      "normalized_utc": "1987-01-15T20:33:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+09:30",
+      "expected": 537727693,
+      "normalized_utc": "1987-01-15T16:48:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+14:00",
+      "expected": 537711493,
+      "normalized_utc": "1987-01-15T12:18:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1987-01-16T02:18:13.123456+23:59",
+      "expected": 537675553,
+      "normalized_utc": "1987-01-15T02:19:13.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53-23:59",
+      "expected": 3925812593,
+      "normalized_utc": "2094-05-27T15:29:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53-14:00",
+      "expected": 3925776653,
+      "normalized_utc": "2094-05-27T05:30:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53-09:30",
+      "expected": 3925760453,
+      "normalized_utc": "2094-05-27T01:00:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53-05:30",
+      "expected": 3925746053,
+      "normalized_utc": "2094-05-26T21:00:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53-01:00",
+      "expected": 3925729853,
+      "normalized_utc": "2094-05-26T16:30:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+00:00",
+      "expected": 3925726253,
+      "normalized_utc": "2094-05-26T15:30:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+01:00",
+      "expected": 3925722653,
+      "normalized_utc": "2094-05-26T14:30:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+05:30",
+      "expected": 3925706453,
+      "normalized_utc": "2094-05-26T10:00:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+05:45",
+      "expected": 3925705553,
+      "normalized_utc": "2094-05-26T09:45:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+09:30",
+      "expected": 3925692053,
+      "normalized_utc": "2094-05-26T06:00:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+14:00",
+      "expected": 3925675853,
+      "normalized_utc": "2094-05-26T01:30:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2094-05-26T15:30:53+23:59",
+      "expected": 3925639913,
+      "normalized_utc": "2094-05-25T15:31:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31-23:59",
+      "expected": 1441226731,
+      "normalized_utc": "2015-09-02T20:45:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31-14:00",
+      "expected": 1441190791,
+      "normalized_utc": "2015-09-02T10:46:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31-09:30",
+      "expected": 1441174591,
+      "normalized_utc": "2015-09-02T06:16:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31-05:30",
+      "expected": 1441160191,
+      "normalized_utc": "2015-09-02T02:16:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31-01:00",
+      "expected": 1441143991,
+      "normalized_utc": "2015-09-01T21:46:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+00:00",
+      "expected": 1441140391,
+      "normalized_utc": "2015-09-01T20:46:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+01:00",
+      "expected": 1441136791,
+      "normalized_utc": "2015-09-01T19:46:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+05:30",
+      "expected": 1441120591,
+      "normalized_utc": "2015-09-01T15:16:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+05:45",
+      "expected": 1441119691,
+      "normalized_utc": "2015-09-01T15:01:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+09:30",
+      "expected": 1441106191,
+      "normalized_utc": "2015-09-01T11:16:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+14:00",
+      "expected": 1441089991,
+      "normalized_utc": "2015-09-01T06:46:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2015-09-01T20:46:31+23:59",
+      "expected": 1441054051,
+      "normalized_utc": "2015-08-31T20:47:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456-23:59",
+      "expected": 3643118154,
+      "normalized_utc": "2085-06-11T17:15:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456-14:00",
+      "expected": 3643082214,
+      "normalized_utc": "2085-06-11T07:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456-09:30",
+      "expected": 3643066014,
+      "normalized_utc": "2085-06-11T02:46:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456-05:30",
+      "expected": 3643051614,
+      "normalized_utc": "2085-06-10T22:46:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456-01:00",
+      "expected": 3643035414,
+      "normalized_utc": "2085-06-10T18:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+00:00",
+      "expected": 3643031814,
+      "normalized_utc": "2085-06-10T17:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+01:00",
+      "expected": 3643028214,
+      "normalized_utc": "2085-06-10T16:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+05:30",
+      "expected": 3643012014,
+      "normalized_utc": "2085-06-10T11:46:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+05:45",
+      "expected": 3643011114,
+      "normalized_utc": "2085-06-10T11:31:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+09:30",
+      "expected": 3642997614,
+      "normalized_utc": "2085-06-10T07:46:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+14:00",
+      "expected": 3642981414,
+      "normalized_utc": "2085-06-10T03:16:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2085-06-10T17:16:54.123456+23:59",
+      "expected": 3642945474,
+      "normalized_utc": "2085-06-09T17:17:54.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51-23:59",
+      "expected": 2556866211,
+      "normalized_utc": "2051-01-09T08:36:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51-14:00",
+      "expected": 2556830271,
+      "normalized_utc": "2051-01-08T22:37:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51-09:30",
+      "expected": 2556814071,
+      "normalized_utc": "2051-01-08T18:07:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51-05:30",
+      "expected": 2556799671,
+      "normalized_utc": "2051-01-08T14:07:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51-01:00",
+      "expected": 2556783471,
+      "normalized_utc": "2051-01-08T09:37:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+00:00",
+      "expected": 2556779871,
+      "normalized_utc": "2051-01-08T08:37:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+01:00",
+      "expected": 2556776271,
+      "normalized_utc": "2051-01-08T07:37:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+05:30",
+      "expected": 2556760071,
+      "normalized_utc": "2051-01-08T03:07:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+05:45",
+      "expected": 2556759171,
+      "normalized_utc": "2051-01-08T02:52:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+09:30",
+      "expected": 2556745671,
+      "normalized_utc": "2051-01-07T23:07:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+14:00",
+      "expected": 2556729471,
+      "normalized_utc": "2051-01-07T18:37:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2051-01-08T08:37:51+23:59",
+      "expected": 2556693531,
+      "normalized_utc": "2051-01-07T08:38:51+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37-23:59",
+      "expected": 2872706377,
+      "normalized_utc": "2061-01-11T21:59:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37-14:00",
+      "expected": 2872670437,
+      "normalized_utc": "2061-01-11T12:00:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37-09:30",
+      "expected": 2872654237,
+      "normalized_utc": "2061-01-11T07:30:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37-05:30",
+      "expected": 2872639837,
+      "normalized_utc": "2061-01-11T03:30:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37-01:00",
+      "expected": 2872623637,
+      "normalized_utc": "2061-01-10T23:00:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+00:00",
+      "expected": 2872620037,
+      "normalized_utc": "2061-01-10T22:00:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+01:00",
+      "expected": 2872616437,
+      "normalized_utc": "2061-01-10T21:00:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+05:30",
+      "expected": 2872600237,
+      "normalized_utc": "2061-01-10T16:30:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+05:45",
+      "expected": 2872599337,
+      "normalized_utc": "2061-01-10T16:15:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+09:30",
+      "expected": 2872585837,
+      "normalized_utc": "2061-01-10T12:30:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+14:00",
+      "expected": 2872569637,
+      "normalized_utc": "2061-01-10T08:00:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2061-01-10T22:00:37+23:59",
+      "expected": 2872533697,
+      "normalized_utc": "2061-01-09T22:01:37+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456-23:59",
+      "expected": 229616906,
+      "normalized_utc": "1977-04-11T14:28:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456-14:00",
+      "expected": 229580966,
+      "normalized_utc": "1977-04-11T04:29:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456-09:30",
+      "expected": 229564766,
+      "normalized_utc": "1977-04-10T23:59:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456-05:30",
+      "expected": 229550366,
+      "normalized_utc": "1977-04-10T19:59:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456-01:00",
+      "expected": 229534166,
+      "normalized_utc": "1977-04-10T15:29:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+00:00",
+      "expected": 229530566,
+      "normalized_utc": "1977-04-10T14:29:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+01:00",
+      "expected": 229526966,
+      "normalized_utc": "1977-04-10T13:29:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+05:30",
+      "expected": 229510766,
+      "normalized_utc": "1977-04-10T08:59:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+05:45",
+      "expected": 229509866,
+      "normalized_utc": "1977-04-10T08:44:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+09:30",
+      "expected": 229496366,
+      "normalized_utc": "1977-04-10T04:59:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+14:00",
+      "expected": 229480166,
+      "normalized_utc": "1977-04-10T00:29:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1977-04-10T14:29:26.123456+23:59",
+      "expected": 229444226,
+      "normalized_utc": "1977-04-09T14:30:26.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25-23:59",
+      "expected": 4013244265,
+      "normalized_utc": "2097-03-04T14:04:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25-14:00",
+      "expected": 4013208325,
+      "normalized_utc": "2097-03-04T04:05:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25-09:30",
+      "expected": 4013192125,
+      "normalized_utc": "2097-03-03T23:35:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25-05:30",
+      "expected": 4013177725,
+      "normalized_utc": "2097-03-03T19:35:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25-01:00",
+      "expected": 4013161525,
+      "normalized_utc": "2097-03-03T15:05:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+00:00",
+      "expected": 4013157925,
+      "normalized_utc": "2097-03-03T14:05:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+01:00",
+      "expected": 4013154325,
+      "normalized_utc": "2097-03-03T13:05:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+05:30",
+      "expected": 4013138125,
+      "normalized_utc": "2097-03-03T08:35:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+05:45",
+      "expected": 4013137225,
+      "normalized_utc": "2097-03-03T08:20:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+09:30",
+      "expected": 4013123725,
+      "normalized_utc": "2097-03-03T04:35:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+14:00",
+      "expected": 4013107525,
+      "normalized_utc": "2097-03-03T00:05:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2097-03-03T14:05:25+23:59",
+      "expected": 4013071585,
+      "normalized_utc": "2097-03-02T14:06:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53-23:59",
+      "expected": 3605827673,
+      "normalized_utc": "2084-04-06T02:47:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53-14:00",
+      "expected": 3605791733,
+      "normalized_utc": "2084-04-05T16:48:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53-09:30",
+      "expected": 3605775533,
+      "normalized_utc": "2084-04-05T12:18:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53-05:30",
+      "expected": 3605761133,
+      "normalized_utc": "2084-04-05T08:18:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53-01:00",
+      "expected": 3605744933,
+      "normalized_utc": "2084-04-05T03:48:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+00:00",
+      "expected": 3605741333,
+      "normalized_utc": "2084-04-05T02:48:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+01:00",
+      "expected": 3605737733,
+      "normalized_utc": "2084-04-05T01:48:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+05:30",
+      "expected": 3605721533,
+      "normalized_utc": "2084-04-04T21:18:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+05:45",
+      "expected": 3605720633,
+      "normalized_utc": "2084-04-04T21:03:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+09:30",
+      "expected": 3605707133,
+      "normalized_utc": "2084-04-04T17:18:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+14:00",
+      "expected": 3605690933,
+      "normalized_utc": "2084-04-04T12:48:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2084-04-05T02:48:53+23:59",
+      "expected": 3605654993,
+      "normalized_utc": "2084-04-04T02:49:53+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456-23:59",
+      "expected": 2994638583,
+      "normalized_utc": "2064-11-23T04:03:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456-14:00",
+      "expected": 2994602643,
+      "normalized_utc": "2064-11-22T18:04:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456-09:30",
+      "expected": 2994586443,
+      "normalized_utc": "2064-11-22T13:34:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456-05:30",
+      "expected": 2994572043,
+      "normalized_utc": "2064-11-22T09:34:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456-01:00",
+      "expected": 2994555843,
+      "normalized_utc": "2064-11-22T05:04:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+00:00",
+      "expected": 2994552243,
+      "normalized_utc": "2064-11-22T04:04:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+01:00",
+      "expected": 2994548643,
+      "normalized_utc": "2064-11-22T03:04:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+05:30",
+      "expected": 2994532443,
+      "normalized_utc": "2064-11-21T22:34:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+05:45",
+      "expected": 2994531543,
+      "normalized_utc": "2064-11-21T22:19:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+09:30",
+      "expected": 2994518043,
+      "normalized_utc": "2064-11-21T18:34:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+14:00",
+      "expected": 2994501843,
+      "normalized_utc": "2064-11-21T14:04:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2064-11-22T04:04:03.123456+23:59",
+      "expected": 2994465903,
+      "normalized_utc": "2064-11-21T04:05:03.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02-23:59",
+      "expected": 1998388622,
+      "normalized_utc": "2033-04-29T11:57:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02-14:00",
+      "expected": 1998352682,
+      "normalized_utc": "2033-04-29T01:58:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02-09:30",
+      "expected": 1998336482,
+      "normalized_utc": "2033-04-28T21:28:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02-05:30",
+      "expected": 1998322082,
+      "normalized_utc": "2033-04-28T17:28:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02-01:00",
+      "expected": 1998305882,
+      "normalized_utc": "2033-04-28T12:58:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+00:00",
+      "expected": 1998302282,
+      "normalized_utc": "2033-04-28T11:58:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+01:00",
+      "expected": 1998298682,
+      "normalized_utc": "2033-04-28T10:58:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+05:30",
+      "expected": 1998282482,
+      "normalized_utc": "2033-04-28T06:28:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+05:45",
+      "expected": 1998281582,
+      "normalized_utc": "2033-04-28T06:13:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+09:30",
+      "expected": 1998268082,
+      "normalized_utc": "2033-04-28T02:28:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+14:00",
+      "expected": 1998251882,
+      "normalized_utc": "2033-04-27T21:58:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2033-04-28T11:58:02+23:59",
+      "expected": 1998215942,
+      "normalized_utc": "2033-04-27T11:59:02+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12-23:59",
+      "expected": 3452068032,
+      "normalized_utc": "2079-05-23T11:47:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12-14:00",
+      "expected": 3452032092,
+      "normalized_utc": "2079-05-23T01:48:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12-09:30",
+      "expected": 3452015892,
+      "normalized_utc": "2079-05-22T21:18:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12-05:30",
+      "expected": 3452001492,
+      "normalized_utc": "2079-05-22T17:18:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12-01:00",
+      "expected": 3451985292,
+      "normalized_utc": "2079-05-22T12:48:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+00:00",
+      "expected": 3451981692,
+      "normalized_utc": "2079-05-22T11:48:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+01:00",
+      "expected": 3451978092,
+      "normalized_utc": "2079-05-22T10:48:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+05:30",
+      "expected": 3451961892,
+      "normalized_utc": "2079-05-22T06:18:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+05:45",
+      "expected": 3451960992,
+      "normalized_utc": "2079-05-22T06:03:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+09:30",
+      "expected": 3451947492,
+      "normalized_utc": "2079-05-22T02:18:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+14:00",
+      "expected": 3451931292,
+      "normalized_utc": "2079-05-21T21:48:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2079-05-22T11:48:12+23:59",
+      "expected": 3451895352,
+      "normalized_utc": "2079-05-21T11:49:12+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456-23:59",
+      "expected": 663171317,
+      "normalized_utc": "1991-01-06T14:15:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456-14:00",
+      "expected": 663135377,
+      "normalized_utc": "1991-01-06T04:16:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456-09:30",
+      "expected": 663119177,
+      "normalized_utc": "1991-01-05T23:46:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456-05:30",
+      "expected": 663104777,
+      "normalized_utc": "1991-01-05T19:46:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456-01:00",
+      "expected": 663088577,
+      "normalized_utc": "1991-01-05T15:16:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+00:00",
+      "expected": 663084977,
+      "normalized_utc": "1991-01-05T14:16:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+01:00",
+      "expected": 663081377,
+      "normalized_utc": "1991-01-05T13:16:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+05:30",
+      "expected": 663065177,
+      "normalized_utc": "1991-01-05T08:46:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+05:45",
+      "expected": 663064277,
+      "normalized_utc": "1991-01-05T08:31:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+09:30",
+      "expected": 663050777,
+      "normalized_utc": "1991-01-05T04:46:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+14:00",
+      "expected": 663034577,
+      "normalized_utc": "1991-01-05T00:16:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1991-01-05T14:16:17.123456+23:59",
+      "expected": 662998637,
+      "normalized_utc": "1991-01-04T14:17:17.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25-23:59",
+      "expected": 1490121625,
+      "normalized_utc": "2017-03-21T18:40:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25-14:00",
+      "expected": 1490085685,
+      "normalized_utc": "2017-03-21T08:41:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25-09:30",
+      "expected": 1490069485,
+      "normalized_utc": "2017-03-21T04:11:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25-05:30",
+      "expected": 1490055085,
+      "normalized_utc": "2017-03-21T00:11:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25-01:00",
+      "expected": 1490038885,
+      "normalized_utc": "2017-03-20T19:41:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+00:00",
+      "expected": 1490035285,
+      "normalized_utc": "2017-03-20T18:41:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+01:00",
+      "expected": 1490031685,
+      "normalized_utc": "2017-03-20T17:41:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+05:30",
+      "expected": 1490015485,
+      "normalized_utc": "2017-03-20T13:11:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+05:45",
+      "expected": 1490014585,
+      "normalized_utc": "2017-03-20T12:56:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+09:30",
+      "expected": 1490001085,
+      "normalized_utc": "2017-03-20T09:11:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+14:00",
+      "expected": 1489984885,
+      "normalized_utc": "2017-03-20T04:41:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2017-03-20T18:41:25+23:59",
+      "expected": 1489948945,
+      "normalized_utc": "2017-03-19T18:42:25+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47-23:59",
+      "expected": 953207087,
+      "normalized_utc": "2000-03-16T11:44:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47-14:00",
+      "expected": 953171147,
+      "normalized_utc": "2000-03-16T01:45:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47-09:30",
+      "expected": 953154947,
+      "normalized_utc": "2000-03-15T21:15:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47-05:30",
+      "expected": 953140547,
+      "normalized_utc": "2000-03-15T17:15:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47-01:00",
+      "expected": 953124347,
+      "normalized_utc": "2000-03-15T12:45:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+00:00",
+      "expected": 953120747,
+      "normalized_utc": "2000-03-15T11:45:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+01:00",
+      "expected": 953117147,
+      "normalized_utc": "2000-03-15T10:45:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+05:30",
+      "expected": 953100947,
+      "normalized_utc": "2000-03-15T06:15:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+05:45",
+      "expected": 953100047,
+      "normalized_utc": "2000-03-15T06:00:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+09:30",
+      "expected": 953086547,
+      "normalized_utc": "2000-03-15T02:15:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+14:00",
+      "expected": 953070347,
+      "normalized_utc": "2000-03-14T21:45:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2000-03-15T11:45:47+23:59",
+      "expected": 953034407,
+      "normalized_utc": "2000-03-14T11:46:47+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456-23:59",
+      "expected": 1033197407,
+      "normalized_utc": "2002-09-28T07:16:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456-14:00",
+      "expected": 1033161467,
+      "normalized_utc": "2002-09-27T21:17:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456-09:30",
+      "expected": 1033145267,
+      "normalized_utc": "2002-09-27T16:47:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456-05:30",
+      "expected": 1033130867,
+      "normalized_utc": "2002-09-27T12:47:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456-01:00",
+      "expected": 1033114667,
+      "normalized_utc": "2002-09-27T08:17:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+00:00",
+      "expected": 1033111067,
+      "normalized_utc": "2002-09-27T07:17:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+01:00",
+      "expected": 1033107467,
+      "normalized_utc": "2002-09-27T06:17:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+05:30",
+      "expected": 1033091267,
+      "normalized_utc": "2002-09-27T01:47:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+05:45",
+      "expected": 1033090367,
+      "normalized_utc": "2002-09-27T01:32:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+09:30",
+      "expected": 1033076867,
+      "normalized_utc": "2002-09-26T21:47:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+14:00",
+      "expected": 1033060667,
+      "normalized_utc": "2002-09-26T17:17:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2002-09-27T07:17:47.123456+23:59",
+      "expected": 1033024727,
+      "normalized_utc": "2002-09-26T07:18:47.123456+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05-23:59",
+      "expected": 646016045,
+      "normalized_utc": "1990-06-22T00:54:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05-14:00",
+      "expected": 645980105,
+      "normalized_utc": "1990-06-21T14:55:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05-09:30",
+      "expected": 645963905,
+      "normalized_utc": "1990-06-21T10:25:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05-05:30",
+      "expected": 645949505,
+      "normalized_utc": "1990-06-21T06:25:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05-01:00",
+      "expected": 645933305,
+      "normalized_utc": "1990-06-21T01:55:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+00:00",
+      "expected": 645929705,
+      "normalized_utc": "1990-06-21T00:55:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+01:00",
+      "expected": 645926105,
+      "normalized_utc": "1990-06-20T23:55:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+05:30",
+      "expected": 645909905,
+      "normalized_utc": "1990-06-20T19:25:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+05:45",
+      "expected": 645909005,
+      "normalized_utc": "1990-06-20T19:10:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+09:30",
+      "expected": 645895505,
+      "normalized_utc": "1990-06-20T15:25:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+14:00",
+      "expected": 645879305,
+      "normalized_utc": "1990-06-20T10:55:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "1990-06-21T00:55:05+23:59",
+      "expected": 645843365,
+      "normalized_utc": "1990-06-20T00:56:05+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31-23:59",
+      "expected": 2373551611,
+      "normalized_utc": "2045-03-19T15:53:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31-14:00",
+      "expected": 2373515671,
+      "normalized_utc": "2045-03-19T05:54:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31-09:30",
+      "expected": 2373499471,
+      "normalized_utc": "2045-03-19T01:24:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31-05:30",
+      "expected": 2373485071,
+      "normalized_utc": "2045-03-18T21:24:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31-01:00",
+      "expected": 2373468871,
+      "normalized_utc": "2045-03-18T16:54:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+00:00",
+      "expected": 2373465271,
+      "normalized_utc": "2045-03-18T15:54:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+01:00",
+      "expected": 2373461671,
+      "normalized_utc": "2045-03-18T14:54:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+05:30",
+      "expected": 2373445471,
+      "normalized_utc": "2045-03-18T10:24:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+05:45",
+      "expected": 2373444571,
+      "normalized_utc": "2045-03-18T10:09:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+09:30",
+      "expected": 2373431071,
+      "normalized_utc": "2045-03-18T06:24:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+14:00",
+      "expected": 2373414871,
+      "normalized_utc": "2045-03-18T01:54:31+00:00"
+    },
+    {
+      "partition": "UTC_OFFSET_DAY_MONTH_YEAR_CROSSING_AND_FRACTIONS",
+      "input": "2045-03-18T15:54:31+23:59",
+      "expected": 2373378931,
+      "normalized_utc": "2045-03-17T15:55:31+00:00"
+    },
+    {
+      "partition": "UTC_Z_SUFFIX",
+      "input": "2024-02-29T00:00:00Z",
+      "expected": 1709164800
+    }
+  ]
+}

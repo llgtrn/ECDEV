@@ -1,0 +1,385 @@
+{
+  "donor_id": "getzep--graphiti",
+  "exact_pinned_commit": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+  "retrieved_at": "2026-10-04T13:45:23.573623+00:00",
+  "license": "Apache-2.0",
+  "license_files": [
+    {
+      "path": "LICENSE",
+      "blob_hash": "5feb0d9d299a1107adfa8331306b13cc0eff2d78",
+      "sha256": "2825300b20d7b951209835a4a331f29e24725a39d65168e4b831df53aa372650",
+      "terms": "Apache-2.0",
+      "basis": "LOCKED_GIT_BLOB"
+    }
+  ],
+  "full_clone": "FULL_CLONE",
+  "submodules": "",
+  "tracked_files": 384,
+  "source_parsed": 200,
+  "source_parse_unknown": 2,
+  "source_contracts": [
+    {
+      "capability": "getzep--graphiti.ensure_utc",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/utils/datetime_utils.py",
+      "source_symbol": "ensure_utc",
+      "line_start": 25,
+      "line_end": 42,
+      "source_sha256": "ff641aed24fa2e04e08264d920faa2e66ec825a66abdd31cd10aa2a9779a89c6",
+      "source_blob_hash": "06f4057c3d6d0448db7b48046b7a1ac82dea15b6",
+      "behavior_contract": "Normalize explicit-zone datetimes to UTC; donor assumes UTC for naive inputs, which ECDEV intentionally rejects.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": "commerce.web-research",
+      "native_implementation": "adapter/web/src/social.rs::published",
+      "production_callers": [
+        "adapter/web/src/social.rs::normalize (Bluesky and JSON Feed publication timestamps)"
+      ],
+      "oracle": "adapter/web/src/social.rs::graphiti_timezone_oracle",
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--graphiti.convert_datetimes_to_strings",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/utils/datetime_utils.py",
+      "source_symbol": "convert_datetimes_to_strings",
+      "line_start": 45,
+      "line_end": 60,
+      "source_sha256": "ff641aed24fa2e04e08264d920faa2e66ec825a66abdd31cd10aa2a9779a89c6",
+      "source_blob_hash": "06f4057c3d6d0448db7b48046b7a1ac82dea15b6",
+      "behavior_contract": "Recursively normalize UTC ISO strings before lexicographic database comparisons; tuple becomes list.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--graphiti.EntityEdge",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/edges.py",
+      "source_symbol": "EntityEdge",
+      "line_start": 263,
+      "line_end": 572,
+      "source_sha256": "0151d72ebfb057033c6d52a163e22f252f67b915722e14315b685c7831b3b1c6",
+      "source_blob_hash": "28c170355e02a569b60c5e070f019572889ace82",
+      "behavior_contract": "Fact, episode provenance, created/valid/invalid/expired times and embedding; model fields do not themselves prove factual truth.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--graphiti.SearchFilters",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/search/search_filters.py",
+      "source_symbol": "SearchFilters",
+      "line_start": 55,
+      "line_end": 73,
+      "source_sha256": "a8be03eb976a8c781b04df9a987a3b57704d6ad729ef0417300f31f7487e298f",
+      "source_blob_hash": "7d45f4b66cc55d0cea90504817bff9f025d48045",
+      "behavior_contract": "Separate valid/invalid/created/expired filters and labels; storage/query construction is external, not native ECDEV.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--graphiti.EdgeSearchMethod",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/search/search_config.py",
+      "source_symbol": "EdgeSearchMethod",
+      "line_start": 32,
+      "line_end": 35,
+      "source_sha256": "43bbc500b16a814f88b0361b1a3cdc2e51f354807489eba73ca407a6c9352157",
+      "source_blob_hash": "7e5714f5fafaec7e362b6a68a67522dde20395ef",
+      "behavior_contract": "Cosine, BM25 and BFS retrieval choices; independent publisher or demand inference is not implied.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    },
+    {
+      "capability": "getzep--graphiti.EdgeReranker",
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "graphiti_core/search/search_config.py",
+      "source_symbol": "EdgeReranker",
+      "line_start": 53,
+      "line_end": 58,
+      "source_sha256": "43bbc500b16a814f88b0361b1a3cdc2e51f354807489eba73ca407a6c9352157",
+      "source_blob_hash": "7e5714f5fafaec7e362b6a68a67522dde20395ef",
+      "behavior_contract": "RRF/distance/episode-mention/MMR/cross-encoder choices; native learned/calibrated ranking not claimed.",
+      "review_status": "SOURCE_BACKED_BOUNDED_CONTRACT_STUDY",
+      "native_owner": null,
+      "native_implementation": null,
+      "production_callers": [],
+      "oracle": null,
+      "runtime_dependency": false,
+      "whole_donor_replacement": false
+    }
+  ],
+  "dependency_inventory": [
+    {
+      "source_path": "Dockerfile",
+      "source_sha256": "4f69a62c16cfb37b848385fa1321b66e705fee389714a3b2722ca7b5b30c1863",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "Makefile",
+      "source_sha256": "3ac509f5919a6cf46d368000a11930b15575aa83d94361b825be193d64ac3a8d",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/opentelemetry/pyproject.toml",
+      "source_sha256": "413166f181eb2bfcac765bb1161e131f999b1a2a00a58161683e649300d8cbeb",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "graphiti-core",
+        "kuzu>=0.11.2",
+        "opentelemetry-api>=1.20.0",
+        "opentelemetry-sdk>=1.20.0"
+      ],
+      "optional_requirements": {}
+    },
+    {
+      "source_path": "examples/opentelemetry/uv.lock",
+      "source_sha256": "2a9c5b4eca3ce64f2f7a0e3b7a037ec7771abb19fad046372368db7c07420f0f",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "examples/quickstart/requirements.txt",
+      "source_sha256": "fa5392a13101a3135e86a5a712c571d97ee09df28b4de1dc09fa6182feaf40eb",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "graphiti-core",
+        "python-dotenv>=1.0.0"
+      ]
+    },
+    {
+      "source_path": "mcp_server/docker/Dockerfile",
+      "source_sha256": "16e40328c86eabf78171f94ce81ca0dcbaf9be4678863fead1305935acd6295b",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "mcp_server/pyproject.toml",
+      "source_sha256": "6f207b5ecacddfbb1e755e99fb386980df7c73a45fd1cb4d00dddbac42b9be07",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "mcp>=2,<3",
+        "openai>=2.41.0",
+        "graphiti-core[falkordb]>=0.30.2",
+        "pydantic-settings>=2.0.0",
+        "pyyaml>=6.0.3",
+        "typing-extensions>=4.0.0"
+      ],
+      "optional_requirements": {
+        "azure": [
+          "azure-identity>=1.25.3"
+        ],
+        "providers": [
+          "google-genai>=2.8.0",
+          "anthropic>=0.107.1",
+          "groq>=1.2.0",
+          "voyageai>=0.3.7",
+          "sentence-transformers>=3.2.1"
+        ]
+      }
+    },
+    {
+      "source_path": "mcp_server/uv.lock",
+      "source_sha256": "f19b0877539afc2d621f748bfe0211b10ed70107f8cf23d4dc5ad624c4c46208",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "pyproject.toml",
+      "source_sha256": "52b58f16f325fe923ec1d05e35f3157df458e36b5a460ccf4fc34b2623fba0ac",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "pydantic>=2.11.5",
+        "neo4j>=5.26.0",
+        "openai>=1.91.0",
+        "tenacity>=9.0.0",
+        "numpy>=1.0.0",
+        "python-dotenv>=1.0.1",
+        "posthog>=3.0.0"
+      ],
+      "optional_requirements": {
+        "anthropic": [
+          "anthropic>=0.49.0"
+        ],
+        "groq": [
+          "groq>=0.2.0"
+        ],
+        "google-genai": [
+          "google-genai>=1.62.0"
+        ],
+        "kuzu": [
+          "kuzu>=0.11.3"
+        ],
+        "falkordb": [
+          "falkordb>=1.1.2,<2.0.0"
+        ],
+        "falkordblite": [
+          "falkordblite>=0.5.0; python_version>='3.12'",
+          "redis<9; python_version>='3.12'"
+        ],
+        "voyageai": [
+          "voyageai>=0.2.3"
+        ],
+        "gliner2": [
+          "gliner2>=1.2.0; python_version>='3.11'"
+        ],
+        "neo4j-opensearch": [
+          "boto3>=1.39.16",
+          "opensearch-py>=3.0.0"
+        ],
+        "sentence-transformers": [
+          "sentence-transformers>=3.2.1"
+        ],
+        "neptune": [
+          "langchain-aws>=0.2.29",
+          "opensearch-py>=3.0.0",
+          "boto3>=1.39.16"
+        ],
+        "tracing": [
+          "opentelemetry-api>=1.20.0",
+          "opentelemetry-sdk>=1.20.0"
+        ],
+        "dev": [
+          "pyright>=1.1.404",
+          "groq>=0.2.0",
+          "anthropic>=0.49.0",
+          "google-genai>=1.8.0",
+          "falkordb>=1.1.2,<2.0.0",
+          "kuzu>=0.11.3",
+          "boto3>=1.39.16",
+          "opensearch-py>=3.0.0",
+          "langchain-aws>=0.2.29",
+          "ipykernel>=6.29.5",
+          "jupyterlab>=4.2.4",
+          "langgraph>=1.0.10",
+          "langchain-anthropic>=0.2.4",
+          "langsmith>=0.1.108",
+          "langchain-openai>=0.2.6",
+          "sentence-transformers>=3.2.1",
+          "transformers>=4.45.2",
+          "voyageai>=0.2.3",
+          "pytest>=8.3.3",
+          "pytest-asyncio>=0.24.0",
+          "pytest-xdist>=3.6.1",
+          "ruff>=0.7.1",
+          "opentelemetry-sdk>=1.20.0"
+        ]
+      }
+    },
+    {
+      "source_path": "server/Makefile",
+      "source_sha256": "be133ef7f9bb3470f7fb31b5239e87f4d77841479d40f6fb3cf3b287aaaaa5f6",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "server/pyproject.toml",
+      "source_sha256": "64ab77b4b66e7b044c0378a15197bc1e0e57db0836abdbdc9248b92376fe74e4",
+      "inventory_status": "PARSED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED",
+      "direct_requirements": [
+        "fastapi>=0.115.0",
+        "graphiti-core>=0.28.2",
+        "pydantic-settings>=2.4.0",
+        "uvicorn>=0.44.0",
+        "httpx>=0.28.1"
+      ],
+      "optional_requirements": {
+        "dev": [
+          "pydantic>=2.8.2",
+          "pyright>=1.1.380",
+          "pytest>=9.0.3",
+          "python-dotenv>=1.2.2",
+          "pytest-asyncio>=0.24.0",
+          "pytest-xdist>=3.6.1",
+          "ruff>=0.6.2",
+          "fastapi-cli>=0.0.5",
+          "graphiti-core[falkordb]>=0.28.2"
+        ]
+      }
+    },
+    {
+      "source_path": "server/uv.lock",
+      "source_sha256": "078b7dd4232d7ee4dd2503720416e6ca141b9094011d80d8961db4186fbdb140",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    },
+    {
+      "source_path": "uv.lock",
+      "source_sha256": "71cf0d5792e2be3540ea95e61ba9aeb4d3811195980942c8ed315c9552eb3022",
+      "inventory_status": "INVENTORIED",
+      "dependency_semantics": "LOCKFILE_TRANSITIVE_CLOSURE_NOT_FULLY_REVIEWED"
+    }
+  ],
+  "runtime_dependencies_added": 0,
+  "native_absorption_candidates": [
+    "Explicit-zone UTC normalization at the commerce acquisition boundary"
+  ],
+  "keep_external_candidates": [
+    "Managed SDK graph calls",
+    "Generic temporal graph storage/retrieval",
+    "LLM extraction/embedding and graph drivers"
+  ],
+  "rejected_capabilities": [
+    "Silent rewriting of observed product identities through aliases",
+    "Social-to-sales/demand inference",
+    "Generic agent memory duplicated inside ECDEV",
+    "Paid or authenticated calls without credentials/permission"
+  ],
+  "unknowns": [
+    "Whole-donor semantic/API replacement coverage",
+    "Transitive dependency license closure",
+    "Compatibility between legacy Graphiti service image 0.3 and separately pinned current Graphiti source",
+    "Managed Zep Cloud implementation is not present or independently verifiable from SDK forwarding code"
+  ],
+  "overlap_with_chronica": "General temporal graph/memory orchestration is outside commerce-domain ownership; cross-shard interface needs upstream architectural review. No generic ECDEV memory backend was introduced.",
+  "overlap_with_norl": "Canonical organism module reserves cognition/backends to norl; domain evidence may feed it, but ECDEV cannot claim its cognition capabilities.",
+  "recommended_ownership": "Commerce source-time/provenance validation belongs to existing commerce.web-research adapter; generic memory/cognition remains outside this shard.",
+  "whole_donor_absorbed": false,
+  "actual_repository_purpose": "Local OSS temporal graph building/retrieval library plus server/MCP/examples; not Zep Cloud server.",
+  "runtime_vs_integration": "graphiti_core contains the implementation; server and mcp_server are separate entrypoints within the donor.",
+  "persistence_design": "Graph-driver abstraction with Neo4j default and optional FalkorDB/Neptune/Kuzu integrations; no donor database started.",
+  "temporal_model": "EntityEdge distinguishes created_at, valid_at, invalid_at, expired_at, episode reference_time; UTC normalization is independent from truth classification.",
+  "graph_model": "Episodes, entities, fact edges and community graph, with attributed episode IDs and entity resolution workflows.",
+  "retrieval_model": "Cosine/BM25/BFS methods and RRF/MMR/distance/cross-encoder rerank choices; not calibrated commerce demand.",
+  "ingestion_model": "Async episode extraction/resolution/persistence orchestrated through models, LLM/embedder clients and graph drivers.",
+  "external_services": [
+    "Configured graph database",
+    "OpenAI default model/embedding client",
+    "Optional Anthropic/Groq/Google/other models",
+    "Posthog telemetry dependency"
+  ],
+  "local_vs_managed": "OSS core can run against selected local/remote graph and model services; Zep Cloud is not required by the chosen pure UTC helper."
+}

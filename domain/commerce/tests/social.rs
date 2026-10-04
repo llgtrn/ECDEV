@@ -44,6 +44,75 @@ fn root() -> std::path::PathBuf {
     std::env::temp_dir().join(format!("ecdev-social-{}", Uuid::new_v4()))
 }
 #[test]
+fn cached_captures_require_original_bytes_and_never_establish_live_acquisition() {
+    use sha2::{Digest, Sha256};
+    let root = root();
+    let engine = Engine::open(&root).unwrap();
+    let now = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs();
+    let raw = b"original source payload";
+    let mut p = post("cached", "HACKER_NEWS", now - 10);
+    p.capture_mode = "LIVE".into();
+    p.captured_at = now;
+    p.raw_hash = format!("{:x}", Sha256::digest(raw));
+    let dir = root.join(".ynventa/materialized/runtime/social-captures");
+    std::fs::create_dir_all(&dir).unwrap();
+    let path = dir.join(format!("{}.raw", p.raw_hash));
+    std::fs::write(&path, raw).unwrap();
+    let source = json!({"platform":"HACKER_NEWS"});
+    let key = format!(
+        "{:x}",
+        Sha256::digest(
+            json!({"query":"matcha","source":source})
+                .to_string()
+                .as_bytes()
+        )
+    );
+    let db = rusqlite::Connection::open(root.join(".ynventa/materialized/runtime/ecdev.sqlite"))
+        .unwrap();
+    db.execute(
+        "INSERT INTO social_cache VALUES(?1,?2,?3)",
+        rusqlite::params![key, now, json!([p]).to_string()],
+    )
+    .unwrap();
+    drop(db);
+    let request = json!({"query":"matcha","sources":[source],"cache_only":true});
+    let valid = engine.trend_discover(request.clone()).unwrap();
+    assert_eq!(valid["mention_count"], 1);
+    assert_eq!(valid["budget_usage"]["cache_hits"], 1);
+    assert_eq!(valid["budget_usage"]["request_count"], 0);
+    assert_eq!(
+        valid["acquisition_provenance"]["live_acquisition_established"],
+        false
+    );
+    assert_eq!(valid["acquisition_provenance"]["new_observation_count"], 0);
+    std::fs::write(&path, b"changed bytes").unwrap();
+    for missing in [false, true] {
+        if missing {
+            std::fs::remove_file(&path).unwrap();
+        }
+        let rejected = engine.trend_discover(request.clone()).unwrap();
+        assert_eq!(rejected["mention_count"], 0);
+        assert_eq!(rejected["budget_usage"]["cache_hits"], 0);
+        assert_eq!(rejected["budget_usage"]["request_count"], 0);
+        assert_eq!(rejected["source_complete"], false);
+        assert_eq!(
+            rejected["provider_failures"][0]["reason"],
+            "CACHE_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH"
+        );
+        assert!(rejected["velocity"]["value"].is_null());
+        assert!(
+            engine
+                .trend_inspect(json!({"snapshot_id":valid["snapshot_id"]}))
+                .is_err()
+        );
+    }
+    drop(engine);
+    std::fs::remove_dir_all(root).unwrap();
+}
+#[test]
 fn unknown_counter_is_not_zero() {
     let p = post("1", "HACKER_NEWS", 9000);
     let v = serde_json::to_value(p).unwrap();
