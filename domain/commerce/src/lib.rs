@@ -1,3 +1,4 @@
+mod capture;
 pub mod decision;
 pub mod domain;
 pub mod economics;

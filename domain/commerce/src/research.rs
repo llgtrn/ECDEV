@@ -78,11 +78,18 @@ pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
 ];
 impl Engine {
     pub fn inspect_candidate(&self, id: &str) -> Result<Value, String> {
-        self.rows("SELECT payload FROM candidates WHERE id=?1", Some(id))?
+        let candidate = self
+            .rows("SELECT payload FROM candidates WHERE id=?1", Some(id))?
             .as_array()
             .and_then(|rows| rows.first())
             .cloned()
-            .ok_or("CANDIDATE_NOT_FOUND".into())
+            .ok_or("CANDIDATE_NOT_FOUND")?;
+        self.verify_evidence_ids(
+            &candidate["evidence_ids"],
+            &mut crate::capture::Verifier::new(&self.root),
+            &mut BTreeMap::new(),
+        )?;
+        Ok(candidate)
     }
     pub fn compare_candidates(&self, args: Value) -> Result<Value, String> {
         #[derive(Deserialize)]
@@ -168,13 +175,56 @@ impl Engine {
         )
     }
     pub fn candidates(&self) -> Result<Value, String> {
-        self.rows(
+        let mut verifier = crate::capture::Verifier::new(&self.root);
+        let mut checked = BTreeMap::new();
+        let candidates = self.rows(
             "SELECT payload FROM candidates ORDER BY rowid DESC LIMIT 500",
             None,
-        )
+        )?;
+        Ok(json!(
+            candidates
+                .as_array()
+                .ok_or("Invalid candidates")?
+                .iter()
+                .filter(|c| self
+                    .verify_evidence_ids(&c["evidence_ids"], &mut verifier, &mut checked)
+                    .is_ok())
+                .collect::<Vec<_>>()
+        ))
     }
     pub fn evidence(&self, id: &str) -> Result<Value, String> {
-        self.rows("SELECT payload FROM evidence WHERE run_id=?1", Some(id))
+        let rows = self.rows("SELECT payload FROM evidence WHERE run_id=?1", Some(id))?;
+        crate::capture::verify_payload(&self.root, &json!({"observations": rows}))?;
+        Ok(rows)
+    }
+    fn verify_evidence_ids(
+        &self,
+        ids: &Value,
+        verifier: &mut crate::capture::Verifier<'_>,
+        checked: &mut BTreeMap<String, bool>,
+    ) -> Result<(), String> {
+        let ids = ids
+            .as_array()
+            .filter(|ids| !ids.is_empty())
+            .ok_or(crate::capture::UNAVAILABLE)?;
+        for id in ids {
+            let id = id.as_str().ok_or(crate::capture::UNAVAILABLE)?;
+            if let Some(valid) = checked.get(id) {
+                if !valid {
+                    return Err(crate::capture::UNAVAILABLE.into());
+                }
+                continue;
+            }
+            let rows = self.rows("SELECT payload FROM evidence WHERE id=?1", Some(id))?;
+            let observation = rows
+                .as_array()
+                .and_then(|a| a.first())
+                .ok_or(crate::capture::UNAVAILABLE)?;
+            let result = verifier.verify(observation);
+            checked.insert(id.to_string(), result.is_ok());
+            result?;
+        }
+        Ok(())
     }
     fn rows(&self, sql: &str, id: Option<&str>) -> Result<Value, String> {
         let db = self.db.lock().map_err(err)?;
@@ -403,6 +453,12 @@ impl Engine {
                     !a.is_empty() && a.iter().all(|o| o["provider"] == provider.id())
                 })
             });
+            if let Some(capture) = &checkpoint
+                && crate::capture::verify_payload(&self.root, capture).is_err()
+            {
+                failures.push(json!({"source":source.url,"reason":crate::capture::UNAVAILABLE,"origin":"FRONTIER_CHECKPOINT","request_count":0}));
+                continue;
+            }
             let started = timestamp() * 1000;
             let started_clock = std::time::Instant::now();
             let key=format!("{:x}",Sha256::digest(json!({"provider":provider.id(),"operation":"fetch.http","url":source.url,"market":input.market,"locale":input.market,"schema":12,"fixture_hash":source.fixture_html.as_ref().map(|h|format!("{:x}",Sha256::digest(h.as_bytes())))}).to_string().as_bytes()));
@@ -421,8 +477,10 @@ impl Engine {
                 .as_ref()
                 .map(|(s, _)| serde_json::from_str::<Value>(s))
                 .transpose()
-                .map_err(err)?;
+                .map_err(err)?
+                .filter(|capture| crate::capture::verify_payload(&self.root, capture).is_ok());
             let fresh = !input.force_refresh
+                && previous.is_some()
                 && cached
                     .as_ref()
                     .is_some_and(|(_, expires)| *expires > timestamp());
@@ -708,8 +766,37 @@ impl Engine {
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {
+        let mut verifier = crate::capture::Verifier::new(&self.root);
+        let mut checked = BTreeMap::new();
+        let entities = self.rows(
+            "SELECT payload FROM entities ORDER BY rowid DESC LIMIT 500",
+            None,
+        )?;
+        let entities: Vec<_> = entities
+            .as_array()
+            .ok_or("Invalid entities")?
+            .iter()
+            .filter(|e| {
+                self.verify_evidence_ids(&e["evidence_ids"], &mut verifier, &mut checked)
+                    .is_ok()
+            })
+            .collect();
+        let edges = self.rows("SELECT payload FROM edges ORDER BY id DESC LIMIT 500", None)?;
+        let edges: Vec<_> = edges
+            .as_array()
+            .ok_or("Invalid edges")?
+            .iter()
+            .filter(|e| {
+                entities.iter().any(|entity| {
+                    entity["id"] == e["from"]
+                        && entity["evidence_ids"]
+                            .as_array()
+                            .is_some_and(|ids| ids.contains(&e["to"]))
+                })
+            })
+            .collect();
         Ok(
-            json!({"entities":self.rows("SELECT payload FROM entities ORDER BY rowid DESC LIMIT 500",None)?,"edges":self.rows("SELECT payload FROM edges ORDER BY id DESC LIMIT 500",None)?}),
+            json!({"entities":entities,"edges":edges,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK"}),
         )
     }
     pub fn compare_snapshots(&self, args: Value) -> Result<Value, String> {

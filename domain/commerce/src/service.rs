@@ -305,6 +305,7 @@ impl Engine {
         self.persist(json!({"intent":intent,"plan":plan,"mode":"PLAN_ONLY","status":"UNAVAILABLE","observations":[],"errors":[{"code":"PROVIDERS_UNAVAILABLE","message":"No live acquisition performed"}],"result":null,"cost_minor":0}))
     }
     pub(crate) fn persist(&self, mut payload: Value) -> Result<Value, String> {
+        crate::capture::verify_payload(&self.root, &payload)?;
         let id = if payload["acquisition_run_id"].is_string() && payload["mode"] != "REPLAY" {
             payload["acquisition_run_id"]
                 .as_str()
@@ -389,7 +390,11 @@ impl Engine {
         let rows = st.query_map([], |r| r.get::<_, String>(0)).map_err(error)?;
         let mut out = vec![];
         for row in rows {
-            out.push(serde_json::from_str::<Value>(&row.map_err(error)?).map_err(error)?);
+            let value = serde_json::from_str::<Value>(&row.map_err(error)?).map_err(error)?;
+            out.push(match crate::capture::verify_payload(&self.root, &value) {
+                Ok(()) => value,
+                Err(reason) => json!({"run_id":value["run_id"],"created_at":value["created_at"],"mode":value["mode"],"status":"UNAVAILABLE","reason":reason,"network_calls":0,"historical_projection":true}),
+            });
         }
         Ok(json!(out))
     }
@@ -398,7 +403,10 @@ impl Engine {
         let text: String = db
             .query_row("SELECT payload FROM runs WHERE id=?1", [id], |r| r.get(0))
             .map_err(error)?;
-        serde_json::from_str(&text).map_err(error)
+        let mut payload: Value = serde_json::from_str(&text).map_err(error)?;
+        crate::capture::verify_payload(&self.root, &payload)?;
+        payload["raw_capture_verification"] = json!("VERIFIED_LOCAL_SHA256_NO_NETWORK");
+        Ok(payload)
     }
     pub fn replay(&self, id: &str) -> Result<Value, String> {
         let original = self.run(id)?;
@@ -761,7 +769,7 @@ mod tests {
             let raw = format!("<html>{id}</html>");
             let hash = format!("{:x}", Sha256::digest(raw.as_bytes()));
             fs::write(dir.join(format!("{hash}.html")), raw).unwrap();
-            observations.push(json!({"id":id,"provider":"native-web","mode":"LIVE","raw_hash":hash,"external_source":source,"normalized_value":{"content_hash":hash}}));
+            observations.push(json!({"id":id,"provider":"native-web","source_type":"PUBLIC_HTML","mode":"LIVE","raw_hash":hash,"external_source":source,"normalized_value":{"content_hash":hash}}));
             calls.push(json!({"provider":"native-web","actual_cost_minor":0,"cache_hit":false,"request_count":2,"evidence_ids":[id]}));
         }
         let mut run = json!({"research_run":true,"mode":"LIVE","status":"PARTIAL","cost_minor":0,"known_network_calls":4,"observations":observations,"provider_calls":calls,"candidates":[{"id":"candidate","state":"SHORTLISTED","decision":{"purpose":"FURTHER_RESEARCH"},"evidence_ids":["one","two"]}]});

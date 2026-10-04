@@ -641,6 +641,83 @@ mod research_tests {
         assert_eq!(run["funnel"]["insufficient_evidence"], 1);
     }
     #[test]
+    fn corrupted_commerce_captures_cannot_be_replayed_compared_or_cached() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-integrity-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let input: Value = serde_json::from_str(include_str!(
+            "../../../domain/commerce/tests/fixtures/research-household.json"
+        ))
+        .unwrap();
+        let first = engine.research(input.clone()).unwrap();
+        let id = first["run_id"].as_str().unwrap();
+        let candidate = first["candidates"][0]["id"].as_str().unwrap();
+        assert!(engine.run(id).is_ok());
+        assert!(engine.inspect_candidate(candidate).is_ok());
+        let replay = engine.replay(id).unwrap();
+        let path = root.join(".ynventa/materialized/raw").join(format!(
+            "{}.html",
+            first["observations"][0]["raw_hash"].as_str().unwrap()
+        ));
+        std::fs::write(&path, b"tampered capture").unwrap();
+        drop(engine);
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        for stored in [id, replay["run_id"].as_str().unwrap()] {
+            assert_eq!(
+                engine.run(stored).unwrap_err(),
+                "RAW_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH"
+            );
+            assert!(engine.replay(stored).is_err());
+        }
+        assert!(engine.inspect_candidate(candidate).is_err());
+        assert!(engine.evidence(id).is_err());
+        assert!(
+            engine
+                .compare_snapshots(json!({"before_run_id":id,"after_run_id":replay["run_id"]}))
+                .is_err()
+        );
+        assert!(engine.candidates().unwrap().as_array().unwrap().is_empty());
+        let graph = engine.evidence_graph().unwrap();
+        assert!(graph["entities"].as_array().unwrap().is_empty());
+        assert!(graph["edges"].as_array().unwrap().is_empty());
+        let unavailable = engine.runs().unwrap();
+        assert!(
+            unavailable
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|r| r["status"] == "UNAVAILABLE"
+                    && r["candidates"].is_null()
+                    && r["observations"].is_null())
+        );
+        let mut resume = input.clone();
+        resume["crawl_run_id"] = first["crawl_run_id"].clone();
+        let resumed = engine.research(resume).unwrap();
+        assert!(resumed["observations"].as_array().unwrap().is_empty());
+        assert_eq!(resumed["errors"][0]["origin"], "FRONTIER_CHECKPOINT");
+        assert_eq!(resumed["network_calls"], 0);
+        let repaired = engine.research(input.clone()).unwrap();
+        assert_eq!(repaired["provider_calls"][0]["cache_hit"], false);
+        assert_eq!(repaired["mode"], "FIXTURE");
+        assert_eq!(repaired["network_calls"], 0);
+        assert!(engine.run(id).is_ok()); // Restoring the exact bytes repairs historical verification.
+        std::fs::remove_file(path).unwrap();
+        assert!(engine.run(id).is_err());
+        let reacquired = engine.research(input).unwrap();
+        assert_eq!(reacquired["provider_calls"][0]["cache_hit"], false);
+        assert_eq!(reacquired["network_calls"], 0);
+        std::fs::remove_dir_all(root).ok();
+    }
+    #[test]
     fn supplier_offer_terms_persist_without_becoming_product_cost() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-supplier-terms-{}",
