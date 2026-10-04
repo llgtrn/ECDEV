@@ -1,1 +1,83 @@
-[]
+[
+  {
+    "capability": "marketplace.catalog",
+    "status": "VERIFIED",
+    "donor_id": "amzn--selling-partner-api-models",
+    "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+    "source_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+    "blob_hash": "d9376f6300aa80a647c8965d3a66e8e1f9302d12",
+    "sha256": "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2",
+    "source_pointer": "/paths/~1catalog~12022-04-01~1items~1{asin}/get/responses/200/examples/application~1json",
+    "symbol": "getCatalogItem",
+    "behavior_contract": "Catalog Items 2022-04-01 required ASIN plus marketplaceIds; native context selects requested marketplace summary and keeps missing prices, inventory and sales unknown. Supplied data does not establish source authenticity.",
+    "native_node": "commerce.marketplace",
+    "native_implementation": "adapter/marketplace/src/lib.rs",
+    "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+    "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+    "license": "Apache-2.0",
+    "evidence": [
+      {
+        "source_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+        "path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+        "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+        "blob_hash": "d9376f6300aa80a647c8965d3a66e8e1f9302d12",
+        "sha256": "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2"
+      }
+    ],
+    "whole_donor_parity": false
+  },
+  {
+    "capability": "marketplace.offers",
+    "status": "VERIFIED",
+    "donor_id": "amzn--selling-partner-api-models",
+    "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+    "source_path": "models/product-pricing-api-model/productPricingV0.json",
+    "blob_hash": "d3ba384b8a100d998188be4a114a7280c0241fa7",
+    "sha256": "86d65f691a5611f951a4e61df206e518ec663064ecfa8733105f2ca259d4ded6",
+    "source_pointer": "/paths/~1products~1pricing~1v0~1items~1{Asin}~1offers/get/responses/200/x-amzn-api-sandbox/static/0/response",
+    "symbol": "getItemOffers",
+    "behavior_contract": "Product Pricing v0 success envelope and required Identifier/marketplaceId, ASIN context, ItemCondition and OfferDetail fields. Preserve raw money, empty vs missing offers and error headers; no sales/demand inference.",
+    "native_node": "commerce.marketplace",
+    "native_implementation": "adapter/marketplace/src/lib.rs",
+    "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+    "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+    "license": "Apache-2.0",
+    "evidence": [
+      {
+        "source_path": "models/product-pricing-api-model/productPricingV0.json",
+        "path": "models/product-pricing-api-model/productPricingV0.json",
+        "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+        "blob_hash": "d3ba384b8a100d998188be4a114a7280c0241fa7",
+        "sha256": "86d65f691a5611f951a4e61df206e518ec663064ecfa8733105f2ca259d4ded6"
+      }
+    ],
+    "whole_donor_parity": false
+  },
+  {
+    "capability": "marketplace.fees",
+    "status": "VERIFIED",
+    "donor_id": "amzn--selling-partner-api-models",
+    "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+    "source_path": "models/product-fees-api-model/productFeesV0.json",
+    "blob_hash": "d0b56c2c1c242847651454f4b15e3d11edbb30ff",
+    "sha256": "d06ad35f909d8c0985845f21420c1f75599531465b27f46d4946f7d7f522fc35",
+    "source_pointer": "/paths/~1products~1fees~1v0~1items~1{Asin}~1feesEstimate/post/responses/200/x-amzn-api-sandbox/static/0/response",
+    "symbol": "getMyFeesEstimateForASIN",
+    "behavior_contract": "Product Fees v0 ASIN estimate with explicit proposed price/fulfillment, identifier and complete monetary/points assumption correlation. Keep original estimate time and ESTIMATED state; no actual fees or expected profit inferred.",
+    "native_node": "commerce.marketplace",
+    "native_implementation": "adapter/marketplace/src/lib.rs",
+    "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+    "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+    "license": "Apache-2.0",
+    "evidence": [
+      {
+        "source_path": "models/product-fees-api-model/productFeesV0.json",
+        "path": "models/product-fees-api-model/productFeesV0.json",
+        "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+        "blob_hash": "d0b56c2c1c242847651454f4b15e3d11edbb30ff",
+        "sha256": "d06ad35f909d8c0985845f21420c1f75599531465b27f46d4946f7d7f522fc35"
+      }
+    ],
+    "whole_donor_parity": false
+  }
+]

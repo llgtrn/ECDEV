@@ -373,6 +373,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
 }
 fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
+        .with_provider(std::sync::Arc::new(ecdev_marketplace::Amazon))
         .with_provider(std::sync::Arc::new(ecdev_keepa::client::Keepa::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
         .with_provider(std::sync::Arc::new(ecdev_web::social::Social::default()))
@@ -715,6 +716,60 @@ mod research_tests {
         let reacquired = engine.research(input).unwrap();
         assert_eq!(reacquired["provider_calls"][0]["cache_hit"], false);
         assert_eq!(reacquired["network_calls"], 0);
+        std::fs::remove_dir_all(root).ok();
+    }
+    #[test]
+    fn official_product_fixture_isolated_from_public_keepa_and_historical_corruption() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-official-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_marketplace::Amazon))
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let fixtures: Value = serde_json::from_str(include_str!(
+            "../../../adapter/marketplace/tests/fixtures/official-responses.json"
+        ))
+        .unwrap();
+        let case = &fixtures["cases"][1];
+        let run = engine.call("ecdev.product.analyze",json!({"market":"AMAZON_US","asin":case["asin"],"evidence_layer":"OFFICIAL_SP_API","include":["OFFERS"],"fixture_responses":{"offers":case["response"]}})).unwrap();
+        assert_eq!(run["mode"], "FIXTURE");
+        assert_eq!(run["network_calls"], 0);
+        assert_eq!(run["result"]["official_live_validation"], "UNAVAILABLE");
+        assert!(run["result"]["profit_expected"].is_null());
+        assert_eq!(
+            run["result"]["records"][0]["normalized"]["offers"][0]["ListingPrice"]["CurrencyCode"],
+            "USD"
+        );
+        assert!(run["result"]["records"][0]["raw_body"].is_null());
+        let id = run["run_id"].as_str().unwrap();
+        assert_eq!(engine.evidence(id).unwrap().as_array().unwrap().len(), 1);
+        assert_eq!(engine.replay(id).unwrap()["network_calls"], 0);
+        let denied = engine.product(json!({"market":"AMAZON_JP","asin":"B00V5DG6IQ","evidence_layer":"OFFICIAL_SP_API"})).unwrap();
+        assert_eq!(denied["mode"], "PLAN_ONLY");
+        assert_eq!(denied["network_calls"], 0);
+        assert_eq!(denied["fallback_providers"], json!([]));
+        assert!(denied["observations"].as_array().unwrap().is_empty());
+        assert_eq!(
+            engine
+                .product(json!({"market":"AMAZON_US","asin":"B00V5DG6IQ"}))
+                .unwrap()["mode"],
+            "PLAN_ONLY"
+        );
+        let path = root.join(".ynventa/materialized/raw").join(format!(
+            "{}.json",
+            run["observations"][0]["raw_hash"].as_str().unwrap()
+        ));
+        std::fs::write(path, b"changed official fixture").unwrap();
+        drop(engine);
+        let engine = Engine::open(&root).unwrap();
+        assert!(engine.run(id).is_err());
+        assert!(engine.replay(id).is_err());
+        assert!(engine.evidence(id).is_err());
         std::fs::remove_dir_all(root).ok();
     }
     #[test]

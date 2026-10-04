@@ -1,0 +1,134 @@
+{
+  "donor_id": "amzn--selling-partner-api-models",
+  "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+  "license": "Apache-2.0",
+  "license_files": [
+    {
+      "path": "LICENSE",
+      "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "retained_at": "adapter/marketplace/data/amazon/LICENSE"
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "d4290ed64c2edd0fce1d84e3f9dfb2881240fe534def76b8cd29ed6af683e287",
+      "retained_at": "adapter/marketplace/data/amazon/NOTICE"
+    }
+  ],
+  "reviewed_contracts": [
+    {
+      "capability": "marketplace.catalog",
+      "status": "VERIFIED",
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+      "blob_hash": "d9376f6300aa80a647c8965d3a66e8e1f9302d12",
+      "sha256": "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2",
+      "source_pointer": "/paths/~1catalog~12022-04-01~1items~1{asin}/get/responses/200/examples/application~1json",
+      "symbol": "getCatalogItem",
+      "behavior_contract": "Catalog Items 2022-04-01 required ASIN plus marketplaceIds; native context selects requested marketplace summary and keeps missing prices, inventory and sales unknown. Supplied data does not establish source authenticity.",
+      "native_node": "commerce.marketplace",
+      "native_implementation": "adapter/marketplace/src/lib.rs",
+      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "source_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+          "path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+          "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+          "blob_hash": "d9376f6300aa80a647c8965d3a66e8e1f9302d12",
+          "sha256": "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2"
+        }
+      ],
+      "whole_donor_parity": false
+    },
+    {
+      "capability": "marketplace.offers",
+      "status": "VERIFIED",
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "models/product-pricing-api-model/productPricingV0.json",
+      "blob_hash": "d3ba384b8a100d998188be4a114a7280c0241fa7",
+      "sha256": "86d65f691a5611f951a4e61df206e518ec663064ecfa8733105f2ca259d4ded6",
+      "source_pointer": "/paths/~1products~1pricing~1v0~1items~1{Asin}~1offers/get/responses/200/x-amzn-api-sandbox/static/0/response",
+      "symbol": "getItemOffers",
+      "behavior_contract": "Product Pricing v0 success envelope and required Identifier/marketplaceId, ASIN context, ItemCondition and OfferDetail fields. Preserve raw money, empty vs missing offers and error headers; no sales/demand inference.",
+      "native_node": "commerce.marketplace",
+      "native_implementation": "adapter/marketplace/src/lib.rs",
+      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "source_path": "models/product-pricing-api-model/productPricingV0.json",
+          "path": "models/product-pricing-api-model/productPricingV0.json",
+          "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+          "blob_hash": "d3ba384b8a100d998188be4a114a7280c0241fa7",
+          "sha256": "86d65f691a5611f951a4e61df206e518ec663064ecfa8733105f2ca259d4ded6"
+        }
+      ],
+      "whole_donor_parity": false
+    },
+    {
+      "capability": "marketplace.fees",
+      "status": "VERIFIED",
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "models/product-fees-api-model/productFeesV0.json",
+      "blob_hash": "d0b56c2c1c242847651454f4b15e3d11edbb30ff",
+      "sha256": "d06ad35f909d8c0985845f21420c1f75599531465b27f46d4946f7d7f522fc35",
+      "source_pointer": "/paths/~1products~1fees~1v0~1items~1{Asin}~1feesEstimate/post/responses/200/x-amzn-api-sandbox/static/0/response",
+      "symbol": "getMyFeesEstimateForASIN",
+      "behavior_contract": "Product Fees v0 ASIN estimate with explicit proposed price/fulfillment, identifier and complete monetary/points assumption correlation. Keep original estimate time and ESTIMATED state; no actual fees or expected profit inferred.",
+      "native_node": "commerce.marketplace",
+      "native_implementation": "adapter/marketplace/src/lib.rs",
+      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
+      "license": "Apache-2.0",
+      "evidence": [
+        {
+          "source_path": "models/product-fees-api-model/productFeesV0.json",
+          "path": "models/product-fees-api-model/productFeesV0.json",
+          "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+          "blob_hash": "d0b56c2c1c242847651454f4b15e3d11edbb30ff",
+          "sha256": "d06ad35f909d8c0985845f21420c1f75599531465b27f46d4946f7d7f522fc35"
+        }
+      ],
+      "whole_donor_parity": false
+    }
+  ],
+  "source_authentication": "SUPPLIED_FIXTURE_NOT_AUTHENTICATED",
+  "official_doc_sources": [
+    {
+      "url": "https://developer-docs.amazon/sp-api/docs/connecting-to-the-selling-partner-api",
+      "contract": "Seller-authorized refresh_token grant; no scope; bearer token <=2048 bytes and one hour expiry; restricted PII uses RDT. Native pure form/expiry tested; no actual token requests."
+    },
+    {
+      "url": "https://developer-docs.amazon/sp-api/docs/sp-api-endpoints",
+      "contract": "US NA endpoint, JP FE endpoint; other regions rejected explicitly."
+    },
+    {
+      "url": "https://developer-docs.amazon/sp-api/changelog/sp-api-will-no-longer-require-aws-iam-or-aws-signature-version-4",
+      "contract": "No AWS IAM/SigV4 required from 2023-10-02; current LWA auth remains."
+    }
+  ],
+  "doc_review_date": "2026-10-05",
+  "models_are_locked_current_docs_are_separate_authority": true,
+  "native_owner": "commerce.marketplace",
+  "production_caller": "ecdev.product.analyze evidence_layer OFFICIAL_SP_API -> domain/commerce/src/marketplace/runtime.rs -> provider",
+  "fallback_providers": [],
+  "live_io": "UNAVAILABLE_NOT_IMPLEMENTED_NO_AUTHENTICATED_REQUESTS_MADE",
+  "credentials_state": "Presence only reported; secrets not captured or logged",
+  "rate_limit_scope": "Default plans and raw request/rate/retry headers preserved in fixture records; actual account quota, live pacing/cooldown/retry transport remain unproven",
+  "schema_proof": "research/commerce/sp-api-schema-proof.json",
+  "whole_semantic_census_complete": false,
+  "whole_donor_absorption": false,
+  "extinct": false,
+  "remaining": [
+    "Authenticated HTTP transport and mock HTTP protocol tests",
+    "Live permission plus account credentials for real calls",
+    "Account rate pacing and retry scheduling",
+    "All other model APIs, generated SDK/package contracts, 3 parse-unknown files and full semantic coverage",
+    "Official evidence integration into commercial validation with independent supplier/logistics/PPC/risk inputs"
+  ]
+}

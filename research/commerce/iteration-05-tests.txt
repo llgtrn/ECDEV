@@ -1,0 +1,194 @@
+warn: could not canonicalize path C:\Users\trngh
+   Compiling ring v0.17.14
+   Compiling ecdev-marketplace v0.1.0 (C:\Users\trngh\Documents\ECDEV\adapter\marketplace)
+   Compiling rustls-webpki v0.103.15
+   Compiling rustls v0.23.45
+   Compiling tokio-rustls v0.26.6
+   Compiling hyper-rustls v0.27.10
+   Compiling reqwest v0.12.28
+   Compiling ecdev-web v0.1.0 (C:\Users\trngh\Documents\ECDEV\adapter\web)
+   Compiling ecdev-keepa v0.1.0 (C:\Users\trngh\Documents\ECDEV\adapter\keepa)
+   Compiling ecdev-server v0.1.0 (C:\Users\trngh\Documents\ECDEV\apps\server)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 33.27s
+     Running unittests src\lib.rs (target\debug\deps\ecdev_core-3002a1bb8f87555a.exe)
+
+running 28 tests
+test economics::tests::loss_never_has_a_break_even ... ok
+test economics::tests::rounding_is_explicit ... ok
+test economics::tests::extreme_inputs_return_errors_without_panicking ... ok
+test economics::tests::known_unit_economics ... ok
+test economics::tests::validates_rates_and_overflow ... ok
+test intelligence::tests::cache_ratios_keep_empty_unknown_and_fixture_ledgers_distinct ... ok
+test marketplace::tests::amazon_mapping_selects_market_and_keeps_unknowns ... ok
+test intelligence::completeness_tests::fixture_and_empty_runs_cannot_claim_live_completeness ... ok
+test decision::tests::selection_keeps_unknown_profit_and_distinguishes_exhaustion_from_rejection ... ok
+test planner::information_tests::shared_allocator_rejects_unknown_estimates_rejections_duplicates_and_overflow ... ok
+test provider::budget_tests::fallback_does_not_require_paid_providers ... ok
+test planner::information_tests::allocates_public_budget_to_unresolved_candidate_not_rejected_candidate ... ok
+test planner::information_tests::shared_allocator_gates_paid_quotes_and_accounts_cumulative_resources ... ok
+test provider::budget_tests::zero_budget_and_unknown_cost_deny_paid_calls ... ok
+test intelligence::tests::per_listing_quality_preserves_claims_and_missing_variations ... ok
+test intelligence::tests::captured_presence_and_prices_never_become_sales_or_profit_forecasts ... ok
+test provider::budget_tests::retry_after_formats_preserve_not_before_and_reject_invalid_dates ... ok
+test service::tests::rejects_paths_and_bad_intents ... ok
+test social::tests::actual_timestamps_and_decay ... ok
+test resolution::tests::identity_does_not_merge_title_only_cross_origin_or_variants ... ok
+test uncertainty::tests::unknown_costs_do_not_become_precise_profit ... ok
+test capture::tests::captures_require_matching_bytes_in_the_declared_source_boundary ... ok
+test social::tests::independent_social_donor_oracles ... ok
+test service::tests::durable_runs_replay_without_network ... ok
+test research::budget_storage_tests::budget_reservations_are_durable_and_zero_denies_io ... ok
+test service::tests::live_status_requires_network_witnesses_and_capture_hashes ... ok
+test monitor::tests::watch_restart_fencing_and_changes_persist ... ok
+test research::budget_storage_tests::response_retry_after_reaches_durable_frontier_and_known_request_accounting ... ok
+
+test result: ok. 28 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.57s
+
+     Running tests\frontier.rs (target\debug\deps\frontier-6f9e102cd7d8eecc.exe)
+
+running 11 tests
+test crash_child ... ok
+test identity_preserves_product_parameters_and_normalizes_safe_variants ... ok
+test origin_status_counts_partition_the_durable_frontier ... ok
+test retries_obey_backoff_retry_after_and_exhaustion ... ok
+test reclaim_is_fenced_and_cannot_evade_retry_exhaustion ... ok
+test persistence_priority_handled_and_deduplication ... ok
+test independent_workers_fenced_origin_global_limits_cancellation_and_deadline ... ok
+test depth_url_and_attempt_budgets_and_throttle_are_durable ... ok
+test deliberate_process_interruption_recovers_expired_lease ... ok
+test retry_after_origin_cooldown_survives_reopen_and_keeps_other_origins_available ... ok
+test locked_crawlee_queue_oracle ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 9.32s
+
+     Running tests\social.rs (target\debug\deps\social-504591fa62bde5fa.exe)
+
+running 14 tests
+test entity_identity_is_conservative ... ok
+test nine_watch_trigger_contracts_preserve_baseline_and_counter_scope ... ok
+test allocator_redundancy_and_zero_paid_gate ... ok
+test sentiment_is_secondary_and_language_scoped ... ok
+test unknown_counter_is_not_zero ... ok
+test duplicate_resolution_preserves_repost_conflicts ... ok
+test clustering_keeps_evidence_and_unknown_timestamps ... ok
+test engagement_growth_compares_same_post_platform_counter ... ok
+test watch_policy_rejects_noise_failures_and_incomplete_disappearance ... ok
+test simulated_and_untrusted_states_cannot_be_observations ... ok
+test temporal_windows_velocity_acceleration_transparency ... ok
+test watch_and_simulation_boundary_persist_after_restart ... ok
+test cached_captures_require_original_bytes_and_never_establish_live_acquisition ... ok
+test expired_trend_watch_leases_recover_and_stale_workers_cannot_publish ... ok
+
+test result: ok. 14 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.37s
+
+     Running unittests src\lib.rs (target\debug\deps\ecdev_keepa-e0cb93a49e4fed2f.exe)
+
+running 3 tests
+test client::tests::missing_key_performs_no_network ... ok
+test client::tests::currency_does_not_follow_donor_usd_formatter ... ok
+test tests::donor_oracle_integer_json_contract ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s
+
+     Running unittests src\lib.rs (target\debug\deps\ecdev_marketplace-e30c5e5e4d963528.exe)
+
+running 4 tests
+test tests::lwa_refresh_and_expiry_contract_never_uses_grantless_or_expired_tokens ... ok
+test tests::official_fixture_errors_keep_rate_headers_and_never_establish_live_io ... ok
+test tests::official_region_identity_and_fee_assumptions_cannot_be_substituted ... ok
+test tests::locked_official_model_examples_preserve_unknowns_and_estimated_fees ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\ecdev_server-8ee170071c5e9b19.exe)
+
+running 10 tests
+test research_tests::official_product_fixture_isolated_from_public_keepa_and_historical_corruption ... ok
+test research_tests::public_amazon_blocked_route_preserves_provider_identity_and_public_fallback ... ok
+test research_tests::supplier_offer_terms_persist_without_becoming_product_cost ... ok
+test research_tests::open_graph_products_reach_candidates_with_inspectable_unknowns ... ok
+test research_tests::microdata_products_and_cross_format_conflicts_retain_evidence ... ok
+test research_tests::multi_origin_identifier_evidence_reaches_research_shortlist ... ok
+test research_tests::supplier_research_plans_public_follow_up_without_invented_terms ... ok
+test research_tests::corrupted_commerce_captures_cannot_be_replayed_compared_or_cached ... ok
+test research_tests::social_snapshot_mcp_projection_and_scenario_isolation ... ok
+test research_tests::zero_paid_research_e2e ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.74s
+
+     Running unittests src\main.rs (target\debug\deps\ecdev-0f6c9e08860e10b8.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\server_main.rs (target\debug\deps\ecdev_server-b30704b073c05a27.exe)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src\lib.rs (target\debug\deps\ecdev_web-5898134dfb39e973.exe)
+
+running 29 tests
+test document::tests::precedence_and_failure_are_explicit ... ok
+test page_product::tests::breadcrumb_and_shipping_fields_resolve_to_source_assertions ... ok
+test amazon::tests::public_documents_have_their_own_provider_and_never_impersonate_official_data ... ok
+test document::tests::declared_japanese_preserves_wire_provenance ... ok
+test page_product::tests::ambiguous_page_association_and_article_do_not_create_prices ... ok
+test commerce::tests::offer_identifiers_require_complete_agreement_and_retain_locators ... ok
+test page_product::tests::named_metadata_preserves_repeated_claims_conflicts_and_exact_locators ... ok
+test commerce::tests::page_roles_and_field_conflicts_are_inspectable ... ok
+test price::tests::precision_and_ambiguous_currency_do_not_invent_money ... ok
+test page_product::tests::document_title_fallback_requires_single_product_and_remains_derived ... ok
+test robots::tests::invalid_and_ambiguous_policy_remains_denied ... ok
+test social::tests::dates_and_hostile_payloads ... ok
+test page_product::tests::standalone_meta_and_cross_format_conflicts_are_explicit ... ok
+test social::tests::public_social_unknown_and_zero_provenance ... ok
+test document::tests::locked_w3lib_declared_document_oracle ... ok
+test supplier::tests::public_claims_never_become_wholesale_prices_or_factory_facts ... ok
+test supplier_terms::tests::explicit_supplier_offers_preserve_terms_and_source_pointers ... ok
+test supplier_terms::tests::microdata_supplier_offers_retain_original_graph_locators ... ok
+test tests::conflicting_offers_never_become_precise_price ... ok
+test supplier_terms::tests::offers_and_organizations_do_not_mix_prices_or_unverified_origins ... ok
+test tests::conservative_policy_and_url_validation ... ok
+test tests::formatted_price_hints_preserve_unknown_observed_money_and_raw_source ... ok
+test tests::extraction_keeps_unknowns_and_minor_units ... ok
+test social::tests::graphiti_timezone_oracle ... ok
+test price::tests::locked_price_parser_numeric_oracle ... ok
+test tests::json_numeric_prices_preserve_source_precision ... ok
+test robots::tests::locked_reppy_oracle ... ok
+test price::tests::locked_price_public_api_oracle ... ok
+test microdata::tests::locked_extruct_microdata_oracle ... ok
+
+test result: ok. 29 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.38s
+
+   Doc-tests ecdev_core
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ecdev_keepa
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ecdev_marketplace
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ecdev_server
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests ecdev_web
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

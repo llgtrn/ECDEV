@@ -223,7 +223,18 @@ impl Engine {
         }
         json!(profiles)
     }
-    pub fn product(&self, args: Value) -> Result<Value, String> {
+    pub fn product(&self, mut args: Value) -> Result<Value, String> {
+        if args["evidence_layer"] == "OFFICIAL_SP_API" {
+            return self.official_product(args);
+        }
+        if let Some(layer) = args.get("evidence_layer") {
+            if layer != "KEEPA" {
+                return Err("UNKNOWN_PRODUCT_EVIDENCE_LAYER".into());
+            }
+            args.as_object_mut()
+                .ok_or("PRODUCT_INTENT_OBJECT_REQUIRED")?
+                .remove("evidence_layer");
+        }
         #[derive(serde::Deserialize)]
         #[serde(deny_unknown_fields)]
         struct Input {
@@ -329,7 +340,9 @@ impl Engine {
         )
         .map_err(error)?;
         if payload["mode"] == "LIVE"
-            || ((payload["research_run"] == true || payload["social_run"] == true)
+            || ((payload["research_run"] == true
+                || payload["social_run"] == true
+                || payload["official_run"] == true)
                 && payload["mode"] != "REPLAY")
         {
             for observation in payload["observations"]
@@ -592,7 +605,7 @@ pub fn tool_definitions() -> Vec<Value> {
     }
     out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.monitor.compare","description":"Compare captured product fields between two persisted research snapshots","inputSchema":{"type":"object","properties":{"before_run_id":{"type":"string"},"after_run_id":{"type":"string"}},"required":["before_run_id","after_run_id"],"additionalProperties":false}}));
-    out.push(json!({"name":"ecdev.product.analyze","description":"Inspect one ASIN using a native Keepa client. Requires KEEPA_API_KEY; makes one paid API request, never retries. Missing credentials yield UNAVAILABLE.","inputSchema":{"type":"object","properties":{"market":{"enum":["AMAZON_JP","AMAZON_US"]},"asin":{"type":"string","pattern":"^[A-Z0-9]{10}$"}},"required":["market","asin"],"additionalProperties":false}}));
+    out.push(json!({"name":"ecdev.product.analyze","description":"Inspect one ASIN through an explicit evidence layer. KEEPA is the default paid path; OFFICIAL_SP_API currently supports supplied protocol fixtures with separate catalog, offers and estimated fees, fixed JP/US regions and no authenticated live transport. Fixture data never establishes official live validation.","inputSchema":{"type":"object","properties":{"market":{"enum":["AMAZON_JP","AMAZON_US"]},"asin":{"type":"string","pattern":"^[A-Z0-9]{10}$"},"evidence_layer":{"enum":["KEEPA","OFFICIAL_SP_API"]},"include":{"type":"array","items":{"enum":["CATALOG","OFFERS","FEE_ESTIMATE"]},"uniqueItems":true,"minItems":1,"maxItems":3},"fee_estimate":{"type":"object","properties":{"listing_price":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false},"shipping":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false},"is_amazon_fulfilled":{"type":"boolean"},"identifier":{"type":"string","minLength":1,"maxLength":128},"points":{"type":"object","properties":{"count":{"type":"integer","minimum":0},"value":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false}},"required":["count","value"],"additionalProperties":false}},"required":["listing_price","is_amazon_fulfilled"],"additionalProperties":false},"fixture_responses":{"type":"object","properties":{"catalog":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false},"offers":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false},"fees":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false}},"additionalProperties":false}},"required":["market","asin"],"additionalProperties":false}}));
     for (name, desc) in [
         ("ecdev.system.status", "Engine and census status"),
         ("ecdev.system.capabilities", "Implemented tool catalog"),
