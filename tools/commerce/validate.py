@@ -1,21 +1,79 @@
 """Verify record schemas, immutable source evidence, and honest completion gates."""
-import json,pathlib,sys,re
+import json,pathlib,sys,re,collections,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT/'.venv/research'))
 import jsonschema
 import census
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
+
+def validate_inventory(summary, files):
+ counts=collections.Counter(f['classification'] for f in files)
+ assert len(files)==summary['total_files'], 'CENSUS_TOTAL_MISMATCH'
+ assert len({f['path'] for f in files})==len(files), 'CENSUS_DUPLICATE_PATH'
+ assert dict(counts)==summary['classification_counts'], 'CENSUS_CLASSIFICATION_COUNTS_MISMATCH'
+ assert len(files)-counts['UNKNOWN']==summary['classified_files'], 'CENSUS_CLASSIFIED_MISMATCH'
+ assert counts['UNKNOWN']==summary['unknown_files'], 'CENSUS_UNKNOWN_MISMATCH'
+ source=[f for f in files if f['classification']=='FIRST_PARTY_SOURCE']
+ assert len(source)==summary['first_party_source_files'], 'CENSUS_SOURCE_MISMATCH'
+ assert sum(f.get('parse_status')=='PARSED' for f in source)==summary['source_parsed'], 'CENSUS_PARSED_MISMATCH'
+ assert sum(f.get('parse_status')!='PARSED' for f in source)==summary['parse_unknown'], 'CENSUS_PARSE_UNKNOWN_MISMATCH'
+ assert counts['TEST']==summary['tests'], 'CENSUS_TEST_MISMATCH'
+ assert counts['FIXTURE']==summary['fixtures'], 'CENSUS_FIXTURE_MISMATCH'
+
+def inventory_negative_cases():
+ path=ROOT/'research/commerce/donors/census/scrapinghub--price-parser'
+ summary=read(path/'summary.json');files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
+ validate_inventory(summary,files)
+ mutations=[dict(summary,classification_counts={**summary['classification_counts'],'UNKNOWN':1}),dict(summary,source_parsed=0),dict(summary,classified_files=0)]
+ for changed in mutations:
+  try:validate_inventory(changed,files)
+  except AssertionError:continue
+  raise AssertionError('CORRUPT_CENSUS_ACCEPTED')
+ try:validate_inventory(summary,files+[files[0]])
+ except AssertionError:pass
+ else:raise AssertionError('DUPLICATE_CENSUS_ACCEPTED')
+ print('PASS: valid locked price-parser census; stale classification counts, source parser count, classified count and duplicate path rejected')
+
+def validate_lifecycle(d, summary, actual):
+ assert actual is not None, 'DONOR_NOT_CANONICALLY_ASSESSED'
+ if d['extinction_status']=='EXTINCT' or actual['extinct']:
+  assert actual['extinct'] and actual['effective']=='EXTINCT', 'UNPROVEN_EXTINCTION_CLAIM'
+  assert summary['status']=='CENSUS_COMPLETE' and summary['semantic_review']=='COMPLETE', 'EXTINCTION_WITH_INCOMPLETE_SEMANTIC_CENSUS'
+  assert d['runtime_dependency'] is False, 'EXTINCT_DONOR_RUNTIME_DEPENDENCY'
+ if d['absorption_status']=='NATIVE_ABSORBED':
+  assert actual['effective'] in ('CUTOVER','EXTINCT') and summary['semantic_review']=='COMPLETE', 'UNPROVEN_WHOLE_ABSORPTION_CLAIM'
+ if d['oracle_status']=='ORACLE_VERIFIED':
+  required=[c for c in actual['capabilities'] if c['required']]
+  assert required and all(c['parity_pass'] for c in required) and summary['semantic_review']=='COMPLETE', 'UNPROVEN_WHOLE_ORACLE_CLAIM'
+
+def lifecycle_negative_cases():
+ d=next(d for d in read(ROOT/'research/commerce/donors/registry.json')['donors'] if d['donor_id']=='scrapinghub--price-parser')
+ summary=read(ROOT/'research/commerce/donors/census/scrapinghub--price-parser/summary.json')
+ actual=next(d for d in json.loads(subprocess.check_output([str(ROOT/'target/lifecycle-review.exe'),str(ROOT)])) if d['donor_id']=='scrapinghub--price-parser')
+ validate_lifecycle(d,summary,actual)
+ mutations=[(dict(d,extinction_status='EXTINCT'),actual),(d,dict(actual,effective='EXTINCT',extinct=True)),(dict(d,absorption_status='NATIVE_ABSORBED'),actual),(dict(d,oracle_status='ORACLE_VERIFIED'),actual)]
+ for changed,evidence in mutations:
+  try:validate_lifecycle(changed,summary,evidence)
+  except AssertionError:continue
+  raise AssertionError('UNPROVEN_WHOLE_DONOR_CLAIM_ACCEPTED')
+ print('PASS: current bounded donor accepted; unproven extinction, incomplete semantic extinction, whole absorption and whole oracle claims rejected')
 def main():
+ if '--inventory-negative-cases' in sys.argv:
+  inventory_negative_cases();return
+ if '--lifecycle-negative-cases' in sys.argv:
+  lifecycle_negative_cases();return
  reg=read(ROOT/'research/commerce/donors/registry.json');schema=ROOT/'tools/commerce/schemas'
+ authority=ROOT/'target/lifecycle-review.exe'
+ assert authority.is_file(), 'Build canonical lifecycle-review before measuring donor lifecycle'
+ assessed={d['donor_id']:d for d in json.loads(subprocess.check_output([str(authority),str(ROOT)]))}
  total=classified=source=parsed=unknown=tests=capabilities=0
  for d in reg['donors']:
   jsonschema.validate(d,read(schema/'donor.schema.json'))
   path=ROOT/'research/commerce/donors/census'/d['donor_id'];summary=read(path/'summary.json');jsonschema.validate(summary,read(schema/'census.schema.json'))
   files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
-  assert len(files)==summary['total_files'];assert len({x['path'] for x in files})==len(files)
-  assert sum(x['classification']=='UNKNOWN' for x in files)==summary['unknown_files']
+  validate_inventory(summary,files)
   assert summary['status']=='CENSUS_PARTIAL' or (summary['unknown_files']==0 and summary['parse_unknown']==0 and summary['semantic_review']=='COMPLETE')
-  assert d['extinction_status']!='EXTINCT';assert d['runtime_dependency'] is False
+  validate_lifecycle(d,summary,assessed.get(d['donor_id']))
   checkout=ROOT/'research/commerce/donors/checkouts'/d['donor_id']
   if '--records-only' not in sys.argv:
    assert census.git('rev-parse','HEAD',cwd=checkout)==d['commit_sha']
@@ -26,6 +84,10 @@ def main():
      assert e['commit_sha']==d['commit_sha'];assert any(f['path']==e['source_path'] and f['blob_hash']==e['blob_hash'] for f in files)
   total+=summary['total_files'];classified+=summary['classified_files'];source+=summary['first_party_source_files'];parsed+=summary['source_parsed'];unknown+=summary['parse_unknown'];tests+=summary['tests']
  report={'status':'PASS','donor_candidates':len(reg['donors']),'remote_verified':sum(d['remote_status']=='VERIFIED_REMOTE' for d in reg['donors']),'full_clones':sum(d['clone_status']=='FULL_CLONE' for d in reg['donors']),'total_files':total,'classified_files':classified,'first_party_source_files':source,'source_parsed':parsed,'parse_unknown':unknown,'tests':tests,'capabilities_verified':capabilities,'census_complete':sum(read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json')['status']=='CENSUS_COMPLETE' for d in reg['donors']),'native_absorbed':0,'oracle_verified':0,'extinct':0,'runtime_donor_dependencies':0}
+ report['native_absorbed']=sum(d['absorption_status']=='NATIVE_ABSORBED' for d in reg['donors'])
+ report['oracle_verified']=sum(d['oracle_status']=='ORACLE_VERIFIED' for d in reg['donors'])
+ report['extinct']=sum(assessed[d['donor_id']]['extinct'] for d in reg['donors'])
+ report['lifecycle_measurement']='CURRENT_CANONICAL_SOURCE_AND_FRESH_PROOFS'
  deps=read(ROOT/'research/commerce/dependencies.json')
  report['runtime_dependency_packages']=deps['runtime_packages']
  report['runtime_dependency_upstreams']=len({p['repository_url'] for p in deps['packages'] if p['scope']=='RUNTIME'})

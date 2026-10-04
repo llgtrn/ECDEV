@@ -5,11 +5,10 @@
   "total_files": 16,
   "classified_files": 16,
   "classification_counts": {
-    "CONFIG": 5,
+    "CONFIG": 6,
     "BUILD": 3,
     "DOC": 3,
     "FIRST_PARTY_SOURCE": 3,
-    "UNKNOWN": 1,
     "TEST": 1
   },
   "first_party_source_files": 3,
@@ -26,5 +25,13 @@
     "Lexical matches are candidates, never verified capabilities.",
     "Non-JSON/TOML manifests and lockfiles require semantic dependency review.",
     "API surfaces and external service behavior require source-backed manual review."
+  ],
+  "classification_evidence": [
+    {
+      "path": "price_parser/py.typed",
+      "classification": "CONFIG",
+      "basis": "Pinned empty PEP 561 package typing marker; existing file inventory CONFIG, aggregate repaired without source or semantic completion change.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
   ]
 }

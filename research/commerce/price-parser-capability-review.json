@@ -1,0 +1,146 @@
+{
+  "donor_id": "scrapinghub--price-parser",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "status": "SOURCE_CONTRACT_REVIEW_NATIVE_FULL_API_PENDING",
+  "license": "BSD-3-Clause",
+  "full_clone_files": 16,
+  "source_files": 3,
+  "parse_unknown": 0,
+  "symbols": 16,
+  "classification_repair": "Existing empty price_parser/py.typed CONFIG inventory now matches summary; no semantic completion inferred",
+  "runtime_dependencies": [
+    "attrs >= 17.3.0"
+  ],
+  "required_contracts": [
+    {
+      "symbol": "Price",
+      "source_path": "price_parser/parser.py",
+      "line_start": 13,
+      "line_end": 72,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Constructor/attrs equality/repr plus field availability; native struct/API unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "or_regex",
+      "source_path": "price_parser/parser.py",
+      "line_start": 78,
+      "line_end": 80,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Escaped alternatives, leftmost match with list-order precedence; standalone helper contract unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "extract_currency_symbol",
+      "source_path": "price_parser/parser.py",
+      "line_start": 256,
+      "line_end": 281,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Dollar-code priority then safe source/hint then unsafe source/hint; native implementation unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "extract_price_text",
+      "source_path": "price_parser/parser.py",
+      "line_start": 284,
+      "line_end": 360,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Whitespace normalization, conditional euro decimal regex, first numeric substring, percent rejection/backtracking and free substring; native implementation unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "get_decimal_separator",
+      "source_path": "price_parser/parser.py",
+      "line_start": 378,
+      "line_end": 398,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Final decimal separator with 1,2,4+ Unicode decimal digits; existing native ASCII bounded subset",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "parse_number",
+      "source_path": "price_parser/parser.py",
+      "line_start": 401,
+      "line_end": 455,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Exact Decimal conversion, explicit/guessed separators and unsupported assertion; existing native bounded numeric subset",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "amount_float",
+      "source_path": "price_parser/parser.py",
+      "line_start": 21,
+      "line_end": 25,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Optional Decimal-to-float projection; native shadow unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "fromstring",
+      "source_path": "price_parser/parser.py",
+      "line_start": 28,
+      "line_end": 72,
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
+      "behavior": "Currency before digit-group removal; price text extraction followed by exact decimal parser; native whole API unresolved",
+      "whole_contract_native": false,
+      "production_cutover": false
+    },
+    {
+      "symbol": "parse_price",
+      "source_path": "price_parser/parser.py",
+      "behavior": "Public alias of Price.fromstring; every frozen public API case checks alias equality in unmodified donor",
+      "whole_contract_native": false,
+      "production_cutover": false
+    }
+  ],
+  "independent_oracle": {
+    "status": "EXECUTED_UNMODIFIED_LOCKED_DONOR",
+    "public_api_cases": 2937,
+    "fixture": "adapter/web/tests/fixtures/price-contract.json",
+    "fixture_sha256": "1f971600e7c9cd3059e2e618c6a83bffcfd002ca20bbae4c4f2726042bff9f93",
+    "source_tests_expected_failures": "Actual donor results retained, not normative XFAIL expected values",
+    "native_comparison": "NOT_IMPLEMENTED",
+    "limitations": [
+      "Source Example digit-group override is not stored on Example; generated explicit group overrides cover the executable API independently.",
+      "Helper parse_number direct nonfinite/exponent/resource cases and packaging/attrs semantics require separate coverage before full donor replacement.",
+      "Currency tables contain data under the locked BSD license; no executable donor code is copied into production."
+    ]
+  },
+  "existing_native": {
+    "scope": "parse_number ASCII bounded exact decimal strings and separator heuristic",
+    "oracle_cases": 1235,
+    "source": "adapter/web/src/price.rs",
+    "production_caller": "adapter/web/src/lib.rs numeric offer lexemes",
+    "whole_donor_parity": false
+  },
+  "extinction_eligibility": {
+    "whole_semantic_matrix_complete": false,
+    "required_full_api_native": false,
+    "full_api_oracle_comparison": false,
+    "callers_cut_over": false,
+    "active_donor_test_oracle_import_removed": false,
+    "rollback_donor_independent": false,
+    "canonical_extinct": false,
+    "blocking_edges": [
+      "tools/commerce/price_oracle.py executes unmodified donor import and original tests",
+      "Required text/currency/full Price/float/attrs contract native implementation missing"
+    ],
+    "allowed_frozen_material": "Data/oracle outputs/BSD notice may remain after actual cutover; active donor imports must be retired and regression must prevent re-entry"
+  },
+  "next_safe_work": "Implement independent native currency and price-text contracts against frozen independent fixture; complete public Price API and dependent caller cutover before attempting canonical extinction."
+}
