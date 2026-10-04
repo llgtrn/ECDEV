@@ -1,6 +1,6 @@
 # ECDEV social trend wave
 
-HEAD: implementation commit and verified origin/main are recorded in `social-publication-proof.json` after publication. Work performed directly on main; no branch was created.
+Implementation HEAD: `000e1510885f564fb2b1cf13b80557e90f505d03`. origin/main equality and clean working tree were verified before the report-only publication metadata commit; see `social-publication-proof.json`. Work performed directly on main; no branch was created.
 
 Commit message: Add native social trend intelligence and pinned donor evidence
 
@@ -88,3 +88,5 @@ Canonical conformance: **30/31**, with existing upstream `system.shard_registere
 - Canonical upstream shard registration remains missing; no full V1 completion claim.
 
 V1: **NOT COMPLETE**. Whole donors absorbed: 0. Extinct: 0. The completed prior live-research wave remains preserved. Commit/push and origin/main equality are verified after this report is committed; see `social-publication-proof.json` and the final response for the published HEAD and clean working-tree result.
+
+Publication: implementation pushed successfully after credential-shaped donor excerpts were redacted; no GitHub protection bypass. Final delivery HEAD is verified in the final response.
