@@ -54,7 +54,7 @@ try {
  const candidates=discovery.structuredContent.candidates;
  const inspect=await client.callTool({name:'ecdev.product.inspect',arguments:{candidate_id:candidates[0].id}});assert.equal(inspect.isError,false);assert.equal(inspect.structuredContent.id,candidates[0].id);
  const comparison=await client.callTool({name:'ecdev.product.compare',arguments:{candidate_ids:candidates.slice(0,2).map(c=>c.id)}});assert.equal(comparison.isError,false);assert.equal(comparison.structuredContent.network_calls,0);
- const providerStatus=await client.callTool({name:'ecdev.provider.status',arguments:{}});assert.equal(providerStatus.isError,false);assert.ok(Array.isArray(providerStatus.structuredContent.items));
+ const providerStatus=await client.callTool({name:'ecdev.provider.status',arguments:{}});assert.equal(providerStatus.isError,false);assert.ok(Array.isArray(providerStatus.structuredContent.items));const officialProfile=providerStatus.structuredContent.items.find(p=>p.id==="amazon-sp-api");assert.equal(officialProfile.live_supported,true);assert.equal(officialProfile.live_authorized,false);
  const watchList=await client.callTool({name:'ecdev.monitor.status',arguments:{}});assert.ok(Array.isArray(watchList.structuredContent.items));
  const watchArgs={enabled:false,market:'PUBLIC_WEB',query:'SDK disabled watch',targets:['https://example.org/product'],interval_seconds:60};
  const watch=await client.callTool({name:'ecdev.monitor.create',arguments:watchArgs});assert.equal(watch.isError,false);assert.equal(watch.structuredContent.status,'DISABLED');

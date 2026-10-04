@@ -373,7 +373,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
 }
 fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
-        .with_provider(std::sync::Arc::new(ecdev_marketplace::Amazon))
+        .with_provider(std::sync::Arc::new(ecdev_marketplace::Amazon::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_keepa::client::Keepa::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
         .with_provider(std::sync::Arc::new(ecdev_web::social::Social::default()))

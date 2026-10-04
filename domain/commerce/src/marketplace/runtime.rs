@@ -10,6 +10,13 @@ use uuid::Uuid;
 
 impl Engine {
     pub(crate) fn official_product(&self, args: Value) -> Result<Value, String> {
+        self.official_product_with_budget(args, &crate::provider::BudgetPolicy::from_env())
+    }
+    fn official_product_with_budget(
+        &self,
+        args: Value,
+        budget: &crate::provider::BudgetPolicy,
+    ) -> Result<Value, String> {
         #[derive(Deserialize)]
         #[serde(deny_unknown_fields)]
         struct Intent {
@@ -33,9 +40,6 @@ impl Engine {
         }
         let fixture = intent.fixture_responses.is_some();
         let id = Uuid::new_v4().to_string();
-        if !fixture {
-            return self.persist(json!({"acquisition_run_id":id,"mode":"PLAN_ONLY","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","reason":"OFFICIAL_LIVE_AUTH_TRANSPORT_UNAVAILABLE_NO_REQUESTS","observations":[],"network_calls":0,"cost_minor":0,"new_live_acquisition":false,"fallback_providers":[]}));
-        }
         let request = AcquireRequest {
             run_id: id.clone(),
             capability: "product.analyze.official".into(),
@@ -45,11 +49,26 @@ impl Engine {
         let Some(provider) = self.providers.iter().find(|p| p.id() == "amazon-sp-api") else {
             return self.persist(json!({"acquisition_run_id":id,"mode":"PLAN_ONLY","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","reason":"OFFICIAL_ADAPTER_UNAVAILABLE","observations":[],"network_calls":0,"cost_minor":0,"fallback_providers":[]}));
         };
+        if !fixture {
+            let profile = provider.metadata();
+            if profile["live_authorized"] != true
+                || profile["live_supported"] != true
+                || profile["status"] != "AVAILABLE"
+            {
+                return self.persist(json!({"acquisition_run_id":id,"mode":"PLAN_ONLY","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","reason":profile["auth_state"],"observations":[],"network_calls":0,"cost_minor":0,"new_live_acquisition":false,"fallback_providers":[]}));
+            }
+            if let Err(reason) =
+                self.reserve_paid(&id, "amazon-sp-api", "product.analyze.official", budget)
+            {
+                return self.persist(json!({"acquisition_run_id":id,"mode":"PLAN_ONLY","source_layer":"OFFICIAL_SP_API","status":"DENIED_BUDGET","reason":reason,"observations":[],"network_calls":0,"cost_minor":0,"new_live_acquisition":false,"fallback_providers":[]}));
+            }
+        }
         match provider.acquire(&request) {
             Ok(mut result) => {
-                if !fixture || result.result["mode"] != "FIXTURE" || result.provider_cost["request_count"] != 0 {
+                if fixture && (result.result["mode"] != "FIXTURE" || result.provider_cost["request_count"] != 0) {
                     return Err("OFFICIAL_LIVE_ACQUISITION_NOT_AUTHORIZED".into());
                 }
+                if !fixture && (result.result["mode"] == "FIXTURE" || (result.result["mode"] == "LIVE" && result.provider_cost["known_request_count"].as_u64().unwrap_or(0)==0)) { return Err("OFFICIAL_LIVE_HTTP_WITNESS_REQUIRED".into()); }
                 let directory = self.root.join(".ynventa/materialized/raw");
                 std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
                 let records = result.result["records"].as_array_mut().ok_or("OFFICIAL_CAPTURE_RECORDS_REQUIRED")?;
@@ -61,9 +80,51 @@ impl Engine {
                     std::fs::write(directory.join(format!("{}.json", observation.raw_hash)), raw.as_bytes()).map_err(|e| e.to_string())?;
                 }
                 for record in records { if let Some(object) = record.as_object_mut() { object.remove("raw_body"); } }
-                self.persist(json!({"acquisition_run_id":id,"official_run":true,"mode":"FIXTURE","run_kind":"OFFICIAL_PRODUCT","source_layer":"OFFICIAL_SP_API","status":result.result["status"],"result":result.result,"observations":result.observations,"provider_cost":result.provider_cost,"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"amazon-sp-api","capability":"product.analyze.official","request_count":0,"actual_cost_minor":0,"cache_hit":false,"status":"FIXTURE","completed_at":timestamp()*1000}],"network_calls":0,"cost_minor":0,"new_live_acquisition":false,"fallback_providers":[],"commercial_validation":"INCOMPLETE_SUPPLIED_FIXTURE_NOT_AUTHENTICATED"}))
+                self.persist(json!({"acquisition_run_id":id,"official_run":true,"mode":result.result["mode"],"run_kind":"OFFICIAL_PRODUCT","source_layer":"OFFICIAL_SP_API","status":result.result["status"],"observations":result.observations,"provider_cost":result.provider_cost,"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"amazon-sp-api","capability":"product.analyze.official","request_count":result.provider_cost["request_count"],"actual_cost_minor":result.provider_cost["actual_cost_minor"],"estimated_cost_minor":if fixture{json!(0)}else{json!(budget.request_ceiling_minor)},"cache_hit":false,"status":result.result["status"],"completed_at":timestamp()*1000}],"network_calls":result.provider_cost["request_count"],"known_network_calls":result.provider_cost["known_request_count"],"cost_minor":result.provider_cost["actual_cost_minor"],"new_live_acquisition":result.result["new_live_acquisition"],"fallback_providers":[],"commercial_validation":"INCOMPLETE_OFFICIAL_SOURCE_EVIDENCE_NOT_SUFFICIENT_FOR_PROFIT","result":result.result}))
             }
-            Err(failure) => self.persist(json!({"acquisition_run_id":id,"mode":if fixture{"FIXTURE"}else{"PLAN_ONLY"},"run_kind":"OFFICIAL_PRODUCT","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","observations":[],"errors":[failure.reason],"network_calls":0,"cost_minor":0,"new_live_acquisition":false,"fallback_providers":[]})),
+            Err(failure) => self.persist(json!({"acquisition_run_id":id,"mode":if fixture{"FIXTURE"}else if failure.request_count==Some(0){"PLAN_ONLY"}else{"INFERRED"},"run_kind":"OFFICIAL_PRODUCT","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","observations":[],"errors":[failure.reason],"acquisition_failure":failure,"network_calls":if fixture{json!(0)}else{json!(failure.request_count)},"cost_minor":if fixture || failure.request_count==Some(0){json!(0)}else{Value::Null},"new_live_acquisition":false,"fallback_providers":[]})),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::provider::{AcquireError, AcquireResult, BudgetPolicy, Provider};
+    use std::sync::Arc;
+    struct Authorized;
+    impl Provider for Authorized {
+        fn id(&self) -> &str {
+            "amazon-sp-api"
+        }
+        fn metadata(&self) -> Value {
+            json!({"status":"AVAILABLE","live_supported":true,"live_authorized":true})
+        }
+        fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+            panic!("zero monetary budget must prevent provider IO")
+        }
+    }
+    #[test]
+    fn official_authorized_transport_still_requires_core_budget_before_io() {
+        let root = std::env::temp_dir().join(format!("ecdev-official-budget-{}", Uuid::new_v4()));
+        {
+            let engine = Engine::open(&root)
+                .unwrap()
+                .with_provider(Arc::new(Authorized));
+            let result=engine.official_product_with_budget(json!({"market":"AMAZON_US","asin":"B00V5DG6IQ","evidence_layer":"OFFICIAL_SP_API"}),&BudgetPolicy::default()).unwrap();
+            assert_eq!(result["status"], "DENIED_BUDGET");
+            assert_eq!(result["network_calls"], 0);
+            assert_eq!(result["new_live_acquisition"], false);
+            let reservations: u64 = engine
+                .db
+                .lock()
+                .unwrap()
+                .query_row("SELECT COUNT(*) FROM paid_reservations", [], |row| {
+                    row.get(0)
+                })
+                .unwrap();
+            assert_eq!(reservations, 0);
+        }
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

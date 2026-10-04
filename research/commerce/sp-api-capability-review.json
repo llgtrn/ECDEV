@@ -28,7 +28,7 @@
       "behavior_contract": "Catalog Items 2022-04-01 required ASIN plus marketplaceIds; native context selects requested marketplace summary and keeps missing prices, inventory and sales unknown. Supplied data does not establish source authenticity.",
       "native_node": "commerce.marketplace",
       "native_implementation": "adapter/marketplace/src/lib.rs",
-      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "native_lifecycle": "EXPERIMENTAL_BOUNDED_HTTP_AND_FIXTURE_PROTOCOL",
       "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
       "license": "Apache-2.0",
       "evidence": [
@@ -55,7 +55,7 @@
       "behavior_contract": "Product Pricing v0 success envelope and required Identifier/marketplaceId, ASIN context, ItemCondition and OfferDetail fields. Preserve raw money, empty vs missing offers and error headers; no sales/demand inference.",
       "native_node": "commerce.marketplace",
       "native_implementation": "adapter/marketplace/src/lib.rs",
-      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "native_lifecycle": "EXPERIMENTAL_BOUNDED_HTTP_AND_FIXTURE_PROTOCOL",
       "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
       "license": "Apache-2.0",
       "evidence": [
@@ -82,7 +82,7 @@
       "behavior_contract": "Product Fees v0 ASIN estimate with explicit proposed price/fulfillment, identifier and complete monetary/points assumption correlation. Keep original estimate time and ESTIMATED state; no actual fees or expected profit inferred.",
       "native_node": "commerce.marketplace",
       "native_implementation": "adapter/marketplace/src/lib.rs",
-      "native_lifecycle": "EXPERIMENTAL_FIXTURE_PROTOCOL_ONLY",
+      "native_lifecycle": "EXPERIMENTAL_BOUNDED_HTTP_AND_FIXTURE_PROTOCOL",
       "oracle_parity": "NOT_RUNTIME_ORACLE_SCHEMA_AND_PROTOCOL_REGRESSIONS",
       "license": "Apache-2.0",
       "evidence": [
@@ -97,11 +97,11 @@
       "whole_donor_parity": false
     }
   ],
-  "source_authentication": "SUPPLIED_FIXTURE_NOT_AUTHENTICATED",
+  "source_authentication": "FIXTURE_UNVERIFIED_HTTP_SOURCE_ONLY_WHEN_ACTUAL_RESPONSE_RECEIVED_NOT_COMMERCIAL_VALIDATION",
   "official_doc_sources": [
     {
       "url": "https://developer-docs.amazon/sp-api/docs/connecting-to-the-selling-partner-api",
-      "contract": "Seller-authorized refresh_token grant; no scope; bearer token <=2048 bytes and one hour expiry; restricted PII uses RDT. Native pure form/expiry tested; no actual token requests."
+      "contract": "Seller-authorized refresh_token grant without scope; one-hour bearer <=2048 bytes; memory-only refresh/reuse/expiry verified with local HTTP mock, no real token requests; restricted PII/RDT outside this boundary"
     },
     {
       "url": "https://developer-docs.amazon/sp-api/docs/sp-api-endpoints",
@@ -117,18 +117,27 @@
   "native_owner": "commerce.marketplace",
   "production_caller": "ecdev.product.analyze evidence_layer OFFICIAL_SP_API -> domain/commerce/src/marketplace/runtime.rs -> provider",
   "fallback_providers": [],
-  "live_io": "UNAVAILABLE_NOT_IMPLEMENTED_NO_AUTHENTICATED_REQUESTS_MADE",
-  "credentials_state": "Presence only reported; secrets not captured or logged",
-  "rate_limit_scope": "Default plans and raw request/rate/retry headers preserved in fixture records; actual account quota, live pacing/cooldown/retry transport remain unproven",
+  "live_io": "IMPLEMENTED_OPERATOR_GATED_HTTP_MOCK_TESTED_NO_REAL_AMAZON_REQUESTS_MADE",
+  "credentials_state": "Operator gate precedes loading secrets; tokens/forms/authentication response bodies remain memory-only and are never persisted",
+  "rate_limit_scope": "Conservative per-operation process-session cooldown, rate header can only tighten defaults, Retry-After enforced without automatic retries; account-global quota remains unknown",
   "schema_proof": "research/commerce/sp-api-schema-proof.json",
   "whole_semantic_census_complete": false,
   "whole_donor_absorption": false,
   "extinct": false,
   "remaining": [
-    "Authenticated HTTP transport and mock HTTP protocol tests",
     "Live permission plus account credentials for real calls",
-    "Account rate pacing and retry scheduling",
     "All other model APIs, generated SDK/package contracts, 3 parse-unknown files and full semantic coverage",
-    "Official evidence integration into commercial validation with independent supplier/logistics/PPC/risk inputs"
+    "Official evidence integration into commercial validation with independent supplier/logistics/PPC/risk inputs",
+    "Account-global rate coordination and actual authorized account validation; session-local pacing does not prove all account limits"
+  ],
+  "transport": "adapter/marketplace/src/transport.rs",
+  "runtime_external_dependency_change": "REUSES_ALREADY_PINNED_REQWEST_0.12.28_NO_NEW_EXTERNAL_PACKAGE",
+  "host_requirements": [
+    "ECDEV_SPAPI_ALLOW_LIVE_READ=true",
+    "ECDEV_SPAPI_HTTP_REQUEST_LIMIT=1..1000",
+    "SP_API_CLIENT_ID",
+    "SP_API_CLIENT_SECRET",
+    "SP_API_REFRESH_TOKEN",
+    "Explicit core USD per-run/day/month/provider/capability and intent ceiling >0; actual cost remains unknown"
   ]
 }

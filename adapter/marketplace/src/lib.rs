@@ -1,4 +1,5 @@
-//! Independent official marketplace fixture/protocol boundary. No authenticated IO yet.
+//! Official marketplace protocol boundary with explicit operator-gated HTTP and isolated fixtures.
+pub mod transport;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
@@ -271,6 +272,11 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
 
 #[derive(Default)]
 pub struct Amazon;
+impl Amazon {
+    pub fn from_env() -> transport::ConfiguredAmazon {
+        transport::ConfiguredAmazon::from_env()
+    }
+}
 impl Provider for Amazon {
     fn id(&self) -> &str {
         "amazon-sp-api"
