@@ -181,13 +181,15 @@ pub fn parse_price(
 }
 
 pub fn decimal_separator(input: &str) -> Option<char> {
+    // Python's donor regex `$` accepts exactly one final LF, including after digits.
+    let input = input.strip_suffix('\n').unwrap_or(input);
     let (index, separator) = input
         .char_indices()
         .rev()
         .find(|(_, c)| matches!(c, '.' | ',' | '€'))?;
     let tail = &input[index + separator.len_utf8()..];
-    let count = tail.len();
-    (tail.bytes().all(|b| b.is_ascii_digit()) && (count == 1 || count == 2 || count >= 4))
+    let count = tail.chars().count();
+    (tail.chars().all(|c| digit(c).is_some()) && (count == 1 || count == 2 || count >= 4))
         .then_some(separator)
 }
 
@@ -295,6 +297,30 @@ pub fn formatted_money(input: &str, currency: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn locked_price_decimal_helper_oracle() {
+        let oracle: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/price-decimal-helper.json"))
+                .unwrap();
+        assert_eq!(
+            oracle["commit_sha"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        let alphabets = oracle["decimal_alphabets"].as_u64().unwrap() as usize;
+        assert_eq!(
+            oracle["cases"].as_array().unwrap().len(),
+            alphabets * 3 * 4 * 5 + 14
+        );
+        assert!(alphabets >= 60);
+        for case in oracle["cases"].as_array().unwrap() {
+            assert_eq!(
+                json!(decimal_separator(case["input"].as_str().unwrap())),
+                case["expected"],
+                "{}",
+                case["input"]
+            );
+        }
+    }
     #[test]
     fn locked_price_public_api_oracle() {
         let oracle: Value =

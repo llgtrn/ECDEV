@@ -12,6 +12,21 @@ def main():
  from price_parser.parser import parse_number, Price, parse_price, extract_price_text, extract_currency_symbol, get_decimal_separator, SAFE_CURRENCY_SYMBOLS, OTHER_CURRENCY_SYMBOLS, DOLLAR_CODES
  # Execute the actual tests module and its original Example data, without replacing donor code.
  spec=importlib.util.spec_from_file_location('locked_price_tests',DONOR/'tests/test_price_parsing.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ if '--decimal-helper' in sys.argv:
+  import unicodedata
+  starts=[i for i in range(0x110000) if unicodedata.category(chr(i))=='Nd' and unicodedata.decimal(chr(i))==0]
+  cases=[]
+  for start in starts:
+   for separator in ['.',',','€']:
+    for count in [1,2,3,4]:
+     for suffix in ['', '\n', '\r\n', ' ', '\n\n']:
+      text='prefix 1,234'+separator+''.join(chr(start+i%10) for i in range(count))+suffix
+      cases.append(dict(partition='UNICODE_DIGIT_COUNT_AND_REGEX_END',input=text,expected=get_decimal_separator(text)))
+  for text in ['', '.', ',12', '1.²', '1.①', '1.Ⅳ', '1.12x', '1.12\u2028', '1.12\u0085', '1.12\x00', '1.12.34', '1.1234,123', '1.12\nmore', '1.12\n\n']:
+   cases.append(dict(partition='NON_DECIMAL_AND_LAST_SEPARATOR',input=text,expected=get_decimal_separator(text)))
+  record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_DECIMAL_SEPARATOR_HELPER',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,unicode_version=unicodedata.unidata_version,decimal_alphabets=len(starts),scope='Direct get_decimal_separator behavior; Unicode Nd, 1/2/3/4 digits, Python regex final-newline semantics, invalid suffix and last-separator selection',whole_donor_parity=False,cases=cases)
+  (ROOT/'adapter/web/tests/fixtures/price-decimal-helper.json').write_bytes((json.dumps(record,indent=2,ensure_ascii=False)+'\n').encode())
+  print('Executed locked decimal helper:',len(cases),'cases;',len(starts),'decimal alphabets');return
  if '--full-contract' in sys.argv:
   import unicodedata
   full=[]

@@ -142,6 +142,20 @@ def main():
  report['oracle_compared_capabilities']=sum(c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED','1235_PRICE_NUMBER_CASES_MATCHED','2937_PRICE_PUBLIC_API_CASES_MATCHED') for c in read(ROOT/'research/commerce/capabilities.json'))
  report['oracle_proven_native_capabilities']=report['oracle_compared_capabilities']
  report['oracle_cases_executed']=sum(c.get('oracle_cases',0) for c in read(ROOT/'research/commerce/capabilities.json') if c.get('oracle_status') in ('508_INTEGER_JSON_CASES_MATCHED','1620_ROBOTS_CASES_MATCHED','132_MICRODATA_CASES_MATCHED','46_QUEUE_TRACES_MATCHED','54_DECLARED_DOCUMENT_CASES_MATCHED','1235_PRICE_NUMBER_CASES_MATCHED','2937_PRICE_PUBLIC_API_CASES_MATCHED'))
+ helper_report=ROOT/'research/commerce/price-decimal-helper-oracle-report.json'
+ if helper_report.exists():
+  import hashlib
+  helper=read(helper_report); fixture=ROOT/helper['fixture']; oracle=read(fixture)
+  assert helper['status']=='PASS' and helper['whole_donor_parity'] is False
+  assert hashlib.sha256(fixture.read_bytes()).hexdigest()==helper['fixture_sha256']
+  assert hashlib.sha256((ROOT/helper['native_source']).read_bytes()).hexdigest()==helper['native_source_sha256']
+  assert oracle['oracle']=='UNMODIFIED_LOCKED_PRICE_PARSER_DECIMAL_SEPARATOR_HELPER'
+  assert oracle['commit_sha']==helper['commit_sha']==next(d['commit_sha'] for d in reg['donors'] if d['donor_id']=='scrapinghub--price-parser')
+  assert len(oracle['cases'])==helper['cases']==oracle['decimal_alphabets']*3*4*5+14
+  assert oracle['decimal_alphabets']==helper['decimal_alphabets']==66
+  report['oracle_cases_executed']+=helper['cases']
+  # Supplemental direct-helper family, not a new replacement capability or whole donor.
+  report['supplemental_helper_oracle_families']=1
  summaries=[read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json') for d in reg['donors']]
  report['symbols_censused']=sum(s['symbols'] for s in summaries)
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)

@@ -63,9 +63,12 @@
       "line_end": 398,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Final decimal separator with 1,2,4+ Unicode decimal digits; existing native ASCII bounded subset",
+      "behavior": "Direct final separator selection with Unicode 14 Nd digits, 1/2/4+ tail cardinality and Python regex final-LF semantics; independently compared to unmodified pinned helper",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "oracle_report": "research/commerce/price-decimal-helper-oracle-report.json",
+      "bounded_direct_contract_native": true,
+      "limitations": "Oracle and native digit table use Unicode 14/Python 3.11; donor supports several Python/Unicode versions. Other Unicode-version semantics are not claimed."
     },
     {
       "symbol": "parse_number",
@@ -158,5 +161,28 @@
       "numeric_exponent_abs": 4096
     },
     "nonfinite_float": "UNKNOWN_NULL"
+  },
+  "direct_decimal_helper": {
+    "status": "PASS",
+    "families": 1,
+    "cases": 3974,
+    "decimal_alphabets": 66,
+    "unicode_version": "14.0.0",
+    "donor_id": "scrapinghub--price-parser",
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-decimal-helper.json",
+    "fixture_sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9",
+    "native_source": "adapter/web/src/price.rs",
+    "native_source_sha256": "3ef84fe81d713295d589434616a7ab79851c417c63f1b298aaea3ffb830f91ad",
+    "native_test": "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
+    "production_caller": "adapter/web/src/price.rs::parse_number and formatted_money",
+    "whole_donor_parity": false,
+    "runtime_donor_import": false,
+    "scope": "Direct get_decimal_separator behavior; Unicode Nd, 1/2/3/4 digits, Python regex final-newline semantics, invalid suffix and last-separator selection",
+    "remaining": [
+      "Direct other helper/object/package semantic contracts",
+      "Full donor census and active oracle/test import retirement",
+      "Unicode versions beyond recorded Unicode 14 oracle/table are not claimed"
+    ]
   }
 }
