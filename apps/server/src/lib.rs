@@ -402,11 +402,14 @@ mod research_tests {
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
-        engine.research(commerce_fixture).unwrap();
+        let commerce_run = engine.research(commerce_fixture).unwrap();
         let commercial_before = engine.candidates().unwrap();
         let raw=json!({"hits":[{"objectID":"1","title":"matcha glass good","created_at_i":9000,"points":0},{"objectID":"2","title":"matcha glass bad","created_at_i":9200}]}).to_string();
         let before=engine.call("ecdev.trend.discover",json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}],"fixture_now":10000})).unwrap();
         assert_eq!(before["mention_count"], 2);
+        let empty_storage=engine.trend_discover(json!({"query":"storage","sources":[{"platform":"HACKER_NEWS","fixture_raw":"{\"hits\":[]}"}],"fixture_now":10000})).unwrap();
+        assert_eq!(empty_storage["evidence_ids"], json!([]));
+        assert_eq!(empty_storage["commerce_links"], json!([]));
         let linked=engine.trend_discover(json!({"query":"storage","sources":[{"platform":"HACKER_NEWS","fixture_raw":json!({"hits":[{"objectID":"33","title":"storage box","created_at_i":9000}]}).to_string()}],"fixture_now":10000})).unwrap();
         assert!(!linked["commerce_links"].as_array().unwrap().is_empty());
         assert!(
@@ -416,6 +419,39 @@ mod research_tests {
                 .iter()
                 .all(|l| l["shortlist_permitted_by_social"] == false)
         );
+        assert_eq!(engine.candidates().unwrap(), commercial_before);
+        let captures: Vec<_> = commerce_run["observations"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|o| {
+                let extension = if o["source_type"] == "PUBLIC_HTML" {
+                    "html"
+                } else {
+                    "json"
+                };
+                let path = root.join(format!(
+                    ".ynventa/materialized/raw/{}.{extension}",
+                    o["raw_hash"].as_str().unwrap()
+                ));
+                let bytes = std::fs::read(&path).unwrap();
+                (path, bytes)
+            })
+            .collect();
+        for (path, _) in &captures {
+            std::fs::write(path, b"corrupted commerce capture").unwrap();
+        }
+        let unavailable_links=engine.trend_discover(json!({"query":"storage","sources":[{"platform":"HACKER_NEWS","fixture_raw":json!({"hits":[{"objectID":"34","title":"storage box","created_at_i":9000}]}).to_string()}],"fixture_now":10000})).unwrap();
+        assert!(
+            !unavailable_links["evidence_ids"]
+                .as_array()
+                .unwrap()
+                .is_empty()
+        );
+        assert_eq!(unavailable_links["commerce_links"], json!([]));
+        for (path, bytes) in captures {
+            std::fs::write(path, bytes).unwrap();
+        }
         assert_eq!(engine.candidates().unwrap(), commercial_before);
         assert_eq!(before["budget_usage"]["request_count"], 0);
         assert_eq!(before["capture_mode"], "FIXTURE");

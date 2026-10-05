@@ -44,6 +44,90 @@ fn root() -> std::path::PathBuf {
     std::env::temp_dir().join(format!("ecdev-social-{}", Uuid::new_v4()))
 }
 #[test]
+fn social_live_capture_requires_http_witness_and_preserves_unknown_counts() {
+    use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
+    use sha2::{Digest, Sha256};
+    use std::sync::Arc;
+    struct Witness(Value);
+    impl Provider for Witness {
+        fn id(&self) -> &str {
+            "native-social"
+        }
+        fn metadata(&self) -> Value {
+            json!({"class":"PUBLIC","cost_minor":0})
+        }
+        fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+            let raw = b"mock social capture";
+            let mut p = post("unwitnessed", "HACKER_NEWS", 1);
+            p.capture_mode = "LIVE".into();
+            p.raw_hash = format!("{:x}", Sha256::digest(raw));
+            Ok(AcquireResult {
+                observations: vec![],
+                result: json!({"posts":[p]}),
+                raw_payload: raw.to_vec(),
+                provider_cost: json!({"request_count":self.0,"cost_minor":0}),
+            })
+        }
+    }
+    for count in [json!(0), Value::Null, json!(2)] {
+        let path = root();
+        let engine = Engine::open(&path)
+            .unwrap()
+            .with_provider(Arc::new(Witness(count.clone())));
+        let result = engine
+            .trend_discover(json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS"}]}))
+            .unwrap();
+        let run = engine.run(result["run_id"].as_str().unwrap()).unwrap();
+        if count == 2 {
+            assert_eq!(run["mode"], "LIVE");
+            assert_eq!(run["observations"].as_array().unwrap().len(), 1);
+            assert_eq!(result["source_complete"], true);
+        } else {
+            assert_eq!(
+                run["mode"],
+                if count.is_null() {
+                    "INFERRED"
+                } else {
+                    "PLAN_ONLY"
+                }
+            );
+            assert_eq!(run["observations"], json!([]));
+            assert_eq!(result["source_complete"], false);
+            assert_eq!(result["budget_usage"]["request_count"], count);
+            assert_eq!(
+                result["acquisition_provenance"]["live_acquisition_established"],
+                false
+            );
+            assert_eq!(
+                result["provider_failures"][0]["reason"],
+                "SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH"
+            );
+            assert!(
+                !path
+                    .join(".ynventa/materialized/runtime/social-captures")
+                    .exists()
+            );
+        }
+        drop(engine);
+        std::fs::remove_dir_all(path).unwrap();
+    }
+    let path = root();
+    let engine = Engine::open(&path).unwrap();
+    let result = engine
+        .trend_discover(
+            json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS"}],"request_budget":0}),
+        )
+        .unwrap();
+    assert_eq!(
+        engine.run(result["run_id"].as_str().unwrap()).unwrap()["mode"],
+        "PLAN_ONLY"
+    );
+    assert_eq!(result["source_complete"], false);
+    assert_eq!(result["budget_usage"]["request_count"], 0);
+    drop(engine);
+    std::fs::remove_dir_all(path).unwrap();
+}
+#[test]
 fn cached_captures_require_original_bytes_and_never_establish_live_acquisition() {
     use sha2::{Digest, Sha256};
     let root = root();

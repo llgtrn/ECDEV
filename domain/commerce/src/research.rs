@@ -175,6 +175,12 @@ impl Engine {
         )
     }
     pub fn candidates(&self) -> Result<Value, String> {
+        self.verified_candidates_where(|_| true)
+    }
+    pub(crate) fn verified_candidates_where(
+        &self,
+        mut relevant: impl FnMut(&Value) -> bool,
+    ) -> Result<Value, String> {
         let mut verifier = crate::capture::Verifier::new(&self.root);
         let mut checked = BTreeMap::new();
         let candidates = self.rows(
@@ -186,6 +192,7 @@ impl Engine {
                 .as_array()
                 .ok_or("Invalid candidates")?
                 .iter()
+                .filter(|c| relevant(c))
                 .filter(|c| self
                     .verify_evidence_ids(&c["evidence_ids"], &mut verifier, &mut checked)
                     .is_ok())

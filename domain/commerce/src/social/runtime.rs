@@ -326,9 +326,12 @@ impl Engine {
             });
             match acquired {
                 Ok(acquired) => {
-                    requests += acquired.provider_cost["request_count"]
-                        .as_u64()
-                        .unwrap_or(0);
+                    let count = acquired.provider_cost["request_count"].as_u64();
+                    requests = requests.saturating_add(count.unwrap_or(0));
+                    if (fixture && count != Some(0)) || (!fixture && count.is_none_or(|n| n == 0)) {
+                        failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH","request_count":count}));
+                        continue;
+                    }
                     let posts: Vec<SocialPost> =
                         serde_json::from_value(acquired.result["posts"].clone()).map_err(err)?;
                     for p in &posts {
@@ -363,7 +366,7 @@ impl Engine {
                     captured.extend(posts);
                 }
                 Err(e) => {
-                    requests += e.request_count.unwrap_or(0);
+                    requests = requests.saturating_add(e.request_count.unwrap_or(0));
                     let state = match e.http_status {
                         Some(401) => "AUTH_REQUIRED",
                         Some(429) => "RATE_LIMITED",
@@ -424,6 +427,18 @@ impl Engine {
         snap["acquisition_provenance"] = json!({"requested_mode":mode,"new_observation_count":if mode=="CACHED"{0}else{captured.len()},"new_live_observation_count":if mode=="LIVE" && requests>0{captured.len()}else{0},"live_acquisition_established":mode=="LIVE" && requests>0 && !captured.is_empty(),"historical_projection":"VALIDATED_RAW_CAPTURE_ONLY","cache_projection_is_new_live_acquisition":false});
         snap["provider_failures"] = json!(failures);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
+        let acquisition_mode = if mode != "LIVE" || requests > 0 {
+            mode
+        } else if snap["budget_usage"]["request_count"].is_null() {
+            "INFERRED"
+        } else {
+            "PLAN_ONLY"
+        };
+        snap["acquisition_provenance"]["actual_run_mode"] = json!(acquisition_mode);
+        snap["acquisition_provenance"]["live_io_established"] =
+            json!(mode == "LIVE" && requests > 0);
+        snap["acquisition_provenance"]["capture_mode_scope"] =
+            json!("REQUESTED_SOURCE_COHORT_HISTORICAL_POSTS_KEEP_ORIGINAL_CAPTURE_MODE");
         snap["source_complete"] = json!(
             snap["provider_failures"]
                 .as_array()
@@ -439,8 +454,24 @@ impl Engine {
                     .is_some_and(|keys| keys.iter().any(|k| k == &p.key())))
                 .collect::<Vec<_>>()
         );
-        let candidates = self.candidates()?;
         let qterms = terms(&query);
+        // Only matching candidates can contribute a topic link. Validate their capture hashes
+        // before exposing a link, without hashing unrelated commercial captures on each trend read.
+        let candidates = if snap["evidence_ids"]
+            .as_array()
+            .is_some_and(|ids| !ids.is_empty())
+        {
+            self.verified_candidates_where(|c| {
+                let text = ["title", "brand", "category"]
+                    .iter()
+                    .filter_map(|key| c["product"][key].as_str())
+                    .collect::<Vec<_>>()
+                    .join(" ");
+                !qterms.is_disjoint(&terms(&text))
+            })?
+        } else {
+            json!([])
+        };
         let mut links = vec![];
         for c in candidates.as_array().into_iter().flatten() {
             let product_text = ["title", "brand", "category"]
@@ -455,7 +486,7 @@ impl Engine {
         }
         snap["commerce_links"] = json!(links);
         snap["population_complete"] = json!(false);
-        let run=self.persist(json!({"acquisition_run_id":run_id,"mode":mode,"run_kind":"SOCIAL_TREND","social_run":true,"status":if snap["source_complete"]==true{"COMPLETE"}else{"PARTIAL"},"snapshot_id":snapshot_id,"observations":captured.iter().map(|p|json!({"id":p.evidence_id,"mode":mode,"source_type":"PUBLIC_SOCIAL_JSON","provider":p.provider,"external_source":p.source_url,"market":"PUBLIC_SOCIAL","query":query,"timestamp":p.published_at,"retrieved_at":p.captured_at,"raw_hash":p.raw_hash,"raw_locator":p.raw_locator,"normalized_value":p,"state":"OBSERVED","run_id":run_id})).collect::<Vec<_>>(),"cost_minor":0,"provider_failures":snap["provider_failures"],"budget_usage":snap["budget_usage"]}))?;
+        let run=self.persist(json!({"acquisition_run_id":run_id,"mode":acquisition_mode,"requested_mode":mode,"run_kind":"SOCIAL_TREND","social_run":true,"status":if snap["source_complete"]==true{"COMPLETE"}else{"PARTIAL"},"snapshot_id":snapshot_id,"observations":captured.iter().map(|p|json!({"id":p.evidence_id,"mode":mode,"source_type":"PUBLIC_SOCIAL_JSON","provider":p.provider,"external_source":p.source_url,"market":"PUBLIC_SOCIAL","query":query,"timestamp":p.published_at,"retrieved_at":p.captured_at,"raw_hash":p.raw_hash,"raw_locator":p.raw_locator,"normalized_value":p,"state":"OBSERVED","run_id":run_id})).collect::<Vec<_>>(),"cost_minor":0,"provider_failures":snap["provider_failures"],"budget_usage":snap["budget_usage"],"network_calls":snap["budget_usage"]["request_count"],"known_network_calls":requests,"acquisition_provenance":snap["acquisition_provenance"]}))?;
         snap["run_id"] = run["run_id"].clone();
         {
             let mut db = self.db.lock().map_err(err)?;
