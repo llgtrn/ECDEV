@@ -185,35 +185,329 @@ pub fn price_text(input: &str) -> Option<String> {
     text.to_lowercase().contains("free").then(|| "0".into())
 }
 
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum PriceError {
+    InvalidOperation,
+    ValueError,
+    ResourceLimit,
+}
+impl PriceError {
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::InvalidOperation => "InvalidOperation",
+            Self::ValueError => "ValueError",
+            Self::ResourceLimit => "ResourceLimit",
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Special {
+    Infinity,
+    QuietNan,
+    SignalNan,
+}
+/// Exact decimal atom. Storage is bounded without expanding a large exponent.
+#[derive(Clone, Debug)]
+pub struct DecimalAmount {
+    negative: bool,
+    coefficient: String,
+    exponent: i64,
+    special: Option<Special>,
+}
+impl DecimalAmount {
+    pub fn parse(input: &str) -> Result<Self, PriceError> {
+        if input.len() > 4096 {
+            return Err(PriceError::ResourceLimit);
+        }
+        let text: String = input
+            .trim_matches(whitespace)
+            .chars()
+            .filter(|c| *c != '_')
+            .map(|c| digit(c).and_then(|n| char::from_digit(n, 10)).unwrap_or(c))
+            .collect();
+        let (negative, text) = if let Some(s) = text.strip_prefix('-') {
+            (true, s)
+        } else {
+            (false, text.strip_prefix('+').unwrap_or(&text))
+        };
+        let lower = text.to_ascii_lowercase();
+        if matches!(lower.as_str(), "inf" | "infinity") {
+            return Ok(Self {
+                negative,
+                coefficient: String::new(),
+                exponent: 0,
+                special: Some(Special::Infinity),
+            });
+        }
+        for (prefix, special) in [("snan", Special::SignalNan), ("nan", Special::QuietNan)] {
+            if let Some(payload) = lower.strip_prefix(prefix) {
+                if !payload.bytes().all(|b| b.is_ascii_digit()) {
+                    return Err(PriceError::InvalidOperation);
+                }
+                return Ok(Self {
+                    negative,
+                    coefficient: payload.trim_start_matches('0').to_owned(),
+                    exponent: 0,
+                    special: Some(special),
+                });
+            }
+        }
+        let mut parts = text.split(['e', 'E']);
+        let mantissa = parts.next().unwrap();
+        let exponent = match parts.next() {
+            Some(s) => s.parse::<i64>().map_err(|_| PriceError::InvalidOperation)?,
+            None => 0,
+        };
+        if parts.next().is_some() {
+            return Err(PriceError::InvalidOperation);
+        }
+        let mut pieces = mantissa.split('.');
+        let whole = pieces.next().unwrap();
+        let fraction = pieces.next().unwrap_or("");
+        if pieces.next().is_some()
+            || (whole.is_empty() && fraction.is_empty())
+            || !whole
+                .bytes()
+                .chain(fraction.bytes())
+                .all(|b| b.is_ascii_digit())
+        {
+            return Err(PriceError::InvalidOperation);
+        }
+        let exponent = exponent
+            .checked_sub(fraction.len() as i64)
+            .ok_or(PriceError::ResourceLimit)?;
+        let coefficient = format!("{whole}{fraction}");
+        let coefficient = coefficient.trim_start_matches('0');
+        Ok(Self {
+            negative,
+            coefficient: if coefficient.is_empty() {
+                "0".into()
+            } else {
+                coefficient.into()
+            },
+            exponent,
+            special: None,
+        })
+    }
+    pub fn text(&self) -> String {
+        let sign = if self.negative { "-" } else { "" };
+        if let Some(special) = self.special {
+            let name = match special {
+                Special::Infinity => "Infinity",
+                Special::QuietNan => "NaN",
+                Special::SignalNan => "sNaN",
+            };
+            return format!("{sign}{name}{}", self.coefficient);
+        }
+        let adjusted = i128::from(self.exponent) + self.coefficient.len() as i128 - 1;
+        if self.exponent > 0 || adjusted < -6 {
+            let rest = &self.coefficient[1..];
+            let mantissa = if rest.is_empty() {
+                self.coefficient.clone()
+            } else {
+                format!("{}.{}", &self.coefficient[..1], rest)
+            };
+            return format!("{sign}{mantissa}E{adjusted:+}");
+        }
+        let point = self.coefficient.len() as i64 + self.exponent;
+        let value = if point <= 0 {
+            format!("0.{}{}", "0".repeat((-point) as usize), self.coefficient)
+        } else if point as usize >= self.coefficient.len() {
+            self.coefficient.clone()
+        } else {
+            format!(
+                "{}.{}",
+                &self.coefficient[..point as usize],
+                &self.coefficient[point as usize..]
+            )
+        };
+        format!("{sign}{value}")
+    }
+    fn float(&self) -> Result<f64, PriceError> {
+        match self.special {
+            Some(Special::SignalNan) => Err(PriceError::ValueError),
+            Some(Special::QuietNan) => Ok(f64::NAN),
+            Some(Special::Infinity) => Ok(if self.negative {
+                f64::NEG_INFINITY
+            } else {
+                f64::INFINITY
+            }),
+            None => self.text().parse().map_err(|_| PriceError::ValueError),
+        }
+    }
+    fn equals(&self, other: &Self) -> Result<bool, PriceError> {
+        if [self.special, other.special].contains(&Some(Special::SignalNan)) {
+            return Err(PriceError::InvalidOperation);
+        }
+        if [self.special, other.special].contains(&Some(Special::QuietNan)) {
+            return Ok(false);
+        }
+        if self.special.is_some() || other.special.is_some() {
+            return Ok(self.special == other.special && self.negative == other.negative);
+        }
+        if self.coefficient == "0" && other.coefficient == "0" {
+            return Ok(true);
+        }
+        let a = self.coefficient.trim_end_matches('0');
+        let b = other.coefficient.trim_end_matches('0');
+        Ok(self.negative == other.negative
+            && a == b
+            && i128::from(self.exponent) + (self.coefficient.len() - a.len()) as i128
+                == i128::from(other.exponent) + (other.coefficient.len() - b.len()) as i128)
+    }
+}
+fn string_repr(value: Option<&str>) -> String {
+    let Some(value) = value else {
+        return "None".into();
+    };
+    let quote = if value.contains('\'') && !value.contains('"') {
+        '"'
+    } else {
+        '\''
+    };
+    let mut out = quote.to_string();
+    for c in value.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c == quote => {
+                out.push('\\');
+                out.push(c);
+            }
+            c => {
+                let code = c as u64;
+                let printable = lexicon()["printable_ranges"]
+                    .as_array()
+                    .expect("checked printability data")
+                    .binary_search_by(|range| {
+                        if code < range[0].as_u64().unwrap() {
+                            std::cmp::Ordering::Greater
+                        } else if code > range[1].as_u64().unwrap() {
+                            std::cmp::Ordering::Less
+                        } else {
+                            std::cmp::Ordering::Equal
+                        }
+                    })
+                    .is_ok();
+                if printable {
+                    out.push(c);
+                } else if code <= 255 {
+                    out.push_str(&format!("\\x{code:02x}"));
+                } else if code <= 65535 {
+                    out.push_str(&format!("\\u{code:04x}"));
+                } else {
+                    out.push_str(&format!("\\U{code:08x}"));
+                }
+            }
+        }
+    }
+    out.push(quote);
+    out
+}
+/// Native typed price object. Source hints stay derived; this does not create observed money.
+#[derive(Clone, Debug)]
+pub struct Price {
+    pub amount: Option<DecimalAmount>,
+    pub currency: Option<String>,
+    pub amount_text: Option<String>,
+}
+impl Price {
+    pub fn new(
+        amount: Option<&str>,
+        currency: Option<&str>,
+        amount_text: Option<&str>,
+    ) -> Result<Self, PriceError> {
+        if [currency, amount_text]
+            .into_iter()
+            .flatten()
+            .any(|s| s.len() > 4096)
+        {
+            return Err(PriceError::ResourceLimit);
+        }
+        Ok(Self {
+            amount: amount.map(DecimalAmount::parse).transpose()?,
+            currency: currency.map(str::to_owned),
+            amount_text: amount_text.map(str::to_owned),
+        })
+    }
+    pub fn amount_float(&self) -> Result<Option<f64>, PriceError> {
+        self.amount.as_ref().map(DecimalAmount::float).transpose()
+    }
+    pub fn equals(&self, other: &Self) -> Result<bool, PriceError> {
+        let equal = match (&self.amount, &other.amount) {
+            (Some(a), Some(b)) => a.equals(b)?,
+            (None, None) => true,
+            _ => false,
+        };
+        Ok(equal && self.currency == other.currency && self.amount_text == other.amount_text)
+    }
+    pub fn repr(&self) -> String {
+        let amount = self
+            .amount
+            .as_ref()
+            .map(|a| format!("Decimal({})", string_repr(Some(&a.text()))))
+            .unwrap_or_else(|| "None".into());
+        format!(
+            "Price(amount={amount}, currency={})",
+            string_repr(self.currency.as_deref())
+        )
+    }
+    pub fn fromstring(
+        input: Option<&str>,
+        hint: Option<&str>,
+        separator: Option<char>,
+        group: Option<&str>,
+    ) -> Self {
+        if [input, hint].into_iter().flatten().any(|s| s.len() > 4096)
+            || group.is_some_and(|s| s.len() > 64)
+        {
+            return Self {
+                amount: None,
+                currency: None,
+                amount_text: None,
+            };
+        }
+        let currency =
+            currency_symbol(input, hint).map(|token| token.trim_matches(whitespace).to_owned());
+        let text = input.map(|s| {
+            group
+                .map(|g| s.replace(g, ""))
+                .unwrap_or_else(|| s.to_owned())
+        });
+        let amount_text = text.as_deref().and_then(price_text);
+        let amount = amount_text
+            .as_deref()
+            .filter(|s| parse_number(s, separator).is_some())
+            .and_then(|s| number_text(s, separator))
+            .and_then(|s| DecimalAmount::parse(&s).ok());
+        Self {
+            amount,
+            currency,
+            amount_text,
+        }
+    }
+    pub fn projection(&self) -> Value {
+        let amount = self
+            .amount
+            .as_ref()
+            .filter(|a| a.special.is_none())
+            .and_then(|a| parse_number(&a.text(), Some('.')));
+        let amount_float = amount
+            .as_ref()
+            .and_then(|_| self.amount_float().ok().flatten().filter(|f| f.is_finite()));
+        json!({"amount":amount,"currency":self.currency,"amount_text":self.amount_text,"amount_float":amount_float})
+    }
+}
+
 pub fn parse_price(
     input: Option<&str>,
     hint: Option<&str>,
     separator: Option<char>,
     group: Option<&str>,
 ) -> Value {
-    if [input, hint].into_iter().flatten().any(|s| s.len() > 4096)
-        || group.is_some_and(|s| s.len() > 64)
-    {
-        return json!({"amount":null,"currency":null,"amount_text":null,"amount_float":null});
-    }
-    let currency =
-        currency_symbol(input, hint).map(|token| token.trim_matches(whitespace).to_owned());
-    let text = input.map(|s| {
-        if let Some(group) = group {
-            s.replace(group, "")
-        } else {
-            s.to_owned()
-        }
-    });
-    let amount_text = text.as_deref().and_then(price_text);
-    let amount = amount_text
-        .as_deref()
-        .and_then(|s| parse_number(s, separator));
-    let amount_float = amount
-        .as_deref()
-        .and_then(|s| s.parse::<f64>().ok())
-        .filter(|f| f.is_finite());
-    json!({"amount":amount,"currency":currency,"amount_text":amount_text,"amount_float":amount_float})
+    Price::fromstring(input, hint, separator, group).projection()
 }
 
 pub fn decimal_separator(input: &str) -> Option<char> {
@@ -231,7 +525,7 @@ pub fn decimal_separator(input: &str) -> Option<char> {
 
 /// Decimal strings are canonicalized without binary floating point or a fixed precision.
 /// Output growth is bounded; nonfinite values and non-ASCII numeric alphabets are unavailable.
-pub fn parse_number(input: &str, explicit: Option<char>) -> Option<String> {
+fn number_text(input: &str, explicit: Option<char>) -> Option<String> {
     if input.len() > 4096 {
         return None;
     }
@@ -253,6 +547,10 @@ pub fn parse_number(input: &str, explicit: Option<char>) -> Option<String> {
         _ => return None,
     }
     .replace('_', "");
+    Some(text)
+}
+pub fn parse_number(input: &str, explicit: Option<char>) -> Option<String> {
+    let text = number_text(input, explicit)?;
     let (negative, text) = if let Some(rest) = text.strip_prefix('-') {
         (true, rest)
     } else {
@@ -333,6 +631,119 @@ pub fn formatted_money(input: &str, currency: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    fn object_from_input(input: &Value) -> Result<Price, PriceError> {
+        Price::new(
+            input["amount_decimal_input"].as_str(),
+            input["currency"].as_str(),
+            input["amount_text"].as_str(),
+        )
+    }
+    fn classified_float(value: Result<Option<f64>, PriceError>) -> Value {
+        match value {
+            Err(error) => json!({"classification":"ERROR","error":error.name()}),
+            Ok(None) => json!({"classification":"NULL","value":null}),
+            Ok(Some(value)) => {
+                json!({"classification":if value.is_nan(){"NAN"}else if value==f64::NEG_INFINITY{"NEGATIVE_INFINITY"}else if value.is_infinite(){"POSITIVE_INFINITY"}else{"FINITE"},"value":if value.is_finite(){json!(value)}else{Value::Null}})
+            }
+        }
+    }
+    #[test]
+    fn locked_price_object_contract_oracle() {
+        let oracle: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/price-object-contract.json"))
+                .unwrap();
+        assert_eq!(
+            oracle["commit_sha"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        assert_eq!(oracle["construction"].as_array().unwrap().len(), 1083);
+        assert_eq!(oracle["comparisons"].as_array().unwrap().len(), 36);
+        for case in oracle["construction"].as_array().unwrap() {
+            match object_from_input(&case["input"]) {
+                Err(error) => assert_eq!(json!(error.name()), case["error"], "{}", case),
+                Ok(price) => {
+                    assert!(case["error"].is_null(), "{}", case);
+                    let expected = &case["expected"];
+                    assert_eq!(
+                        json!(price.amount.as_ref().map(DecimalAmount::text)),
+                        expected["amount_decimal_text"],
+                        "{}",
+                        case
+                    );
+                    assert_eq!(json!(price.currency), expected["currency"], "{}", case);
+                    assert_eq!(
+                        json!(price.amount_text),
+                        expected["amount_text"],
+                        "{}",
+                        case
+                    );
+                    assert_eq!(json!(price.repr()), expected["repr"], "{}", case);
+                    let floating = classified_float(price.amount_float());
+                    assert_eq!(
+                        floating["classification"], expected["amount_float"]["classification"],
+                        "{}",
+                        case
+                    );
+                    if floating["classification"] == "FINITE" {
+                        // Compare the typed float exactly, including signed zero. Python and
+                        // serde spell the same JSON number as e-07 and e-7 respectively.
+                        assert_eq!(
+                            floating["value"].as_f64().unwrap().to_bits(),
+                            expected["amount_float"]["value"]
+                                .as_f64()
+                                .unwrap()
+                                .to_bits(),
+                            "{}",
+                            case
+                        );
+                    } else {
+                        assert_eq!(floating, expected["amount_float"], "{}", case);
+                    }
+                }
+            }
+        }
+        for case in oracle["comparisons"].as_array().unwrap() {
+            let a = object_from_input(&case["left"]).unwrap();
+            let b = object_from_input(&case["right"]).unwrap();
+            match a.equals(&b) {
+                Ok(equal) => {
+                    assert!(case["error"].is_null(), "{}", case);
+                    assert_eq!(json!(equal), case["expected"], "{}", case);
+                }
+                Err(error) => assert_eq!(json!(error.name()), case["error"], "{}", case),
+            }
+        }
+    }
+    #[test]
+    fn native_price_object_projection_preserves_nonfinite_and_resource_unknowns() {
+        for raw in [
+            "NaN",
+            "Infinity",
+            "-Infinity",
+            "sNaN",
+            "1E+99999",
+            "1E-99999",
+        ] {
+            let price = Price::new(Some(raw), Some("USD"), Some("original")).unwrap();
+            let projection = price.projection();
+            assert!(projection["amount"].is_null() && projection["amount_float"].is_null());
+            assert_eq!(projection["currency"], "USD");
+            assert_eq!(projection["amount_text"], "original");
+        }
+        assert!(matches!(
+            Price::new(Some(&"1".repeat(4097)), None, None),
+            Err(PriceError::ResourceLimit)
+        ));
+        assert!(Price::fromstring(Some(&"1".repeat(4097)), Some("USD"), None, None).projection()["amount"].is_null());
+        let a = Price::new(Some("12.00"), Some("USD"), Some("raw")).unwrap();
+        let b = Price::new(Some("12"), Some("USD"), Some("different")).unwrap();
+        assert!(!a.equals(&b).unwrap());
+        assert_eq!(a.repr(), "Price(amount=Decimal('12.00'), currency='USD')");
+        assert_eq!(
+            Price::fromstring(Some("$12.00"), None, None, None).repr(),
+            "Price(amount=Decimal('12.00'), currency='$')"
+        );
+    }
     #[test]
     fn locked_price_source_helpers_oracle() {
         let oracle: Value =

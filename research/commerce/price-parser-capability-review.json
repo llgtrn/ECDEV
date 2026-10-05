@@ -19,9 +19,12 @@
       "line_end": 72,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Constructor/attrs equality/repr plus field availability; native struct/API unresolved",
+      "behavior": "Native typed object with three fields, amount_text equality participation, decimal scale/sign repr and explicit nonfinite/error outcomes; bounded independent constructor/equality oracle passed",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-object-oracle-report.json",
+      "limitations": "Typed, bounded source/object profile only; dynamic Python ABI, exceptional/version/package surfaces remain incomplete"
     },
     {
       "symbol": "or_regex",
@@ -97,9 +100,12 @@
       "line_end": 25,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Optional Decimal-to-float projection; native shadow unresolved",
+      "behavior": "Typed property matches finite IEEE bits and classifies nonfinite/signaling errors; commerce projection additionally requires known bounded finite amount",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-object-oracle-report.json",
+      "limitations": "Typed, bounded source/object profile only; dynamic Python ABI, exceptional/version/package surfaces remain incomplete"
     },
     {
       "symbol": "fromstring",
@@ -108,16 +114,22 @@
       "line_end": 72,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Currency before digit-group removal; price text extraction followed by exact decimal parser; native whole API unresolved",
+      "behavior": "Production parse_price delegates to native Price::fromstring and guarded projection; original 2937 public API cases remain passing",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-object-oracle-report.json",
+      "limitations": "Typed, bounded source/object profile only; dynamic Python ABI, exceptional/version/package surfaces remain incomplete"
     },
     {
       "symbol": "parse_price",
       "source_path": "price_parser/parser.py",
-      "behavior": "Public alias of Price.fromstring; every frozen public API case checks alias equality in unmodified donor",
+      "behavior": "Production parse_price delegates to native Price::fromstring and guarded projection; original 2937 public API cases remain passing",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-object-oracle-report.json",
+      "limitations": "Typed, bounded source/object profile only; dynamic Python ABI, exceptional/version/package surfaces remain incomplete"
     }
   ],
   "independent_oracle": {
@@ -182,7 +194,7 @@
     "fixture": "adapter/web/tests/fixtures/price-decimal-helper.json",
     "fixture_sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
+    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
     "native_test": "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
     "production_caller": "adapter/web/src/price.rs::parse_number and formatted_money",
     "whole_donor_parity": false,
@@ -193,7 +205,7 @@
       "Full donor census and active oracle/test import retirement",
       "Unicode versions beyond recorded Unicode 14 oracle/table are not claimed"
     ],
-    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949"
+    "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79"
   },
   "direct_literal_helper": {
     "status": "PASS",
@@ -204,8 +216,8 @@
     "fixture": "adapter/web/tests/fixtures/price-literal-helper.json",
     "fixture_sha256": "323ab1bc39c90312f58ecb79c4401d73812198bd040cf52915b592ae607960d6",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
-    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949",
+    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
     "native_test": "adapter/web/src/price.rs::locked_price_literal_helper_oracle",
     "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
     "whole_donor_parity": false,
@@ -226,8 +238,8 @@
     "fixture": "adapter/web/tests/fixtures/price-source-helpers.json",
     "fixture_sha256": "7df15486ea4d9f3b05d681804b2d0708e596fa5416f5fe9ed62fff284df164f5",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
-    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949",
+    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
     "native_test": "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
     "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
     "whole_donor_parity": false,
@@ -243,5 +255,34 @@
       "text": 4282
     },
     "unicode_version": "14.0.0"
+  },
+  "native_object_contract": {
+    "status": "PASS",
+    "families": 1,
+    "cases": 1119,
+    "construction_cases": 1083,
+    "comparison_cases": 36,
+    "donor_id": "scrapinghub--price-parser",
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-object-contract.json",
+    "fixture_sha256": "d02a82005bdcb975cc4a4cea3dad3e76a660db8099b5fe3c84a9ec39f26fcb45",
+    "native_source": "adapter/web/src/price.rs",
+    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
+    "native_test": "adapter/web/src/price.rs::locked_price_object_contract_oracle",
+    "regression": "adapter/web/src/price.rs::native_price_object_projection_preserves_nonfinite_and_resource_unknowns",
+    "production_caller": "adapter/web/src/price.rs::parse_price -> Price::fromstring -> Price::projection",
+    "whole_donor_parity": false,
+    "runtime_donor_import": false,
+    "python_version": "3.11.15",
+    "unicode_version": "14.0.0",
+    "attrs_version": "26.1.0",
+    "scope": "Native typed Decimal-or-None price object fields; exact decimal scale/sign and repr, amount_text participates in equality, quiet/signaling NaN and Infinity classified separately. Valid bounded constructor inputs compared to locked donor. Floats compared by exact IEEE bits, not JSON exponent spelling.",
+    "projection_contract": "Only bounded canonical finite decimal output has a finite float projection; nonfinite/unknown/overflow/underflow outside resource bounds remain null, never observed money.",
+    "limitations": [
+      "Input/string storage bounded to 4096 bytes; numeric expansion/exponent guards unchanged in commerce projection",
+      "Other Python dynamic object types, subclass/class identity, mutation/exception-context variations and packaging ABI are not claimed",
+      "Unicode14/Python3.11/attrs26.1 corpus only; all-version parity and whole cutover remain incomplete"
+    ]
   }
 }

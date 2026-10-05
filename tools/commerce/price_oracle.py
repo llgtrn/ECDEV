@@ -10,6 +10,14 @@ def unicode_word_ranges():
    if ranges and ranges[-1][1]+1==code:ranges[-1][1]=code
    else:ranges.append([code,code])
  return ranges
+
+def unicode_printable_ranges():
+ ranges=[]
+ for code in range(0x110000):
+  if chr(code).isprintable():
+   if ranges and ranges[-1][1]+1==code:ranges[-1][1]=code
+   else:ranges.append([code,code])
+ return ranges
 def main():
  assert git('rev-parse','HEAD').decode().strip()==COMMIT
  sources=[]
@@ -20,6 +28,39 @@ def main():
  from price_parser.parser import parse_number, Price, parse_price, extract_price_text, extract_currency_symbol, get_decimal_separator, SAFE_CURRENCY_SYMBOLS, OTHER_CURRENCY_SYMBOLS, DOLLAR_CODES
  # Execute the actual tests module and its original Example data, without replacing donor code.
  spec=importlib.util.spec_from_file_location('locked_price_tests',DONOR/'tests/test_price_parsing.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ if '--object-contract' in sys.argv:
+  import decimal,math,platform,attr,unicodedata
+  from importlib.metadata import version as installed_version
+  amounts=[None,'','0','-0','0.00','000.00','12.00','1200e-2','1E+3','1.2e-7','1E+500','1E-500','1E+99999','Infinity','-Inf','NaN','NaN123','sNaN','-NaN42']
+  currencies=[None,'','USD','$',"A'B",'A"B','東京','\n','\0','\x1b','\x85','\u00a0','\u00ad','\u200d','\u2028','😀',"both'\" quotes",'\\','\t\r']
+  construction=[]
+  for amount in amounts:
+   for currency in currencies:
+    for text in [None,'raw','different']:
+     inputs=dict(amount_decimal_input=amount,currency=currency,amount_text=text)
+     try:
+      value=Price(None if amount is None else decimal.Decimal(amount),currency,text)
+      try:
+       number=value.amount_float
+       floating=dict(classification='NULL',value=None) if number is None else dict(classification='NAN' if math.isnan(number) else 'NEGATIVE_INFINITY' if number==float('-inf') else 'POSITIVE_INFINITY' if math.isinf(number) else 'FINITE',value=number if math.isfinite(number) else None)
+      except (decimal.DecimalException,ValueError,OverflowError) as error:floating=dict(classification='ERROR',error=type(error).__name__)
+      expected=dict(amount_decimal_text=None if value.amount is None else str(value.amount),currency=value.currency,amount_text=value.amount_text,amount_float=floating,repr=repr(value))
+      construction.append(dict(input=inputs,expected=expected,error=None))
+     except (decimal.DecimalException,ValueError,TypeError) as error:construction.append(dict(input=inputs,expected=None,error=type(error).__name__))
+  comparisons=[]
+  for left,right in [(None,None),('0','-0.00'),('12.00','12'),('1E+3','1000'),('Infinity','Inf'),('Infinity','-Infinity'),('NaN','NaN'),('NaN123','NaN123'),('sNaN','sNaN')]:
+   for same_currency in [True,False]:
+    for same_text in [True,False]:
+     a=dict(amount_decimal_input=left,currency='USD',amount_text='raw');b=dict(amount_decimal_input=right,currency='USD' if same_currency else 'EUR',amount_text='raw' if same_text else 'different')
+     try:
+      actual=Price(None if left is None else decimal.Decimal(left),a['currency'],a['amount_text'])==Price(None if right is None else decimal.Decimal(right),b['currency'],b['amount_text'])
+      comparisons.append(dict(left=a,right=b,expected=actual,error=None))
+     except decimal.DecimalException as error:comparisons.append(dict(left=a,right=b,expected=None,error=type(error).__name__))
+  record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_PRICE_OBJECT',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,python_version=platform.python_version(),unicode_version=unicodedata.unidata_version,attrs_version=installed_version('attrs'),scope='Typed Decimal-or-None constructor fields, original repr and amount_float outcomes, exact scale/sign/nonfinite behavior, equality including amount_text; synthetic study inputs, no native parity yet',fields=[dict(name=f.name,repr=f.repr,eq=f.eq,required=f.default is attr.NOTHING) for f in attr.fields(Price)],construction=construction,comparisons=comparisons,native_parity=False,whole_donor_parity=False,new_live_acquisition=False)
+  (ROOT/'adapter/web/tests/fixtures/price-object-contract.json').write_bytes((json.dumps(record,indent=2,ensure_ascii=False,allow_nan=False)+'\n').encode())
+  lexicon_path=ROOT/'adapter/web/data/price-currency.json';data=json.loads(lexicon_path.read_text(encoding='utf-8'));assert data['unicode_version']==unicodedata.unidata_version;data['printable_ranges']=unicode_printable_ranges();data['printable_ranges_basis']='Python isprintable Unicode14 property data for source-compatible representation; no donor executable code'
+  lexicon_path.write_bytes((json.dumps(data,indent=2,ensure_ascii=False)+'\n').encode())
+  print('Executed locked object contract:',len(construction),'construction and',len(comparisons),'comparison cases; native implementation/proof pending');return
  if '--source-helpers' in sys.argv:
   import unicodedata
   public=json.loads((ROOT/'adapter/web/tests/fixtures/price-contract.json').read_text(encoding='utf-8'))
@@ -106,6 +147,7 @@ def main():
   data=ROOT/'adapter/web/data';data.mkdir(exist_ok=True)
   lexicon=dict(record['currency_tokens'],license='BSD-3-Clause',notice='adapter/web/tests/fixtures/price-parser-LICENSE.txt',source_commit=COMMIT,source_sha256=sources[1]['sha256'],unicode_version=unicodedata.unidata_version,decimal_digit_starts=[i for i in range(0x110000) if unicodedata.category(chr(i))=='Nd' and unicodedata.decimal(chr(i))==0])
   lexicon['word_ranges']=unicode_word_ranges();lexicon['word_ranges_basis']='Python isalnum or underscore, Unicode '+unicodedata.unidata_version+'; derived Unicode property data, not donor executable code'
+  lexicon['printable_ranges']=unicode_printable_ranges();lexicon['printable_ranges_basis']='Python isprintable Unicode14 property data for source-compatible representation; no donor executable code'
   (data/'price-currency.json').write_text(json.dumps(lexicon,indent=2,ensure_ascii=False)+'\n',encoding='utf-8',newline='\n')
   print('Executed locked full public Price API oracle:',len(cases),'cases; native comparison pending');return
  inputs=[]

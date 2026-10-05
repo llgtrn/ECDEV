@@ -167,6 +167,16 @@ def main():
   assert hashlib.sha256((ROOT/helper['native_source']).read_bytes()).hexdigest()==helper['native_source_sha256']
   assert hashlib.sha256((ROOT/'adapter/web/data/price-currency.json').read_bytes()).hexdigest()==helper['data_sha256']
   report['oracle_cases_executed']+=helper['cases'];report['supplemental_helper_oracle_families']+=families
+ object_report=read(ROOT/'research/commerce/price-object-oracle-report.json');fixture=ROOT/object_report['fixture'];oracle=read(fixture)
+ assert object_report['status']=='PASS' and object_report['whole_donor_parity'] is False
+ assert oracle['oracle']=='UNMODIFIED_LOCKED_PRICE_PARSER_PRICE_OBJECT'
+ assert len(oracle['construction'])==1083 and len(oracle['comparisons'])==36 and object_report['cases']==1119
+ assert oracle['commit_sha']==object_report['commit_sha']==next(d['commit_sha'] for d in reg['donors'] if d['donor_id']=='scrapinghub--price-parser')
+ assert hashlib.sha256(fixture.read_bytes()).hexdigest()==object_report['fixture_sha256']
+ assert hashlib.sha256((ROOT/object_report['native_source']).read_bytes()).hexdigest()==object_report['native_source_sha256']
+ assert hashlib.sha256((ROOT/'adapter/web/data/price-currency.json').read_bytes()).hexdigest()==object_report['data_sha256']
+ assert oracle['unicode_version']==read(ROOT/'adapter/web/data/price-currency.json')['unicode_version']=='14.0.0'
+ report['oracle_cases_executed']+=object_report['cases'];report['supplemental_helper_oracle_families']+=1
  summaries=[read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json') for d in reg['donors']]
  report['symbols_censused']=sum(s['symbols'] for s in summaries)
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)

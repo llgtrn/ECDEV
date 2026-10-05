@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "families": 1,
+  "cases": 1119,
+  "construction_cases": 1083,
+  "comparison_cases": 36,
+  "donor_id": "scrapinghub--price-parser",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "fixture": "adapter/web/tests/fixtures/price-object-contract.json",
+  "fixture_sha256": "d02a82005bdcb975cc4a4cea3dad3e76a660db8099b5fe3c84a9ec39f26fcb45",
+  "native_source": "adapter/web/src/price.rs",
+  "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+  "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
+  "native_test": "adapter/web/src/price.rs::locked_price_object_contract_oracle",
+  "regression": "adapter/web/src/price.rs::native_price_object_projection_preserves_nonfinite_and_resource_unknowns",
+  "production_caller": "adapter/web/src/price.rs::parse_price -> Price::fromstring -> Price::projection",
+  "whole_donor_parity": false,
+  "runtime_donor_import": false,
+  "python_version": "3.11.15",
+  "unicode_version": "14.0.0",
+  "attrs_version": "26.1.0",
+  "scope": "Native typed Decimal-or-None price object fields; exact decimal scale/sign and repr, amount_text participates in equality, quiet/signaling NaN and Infinity classified separately. Valid bounded constructor inputs compared to locked donor. Floats compared by exact IEEE bits, not JSON exponent spelling.",
+  "projection_contract": "Only bounded canonical finite decimal output has a finite float projection; nonfinite/unknown/overflow/underflow outside resource bounds remain null, never observed money.",
+  "limitations": [
+    "Input/string storage bounded to 4096 bytes; numeric expansion/exponent guards unchanged in commerce projection",
+    "Other Python dynamic object types, subclass/class identity, mutation/exception-context variations and packaging ABI are not claimed",
+    "Unicode14/Python3.11/attrs26.1 corpus only; all-version parity and whole cutover remain incomplete"
+  ]
+}
