@@ -12,6 +12,16 @@ use uuid::Uuid;
 pub struct Keepa {
     key: Option<String>,
 }
+fn before(reason: impl Into<String>) -> AcquireError {
+    let mut error = AcquireError::from(reason.into());
+    error.request_count = Some(0);
+    error
+}
+fn response_failure(receipt: &AcquireError, reason: impl Into<String>) -> AcquireError {
+    let mut error = receipt.clone();
+    error.reason = reason.into();
+    error
+}
 impl Keepa {
     pub fn from_env() -> Self {
         Self {
@@ -43,42 +53,38 @@ impl Keepa {
           "source_last_update_keepa_minutes":product["lastUpdate"],"note":"Rank is an observation, not a sales estimate. No supplier, fees or demand inferred."}),
         )
     }
-}
-impl Provider for Keepa {
-    fn id(&self) -> &str {
-        "keepa"
-    }
-    fn metadata(&self) -> Value {
-        json!({"id":"keepa","class":"PAID","type":"TYPE_B","status":if self.key.is_some(){"AVAILABLE"}else{"UNAVAILABLE"},"auth_state":if self.key.is_some(){"CONFIGURED"}else{"MISSING"},"auth_verified":false,"health":"UNVERIFIED","adapter_state":"RUST_IMPLEMENTED","capabilities":["product.analyze"],"markets":["AMAZON_JP","AMAZON_US"],"cost_minor":null,"reason":"Paid optional product inspection; disabled by default budget. Auth and live correctness unverified. No retries."})
-    }
-    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
-        let key = self
-            .key
-            .as_ref()
-            .ok_or("KEEPA_UNAVAILABLE: KEEPA_API_KEY missing")?;
-        if r.capability != "product.analyze" {
-            return Err("UNSUPPORTED_CAPABILITY".into());
-        }
-        let domain = match r.market.as_str() {
-            "AMAZON_JP" => 5,
-            "AMAZON_US" => 1,
-            _ => return Err("UNSUPPORTED_MARKET".into()),
-        };
-        let asin = r.query["asin"].as_str().ok_or("ASIN_REQUIRED")?;
-        if asin.len() != 10
-            || !asin
-                .bytes()
-                .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
-        {
-            return Err("ASIN must contain 10 uppercase letters or digits".into());
-        }
-        let client = reqwest::blocking::Client::builder()
-            .timeout(std::time::Duration::from_secs(30))
-            .redirect(reqwest::redirect::Policy::none())
-            .build()
-            .map_err(|_| "HTTP_CLIENT_ERROR")?;
+    fn acquire_at(
+        &self,
+        r: &AcquireRequest,
+        client: &reqwest::blocking::Client,
+        endpoint: &str,
+    ) -> Result<AcquireResult, AcquireError> {
+        let (key, domain, asin) = (|| -> Result<_, &str> {
+            let key = self
+                .key
+                .as_ref()
+                .ok_or("KEEPA_UNAVAILABLE: KEEPA_API_KEY missing")?;
+            if r.capability != "product.analyze" {
+                return Err("UNSUPPORTED_CAPABILITY");
+            }
+            let domain = match r.market.as_str() {
+                "AMAZON_JP" => 5,
+                "AMAZON_US" => 1,
+                _ => return Err("UNSUPPORTED_MARKET"),
+            };
+            let asin = r.query["asin"].as_str().ok_or("ASIN_REQUIRED")?;
+            if asin.len() != 10
+                || !asin
+                    .bytes()
+                    .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
+            {
+                return Err("ASIN must contain 10 uppercase letters or digits");
+            }
+            Ok((key, domain, asin))
+        })()
+        .map_err(before)?;
         let response = client
-            .get("https://api.keepa.com/product")
+            .get(endpoint)
             .query(&[
                 ("key", key.as_str()),
                 ("domain", &domain.to_string()),
@@ -98,26 +104,36 @@ impl Provider for Keepa {
                 }
             })?;
         let status = response.status();
+        let retry = response
+            .headers()
+            .get("retry-after")
+            .and_then(|v| v.to_str().ok())
+            .filter(|s| s.len() <= 4096 && !s.chars().any(char::is_control));
+        let receipt = AcquireError::http(status.as_u16(), 1, retry, (timestamp() * 1000) as i64);
         if !status.is_success() {
-            return Err(match status.as_u16() {
-                400 => "PROVIDER_AUTH_OR_PARAMETER_ERROR",
-                402 => "PROVIDER_QUOTA_EXCEEDED",
-                429 => "PROVIDER_RATE_LIMITED",
-                _ => "PROVIDER_HTTP_ERROR",
-            }
-            .into());
+            return Err(response_failure(
+                &receipt,
+                match status.as_u16() {
+                    400 => "PROVIDER_AUTH_OR_PARAMETER_ERROR",
+                    402 => "PROVIDER_QUOTA_EXCEEDED",
+                    429 => "PROVIDER_RATE_LIMITED",
+                    _ => "PROVIDER_HTTP_ERROR",
+                },
+            ));
         }
         let mut raw = vec![];
         use std::io::Read;
         response
             .take(8 * 1024 * 1024 + 1)
             .read_to_end(&mut raw)
-            .map_err(|_| "PROVIDER_BODY_ERROR")?;
+            .map_err(|_| response_failure(&receipt, "PROVIDER_BODY_ERROR"))?;
         if raw.len() > 8 * 1024 * 1024 {
-            return Err("PROVIDER_RESPONSE_TOO_LARGE".into());
+            return Err(response_failure(&receipt, "PROVIDER_RESPONSE_TOO_LARGE"));
         }
-        let body: Value = serde_json::from_slice(&raw).map_err(|_| "PROVIDER_INVALID_JSON")?;
-        let normalized = Self::normalize(r, &body)?;
+        let body: Value = serde_json::from_slice(&raw)
+            .map_err(|_| response_failure(&receipt, "PROVIDER_INVALID_JSON"))?;
+        let normalized =
+            Self::normalize(r, &body).map_err(|reason| response_failure(&receipt, reason))?;
         let hash = format!("{:x}", Sha256::digest(&raw));
         let obs = Evidence {
             id: Uuid::new_v4().to_string(),
@@ -141,13 +157,31 @@ impl Provider for Keepa {
             cost_minor: None,
             run_id: r.run_id.clone(),
         };
-        obs.validate()?;
+        obs.validate()
+            .map_err(|reason| response_failure(&receipt, reason))?;
         Ok(AcquireResult {
             observations: vec![obs],
             result: normalized,
             raw_payload: raw,
             provider_cost: json!({"provider":"keepa","request_count":1,"actual_cost_minor":null,"tokens_consumed":body["tokensConsumed"],"tokens_left":body["tokensLeft"],"freshness":"UPSTREAM_TIMESTAMP_REPORTED","network_calls":1}),
         })
+    }
+}
+impl Provider for Keepa {
+    fn id(&self) -> &str {
+        "keepa"
+    }
+    fn metadata(&self) -> Value {
+        json!({"id":"keepa","class":"PAID","type":"TYPE_B","status":if self.key.is_some(){"AVAILABLE"}else{"UNAVAILABLE"},"auth_state":if self.key.is_some(){"CONFIGURED"}else{"MISSING"},"auth_verified":false,"health":"UNVERIFIED","adapter_state":"RUST_IMPLEMENTED","capabilities":["product.analyze"],"markets":["AMAZON_JP","AMAZON_US"],"cost_minor":null,"reason":"Paid optional product inspection; disabled by default budget. Auth and live correctness unverified. No retries."})
+    }
+    fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+        let client = reqwest::blocking::Client::builder()
+            .https_only(true)
+            .timeout(std::time::Duration::from_secs(30))
+            .redirect(reqwest::redirect::Policy::none())
+            .build()
+            .map_err(|_| before("HTTP_CLIENT_ERROR"))?;
+        self.acquire_at(r, &client, "https://api.keepa.com/product")
     }
 }
 #[cfg(test)]
@@ -162,11 +196,9 @@ mod tests {
             market: "AMAZON_JP".into(),
             query: json!({"asin":"B08N5WRWNW"}),
         };
-        assert!(
-            p.acquire(&r)
-                .unwrap_err_text()
-                .contains("KEEPA_UNAVAILABLE")
-        );
+        let failure = p.acquire(&r).err().unwrap();
+        assert_eq!(failure.request_count, Some(0));
+        assert!(failure.reason.contains("KEEPA_UNAVAILABLE"));
     }
     #[test]
     fn currency_does_not_follow_donor_usd_formatter() {
@@ -185,15 +217,91 @@ mod tests {
         assert_eq!(v["price_minor"], 4000);
         assert!(v["review_count"].is_null());
     }
-    trait ErrorText {
-        fn unwrap_err_text(self) -> String;
-    }
-    impl ErrorText for Result<AcquireResult, AcquireError> {
-        fn unwrap_err_text(self) -> String {
-            match self {
-                Err(e) => e.to_string(),
-                Ok(_) => panic!("Expected unavailable"),
+    #[test]
+    fn http_receipts_keep_counts_status_retry_and_secret_boundaries() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+            time::Duration,
+        };
+        let request = AcquireRequest {
+            run_id: "mock-receipt".into(),
+            capability: "product.analyze".into(),
+            market: "AMAZON_JP".into(),
+            query: json!({"asin":"B08N5WRWNW"}),
+        };
+        for (status, body, reason) in [
+            (400, "mock-secret", "PROVIDER_AUTH_OR_PARAMETER_ERROR"),
+            (402, "{}", "PROVIDER_QUOTA_EXCEEDED"),
+            (429, "{}", "PROVIDER_RATE_LIMITED"),
+            (301, "{}", "PROVIDER_HTTP_ERROR"),
+            (200, "not-json", "PROVIDER_INVALID_JSON"),
+            (200, "{\"products\":[]}", "PRODUCT_NOT_FOUND"),
+        ] {
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let endpoint = format!("http://{}/product", listener.local_addr().unwrap());
+            let server = thread::spawn(move || {
+                let (mut stream, _) = listener.accept().unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(3)))
+                    .unwrap();
+                let mut bytes = vec![];
+                while !bytes.windows(4).any(|w| w == b"\r\n\r\n") {
+                    let mut chunk = [0; 4096];
+                    let n = stream.read(&mut chunk).unwrap();
+                    assert!(n > 0);
+                    bytes.extend_from_slice(&chunk[..n]);
+                }
+                write!(stream,"HTTP/1.1 {status} Mock\r\nContent-Length: {}\r\nRetry-After: 5\r\nLocation: https://example.invalid/\r\nConnection: close\r\n\r\n{body}",body.len()).unwrap();
+                String::from_utf8(bytes).unwrap()
+            });
+            let client = reqwest::blocking::Client::builder()
+                .no_proxy()
+                .timeout(Duration::from_secs(3))
+                .redirect(reqwest::redirect::Policy::none())
+                .build()
+                .unwrap();
+            let failure = Keepa {
+                key: Some("mock-secret".into()),
             }
+            .acquire_at(&request, &client, &endpoint)
+            .err()
+            .unwrap();
+            assert_eq!(failure.http_status, Some(status));
+            assert_eq!(failure.request_count, Some(1));
+            assert_eq!(failure.reason, reason);
+            assert_eq!(failure.retry_after_header.as_deref(), Some("5"));
+            assert!(failure.retry_not_before_ms.is_some());
+            assert!(
+                !serde_json::to_string(&failure)
+                    .unwrap()
+                    .contains("mock-secret")
+            );
+            let wire = server.join().unwrap();
+            assert!(wire.starts_with("GET /product?"));
+            assert!(wire.contains("domain=5"));
+            assert!(wire.contains("asin=B08N5WRWNW"));
         }
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        listener.set_nonblocking(true).unwrap();
+        let endpoint = format!("http://{}/product", listener.local_addr().unwrap());
+        let client = reqwest::blocking::Client::builder()
+            .no_proxy()
+            .build()
+            .unwrap();
+        let mut invalid = request;
+        invalid.market = "UNSUPPORTED".into();
+        assert_eq!(
+            Keepa {
+                key: Some("mock-secret".into())
+            }
+            .acquire_at(&invalid, &client, &endpoint)
+            .err()
+            .unwrap()
+            .request_count,
+            Some(0)
+        );
+        assert!(listener.accept().is_err());
     }
 }

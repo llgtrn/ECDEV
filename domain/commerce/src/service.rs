@@ -223,7 +223,19 @@ impl Engine {
         }
         json!(profiles)
     }
-    pub fn product(&self, mut args: Value) -> Result<Value, String> {
+    pub fn product(&self, args: Value) -> Result<Value, String> {
+        let limit = std::env::var("ECDEV_MAX_PROVIDER_REQUESTS_PER_DAY")
+            .ok()
+            .and_then(|s| s.parse().ok())
+            .unwrap_or(100);
+        self.product_with_policy(args, &crate::provider::BudgetPolicy::from_env(), limit)
+    }
+    fn product_with_policy(
+        &self,
+        mut args: Value,
+        budget: &crate::provider::BudgetPolicy,
+        daily_limit: u64,
+    ) -> Result<Value, String> {
         if args["evidence_layer"] == "OFFICIAL_SP_API" {
             return self.official_product(args);
         }
@@ -267,12 +279,7 @@ impl Engine {
         else {
             return self.persist(json!({"mode":"PLAN_ONLY","status":"UNAVAILABLE","request":request,"observations":[],"network_calls":0,"cost_minor":0,"errors":["KEEPA_API_KEY missing or adapter unavailable"]}));
         };
-        if let Err(reason) = self.reserve_paid(
-            &id,
-            "keepa",
-            "product.analyze",
-            &crate::provider::BudgetPolicy::from_env(),
-        ) {
+        if let Err(reason) = self.reserve_paid(&id, "keepa", "product.analyze", budget) {
             return self.persist(json!({"mode":"PLAN_ONLY","status":"DENIED_BUDGET","request":request,"observations":[],"network_calls":0,"cost_minor":0,"errors":[reason],"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"keepa","capability":"product.analyze","status":"DENIED_BUDGET","started_at":started_at,"completed_at":timestamp()*1000,"request_count":0,"actual_cost_minor":0,"cache_hit":false,"quota_before":null,"quota_after":null}]}));
         }
         // Reserve under the database lock before IO; retries cannot bypass the daily bound.
@@ -285,11 +292,7 @@ impl Engine {
                     |r| r.get(0),
                 )
                 .map_err(error)?;
-            let limit = std::env::var("ECDEV_MAX_PROVIDER_REQUESTS_PER_DAY")
-                .ok()
-                .and_then(|s| s.parse::<u64>().ok())
-                .unwrap_or(100);
-            if count >= limit {
+            if count >= daily_limit {
                 return Err("PROVIDER_DAILY_REQUEST_BUDGET_EXHAUSTED".into());
             }
             db.execute(
@@ -298,18 +301,46 @@ impl Engine {
             )
             .map_err(error)?;
         }
+        let failed = |failure: crate::provider::AcquireError| {
+            let count = failure.request_count;
+            self.persist(json!({"mode":crate::provider::acquisition_mode(false,count.unwrap_or(0),count.is_none(),false),"requested_mode":"LIVE","status":"FAILED","acquisition_run_id":id,"request":request,"observations":[],"errors":[failure.reason],"acquisition_failure":failure,"network_calls":count,"known_network_calls":count.unwrap_or(0),"live_io_established":count.is_some_and(|n|n>0),"new_live_acquisition":false,"cost_minor":if count==Some(0){json!(0)}else{Value::Null},"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"keepa","capability":"product.analyze","status":"FAILED","started_at":started_at,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":count,"actual_cost_minor":if count==Some(0){json!(0)}else{Value::Null},"cache_hit":false,"quota_before":null,"quota_after":null}]}))
+        };
         match provider.acquire(&request) {
             Ok(result) => {
-                for observation in &result.observations { observation.validate()?; }
+                let count = result.provider_cost["request_count"].as_u64();
+                if count.is_none_or(|n| n == 0)
+                    || result.observations.is_empty()
+                    || result.observations.iter().any(|o| {
+                        o.mode != crate::domain::ObservationMode::Live
+                            || o.provider != "keepa"
+                            || o.source_type != "API"
+                    })
+                {
+                    let mut failure = crate::provider::AcquireError::from(
+                        "KEEPA_LIVE_HTTP_AND_PRODUCT_WITNESS_REQUIRED",
+                    );
+                    failure.request_count = count;
+                    return failed(failure);
+                }
+                let count = count.unwrap();
+                for observation in &result.observations {
+                    observation.validate()?;
+                }
                 let dir = self.root.join(".ynventa/materialized/raw");
                 fs::create_dir_all(&dir).map_err(error)?;
-                for observation in &result.observations { fs::write(dir.join(format!("{}.json",observation.raw_hash)), &result.raw_payload).map_err(error)?; }
-                let run = self.persist(json!({"mode":"LIVE","status":"COMPLETE","acquisition_run_id":id,"request":request,"observations":result.observations,"result":result.result,"provider_cost":result.provider_cost,"network_calls":1,"cost_minor":null,"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"keepa","capability":"product.analyze","status":"COMPLETE","started_at":started_at,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":1,"estimated_cost_minor":crate::provider::BudgetPolicy::from_env().request_ceiling_minor,"actual_cost_minor":null,"cache_hit":false,"result_count":result.observations.len(),"quota_before":null,"quota_after":result.provider_cost["tokens_left"]}]}))?;
-                Ok(run)
-            },
-            Err(message) => self.persist(json!({"mode":"LIVE","status":"FAILED","acquisition_run_id":id,"request":request,"observations":[],"errors":[message.reason],"acquisition_failure":message,"network_calls":null,"cost_minor":null,"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"keepa","capability":"product.analyze","status":"FAILED","started_at":started_at,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":null,"actual_cost_minor":null,"cache_hit":false,"quota_before":null,"quota_after":null}]}))
+                for observation in &result.observations {
+                    fs::write(
+                        dir.join(format!("{}.json", observation.raw_hash)),
+                        &result.raw_payload,
+                    )
+                    .map_err(error)?;
+                }
+                self.persist(json!({"mode":"LIVE","requested_mode":"LIVE","status":"COMPLETE","acquisition_run_id":id,"request":request,"observations":result.observations,"result":result.result,"provider_cost":result.provider_cost,"network_calls":count,"known_network_calls":count,"live_io_established":true,"new_live_acquisition":true,"cost_minor":null,"provider_calls":[{"id":Uuid::new_v4().to_string(),"provider":"keepa","capability":"product.analyze","status":"COMPLETE","started_at":started_at,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":count,"estimated_cost_minor":budget.request_ceiling_minor,"actual_cost_minor":null,"cache_hit":false,"result_count":result.observations.len(),"quota_before":null,"quota_after":result.provider_cost["tokens_left"]}]}))
+            }
+            Err(failure) => failed(failure),
         }
     }
+
     pub fn submit(&self, intent: Intent) -> Result<Value, String> {
         let providers = self.providers();
         let plan = planner::plan(&intent, providers.as_array().unwrap())?;
@@ -749,6 +780,91 @@ mod tests {
         let p = std::env::temp_dir().join(format!("ecdev-test-{}", Uuid::new_v4()));
         fs::create_dir_all(&p).unwrap();
         p
+    }
+    #[test]
+    fn paid_product_failure_modes_counts_and_budget_are_durable() {
+        use crate::provider::{
+            AcquireError, AcquireRequest, AcquireResult, BudgetPolicy, Provider,
+        };
+        struct TestProvider(Option<u64>, bool);
+        impl Provider for TestProvider {
+            fn id(&self) -> &str {
+                "keepa"
+            }
+            fn metadata(&self) -> Value {
+                json!({"status":"AVAILABLE"})
+            }
+            fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                if self.1 {
+                    Ok(AcquireResult {
+                        observations: vec![],
+                        result: json!({"unwitnessed_product":true}),
+                        raw_payload: b"unwitnessed payload".to_vec(),
+                        provider_cost: json!({"request_count":self.0}),
+                    })
+                } else {
+                    let mut failure = AcquireError::http(429, 1, Some("5"), 1000);
+                    failure.request_count = self.0;
+                    Err(failure)
+                }
+            }
+        }
+        let budget = BudgetPolicy {
+            per_run_minor: 10,
+            per_day_minor: 100,
+            per_month_minor: 100,
+            per_provider_minor: 100,
+            per_capability_minor: 100,
+            request_ceiling_minor: 10,
+            ..Default::default()
+        };
+        for (count, mode) in [
+            (Some(0), "PLAN_ONLY"),
+            (None, "INFERRED"),
+            (Some(1), "LIVE"),
+        ] {
+            for success in [false, true] {
+                let path = temp();
+                let e = Engine::open(&path)
+                    .unwrap()
+                    .with_provider(Arc::new(TestProvider(count, success)));
+                let run = e
+                    .product_with_policy(
+                        json!({"market":"AMAZON_JP","asin":"B08N5WRWNW"}),
+                        &budget,
+                        100,
+                    )
+                    .unwrap();
+                assert_eq!(run["mode"], mode);
+                assert_eq!(run["status"], "FAILED");
+                assert_eq!(run["network_calls"], json!(count));
+                assert_eq!(run["provider_calls"][0]["request_count"], json!(count));
+                assert_eq!(run["observations"], json!([]));
+                assert_eq!(run["new_live_acquisition"], false);
+                assert!(!path.join(".ynventa/materialized/raw").exists());
+                if count != Some(0) {
+                    assert!(run["cost_minor"].is_null());
+                } else {
+                    assert_eq!(run["cost_minor"], 0);
+                }
+                assert_eq!(
+                    e.run(run["run_id"].as_str().unwrap()).unwrap()["mode"],
+                    mode
+                );
+                let db = e.db.lock().unwrap();
+                let reserved: u64 = db
+                    .query_row(
+                        "SELECT SUM(reserved_minor) FROM paid_reservations",
+                        [],
+                        |r| r.get(0),
+                    )
+                    .unwrap();
+                assert_eq!(reserved, 10);
+                drop(db);
+                drop(e);
+                fs::remove_dir_all(path).unwrap();
+            }
+        }
     }
     #[test]
     fn durable_runs_replay_without_network() {

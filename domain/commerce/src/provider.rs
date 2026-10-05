@@ -11,6 +11,25 @@ pub enum ProviderClass {
     Official,
     Paid,
 }
+/// An intent is not evidence of IO. Unknown outcomes never become a zero-call claim.
+pub(crate) fn acquisition_mode(
+    fixture: bool,
+    known: u64,
+    uncertain: bool,
+    cached: bool,
+) -> &'static str {
+    if fixture {
+        "FIXTURE"
+    } else if known > 0 {
+        "LIVE"
+    } else if uncertain {
+        "INFERRED"
+    } else if cached {
+        "CACHED"
+    } else {
+        "PLAN_ONLY"
+    }
+}
 #[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
 pub struct BudgetPolicy {
     pub currency: String,

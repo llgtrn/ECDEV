@@ -504,7 +504,33 @@ impl Engine {
             } else if fresh {
                 (previous.clone().unwrap(), true)
             } else {
-                match provider.acquire(&request) {
+                let acquired = provider.acquire(&request).and_then(|result| {
+                    let count = result.provider_cost["request_count"].as_u64();
+                    let invalid = if fixture {
+                        count != Some(0)
+                            || result
+                                .observations
+                                .iter()
+                                .any(|o| o.mode != crate::domain::ObservationMode::Fixture)
+                    } else {
+                        (!result.observations.is_empty() || result.result["not_modified"] == true)
+                            && (count.is_none_or(|n| n == 0)
+                                || result
+                                    .observations
+                                    .iter()
+                                    .any(|o| o.mode != crate::domain::ObservationMode::Live))
+                    };
+                    if invalid {
+                        let mut error = crate::provider::AcquireError::from(
+                            "PUBLIC_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH",
+                        );
+                        error.request_count = count;
+                        Err(error)
+                    } else {
+                        Ok(result)
+                    }
+                });
+                match acquired {
                     Ok(result) => {
                         if result.result["not_modified"] == true {
                             let Some(mut prior) = previous.clone() else {
@@ -761,15 +787,14 @@ impl Engine {
         ]
         .iter()
         .any(|state| frontier_status["states"][*state].as_u64().unwrap_or(0) > 0);
-        let accounting_mode = if fixture {
-            "FIXTURE"
-        } else if calls.iter().all(|c| c["cache_hit"] == true) {
-            "CACHED"
-        } else {
-            "LIVE"
-        };
+        let accounting_mode = crate::provider::acquisition_mode(
+            fixture,
+            network,
+            calls.iter().any(|c| c["request_count"].is_null()),
+            !observations.is_empty() && calls.iter().all(|c| c["cache_hit"] == true),
+        );
         let cache_metrics = crate::intelligence::cache_metrics(&calls, accounting_mode);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":if fixture{"FIXTURE"}else if calls.iter().all(|c|c["cache_hit"]==true){"CACHED"}else{"LIVE"},"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {
@@ -849,6 +874,90 @@ impl Engine {
 #[cfg(test)]
 mod budget_storage_tests {
     use super::*;
+    #[test]
+    fn public_research_mode_comes_from_known_io_not_failed_intent() {
+        use crate::provider::{AcquireError, AcquireResult, Provider};
+        struct Failure(Option<u64>, bool);
+        impl Provider for Failure {
+            fn id(&self) -> &str {
+                "native-web"
+            }
+            fn metadata(&self) -> Value {
+                json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","capabilities":["fetch.http"],"markets":["PUBLIC_WEB"]})
+            }
+            fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                if self.1 {
+                    let raw = b"synthetic public capture";
+                    let observation = Evidence {
+                        id: Uuid::new_v4().to_string(),
+                        mode: crate::domain::ObservationMode::Live,
+                        source_type: "PUBLIC_HTML".into(),
+                        provider: "native-web".into(),
+                        external_source: "https://shop.example/product".into(),
+                        market: "PUBLIC_WEB".into(),
+                        query: request.query.clone(),
+                        timestamp: "synthetic capture time".into(),
+                        retrieved_at: "synthetic capture time".into(),
+                        raw_hash: format!("{:x}", Sha256::digest(raw)),
+                        normalized_value: json!({}),
+                        unit: "MOCK_NOT_LIVE_PROOF".into(),
+                        currency: None,
+                        confidence: None,
+                        freshness_seconds: None,
+                        cost_minor: Some(0),
+                        run_id: request.run_id.clone(),
+                    };
+                    Ok(AcquireResult {
+                        observations: vec![observation],
+                        result: json!({"products":[],"links":[],"source_url":"https://shop.example/product"}),
+                        raw_payload: raw.to_vec(),
+                        provider_cost: json!({"request_count":self.0}),
+                    })
+                } else {
+                    let mut error = AcquireError::from("SYNTHETIC_FAILURE_NO_ACTUAL_NETWORK");
+                    error.request_count = self.0;
+                    Err(error)
+                }
+            }
+        }
+        for (count, mode) in [
+            (Some(0), "PLAN_ONLY"),
+            (None, "INFERRED"),
+            (Some(2), "LIVE"),
+        ] {
+            for success in [false, true] {
+                let root =
+                    std::env::temp_dir().join(format!("ecdev-research-mode-{}", Uuid::new_v4()));
+                let e = Engine::open(&root)
+                    .unwrap()
+                    .with_provider(std::sync::Arc::new(Failure(count, success)));
+                let run=e.research(json!({"market":"PUBLIC_WEB","query":"Synthetic classification, not live proof","sources":[{"url":"https://shop.example/product"}],"max_pages":1})).unwrap();
+                assert_eq!(run["mode"], mode);
+                assert_eq!(run["network_calls"], json!(count));
+                assert_eq!(run["known_network_calls"], count.unwrap_or(0));
+                if success && count.is_some_and(|n| n > 0) {
+                    assert_eq!(run["observations"].as_array().unwrap().len(), 1);
+                } else {
+                    assert_eq!(run["observations"], json!([]));
+                    assert!(!root.join(".ynventa/materialized/raw").exists());
+                }
+                assert_eq!(
+                    e.run(run["run_id"].as_str().unwrap()).unwrap()["mode"],
+                    mode
+                );
+                drop(e);
+                std::fs::remove_dir_all(root).unwrap();
+            }
+        }
+        assert_eq!(
+            crate::provider::acquisition_mode(false, 0, false, true),
+            "CACHED"
+        );
+        assert_eq!(
+            crate::provider::acquisition_mode(false, 1, false, true),
+            "LIVE"
+        );
+    }
     #[test]
     fn response_retry_after_reaches_durable_frontier_and_known_request_accounting() {
         use crate::provider::{AcquireError, AcquireResult, Provider};
