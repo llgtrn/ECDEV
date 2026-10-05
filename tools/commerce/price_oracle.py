@@ -2,6 +2,14 @@
 import ast,hashlib,importlib.util,json,pathlib,subprocess,sys
 ROOT=pathlib.Path(__file__).resolve().parents[2];DONOR=ROOT/'research/commerce/donors/checkouts/scrapinghub--price-parser';COMMIT='64e213a46a40473ba4f8aa3b249917fdc64d8a16'
 def git(*args):return subprocess.check_output(['git','-C',str(DONOR),*args])
+
+def unicode_word_ranges():
+ ranges=[]
+ for code in range(0x110000):
+  if chr(code).isalnum() or code==95:
+   if ranges and ranges[-1][1]+1==code:ranges[-1][1]=code
+   else:ranges.append([code,code])
+ return ranges
 def main():
  assert git('rev-parse','HEAD').decode().strip()==COMMIT
  sources=[]
@@ -12,6 +20,40 @@ def main():
  from price_parser.parser import parse_number, Price, parse_price, extract_price_text, extract_currency_symbol, get_decimal_separator, SAFE_CURRENCY_SYMBOLS, OTHER_CURRENCY_SYMBOLS, DOLLAR_CODES
  # Execute the actual tests module and its original Example data, without replacing donor code.
  spec=importlib.util.spec_from_file_location('locked_price_tests',DONOR/'tests/test_price_parsing.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ if '--source-helpers' in sys.argv:
+  import unicodedata
+  public=json.loads((ROOT/'adapter/web/tests/fixtures/price-contract.json').read_text(encoding='utf-8'))
+  pairs={(c['input'],c['currency_hint']) for c in public['cases']}
+  for token in SAFE_CURRENCY_SYMBOLS+OTHER_CURRENCY_SYMBOLS+DOLLAR_CODES:
+   pairs.update([(token+' 12.99',None),('12.99',token),('USD 12.99',token+' $')])
+  for token in DOLLAR_CODES:
+   for prefix in ['', 'A', '_', '3', '\u0345', '\u0301', '東京', '😀', '\u2163']:
+    for suffix in ['$', '$A', '$1', 'A', '1', '\u0345', '\u0301']:
+     pairs.add((prefix+token+suffix+' 12',None))
+  cases=[dict(operation='currency',input=text,hint=hint,expected=extract_currency_symbol(text,hint)) for text,hint in sorted(pairs,key=lambda p:(p[0] is not None,p[0] or '',p[1] is not None,p[1] or ''))]
+  texts={text for text,hint in pairs if text is not None}
+  cases += [dict(operation='text',input=text,expected=extract_price_text(text)) for text in sorted(texts)]
+  record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_SOURCE_HELPERS',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,unicode_version=unicodedata.unidata_version,scope='Direct currency token spelling and text extraction; source/hint priority and dollar-code Unicode word boundaries; valid string/optional currency inputs only',whole_donor_parity=False,cases=cases)
+  (ROOT/'adapter/web/tests/fixtures/price-source-helpers.json').write_bytes((json.dumps(record,indent=2,ensure_ascii=False)+'\n').encode())
+  lexicon_path=ROOT/'adapter/web/data/price-currency.json';data=json.loads(lexicon_path.read_text(encoding='utf-8'));assert data['unicode_version']==unicodedata.unidata_version
+  ranges=unicode_word_ranges()
+  data['word_ranges']=ranges;data['word_ranges_basis']='Python isalnum or underscore, Unicode '+unicodedata.unidata_version+'; derived Unicode property data, not donor executable code'
+  lexicon_path.write_bytes((json.dumps(data,indent=2,ensure_ascii=False)+'\n').encode())
+  print('Executed source helpers:',len(cases),'cases;',len(ranges),'word ranges');return
+ if '--literal-helper' in sys.argv:
+  from price_parser.parser import or_regex
+  tokens=['','a','ab','b','$','.','a+b','[','\\','東京','é','😀','\0','\n']
+  texts=['','ab','b ab a','foo.$a+b[\\','東京 é 😀','\0\n','😀ab東京','none']
+  cases=[]
+  for symbols in [[]]+[[a,b] for a in tokens for b in tokens]:
+   pattern=or_regex(symbols)
+   for text in texts:
+    match=pattern.search(text)
+    expected=None if match is None else dict(start_byte=len(text[:match.start()].encode()),end_byte=len(text[:match.end()].encode()),matched=match.group())
+    cases.append(dict(partition='LEFTMOST_ORDER_LITERAL_ESCAPES_EMPTY_UNICODE',symbols=symbols,input=text,expected=expected))
+  record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_LITERAL_UNION_SEARCH',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,scope='or_regex(symbols).search: literal escaping, leftmost then list order, empty union/token and Unicode spans projected to UTF-8 bytes; compiled Python pattern object methods beyond search not claimed',whole_donor_parity=False,cases=cases)
+  (ROOT/'adapter/web/tests/fixtures/price-literal-helper.json').write_bytes((json.dumps(record,indent=2,ensure_ascii=False)+'\n').encode())
+  print('Executed locked literal helper:',len(cases),'cases');return
  if '--decimal-helper' in sys.argv:
   import unicodedata
   starts=[i for i in range(0x110000) if unicodedata.category(chr(i))=='Nd' and unicodedata.decimal(chr(i))==0]
@@ -63,6 +105,7 @@ def main():
   folder=ROOT/'adapter/web/tests/fixtures';(folder/'price-contract.json').write_text(json.dumps(record,indent=2,ensure_ascii=False,allow_nan=False)+'\n',encoding='utf-8',newline='\n')
   data=ROOT/'adapter/web/data';data.mkdir(exist_ok=True)
   lexicon=dict(record['currency_tokens'],license='BSD-3-Clause',notice='adapter/web/tests/fixtures/price-parser-LICENSE.txt',source_commit=COMMIT,source_sha256=sources[1]['sha256'],unicode_version=unicodedata.unidata_version,decimal_digit_starts=[i for i in range(0x110000) if unicodedata.category(chr(i))=='Nd' and unicodedata.decimal(chr(i))==0])
+  lexicon['word_ranges']=unicode_word_ranges();lexicon['word_ranges_basis']='Python isalnum or underscore, Unicode '+unicodedata.unidata_version+'; derived Unicode property data, not donor executable code'
   (data/'price-currency.json').write_text(json.dumps(lexicon,indent=2,ensure_ascii=False)+'\n',encoding='utf-8',newline='\n')
   print('Executed locked full public Price API oracle:',len(cases),'cases; native comparison pending');return
  inputs=[]

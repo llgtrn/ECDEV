@@ -30,9 +30,12 @@
       "line_end": 80,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Escaped alternatives, leftmost match with list-order precedence; standalone helper contract unresolved",
+      "behavior": "Native literal search with leftmost/list-order priority, escaped literals, empty union/token and byte-projected Unicode spans; Python compiled-pattern object methods beyond search remain unresolved",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-literal-helper-oracle-report.json",
+      "limitations": "Only required valid-input search/extraction surface with recorded Unicode14 table; whole Python-object/all-version semantics remain unproven"
     },
     {
       "symbol": "extract_currency_symbol",
@@ -41,9 +44,12 @@
       "line_end": 281,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Dollar-code priority then safe source/hint then unsafe source/hint; native implementation unresolved",
+      "behavior": "Direct native raw token spelling, dollar-code precedence, safe/unsafe price/hint order and Unicode14 word boundaries independently proven; other Unicode versions remain unresolved",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-source-helpers-oracle-report.json",
+      "limitations": "Only required valid-input search/extraction surface with recorded Unicode14 table; whole Python-object/all-version semantics remain unproven"
     },
     {
       "symbol": "extract_price_text",
@@ -52,9 +58,12 @@
       "line_end": 360,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Whitespace normalization, conditional euro decimal regex, first numeric substring, percent rejection/backtracking and free substring; native implementation unresolved",
+      "behavior": "Direct source text selection independently compared on locked public inputs and generated currency/boundary cases; valid strings within ECDEV source cap, other input/version/resource surfaces remain unresolved",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-source-helpers-oracle-report.json",
+      "limitations": "Only required valid-input search/extraction surface with recorded Unicode14 table; whole Python-object/all-version semantics remain unproven"
     },
     {
       "symbol": "get_decimal_separator",
@@ -173,7 +182,7 @@
     "fixture": "adapter/web/tests/fixtures/price-decimal-helper.json",
     "fixture_sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "3ef84fe81d713295d589434616a7ab79851c417c63f1b298aaea3ffb830f91ad",
+    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
     "native_test": "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
     "production_caller": "adapter/web/src/price.rs::parse_number and formatted_money",
     "whole_donor_parity": false,
@@ -183,6 +192,56 @@
       "Direct other helper/object/package semantic contracts",
       "Full donor census and active oracle/test import retirement",
       "Unicode versions beyond recorded Unicode 14 oracle/table are not claimed"
+    ],
+    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949"
+  },
+  "direct_literal_helper": {
+    "status": "PASS",
+    "families": 1,
+    "cases": 1576,
+    "donor_id": "scrapinghub--price-parser",
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-literal-helper.json",
+    "fixture_sha256": "323ab1bc39c90312f58ecb79c4401d73812198bd040cf52915b592ae607960d6",
+    "native_source": "adapter/web/src/price.rs",
+    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
+    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949",
+    "native_test": "adapter/web/src/price.rs::locked_price_literal_helper_oracle",
+    "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
+    "whole_donor_parity": false,
+    "runtime_donor_import": false,
+    "scope": "or_regex(symbols).search: literal escaping, leftmost then list order, empty union/token and Unicode spans projected to UTF-8 bytes; compiled Python pattern object methods beyond search not claimed",
+    "limitations": [
+      "Valid string inputs within current ECDEV 4096-byte source boundary",
+      "Unicode word classification fixed at Unicode14/Python3.11; newer tables and compiled Python pattern-object methods not claimed",
+      "Constructor/attrs/package/direct numeric exceptional contracts and active donor oracle retirement remain open"
     ]
+  },
+  "direct_source_helpers": {
+    "status": "PASS",
+    "families": 2,
+    "cases": 9560,
+    "donor_id": "scrapinghub--price-parser",
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-source-helpers.json",
+    "fixture_sha256": "7df15486ea4d9f3b05d681804b2d0708e596fa5416f5fe9ed62fff284df164f5",
+    "native_source": "adapter/web/src/price.rs",
+    "native_source_sha256": "520a2a718ea9c20c616dda8186e875bc44004ee6d379e611a83c99695e9b6e77",
+    "data_sha256": "93e3236e9cf1d1e7c9cd6f220bf9f5d2c9a3a42d869f327f8407dd2db7cca949",
+    "native_test": "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
+    "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
+    "whole_donor_parity": false,
+    "runtime_donor_import": false,
+    "scope": "Direct currency token spelling and text extraction; source/hint priority and dollar-code Unicode word boundaries; valid string/optional currency inputs only",
+    "limitations": [
+      "Valid string inputs within current ECDEV 4096-byte source boundary",
+      "Unicode word classification fixed at Unicode14/Python3.11; newer tables and compiled Python pattern-object methods not claimed",
+      "Constructor/attrs/package/direct numeric exceptional contracts and active donor oracle retirement remain open"
+    ],
+    "operation_counts": {
+      "currency": 5278,
+      "text": 4282
+    },
+    "unicode_version": "14.0.0"
   }
 }

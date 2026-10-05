@@ -27,7 +27,48 @@ fn whitespace(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
 }
 fn word(c: char) -> bool {
-    c.is_alphanumeric() || c == '_'
+    use std::cmp::Ordering;
+    let code = c as u64;
+    lexicon()["word_ranges"]
+        .as_array()
+        .expect("checked Unicode word data")
+        .binary_search_by(|range| {
+            if code < range[0].as_u64().unwrap() {
+                Ordering::Greater
+            } else if code > range[1].as_u64().unwrap() {
+                Ordering::Less
+            } else {
+                Ordering::Equal
+            }
+        })
+        .is_ok()
+}
+
+fn literal_search<'a>(
+    text: &str,
+    symbols: impl Iterator<Item = &'a str>,
+    accept: impl Fn(usize, &str) -> bool,
+) -> Option<(usize, &'a str)> {
+    let mut best: Option<(usize, usize, &'a str)> = None;
+    for (order, token) in symbols.enumerate() {
+        for (at, _) in text.match_indices(token) {
+            if accept(at, token)
+                && best.is_none_or(|(pos, priority, _)| (at, order) < (pos, priority))
+            {
+                best = Some((at, order, token));
+            }
+        }
+    }
+    best.map(|(at, _, token)| (at, token))
+}
+
+/// Literal union search: leftmost position, then declaration order. Offsets are UTF-8 bytes.
+/// An empty union is the empty pattern, matching at the beginning like the donor helper.
+pub fn literal_alternative<'a>(text: &str, symbols: &[&'a str]) -> Option<(usize, &'a str)> {
+    if symbols.is_empty() {
+        return Some((0, ""));
+    }
+    literal_search(text, symbols.iter().copied(), |_, _| true)
 }
 
 /// Currency tokens retain source spelling. They do not identify an ISO currency.
@@ -36,25 +77,19 @@ pub fn currency_symbol(price: Option<&str>, hint: Option<&str>) -> Option<String
         return None;
     }
     fn search(text: &str, key: &str, dollar: bool) -> Option<String> {
-        lexicon()[key]
-            .as_array()?
-            .iter()
-            .enumerate()
-            .flat_map(|(order, token)| {
-                let token = token.as_str().unwrap();
-                text.match_indices(token)
-                    .filter(move |(at, _)| {
-                        !dollar
-                            || ((!text[..*at].chars().next_back().is_some_and(word))
-                                && !text[*at + token.len()..]
-                                    .chars()
-                                    .next()
-                                    .is_some_and(|c| word(c) && digit(c).is_none()))
-                    })
-                    .map(move |(at, _)| (at, order, token))
-            })
-            .min_by_key(|(at, order, _)| (*at, *order))
-            .map(|(_, _, token)| token.trim_matches(whitespace).to_owned())
+        literal_search(
+            text,
+            lexicon()[key].as_array()?.iter().filter_map(Value::as_str),
+            |at, token| {
+                !dollar
+                    || (!text[..at].chars().next_back().is_some_and(word)
+                        && !text[at + token.len()..]
+                            .chars()
+                            .next()
+                            .is_some_and(|c| word(c) && digit(c).is_none()))
+            },
+        )
+        .map(|(_, token)| token.to_owned())
     }
     for text in [price, hint]
         .into_iter()
@@ -161,7 +196,8 @@ pub fn parse_price(
     {
         return json!({"amount":null,"currency":null,"amount_text":null,"amount_float":null});
     }
-    let currency = currency_symbol(input, hint);
+    let currency =
+        currency_symbol(input, hint).map(|token| token.trim_matches(whitespace).to_owned());
     let text = input.map(|s| {
         if let Some(group) = group {
             s.replace(group, "")
@@ -297,6 +333,48 @@ pub fn formatted_money(input: &str, currency: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn locked_price_source_helpers_oracle() {
+        let oracle: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/price-source-helpers.json"))
+                .unwrap();
+        assert_eq!(
+            oracle["commit_sha"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        assert!(oracle["cases"].as_array().unwrap().len() > 1000);
+        for case in oracle["cases"].as_array().unwrap() {
+            let actual = match case["operation"].as_str().unwrap() {
+                "currency" => currency_symbol(case["input"].as_str(), case["hint"].as_str()),
+                "text" => price_text(case["input"].as_str().unwrap()),
+                _ => panic!("unknown oracle operation"),
+            };
+            assert_eq!(json!(actual), case["expected"], "{}", case);
+        }
+    }
+    #[test]
+    fn locked_price_literal_helper_oracle() {
+        let oracle: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/price-literal-helper.json"))
+                .unwrap();
+        assert_eq!(
+            oracle["commit_sha"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        assert_eq!(oracle["cases"].as_array().unwrap().len(), 1576);
+        for case in oracle["cases"].as_array().unwrap() {
+            let symbols: Vec<_> = case["symbols"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|v| v.as_str().unwrap())
+                .collect();
+            let actual = literal_alternative(case["input"].as_str().unwrap(), &symbols).map(
+                |(at, token)| json!({"start_byte":at,"end_byte":at+token.len(),"matched":token}),
+            );
+            assert_eq!(json!(actual), case["expected"], "{}", case);
+        }
+    }
     #[test]
     fn locked_price_decimal_helper_oracle() {
         let oracle: Value =

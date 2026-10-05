@@ -104,6 +104,8 @@ def main():
    assert oracle['oracle']=='UNMODIFIED_LOCKED_PRICE_PARSER_FULL_PUBLIC_PRICE_API' and oracle['whole_donor_parity'] is False
    public_report=read(ROOT/'research/commerce/price-public-api-oracle-report.json')
    assert public_report['status']=='PASS' and public_report['fixture_sha256']==capability['fixture_sha256'] and public_report['whole_donor_parity'] is False
+   assert hashlib.sha256((ROOT/public_report['native_source']).read_bytes()).hexdigest()==public_report['native_source_sha256']
+   assert hashlib.sha256((ROOT/'adapter/web/data/price-currency.json').read_bytes()).hexdigest()==public_report['data_sha256']
   if capability.get('oracle_status')=='132_MICRODATA_CASES_MATCHED':
    import hashlib
    fixture=ROOT/capability['fixture'];oracle=read(fixture)
@@ -156,6 +158,15 @@ def main():
   report['oracle_cases_executed']+=helper['cases']
   # Supplemental direct-helper family, not a new replacement capability or whole donor.
   report['supplemental_helper_oracle_families']=1
+ for filename,kind,count,families in [('price-literal-helper-oracle-report.json','UNMODIFIED_LOCKED_PRICE_PARSER_LITERAL_UNION_SEARCH',1576,1),('price-source-helpers-oracle-report.json','UNMODIFIED_LOCKED_PRICE_PARSER_SOURCE_HELPERS',9560,2)]:
+  helper=read(ROOT/'research/commerce'/filename);fixture=ROOT/helper['fixture'];oracle=read(fixture)
+  assert helper['status']=='PASS' and helper['whole_donor_parity'] is False
+  assert oracle['oracle']==kind and len(oracle['cases'])==helper['cases']==count
+  assert oracle['commit_sha']==helper['commit_sha']==next(d['commit_sha'] for d in reg['donors'] if d['donor_id']=='scrapinghub--price-parser')
+  assert hashlib.sha256(fixture.read_bytes()).hexdigest()==helper['fixture_sha256']
+  assert hashlib.sha256((ROOT/helper['native_source']).read_bytes()).hexdigest()==helper['native_source_sha256']
+  assert hashlib.sha256((ROOT/'adapter/web/data/price-currency.json').read_bytes()).hexdigest()==helper['data_sha256']
+  report['oracle_cases_executed']+=helper['cases'];report['supplemental_helper_oracle_families']+=families
  summaries=[read(ROOT/'research/commerce/donors/census'/d['donor_id']/'summary.json') for d in reg['donors']]
  report['symbols_censused']=sum(s['symbols'] for s in summaries)
  report['unknown_files']=sum(s['unknown_files'] for s in summaries)
