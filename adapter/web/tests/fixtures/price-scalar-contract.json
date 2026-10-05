@@ -1,0 +1,6844 @@
+{
+  "oracle": "UNMODIFIED_LOCKED_PRICE_PARSER_TYPED_SCALAR",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "license": "BSD-3-Clause",
+  "source_evidence": [
+    {
+      "path": "price_parser/parser.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "a7b0552e879037618004f1ed6cb41deb4c55c917",
+      "sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa"
+    },
+    {
+      "path": "price_parser/_currencies.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "7e11a718d094c7c41ea02214059b44f69b7ae6d9",
+      "sha256": "c8eda1370f2e8db92f4a01d368c773cefbef2719348cd7ee503588daf3d297b1"
+    },
+    {
+      "path": "tests/test_price_parsing.py",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "b99db9fbe1de1e04479df4b33e6c89790ed467d1",
+      "sha256": "92c72582cca6b9d0201782ddc2665538d9c30602619a4bc06c5afc7fd5f17966"
+    },
+    {
+      "path": "LICENSE",
+      "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "blob_hash": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+      "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+    }
+  ],
+  "python_version": "3.11.15",
+  "unicode_version": "14.0.0",
+  "scope": "Direct parse_number exact Decimal text, nonfinite and malformed input outcomes, empty/None and unsupported-selector error precedence; valid typed string inputs with recorded Python decimal context",
+  "decimal_context": "Context(prec=28, rounding=ROUND_HALF_EVEN, Emin=-999999, Emax=999999, capitals=1, clamp=0, flags=[InvalidOperation], traps=[InvalidOperation, DivisionByZero, Overflow])",
+  "cases": [
+    {
+      "input": null,
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "*",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": null,
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " \t",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " \t",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " \t",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " \t",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": null,
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "",
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": ",",
+      "expected": "1200",
+      "error": null
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": ".",
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": " 12.00\n",
+      "decimal_separator": "€",
+      "expected": "1200",
+      "error": null
+    },
+    {
+      "input": "+",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "+",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "+",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "+",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "+",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": null,
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "",
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": ",",
+      "expected": "1200",
+      "error": null
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": ".",
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "+12.00",
+      "decimal_separator": "€",
+      "expected": "1200",
+      "error": null
+    },
+    {
+      "input": "+12.99",
+      "decimal_separator": null,
+      "expected": "12.99",
+      "error": null
+    },
+    {
+      "input": "+12.99",
+      "decimal_separator": ",",
+      "expected": "1299",
+      "error": null
+    },
+    {
+      "input": "+12.99",
+      "decimal_separator": ".",
+      "expected": "12.99",
+      "error": null
+    },
+    {
+      "input": "+12.99",
+      "decimal_separator": "€",
+      "expected": "1299",
+      "error": null
+    },
+    {
+      "input": "-",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "-",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "-",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "-",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "-",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": null,
+      "expected": "-0.00",
+      "error": null
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "",
+      "expected": "-0.00",
+      "error": null
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": ",",
+      "expected": "-0",
+      "error": null
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": ".",
+      "expected": "-0.00",
+      "error": null
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-0.00",
+      "decimal_separator": "€",
+      "expected": "-0",
+      "error": null
+    },
+    {
+      "input": "-12.99",
+      "decimal_separator": null,
+      "expected": "-12.99",
+      "error": null
+    },
+    {
+      "input": "-12.99",
+      "decimal_separator": ",",
+      "expected": "-1299",
+      "error": null
+    },
+    {
+      "input": "-12.99",
+      "decimal_separator": ".",
+      "expected": "-12.99",
+      "error": null
+    },
+    {
+      "input": "-12.99",
+      "decimal_separator": "€",
+      "expected": "-1299",
+      "error": null
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": null,
+      "expected": "-Infinity",
+      "error": null
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "",
+      "expected": "-Infinity",
+      "error": null
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": ",",
+      "expected": "-Infinity",
+      "error": null
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": ".",
+      "expected": "-Infinity",
+      "error": null
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-Inf",
+      "decimal_separator": "€",
+      "expected": "-Infinity",
+      "error": null
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": null,
+      "expected": "-sNaN42",
+      "error": null
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "",
+      "expected": "-sNaN42",
+      "error": null
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": ",",
+      "expected": "-sNaN42",
+      "error": null
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": ".",
+      "expected": "-sNaN42",
+      "error": null
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "-sNaN42",
+      "decimal_separator": "€",
+      "expected": "-sNaN42",
+      "error": null
+    },
+    {
+      "input": ".",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": ".",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": ".",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": ".",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": ".",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": ".",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": ".",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": ".",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": ".",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": ".75",
+      "decimal_separator": null,
+      "expected": "0.75",
+      "error": null
+    },
+    {
+      "input": ".75",
+      "decimal_separator": ",",
+      "expected": "75",
+      "error": null
+    },
+    {
+      "input": ".75",
+      "decimal_separator": ".",
+      "expected": "0.75",
+      "error": null
+    },
+    {
+      "input": ".75",
+      "decimal_separator": "€",
+      "expected": "75",
+      "error": null
+    },
+    {
+      "input": ".75,333",
+      "decimal_separator": null,
+      "expected": "75333",
+      "error": null
+    },
+    {
+      "input": ".75,333",
+      "decimal_separator": ",",
+      "expected": "75.333",
+      "error": null
+    },
+    {
+      "input": ".75,333",
+      "decimal_separator": ".",
+      "expected": "0.75333",
+      "error": null
+    },
+    {
+      "input": "0",
+      "decimal_separator": null,
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "0",
+      "decimal_separator": "",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "0",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "0",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "0",
+      "decimal_separator": ",",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "0",
+      "decimal_separator": ".",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "0",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "0",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "0",
+      "decimal_separator": "€",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "0,00",
+      "decimal_separator": null,
+      "expected": "0.00",
+      "error": null
+    },
+    {
+      "input": "0,15",
+      "decimal_separator": null,
+      "expected": "0.15",
+      "error": null
+    },
+    {
+      "input": "0,29",
+      "decimal_separator": null,
+      "expected": "0.29",
+      "error": null
+    },
+    {
+      "input": "0,40",
+      "decimal_separator": null,
+      "expected": "0.40",
+      "error": null
+    },
+    {
+      "input": "0,46",
+      "decimal_separator": null,
+      "expected": "0.46",
+      "error": null
+    },
+    {
+      "input": "0,82",
+      "decimal_separator": null,
+      "expected": "0.82",
+      "error": null
+    },
+    {
+      "input": "0,85",
+      "decimal_separator": null,
+      "expected": "0.85",
+      "error": null
+    },
+    {
+      "input": "0.00",
+      "decimal_separator": null,
+      "expected": "0.00",
+      "error": null
+    },
+    {
+      "input": "0.0000000001",
+      "decimal_separator": null,
+      "expected": "1E-10",
+      "error": null
+    },
+    {
+      "input": "0.0000000001",
+      "decimal_separator": ",",
+      "expected": "1",
+      "error": null
+    },
+    {
+      "input": "0.0000000001",
+      "decimal_separator": ".",
+      "expected": "1E-10",
+      "error": null
+    },
+    {
+      "input": "0.0000000001",
+      "decimal_separator": "€",
+      "expected": "1",
+      "error": null
+    },
+    {
+      "input": "0.31",
+      "decimal_separator": null,
+      "expected": "0.31",
+      "error": null
+    },
+    {
+      "input": "0.42",
+      "decimal_separator": null,
+      "expected": "0.42",
+      "error": null
+    },
+    {
+      "input": "0.51",
+      "decimal_separator": null,
+      "expected": "0.51",
+      "error": null
+    },
+    {
+      "input": "0.99",
+      "decimal_separator": null,
+      "expected": "0.99",
+      "error": null
+    },
+    {
+      "input": "000.00",
+      "decimal_separator": null,
+      "expected": "0.00",
+      "error": null
+    },
+    {
+      "input": "000.00",
+      "decimal_separator": ",",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "000.00",
+      "decimal_separator": ".",
+      "expected": "0.00",
+      "error": null
+    },
+    {
+      "input": "000.00",
+      "decimal_separator": "€",
+      "expected": "0",
+      "error": null
+    },
+    {
+      "input": "1",
+      "decimal_separator": null,
+      "expected": "1",
+      "error": null
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\u000023",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1\t234",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1 029,00",
+      "decimal_separator": null,
+      "expected": "1029.00",
+      "error": null
+    },
+    {
+      "input": "1 030",
+      "decimal_separator": null,
+      "expected": "1030",
+      "error": null
+    },
+    {
+      "input": "1 075",
+      "decimal_separator": null,
+      "expected": "1075",
+      "error": null
+    },
+    {
+      "input": "1 090",
+      "decimal_separator": null,
+      "expected": "1090",
+      "error": null
+    },
+    {
+      "input": "1 099",
+      "decimal_separator": null,
+      "expected": "1099",
+      "error": null
+    },
+    {
+      "input": "1 099,00",
+      "decimal_separator": null,
+      "expected": "1099.00",
+      "error": null
+    },
+    {
+      "input": "1 120 900",
+      "decimal_separator": null,
+      "expected": "1120900",
+      "error": null
+    },
+    {
+      "input": "1 139,00",
+      "decimal_separator": null,
+      "expected": "1139.00",
+      "error": null
+    },
+    {
+      "input": "1 150",
+      "decimal_separator": null,
+      "expected": "1150",
+      "error": null
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": null,
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": ",",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": ".",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1 234",
+      "decimal_separator": "€",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "1 235€99",
+      "decimal_separator": null,
+      "expected": "1235.99",
+      "error": null
+    },
+    {
+      "input": "1 235€99",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1 235€99",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1 235€99",
+      "decimal_separator": "€",
+      "expected": "1235.99",
+      "error": null
+    },
+    {
+      "input": "1 298,00",
+      "decimal_separator": null,
+      "expected": "1298.00",
+      "error": null
+    },
+    {
+      "input": "1 400",
+      "decimal_separator": null,
+      "expected": "1400",
+      "error": null
+    },
+    {
+      "input": "1 430",
+      "decimal_separator": null,
+      "expected": "1430",
+      "error": null
+    },
+    {
+      "input": "1 499",
+      "decimal_separator": null,
+      "expected": "1499",
+      "error": null
+    },
+    {
+      "input": "1 500",
+      "decimal_separator": null,
+      "expected": "1500",
+      "error": null
+    },
+    {
+      "input": "1 505",
+      "decimal_separator": null,
+      "expected": "1505",
+      "error": null
+    },
+    {
+      "input": "1 573",
+      "decimal_separator": null,
+      "expected": "1573",
+      "error": null
+    },
+    {
+      "input": "1 600",
+      "decimal_separator": null,
+      "expected": "1600",
+      "error": null
+    },
+    {
+      "input": "1 690,54",
+      "decimal_separator": null,
+      "expected": "1690.54",
+      "error": null
+    },
+    {
+      "input": "1 720,00",
+      "decimal_separator": null,
+      "expected": "1720.00",
+      "error": null
+    },
+    {
+      "input": "1 849",
+      "decimal_separator": null,
+      "expected": "1849",
+      "error": null
+    },
+    {
+      "input": "1 890",
+      "decimal_separator": null,
+      "expected": "1890",
+      "error": null
+    },
+    {
+      "input": "1 987",
+      "decimal_separator": null,
+      "expected": "1987",
+      "error": null
+    },
+    {
+      "input": "1 995",
+      "decimal_separator": null,
+      "expected": "1995",
+      "error": null
+    },
+    {
+      "input": "1 995,00",
+      "decimal_separator": null,
+      "expected": "1995.00",
+      "error": null
+    },
+    {
+      "input": "1,099.99",
+      "decimal_separator": null,
+      "expected": "1099.99",
+      "error": null
+    },
+    {
+      "input": "1,10",
+      "decimal_separator": null,
+      "expected": "1.10",
+      "error": null
+    },
+    {
+      "input": "1,120.00",
+      "decimal_separator": null,
+      "expected": "1120.00",
+      "error": null
+    },
+    {
+      "input": "1,15",
+      "decimal_separator": null,
+      "expected": "1.15",
+      "error": null
+    },
+    {
+      "input": "1,160",
+      "decimal_separator": null,
+      "expected": "1160",
+      "error": null
+    },
+    {
+      "input": "1,175",
+      "decimal_separator": null,
+      "expected": "1175",
+      "error": null
+    },
+    {
+      "input": "1,190.00",
+      "decimal_separator": null,
+      "expected": "1190.00",
+      "error": null
+    },
+    {
+      "input": "1,20",
+      "decimal_separator": null,
+      "expected": "1.20",
+      "error": null
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": null,
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "",
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": ",",
+      "expected": "1.23456",
+      "error": null
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": ".",
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1,234.56",
+      "decimal_separator": "€",
+      "expected": "123456",
+      "error": null
+    },
+    {
+      "input": "1,422.50",
+      "decimal_separator": null,
+      "expected": "1422.50",
+      "error": null
+    },
+    {
+      "input": "1,599.00",
+      "decimal_separator": null,
+      "expected": "1599.00",
+      "error": null
+    },
+    {
+      "input": "1,695.00",
+      "decimal_separator": null,
+      "expected": "1695.00",
+      "error": null
+    },
+    {
+      "input": "1,85",
+      "decimal_separator": null,
+      "expected": "1.85",
+      "error": null
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": ",",
+      "expected": "12",
+      "error": null
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1..2",
+      "decimal_separator": "€",
+      "expected": "12",
+      "error": null
+    },
+    {
+      "input": "1.11000000000000009770",
+      "decimal_separator": null,
+      "expected": "1.11000000000000009770",
+      "error": null
+    },
+    {
+      "input": "1.144.000",
+      "decimal_separator": null,
+      "expected": "1144000",
+      "error": null
+    },
+    {
+      "input": "1.198",
+      "decimal_separator": null,
+      "expected": "1198",
+      "error": null
+    },
+    {
+      "input": "1.20",
+      "decimal_separator": null,
+      "expected": "1.20",
+      "error": null
+    },
+    {
+      "input": "1.23",
+      "decimal_separator": null,
+      "expected": "1.23",
+      "error": null
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": null,
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "",
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": ",",
+      "expected": "1234.56",
+      "error": null
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": ".",
+      "expected": "1.23456",
+      "error": null
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.234,56",
+      "decimal_separator": "€",
+      "expected": "123456",
+      "error": null
+    },
+    {
+      "input": "1.235€99",
+      "decimal_separator": null,
+      "expected": "1235.99",
+      "error": null
+    },
+    {
+      "input": "1.235€99",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1.235€99",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1.235€99",
+      "decimal_separator": "€",
+      "expected": "1235.99",
+      "error": null
+    },
+    {
+      "input": "1.2e-3",
+      "decimal_separator": null,
+      "expected": "0.012",
+      "error": null
+    },
+    {
+      "input": "1.2e-3",
+      "decimal_separator": ",",
+      "expected": "0.012",
+      "error": null
+    },
+    {
+      "input": "1.2e-3",
+      "decimal_separator": ".",
+      "expected": "0.0012",
+      "error": null
+    },
+    {
+      "input": "1.2e-3",
+      "decimal_separator": "€",
+      "expected": "0.012",
+      "error": null
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": null,
+      "expected": "0.0000012",
+      "error": null
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "",
+      "expected": "0.0000012",
+      "error": null
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": ",",
+      "expected": "0.0000012",
+      "error": null
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": ".",
+      "expected": "1.2E-7",
+      "error": null
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1.2e-7",
+      "decimal_separator": "€",
+      "expected": "0.0000012",
+      "error": null
+    },
+    {
+      "input": "1.500,00",
+      "decimal_separator": null,
+      "expected": "1500.00",
+      "error": null
+    },
+    {
+      "input": "1.52",
+      "decimal_separator": null,
+      "expected": "1.52",
+      "error": null
+    },
+    {
+      "input": "1.550.000",
+      "decimal_separator": null,
+      "expected": "1550000",
+      "error": null
+    },
+    {
+      "input": "1.599,00",
+      "decimal_separator": null,
+      "expected": "1599.00",
+      "error": null
+    },
+    {
+      "input": "1.727",
+      "decimal_separator": null,
+      "expected": "1727",
+      "error": null
+    },
+    {
+      "input": "1.800.000",
+      "decimal_separator": null,
+      "expected": "1800000",
+      "error": null
+    },
+    {
+      "input": "1.837, 32",
+      "decimal_separator": null,
+      "expected": "1837.32",
+      "error": null
+    },
+    {
+      "input": "1.890,00",
+      "decimal_separator": null,
+      "expected": "1890.00",
+      "error": null
+    },
+    {
+      "input": "1.899",
+      "decimal_separator": null,
+      "expected": "1899",
+      "error": null
+    },
+    {
+      "input": "1.95",
+      "decimal_separator": null,
+      "expected": "1.95",
+      "error": null
+    },
+    {
+      "input": "1.99",
+      "decimal_separator": null,
+      "expected": "1.99",
+      "error": null
+    },
+    {
+      "input": "10",
+      "decimal_separator": null,
+      "expected": "10",
+      "error": null
+    },
+    {
+      "input": "10 990,00",
+      "decimal_separator": null,
+      "expected": "10990.00",
+      "error": null
+    },
+    {
+      "input": "10,00",
+      "decimal_separator": null,
+      "expected": "10.00",
+      "error": null
+    },
+    {
+      "input": "10,50",
+      "decimal_separator": null,
+      "expected": "10.50",
+      "error": null
+    },
+    {
+      "input": "10,75",
+      "decimal_separator": null,
+      "expected": "10.75",
+      "error": null
+    },
+    {
+      "input": "10,90",
+      "decimal_separator": null,
+      "expected": "10.90",
+      "error": null
+    },
+    {
+      "input": "10.00",
+      "decimal_separator": null,
+      "expected": "10.00",
+      "error": null
+    },
+    {
+      "input": "10.14",
+      "decimal_separator": null,
+      "expected": "10.14",
+      "error": null
+    },
+    {
+      "input": "10.90",
+      "decimal_separator": null,
+      "expected": "10.90",
+      "error": null
+    },
+    {
+      "input": "100,00",
+      "decimal_separator": null,
+      "expected": "100.00",
+      "error": null
+    },
+    {
+      "input": "100.70",
+      "decimal_separator": null,
+      "expected": "100.70",
+      "error": null
+    },
+    {
+      "input": "1000.00",
+      "decimal_separator": null,
+      "expected": "1000.00",
+      "error": null
+    },
+    {
+      "input": "103.90",
+      "decimal_separator": null,
+      "expected": "103.90",
+      "error": null
+    },
+    {
+      "input": "104,64",
+      "decimal_separator": null,
+      "expected": "104.64",
+      "error": null
+    },
+    {
+      "input": "104.99",
+      "decimal_separator": null,
+      "expected": "104.99",
+      "error": null
+    },
+    {
+      "input": "1049,95",
+      "decimal_separator": null,
+      "expected": "1049.95",
+      "error": null
+    },
+    {
+      "input": "105.",
+      "decimal_separator": null,
+      "expected": "105",
+      "error": null
+    },
+    {
+      "input": "106,40",
+      "decimal_separator": null,
+      "expected": "106.40",
+      "error": null
+    },
+    {
+      "input": "106.61",
+      "decimal_separator": null,
+      "expected": "106.61",
+      "error": null
+    },
+    {
+      "input": "109.90",
+      "decimal_separator": null,
+      "expected": "109.90",
+      "error": null
+    },
+    {
+      "input": "11 450",
+      "decimal_separator": null,
+      "expected": "11450",
+      "error": null
+    },
+    {
+      "input": "11,13",
+      "decimal_separator": null,
+      "expected": "11.13",
+      "error": null
+    },
+    {
+      "input": "11,33",
+      "decimal_separator": null,
+      "expected": "11.33",
+      "error": null
+    },
+    {
+      "input": "11,70",
+      "decimal_separator": null,
+      "expected": "11.70",
+      "error": null
+    },
+    {
+      "input": "11,76",
+      "decimal_separator": null,
+      "expected": "11.76",
+      "error": null
+    },
+    {
+      "input": "11,90",
+      "decimal_separator": null,
+      "expected": "11.90",
+      "error": null
+    },
+    {
+      "input": "11.499,00",
+      "decimal_separator": null,
+      "expected": "11499.00",
+      "error": null
+    },
+    {
+      "input": "11.69",
+      "decimal_separator": null,
+      "expected": "11.69",
+      "error": null
+    },
+    {
+      "input": "11.70",
+      "decimal_separator": null,
+      "expected": "11.70",
+      "error": null
+    },
+    {
+      "input": "11.95",
+      "decimal_separator": null,
+      "expected": "11.95",
+      "error": null
+    },
+    {
+      "input": "11.96",
+      "decimal_separator": null,
+      "expected": "11.96",
+      "error": null
+    },
+    {
+      "input": "11.99",
+      "decimal_separator": null,
+      "expected": "11.99",
+      "error": null
+    },
+    {
+      "input": "1128240",
+      "decimal_separator": null,
+      "expected": "1128240",
+      "error": null
+    },
+    {
+      "input": "118, 99",
+      "decimal_separator": null,
+      "expected": "118.99",
+      "error": null
+    },
+    {
+      "input": "118.15",
+      "decimal_separator": null,
+      "expected": "118.15",
+      "error": null
+    },
+    {
+      "input": "119,00",
+      "decimal_separator": null,
+      "expected": "119.00",
+      "error": null
+    },
+    {
+      "input": "119,999",
+      "decimal_separator": null,
+      "expected": "119999",
+      "error": null
+    },
+    {
+      "input": "119. 95",
+      "decimal_separator": null,
+      "expected": "119.95",
+      "error": null
+    },
+    {
+      "input": "119.00",
+      "decimal_separator": null,
+      "expected": "119.00",
+      "error": null
+    },
+    {
+      "input": "119.95",
+      "decimal_separator": null,
+      "expected": "119.95",
+      "error": null
+    },
+    {
+      "input": "119.99",
+      "decimal_separator": null,
+      "expected": "119.99",
+      "error": null
+    },
+    {
+      "input": "12",
+      "decimal_separator": null,
+      "expected": "12",
+      "error": null
+    },
+    {
+      "input": "12 590",
+      "decimal_separator": null,
+      "expected": "12590",
+      "error": null
+    },
+    {
+      "input": "12 900,00",
+      "decimal_separator": null,
+      "expected": "12900.00",
+      "error": null
+    },
+    {
+      "input": "12,00",
+      "decimal_separator": null,
+      "expected": "12.00",
+      "error": null
+    },
+    {
+      "input": "12,000",
+      "decimal_separator": null,
+      "expected": "12000",
+      "error": null
+    },
+    {
+      "input": "12,15",
+      "decimal_separator": null,
+      "expected": "12.15",
+      "error": null
+    },
+    {
+      "input": "12,90",
+      "decimal_separator": null,
+      "expected": "12.90",
+      "error": null
+    },
+    {
+      "input": "12,96",
+      "decimal_separator": null,
+      "expected": "12.96",
+      "error": null
+    },
+    {
+      "input": "12,99",
+      "decimal_separator": null,
+      "expected": "12.99",
+      "error": null
+    },
+    {
+      "input": "12..34",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "12..34",
+      "decimal_separator": ",",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "12..34",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "12..34",
+      "decimal_separator": "€",
+      "expected": "1234",
+      "error": null
+    },
+    {
+      "input": "12.34",
+      "decimal_separator": null,
+      "expected": "12.34",
+      "error": null
+    },
+    {
+      "input": "12.345",
+      "decimal_separator": null,
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "12.345",
+      "decimal_separator": ",",
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "12.345",
+      "decimal_separator": ".",
+      "expected": "12.345",
+      "error": null
+    },
+    {
+      "input": "12.345",
+      "decimal_separator": "€",
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "12.50",
+      "decimal_separator": null,
+      "expected": "12.50",
+      "error": null
+    },
+    {
+      "input": "12.500",
+      "decimal_separator": null,
+      "expected": "12500",
+      "error": null
+    },
+    {
+      "input": "12.95",
+      "decimal_separator": null,
+      "expected": "12.95",
+      "error": null
+    },
+    {
+      "input": "12.99",
+      "decimal_separator": null,
+      "expected": "12.99",
+      "error": null
+    },
+    {
+      "input": "120 000 000",
+      "decimal_separator": null,
+      "expected": "120000000",
+      "error": null
+    },
+    {
+      "input": "123,456.789",
+      "decimal_separator": ".",
+      "expected": "123456.789",
+      "error": null
+    },
+    {
+      "input": "124,00",
+      "decimal_separator": null,
+      "expected": "124.00",
+      "error": null
+    },
+    {
+      "input": "124.95",
+      "decimal_separator": null,
+      "expected": "124.95",
+      "error": null
+    },
+    {
+      "input": "125,00",
+      "decimal_separator": null,
+      "expected": "125.00",
+      "error": null
+    },
+    {
+      "input": "125.00",
+      "decimal_separator": null,
+      "expected": "125.00",
+      "error": null
+    },
+    {
+      "input": "1250",
+      "decimal_separator": "€",
+      "expected": "1250",
+      "error": null
+    },
+    {
+      "input": "1250€60",
+      "decimal_separator": "€",
+      "expected": "1250.60",
+      "error": null
+    },
+    {
+      "input": "1250€600",
+      "decimal_separator": "€",
+      "expected": "1250.600",
+      "error": null
+    },
+    {
+      "input": "129,00",
+      "decimal_separator": null,
+      "expected": "129.00",
+      "error": null
+    },
+    {
+      "input": "129,99",
+      "decimal_separator": null,
+      "expected": "129.99",
+      "error": null
+    },
+    {
+      "input": "129.00",
+      "decimal_separator": null,
+      "expected": "129.00",
+      "error": null
+    },
+    {
+      "input": "129.900",
+      "decimal_separator": null,
+      "expected": "129900",
+      "error": null
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": null,
+      "expected": "12.34",
+      "error": null
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "",
+      "expected": "12.34",
+      "error": null
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "12€ 34",
+      "decimal_separator": "€",
+      "expected": "12.34",
+      "error": null
+    },
+    {
+      "input": "13",
+      "decimal_separator": null,
+      "expected": "13",
+      "error": null
+    },
+    {
+      "input": "13,00",
+      "decimal_separator": null,
+      "expected": "13.00",
+      "error": null
+    },
+    {
+      "input": "13,30",
+      "decimal_separator": null,
+      "expected": "13.30",
+      "error": null
+    },
+    {
+      "input": "13,50",
+      "decimal_separator": null,
+      "expected": "13.50",
+      "error": null
+    },
+    {
+      "input": "13,90",
+      "decimal_separator": null,
+      "expected": "13.90",
+      "error": null
+    },
+    {
+      "input": "13.50",
+      "decimal_separator": null,
+      "expected": "13.50",
+      "error": null
+    },
+    {
+      "input": "13.95",
+      "decimal_separator": null,
+      "expected": "13.95",
+      "error": null
+    },
+    {
+      "input": "130, 38",
+      "decimal_separator": null,
+      "expected": "130.38",
+      "error": null
+    },
+    {
+      "input": "133,86",
+      "decimal_separator": null,
+      "expected": "133.86",
+      "error": null
+    },
+    {
+      "input": "134.96",
+      "decimal_separator": null,
+      "expected": "134.96",
+      "error": null
+    },
+    {
+      "input": "135",
+      "decimal_separator": null,
+      "expected": "135",
+      "error": null
+    },
+    {
+      "input": "135,00",
+      "decimal_separator": null,
+      "expected": "135.00",
+      "error": null
+    },
+    {
+      "input": "135.99",
+      "decimal_separator": null,
+      "expected": "135.99",
+      "error": null
+    },
+    {
+      "input": "13800",
+      "decimal_separator": null,
+      "expected": "13800",
+      "error": null
+    },
+    {
+      "input": "139,00",
+      "decimal_separator": null,
+      "expected": "139.00",
+      "error": null
+    },
+    {
+      "input": "139,95",
+      "decimal_separator": null,
+      "expected": "139.95",
+      "error": null
+    },
+    {
+      "input": "139,99",
+      "decimal_separator": null,
+      "expected": "139.99",
+      "error": null
+    },
+    {
+      "input": "139.00",
+      "decimal_separator": null,
+      "expected": "139.00",
+      "error": null
+    },
+    {
+      "input": "1399",
+      "decimal_separator": null,
+      "expected": "1399",
+      "error": null
+    },
+    {
+      "input": "14 196",
+      "decimal_separator": null,
+      "expected": "14196",
+      "error": null
+    },
+    {
+      "input": "14,00",
+      "decimal_separator": null,
+      "expected": "14.00",
+      "error": null
+    },
+    {
+      "input": "14,79",
+      "decimal_separator": null,
+      "expected": "14.79",
+      "error": null
+    },
+    {
+      "input": "14,85",
+      "decimal_separator": null,
+      "expected": "14.85",
+      "error": null
+    },
+    {
+      "input": "14,90",
+      "decimal_separator": null,
+      "expected": "14.90",
+      "error": null
+    },
+    {
+      "input": "14.00",
+      "decimal_separator": null,
+      "expected": "14.00",
+      "error": null
+    },
+    {
+      "input": "14.50",
+      "decimal_separator": null,
+      "expected": "14.50",
+      "error": null
+    },
+    {
+      "input": "14.55",
+      "decimal_separator": null,
+      "expected": "14.55",
+      "error": null
+    },
+    {
+      "input": "14.95",
+      "decimal_separator": null,
+      "expected": "14.95",
+      "error": null
+    },
+    {
+      "input": "14.96",
+      "decimal_separator": null,
+      "expected": "14.96",
+      "error": null
+    },
+    {
+      "input": "14.97",
+      "decimal_separator": null,
+      "expected": "14.97",
+      "error": null
+    },
+    {
+      "input": "14.99",
+      "decimal_separator": null,
+      "expected": "14.99",
+      "error": null
+    },
+    {
+      "input": "140,00",
+      "decimal_separator": null,
+      "expected": "140.00",
+      "error": null
+    },
+    {
+      "input": "140,000€33",
+      "decimal_separator": null,
+      "expected": "140000.33",
+      "error": null
+    },
+    {
+      "input": "140,000€33",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "140,000€33",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "140,000€33",
+      "decimal_separator": "€",
+      "expected": "140000.33",
+      "error": null
+    },
+    {
+      "input": "140.000",
+      "decimal_separator": null,
+      "expected": "140000",
+      "error": null
+    },
+    {
+      "input": "140.000",
+      "decimal_separator": ",",
+      "expected": "140000",
+      "error": null
+    },
+    {
+      "input": "140.000",
+      "decimal_separator": ".",
+      "expected": "140.000",
+      "error": null
+    },
+    {
+      "input": "140.000",
+      "decimal_separator": "€",
+      "expected": "140000",
+      "error": null
+    },
+    {
+      "input": "145,00",
+      "decimal_separator": null,
+      "expected": "145.00",
+      "error": null
+    },
+    {
+      "input": "145,79",
+      "decimal_separator": null,
+      "expected": "145.79",
+      "error": null
+    },
+    {
+      "input": "145.00",
+      "decimal_separator": null,
+      "expected": "145.00",
+      "error": null
+    },
+    {
+      "input": "147.44",
+      "decimal_separator": null,
+      "expected": "147.44",
+      "error": null
+    },
+    {
+      "input": "148.50",
+      "decimal_separator": null,
+      "expected": "148.50",
+      "error": null
+    },
+    {
+      "input": "149,00",
+      "decimal_separator": null,
+      "expected": "149.00",
+      "error": null
+    },
+    {
+      "input": "149,98",
+      "decimal_separator": null,
+      "expected": "149.98",
+      "error": null
+    },
+    {
+      "input": "149.00",
+      "decimal_separator": null,
+      "expected": "149.00",
+      "error": null
+    },
+    {
+      "input": "149.95",
+      "decimal_separator": null,
+      "expected": "149.95",
+      "error": null
+    },
+    {
+      "input": "149.99",
+      "decimal_separator": null,
+      "expected": "149.99",
+      "error": null
+    },
+    {
+      "input": "15 130",
+      "decimal_separator": null,
+      "expected": "15130",
+      "error": null
+    },
+    {
+      "input": "15,00",
+      "decimal_separator": null,
+      "expected": "15.00",
+      "error": null
+    },
+    {
+      "input": "15,000",
+      "decimal_separator": null,
+      "expected": "15000",
+      "error": null
+    },
+    {
+      "input": "15,55",
+      "decimal_separator": null,
+      "expected": "15.55",
+      "error": null
+    },
+    {
+      "input": "15,95",
+      "decimal_separator": null,
+      "expected": "15.95",
+      "error": null
+    },
+    {
+      "input": "15.00",
+      "decimal_separator": null,
+      "expected": "15.00",
+      "error": null
+    },
+    {
+      "input": "15.49",
+      "decimal_separator": null,
+      "expected": "15.49",
+      "error": null
+    },
+    {
+      "input": "15.95",
+      "decimal_separator": null,
+      "expected": "15.95",
+      "error": null
+    },
+    {
+      "input": "150",
+      "decimal_separator": null,
+      "expected": "150",
+      "error": null
+    },
+    {
+      "input": "150.00",
+      "decimal_separator": null,
+      "expected": "150.00",
+      "error": null
+    },
+    {
+      "input": "151,200",
+      "decimal_separator": null,
+      "expected": "151200",
+      "error": null
+    },
+    {
+      "input": "154",
+      "decimal_separator": null,
+      "expected": "154",
+      "error": null
+    },
+    {
+      "input": "1540",
+      "decimal_separator": null,
+      "expected": "1540",
+      "error": null
+    },
+    {
+      "input": "157,000",
+      "decimal_separator": null,
+      "expected": "157000",
+      "error": null
+    },
+    {
+      "input": "158,24",
+      "decimal_separator": null,
+      "expected": "158.24",
+      "error": null
+    },
+    {
+      "input": "159,50",
+      "decimal_separator": null,
+      "expected": "159.50",
+      "error": null
+    },
+    {
+      "input": "159.99",
+      "decimal_separator": null,
+      "expected": "159.99",
+      "error": null
+    },
+    {
+      "input": "16,40",
+      "decimal_separator": null,
+      "expected": "16.40",
+      "error": null
+    },
+    {
+      "input": "16,50",
+      "decimal_separator": null,
+      "expected": "16.50",
+      "error": null
+    },
+    {
+      "input": "16,500",
+      "decimal_separator": null,
+      "expected": "16500",
+      "error": null
+    },
+    {
+      "input": "16,90",
+      "decimal_separator": null,
+      "expected": "16.90",
+      "error": null
+    },
+    {
+      "input": "16,95",
+      "decimal_separator": null,
+      "expected": "16.95",
+      "error": null
+    },
+    {
+      "input": "16.00",
+      "decimal_separator": null,
+      "expected": "16.00",
+      "error": null
+    },
+    {
+      "input": "16.95",
+      "decimal_separator": null,
+      "expected": "16.95",
+      "error": null
+    },
+    {
+      "input": "160,00",
+      "decimal_separator": null,
+      "expected": "160.00",
+      "error": null
+    },
+    {
+      "input": "162.18",
+      "decimal_separator": null,
+      "expected": "162.18",
+      "error": null
+    },
+    {
+      "input": "163,80",
+      "decimal_separator": null,
+      "expected": "163.80",
+      "error": null
+    },
+    {
+      "input": "163,900",
+      "decimal_separator": null,
+      "expected": "163900",
+      "error": null
+    },
+    {
+      "input": "163.95",
+      "decimal_separator": null,
+      "expected": "163.95",
+      "error": null
+    },
+    {
+      "input": "164.00",
+      "decimal_separator": null,
+      "expected": "164.00",
+      "error": null
+    },
+    {
+      "input": "165,00",
+      "decimal_separator": null,
+      "expected": "165.00",
+      "error": null
+    },
+    {
+      "input": "165.00",
+      "decimal_separator": null,
+      "expected": "165.00",
+      "error": null
+    },
+    {
+      "input": "166,81",
+      "decimal_separator": null,
+      "expected": "166.81",
+      "error": null
+    },
+    {
+      "input": "169,00",
+      "decimal_separator": null,
+      "expected": "169.00",
+      "error": null
+    },
+    {
+      "input": "169.00",
+      "decimal_separator": null,
+      "expected": "169.00",
+      "error": null
+    },
+    {
+      "input": "169.000",
+      "decimal_separator": null,
+      "expected": "169000",
+      "error": null
+    },
+    {
+      "input": "17 260",
+      "decimal_separator": null,
+      "expected": "17260",
+      "error": null
+    },
+    {
+      "input": "17 940,00",
+      "decimal_separator": null,
+      "expected": "17940.00",
+      "error": null
+    },
+    {
+      "input": "17,00",
+      "decimal_separator": null,
+      "expected": "17.00",
+      "error": null
+    },
+    {
+      "input": "17,35",
+      "decimal_separator": null,
+      "expected": "17.35",
+      "error": null
+    },
+    {
+      "input": "17,45",
+      "decimal_separator": null,
+      "expected": "17.45",
+      "error": null
+    },
+    {
+      "input": "17,95",
+      "decimal_separator": null,
+      "expected": "17.95",
+      "error": null
+    },
+    {
+      "input": "17.90",
+      "decimal_separator": null,
+      "expected": "17.90",
+      "error": null
+    },
+    {
+      "input": "17.99",
+      "decimal_separator": null,
+      "expected": "17.99",
+      "error": null
+    },
+    {
+      "input": "170 000",
+      "decimal_separator": null,
+      "expected": "170000",
+      "error": null
+    },
+    {
+      "input": "170,00",
+      "decimal_separator": null,
+      "expected": "170.00",
+      "error": null
+    },
+    {
+      "input": "1700",
+      "decimal_separator": null,
+      "expected": "1700",
+      "error": null
+    },
+    {
+      "input": "171900",
+      "decimal_separator": null,
+      "expected": "171900",
+      "error": null
+    },
+    {
+      "input": "172",
+      "decimal_separator": null,
+      "expected": "172",
+      "error": null
+    },
+    {
+      "input": "174,00",
+      "decimal_separator": null,
+      "expected": "174.00",
+      "error": null
+    },
+    {
+      "input": "175.00",
+      "decimal_separator": null,
+      "expected": "175.00",
+      "error": null
+    },
+    {
+      "input": "178.00",
+      "decimal_separator": null,
+      "expected": "178.00",
+      "error": null
+    },
+    {
+      "input": "179,00",
+      "decimal_separator": null,
+      "expected": "179.00",
+      "error": null
+    },
+    {
+      "input": "179.00",
+      "decimal_separator": null,
+      "expected": "179.00",
+      "error": null
+    },
+    {
+      "input": "179.62",
+      "decimal_separator": null,
+      "expected": "179.62",
+      "error": null
+    },
+    {
+      "input": "18",
+      "decimal_separator": null,
+      "expected": "18",
+      "error": null
+    },
+    {
+      "input": "18 000",
+      "decimal_separator": null,
+      "expected": "18000",
+      "error": null
+    },
+    {
+      "input": "18,00",
+      "decimal_separator": null,
+      "expected": "18.00",
+      "error": null
+    },
+    {
+      "input": "18,25",
+      "decimal_separator": null,
+      "expected": "18.25",
+      "error": null
+    },
+    {
+      "input": "18.95",
+      "decimal_separator": null,
+      "expected": "18.95",
+      "error": null
+    },
+    {
+      "input": "18.99",
+      "decimal_separator": null,
+      "expected": "18.99",
+      "error": null
+    },
+    {
+      "input": "180",
+      "decimal_separator": null,
+      "expected": "180",
+      "error": null
+    },
+    {
+      "input": "184,20",
+      "decimal_separator": null,
+      "expected": "184.20",
+      "error": null
+    },
+    {
+      "input": "184,35",
+      "decimal_separator": null,
+      "expected": "184.35",
+      "error": null
+    },
+    {
+      "input": "1849.00",
+      "decimal_separator": null,
+      "expected": "1849.00",
+      "error": null
+    },
+    {
+      "input": "185.00",
+      "decimal_separator": null,
+      "expected": "185.00",
+      "error": null
+    },
+    {
+      "input": "189",
+      "decimal_separator": null,
+      "expected": "189",
+      "error": null
+    },
+    {
+      "input": "189,00",
+      "decimal_separator": null,
+      "expected": "189.00",
+      "error": null
+    },
+    {
+      "input": "189,900",
+      "decimal_separator": null,
+      "expected": "189900",
+      "error": null
+    },
+    {
+      "input": "19",
+      "decimal_separator": null,
+      "expected": "19",
+      "error": null
+    },
+    {
+      "input": "19 000",
+      "decimal_separator": null,
+      "expected": "19000",
+      "error": null
+    },
+    {
+      "input": "19,00",
+      "decimal_separator": null,
+      "expected": "19.00",
+      "error": null
+    },
+    {
+      "input": "19,1",
+      "decimal_separator": null,
+      "expected": "19.1",
+      "error": null
+    },
+    {
+      "input": "19,50",
+      "decimal_separator": null,
+      "expected": "19.50",
+      "error": null
+    },
+    {
+      "input": "19,59",
+      "decimal_separator": null,
+      "expected": "19.59",
+      "error": null
+    },
+    {
+      "input": "19,90",
+      "decimal_separator": null,
+      "expected": "19.90",
+      "error": null
+    },
+    {
+      "input": "19,95",
+      "decimal_separator": null,
+      "expected": "19.95",
+      "error": null
+    },
+    {
+      "input": "19.00",
+      "decimal_separator": null,
+      "expected": "19.00",
+      "error": null
+    },
+    {
+      "input": "19.50",
+      "decimal_separator": null,
+      "expected": "19.50",
+      "error": null
+    },
+    {
+      "input": "19.90",
+      "decimal_separator": null,
+      "expected": "19.90",
+      "error": null
+    },
+    {
+      "input": "19.95",
+      "decimal_separator": null,
+      "expected": "19.95",
+      "error": null
+    },
+    {
+      "input": "19.97",
+      "decimal_separator": null,
+      "expected": "19.97",
+      "error": null
+    },
+    {
+      "input": "19.99",
+      "decimal_separator": null,
+      "expected": "19.99",
+      "error": null
+    },
+    {
+      "input": "190.00",
+      "decimal_separator": null,
+      "expected": "190.00",
+      "error": null
+    },
+    {
+      "input": "196.50",
+      "decimal_separator": null,
+      "expected": "196.50",
+      "error": null
+    },
+    {
+      "input": "197",
+      "decimal_separator": null,
+      "expected": "197",
+      "error": null
+    },
+    {
+      "input": "199",
+      "decimal_separator": null,
+      "expected": "199",
+      "error": null
+    },
+    {
+      "input": "199,00",
+      "decimal_separator": null,
+      "expected": "199.00",
+      "error": null
+    },
+    {
+      "input": "199,95",
+      "decimal_separator": null,
+      "expected": "199.95",
+      "error": null
+    },
+    {
+      "input": "199,99",
+      "decimal_separator": null,
+      "expected": "199.99",
+      "error": null
+    },
+    {
+      "input": "199.90",
+      "decimal_separator": null,
+      "expected": "199.90",
+      "error": null
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": null,
+      "expected": "1E+99999",
+      "error": null
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "",
+      "expected": "1E+99999",
+      "error": null
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": ",",
+      "expected": "1E+99999",
+      "error": null
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": ".",
+      "expected": "1E+99999",
+      "error": null
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E+99999",
+      "decimal_separator": "€",
+      "expected": "1E+99999",
+      "error": null
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": null,
+      "expected": "1E-99999",
+      "error": null
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "",
+      "expected": "1E-99999",
+      "error": null
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": ",",
+      "expected": "1E-99999",
+      "error": null
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": ".",
+      "expected": "1E-99999",
+      "error": null
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1E-99999",
+      "decimal_separator": "€",
+      "expected": "1E-99999",
+      "error": null
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": null,
+      "expected": "1234.00",
+      "error": null
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "",
+      "expected": "1234.00",
+      "error": null
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": ",",
+      "expected": "123400",
+      "error": null
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": ".",
+      "expected": "1234.00",
+      "error": null
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1_234.00",
+      "decimal_separator": "€",
+      "expected": "123400",
+      "error": null
+    },
+    {
+      "input": "1_234.50",
+      "decimal_separator": null,
+      "expected": "1234.50",
+      "error": null
+    },
+    {
+      "input": "1_234.50",
+      "decimal_separator": ",",
+      "expected": "123450",
+      "error": null
+    },
+    {
+      "input": "1_234.50",
+      "decimal_separator": ".",
+      "expected": "1234.50",
+      "error": null
+    },
+    {
+      "input": "1_234.50",
+      "decimal_separator": "€",
+      "expected": "123450",
+      "error": null
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "1e+",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "1e3",
+      "decimal_separator": null,
+      "expected": "1E+3",
+      "error": null
+    },
+    {
+      "input": "1e3",
+      "decimal_separator": ",",
+      "expected": "1E+3",
+      "error": null
+    },
+    {
+      "input": "1e3",
+      "decimal_separator": ".",
+      "expected": "1E+3",
+      "error": null
+    },
+    {
+      "input": "1e3",
+      "decimal_separator": "€",
+      "expected": "1E+3",
+      "error": null
+    },
+    {
+      "input": "2",
+      "decimal_separator": null,
+      "expected": "2",
+      "error": null
+    },
+    {
+      "input": "2 285,81",
+      "decimal_separator": null,
+      "expected": "2285.81",
+      "error": null
+    },
+    {
+      "input": "2 390",
+      "decimal_separator": null,
+      "expected": "2390",
+      "error": null
+    },
+    {
+      "input": "2 399",
+      "decimal_separator": null,
+      "expected": "2399",
+      "error": null
+    },
+    {
+      "input": "2 400",
+      "decimal_separator": null,
+      "expected": "2400",
+      "error": null
+    },
+    {
+      "input": "2 499,00",
+      "decimal_separator": null,
+      "expected": "2499.00",
+      "error": null
+    },
+    {
+      "input": "2 500",
+      "decimal_separator": null,
+      "expected": "2500",
+      "error": null
+    },
+    {
+      "input": "2 660",
+      "decimal_separator": null,
+      "expected": "2660",
+      "error": null
+    },
+    {
+      "input": "2 690",
+      "decimal_separator": null,
+      "expected": "2690",
+      "error": null
+    },
+    {
+      "input": "2 750",
+      "decimal_separator": null,
+      "expected": "2750",
+      "error": null
+    },
+    {
+      "input": "2 990",
+      "decimal_separator": null,
+      "expected": "2990",
+      "error": null
+    },
+    {
+      "input": "2 999",
+      "decimal_separator": null,
+      "expected": "2999",
+      "error": null
+    },
+    {
+      "input": "2 999,00",
+      "decimal_separator": null,
+      "expected": "2999.00",
+      "error": null
+    },
+    {
+      "input": "2,20",
+      "decimal_separator": null,
+      "expected": "2.20",
+      "error": null
+    },
+    {
+      "input": "2,90",
+      "decimal_separator": null,
+      "expected": "2.90",
+      "error": null
+    },
+    {
+      "input": "2,99",
+      "decimal_separator": null,
+      "expected": "2.99",
+      "error": null
+    },
+    {
+      "input": "2.00",
+      "decimal_separator": null,
+      "expected": "2.00",
+      "error": null
+    },
+    {
+      "input": "2.109,00",
+      "decimal_separator": null,
+      "expected": "2109.00",
+      "error": null
+    },
+    {
+      "input": "2.130,00",
+      "decimal_separator": null,
+      "expected": "2130.00",
+      "error": null
+    },
+    {
+      "input": "2.49",
+      "decimal_separator": null,
+      "expected": "2.49",
+      "error": null
+    },
+    {
+      "input": "2.85",
+      "decimal_separator": null,
+      "expected": "2.85",
+      "error": null
+    },
+    {
+      "input": "2.950,00",
+      "decimal_separator": null,
+      "expected": "2950.00",
+      "error": null
+    },
+    {
+      "input": "2.99",
+      "decimal_separator": null,
+      "expected": "2.99",
+      "error": null
+    },
+    {
+      "input": "20,00",
+      "decimal_separator": null,
+      "expected": "20.00",
+      "error": null
+    },
+    {
+      "input": "20,95",
+      "decimal_separator": null,
+      "expected": "20.95",
+      "error": null
+    },
+    {
+      "input": "20.00",
+      "decimal_separator": null,
+      "expected": "20.00",
+      "error": null
+    },
+    {
+      "input": "20.70",
+      "decimal_separator": null,
+      "expected": "20.70",
+      "error": null
+    },
+    {
+      "input": "200",
+      "decimal_separator": null,
+      "expected": "200",
+      "error": null
+    },
+    {
+      "input": "200.000",
+      "decimal_separator": null,
+      "expected": "200000",
+      "error": null
+    },
+    {
+      "input": "2000",
+      "decimal_separator": null,
+      "expected": "2000",
+      "error": null
+    },
+    {
+      "input": "205,68",
+      "decimal_separator": null,
+      "expected": "205.68",
+      "error": null
+    },
+    {
+      "input": "205.99",
+      "decimal_separator": null,
+      "expected": "205.99",
+      "error": null
+    },
+    {
+      "input": "21,00",
+      "decimal_separator": null,
+      "expected": "21.00",
+      "error": null
+    },
+    {
+      "input": "21,33",
+      "decimal_separator": null,
+      "expected": "21.33",
+      "error": null
+    },
+    {
+      "input": "21,95",
+      "decimal_separator": null,
+      "expected": "21.95",
+      "error": null
+    },
+    {
+      "input": "21.00",
+      "decimal_separator": null,
+      "expected": "21.00",
+      "error": null
+    },
+    {
+      "input": "21.95",
+      "decimal_separator": null,
+      "expected": "21.95",
+      "error": null
+    },
+    {
+      "input": "210",
+      "decimal_separator": null,
+      "expected": "210",
+      "error": null
+    },
+    {
+      "input": "213,62",
+      "decimal_separator": null,
+      "expected": "213.62",
+      "error": null
+    },
+    {
+      "input": "215,10",
+      "decimal_separator": null,
+      "expected": "215.10",
+      "error": null
+    },
+    {
+      "input": "219",
+      "decimal_separator": null,
+      "expected": "219",
+      "error": null
+    },
+    {
+      "input": "22,00",
+      "decimal_separator": null,
+      "expected": "22.00",
+      "error": null
+    },
+    {
+      "input": "22,90",
+      "decimal_separator": null,
+      "expected": "22.90",
+      "error": null
+    },
+    {
+      "input": "22.00",
+      "decimal_separator": null,
+      "expected": "22.00",
+      "error": null
+    },
+    {
+      "input": "22.48",
+      "decimal_separator": null,
+      "expected": "22.48",
+      "error": null
+    },
+    {
+      "input": "22.75",
+      "decimal_separator": null,
+      "expected": "22.75",
+      "error": null
+    },
+    {
+      "input": "22.99",
+      "decimal_separator": null,
+      "expected": "22.99",
+      "error": null
+    },
+    {
+      "input": "22000.00",
+      "decimal_separator": null,
+      "expected": "22000.00",
+      "error": null
+    },
+    {
+      "input": "221.000",
+      "decimal_separator": null,
+      "expected": "221000",
+      "error": null
+    },
+    {
+      "input": "225,00",
+      "decimal_separator": null,
+      "expected": "225.00",
+      "error": null
+    },
+    {
+      "input": "227,000",
+      "decimal_separator": null,
+      "expected": "227000",
+      "error": null
+    },
+    {
+      "input": "22800.00",
+      "decimal_separator": null,
+      "expected": "22800.00",
+      "error": null
+    },
+    {
+      "input": "23,00",
+      "decimal_separator": null,
+      "expected": "23.00",
+      "error": null
+    },
+    {
+      "input": "23,40",
+      "decimal_separator": null,
+      "expected": "23.40",
+      "error": null
+    },
+    {
+      "input": "23.00",
+      "decimal_separator": null,
+      "expected": "23.00",
+      "error": null
+    },
+    {
+      "input": "23.40",
+      "decimal_separator": null,
+      "expected": "23.40",
+      "error": null
+    },
+    {
+      "input": "23.90",
+      "decimal_separator": null,
+      "expected": "23.90",
+      "error": null
+    },
+    {
+      "input": "230",
+      "decimal_separator": null,
+      "expected": "230",
+      "error": null
+    },
+    {
+      "input": "235.000",
+      "decimal_separator": null,
+      "expected": "235000",
+      "error": null
+    },
+    {
+      "input": "238.00",
+      "decimal_separator": null,
+      "expected": "238.00",
+      "error": null
+    },
+    {
+      "input": "24,00",
+      "decimal_separator": null,
+      "expected": "24.00",
+      "error": null
+    },
+    {
+      "input": "24,35",
+      "decimal_separator": null,
+      "expected": "24.35",
+      "error": null
+    },
+    {
+      "input": "24,401",
+      "decimal_separator": null,
+      "expected": "24401",
+      "error": null
+    },
+    {
+      "input": "24,95",
+      "decimal_separator": null,
+      "expected": "24.95",
+      "error": null
+    },
+    {
+      "input": "24.00",
+      "decimal_separator": null,
+      "expected": "24.00",
+      "error": null
+    },
+    {
+      "input": "24.38",
+      "decimal_separator": null,
+      "expected": "24.38",
+      "error": null
+    },
+    {
+      "input": "24.95",
+      "decimal_separator": null,
+      "expected": "24.95",
+      "error": null
+    },
+    {
+      "input": "24.99",
+      "decimal_separator": null,
+      "expected": "24.99",
+      "error": null
+    },
+    {
+      "input": "244,00",
+      "decimal_separator": null,
+      "expected": "244.00",
+      "error": null
+    },
+    {
+      "input": "249",
+      "decimal_separator": null,
+      "expected": "249",
+      "error": null
+    },
+    {
+      "input": "249,00",
+      "decimal_separator": null,
+      "expected": "249.00",
+      "error": null
+    },
+    {
+      "input": "249.99",
+      "decimal_separator": null,
+      "expected": "249.99",
+      "error": null
+    },
+    {
+      "input": "25",
+      "decimal_separator": null,
+      "expected": "25",
+      "error": null
+    },
+    {
+      "input": "25,00",
+      "decimal_separator": null,
+      "expected": "25.00",
+      "error": null
+    },
+    {
+      "input": "25,13",
+      "decimal_separator": null,
+      "expected": "25.13",
+      "error": null
+    },
+    {
+      "input": "25.00",
+      "decimal_separator": null,
+      "expected": "25.00",
+      "error": null
+    },
+    {
+      "input": "25.88",
+      "decimal_separator": null,
+      "expected": "25.88",
+      "error": null
+    },
+    {
+      "input": "25.95",
+      "decimal_separator": null,
+      "expected": "25.95",
+      "error": null
+    },
+    {
+      "input": "25.97",
+      "decimal_separator": null,
+      "expected": "25.97",
+      "error": null
+    },
+    {
+      "input": "250,00",
+      "decimal_separator": null,
+      "expected": "250.00",
+      "error": null
+    },
+    {
+      "input": "250.00",
+      "decimal_separator": null,
+      "expected": "250.00",
+      "error": null
+    },
+    {
+      "input": "253,89",
+      "decimal_separator": null,
+      "expected": "253.89",
+      "error": null
+    },
+    {
+      "input": "259,00",
+      "decimal_separator": null,
+      "expected": "259.00",
+      "error": null
+    },
+    {
+      "input": "26",
+      "decimal_separator": null,
+      "expected": "26",
+      "error": null
+    },
+    {
+      "input": "26,95",
+      "decimal_separator": null,
+      "expected": "26.95",
+      "error": null
+    },
+    {
+      "input": "26.30",
+      "decimal_separator": null,
+      "expected": "26.30",
+      "error": null
+    },
+    {
+      "input": "260,00",
+      "decimal_separator": null,
+      "expected": "260.00",
+      "error": null
+    },
+    {
+      "input": "261.25",
+      "decimal_separator": null,
+      "expected": "261.25",
+      "error": null
+    },
+    {
+      "input": "269",
+      "decimal_separator": null,
+      "expected": "269",
+      "error": null
+    },
+    {
+      "input": "27,95",
+      "decimal_separator": null,
+      "expected": "27.95",
+      "error": null
+    },
+    {
+      "input": "27.00",
+      "decimal_separator": null,
+      "expected": "27.00",
+      "error": null
+    },
+    {
+      "input": "27.50",
+      "decimal_separator": null,
+      "expected": "27.50",
+      "error": null
+    },
+    {
+      "input": "273.00",
+      "decimal_separator": null,
+      "expected": "273.00",
+      "error": null
+    },
+    {
+      "input": "274.95",
+      "decimal_separator": null,
+      "expected": "274.95",
+      "error": null
+    },
+    {
+      "input": "279 000",
+      "decimal_separator": null,
+      "expected": "279000",
+      "error": null
+    },
+    {
+      "input": "28",
+      "decimal_separator": null,
+      "expected": "28",
+      "error": null
+    },
+    {
+      "input": "28 270,00",
+      "decimal_separator": null,
+      "expected": "28270.00",
+      "error": null
+    },
+    {
+      "input": "28.49",
+      "decimal_separator": null,
+      "expected": "28.49",
+      "error": null
+    },
+    {
+      "input": "280",
+      "decimal_separator": null,
+      "expected": "280",
+      "error": null
+    },
+    {
+      "input": "280,00",
+      "decimal_separator": null,
+      "expected": "280.00",
+      "error": null
+    },
+    {
+      "input": "2800",
+      "decimal_separator": null,
+      "expected": "2800",
+      "error": null
+    },
+    {
+      "input": "281.40",
+      "decimal_separator": null,
+      "expected": "281.40",
+      "error": null
+    },
+    {
+      "input": "283,50",
+      "decimal_separator": null,
+      "expected": "283.50",
+      "error": null
+    },
+    {
+      "input": "288,00",
+      "decimal_separator": null,
+      "expected": "288.00",
+      "error": null
+    },
+    {
+      "input": "289,00",
+      "decimal_separator": null,
+      "expected": "289.00",
+      "error": null
+    },
+    {
+      "input": "29",
+      "decimal_separator": null,
+      "expected": "29",
+      "error": null
+    },
+    {
+      "input": "29,00",
+      "decimal_separator": null,
+      "expected": "29.00",
+      "error": null
+    },
+    {
+      "input": "29,50",
+      "decimal_separator": null,
+      "expected": "29.50",
+      "error": null
+    },
+    {
+      "input": "29,90",
+      "decimal_separator": null,
+      "expected": "29.90",
+      "error": null
+    },
+    {
+      "input": "29,95",
+      "decimal_separator": null,
+      "expected": "29.95",
+      "error": null
+    },
+    {
+      "input": "29.00",
+      "decimal_separator": null,
+      "expected": "29.00",
+      "error": null
+    },
+    {
+      "input": "29.1583",
+      "decimal_separator": null,
+      "expected": "29.1583",
+      "error": null
+    },
+    {
+      "input": "29.66",
+      "decimal_separator": null,
+      "expected": "29.66",
+      "error": null
+    },
+    {
+      "input": "29.95",
+      "decimal_separator": null,
+      "expected": "29.95",
+      "error": null
+    },
+    {
+      "input": "29.99",
+      "decimal_separator": null,
+      "expected": "29.99",
+      "error": null
+    },
+    {
+      "input": "290,00",
+      "decimal_separator": null,
+      "expected": "290.00",
+      "error": null
+    },
+    {
+      "input": "295",
+      "decimal_separator": null,
+      "expected": "295",
+      "error": null
+    },
+    {
+      "input": "295,88",
+      "decimal_separator": null,
+      "expected": "295.88",
+      "error": null
+    },
+    {
+      "input": "2963",
+      "decimal_separator": null,
+      "expected": "2963",
+      "error": null
+    },
+    {
+      "input": "299",
+      "decimal_separator": null,
+      "expected": "299",
+      "error": null
+    },
+    {
+      "input": "299,00",
+      "decimal_separator": null,
+      "expected": "299.00",
+      "error": null
+    },
+    {
+      "input": "299.00",
+      "decimal_separator": null,
+      "expected": "299.00",
+      "error": null
+    },
+    {
+      "input": "299.71",
+      "decimal_separator": null,
+      "expected": "299.71",
+      "error": null
+    },
+    {
+      "input": "3 100",
+      "decimal_separator": null,
+      "expected": "3100",
+      "error": null
+    },
+    {
+      "input": "3 173,00",
+      "decimal_separator": null,
+      "expected": "3173.00",
+      "error": null
+    },
+    {
+      "input": "3 250 000",
+      "decimal_separator": null,
+      "expected": "3250000",
+      "error": null
+    },
+    {
+      "input": "3 291,00",
+      "decimal_separator": null,
+      "expected": "3291.00",
+      "error": null
+    },
+    {
+      "input": "3 300",
+      "decimal_separator": null,
+      "expected": "3300",
+      "error": null
+    },
+    {
+      "input": "3,00",
+      "decimal_separator": null,
+      "expected": "3.00",
+      "error": null
+    },
+    {
+      "input": "3,0000",
+      "decimal_separator": null,
+      "expected": "3.0000",
+      "error": null
+    },
+    {
+      "input": "3,0000",
+      "decimal_separator": ",",
+      "expected": "3.0000",
+      "error": null
+    },
+    {
+      "input": "3,0000",
+      "decimal_separator": ".",
+      "expected": "30000",
+      "error": null
+    },
+    {
+      "input": "3,0000",
+      "decimal_separator": "€",
+      "expected": "30000",
+      "error": null
+    },
+    {
+      "input": "3,179.00",
+      "decimal_separator": null,
+      "expected": "3179.00",
+      "error": null
+    },
+    {
+      "input": "3,20",
+      "decimal_separator": null,
+      "expected": "3.20",
+      "error": null
+    },
+    {
+      "input": "3,301.00",
+      "decimal_separator": null,
+      "expected": "3301.00",
+      "error": null
+    },
+    {
+      "input": "3,439.00",
+      "decimal_separator": null,
+      "expected": "3439.00",
+      "error": null
+    },
+    {
+      "input": "3,49",
+      "decimal_separator": null,
+      "expected": "3.49",
+      "error": null
+    },
+    {
+      "input": "3,500",
+      "decimal_separator": null,
+      "expected": "3500",
+      "error": null
+    },
+    {
+      "input": "3,600.00",
+      "decimal_separator": null,
+      "expected": "3600.00",
+      "error": null
+    },
+    {
+      "input": "3,63",
+      "decimal_separator": null,
+      "expected": "3.63",
+      "error": null
+    },
+    {
+      "input": "3,690.00",
+      "decimal_separator": null,
+      "expected": "3690.00",
+      "error": null
+    },
+    {
+      "input": "3,822.00",
+      "decimal_separator": null,
+      "expected": "3822.00",
+      "error": null
+    },
+    {
+      "input": "3,85",
+      "decimal_separator": null,
+      "expected": "3.85",
+      "error": null
+    },
+    {
+      "input": "3,90",
+      "decimal_separator": null,
+      "expected": "3.90",
+      "error": null
+    },
+    {
+      "input": "3,990",
+      "decimal_separator": null,
+      "expected": "3990",
+      "error": null
+    },
+    {
+      "input": "3.00",
+      "decimal_separator": null,
+      "expected": "3.00",
+      "error": null
+    },
+    {
+      "input": "3.22",
+      "decimal_separator": null,
+      "expected": "3.22",
+      "error": null
+    },
+    {
+      "input": "3.24",
+      "decimal_separator": null,
+      "expected": "3.24",
+      "error": null
+    },
+    {
+      "input": "3.3900",
+      "decimal_separator": null,
+      "expected": "3.3900",
+      "error": null
+    },
+    {
+      "input": "3.79",
+      "decimal_separator": null,
+      "expected": "3.79",
+      "error": null
+    },
+    {
+      "input": "3.95",
+      "decimal_separator": null,
+      "expected": "3.95",
+      "error": null
+    },
+    {
+      "input": "3.99",
+      "decimal_separator": null,
+      "expected": "3.99",
+      "error": null
+    },
+    {
+      "input": "30",
+      "decimal_separator": null,
+      "expected": "30",
+      "error": null
+    },
+    {
+      "input": "30,00",
+      "decimal_separator": null,
+      "expected": "30.00",
+      "error": null
+    },
+    {
+      "input": "30,000",
+      "decimal_separator": null,
+      "expected": "30000",
+      "error": null
+    },
+    {
+      "input": "30,40",
+      "decimal_separator": null,
+      "expected": "30.40",
+      "error": null
+    },
+    {
+      "input": "30.00",
+      "decimal_separator": null,
+      "expected": "30.00",
+      "error": null
+    },
+    {
+      "input": "30.56",
+      "decimal_separator": null,
+      "expected": "30.56",
+      "error": null
+    },
+    {
+      "input": "30.84",
+      "decimal_separator": null,
+      "expected": "30.84",
+      "error": null
+    },
+    {
+      "input": "300.00",
+      "decimal_separator": null,
+      "expected": "300.00",
+      "error": null
+    },
+    {
+      "input": "302,44",
+      "decimal_separator": null,
+      "expected": "302.44",
+      "error": null
+    },
+    {
+      "input": "3089.9",
+      "decimal_separator": null,
+      "expected": "3089.9",
+      "error": null
+    },
+    {
+      "input": "31,07",
+      "decimal_separator": null,
+      "expected": "31.07",
+      "error": null
+    },
+    {
+      "input": "31,93",
+      "decimal_separator": null,
+      "expected": "31.93",
+      "error": null
+    },
+    {
+      "input": "31.500",
+      "decimal_separator": null,
+      "expected": "31500",
+      "error": null
+    },
+    {
+      "input": "318,00",
+      "decimal_separator": null,
+      "expected": "318.00",
+      "error": null
+    },
+    {
+      "input": "32",
+      "decimal_separator": null,
+      "expected": "32",
+      "error": null
+    },
+    {
+      "input": "32,50",
+      "decimal_separator": null,
+      "expected": "32.50",
+      "error": null
+    },
+    {
+      "input": "32.00",
+      "decimal_separator": null,
+      "expected": "32.00",
+      "error": null
+    },
+    {
+      "input": "32.99",
+      "decimal_separator": null,
+      "expected": "32.99",
+      "error": null
+    },
+    {
+      "input": "320.000",
+      "decimal_separator": null,
+      "expected": "320000",
+      "error": null
+    },
+    {
+      "input": "3200",
+      "decimal_separator": null,
+      "expected": "3200",
+      "error": null
+    },
+    {
+      "input": "325.95",
+      "decimal_separator": null,
+      "expected": "325.95",
+      "error": null
+    },
+    {
+      "input": "32690",
+      "decimal_separator": null,
+      "expected": "32690",
+      "error": null
+    },
+    {
+      "input": "33",
+      "decimal_separator": null,
+      "expected": "33",
+      "error": null
+    },
+    {
+      "input": "33,68",
+      "decimal_separator": null,
+      "expected": "33.68",
+      "error": null
+    },
+    {
+      "input": "33,90",
+      "decimal_separator": null,
+      "expected": "33.90",
+      "error": null
+    },
+    {
+      "input": "33.00",
+      "decimal_separator": null,
+      "expected": "33.00",
+      "error": null
+    },
+    {
+      "input": "330",
+      "decimal_separator": null,
+      "expected": "330",
+      "error": null
+    },
+    {
+      "input": "336",
+      "decimal_separator": null,
+      "expected": "336",
+      "error": null
+    },
+    {
+      "input": "339",
+      "decimal_separator": null,
+      "expected": "339",
+      "error": null
+    },
+    {
+      "input": "34,50",
+      "decimal_separator": null,
+      "expected": "34.50",
+      "error": null
+    },
+    {
+      "input": "34,90",
+      "decimal_separator": null,
+      "expected": "34.90",
+      "error": null
+    },
+    {
+      "input": "34,94",
+      "decimal_separator": null,
+      "expected": "34.94",
+      "error": null
+    },
+    {
+      "input": "34.12",
+      "decimal_separator": null,
+      "expected": "34.12",
+      "error": null
+    },
+    {
+      "input": "34.44",
+      "decimal_separator": null,
+      "expected": "34.44",
+      "error": null
+    },
+    {
+      "input": "34.99",
+      "decimal_separator": null,
+      "expected": "34.99",
+      "error": null
+    },
+    {
+      "input": "34.992001",
+      "decimal_separator": null,
+      "expected": "34.992001",
+      "error": null
+    },
+    {
+      "input": "343,05",
+      "decimal_separator": null,
+      "expected": "343.05",
+      "error": null
+    },
+    {
+      "input": "3430",
+      "decimal_separator": null,
+      "expected": "3430",
+      "error": null
+    },
+    {
+      "input": "344.99",
+      "decimal_separator": null,
+      "expected": "344.99",
+      "error": null
+    },
+    {
+      "input": "349,00",
+      "decimal_separator": null,
+      "expected": "349.00",
+      "error": null
+    },
+    {
+      "input": "349.95",
+      "decimal_separator": null,
+      "expected": "349.95",
+      "error": null
+    },
+    {
+      "input": "35,00",
+      "decimal_separator": null,
+      "expected": "35.00",
+      "error": null
+    },
+    {
+      "input": "35,70",
+      "decimal_separator": null,
+      "expected": "35.70",
+      "error": null
+    },
+    {
+      "input": "35,90",
+      "decimal_separator": null,
+      "expected": "35.90",
+      "error": null
+    },
+    {
+      "input": "35,95",
+      "decimal_separator": null,
+      "expected": "35.95",
+      "error": null
+    },
+    {
+      "input": "35.00",
+      "decimal_separator": null,
+      "expected": "35.00",
+      "error": null
+    },
+    {
+      "input": "350.00",
+      "decimal_separator": null,
+      "expected": "350.00",
+      "error": null
+    },
+    {
+      "input": "350.000",
+      "decimal_separator": null,
+      "expected": "350000",
+      "error": null
+    },
+    {
+      "input": "356.03",
+      "decimal_separator": null,
+      "expected": "356.03",
+      "error": null
+    },
+    {
+      "input": "359",
+      "decimal_separator": null,
+      "expected": "359",
+      "error": null
+    },
+    {
+      "input": "35€99",
+      "decimal_separator": null,
+      "expected": "35.99",
+      "error": null
+    },
+    {
+      "input": "36",
+      "decimal_separator": null,
+      "expected": "36",
+      "error": null
+    },
+    {
+      "input": "36. 24",
+      "decimal_separator": null,
+      "expected": "36.24",
+      "error": null
+    },
+    {
+      "input": "36.95",
+      "decimal_separator": null,
+      "expected": "36.95",
+      "error": null
+    },
+    {
+      "input": "369",
+      "decimal_separator": null,
+      "expected": "369",
+      "error": null
+    },
+    {
+      "input": "370",
+      "decimal_separator": null,
+      "expected": "370",
+      "error": null
+    },
+    {
+      "input": "378.00",
+      "decimal_separator": null,
+      "expected": "378.00",
+      "error": null
+    },
+    {
+      "input": "379",
+      "decimal_separator": null,
+      "expected": "379",
+      "error": null
+    },
+    {
+      "input": "379,00",
+      "decimal_separator": null,
+      "expected": "379.00",
+      "error": null
+    },
+    {
+      "input": "384,00",
+      "decimal_separator": null,
+      "expected": "384.00",
+      "error": null
+    },
+    {
+      "input": "39,00",
+      "decimal_separator": null,
+      "expected": "39.00",
+      "error": null
+    },
+    {
+      "input": "39,60",
+      "decimal_separator": null,
+      "expected": "39.60",
+      "error": null
+    },
+    {
+      "input": "39,90",
+      "decimal_separator": null,
+      "expected": "39.90",
+      "error": null
+    },
+    {
+      "input": "39,95",
+      "decimal_separator": null,
+      "expected": "39.95",
+      "error": null
+    },
+    {
+      "input": "39.00",
+      "decimal_separator": null,
+      "expected": "39.00",
+      "error": null
+    },
+    {
+      "input": "39.95",
+      "decimal_separator": null,
+      "expected": "39.95",
+      "error": null
+    },
+    {
+      "input": "39.99",
+      "decimal_separator": null,
+      "expected": "39.99",
+      "error": null
+    },
+    {
+      "input": "390,00",
+      "decimal_separator": null,
+      "expected": "390.00",
+      "error": null
+    },
+    {
+      "input": "39000",
+      "decimal_separator": null,
+      "expected": "39000",
+      "error": null
+    },
+    {
+      "input": "392. 00",
+      "decimal_separator": null,
+      "expected": "392.00",
+      "error": null
+    },
+    {
+      "input": "395",
+      "decimal_separator": null,
+      "expected": "395",
+      "error": null
+    },
+    {
+      "input": "395,000",
+      "decimal_separator": null,
+      "expected": "395000",
+      "error": null
+    },
+    {
+      "input": "397.00",
+      "decimal_separator": null,
+      "expected": "397.00",
+      "error": null
+    },
+    {
+      "input": "398,00",
+      "decimal_separator": null,
+      "expected": "398.00",
+      "error": null
+    },
+    {
+      "input": "399 167.00",
+      "decimal_separator": null,
+      "expected": "399167.00",
+      "error": null
+    },
+    {
+      "input": "399.00",
+      "decimal_separator": null,
+      "expected": "399.00",
+      "error": null
+    },
+    {
+      "input": "39900",
+      "decimal_separator": null,
+      "expected": "39900",
+      "error": null
+    },
+    {
+      "input": "4 370",
+      "decimal_separator": null,
+      "expected": "4370",
+      "error": null
+    },
+    {
+      "input": "4 690",
+      "decimal_separator": null,
+      "expected": "4690",
+      "error": null
+    },
+    {
+      "input": "4 835,50",
+      "decimal_separator": null,
+      "expected": "4835.50",
+      "error": null
+    },
+    {
+      "input": "4 980",
+      "decimal_separator": null,
+      "expected": "4980",
+      "error": null
+    },
+    {
+      "input": "4,30",
+      "decimal_separator": null,
+      "expected": "4.30",
+      "error": null
+    },
+    {
+      "input": "4,35",
+      "decimal_separator": null,
+      "expected": "4.35",
+      "error": null
+    },
+    {
+      "input": "4,350.00",
+      "decimal_separator": null,
+      "expected": "4350.00",
+      "error": null
+    },
+    {
+      "input": "4,50",
+      "decimal_separator": null,
+      "expected": "4.50",
+      "error": null
+    },
+    {
+      "input": "4,56",
+      "decimal_separator": null,
+      "expected": "4.56",
+      "error": null
+    },
+    {
+      "input": "4.00",
+      "decimal_separator": null,
+      "expected": "4.00",
+      "error": null
+    },
+    {
+      "input": "4.07",
+      "decimal_separator": null,
+      "expected": "4.07",
+      "error": null
+    },
+    {
+      "input": "4.10",
+      "decimal_separator": null,
+      "expected": "4.10",
+      "error": null
+    },
+    {
+      "input": "4.25",
+      "decimal_separator": null,
+      "expected": "4.25",
+      "error": null
+    },
+    {
+      "input": "4.47",
+      "decimal_separator": null,
+      "expected": "4.47",
+      "error": null
+    },
+    {
+      "input": "4.50",
+      "decimal_separator": null,
+      "expected": "4.50",
+      "error": null
+    },
+    {
+      "input": "4.59",
+      "decimal_separator": null,
+      "expected": "4.59",
+      "error": null
+    },
+    {
+      "input": "4.60",
+      "decimal_separator": null,
+      "expected": "4.60",
+      "error": null
+    },
+    {
+      "input": "4.70",
+      "decimal_separator": null,
+      "expected": "4.70",
+      "error": null
+    },
+    {
+      "input": "4.75",
+      "decimal_separator": null,
+      "expected": "4.75",
+      "error": null
+    },
+    {
+      "input": "4.81",
+      "decimal_separator": null,
+      "expected": "4.81",
+      "error": null
+    },
+    {
+      "input": "4.90",
+      "decimal_separator": null,
+      "expected": "4.90",
+      "error": null
+    },
+    {
+      "input": "4.95",
+      "decimal_separator": null,
+      "expected": "4.95",
+      "error": null
+    },
+    {
+      "input": "4.99",
+      "decimal_separator": null,
+      "expected": "4.99",
+      "error": null
+    },
+    {
+      "input": "40 130",
+      "decimal_separator": null,
+      "expected": "40130",
+      "error": null
+    },
+    {
+      "input": "40,00",
+      "decimal_separator": null,
+      "expected": "40.00",
+      "error": null
+    },
+    {
+      "input": "40.00",
+      "decimal_separator": null,
+      "expected": "40.00",
+      "error": null
+    },
+    {
+      "input": "41,78",
+      "decimal_separator": null,
+      "expected": "41.78",
+      "error": null
+    },
+    {
+      "input": "419",
+      "decimal_separator": null,
+      "expected": "419",
+      "error": null
+    },
+    {
+      "input": "42.90",
+      "decimal_separator": null,
+      "expected": "42.90",
+      "error": null
+    },
+    {
+      "input": "42.95",
+      "decimal_separator": null,
+      "expected": "42.95",
+      "error": null
+    },
+    {
+      "input": "423.923",
+      "decimal_separator": ".",
+      "expected": "423.923",
+      "error": null
+    },
+    {
+      "input": "425,00",
+      "decimal_separator": null,
+      "expected": "425.00",
+      "error": null
+    },
+    {
+      "input": "426.20",
+      "decimal_separator": null,
+      "expected": "426.20",
+      "error": null
+    },
+    {
+      "input": "429,00",
+      "decimal_separator": null,
+      "expected": "429.00",
+      "error": null
+    },
+    {
+      "input": "430",
+      "decimal_separator": null,
+      "expected": "430",
+      "error": null
+    },
+    {
+      "input": "430,00",
+      "decimal_separator": null,
+      "expected": "430.00",
+      "error": null
+    },
+    {
+      "input": "434",
+      "decimal_separator": null,
+      "expected": "434",
+      "error": null
+    },
+    {
+      "input": "44,00",
+      "decimal_separator": null,
+      "expected": "44.00",
+      "error": null
+    },
+    {
+      "input": "44,50",
+      "decimal_separator": null,
+      "expected": "44.50",
+      "error": null
+    },
+    {
+      "input": "44.95",
+      "decimal_separator": null,
+      "expected": "44.95",
+      "error": null
+    },
+    {
+      "input": "44.99",
+      "decimal_separator": null,
+      "expected": "44.99",
+      "error": null
+    },
+    {
+      "input": "442",
+      "decimal_separator": null,
+      "expected": "442",
+      "error": null
+    },
+    {
+      "input": "449,00",
+      "decimal_separator": null,
+      "expected": "449.00",
+      "error": null
+    },
+    {
+      "input": "449,72",
+      "decimal_separator": null,
+      "expected": "449.72",
+      "error": null
+    },
+    {
+      "input": "45",
+      "decimal_separator": null,
+      "expected": "45",
+      "error": null
+    },
+    {
+      "input": "45,00",
+      "decimal_separator": null,
+      "expected": "45.00",
+      "error": null
+    },
+    {
+      "input": "45,000",
+      "decimal_separator": null,
+      "expected": "45000",
+      "error": null
+    },
+    {
+      "input": "45.00",
+      "decimal_separator": null,
+      "expected": "45.00",
+      "error": null
+    },
+    {
+      "input": "45.33",
+      "decimal_separator": null,
+      "expected": "45.33",
+      "error": null
+    },
+    {
+      "input": "45.49",
+      "decimal_separator": null,
+      "expected": "45.49",
+      "error": null
+    },
+    {
+      "input": "450 000",
+      "decimal_separator": null,
+      "expected": "450000",
+      "error": null
+    },
+    {
+      "input": "459,00",
+      "decimal_separator": null,
+      "expected": "459.00",
+      "error": null
+    },
+    {
+      "input": "46.00",
+      "decimal_separator": null,
+      "expected": "46.00",
+      "error": null
+    },
+    {
+      "input": "4649",
+      "decimal_separator": null,
+      "expected": "4649",
+      "error": null
+    },
+    {
+      "input": "469,00",
+      "decimal_separator": null,
+      "expected": "469.00",
+      "error": null
+    },
+    {
+      "input": "469.00",
+      "decimal_separator": null,
+      "expected": "469.00",
+      "error": null
+    },
+    {
+      "input": "47.00",
+      "decimal_separator": null,
+      "expected": "47.00",
+      "error": null
+    },
+    {
+      "input": "475",
+      "decimal_separator": null,
+      "expected": "475",
+      "error": null
+    },
+    {
+      "input": "47700",
+      "decimal_separator": null,
+      "expected": "47700",
+      "error": null
+    },
+    {
+      "input": "479,00",
+      "decimal_separator": null,
+      "expected": "479.00",
+      "error": null
+    },
+    {
+      "input": "479.00",
+      "decimal_separator": null,
+      "expected": "479.00",
+      "error": null
+    },
+    {
+      "input": "48,00",
+      "decimal_separator": null,
+      "expected": "48.00",
+      "error": null
+    },
+    {
+      "input": "48,39",
+      "decimal_separator": null,
+      "expected": "48.39",
+      "error": null
+    },
+    {
+      "input": "48,96",
+      "decimal_separator": null,
+      "expected": "48.96",
+      "error": null
+    },
+    {
+      "input": "48.25",
+      "decimal_separator": null,
+      "expected": "48.25",
+      "error": null
+    },
+    {
+      "input": "49",
+      "decimal_separator": null,
+      "expected": "49",
+      "error": null
+    },
+    {
+      "input": "49,00",
+      "decimal_separator": null,
+      "expected": "49.00",
+      "error": null
+    },
+    {
+      "input": "49,90",
+      "decimal_separator": null,
+      "expected": "49.90",
+      "error": null
+    },
+    {
+      "input": "49,96",
+      "decimal_separator": null,
+      "expected": "49.96",
+      "error": null
+    },
+    {
+      "input": "49.56",
+      "decimal_separator": null,
+      "expected": "49.56",
+      "error": null
+    },
+    {
+      "input": "49.95",
+      "decimal_separator": null,
+      "expected": "49.95",
+      "error": null
+    },
+    {
+      "input": "49.99",
+      "decimal_separator": null,
+      "expected": "49.99",
+      "error": null
+    },
+    {
+      "input": "499,00",
+      "decimal_separator": null,
+      "expected": "499.00",
+      "error": null
+    },
+    {
+      "input": "499.80",
+      "decimal_separator": null,
+      "expected": "499.80",
+      "error": null
+    },
+    {
+      "input": "5 000",
+      "decimal_separator": null,
+      "expected": "5000",
+      "error": null
+    },
+    {
+      "input": "5 290",
+      "decimal_separator": null,
+      "expected": "5290",
+      "error": null
+    },
+    {
+      "input": "5 427",
+      "decimal_separator": null,
+      "expected": "5427",
+      "error": null
+    },
+    {
+      "input": "5 450",
+      "decimal_separator": null,
+      "expected": "5450",
+      "error": null
+    },
+    {
+      "input": "5 550",
+      "decimal_separator": null,
+      "expected": "5550",
+      "error": null
+    },
+    {
+      "input": "5 770",
+      "decimal_separator": null,
+      "expected": "5770",
+      "error": null
+    },
+    {
+      "input": "5 799,00",
+      "decimal_separator": null,
+      "expected": "5799.00",
+      "error": null
+    },
+    {
+      "input": "5 833,00",
+      "decimal_separator": null,
+      "expected": "5833.00",
+      "error": null
+    },
+    {
+      "input": "5 870",
+      "decimal_separator": null,
+      "expected": "5870",
+      "error": null
+    },
+    {
+      "input": "5,246.58",
+      "decimal_separator": null,
+      "expected": "5246.58",
+      "error": null
+    },
+    {
+      "input": "5,60",
+      "decimal_separator": null,
+      "expected": "5.60",
+      "error": null
+    },
+    {
+      "input": "5,72",
+      "decimal_separator": null,
+      "expected": "5.72",
+      "error": null
+    },
+    {
+      "input": "5,90",
+      "decimal_separator": null,
+      "expected": "5.90",
+      "error": null
+    },
+    {
+      "input": "5.00",
+      "decimal_separator": null,
+      "expected": "5.00",
+      "error": null
+    },
+    {
+      "input": "5.11",
+      "decimal_separator": null,
+      "expected": "5.11",
+      "error": null
+    },
+    {
+      "input": "5.76",
+      "decimal_separator": null,
+      "expected": "5.76",
+      "error": null
+    },
+    {
+      "input": "5.95",
+      "decimal_separator": null,
+      "expected": "5.95",
+      "error": null
+    },
+    {
+      "input": "50",
+      "decimal_separator": null,
+      "expected": "50",
+      "error": null
+    },
+    {
+      "input": "50,00",
+      "decimal_separator": null,
+      "expected": "50.00",
+      "error": null
+    },
+    {
+      "input": "50.00",
+      "decimal_separator": null,
+      "expected": "50.00",
+      "error": null
+    },
+    {
+      "input": "528,00",
+      "decimal_separator": null,
+      "expected": "528.00",
+      "error": null
+    },
+    {
+      "input": "53,20",
+      "decimal_separator": null,
+      "expected": "53.20",
+      "error": null
+    },
+    {
+      "input": "53,95",
+      "decimal_separator": null,
+      "expected": "53.95",
+      "error": null
+    },
+    {
+      "input": "53.79",
+      "decimal_separator": null,
+      "expected": "53.79",
+      "error": null
+    },
+    {
+      "input": "530,42",
+      "decimal_separator": null,
+      "expected": "530.42",
+      "error": null
+    },
+    {
+      "input": "54,99",
+      "decimal_separator": null,
+      "expected": "54.99",
+      "error": null
+    },
+    {
+      "input": "54.17",
+      "decimal_separator": null,
+      "expected": "54.17",
+      "error": null
+    },
+    {
+      "input": "54.95",
+      "decimal_separator": null,
+      "expected": "54.95",
+      "error": null
+    },
+    {
+      "input": "542",
+      "decimal_separator": null,
+      "expected": "542",
+      "error": null
+    },
+    {
+      "input": "549.00",
+      "decimal_separator": null,
+      "expected": "549.00",
+      "error": null
+    },
+    {
+      "input": "55,00",
+      "decimal_separator": null,
+      "expected": "55.00",
+      "error": null
+    },
+    {
+      "input": "55,72",
+      "decimal_separator": null,
+      "expected": "55.72",
+      "error": null
+    },
+    {
+      "input": "55.00",
+      "decimal_separator": null,
+      "expected": "55.00",
+      "error": null
+    },
+    {
+      "input": "550,00",
+      "decimal_separator": null,
+      "expected": "550.00",
+      "error": null
+    },
+    {
+      "input": "559. 99",
+      "decimal_separator": null,
+      "expected": "559.99",
+      "error": null
+    },
+    {
+      "input": "559.00",
+      "decimal_separator": null,
+      "expected": "559.00",
+      "error": null
+    },
+    {
+      "input": "56,000",
+      "decimal_separator": null,
+      "expected": "56000",
+      "error": null
+    },
+    {
+      "input": "56.00",
+      "decimal_separator": null,
+      "expected": "56.00",
+      "error": null
+    },
+    {
+      "input": "571.12",
+      "decimal_separator": null,
+      "expected": "571.12",
+      "error": null
+    },
+    {
+      "input": "575.00",
+      "decimal_separator": null,
+      "expected": "575.00",
+      "error": null
+    },
+    {
+      "input": "58,00",
+      "decimal_separator": null,
+      "expected": "58.00",
+      "error": null
+    },
+    {
+      "input": "58,19",
+      "decimal_separator": null,
+      "expected": "58.19",
+      "error": null
+    },
+    {
+      "input": "589,00",
+      "decimal_separator": null,
+      "expected": "589.00",
+      "error": null
+    },
+    {
+      "input": "59 900",
+      "decimal_separator": null,
+      "expected": "59900",
+      "error": null
+    },
+    {
+      "input": "59,00",
+      "decimal_separator": null,
+      "expected": "59.00",
+      "error": null
+    },
+    {
+      "input": "59,90",
+      "decimal_separator": null,
+      "expected": "59.90",
+      "error": null
+    },
+    {
+      "input": "59,95",
+      "decimal_separator": null,
+      "expected": "59.95",
+      "error": null
+    },
+    {
+      "input": "59.00",
+      "decimal_separator": null,
+      "expected": "59.00",
+      "error": null
+    },
+    {
+      "input": "59.95",
+      "decimal_separator": null,
+      "expected": "59.95",
+      "error": null
+    },
+    {
+      "input": "59.99",
+      "decimal_separator": null,
+      "expected": "59.99",
+      "error": null
+    },
+    {
+      "input": "590",
+      "decimal_separator": null,
+      "expected": "590",
+      "error": null
+    },
+    {
+      "input": "595.00",
+      "decimal_separator": null,
+      "expected": "595.00",
+      "error": null
+    },
+    {
+      "input": "599",
+      "decimal_separator": null,
+      "expected": "599",
+      "error": null
+    },
+    {
+      "input": "599.97",
+      "decimal_separator": null,
+      "expected": "599.97",
+      "error": null
+    },
+    {
+      "input": "6 300",
+      "decimal_separator": null,
+      "expected": "6300",
+      "error": null
+    },
+    {
+      "input": "6 450,00",
+      "decimal_separator": null,
+      "expected": "6450.00",
+      "error": null
+    },
+    {
+      "input": "6,00",
+      "decimal_separator": null,
+      "expected": "6.00",
+      "error": null
+    },
+    {
+      "input": "6,000.00",
+      "decimal_separator": null,
+      "expected": "6000.00",
+      "error": null
+    },
+    {
+      "input": "6,200.00",
+      "decimal_separator": null,
+      "expected": "6200.00",
+      "error": null
+    },
+    {
+      "input": "6,24",
+      "decimal_separator": null,
+      "expected": "6.24",
+      "error": null
+    },
+    {
+      "input": "6,50",
+      "decimal_separator": null,
+      "expected": "6.50",
+      "error": null
+    },
+    {
+      "input": "6,75",
+      "decimal_separator": null,
+      "expected": "6.75",
+      "error": null
+    },
+    {
+      "input": "6,78",
+      "decimal_separator": null,
+      "expected": "6.78",
+      "error": null
+    },
+    {
+      "input": "6,99",
+      "decimal_separator": null,
+      "expected": "6.99",
+      "error": null
+    },
+    {
+      "input": "6.00",
+      "decimal_separator": null,
+      "expected": "6.00",
+      "error": null
+    },
+    {
+      "input": "6.45",
+      "decimal_separator": null,
+      "expected": "6.45",
+      "error": null
+    },
+    {
+      "input": "6.49",
+      "decimal_separator": null,
+      "expected": "6.49",
+      "error": null
+    },
+    {
+      "input": "6.50",
+      "decimal_separator": null,
+      "expected": "6.50",
+      "error": null
+    },
+    {
+      "input": "6.56",
+      "decimal_separator": null,
+      "expected": "6.56",
+      "error": null
+    },
+    {
+      "input": "6.70",
+      "decimal_separator": null,
+      "expected": "6.70",
+      "error": null
+    },
+    {
+      "input": "6.75",
+      "decimal_separator": null,
+      "expected": "6.75",
+      "error": null
+    },
+    {
+      "input": "6.95",
+      "decimal_separator": null,
+      "expected": "6.95",
+      "error": null
+    },
+    {
+      "input": "60,00",
+      "decimal_separator": null,
+      "expected": "60.00",
+      "error": null
+    },
+    {
+      "input": "60,55",
+      "decimal_separator": null,
+      "expected": "60.55",
+      "error": null
+    },
+    {
+      "input": "60.00",
+      "decimal_separator": null,
+      "expected": "60.00",
+      "error": null
+    },
+    {
+      "input": "600",
+      "decimal_separator": null,
+      "expected": "600",
+      "error": null
+    },
+    {
+      "input": "600,00",
+      "decimal_separator": null,
+      "expected": "600.00",
+      "error": null
+    },
+    {
+      "input": "60800",
+      "decimal_separator": null,
+      "expected": "60800",
+      "error": null
+    },
+    {
+      "input": "61.00",
+      "decimal_separator": null,
+      "expected": "61.00",
+      "error": null
+    },
+    {
+      "input": "61.858",
+      "decimal_separator": null,
+      "expected": "61858",
+      "error": null
+    },
+    {
+      "input": "610",
+      "decimal_separator": null,
+      "expected": "610",
+      "error": null
+    },
+    {
+      "input": "62,00",
+      "decimal_separator": null,
+      "expected": "62.00",
+      "error": null
+    },
+    {
+      "input": "629.95",
+      "decimal_separator": null,
+      "expected": "629.95",
+      "error": null
+    },
+    {
+      "input": "63,90",
+      "decimal_separator": null,
+      "expected": "63.90",
+      "error": null
+    },
+    {
+      "input": "64,59",
+      "decimal_separator": null,
+      "expected": "64.59",
+      "error": null
+    },
+    {
+      "input": "644.00",
+      "decimal_separator": null,
+      "expected": "644.00",
+      "error": null
+    },
+    {
+      "input": "668",
+      "decimal_separator": null,
+      "expected": "668",
+      "error": null
+    },
+    {
+      "input": "67",
+      "decimal_separator": null,
+      "expected": "67",
+      "error": null
+    },
+    {
+      "input": "67,30",
+      "decimal_separator": null,
+      "expected": "67.30",
+      "error": null
+    },
+    {
+      "input": "679.00",
+      "decimal_separator": null,
+      "expected": "679.00",
+      "error": null
+    },
+    {
+      "input": "6790",
+      "decimal_separator": null,
+      "expected": "6790",
+      "error": null
+    },
+    {
+      "input": "684,25",
+      "decimal_separator": null,
+      "expected": "684.25",
+      "error": null
+    },
+    {
+      "input": "69",
+      "decimal_separator": null,
+      "expected": "69",
+      "error": null
+    },
+    {
+      "input": "69,50",
+      "decimal_separator": null,
+      "expected": "69.50",
+      "error": null
+    },
+    {
+      "input": "69,900",
+      "decimal_separator": null,
+      "expected": "69900",
+      "error": null
+    },
+    {
+      "input": "69.00",
+      "decimal_separator": null,
+      "expected": "69.00",
+      "error": null
+    },
+    {
+      "input": "69.30",
+      "decimal_separator": null,
+      "expected": "69.30",
+      "error": null
+    },
+    {
+      "input": "69.90",
+      "decimal_separator": null,
+      "expected": "69.90",
+      "error": null
+    },
+    {
+      "input": "69.95",
+      "decimal_separator": null,
+      "expected": "69.95",
+      "error": null
+    },
+    {
+      "input": "69.99",
+      "decimal_separator": null,
+      "expected": "69.99",
+      "error": null
+    },
+    {
+      "input": "690,00",
+      "decimal_separator": null,
+      "expected": "690.00",
+      "error": null
+    },
+    {
+      "input": "695.00",
+      "decimal_separator": null,
+      "expected": "695.00",
+      "error": null
+    },
+    {
+      "input": "699,00",
+      "decimal_separator": null,
+      "expected": "699.00",
+      "error": null
+    },
+    {
+      "input": "699,000",
+      "decimal_separator": null,
+      "expected": "699000",
+      "error": null
+    },
+    {
+      "input": "7 390",
+      "decimal_separator": null,
+      "expected": "7390",
+      "error": null
+    },
+    {
+      "input": "7 940",
+      "decimal_separator": null,
+      "expected": "7940",
+      "error": null
+    },
+    {
+      "input": "7 990",
+      "decimal_separator": null,
+      "expected": "7990",
+      "error": null
+    },
+    {
+      "input": "7 990,00",
+      "decimal_separator": null,
+      "expected": "7990.00",
+      "error": null
+    },
+    {
+      "input": "7,00",
+      "decimal_separator": null,
+      "expected": "7.00",
+      "error": null
+    },
+    {
+      "input": "7,25",
+      "decimal_separator": null,
+      "expected": "7.25",
+      "error": null
+    },
+    {
+      "input": "7,31",
+      "decimal_separator": null,
+      "expected": "7.31",
+      "error": null
+    },
+    {
+      "input": "7,32",
+      "decimal_separator": null,
+      "expected": "7.32",
+      "error": null
+    },
+    {
+      "input": "7,60",
+      "decimal_separator": null,
+      "expected": "7.60",
+      "error": null
+    },
+    {
+      "input": "7,99",
+      "decimal_separator": null,
+      "expected": "7.99",
+      "error": null
+    },
+    {
+      "input": "7.20",
+      "decimal_separator": null,
+      "expected": "7.20",
+      "error": null
+    },
+    {
+      "input": "7.38",
+      "decimal_separator": null,
+      "expected": "7.38",
+      "error": null
+    },
+    {
+      "input": "7.49",
+      "decimal_separator": null,
+      "expected": "7.49",
+      "error": null
+    },
+    {
+      "input": "7.65",
+      "decimal_separator": null,
+      "expected": "7.65",
+      "error": null
+    },
+    {
+      "input": "7.95",
+      "decimal_separator": null,
+      "expected": "7.95",
+      "error": null
+    },
+    {
+      "input": "7.99",
+      "decimal_separator": null,
+      "expected": "7.99",
+      "error": null
+    },
+    {
+      "input": "70,20",
+      "decimal_separator": null,
+      "expected": "70.20",
+      "error": null
+    },
+    {
+      "input": "70,31",
+      "decimal_separator": null,
+      "expected": "70.31",
+      "error": null
+    },
+    {
+      "input": "72.00",
+      "decimal_separator": null,
+      "expected": "72.00",
+      "error": null
+    },
+    {
+      "input": "72.95",
+      "decimal_separator": null,
+      "expected": "72.95",
+      "error": null
+    },
+    {
+      "input": "724,00",
+      "decimal_separator": null,
+      "expected": "724.00",
+      "error": null
+    },
+    {
+      "input": "73,460",
+      "decimal_separator": null,
+      "expected": "73460",
+      "error": null
+    },
+    {
+      "input": "7362",
+      "decimal_separator": null,
+      "expected": "7362",
+      "error": null
+    },
+    {
+      "input": "737,00",
+      "decimal_separator": null,
+      "expected": "737.00",
+      "error": null
+    },
+    {
+      "input": "74.00",
+      "decimal_separator": null,
+      "expected": "74.00",
+      "error": null
+    },
+    {
+      "input": "74.99",
+      "decimal_separator": null,
+      "expected": "74.99",
+      "error": null
+    },
+    {
+      "input": "742.50",
+      "decimal_separator": null,
+      "expected": "742.50",
+      "error": null
+    },
+    {
+      "input": "745,00",
+      "decimal_separator": null,
+      "expected": "745.00",
+      "error": null
+    },
+    {
+      "input": "749",
+      "decimal_separator": null,
+      "expected": "749",
+      "error": null
+    },
+    {
+      "input": "749,00",
+      "decimal_separator": null,
+      "expected": "749.00",
+      "error": null
+    },
+    {
+      "input": "75 000",
+      "decimal_separator": null,
+      "expected": "75000",
+      "error": null
+    },
+    {
+      "input": "75 990,00",
+      "decimal_separator": null,
+      "expected": "75990.00",
+      "error": null
+    },
+    {
+      "input": "75,00",
+      "decimal_separator": null,
+      "expected": "75.00",
+      "error": null
+    },
+    {
+      "input": "75.00",
+      "decimal_separator": null,
+      "expected": "75.00",
+      "error": null
+    },
+    {
+      "input": "750,000",
+      "decimal_separator": null,
+      "expected": "750000",
+      "error": null
+    },
+    {
+      "input": "750.30",
+      "decimal_separator": null,
+      "expected": "750.30",
+      "error": null
+    },
+    {
+      "input": "750.30",
+      "decimal_separator": ".",
+      "expected": "750.30",
+      "error": null
+    },
+    {
+      "input": "78",
+      "decimal_separator": null,
+      "expected": "78",
+      "error": null
+    },
+    {
+      "input": "79,00",
+      "decimal_separator": null,
+      "expected": "79.00",
+      "error": null
+    },
+    {
+      "input": "79,50",
+      "decimal_separator": null,
+      "expected": "79.50",
+      "error": null
+    },
+    {
+      "input": "79.00",
+      "decimal_separator": null,
+      "expected": "79.00",
+      "error": null
+    },
+    {
+      "input": "79.95",
+      "decimal_separator": null,
+      "expected": "79.95",
+      "error": null
+    },
+    {
+      "input": "790",
+      "decimal_separator": null,
+      "expected": "790",
+      "error": null
+    },
+    {
+      "input": "790,00",
+      "decimal_separator": null,
+      "expected": "790.00",
+      "error": null
+    },
+    {
+      "input": "790.00",
+      "decimal_separator": null,
+      "expected": "790.00",
+      "error": null
+    },
+    {
+      "input": "791.00",
+      "decimal_separator": null,
+      "expected": "791.00",
+      "error": null
+    },
+    {
+      "input": "795",
+      "decimal_separator": null,
+      "expected": "795",
+      "error": null
+    },
+    {
+      "input": "799,00",
+      "decimal_separator": null,
+      "expected": "799.00",
+      "error": null
+    },
+    {
+      "input": "8 390",
+      "decimal_separator": null,
+      "expected": "8390",
+      "error": null
+    },
+    {
+      "input": "8 500",
+      "decimal_separator": null,
+      "expected": "8500",
+      "error": null
+    },
+    {
+      "input": "8,499",
+      "decimal_separator": null,
+      "expected": "8499",
+      "error": null
+    },
+    {
+      "input": "8,55",
+      "decimal_separator": null,
+      "expected": "8.55",
+      "error": null
+    },
+    {
+      "input": "8,99",
+      "decimal_separator": null,
+      "expected": "8.99",
+      "error": null
+    },
+    {
+      "input": "8. 94",
+      "decimal_separator": null,
+      "expected": "8.94",
+      "error": null
+    },
+    {
+      "input": "8.000.000",
+      "decimal_separator": null,
+      "expected": "8000000",
+      "error": null
+    },
+    {
+      "input": "8.27",
+      "decimal_separator": null,
+      "expected": "8.27",
+      "error": null
+    },
+    {
+      "input": "8.29",
+      "decimal_separator": null,
+      "expected": "8.29",
+      "error": null
+    },
+    {
+      "input": "8.90",
+      "decimal_separator": null,
+      "expected": "8.90",
+      "error": null
+    },
+    {
+      "input": "80",
+      "decimal_separator": null,
+      "expected": "80",
+      "error": null
+    },
+    {
+      "input": "80,00",
+      "decimal_separator": null,
+      "expected": "80.00",
+      "error": null
+    },
+    {
+      "input": "80,000",
+      "decimal_separator": null,
+      "expected": "80000",
+      "error": null
+    },
+    {
+      "input": "80.00",
+      "decimal_separator": null,
+      "expected": "80.00",
+      "error": null
+    },
+    {
+      "input": "800",
+      "decimal_separator": null,
+      "expected": "800",
+      "error": null
+    },
+    {
+      "input": "8000",
+      "decimal_separator": null,
+      "expected": "8000",
+      "error": null
+    },
+    {
+      "input": "805",
+      "decimal_separator": null,
+      "expected": "805",
+      "error": null
+    },
+    {
+      "input": "809,000",
+      "decimal_separator": null,
+      "expected": "809000",
+      "error": null
+    },
+    {
+      "input": "841,00",
+      "decimal_separator": null,
+      "expected": "841.00",
+      "error": null
+    },
+    {
+      "input": "844,900",
+      "decimal_separator": null,
+      "expected": "844900",
+      "error": null
+    },
+    {
+      "input": "850",
+      "decimal_separator": null,
+      "expected": "850",
+      "error": null
+    },
+    {
+      "input": "850,000",
+      "decimal_separator": null,
+      "expected": "850000",
+      "error": null
+    },
+    {
+      "input": "86.44",
+      "decimal_separator": null,
+      "expected": "86.44",
+      "error": null
+    },
+    {
+      "input": "860",
+      "decimal_separator": null,
+      "expected": "860",
+      "error": null
+    },
+    {
+      "input": "860.00",
+      "decimal_separator": null,
+      "expected": "860.00",
+      "error": null
+    },
+    {
+      "input": "870",
+      "decimal_separator": null,
+      "expected": "870",
+      "error": null
+    },
+    {
+      "input": "876",
+      "decimal_separator": null,
+      "expected": "876",
+      "error": null
+    },
+    {
+      "input": "879.0",
+      "decimal_separator": null,
+      "expected": "879.0",
+      "error": null
+    },
+    {
+      "input": "880,000",
+      "decimal_separator": null,
+      "expected": "880000",
+      "error": null
+    },
+    {
+      "input": "884",
+      "decimal_separator": null,
+      "expected": "884",
+      "error": null
+    },
+    {
+      "input": "89",
+      "decimal_separator": null,
+      "expected": "89",
+      "error": null
+    },
+    {
+      "input": "89,00",
+      "decimal_separator": null,
+      "expected": "89.00",
+      "error": null
+    },
+    {
+      "input": "89,90",
+      "decimal_separator": null,
+      "expected": "89.90",
+      "error": null
+    },
+    {
+      "input": "89.00",
+      "decimal_separator": null,
+      "expected": "89.00",
+      "error": null
+    },
+    {
+      "input": "89.99",
+      "decimal_separator": null,
+      "expected": "89.99",
+      "error": null
+    },
+    {
+      "input": "890",
+      "decimal_separator": null,
+      "expected": "890",
+      "error": null
+    },
+    {
+      "input": "892.00",
+      "decimal_separator": null,
+      "expected": "892.00",
+      "error": null
+    },
+    {
+      "input": "899,00",
+      "decimal_separator": null,
+      "expected": "899.00",
+      "error": null
+    },
+    {
+      "input": "9 282",
+      "decimal_separator": null,
+      "expected": "9282",
+      "error": null
+    },
+    {
+      "input": "9 472",
+      "decimal_separator": null,
+      "expected": "9472",
+      "error": null
+    },
+    {
+      "input": "9 800",
+      "decimal_separator": null,
+      "expected": "9800",
+      "error": null
+    },
+    {
+      "input": "9,24",
+      "decimal_separator": null,
+      "expected": "9.24",
+      "error": null
+    },
+    {
+      "input": "9,41",
+      "decimal_separator": null,
+      "expected": "9.41",
+      "error": null
+    },
+    {
+      "input": "9,50",
+      "decimal_separator": null,
+      "expected": "9.50",
+      "error": null
+    },
+    {
+      "input": "9,94",
+      "decimal_separator": null,
+      "expected": "9.94",
+      "error": null
+    },
+    {
+      "input": "9.00",
+      "decimal_separator": null,
+      "expected": "9.00",
+      "error": null
+    },
+    {
+      "input": "9.95",
+      "decimal_separator": null,
+      "expected": "9.95",
+      "error": null
+    },
+    {
+      "input": "9.99",
+      "decimal_separator": null,
+      "expected": "9.99",
+      "error": null
+    },
+    {
+      "input": "9.990,00",
+      "decimal_separator": null,
+      "expected": "9990.00",
+      "error": null
+    },
+    {
+      "input": "924.99",
+      "decimal_separator": null,
+      "expected": "924.99",
+      "error": null
+    },
+    {
+      "input": "93 499",
+      "decimal_separator": null,
+      "expected": "93499",
+      "error": null
+    },
+    {
+      "input": "94,000",
+      "decimal_separator": null,
+      "expected": "94000",
+      "error": null
+    },
+    {
+      "input": "94,456",
+      "decimal_separator": null,
+      "expected": "94456",
+      "error": null
+    },
+    {
+      "input": "94,90",
+      "decimal_separator": null,
+      "expected": "94.90",
+      "error": null
+    },
+    {
+      "input": "94,99",
+      "decimal_separator": null,
+      "expected": "94.99",
+      "error": null
+    },
+    {
+      "input": "94.50",
+      "decimal_separator": null,
+      "expected": "94.50",
+      "error": null
+    },
+    {
+      "input": "95",
+      "decimal_separator": null,
+      "expected": "95",
+      "error": null
+    },
+    {
+      "input": "95.00",
+      "decimal_separator": null,
+      "expected": "95.00",
+      "error": null
+    },
+    {
+      "input": "950",
+      "decimal_separator": null,
+      "expected": "950",
+      "error": null
+    },
+    {
+      "input": "960,00",
+      "decimal_separator": null,
+      "expected": "960.00",
+      "error": null
+    },
+    {
+      "input": "979.00",
+      "decimal_separator": null,
+      "expected": "979.00",
+      "error": null
+    },
+    {
+      "input": "98",
+      "decimal_separator": null,
+      "expected": "98",
+      "error": null
+    },
+    {
+      "input": "987,20",
+      "decimal_separator": null,
+      "expected": "987.20",
+      "error": null
+    },
+    {
+      "input": "99",
+      "decimal_separator": null,
+      "expected": "99",
+      "error": null
+    },
+    {
+      "input": "99,00",
+      "decimal_separator": null,
+      "expected": "99.00",
+      "error": null
+    },
+    {
+      "input": "99,90",
+      "decimal_separator": null,
+      "expected": "99.90",
+      "error": null
+    },
+    {
+      "input": "99,99",
+      "decimal_separator": null,
+      "expected": "99.99",
+      "error": null
+    },
+    {
+      "input": "99.95",
+      "decimal_separator": null,
+      "expected": "99.95",
+      "error": null
+    },
+    {
+      "input": "99.99",
+      "decimal_separator": null,
+      "expected": "99.99",
+      "error": null
+    },
+    {
+      "input": "999.00",
+      "decimal_separator": null,
+      "expected": "999.00",
+      "error": null
+    },
+    {
+      "input": "999999999999999999999999.99",
+      "decimal_separator": null,
+      "expected": "999999999999999999999999.99",
+      "error": null
+    },
+    {
+      "input": "999999999999999999999999.99",
+      "decimal_separator": ",",
+      "expected": "99999999999999999999999999",
+      "error": null
+    },
+    {
+      "input": "999999999999999999999999.99",
+      "decimal_separator": ".",
+      "expected": "999999999999999999999999.99",
+      "error": null
+    },
+    {
+      "input": "999999999999999999999999.99",
+      "decimal_separator": "€",
+      "expected": "99999999999999999999999999",
+      "error": null
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": null,
+      "expected": "Infinity",
+      "error": null
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "",
+      "expected": "Infinity",
+      "error": null
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": ",",
+      "expected": "Infinity",
+      "error": null
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": ".",
+      "expected": "Infinity",
+      "error": null
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "Infinity",
+      "decimal_separator": "€",
+      "expected": "Infinity",
+      "error": null
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": null,
+      "expected": "NaN",
+      "error": null
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "",
+      "expected": "NaN",
+      "error": null
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": ",",
+      "expected": "NaN",
+      "error": null
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": ".",
+      "expected": "NaN",
+      "error": null
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN",
+      "decimal_separator": "€",
+      "expected": "NaN",
+      "error": null
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": null,
+      "expected": "NaN123",
+      "error": null
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "",
+      "expected": "NaN123",
+      "error": null
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": ",",
+      "expected": "NaN123",
+      "error": null
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": ".",
+      "expected": "NaN123",
+      "error": null
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "NaN123",
+      "decimal_separator": "€",
+      "expected": "NaN123",
+      "error": null
+    },
+    {
+      "input": "foo",
+      "decimal_separator": null,
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "foo",
+      "decimal_separator": ",",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "foo",
+      "decimal_separator": ".",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "foo",
+      "decimal_separator": "€",
+      "expected": null,
+      "error": null
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": null,
+      "expected": "sNaN",
+      "error": null
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "",
+      "expected": "sNaN",
+      "error": null
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": ",",
+      "expected": "sNaN",
+      "error": null
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": ".",
+      "expected": "sNaN",
+      "error": null
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "sNaN",
+      "decimal_separator": "€",
+      "expected": "sNaN",
+      "error": null
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": null,
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "",
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": ",",
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": ".",
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "١٢٣.٤٥",
+      "decimal_separator": "€",
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": null,
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "",
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "\u0000",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "*",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": ",",
+      "expected": "12345",
+      "error": null
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": ".",
+      "expected": "123.45",
+      "error": null
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "xx",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "٫",
+      "expected": null,
+      "error": "AssertionError"
+    },
+    {
+      "input": "１２３.４５",
+      "decimal_separator": "€",
+      "expected": "12345",
+      "error": null
+    }
+  ],
+  "native_parity": false,
+  "whole_donor_parity": false,
+  "new_live_acquisition": false
+}

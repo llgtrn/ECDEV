@@ -89,9 +89,12 @@
       "line_end": 455,
       "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
       "source_sha256": "f71072627edcf6573dfc109f390e94e59c64f8a26616308de8a108ad570260fa",
-      "behavior": "Exact Decimal conversion, explicit/guessed separators and unsupported assertion; existing native bounded numeric subset",
+      "behavior": "Typed scalar exact Decimal-or-None and unsupported-selector AssertionError precedence; malformed numeric input remains None. Nonfinite and large exponents remain exact atoms, guarded commerce projection remains unknown.",
       "whole_contract_native": false,
-      "production_cutover": false
+      "production_cutover": true,
+      "bounded_direct_contract_native": true,
+      "oracle_report": "research/commerce/price-scalar-oracle-report.json",
+      "limitations": "4096-byte native input bound; source unlimited inputs are not claimed; Python3.11/Unicode14 profile only; arbitrary dynamic Python input types, decimal context changes and packaging ABI remain unproven"
     },
     {
       "symbol": "amount_float",
@@ -194,7 +197,7 @@
     "fixture": "adapter/web/tests/fixtures/price-decimal-helper.json",
     "fixture_sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "native_source_sha256": "8f95dcd07e0baadaaf936990c613adf39fd5034b17f8f209fb1552a3c45f1551",
     "native_test": "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
     "production_caller": "adapter/web/src/price.rs::parse_number and formatted_money",
     "whole_donor_parity": false,
@@ -216,7 +219,7 @@
     "fixture": "adapter/web/tests/fixtures/price-literal-helper.json",
     "fixture_sha256": "323ab1bc39c90312f58ecb79c4401d73812198bd040cf52915b592ae607960d6",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "native_source_sha256": "8f95dcd07e0baadaaf936990c613adf39fd5034b17f8f209fb1552a3c45f1551",
     "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
     "native_test": "adapter/web/src/price.rs::locked_price_literal_helper_oracle",
     "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
@@ -238,7 +241,7 @@
     "fixture": "adapter/web/tests/fixtures/price-source-helpers.json",
     "fixture_sha256": "7df15486ea4d9f3b05d681804b2d0708e596fa5416f5fe9ed62fff284df164f5",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "native_source_sha256": "8f95dcd07e0baadaaf936990c613adf39fd5034b17f8f209fb1552a3c45f1551",
     "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
     "native_test": "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
     "production_caller": "adapter/web/src/price.rs::currency_symbol and parse_price",
@@ -267,7 +270,7 @@
     "fixture": "adapter/web/tests/fixtures/price-object-contract.json",
     "fixture_sha256": "d02a82005bdcb975cc4a4cea3dad3e76a660db8099b5fe3c84a9ec39f26fcb45",
     "native_source": "adapter/web/src/price.rs",
-    "native_source_sha256": "30c071686a915291e64c4fe74e656a1a1673f397d932d1bcea310e07b620b563",
+    "native_source_sha256": "8f95dcd07e0baadaaf936990c613adf39fd5034b17f8f209fb1552a3c45f1551",
     "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
     "native_test": "adapter/web/src/price.rs::locked_price_object_contract_oracle",
     "regression": "adapter/web/src/price.rs::native_price_object_projection_preserves_nonfinite_and_resource_unknowns",
@@ -283,6 +286,30 @@
       "Input/string storage bounded to 4096 bytes; numeric expansion/exponent guards unchanged in commerce projection",
       "Other Python dynamic object types, subclass/class identity, mutation/exception-context variations and packaging ABI are not claimed",
       "Unicode14/Python3.11/attrs26.1 corpus only; all-version parity and whole cutover remain incomplete"
+    ]
+  },
+  "native_scalar_contract": {
+    "status": "PASS",
+    "families": 1,
+    "cases": 1134,
+    "donor_id": "scrapinghub--price-parser",
+    "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "fixture": "adapter/web/tests/fixtures/price-scalar-contract.json",
+    "fixture_sha256": "64586b639da383db8cce21ab19359cb7d4787831d7885355aedfbe640523f80a",
+    "native_source": "adapter/web/src/price.rs",
+    "native_source_sha256": "8f95dcd07e0baadaaf936990c613adf39fd5034b17f8f209fb1552a3c45f1551",
+    "data_sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
+    "native_test": "adapter/web/src/price.rs::locked_price_typed_scalar_oracle",
+    "regression": "adapter/web/src/price.rs::typed_price_selector_errors_and_resource_unknowns_are_explicit",
+    "production_caller": "parse_price -> Price::fromstring -> Price::try_fromstring -> parse_decimal_number",
+    "whole_donor_parity": false,
+    "runtime_donor_import": false,
+    "python_version": "3.11.15",
+    "unicode_version": "14.0.0",
+    "scope": "Typed scalar exact Decimal-or-None and unsupported-selector AssertionError precedence; malformed numeric input remains None. Nonfinite and large exponents remain exact atoms, guarded commerce projection remains unknown.",
+    "limitations": [
+      "4096-byte native input bound; source unlimited inputs are not claimed",
+      "Python3.11/Unicode14 profile only; arbitrary dynamic Python input types, decimal context changes and packaging ABI remain unproven"
     ]
   }
 }

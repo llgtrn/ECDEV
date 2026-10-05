@@ -188,6 +188,7 @@ pub fn price_text(input: &str) -> Option<String> {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PriceError {
     InvalidOperation,
+    AssertionError,
     ValueError,
     ResourceLimit,
 }
@@ -195,6 +196,7 @@ impl PriceError {
     pub fn name(self) -> &'static str {
         match self {
             Self::InvalidOperation => "InvalidOperation",
+            Self::AssertionError => "AssertionError",
             Self::ValueError => "ValueError",
             Self::ResourceLimit => "ResourceLimit",
         }
@@ -460,14 +462,25 @@ impl Price {
         separator: Option<char>,
         group: Option<&str>,
     ) -> Self {
+        let explicit = separator.map(|c| c.to_string());
+        Self::try_fromstring(input, hint, explicit.as_deref(), group).unwrap_or(Self {
+            amount: None,
+            currency: None,
+            amount_text: None,
+        })
+    }
+    /// Typed source API preserves invalid-selector errors. The legacy projection
+    /// wrapper retains unknown output when its input is outside this boundary.
+    pub fn try_fromstring(
+        input: Option<&str>,
+        hint: Option<&str>,
+        separator: Option<&str>,
+        group: Option<&str>,
+    ) -> Result<Self, PriceError> {
         if [input, hint].into_iter().flatten().any(|s| s.len() > 4096)
             || group.is_some_and(|s| s.len() > 64)
         {
-            return Self {
-                amount: None,
-                currency: None,
-                amount_text: None,
-            };
+            return Err(PriceError::ResourceLimit);
         }
         let currency =
             currency_symbol(input, hint).map(|token| token.trim_matches(whitespace).to_owned());
@@ -477,16 +490,12 @@ impl Price {
                 .unwrap_or_else(|| s.to_owned())
         });
         let amount_text = text.as_deref().and_then(price_text);
-        let amount = amount_text
-            .as_deref()
-            .filter(|s| parse_number(s, separator).is_some())
-            .and_then(|s| number_text(s, separator))
-            .and_then(|s| DecimalAmount::parse(&s).ok());
-        Self {
+        let amount = parse_decimal_number(amount_text.as_deref(), separator)?;
+        Ok(Self {
             amount,
             currency,
             amount_text,
-        }
+        })
     }
     pub fn projection(&self) -> Value {
         let amount = self
@@ -548,6 +557,34 @@ fn number_text(input: &str, explicit: Option<char>) -> Option<String> {
     }
     .replace('_', "");
     Some(text)
+}
+/// Direct typed numeric helper, with exact atoms and explicit selector/resource errors.
+/// Invalid numeric strings are unavailable; nonfinite atoms remain classifiable.
+pub fn parse_decimal_number(
+    input: Option<&str>,
+    explicit: Option<&str>,
+) -> Result<Option<DecimalAmount>, PriceError> {
+    let Some(input) = input.filter(|s| !s.is_empty()) else {
+        return Ok(None);
+    };
+    if input.len() > 4096 {
+        return Err(PriceError::ResourceLimit);
+    }
+    let separator = match explicit {
+        None | Some("") => None,
+        Some(".") => Some('.'),
+        Some(",") => Some(','),
+        Some("€") => Some('€'),
+        _ => return Err(PriceError::AssertionError),
+    };
+    let Some(text) = number_text(input, separator) else {
+        return Ok(None);
+    };
+    match DecimalAmount::parse(&text) {
+        Ok(amount) => Ok(Some(amount)),
+        Err(PriceError::InvalidOperation) => Ok(None),
+        Err(error) => Err(error),
+    }
 }
 pub fn parse_number(input: &str, explicit: Option<char>) -> Option<String> {
     let text = number_text(input, explicit)?;
@@ -631,6 +668,62 @@ pub fn formatted_money(input: &str, currency: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn locked_price_typed_scalar_oracle() {
+        let oracle: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/price-scalar-contract.json"))
+                .unwrap();
+        assert_eq!(
+            oracle["commit_sha"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        assert_eq!(oracle["cases"].as_array().unwrap().len(), 1134);
+        for case in oracle["cases"].as_array().unwrap() {
+            match parse_decimal_number(case["input"].as_str(), case["decimal_separator"].as_str()) {
+                Ok(amount) => {
+                    assert!(case["error"].is_null(), "{}", case);
+                    assert_eq!(
+                        json!(amount.as_ref().map(DecimalAmount::text)),
+                        case["expected"],
+                        "{}",
+                        case
+                    );
+                }
+                Err(error) => assert_eq!(json!(error.name()), case["error"], "{}", case),
+            }
+        }
+    }
+    #[test]
+    fn typed_price_selector_errors_and_resource_unknowns_are_explicit() {
+        assert!(matches!(
+            Price::try_fromstring(Some("$12"), None, Some("xx"), None),
+            Err(PriceError::AssertionError)
+        ));
+        assert!(
+            Price::try_fromstring(Some("foo"), None, Some("xx"), None)
+                .unwrap()
+                .amount
+                .is_none()
+        );
+        assert!(parse_decimal_number(None, Some("xx")).unwrap().is_none());
+        assert!(matches!(
+            parse_decimal_number(Some(" \t"), Some("xx")),
+            Err(PriceError::AssertionError)
+        ));
+        assert!(matches!(
+            parse_decimal_number(Some(&"1".repeat(4097)), None),
+            Err(PriceError::ResourceLimit)
+        ));
+        for raw in ["NaN", "Infinity", "sNaN", "1E-99999", "1E+99999"] {
+            let price = Price {
+                amount: parse_decimal_number(Some(raw), None).unwrap(),
+                currency: Some("USD".into()),
+                amount_text: Some(raw.into()),
+            };
+            assert!(price.projection()["amount"].is_null());
+            assert!(price.projection()["amount_float"].is_null());
+        }
+    }
     fn object_from_input(input: &Value) -> Result<Price, PriceError> {
         Price::new(
             input["amount_decimal_input"].as_str(),

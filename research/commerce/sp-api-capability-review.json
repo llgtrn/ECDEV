@@ -139,5 +139,39 @@
     "SP_API_CLIENT_SECRET",
     "SP_API_REFRESH_TOKEN",
     "Explicit core USD per-run/day/month/provider/capability and intent ceiling >0; actual cost remains unknown"
-  ]
+  ],
+  "user_selected_connection_document_review": {
+    "url": "https://developer-docs.amazon/sp-api/docs/connecting-to-the-selling-partner-api",
+    "review_date": "2026-10-05",
+    "document_kind": "CURRENT_OFFICIAL_DOCUMENT_NOT_LOCKED_DONOR_OR_LIVE_ACCOUNT_PROOF",
+    "contracts": [
+      {
+        "requirement": "Registered application and selling-partner authorization are prerequisites",
+        "implementation": "Operator-gated credential flow; account registration/authorization externally unverified"
+      },
+      {
+        "requirement": "LWA secure POST with refresh_token grant, client_id and client_secret; no scope in this flow",
+        "implementation": "lwa_refresh_form and transport form POST to fixed LWA endpoint"
+      },
+      {
+        "requirement": "Bearer access token up to 2048 bytes, one-hour lifetime",
+        "implementation": "LwaToken validates bearer, token bytes and <=3600s; renews with 30s margin"
+      },
+      {
+        "requirement": "Regional endpoint plus API path/query; host, x-amz-access-token, x-amz-date and user-agent",
+        "implementation": "Fixed US/JP regional endpoints and bounded request builder; user-agent ECDEV/0.1.0 (Language=Rust)"
+      },
+      {
+        "requirement": "Restricted operations use RDT; grantless operations use client_credentials and scope",
+        "implementation": "Outside current catalog/offers/fees operation profile; no RDT or grantless support claimed"
+      }
+    ],
+    "source_hashes": {
+      "adapter/marketplace/src/lib.rs": "64f4606e9d6dbcf8b18a5e80bc5c5e5adafc508f1b2fbbee5a66e5980f42d96e",
+      "adapter/marketplace/src/transport.rs": "407159edd51ffc51bb145e4737a3441a0dbb24d7df08d6bda7c0dd46fc7ac01d"
+    },
+    "authenticated_calls_this_review": 0,
+    "credentials_read": false,
+    "whole_api_coverage": false
+  }
 }

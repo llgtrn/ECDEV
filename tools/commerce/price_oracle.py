@@ -28,6 +28,21 @@ def main():
  from price_parser.parser import parse_number, Price, parse_price, extract_price_text, extract_currency_symbol, get_decimal_separator, SAFE_CURRENCY_SYMBOLS, OTHER_CURRENCY_SYMBOLS, DOLLAR_CODES
  # Execute the actual tests module and its original Example data, without replacing donor code.
  spec=importlib.util.spec_from_file_location('locked_price_tests',DONOR/'tests/test_price_parsing.py');module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+ if '--scalar-contract' in sys.argv:
+  import decimal,platform,unicodedata
+  base=json.loads((ROOT/'adapter/web/tests/fixtures/price-number.json').read_text(encoding='utf-8'))
+  pairs={(c['input'],c['decimal_separator']) for c in base['cases']}
+  texts=[None,'',' \t','foo','0','-0.00','NaN','NaN123','-sNaN42','sNaN','Infinity','-Inf','1E+99999','1E-99999','1.2e-7','1e+','1,234.56','1.234,56','12€ 34','١٢٣.٤٥','１２３.４５','1_234.00','+12.00',' 12.00\n','1\x0023','+','-','.','1..2','1 234','1\t234']
+  pairs.update((text,separator) for text in texts for separator in [None,'','.',',','€','*','xx','٫','\0'])
+  cases=[]
+  for text,separator in sorted(pairs,key=lambda p:(p[0] is not None,p[0] or '',p[1] is not None,p[1] or '')):
+   try:
+    amount=parse_number(text,separator)
+    cases.append(dict(input=text,decimal_separator=separator,expected=None if amount is None else str(amount),error=None))
+   except (AssertionError,decimal.DecimalException,ValueError) as error:cases.append(dict(input=text,decimal_separator=separator,expected=None,error=type(error).__name__))
+  record=dict(oracle='UNMODIFIED_LOCKED_PRICE_PARSER_TYPED_SCALAR',commit_sha=COMMIT,license='BSD-3-Clause',source_evidence=sources,python_version=platform.python_version(),unicode_version=unicodedata.unidata_version,scope='Direct parse_number exact Decimal text, nonfinite and malformed input outcomes, empty/None and unsupported-selector error precedence; valid typed string inputs with recorded Python decimal context',decimal_context=str(decimal.getcontext()),cases=cases,native_parity=False,whole_donor_parity=False,new_live_acquisition=False)
+  (ROOT/'adapter/web/tests/fixtures/price-scalar-contract.json').write_bytes((json.dumps(record,indent=2,ensure_ascii=False)+'\n').encode())
+  print('Executed locked scalar contract:',len(cases),'unique cases; native comparison pending');return
  if '--object-contract' in sys.argv:
   import decimal,math,platform,attr,unicodedata
   from importlib.metadata import version as installed_version
