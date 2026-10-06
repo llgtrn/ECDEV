@@ -1,19 +1,20 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "25c36c14e7476ac7be1cef4db78e3577b0ca1374",
+  "assessed_parent_commit": "bc24b88f1e3b8ddc6c46de9cc16392bb1f1a1e18",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
   "donor_count": 61,
   "effective_states": {
-    "CENSUSED": 7,
+    "CENSUSED": 6,
     "DISCOVERED": 15,
-    "EXTINCT": 4,
+    "EXTINCT": 5,
     "PARITY_PROVEN": 1,
     "REGISTERED": 34
   },
   "extinct": [
     "getzep--graphiti",
+    "purahmanian--keepa-mcp",
     "scrapinghub--extruct",
     "scrapinghub--price-parser",
     "seomoz--reppy"
@@ -100,10 +101,10 @@
     },
     {
       "donor": "purahmanian--keepa-mcp",
-      "claimed": "CENSUSED",
-      "effective": "CENSUSED",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals",
+      "stopped_by": "",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -112,8 +113,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": false,
-          "detail": "1 observed: SOURCE_REFERENCE NATIVE research/commerce/donors/checkouts/purahmanian--keepa-mcp in tools/commerce/keepa-oracle.mjs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -137,43 +138,43 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals"
+          "pass": true,
+          "detail": "all 2 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "7 of 7 required capabilities lack it: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals, keepa.resolve-current"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals"
+          "pass": true,
+          "detail": "all 2 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals"
+          "pass": true,
+          "detail": "all 2 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "7 of 7 declared capabilities have no resolved ECDEV relevance: keepa.get_product, keepa.get_price_history, keepa.get_sales_rank_history, keepa.search_products, keepa.get_best_sellers, keepa.get_deals, keepa.resolve-current"
+          "pass": true,
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: tools.commerce (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },

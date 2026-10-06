@@ -36,6 +36,7 @@ pub fn resolve_current(source: &Value, index: usize, legacy: Option<&Value>) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use serde_json::json;
     #[test]
     fn donor_oracle_integer_json_contract() {
         let cases: Value =
@@ -56,5 +57,26 @@ mod tests {
                 case["case_id"]
             );
         }
+    }
+    #[test]
+    fn resolve_current_regressions() {
+        let v = |s: Value, i: usize| resolve_current(&s, i, None);
+        // stats.current wins; Keepa's -1 sentinel never becomes a value.
+        assert_eq!(
+            v(json!({"stats":{"current":[7]},"current":[9]}), 0),
+            Some(7)
+        );
+        assert_eq!(
+            v(json!({"stats":{"current":[-1]},"current":[9]}), 0),
+            Some(9)
+        );
+        // Last complete sample, skipping -1; an unpaired trailing timestamp is ignored.
+        assert_eq!(v(json!({"csv":[[1,5,2,-1,3]]}), 0), Some(5));
+        // Buy box (slot 18) samples are (time, price, shipping) triples.
+        let mut csv = vec![Value::Null; 19];
+        csv[18] = json!([1, 300, 50, 2, 400, 60]);
+        assert_eq!(v(json!({ "csv": csv }), 18), Some(400));
+        assert_eq!(resolve_current(&json!({}), 16, Some(&json!(45))), Some(45));
+        assert_eq!(resolve_current(&json!({}), 16, Some(&json!(-1))), None);
     }
 }

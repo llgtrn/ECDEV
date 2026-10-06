@@ -1,0 +1,50 @@
+{
+  "donor_id": "purahmanian--keepa-mcp",
+  "origin": "https://github.com/purahmanian/keepa-mcp",
+  "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+  "license": "MIT",
+  "status": "EXTINCT",
+  "definition": "Current-value resolution and the product-summary slot mapping, the keepa-mcp behaviours ECDEV relies on, are native and proven against the unmodified donor; history decoding, paid discovery endpoints, text formatting and the server/transport are justified NOT_RELEVANT_TO_ECDEV; all 12 first-party files map to research/commerce/keepa-semantic-matrix.json.",
+  "governance": "ecdev-gov extinction: all gates pass (research/commerce/governance/lifecycle.json)",
+  "source_layer": "KEEPA stays a separate, paid, opt-in evidence layer; nothing here makes Keepa calls by default",
+  "defects_found_by_oracle": [
+    "ECDEV reported Keepa sales rank 0 as an observed rank; it is now UNKNOWN",
+    "ECDEV ignored the reviews object as a last fallback for rating and review count in the same captured payload; it is now read"
+  ],
+  "frozen_material": [
+    {
+      "path": "adapter/keepa/tests/fixtures/keepa-current-oracle.json",
+      "sha256": "5ffec66c440f0fcee17500f74d9e8224b1a9ff58fc4268848f646363469b591b"
+    },
+    {
+      "path": "adapter/keepa/tests/fixtures/keepa-product-summary-oracle.json",
+      "sha256": "cd78b26d6d01f76069db87a3d06414c7926296e372958bb9917d86509899794f"
+    }
+  ],
+  "retired_generator": {
+    "path": "tools/commerce/keepa-oracle.mjs",
+    "last_blob": "e5f0c3f630870c69df72678a60278d465093ad9c",
+    "sha256": "add9fa7c49e584e8065d6053ff463909efe7df12c25276deb0612cbd61a81ad9",
+    "last_commit_containing_it": "bc24b88",
+    "reproduce": "git show bc24b88:tools/commerce/keepa-oracle.mjs; requires the pinned clone at research/commerce/donors/checkouts/purahmanian--keepa-mcp"
+  },
+  "builds_without_donor": {
+    "donor_checkout_present": false,
+    "node_in_build": false,
+    "cargo_test_ecdev_keepa": "6 ecdev-keepa tests pass with no keepa-mcp clone on disk"
+  },
+  "negative_checks": [
+    {
+      "probe": "retired tools/commerce/keepa-oracle.mjs restored and tracked",
+      "result": "effective CUTOVER; BUILD_EDGES_ZERO and ROLLBACK_INDEPENDENT fail; verify fails"
+    },
+    {
+      "probe": "one appended comment line in adapter/keepa/src/lib.rs without re-proving",
+      "result": "effective NATIVE_SHADOW; parity and regression evidence STALE; verify fails"
+    }
+  ],
+  "license_and_provenance": {
+    "license": "MIT",
+    "note": "no donor code in ECDEV; fixtures record source blob hashes"
+  }
+}

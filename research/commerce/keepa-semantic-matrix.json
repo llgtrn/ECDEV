@@ -1,0 +1,122 @@
+{
+  "donor_id": "purahmanian--keepa-mcp",
+  "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+  "license": "MIT",
+  "oracles": [
+    {
+      "fixture": "adapter/keepa/tests/fixtures/keepa-current-oracle.json",
+      "sha256": "5ffec66c440f0fcee17500f74d9e8224b1a9ff58fc4268848f646363469b591b",
+      "cases": 508,
+      "generator": "retired tools/commerce/keepa-oracle.mjs"
+    },
+    {
+      "fixture": "adapter/keepa/tests/fixtures/keepa-product-summary-oracle.json",
+      "sha256": "cd78b26d6d01f76069db87a3d06414c7926296e372958bb9917d86509899794f",
+      "cases": 304,
+      "generator": "embedded generator_source"
+    }
+  ],
+  "rows": [
+    {
+      "source": "src/services/keepa-values.ts resolveCurrent, nonNegative, lastCsvValue; src/constants.ts PRICE_TYPES, csvStride",
+      "behaviour": "current value: stats.current, else last complete csv sample (triples for buy box), else current[], else legacy; -1 means none",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "keepa.resolve-current",
+      "native": "adapter/keepa/src/lib.rs::resolve_current",
+      "production_caller": "adapter/keepa/src/client.rs::normalize",
+      "proof": "PARITY_PROVEN 508 cases (keepa-current-oracle.json); regression resolve_current_regressions"
+    },
+    {
+      "source": "src/tools/get-product.ts buildProductSummary",
+      "behaviour": "slot mapping for Amazon/new/buy-box prices, sales rank (0 is no rank), rating and review count with the reviews object as last fallback",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "keepa.get_product",
+      "native": "adapter/keepa/src/client.rs::normalize",
+      "production_caller": "ecdev product.analyze via the KEEPA layer (paid, opt-in)",
+      "proof": "PARITY_PROVEN 304 cases (keepa-product-summary-oracle.json); ECDEV keeps rating in integer tenths and prices in minor units per market",
+      "note": "the oracle showed ECDEV reported sales rank 0 and ignored the reviews fallback; normalize now matches"
+    },
+    {
+      "source": "src/tools/get-product.ts formatProductSummary, src/tools/*.ts format*",
+      "behaviour": "markdown text with USD formatting for every domain",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "keepa.text-formatting",
+      "note": "ECDEV returns typed minor units with the market's currency (currency_does_not_follow_donor_usd_formatter)"
+    },
+    {
+      "source": "src/tools/get-price-history.ts, get-sales-rank-history.ts, services/keepa-client.ts decodeHistory/decodeSeries/keepaTimeToDate/parseRange/computeTrendSummary",
+      "behaviour": "decode Keepa csv history and summarise trends",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "keepa.get_price_history + keepa.get_sales_rank_history",
+      "note": "ECDEV keeps only current observations from Keepa and builds history from its own watch facts (monitor::record_facts); a text trend summary is not evidence"
+    },
+    {
+      "source": "src/tools/search-products.ts, get-best-sellers.ts, get-deals.ts and their keepa-client fetchers",
+      "behaviour": "paid Keepa discovery endpoints (/query, /bestsellers, /deal)",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "keepa.search_products + keepa.get_best_sellers + keepa.get_deals",
+      "note": "discovery is zero-paid public research by default; Keepa is used only for opt-in per-ASIN product analysis within a paid budget"
+    },
+    {
+      "source": "src/services/keepa-client.ts keepaFetch, src/index.ts, src/types.ts, vitest.config.ts",
+      "behaviour": "HTTP client, MCP server registration, types, test config",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "keepa.server-and-transport",
+      "note": "ECDEV has its own bounded Keepa transport (8 MiB cap, receipts, no key logging) and MCP server"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "src/services/keepa-values.ts",
+        "capabilities": "keepa.resolve-current"
+      },
+      {
+        "prefix": "src/constants.ts",
+        "capabilities": "keepa.resolve-current"
+      },
+      {
+        "prefix": "src/tools/get-product.ts",
+        "capabilities": "keepa.get_product + keepa.text-formatting"
+      },
+      {
+        "prefix": "src/tools/get-price-history.ts",
+        "capabilities": "keepa.get_price_history"
+      },
+      {
+        "prefix": "src/tools/get-sales-rank-history.ts",
+        "capabilities": "keepa.get_sales_rank_history"
+      },
+      {
+        "prefix": "src/tools/search-products.ts",
+        "capabilities": "keepa.search_products"
+      },
+      {
+        "prefix": "src/tools/get-best-sellers.ts",
+        "capabilities": "keepa.get_best_sellers"
+      },
+      {
+        "prefix": "src/tools/get-deals.ts",
+        "capabilities": "keepa.get_deals"
+      },
+      {
+        "prefix": "src/services/keepa-client.ts",
+        "capabilities": "keepa.server-and-transport + history decoding"
+      },
+      {
+        "prefix": "src/index.ts",
+        "capabilities": "keepa.server-and-transport"
+      },
+      {
+        "prefix": "src/types.ts",
+        "capabilities": "keepa.server-and-transport"
+      },
+      {
+        "prefix": "vitest.config.ts",
+        "capabilities": "keepa.server-and-transport"
+      }
+    ]
+  },
+  "status": "SEMANTIC_MATRIX_FILE_LEVEL_COMPLETE_ALL_CAPABILITIES_RESOLVED"
+}

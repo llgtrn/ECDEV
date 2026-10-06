@@ -48,9 +48,9 @@ impl Keepa {
             json!({"id":format!("{}:{expected}",request.market),"kind":"PRODUCT","asin":expected,"market":request.market,
           "title":product["title"],"brand":product["brand"],"category":product["categoryTree"],"currency":currency,
           "price_minor":resolve_current(product,0,None),"new_price_minor":resolve_current(product,1,None),"buy_box_price_minor":resolve_current(product,18,None),
-          "sales_rank":resolve_current(product,3,None),"rating_tenths":resolve_current(product,16,None),"review_count":resolve_current(product,17,None),
+          "sales_rank":resolve_current(product,3,None).filter(|rank|*rank>0),"rating_tenths":resolve_current(product,16,product.get("reviews").and_then(|r|r.get("rating"))),"review_count":resolve_current(product,17,product.get("reviews").and_then(|r|r.get("reviewCount"))),
           "weight_g":product["packageWeight"],"dimensions_mm":{"length":product["packageLength"],"width":product["packageWidth"],"height":product["packageHeight"]},
-          "source_last_update_keepa_minutes":product["lastUpdate"],"note":"Rank is an observation, not a sales estimate. No supplier, fees or demand inferred."}),
+          "source_last_update_keepa_minutes":product["lastUpdate"],"note":"Rank is an observation, not a sales estimate; rank 0 is not a rank and stays UNKNOWN. No supplier, fees or demand inferred."}),
         )
     }
     fn acquire_at(
@@ -199,6 +199,44 @@ mod tests {
         let failure = p.acquire(&r).err().unwrap();
         assert_eq!(failure.request_count, Some(0));
         assert!(failure.reason.contains("KEEPA_UNAVAILABLE"));
+    }
+    #[test]
+    fn donor_product_summary_oracle() {
+        let oracle: Value = serde_json::from_str(include_str!(
+            "../tests/fixtures/keepa-product-summary-oracle.json"
+        ))
+        .unwrap();
+        let cases = oracle["cases"].as_array().unwrap();
+        assert!(cases.len() >= 300);
+        for case in cases {
+            let asin = case["product"]["asin"].as_str().unwrap();
+            let r = AcquireRequest {
+                run_id: "oracle".into(),
+                capability: "product.analyze".into(),
+                market: "AMAZON_US".into(),
+                query: json!({ "asin": asin }),
+            };
+            let v = Keepa::normalize(&r, &json!({ "products": [case["product"]] })).unwrap();
+            let want = &case["expected"];
+            let id = &case["case_id"];
+            assert_eq!(v["price_minor"], want["current_price_amazon_cents"], "{id}");
+            assert_eq!(
+                v["new_price_minor"], want["current_price_new_cents"],
+                "{id}"
+            );
+            assert_eq!(
+                v["buy_box_price_minor"], want["buy_box_price_cents"],
+                "{id}"
+            );
+            assert_eq!(v["review_count"], want["review_count"], "{id}");
+            assert_eq!(v["sales_rank"], want["sales_rank"], "{id}");
+            // The donor divides the 0-50 rating by ten; ECDEV keeps the integer tenths.
+            assert_eq!(
+                v["rating_tenths"].as_i64().map(|t| t as f64 / 10.0),
+                want["rating"].as_f64(),
+                "{id}"
+            );
+        }
     }
     #[test]
     fn currency_does_not_follow_donor_usd_formatter() {
