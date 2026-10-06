@@ -17,12 +17,13 @@
     },
     "defects_found_in_ecdev": [
       "redirect targets bypassed normalize_url: credentials, credential queries, fragments and non-http schemes were followed",
-      "every 3xx with a Location was followed (300, 305, 306); only 301, 302, 303, 307 and 308 redirect"
+      "every 3xx with a Location was followed (300, 305, 306); only 301, 302, 303, 307 and 308 redirect",
+      "cache validators were sent to every redirect hop; a 304 from another resource would have reused the prior payload"
     ]
   },
   "capabilities": {
     "fetch.redirect": "RELIED_ON; STUDY_COMPLETE[DERIVED_NATIVE]",
-    "httpx.redirect-request-rewriting": "NOT_ADOPTED (ECDEV sends credentialless GET only); STUDY_CANDIDATE: which request headers survive an origin change. ECDEV re-sends its If-None-Match / If-Modified-Since validators to every redirect target; httpx strips Authorization across origins but keeps validators",
+    "httpx.redirect-request-rewriting": "NOT_ADOPTED; STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE]: the study found ECDEV sent the previous capture's If-None-Match / If-Modified-Since to every redirect hop, so a 304 from a different resource would reuse a payload it never captured. Validators now go only to the URL that produced them (validators_for; regression adapter/web/src/lib.rs::validators_go_only_to_the_url_that_produced_them), legacy validators without a URL only to the requested URL, and an unsolicited 304 is refused (UNSOLICITED_NOT_MODIFIED). httpx keeps validators across redirects and strips only Authorization",
     "httpx.content-decoding": "NOT_ADOPTED; STUDY_CANDIDATE: content-encoding and charset fallback (httpx decoders, autodetect) versus ECDEV's document decoder on pages without a declared charset",
     "httpx.transport-and-pooling": "NOT_ADOPTED; REFERENCE_ONLY: httpcore pooling, HTTP/2 and proxy routing as a reference for a higher-throughput crawler",
     "httpx.auth-and-cookies": "NOT_ADOPTED; DELIBERATE_SEMANTIC_DIVERGENCE: ECDEV public research fetches carry no credentials or cookies",

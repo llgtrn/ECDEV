@@ -517,7 +517,7 @@ impl Engine {
                 run_id: id.clone(),
                 capability: "fetch.http".into(),
                 market: input.market.clone(),
-                query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":if input.force_refresh {None} else {previous.as_ref().map(|v|v["provider_cost"]["headers"].clone())}}),
+                query: json!({"url":source.url,"fixture_html":source.fixture_html,"conditional":if input.force_refresh {None} else {previous.as_ref().map(|v|{let mut c=v["provider_cost"]["headers"].clone(); if c.is_object() {c["url"]=v["result"]["final_url"].clone();} c})}}),
             };
             let mut stale_used = false;
             let recovered_capture = checkpoint.is_some();

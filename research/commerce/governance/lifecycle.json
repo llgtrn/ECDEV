@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "44d5226a2e3a832f62130c3b07516ebe0266a3cc",
+  "assessed_parent_commit": "75b8e5799f5cc3f4a83578149e5d46386e6ceb36",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2656,9 +2656,9 @@
         {
           "key": "httpx.redirect-request-rewriting",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(which request headers should survive an origin change on redirect: ECDEV re-sends its If-None-Match and If-Modified-Since validators to every redirect target)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](cache validators go only to the URL whose response produced them (adapter/web/src/lib.rs::validators_for) and a 304 nothing was asked for is refused; httpx keeps validators across redirects and strips only Authorization)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "httpx.content-decoding",
@@ -2753,7 +2753,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "2 of 6 declared capabilities still have open research: httpx.redirect-request-rewriting (STUDY_CANDIDATE), httpx.content-decoding (STUDY_CANDIDATE)"
+          "detail": "1 of 6 declared capabilities still have open research: httpx.content-decoding (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

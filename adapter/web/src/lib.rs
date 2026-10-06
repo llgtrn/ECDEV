@@ -92,6 +92,22 @@ pub fn redirect_target(
     let next = current.join(location).map_err(|_| "INVALID_REDIRECT")?;
     normalize_url(next.as_str()).map(Some)
 }
+/// The cache validators (`etag`, `last_modified`) to send to `url`: only to the URL whose response
+/// produced them (`conditional.url`, the previous capture's final URL). A validator sent anywhere
+/// else could be answered 304 by a different resource, and the cached payload would be reused
+/// for content it never captured. Validators recorded without their URL are sent only to the
+/// requested URL, never across a redirect.
+pub fn validators_for(conditional: &Value, url: &Url, first_hop: bool) -> Value {
+    let applies = match conditional["url"].as_str() {
+        Some(origin) => Url::parse(origin).is_ok_and(|o| o == *url),
+        None => first_hop,
+    };
+    if applies && conditional.is_object() {
+        json!({"etag": conditional["etag"], "last_modified": conditional["last_modified"]})
+    } else {
+        Value::Null
+    }
+}
 fn public_ip(ip: IpAddr) -> bool {
     match ip {
         IpAddr::V4(a) => {
@@ -425,7 +441,7 @@ impl Provider for Web {
             let mut requests = 0;
             let mut visited = BTreeSet::new();
             let mut body = None;
-            for _ in 0..6 {
+            for hop in 0..6 {
                 if r.query["source_layer"] == "PUBLIC_AMAZON" && !amazon::public_host(url.as_str())
                 {
                     return Err("PUBLIC_AMAZON_REDIRECT_SCOPE_DENIED".into());
@@ -467,13 +483,17 @@ impl Provider for Web {
                     return Err("ROBOTS_DELAY_EXCEEDS_FETCH_BUDGET".into());
                 }
                 let interval = Duration::from_secs_f64(delay).max(Duration::from_millis(750));
-                let (status, content, headers) =
-                    self.request(&url, &r.query["conditional"], interval)?;
+                let validators = validators_for(&r.query["conditional"], &url, hop == 0);
+                let (status, content, headers) = self.request(&url, &validators, interval)?;
                 requests += 1;
                 if status == 304 {
+                    if validators.is_null() {
+                        // Nothing conditional was asked of this URL: a 304 has no payload to stand for.
+                        return Err("UNSOLICITED_NOT_MODIFIED".into());
+                    }
                     return Ok(AcquireResult {
                         observations: vec![],
-                        result: json!({"not_modified":true,"headers":headers}),
+                        result: json!({"not_modified":true,"headers":headers,"validated_url":url.as_str()}),
                         raw_payload: vec![],
                         provider_cost: json!({"request_count":requests,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis()}),
                     });
@@ -543,6 +563,20 @@ impl Provider for Web {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn validators_go_only_to_the_url_that_produced_them() {
+        let page = Url::parse("https://shop.example/p/1").unwrap();
+        let moved = Url::parse("https://shop.example/p/2").unwrap();
+        let c = json!({"etag":"\"v1\"","last_modified":null,"url":"https://shop.example/p/1"});
+        assert_eq!(validators_for(&c, &page, false)["etag"], "\"v1\"");
+        // A redirect to another resource never receives them, first hop or not.
+        assert!(validators_for(&c, &moved, true).is_null());
+        // Validators recorded without their URL: the requested URL only, never across a redirect.
+        let legacy = json!({"etag":"\"v1\""});
+        assert_eq!(validators_for(&legacy, &page, true)["etag"], "\"v1\"");
+        assert!(validators_for(&legacy, &moved, false).is_null());
+        assert!(validators_for(&Value::Null, &page, true).is_null());
+    }
     #[test]
     fn extraction_keeps_unknowns_and_minor_units() {
         let h = r#"<title>Shop</title><script type="application/ld+json">{"@graph":[{"@type":"Product","name":"Storage box","offers":{"price":"39.95","priceCurrency":"USD","availability":"https://schema.org/InStock"}}]}</script><a href="/next#x">next</a>"#;
