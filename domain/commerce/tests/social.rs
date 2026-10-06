@@ -608,3 +608,39 @@ fn nine_watch_trigger_contracts_preserve_baseline_and_counter_scope() {
         1
     );
 }
+#[test]
+fn mention_growth_needs_a_captured_prior_window_and_enough_counts() {
+    let w = 3600;
+    // Prior window (3600, 7200] holds 1 post; current (7200, 10800] holds 8 (1 -> 6 is p = 0.0625).
+    let mut posts = vec![post("p0", "BLUESKY", 5000)];
+    posts.extend((1..=8).map(|i| post(&format!("c{i}"), "BLUESKY", 7300 + i * 100)));
+    let uncaptured = snapshot(&posts, &[], "matcha", 10800, w, "FIXTURE");
+    assert_eq!(
+        uncaptured["mention_growth"]["state"],
+        "PRIOR_WINDOW_NOT_FULLY_CAPTURED"
+    );
+    assert!(uncaptured["mention_growth"]["comparison"].is_null());
+    let prior = snapshot(&posts[..1], &[], "matcha", 7200, w, "FIXTURE");
+    let s = snapshot(
+        &posts,
+        std::slice::from_ref(&prior),
+        "matcha",
+        10800,
+        w,
+        "FIXTURE",
+    );
+    let g = &s["mention_growth"];
+    assert_eq!(
+        (
+            g["comparison"]["before"].clone(),
+            g["comparison"]["after"].clone()
+        ),
+        (json!(1), json!(8))
+    );
+    assert_eq!(g["state"], "RISING");
+    assert_eq!(g["score_weight"], 0);
+    // Two mentions after none is not growth.
+    let few = snapshot(&posts[..3], &[prior], "matcha", 10800, w, "FIXTURE");
+    assert_eq!(few["mention_growth"]["comparison"]["before"], 1);
+    assert_eq!(few["mention_growth"]["state"], "NO_DETECTABLE_CHANGE");
+}

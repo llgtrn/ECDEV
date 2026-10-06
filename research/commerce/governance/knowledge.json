@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "288acc08d5dc35fd3bbd21593b0991bde60c5408",
+  "assessed_parent_commit": "1ce7d3f06341434913dcdf4790c7090675ef9d3f",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 45,
     "benchmark_candidates": 32,
-    "algorithm_candidates": 15,
+    "algorithm_candidates": 14,
     "reference_only": 52,
-    "study_complete_capabilities": 73,
+    "study_complete_capabilities": 74,
     "not_relevant_after_review": 25,
-    "research_questions_open": 92,
-    "knowledge_coverage_ratio": 0.619835
+    "research_questions_open": 91,
+    "knowledge_coverage_ratio": 0.623967
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -1154,7 +1154,6 @@
         "social.viral-trend-agent.public-trend-sources STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); Mastodon and Bluesky trending endpoints as zero-paid public sources)",
         "social.viral-trend-agent.cross-source-story-matching BENCHMARK_CANDIDATE(which sentence-embedding cosine threshold separates same story or product from same topic across sources: precision and recall from 0.75 to 0.92 on labelled pairs)",
         "social.viral-trend-agent.topic-clustering-and-continuity STUDY_CANDIDATE(trend identity continuity across runs by centroid cosine 0.75 with 6 hour expiry: identity churn against a labelled trend timeline)",
-        "social.viral-trend-agent.growth-detection ALGORITHM_CANDIDATE(small-count-safe growth: a rate-ratio or Poisson z-test instead of raw percent change, never an invented baseline growth for new clusters)",
         "social.viral-trend-agent.emotion-detection BENCHMARK_CANDIDATE(does the dominant emotion of posts about a product correlate with sales-rank lift in held-out data, before any score uses emotion?)",
         "social.viral-trend-agent.linguistic-markers STUDY_CANDIDATE(listing-title markers (numbers, superlatives, 60 to 100 characters) against click-through or sales, controlled for category and price)"
       ],
@@ -1167,6 +1166,7 @@
         "social.viral-trend-agent.geo-market-filter STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](market targeting by a deny-list of nationality and language keywords; ECDEV scopes markets positively by marketplace and locale)",
         "social.viral-trend-agent.text-normalisation REFERENCE_ONLY(cleaning steps, bot-post phrases and title-weighted embedding text)",
         "social.viral-trend-agent.cluster-labeling REFERENCE_ONLY(stopword-filtered top-term cluster labels)",
+        "social.viral-trend-agent.growth-detection STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/growth.rs::rate_comparison is an exact conditional binomial test of Poisson mention rates over disjoint windows (no ratio and no invented baseline from zero; 1 to 3 or 0 to 4 is no detectable change); social::snapshot reports it as mention_growth only when history snapshots fully cover the prior window, with weight 0 in the score)",
         "social.viral-trend-agent.viral-prediction STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an uncalibrated weighted heuristic shown as a probability with static spread-path and peak-time tables; ECDEV requires a reliability curve and Brier score before any probability)",
         "social.viral-trend-agent.application NO_RESEARCH_VALUE[FRONTEND](Telegram bot commands, Streamlit dashboard and scheduler wiring of the donor product)"
       ]

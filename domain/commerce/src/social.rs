@@ -1,5 +1,6 @@
 //! Evidence-first social contracts. Capture mode and evidence state are orthogonal.
 pub mod displayed;
+pub mod growth;
 pub mod runtime;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -448,6 +449,36 @@ pub fn snapshot(
         "MAX_COMPATIBLE_SAME_POST_SAME_PLATFORM_COUNTER_DELTA_NOT_AGGREGATE",
         json!("matching observed counters"),
     );
+    let prior_end = now.saturating_sub(window);
+    let prior_start = prior_end.saturating_sub(window);
+    let captured_windows: Vec<(u64, u64)> = history
+        .iter()
+        .filter_map(|s| {
+            let c = s["captured_at"].as_u64()?;
+            Some((c.saturating_sub(s["window_seconds"].as_u64()?), c))
+        })
+        .collect();
+    let covered = growth::covered_seconds(prior_start, prior_end, &captured_windows);
+    let prior = dedup
+        .iter()
+        .filter(|p| {
+            p.published_at
+                .is_some_and(|t| t > prior_start && t <= prior_end)
+                && q.is_subset(&terms(&p.text))
+        })
+        .count() as u64;
+    let comparison = (covered == window && window > 0)
+        .then(|| growth::rate_comparison(prior, window, n as u64, window))
+        .flatten();
+    result["mention_growth"] = json!({
+        "prior_window_start_exclusive": prior_start,
+        "prior_window_end_inclusive": prior_end,
+        "prior_window_covered_seconds": covered,
+        "state": comparison.as_ref().map_or("PRIOR_WINDOW_NOT_FULLY_CAPTURED", |c| c.state),
+        "comparison": comparison,
+        "counts": "RETRIEVED_SAMPLE_NOT_PLATFORM_TOTAL",
+        "score_weight": 0,
+    });
     result["cluster_growth"] = metric(
         last.map(|old| {
             result["clusters"].as_array().map_or(0, Vec::len) as f64

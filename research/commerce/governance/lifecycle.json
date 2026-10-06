@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "288acc08d5dc35fd3bbd21593b0991bde60c5408",
+  "assessed_parent_commit": "1ce7d3f06341434913dcdf4790c7090675ef9d3f",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "14 imports: serde in domain/commerce/src/decision.rs; serde in domain/commerce/src/domain.rs; serde in domain/commerce/src/economics.rs"
+          "detail": "15 imports: serde in domain/commerce/src/decision.rs; serde in domain/commerce/src/domain.rs; serde in domain/commerce/src/economics.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -7013,9 +7013,9 @@
         {
           "key": "social.viral-trend-agent.growth-detection",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(small-count-safe growth: a rate-ratio or Poisson z-test instead of raw percent change, never an invented baseline growth for new clusters)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/growth.rs::rate_comparison is an exact conditional binomial test of Poisson mention rates over disjoint windows (no ratio and no invented baseline from zero; 1 to 3 or 0 to 4 is no detectable change); social::snapshot reports it as mention_growth only when history snapshots fully cover the prior window, with weight 0 in the score)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.viral-trend-agent.emotion-detection",
@@ -7110,7 +7110,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "9 of 19 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.public-trend-sources (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.growth-detection (ALGORITHM_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
+          "detail": "8 of 19 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.public-trend-sources (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
