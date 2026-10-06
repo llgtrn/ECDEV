@@ -173,40 +173,6 @@ fn graphiti_fact_invalidation_oracle() {
 }
 
 #[test]
-fn graphiti_reciprocal_rank_fusion_oracle() {
-    for case in oracle()["fusions"].as_array().unwrap() {
-        let lists: Vec<Vec<String>> = case["results"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|l| {
-                l.as_array()
-                    .unwrap()
-                    .iter()
-                    .map(|s| s.as_str().unwrap().into())
-                    .collect()
-            })
-            .collect();
-        let got = reciprocal_rank_fusion(
-            &lists,
-            case["rank_const"].as_u64().unwrap() as u32,
-            case["min_score"].as_f64().unwrap(),
-        );
-        let ids: Vec<&str> = got.iter().map(|(i, _)| i.as_str()).collect();
-        let want: Vec<&str> = case["ids"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|s| s.as_str().unwrap())
-            .collect();
-        assert_eq!(ids, want, "{case}");
-        for ((_, s), w) in got.iter().zip(case["scores"].as_array().unwrap()) {
-            assert_eq!(s.to_bits(), f(w).to_bits(), "{case}");
-        }
-    }
-}
-
-#[test]
 fn memory_semantics_regressions() {
     // Known BLAKE2b-512 test vector prefix is not applicable to 8-byte digests (the parameter
     // block differs); pin our own values instead.
@@ -268,6 +234,4 @@ fn memory_semantics_regressions() {
         },
     ];
     assert_eq!(superseded(&new, &old), vec![(0, 5)]);
-    let fused = reciprocal_rank_fusion(&[vec!["a".into(), "b".into()], vec!["b".into()]], 1, 0.0);
-    assert_eq!(fused[0].0, "b");
 }

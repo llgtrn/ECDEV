@@ -7,7 +7,8 @@
     "fixture": "domain/commerce/tests/fixtures/graphiti-semantics.json",
     "cases": 1580,
     "generator": "embedded as generator_source in the fixture; runs the unmodified pinned clone; no tracked file imports graphiti_core",
-    "reproducibility": "names, jaccard, invalidations and fusions identical across PYTHONHASHSEED 1-3; resolutions differ only by hash-seeded tie order, recorded as fuzzy_candidates_at_best_score"
+    "reproducibility": "names, jaccard, invalidations and fusions identical across PYTHONHASHSEED 1-3; resolutions differ only by hash-seeded tie order, recorded as fuzzy_candidates_at_best_score",
+    "note": "fusion cases are retained in the frozen fixture but no longer executed: the capability was resolved NOT_RELEVANT"
   },
   "rows": [
     {
@@ -31,11 +32,11 @@
     {
       "source": "graphiti_core/search/search_utils.py:1775-1790 rrf",
       "behaviour": "reciprocal rank fusion with rank constant and minimum score; stable tie order",
-      "ecdev_relevance": "USEFUL",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
       "capability": "memory.rank-fusion",
-      "native": "domain/commerce/src/memory.rs::reciprocal_rank_fusion",
-      "proof": "PARITY_PROVEN: 300 fusion cases, bit-exact scores",
-      "note": null
+      "native": null,
+      "proof": "PARITY_PROVEN earlier (300 fusion cases, bit-exact) and then withdrawn: no production caller",
+      "note": "Graphiti's only caller fuses BM25 and vector search result lists (search/search.py hybrid search). ECDEV runs no multi-retriever search and stores no embeddings, so no two rankings exist to fuse. The uncalled native copy was removed; the frozen fusion cases stay in the fixture unchanged so its recorded sha256 and embedded generator remain reproducible."
     },
     {
       "source": "graphiti_core/utils/datetime_utils.py ensure_utc",
@@ -58,20 +59,20 @@
     {
       "source": "graphiti_core/utils/maintenance/community_operations.py label_propagation",
       "behaviour": "community detection by label propagation over entity neighbours",
-      "ecdev_relevance": "CANDIDATE",
-      "capability": "social.topic-clustering",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "graphiti.label-propagation-clustering",
       "native": null,
       "proof": null,
-      "note": "possible social topic clustering technique; LLM summarisation parts excluded; not studied to parity yet"
+      "note": "label_propagation runs only inside get_community_clusters over RELATES_TO edges between LLM-extracted EntityNodes (community_operations.py:30-90), and its only caller build_communities feeds clusters to LLM community summaries (graphiti.py build_communities). ECDEV excludes LLM extraction, so the entity-neighbour graph it needs never exists; ECDEV social clusters (social.rs::clusters) are evidence-linked term groups over captured posts."
     },
     {
       "source": "graphiti_core/utils/bulk_utils.py UnionFind, compress_uuid_map",
       "behaviour": "duplicate-pair transitive closure",
-      "ecdev_relevance": "CANDIDATE",
-      "capability": "memory.duplicate-closure",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "graphiti.duplicate-closure",
       "native": null,
       "proof": null,
-      "note": "small deterministic algorithm; absorb with next resolution wave"
+      "note": "compress_uuid_map closes LLM-judged duplicate edge pairs (bulk_utils.py:540-567, resolve_extracted_edge). ECDEV identity is key equality (resolution.rs::key), which is already an equivalence relation, and uncertain title-similarity links must never be closed transitively: A~B and B~C does not give A~C. Merging them would turn POSSIBLE_EQUIVALENCE into fabricated identity."
     },
     {
       "source": "graphiti_core/utils/content_chunking.py",
@@ -140,7 +141,222 @@
   "production_callers": {
     "memory.name-similarity": "domain/commerce/src/resolution.rs::resolve (uncertain near-duplicate title links, never merged)",
     "memory.fact-supersession": "domain/commerce/src/monitor.rs::record_facts (watch_facts validity windows for price_minor and availability)",
-    "memory.rank-fusion": "none yet; relevance unresolved"
+    "memory.rank-fusion": "none; NOT_RELEVANT (no multi-retriever search)"
   },
-  "status": "SEMANTIC_MATRIX_MODULE_LEVEL_COMPLETE_CAPABILITY_ABSORPTION_PARTIAL"
+  "status": "SEMANTIC_MATRIX_MODULE_LEVEL_COMPLETE_ALL_CAPABILITIES_RESOLVED",
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "graphiti_core/utils/maintenance/dedup_helpers.py",
+        "capabilities": "memory.name-similarity",
+        "relevance": "RELIED_ON",
+        "why": "name normalization, entropy, MinHash/LSH, Jaccard resolution"
+      },
+      {
+        "prefix": "graphiti_core/utils/maintenance/edge_operations.py",
+        "capabilities": "memory.fact-supersession + graphiti.llm-extraction-and-prompts",
+        "relevance": "MIXED_RESOLVED",
+        "why": "resolve_edge_contradictions relied on; extract_edges/resolve_extracted_edge are LLM judgement, not evidence"
+      },
+      {
+        "prefix": "graphiti_core/utils/datetime_utils.py",
+        "capabilities": "extract.publication-time",
+        "relevance": "RELIED_ON",
+        "why": "ensure_utc; utc_now and convert_datetimes_to_strings are persistence bookkeeping"
+      },
+      {
+        "prefix": "graphiti_core/search/search_utils.py",
+        "capabilities": "memory.rank-fusion + graphiti.embedding-rerank + graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "rrf (only caller hybrid search), MMR/cosine/node-distance reranking, fulltext/BFS/vector graph queries"
+      },
+      {
+        "prefix": "graphiti_core/search/",
+        "capabilities": "graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "search orchestration, configs, recipes, filters and context formatting over a graph database with embeddings"
+      },
+      {
+        "prefix": "graphiti_core/utils/maintenance/community_operations.py",
+        "capabilities": "graphiti.label-propagation-clustering",
+        "relevance": "NOT_RELEVANT",
+        "why": "label propagation over LLM-extracted entity edges; LLM community summaries"
+      },
+      {
+        "prefix": "graphiti_core/utils/bulk_utils.py",
+        "capabilities": "graphiti.duplicate-closure + graphiti.llm-extraction-and-prompts",
+        "relevance": "NOT_RELEVANT",
+        "why": "bulk LLM extraction/dedupe and UnionFind closure of LLM-judged duplicates"
+      },
+      {
+        "prefix": "graphiti_core/utils/content_chunking.py",
+        "capabilities": "graphiti.content-chunking",
+        "relevance": "NOT_RELEVANT",
+        "why": "LLM context-window chunking"
+      },
+      {
+        "prefix": "graphiti_core/utils/text_utils.py",
+        "capabilities": "graphiti.content-chunking",
+        "relevance": "NOT_RELEVANT",
+        "why": "sentence truncation and episode concatenation for LLM prompts"
+      },
+      {
+        "prefix": "graphiti_core/utils/ontology_utils/",
+        "capabilities": "graphiti.llm-extraction-and-prompts",
+        "relevance": "NOT_RELEVANT",
+        "why": "entity type validation for LLM extraction schemas"
+      },
+      {
+        "prefix": "graphiti_core/utils/maintenance/",
+        "capabilities": "graphiti.llm-extraction-and-prompts + graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "LLM node/edge/attribute extraction, combined extraction, attribute capping of LLM output, graph data clearing and episode retrieval"
+      },
+      {
+        "prefix": "graphiti_core/utils/__init__.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "package re-exports"
+      },
+      {
+        "prefix": "graphiti_core/prompts/",
+        "capabilities": "graphiti.llm-extraction-and-prompts",
+        "relevance": "NOT_RELEVANT",
+        "why": "prompt templates"
+      },
+      {
+        "prefix": "graphiti_core/llm_client/",
+        "capabilities": "graphiti.provider-clients",
+        "relevance": "NOT_RELEVANT",
+        "why": "LLM provider clients"
+      },
+      {
+        "prefix": "graphiti_core/embedder/",
+        "capabilities": "graphiti.provider-clients",
+        "relevance": "NOT_RELEVANT",
+        "why": "embedding provider clients"
+      },
+      {
+        "prefix": "graphiti_core/cross_encoder/",
+        "capabilities": "graphiti.provider-clients",
+        "relevance": "NOT_RELEVANT",
+        "why": "reranker provider clients"
+      },
+      {
+        "prefix": "graphiti_core/driver/",
+        "capabilities": "graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "Neo4j, FalkorDB, Kuzu, Neptune drivers"
+      },
+      {
+        "prefix": "graphiti_core/graph_queries.py",
+        "capabilities": "graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "provider-specific index and Cypher query builders"
+      },
+      {
+        "prefix": "graphiti_core/helpers.py",
+        "capabilities": "graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "neo4j date parsing, Lucene sanitising, L2 embedding normalisation, asyncio gather, graph group-id validation"
+      },
+      {
+        "prefix": "graphiti_core/telemetry/",
+        "capabilities": "graphiti.telemetry-and-tracing",
+        "relevance": "NOT_RELEVANT",
+        "why": "usage telemetry"
+      },
+      {
+        "prefix": "graphiti_core/tracer.py",
+        "capabilities": "graphiti.telemetry-and-tracing",
+        "relevance": "NOT_RELEVANT",
+        "why": "OpenTelemetry tracing"
+      },
+      {
+        "prefix": "graphiti_core/decorators.py",
+        "capabilities": "graphiti.telemetry-and-tracing",
+        "relevance": "NOT_RELEVANT",
+        "why": "tracing/telemetry decorators"
+      },
+      {
+        "prefix": "graphiti_core/graphiti.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "orchestration facade"
+      },
+      {
+        "prefix": "graphiti_core/nodes.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "STUDIED_MODEL_ONLY",
+        "why": "bi-temporal fields informed memory::Validity"
+      },
+      {
+        "prefix": "graphiti_core/edges.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "STUDIED_MODEL_ONLY",
+        "why": "valid_at/invalid_at/expired_at informed memory::Validity"
+      },
+      {
+        "prefix": "graphiti_core/models/",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "persisted node/edge DB models"
+      },
+      {
+        "prefix": "graphiti_core/namespaces/",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "namespaced facade API"
+      },
+      {
+        "prefix": "graphiti_core/migrations/",
+        "capabilities": "graphiti.graph-database-drivers",
+        "relevance": "NOT_RELEVANT",
+        "why": "graph schema migrations package"
+      },
+      {
+        "prefix": "graphiti_core/errors.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "facade exception types"
+      },
+      {
+        "prefix": "graphiti_core/graphiti_types.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "client bundle model"
+      },
+      {
+        "prefix": "graphiti_core/__init__.py",
+        "capabilities": "graphiti.persistence-models-and-facade",
+        "relevance": "NOT_RELEVANT",
+        "why": "package re-exports"
+      },
+      {
+        "prefix": "mcp_server/",
+        "capabilities": "graphiti.hosted-services",
+        "relevance": "NOT_RELEVANT",
+        "why": "hosted MCP service"
+      },
+      {
+        "prefix": "server/",
+        "capabilities": "graphiti.hosted-services",
+        "relevance": "NOT_RELEVANT",
+        "why": "hosted REST service"
+      },
+      {
+        "prefix": "examples/",
+        "capabilities": "graphiti.llm-extraction-and-prompts",
+        "relevance": "NOT_RELEVANT",
+        "why": "demonstrations of LLM ingestion pipelines (notebooks parse; see parse-unknown-review.json)"
+      },
+      {
+        "prefix": "conftest.py",
+        "capabilities": "graphiti.hosted-services",
+        "relevance": "NOT_RELEVANT",
+        "why": "pytest import-path harness for the donor test suite"
+      }
+    ]
+  }
 }

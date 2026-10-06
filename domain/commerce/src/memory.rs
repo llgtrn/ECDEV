@@ -1,7 +1,7 @@
 //! Deterministic evidence-memory semantics learned from Graphiti (Apache-2.0, getzep/graphiti
 //! at 5d47d4d0182aa6350edeb435b734837a88ed9738): name similarity for entity candidates
 //! (exact normalization, entropy gate, 3-gram MinHash/LSH, Jaccard), temporal invalidation of
-//! superseded facts, and reciprocal rank fusion. Similarity only proposes candidates: ECDEV never
+//! superseded facts. Similarity only proposes candidates: ECDEV never
 //! treats a similar name as an identity. Where Graphiti breaks equal-score ties by hash-seeded
 //! set order, ECDEV picks the earliest existing candidate.
 
@@ -340,26 +340,4 @@ pub fn superseded<T: Ord + Clone>(new: &Validity<T>, existing: &[Validity<T>]) -
         }
     }
     out
-}
-
-/// Reciprocal rank fusion: score(id) = Σ 1/(rank + rank_const) over every list, highest first,
-/// ties in first-seen order, scores below `min_score` dropped.
-pub fn reciprocal_rank_fusion(
-    results: &[Vec<String>],
-    rank_const: u32,
-    min_score: f64,
-) -> Vec<(String, f64)> {
-    let mut scores: Vec<(String, f64)> = Vec::new();
-    for list in results {
-        for (i, id) in list.iter().enumerate() {
-            let add = 1.0 / (i as f64 + f64::from(rank_const));
-            match scores.iter_mut().find(|(k, _)| k == id) {
-                Some((_, s)) => *s += add,
-                None => scores.push((id.clone(), add)),
-            }
-        }
-    }
-    scores.sort_by(|a, b| b.1.total_cmp(&a.1));
-    scores.retain(|(_, s)| *s >= min_score);
-    scores
 }

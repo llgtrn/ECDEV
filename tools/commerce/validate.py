@@ -21,6 +21,17 @@ def validate_inventory(summary, files):
  assert counts['TEST']==summary['tests'], 'CENSUS_TEST_MISMATCH'
  assert counts['FIXTURE']==summary['fixtures'], 'CENSUS_FIXTURE_MISMATCH'
 
+def validate_file_coverage(summary, files):
+ """A complete census names its semantic matrix; a matrix with file_coverage must map every
+ first-party source file to a reviewed prefix (first match wins)."""
+ if 'semantic_matrix' not in summary: return
+ matrix=read(ROOT/summary['semantic_matrix'])
+ if 'file_coverage' not in matrix: return
+ prefixes=[e['prefix'] for e in matrix['file_coverage']['entries']]
+ hit=lambda p:any(p==x or (x.endswith('/') and p.startswith(x)) for x in prefixes)
+ missing=[f['path'] for f in files if f['classification']=='FIRST_PARTY_SOURCE' and not hit(f['path'])]
+ assert not missing, ('SEMANTIC_FILE_COVERAGE_INCOMPLETE',missing[:5])
+
 def inventory_negative_cases():
  path=ROOT/'research/commerce/donors/census/scrapinghub--price-parser'
  summary=read(path/'summary.json');files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
@@ -82,6 +93,7 @@ def main():
   files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
   validate_inventory(summary,files)
   assert summary['status']=='CENSUS_PARTIAL' or (summary['unknown_files']==0 and summary['parse_unknown']==0 and summary['semantic_review']=='COMPLETE')
+  if summary['status']=='CENSUS_COMPLETE': validate_file_coverage(summary,files)
   validate_lifecycle(d,summary,assessed.get(d['donor_id']))
   checkout=ROOT/'research/commerce/donors/checkouts'/d['donor_id']
   if '--records-only' not in sys.argv:

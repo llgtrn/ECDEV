@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "4cef7c8699ec7e9042c9735d326af31466de8faf",
+  "assessed_parent_commit": "ad6afc8e1a01cdd6691ccc5119c47315bdfad250",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
@@ -8,12 +8,12 @@
   "effective_states": {
     "CENSUSED": 7,
     "DISCOVERED": 15,
-    "EXTINCT": 1,
+    "EXTINCT": 2,
     "NATIVE_SHADOW": 3,
-    "PARITY_PROVEN": 1,
     "REGISTERED": 33
   },
   "extinct": [
+    "getzep--graphiti",
     "scrapinghub--price-parser"
   ],
   "donors": [
@@ -4680,10 +4680,10 @@
     },
     {
       "donor": "getzep--graphiti",
-      "claimed": "REGISTERED",
-      "effective": "PARITY_PROVEN",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "CAPABILITY_RELEVANCE_RESOLVED: capabilities whose ECDEV relevance is unresolved or inconsistent with `required` (relevance): memory.rank-fusion, graphiti.label-propagation-clustering, graphiti.duplicate-closure",
+      "stopped_by": "",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4742,13 +4742,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "3 of 14 declared capabilities have no resolved ECDEV relevance: memory.rank-fusion, graphiti.label-propagation-clustering, graphiti.duplicate-closure"
+          "pass": true,
+          "detail": "all 14 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
