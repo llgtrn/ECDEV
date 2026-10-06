@@ -396,4 +396,15 @@ pub trait Provider: Send + Sync {
     }
     /// Blocking IO; application transports execute this on a blocking worker.
     fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError>;
+    /// Re-runs this provider's current extraction over a stored, hash-verified capture, without
+    /// network. `recorded` is the result recorded when the capture was taken (its decoding
+    /// recipe is reused). None when the provider cannot re-extract.
+    fn reextract(
+        &self,
+        _raw: &[u8],
+        _source_type: &str,
+        _recorded: &Value,
+    ) -> Option<Result<Value, String>> {
+        None
+    }
 }

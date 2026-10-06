@@ -10,7 +10,7 @@ use rusqlite::{OptionalExtension, params};
 use serde::Deserialize;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, VecDeque};
+use std::collections::{BTreeMap, BTreeSet, VecDeque};
 use uuid::Uuid;
 #[derive(Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -953,6 +953,115 @@ impl Engine {
             json!({"entities":entities,"edges":edges,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK"}),
         )
     }
+    /// Re-derives typed product series from the stored raw captures of research runs, without
+    /// network: each hash-verified capture is extracted again by the provider that took it and
+    /// compared with what was recorded then. A capture whose bytes are missing or altered, or
+    /// whose provider cannot re-extract, is reported and contributes nothing.
+    pub fn research_reextract(&self, run_ids: &[String]) -> Result<Value, String> {
+        if run_ids.is_empty() || run_ids.len() > 50 {
+            return Err("REEXTRACT_RUN_LIMIT".into());
+        }
+        const FIELDS: [&str; 5] = ["sku", "title", "price_minor", "currency", "availability"];
+        let key = |p: &Value| {
+            p["sku"]
+                .as_str()
+                .map(|s| format!("sku:{s}"))
+                .or_else(|| p["title"].as_str().map(|t| format!("title:{t}")))
+        };
+        let index = |products: &Value| -> BTreeMap<String, Value> {
+            products
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(|p| Some((key(p)?, p.clone())))
+                .collect()
+        };
+        let mut captures = vec![];
+        let mut series: BTreeMap<(String, String, String), Vec<Value>> = BTreeMap::new();
+        let mut seen = BTreeSet::new();
+        for run_id in run_ids {
+            let payload: String = self
+                .db
+                .lock()
+                .map_err(err)?
+                .query_row("SELECT payload FROM runs WHERE id=?1", [run_id], |r| {
+                    r.get(0)
+                })
+                .map_err(|_| "RUN_NOT_FOUND")?;
+            let run: Value = serde_json::from_str(&payload).map_err(err)?;
+            for o in run["observations"].as_array().into_iter().flatten() {
+                let hash = o["raw_hash"].as_str().unwrap_or("").to_string();
+                if !seen.insert((run_id.clone(), hash.clone())) {
+                    continue;
+                }
+                let base = json!({"run_id":run_id,"raw_hash":hash,"source":o["external_source"],"captured_at_ms":o["retrieved_at"],"source_type":o["source_type"]});
+                let provider = self
+                    .providers
+                    .iter()
+                    .find(|p| Some(p.id()) == o["provider"].as_str());
+                let raw = match crate::capture::read_verified(&self.root, o) {
+                    Ok(raw) => raw,
+                    Err(_) => {
+                        captures.push(json!({"state":"RAW_UNAVAILABLE_OR_ALTERED","capture":base}));
+                        continue;
+                    }
+                };
+                let recorded = &o["normalized_value"];
+                let outcome = provider.and_then(|p| {
+                    p.reextract(&raw, o["source_type"].as_str().unwrap_or(""), recorded)
+                });
+                let fresh = match outcome {
+                    None => {
+                        captures.push(json!({"state":"PROVIDER_CANNOT_REEXTRACT","capture":base}));
+                        continue;
+                    }
+                    Some(Err(reason)) => {
+                        captures.push(
+                            json!({"state":"REEXTRACTION_FAILED","reason":reason,"capture":base}),
+                        );
+                        continue;
+                    }
+                    Some(Ok(v)) => v,
+                };
+                let (before, after) = (index(&recorded["products"]), index(&fresh["products"]));
+                let mut differences = vec![];
+                for k in before.keys().chain(after.keys()).collect::<BTreeSet<_>>() {
+                    for f in FIELDS {
+                        let (b, a) = (
+                            &before.get(k).map_or(Value::Null, |p| p[f].clone()),
+                            &after.get(k).map_or(Value::Null, |p| p[f].clone()),
+                        );
+                        if b != a {
+                            differences
+                                .push(json!({"product":k,"field":f,"recorded":b,"reextracted":a}));
+                        }
+                    }
+                }
+                for (k, p) in &after {
+                    for f in ["price_minor", "currency", "availability"] {
+                        if !p[f].is_null() {
+                            series
+                                .entry((o["external_source"].as_str().unwrap_or("").to_string(), k.clone(), f.to_string()))
+                                .or_default()
+                                .push(json!({"captured_at_ms":o["retrieved_at"],"value":p[f],"run_id":run_id,"raw_hash":hash}));
+                        }
+                    }
+                }
+                captures.push(json!({"state":if differences.is_empty(){"SAME_AS_RECORDED"}else{"DIFFERS_FROM_RECORDED"},"capture":base,"differences":differences,"reextracted_products":after.len(),"recorded_products":before.len()}));
+            }
+        }
+        let series: Vec<Value> = series
+            .into_iter()
+            .map(|((source, product, field), mut points)| {
+                points.sort_by_key(|p| p["captured_at_ms"].as_str().and_then(|t| t.parse::<u64>().ok()).unwrap_or(0));
+                json!({"source":source,"product":product,"field":field,"points":points,"state":"DERIVED_BY_CURRENT_EXTRACTOR_FROM_VERIFIED_RAW"})
+            })
+            .collect();
+        Ok(
+            json!({"runs":run_ids,"captures":captures,"series":series,"network":"NONE","extractor":"CURRENT_BUILD"}),
+        )
+    }
+
     pub fn compare_snapshots(&self, args: Value) -> Result<Value, String> {
         #[derive(Deserialize)]
         #[serde(deny_unknown_fields)]
@@ -996,6 +1105,87 @@ impl Engine {
 #[cfg(test)]
 mod budget_storage_tests {
     use super::*;
+    #[test]
+    fn reextraction_reports_where_the_current_extractor_disagrees_with_the_record() {
+        use crate::provider::{AcquireError, AcquireResult, Provider};
+        // Recorded with price 100; today's extractor reads 120 from the same bytes.
+        struct Drift;
+        impl Provider for Drift {
+            fn id(&self) -> &str {
+                "native-web"
+            }
+            fn metadata(&self) -> Value {
+                json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","capabilities":["fetch.http"],"markets":["PUBLIC_WEB"]})
+            }
+            fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                let raw = b"synthetic page with a price";
+                let result = json!({"products":[{"sku":"S1","title":"Cup","price_minor":100,"currency":"JPY"}],"links":[],"source":"https://shop.example/product"});
+                let observation = Evidence {
+                    id: Uuid::new_v4().to_string(),
+                    mode: crate::domain::ObservationMode::Live,
+                    source_type: "PUBLIC_HTML".into(),
+                    provider: "native-web".into(),
+                    external_source: "https://shop.example/product".into(),
+                    market: "PUBLIC_WEB".into(),
+                    query: request.query.clone(),
+                    timestamp: "1000".into(),
+                    retrieved_at: "1000".into(),
+                    raw_hash: format!("{:x}", Sha256::digest(raw)),
+                    normalized_value: result.clone(),
+                    unit: "MOCK_NOT_LIVE_PROOF".into(),
+                    currency: None,
+                    confidence: None,
+                    freshness_seconds: None,
+                    cost_minor: Some(0),
+                    run_id: request.run_id.clone(),
+                };
+                Ok(AcquireResult {
+                    observations: vec![observation],
+                    result,
+                    raw_payload: raw.to_vec(),
+                    provider_cost: json!({"request_count":1}),
+                })
+            }
+            fn reextract(&self, raw: &[u8], _: &str, _: &Value) -> Option<Result<Value, String>> {
+                assert_eq!(raw, b"synthetic page with a price");
+                Some(Ok(
+                    json!({"products":[{"sku":"S1","title":"Cup","price_minor":120,"currency":"JPY"}]}),
+                ))
+            }
+        }
+        let root = std::env::temp_dir().join(format!("ecdev-reextract-{}", Uuid::new_v4()));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(std::sync::Arc::new(Drift));
+        let run = e.research(json!({"market":"PUBLIC_WEB","query":"Synthetic drift, not live proof","sources":[{"url":"https://shop.example/product"}],"max_pages":1})).unwrap();
+        let id = run["run_id"].as_str().unwrap().to_string();
+        let out = e.research_reextract(std::slice::from_ref(&id)).unwrap();
+        let capture = &out["captures"][0];
+        assert_eq!(capture["state"], "DIFFERS_FROM_RECORDED");
+        assert_eq!(
+            capture["differences"],
+            json!([{"product":"sku:S1","field":"price_minor","recorded":100,"reextracted":120}])
+        );
+        let price = out["series"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|s| s["field"] == "price_minor")
+            .unwrap();
+        assert_eq!(price["points"][0]["value"], 120);
+        // A provider that cannot re-extract contributes nothing.
+        let bare = Engine::open(&root).unwrap();
+        assert_eq!(
+            bare.research_reextract(&[id]).unwrap()["captures"][0]["state"],
+            "PROVIDER_CANNOT_REEXTRACT"
+        );
+        assert_eq!(
+            e.research_reextract(&[]).unwrap_err(),
+            "REEXTRACT_RUN_LIMIT"
+        );
+        drop((e, bare));
+        std::fs::remove_dir_all(root).unwrap();
+    }
     #[test]
     fn public_research_mode_comes_from_known_io_not_failed_intent() {
         use crate::provider::{AcquireError, AcquireResult, Provider};

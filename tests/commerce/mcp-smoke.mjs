@@ -7,7 +7,7 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,43);
+ const tools=await client.listTools();assert.equal(tools.tools.length,44);
  const officialFixtures=JSON.parse(await readFile(new URL('../../adapter/marketplace/tests/fixtures/official-responses.json',import.meta.url),'utf8'));
  const officialCase=officialFixtures.cases.find(c=>c.operation==='offers');
  const official=await client.callTool({name:'ecdev.product.analyze',arguments:{market:'AMAZON_US',asin:officialCase.asin,evidence_layer:'OFFICIAL_SP_API',include:['OFFERS'],fixture_responses:{offers:officialCase.response}}});
@@ -41,7 +41,7 @@ try {
  const economics=await client.callTool({name:'ecdev.economics.simulate',arguments:scenario});assert.equal(economics.structuredContent.mode,'SIMULATED');assert.equal(economics.structuredContent.result.expected_profit,140000);
  const invalid=await client.callTool({name:'ecdev.economics.simulate',arguments:{...scenario,referral_bps:10001}});assert.equal(invalid.isError,true);
  const fixture=await (await fetch(base+'/api/research/example')).json();
- const research=await client.callTool({name:'ecdev.research.run',arguments:fixture});assert.equal(research.isError,false);
+ const research=await client.callTool({name:'ecdev.research.run',arguments:fixture});assert.equal(research.isError,false);const reextracted=await client.callTool({name:'ecdev.research.reextract',arguments:{run_ids:[research.structuredContent.run_id]}});assert.equal(reextracted.isError,false);assert.equal(reextracted.structuredContent.network,'NONE');assert.ok(reextracted.structuredContent.captures.length>0);assert.ok(reextracted.structuredContent.captures.every(c=>c.state==='SAME_AS_RECORDED'));
  const formatted=await client.callTool({name:'ecdev.research.run',arguments:{market:'PUBLIC_WEB',query:'SDK formatted price interpretation',max_pages:1,sources:[{url:'https://example.org/formatted-price',fixture_html:'<script type="application/ld+json">{"@type":"Product","name":"Formatted price","offers":{"price":"$12.99","priceCurrency":"USD"}}</script>'}]}});
  assert.equal(formatted.isError,false);assert.equal(formatted.structuredContent.mode,'FIXTURE');assert.equal(formatted.structuredContent.network_calls,0);
  const formattedOffers=formatted.structuredContent.candidates[0].product.observed_offers;

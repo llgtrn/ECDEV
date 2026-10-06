@@ -441,6 +441,33 @@ impl Provider for Web {
     fn metadata(&self) -> Value {
         json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","auth_state":"NOT_REQUIRED","capabilities":["fetch.http","extract.product","research.market"],"markets":["AMAZON_JP","AMAZON_US","PUBLIC_WEB"],"quota_remaining":null,"rate_limit":{"concurrency":1,"minimum_interval_ms":750},"estimated_cost_minor":0,"latency_estimate_ms":null,"freshness":null,"confidence_characteristics":"Source assertions, not verified commercial truth","cacheable":true,"cache_ttl_seconds":3600,"failure_state":null,"fallback_providers":[],"adapter_state":"RUST_IMPLEMENTED","reason":"Public HTTP and supplied fixtures; private addresses denied; robots enforced; no browser/CAPTCHA bypass"})
     }
+    fn reextract(
+        &self,
+        raw: &[u8],
+        source_type: &str,
+        recorded: &Value,
+    ) -> Option<Result<Value, String>> {
+        let source = recorded["final_url"]
+            .as_str()
+            .or(recorded["source"].as_str())
+            .unwrap_or("");
+        Some(match source_type {
+            "PUBLIC_SITEMAP_XML" => sitemap_result(raw, source),
+            "PUBLIC_HTML" => {
+                // The charset the capture was decoded with came from its HTTP header only when
+                // the recorded recipe says so; BOM and meta declarations are in the bytes.
+                let decoding = &recorded["document_decoding"];
+                let content_type = match decoding["declared_label"].as_str() {
+                    Some(label) if decoding["source"] == "HTTP_CONTENT_TYPE" => {
+                        format!("text/html; charset={label}")
+                    }
+                    _ => "text/html".to_string(),
+                };
+                document::extract(raw, &content_type, source)
+            }
+            _ => return None,
+        })
+    }
     fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;

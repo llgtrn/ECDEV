@@ -35,6 +35,11 @@ impl<'a> Verifier<'a> {
 }
 
 pub(crate) fn verify(root: &Path, observation: &Value) -> Result<(), String> {
+    read_verified(root, observation).map(|_| ())
+}
+
+/// The stored capture bytes of an observation, only when they match its recorded hash.
+pub(crate) fn read_verified(root: &Path, observation: &Value) -> Result<Vec<u8>, String> {
     let hash = observation["raw_hash"]
         .as_str()
         .filter(|s| {
@@ -47,7 +52,10 @@ pub(crate) fn verify(root: &Path, observation: &Value) -> Result<(), String> {
         Some("PUBLIC_SOCIAL_JSON") => root
             .join(".ecdev-data/runtime/social-captures")
             .join(format!("{hash}.raw")),
-        Some("PUBLIC_HTML") => root.join(".ecdev-data/raw").join(format!("{hash}.html")),
+        // Research runs write every public web capture, sitemaps included, as `<hash>.html`.
+        Some("PUBLIC_HTML" | "PUBLIC_SITEMAP_XML") => {
+            root.join(".ecdev-data/raw").join(format!("{hash}.html"))
+        }
         Some("API") => root.join(".ecdev-data/raw").join(format!("{hash}.json")),
         _ => return Err(UNAVAILABLE.into()),
     };
@@ -65,7 +73,7 @@ pub(crate) fn verify(root: &Path, observation: &Value) -> Result<(), String> {
     if bytes.len() as u64 > MAX_CAPTURE || format!("{:x}", Sha256::digest(&bytes)) != hash {
         return Err(UNAVAILABLE.into());
     }
-    Ok(())
+    Ok(bytes)
 }
 
 pub(crate) fn verify_payload(root: &Path, payload: &Value) -> Result<(), String> {
@@ -93,6 +101,7 @@ mod tests {
         let hash = format!("{:x}", Sha256::digest(bytes));
         for (source, directory, extension) in [
             ("PUBLIC_HTML", ".ecdev-data/raw", "html"),
+            ("PUBLIC_SITEMAP_XML", ".ecdev-data/raw", "html"),
             ("API", ".ecdev-data/raw", "json"),
             (
                 "PUBLIC_SOCIAL_JSON",

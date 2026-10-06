@@ -1048,6 +1048,70 @@ mod research_tests {
         assert_eq!(run["funnel"]["shortlisted"], 0);
     }
     #[test]
+    fn stored_captures_reextract_into_typed_series_without_network() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-reextract-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let page = |price: &str| {
+            format!(
+                r#"<meta property="og:type" content="product"><meta property="og:title" content="Cup"><meta property="product:price:amount" content="{price}"><meta property="product:price:currency" content="JPY">"#
+            )
+        };
+        let args = |html: String| json!({"market":"PUBLIC_WEB","query":"Reextraction fixture","sources":[{"url":"https://example.org/cup","fixture_html":html}],"max_pages":1});
+        let first = e.research(args(page("2,980"))).unwrap();
+        let second = e.research(args(page("2,500"))).unwrap();
+        let ids = vec![
+            first["run_id"].as_str().unwrap().to_string(),
+            second["run_id"].as_str().unwrap().to_string(),
+        ];
+        let out = e.research_reextract(&ids).unwrap();
+        assert_eq!(out["network"], "NONE");
+        assert!(
+            out["captures"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|c| c["state"] == "SAME_AS_RECORDED")
+        );
+        let price = out["series"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|s| s["field"] == "price_minor")
+            .unwrap();
+        let values: Vec<_> = price["points"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|p| p["value"].clone())
+            .collect();
+        assert_eq!(values, [json!(2980), json!(2500)]);
+        // Altered bytes contribute nothing.
+        let hash = out["captures"][0]["capture"]["raw_hash"].as_str().unwrap();
+        std::fs::write(
+            root.join(format!(".ecdev-data/raw/{hash}.html")),
+            b"altered",
+        )
+        .unwrap();
+        let altered = e.research_reextract(&ids[..1]).unwrap();
+        assert_eq!(
+            altered["captures"][0]["state"],
+            "RAW_UNAVAILABLE_OR_ALTERED"
+        );
+        assert_eq!(altered["series"], json!([]));
+        assert_eq!(
+            e.research_reextract(&["missing".into()]).unwrap_err(),
+            "RUN_NOT_FOUND"
+        );
+    }
+    #[test]
     fn microdata_products_and_cross_format_conflicts_retain_evidence() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-microdata-{}",
