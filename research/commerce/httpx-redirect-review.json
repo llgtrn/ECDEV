@@ -1,0 +1,31 @@
+{
+  "donor_id": "encode--httpx",
+  "commit_sha": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+  "license": "BSD-3-Clause",
+  "license_evidence": "LICENSE.md (blob ab79d16a3f4c6c894c028d1f7431811e8711b42b) is the three-clause BSD text: retain notice, reproduce notice, no endorsement",
+  "runtime_decision": "never a runtime dependency; ECDEV's redirect decision is native (adapter/web/src/lib.rs::redirect_target)",
+  "oracle": {
+    "fixture": "adapter/web/tests/fixtures/httpx-redirect-oracle.json",
+    "generator": "embedded in the fixture (generator_source); reads the unmodified donor models in memory, no network",
+    "cases": 2000,
+    "agreement": "650 of 650 cases where both httpx and ECDEV follow produce the same target (fragment removed, WHATWG serialization); 975 non-redirect cases agree",
+    "deliberate_divergences": {
+      "public_url_policy": "75 cases: httpx follows ftp://, userinfo and ?token= targets; ECDEV holds every redirect target to the requested-URL policy (normalize_url)",
+      "refused_instead_of_guessed": "150 cases: //, ///triple, backslashes, a host with a space, http:/nohost, port 99999; httpx guesses a target, WHATWG would resolve some to a different host, ECDEV returns INVALID_REDIRECT",
+      "fragment": "httpx re-attaches the previous fragment (RFC 7231 7.1.2); ECDEV URL identity carries no fragment",
+      "limit": "httpx follows up to 20 redirects; ECDEV at most 5, with loop detection, inside its fetch budget"
+    },
+    "defects_found_in_ecdev": [
+      "redirect targets bypassed normalize_url: credentials, credential queries, fragments and non-http schemes were followed",
+      "every 3xx with a Location was followed (300, 305, 306); only 301, 302, 303, 307 and 308 redirect"
+    ]
+  },
+  "capabilities": {
+    "fetch.redirect": "RELIED_ON; STUDY_COMPLETE[DERIVED_NATIVE]",
+    "httpx.redirect-request-rewriting": "NOT_ADOPTED (ECDEV sends credentialless GET only); STUDY_CANDIDATE: which request headers survive an origin change. ECDEV re-sends its If-None-Match / If-Modified-Since validators to every redirect target; httpx strips Authorization across origins but keeps validators",
+    "httpx.content-decoding": "NOT_ADOPTED; STUDY_CANDIDATE: content-encoding and charset fallback (httpx decoders, autodetect) versus ECDEV's document decoder on pages without a declared charset",
+    "httpx.transport-and-pooling": "NOT_ADOPTED; REFERENCE_ONLY: httpcore pooling, HTTP/2 and proxy routing as a reference for a higher-throughput crawler",
+    "httpx.auth-and-cookies": "NOT_ADOPTED; DELIBERATE_SEMANTIC_DIVERGENCE: ECDEV public research fetches carry no credentials or cookies",
+    "httpx.command-line": "NOT_ADOPTED; NO_RESEARCH_VALUE[RELEASE_TOOLING]"
+  }
+}

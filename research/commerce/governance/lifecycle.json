@@ -1,14 +1,14 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "fb670b443ea80830248d4fcb01fa9a3af8a17bfc",
+  "assessed_parent_commit": "fb7eea4378932908d034b588e968da7974122f0d",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
   "donor_count": 63,
   "effective_states": {
-    "CAPABILITY_RELEVANCE_RESOLVED": 2,
+    "CAPABILITY_RELEVANCE_RESOLVED": 4,
     "CUTOVER": 4,
-    "DISCOVERED": 15,
+    "DISCOVERED": 13,
     "EXTINCT": 1,
     "PARITY_PROVEN": 1,
     "REGISTERED": 40
@@ -2631,27 +2631,62 @@
     },
     {
       "donor": "encode--httpx",
-      "claimed": "DISCOVERED",
-      "effective": "DISCOVERED",
+      "claimed": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
-      "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
-      "runtime": "DISCOVERED",
-      "knowledge": "STRUCTURAL_CENSUS",
+      "stopped_by": "CUTOVER: no cutover declared",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
-        "licence": "UNVERIFIED",
-        "family": "UNVERIFIED",
-        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
-        "knowledge_study": "STUDY_READ_ONLY",
-        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
       "capabilities": [
         {
           "key": "fetch.redirect",
           "required": true,
-          "knowledge": "UNREVIEWED",
-          "knowledge_status": "UNREVIEWED",
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](redirect statuses and target resolution proven on 2000 frozen httpx cases; policy and ambiguity refusals pinned)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "httpx.redirect-request-rewriting",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(which request headers should survive an origin change on redirect: ECDEV re-sends its If-None-Match and If-Modified-Since validators to every redirect target)",
+          "knowledge_status": "STUDY_CANDIDATE",
           "open": true
+        },
+        {
+          "key": "httpx.content-decoding",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(content-encoding and charset fallback (httpx decoders and autodetect) versus ECDEV's document decoder on pages without a declared charset)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "httpx.transport-and-pooling",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(httpcore pooling, HTTP/2 and proxy routing as a reference for a higher-throughput crawler)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "httpx.auth-and-cookies",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV public research is credentialless and cookieless by design)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "httpx.command-line",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](interactive command-line HTTP client)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
         }
       ],
       "gates": [
@@ -2692,13 +2727,13 @@
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: fetch.redirect"
+          "pass": true,
+          "detail": "all 1 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: fetch.redirect"
+          "pass": true,
+          "detail": "all 1 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
@@ -2712,13 +2747,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: fetch.redirect"
+          "pass": true,
+          "detail": "all 6 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "1 of 1 declared capabilities still have open research: fetch.redirect (UNREVIEWED)"
+          "detail": "2 of 6 declared capabilities still have open research: httpx.redirect-request-rewriting (STUDY_CANDIDATE), httpx.content-decoding (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -2734,27 +2769,48 @@
     },
     {
       "donor": "tkem--cachetools",
-      "claimed": "DISCOVERED",
-      "effective": "DISCOVERED",
+      "claimed": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
-      "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
-      "runtime": "DISCOVERED",
-      "knowledge": "STRUCTURAL_CENSUS",
+      "stopped_by": "CUTOVER: no cutover declared",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
-        "licence": "UNVERIFIED",
-        "family": "UNVERIFIED",
-        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
-        "knowledge_study": "STUDY_READ_ONLY",
-        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
       "capabilities": [
         {
           "key": "cache.ttl",
           "required": true,
-          "knowledge": "UNREVIEWED",
-          "knowledge_status": "UNREVIEWED",
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](TTL freshness proven on 884 frozen TTLCache reads, expiry instant included)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "cachetools.size-eviction",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)",
+          "knowledge_status": "STUDY_CANDIDATE",
           "open": true
+        },
+        {
+          "key": "cachetools.per-entry-expiry",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(per-entry expiry (TLRUCache time-to-use) from response Cache-Control and Expires or observed source volatility instead of one fixed TTL)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "cachetools.memoization-decorators",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(cached and cachedmethod key construction, locking and condition-based stampede protection)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
         }
       ],
       "gates": [
@@ -2795,13 +2851,13 @@
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: cache.ttl"
+          "pass": true,
+          "detail": "all 1 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: cache.ttl"
+          "pass": true,
+          "detail": "all 1 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
@@ -2815,13 +2871,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: cache.ttl"
+          "pass": true,
+          "detail": "all 4 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "1 of 1 declared capabilities still have open research: cache.ttl (UNREVIEWED)"
+          "detail": "2 of 4 declared capabilities still have open research: cachetools.size-eviction (STUDY_CANDIDATE), cachetools.per-entry-expiry (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4871,7 +4927,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "43 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "45 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5061,7 +5117,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "17 imports: url in adapter/web/src/amazon.rs; url in adapter/web/src/commerce.rs; url in adapter/web/src/lib.rs"
+          "detail": "18 imports: url in adapter/web/src/amazon.rs; url in adapter/web/src/commerce.rs; url in adapter/web/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

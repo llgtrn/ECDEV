@@ -60,6 +60,38 @@ pub fn normalize_url(input: &str) -> Result<String, String> {
     u.set_fragment(None);
     Ok(u.to_string())
 }
+/// Where a response sends the fetch loop next. `Ok(None)`: the response is final (only 301, 302,
+/// 303, 307 and 308 with a `Location` redirect, as in httpx). `Ok(Some(url))`: the next URL,
+/// resolved against `current` and held to the same public-URL policy as the requested one
+/// (`normalize_url`: http(s) only, no credentials, no credential query, no fragment). A Location
+/// that clients resolve differently is refused rather than guessed: non-ASCII bytes, a backslash,
+/// or a scheme without an authority (`http:/x`, `https:x`).
+pub fn redirect_target(
+    current: &Url,
+    status: u16,
+    location: Option<&str>,
+) -> Result<Option<String>, String> {
+    if !matches!(status, 301 | 302 | 303 | 307 | 308) {
+        return Ok(None);
+    }
+    let Some(location) = location else {
+        return Ok(None);
+    };
+    let location = location.trim_matches([' ', '\t']);
+    let scheme_without_authority = location.split_once(':').is_some_and(|(scheme, rest)| {
+        !scheme.is_empty()
+            && scheme
+                .chars()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, '+' | '-' | '.'))
+            && !rest.starts_with("//")
+            && !scheme.contains(['/', '?', '#'])
+    });
+    if !location.is_ascii() || location.contains('\\') || scheme_without_authority {
+        return Err("INVALID_REDIRECT".into());
+    }
+    let next = current.join(location).map_err(|_| "INVALID_REDIRECT")?;
+    normalize_url(next.as_str()).map(Some)
+}
 fn public_ip(ip: IpAddr) -> bool {
     match ip {
         IpAddr::V4(a) => {
@@ -446,14 +478,8 @@ impl Provider for Web {
                         provider_cost: json!({"request_count":requests,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis()}),
                     });
                 }
-                if (300..400).contains(&status) {
-                    url = url
-                        .join(
-                            headers["location"]
-                                .as_str()
-                                .ok_or("REDIRECT_WITHOUT_LOCATION")?,
-                        )
-                        .map_err(|_| "INVALID_REDIRECT")?;
+                if let Some(next) = redirect_target(&url, status, headers["location"].as_str())? {
+                    url = Url::parse(&next).map_err(|_| "INVALID_REDIRECT")?;
                     continue;
                 }
                 if status != 200 {

@@ -60,6 +60,29 @@ fn pages() -> usize {
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
+/// Seconds a fetched page stays fresh in the persistent fetch cache.
+pub const FETCH_TTL_SECONDS: u64 = 3600;
+/// Seconds after expiry an entry may still stand in for a failed fetch (`allow_stale`).
+pub const STALE_IF_ERROR_SECONDS: u64 = 86400;
+
+/// When an entry stored at `stored_at` expires; storing again (a refetch or a revalidation)
+/// restarts its lifetime.
+pub fn cache_expiry(stored_at: u64) -> u64 {
+    stored_at + FETCH_TTL_SECONDS
+}
+
+/// A cached entry is fresh strictly before its expiry: at the expiry instant it is stale
+/// (cachetools TTLCache: `timer() < expires`).
+pub fn cache_fresh(expires_at: u64, now: u64) -> bool {
+    now < expires_at
+}
+
+/// An expired entry may replace a failed fetch for `STALE_IF_ERROR_SECONDS` after expiry, and is
+/// then reported as `STALE_USABLE`, never as fresh.
+pub fn stale_usable(expires_at: u64, now: u64) -> bool {
+    now.saturating_sub(expires_at) <= STALE_IF_ERROR_SECONDS
+}
+
 pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
     ("discovery_from_seed_links", true),
     ("crawl", true),
@@ -489,7 +512,7 @@ impl Engine {
                 && previous.is_some()
                 && cached
                     .as_ref()
-                    .is_some_and(|(_, expires)| *expires > timestamp());
+                    .is_some_and(|(_, expires)| cache_fresh(*expires, timestamp()));
             let request = AcquireRequest {
                 run_id: id.clone(),
                 capability: "fetch.http".into(),
@@ -569,9 +592,9 @@ impl Engine {
                     Err(failure) => {
                         let reason = &failure.reason;
                         if input.allow_stale
-                            && cached.as_ref().is_some_and(|(_, expires)| {
-                                timestamp().saturating_sub(*expires) <= 86400
-                            })
+                            && cached
+                                .as_ref()
+                                .is_some_and(|(_, expires)| stale_usable(*expires, timestamp()))
                             && previous.is_some()
                         {
                             stale_used = true;
@@ -608,7 +631,12 @@ impl Engine {
                     .map_err(err)?
                     .execute(
                         "INSERT OR REPLACE INTO fetch_cache VALUES(?1,?2,?3,?4)",
-                        params![key, captured.to_string(), timestamp(), timestamp() + 3600],
+                        params![
+                            key,
+                            captured.to_string(),
+                            timestamp(),
+                            cache_expiry(timestamp())
+                        ],
                     )
                     .map_err(err)?;
             }

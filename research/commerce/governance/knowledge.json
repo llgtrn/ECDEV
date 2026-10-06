@@ -1,41 +1,41 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "fb670b443ea80830248d4fcb01fa9a3af8a17bfc",
+  "assessed_parent_commit": "fb7eea4378932908d034b588e968da7974122f0d",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 25,
-    "production_capabilities_native": 25,
-    "production_capabilities_proven": 25,
+    "production_capabilities_required": 27,
+    "production_capabilities_native": 27,
+    "production_capabilities_proven": 27,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 146,
-    "semantic_censused_capabilities": 144,
-    "unreviewed_capabilities": 2,
+    "known_donor_capabilities": 154,
+    "semantic_censused_capabilities": 154,
+    "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 24,
+    "study_candidates": 27,
     "benchmark_candidates": 19,
-    "algorithm_candidates": 7,
-    "reference_only": 30,
-    "study_complete_capabilities": 47,
-    "not_relevant_after_review": 17,
-    "research_questions_open": 52,
-    "knowledge_coverage_ratio": 0.643836
+    "algorithm_candidates": 8,
+    "reference_only": 32,
+    "study_complete_capabilities": 50,
+    "not_relevant_after_review": 18,
+    "research_questions_open": 54,
+    "knowledge_coverage_ratio": 0.649351
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 45,
-    "donors_structural_census": 2,
+    "donors_structural_census": 0,
     "donors_semantic_census": 1,
-    "donors_active_study": 14,
+    "donors_active_study": 16,
     "donors_study_complete": 1,
     "donors_structurally_censused": 18,
     "donors_semantically_censused": 5,
-    "donors_with_open_candidates": 14,
+    "donors_with_open_candidates": 16,
     "donors_with_open_research": 62
   },
   "denominators": {
@@ -464,37 +464,47 @@
     },
     {
       "donor": "encode--httpx",
-      "runtime": "DISCOVERED",
-      "effective": "DISCOVERED",
-      "knowledge": "STRUCTURAL_CENSUS",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
-        "licence": "UNVERIFIED",
-        "family": "UNVERIFIED",
-        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
-        "knowledge_study": "STUDY_READ_ONLY",
-        "native_reimplementation": "CLEAN_ROOM_ONLY"
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "fetch.redirect UNREVIEWED"
+        "httpx.redirect-request-rewriting STUDY_CANDIDATE(which request headers should survive an origin change on redirect: ECDEV re-sends its If-None-Match and If-Modified-Since validators to every redirect target)",
+        "httpx.content-decoding STUDY_CANDIDATE(content-encoding and charset fallback (httpx decoders and autodetect) versus ECDEV's document decoder on pages without a declared charset)"
       ],
-      "resolved": []
+      "resolved": [
+        "fetch.redirect STUDY_COMPLETE[DERIVED_NATIVE](redirect statuses and target resolution proven on 2000 frozen httpx cases; policy and ambiguity refusals pinned)",
+        "httpx.transport-and-pooling REFERENCE_ONLY(httpcore pooling, HTTP/2 and proxy routing as a reference for a higher-throughput crawler)",
+        "httpx.auth-and-cookies STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV public research is credentialless and cookieless by design)",
+        "httpx.command-line NO_RESEARCH_VALUE[RELEASE_TOOLING](interactive command-line HTTP client)"
+      ]
     },
     {
       "donor": "tkem--cachetools",
-      "runtime": "DISCOVERED",
-      "effective": "DISCOVERED",
-      "knowledge": "STRUCTURAL_CENSUS",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
-        "licence": "UNVERIFIED",
-        "family": "UNVERIFIED",
-        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
-        "knowledge_study": "STUDY_READ_ONLY",
-        "native_reimplementation": "CLEAN_ROOM_ONLY"
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "cache.ttl UNREVIEWED"
+        "cachetools.size-eviction STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)",
+        "cachetools.per-entry-expiry ALGORITHM_CANDIDATE(per-entry expiry (TLRUCache time-to-use) from response Cache-Control and Expires or observed source volatility instead of one fixed TTL)"
       ],
-      "resolved": []
+      "resolved": [
+        "cache.ttl STUDY_COMPLETE[DERIVED_NATIVE](TTL freshness proven on 884 frozen TTLCache reads, expiry instant included)",
+        "cachetools.memoization-decorators REFERENCE_ONLY(cached and cachedmethod key construction, locking and condition-based stampede protection)"
+      ]
     },
     {
       "donor": "dependency--github-com-goldziher-tree-sitter-language-pack",

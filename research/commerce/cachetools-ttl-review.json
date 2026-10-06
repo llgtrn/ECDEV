@@ -1,0 +1,23 @@
+{
+  "donor_id": "tkem--cachetools",
+  "commit_sha": "3c082c654c2804b9354e4b62dbd2994f1aac464d",
+  "license": "MIT",
+  "license_evidence": "LICENSE (blob f980a19c78c25959f922b8cc93854d91a89e686f) is the MIT licence text",
+  "runtime_decision": "never a runtime dependency; ECDEV's persistent fetch cache decides freshness natively (domain/commerce/src/research.rs::cache_fresh, stale_usable, cache_expiry)",
+  "oracle": {
+    "fixture": "domain/commerce/tests/fixtures/cachetools-ttl-oracle.json",
+    "generator": "embedded in the fixture (generator_source); the unmodified TTLCache with an injected integer timer",
+    "agreement": "884 of 884 reads agree (72 hits), including 50 reads at the exact expiry instant, which both treat as expired",
+    "deliberate_divergences": {
+      "persistence": "ECDEV's cache is a SQLite table that survives restarts; TTLCache is in-process",
+      "stale_if_error": "ECDEV may serve an entry up to 86400 s past expiry when a fetch fails, labelled STALE_USABLE; cachetools has no such window",
+      "revalidation": "an expired ECDEV entry is revalidated with its validators (If-None-Match, If-Modified-Since) before refetching"
+    }
+  },
+  "capabilities": {
+    "cache.ttl": "RELIED_ON; STUDY_COMPLETE[DERIVED_NATIVE]",
+    "cachetools.size-eviction": "NOT_ADOPTED; STUDY_CANDIDATE: ECDEV's fetch cache is unbounded; which bounded eviction (LRU, LFU, FIFO, random, by getsizeof) fits a persistent cache whose entries differ in refetch cost and robots delay",
+    "cachetools.per-entry-expiry": "NOT_ADOPTED; ALGORITHM_CANDIDATE: TLRUCache's per-item time-to-use, as per-entry expiry from response Cache-Control/Expires or observed source volatility instead of one fixed 3600 s TTL",
+    "cachetools.memoization-decorators": "NOT_ADOPTED; REFERENCE_ONLY: cached/cachedmethod key construction, locks and condition-based stampede protection"
+  }
+}
