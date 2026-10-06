@@ -856,6 +856,70 @@
         {
           "capability": "changedetection.ui",
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)"
+        },
+        {
+          "capability": "changedetection.api",
+          "knowledge": "STUDY_CANDIDATE(a versioned monitoring API exposing evidence (snapshot hash, fetch metadata, observed values with provenance) rather than file paths, with no side effects on reads)"
+        },
+        {
+          "capability": "changedetection.price-history",
+          "knowledge": "ALGORITHM_CANDIDATE(time-weighted price statistics (low, typical, high) over observed points with gaps kept as gaps, instead of unweighted statistics over change events)"
+        },
+        {
+          "capability": "changedetection.selector-authoring",
+          "knowledge": "STUDY_CANDIDATE(stability of click-derived selectors (name, id or class chain, positional XPath) across page revisions, with fallbacks stored beside the screenshot and element box as evidence)"
+        },
+        {
+          "capability": "changedetection.portability",
+          "knowledge": "ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)"
+        },
+        {
+          "capability": "changedetection.access-diagnostics",
+          "knowledge": "STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)"
+        },
+        {
+          "capability": "changedetection.llm-assist",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)"
+        },
+        {
+          "capability": "changedetection.llm-extraction",
+          "knowledge": "BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)"
+        },
+        {
+          "capability": "changedetection.conditions-engine",
+          "knowledge": "STUDY_CANDIDATE(declarative rules over typed observed fields (price, stock, similarity) that record which observed values met which rule when they fire)"
+        },
+        {
+          "capability": "changedetection.content-filter-dsl",
+          "knowledge": "STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns, with a filter miss reported as missing evidence rather than no change)"
+        },
+        {
+          "capability": "changedetection.fetcher-selection",
+          "knowledge": "BENCHMARK_CANDIDATE(when does a plain HTTP fetch yield the same price and stock evidence as a rendered browser, measured per site)"
+        },
+        {
+          "capability": "changedetection.browser-automation",
+          "knowledge": "STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)"
+        },
+        {
+          "capability": "changedetection.anti-bot-evasion",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)"
+        },
+        {
+          "capability": "changedetection.processor-framework",
+          "knowledge": "REFERENCE_ONLY(pluggable extraction processors and hooks, where every result should carry the strategy that produced it)"
+        },
+        {
+          "capability": "changedetection.history-extraction",
+          "knowledge": "ALGORITHM_CANDIDATE(re-deriving typed time series from stored raw snapshots after the fact)"
+        },
+        {
+          "capability": "changedetection.fetch-safety",
+          "knowledge": "REFERENCE_ONLY(SSRF validation on every redirect hop and open-redirect guards)"
+        },
+        {
+          "capability": "changedetection.deployment",
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](packaging, console entry point and container start script)"
         }
       ],
       "rationale": "its restock interpretation diverges deliberately (LLM and scraped text over structured data, float prices, stock alerts suppressed by price ranges), but percent/range alert policies, a DERIVED in-stock flag, a text-diff fallback monitor and per-watch scheduling are benchmark and study candidates",
@@ -870,16 +934,17 @@
       "semantic_coverage": {
         "files_inventoried": 1156,
         "first_party_source_files": 288,
-        "source_parsed": 263,
-        "parse_unknown": 25,
+        "source_parsed": 288,
+        "parse_unknown": 0,
         "parse_invalid_confirmed": 0,
-        "semantic_review": "PENDING",
-        "capabilities_extracted": 9,
-        "capabilities_decided": 9,
-        "research_questions_open": 4
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 25,
+        "capabilities_decided": 25,
+        "research_questions_open": 15
       }
     }
   ],
   "semantic_coverage_rule": "STUDY_COMPLETE requires the census whole-source semantic_review to be COMPLETE; extracted and decided capabilities alone reach SEMANTIC_CENSUS",
-  "licence_policy_rule": "licence_policy is read off the declared licence string by .ecdev/src/licence.rs; a governance policy, not a legal conclusion; no licence forbids study"
+  "licence_policy_rule": "licence_policy is read off the declared licence string by .ecdev/src/licence.rs; a governance policy, not a legal conclusion; no licence forbids study",
+  "status": "all eight runtime-rejected donors have a COMPLETE whole-source semantic review; each stays ACTIVE_STUDY while research questions remain open"
 }

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "142fa812f0a004076e2158298a1e134d4f025184",
+  "assessed_parent_commit": "3d231058e44c0a9f23143ecc65f977479941f99a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1614,6 +1614,118 @@
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)",
           "knowledge_status": "NO_RESEARCH_VALUE",
           "open": false
+        },
+        {
+          "key": "changedetection.api",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(a versioned monitoring API exposing evidence (snapshot hash, fetch metadata, observed values with provenance) rather than file paths, with no side effects on reads)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.price-history",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(time-weighted price statistics (low, typical, high) over observed points with gaps kept as gaps, instead of unweighted statistics over change events)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.selector-authoring",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(stability of click-derived selectors (name, id or class chain, positional XPath) across page revisions, with fallbacks stored beside the screenshot and element box as evidence)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.portability",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.access-diagnostics",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.llm-assist",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "changedetection.llm-extraction",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.conditions-engine",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(declarative rules over typed observed fields (price, stock, similarity) that record which observed values met which rule when they fire)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.content-filter-dsl",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns, with a filter miss reported as missing evidence rather than no change)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.fetcher-selection",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(when does a plain HTTP fetch yield the same price and stock evidence as a rendered browser, measured per site)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.browser-automation",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.anti-bot-evasion",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "changedetection.processor-framework",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(pluggable extraction processors and hooks, where every result should carry the strategy that produced it)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "changedetection.history-extraction",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(re-deriving typed time series from stored raw snapshots after the fact)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.fetch-safety",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(SSRF validation on every redirect hop and open-redirect guards)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "changedetection.deployment",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](packaging, console entry point and container start script)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
         }
       ],
       "gates": [
@@ -1675,12 +1787,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 25 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "4 of 9 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE)"
+          "detail": "15 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.price-history (ALGORITHM_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.conditions-engine (STUDY_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

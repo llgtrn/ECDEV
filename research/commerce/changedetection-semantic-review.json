@@ -1,0 +1,1460 @@
+{
+  "donor_id": "dgtlmoon--changedetection.io",
+  "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+  "license": "Apache-2.0",
+  "method": "two parallel read-only whole-source reviews (processors, fetchers, LLM, models, store, scheduling; blueprints, API, templates, static assets); 'Possibly in stock' stored as in stock, the model verdict dropping changes and the decimal-comma price normaliser were spot-checked",
+  "findings": [
+    "When no availability metadata exists, the JavaScript default 'Possibly in stock' (no phrase matched) is stored as in_stock=True, and a text out-of-stock hit overrides structured metadata",
+    "A model 'not important' verdict sets changed_detected=False, so no snapshot is saved while the checksum advances: the change is lost; unparseable model output counts as not important and is cached per diff; model summaries replace the diff in notifications by default",
+    "Model price and availability extraction is written into the observed restock record with no provenance; its normaliser turns 1.299,95 into 1.29995",
+    "The REST API strips observed restock values and returns snapshot file paths without hashes; backups carry no manifest or checksums",
+    "Stealth evasions, a headless user-agent rewrite, a fake desktop user agent and scheduler jitter to look less robotic; browser-step values (including typed passwords) are stored in plaintext and the share-to-cloud upload carries stored headers and step values",
+    "The stock-detection script marks the DOM before Playwright captures content and screenshots, so stored evidence carries its artefacts; snippet images are stamped with export time as capture time",
+    "The 'image_ssim_diff' processor uses blurred absolute difference, not SSIM, and a leftover 0.999 default truncates to maximum sensitivity"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "changedetection.py",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "changedetectionio/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/api/Import.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/Notifications.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/Search.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/Spec.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/SystemInfo.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/Tags.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/Watch.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/__init__.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/api/auth.py",
+        "capabilities": "changedetection.api",
+        "why": "REST v1 with OpenAPI validation; observed restock values stripped"
+      },
+      {
+        "prefix": "changedetectionio/auth_decorator.py",
+        "capabilities": "changedetection.fetch-safety",
+        "why": "SSRF checks per redirect hop, open-redirect guard"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/add_watch_ui/__init__.py",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/add_watch_ui/browser_config.py",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/add_watch_ui/static/add-watch.js",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/add_watch_ui/templates/add-watch-ui.html",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/backups/__init__.py",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/backups/restore.py",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/backups/templates/backup_create.html",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/backups/templates/backup_restore.html",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/browser_steps/__init__.py",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/check_proxies/__init__.py",
+        "capabilities": "changedetection.access-diagnostics",
+        "why": "per-proxy reachability classification"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/imports/__init__.py",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/imports/importer.py",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/imports/templates/import.html",
+        "capabilities": "changedetection.portability",
+        "why": "zip backup and restore, URL list, Distill.io and XLSX imports"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/menu_modes.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/price_data_follower/__init__.py",
+        "capabilities": "changedetection.availability-mapping",
+        "why": "switch to restock mode on detected price data, wiping history"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/pwa/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/pwa/service.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/pwa/static/sw.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/_util.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/blueprint.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/main_feed.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/single_watch.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/rss/tag.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/llm.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/notifications/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/notifications/templates/apprise.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/templates/notification-log.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/templates/settings.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/settings/templates/settings_llm_tab.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/tags/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/tags/colour.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/tags/form.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/tags/templates/edit-tag.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/tags/templates/groups-overview.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/diff.py",
+        "capabilities": "changedetection.text-diff + changedetection.llm-assist",
+        "why": "diff pages, patch download, model summary jobs"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/edit.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/notification.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/preview.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/queue.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/clear_all_history.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/diff-offscreen-options.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/diff.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/edit.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/preview.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/templates/queue.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/ui/views.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/watchlist/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/watchlist/filters.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/watchlist/row_context.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/blueprint/watchlist/templates/watch-overview.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/browser_steps/__init__.py",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/browser_steps/browser_steps.py",
+        "capabilities": "changedetection.browser-automation + changedetection.selector-authoring",
+        "why": "scripted and live interaction steps; values stored in plaintext"
+      },
+      {
+        "prefix": "changedetectionio/conditions/__init__.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/blueprint.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/default_plugin.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/exceptions.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/form.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/pluggy_interface.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/plugins/__init__.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/plugins/levenshtein_plugin.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/conditions/plugins/wordcount_plugin.py",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "JSON-Logic rules over extracted fields"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/__init__.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/base.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/exceptions/__init__.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/playwright.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/puppeteer.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/requests.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/__init__.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/favicon-fetcher.js",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/lock-elements-sizing.js",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/stock-not-in-stock.js",
+        "capabilities": "changedetection.restock-interpretation + changedetection.anti-bot-evasion",
+        "why": "multilingual out-of-stock phrases; default Possibly in stock; marks the DOM before capture"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/unlock-elements-sizing.js",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/res/xpath_element_scraper.js",
+        "capabilities": "changedetection.selector-authoring",
+        "why": "selector generation from page elements"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/screenshot_handler.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/content_fetchers/webdriver_selenium.py",
+        "capabilities": "changedetection.fetcher-selection + changedetection.anti-bot-evasion",
+        "why": "requests, Playwright, Puppeteer with stealth evasions, Selenium"
+      },
+      {
+        "prefix": "changedetectionio/custom_queue.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/diff/__init__.py",
+        "capabilities": "changedetection.text-diff",
+        "why": "difflib and diff-match-patch rendering"
+      },
+      {
+        "prefix": "changedetectionio/diff/tokenizers/__init__.py",
+        "capabilities": "changedetection.text-diff",
+        "why": "difflib and diff-match-patch rendering"
+      },
+      {
+        "prefix": "changedetectionio/diff/tokenizers/natural_text.py",
+        "capabilities": "changedetection.text-diff",
+        "why": "difflib and diff-match-patch rendering"
+      },
+      {
+        "prefix": "changedetectionio/diff/tokenizers/words_and_html.py",
+        "capabilities": "changedetection.text-diff",
+        "why": "difflib and diff-match-patch rendering"
+      },
+      {
+        "prefix": "changedetectionio/favicon_utils.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/flask_app.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/forms.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/gc_cleanup.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/gc_debounce.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/html_tools.py",
+        "capabilities": "changedetection.content-filter-dsl",
+        "why": "CSS, XPath, JSONPath and jq filters, ignore and trigger rules"
+      },
+      {
+        "prefix": "changedetectionio/is_safe_url.py",
+        "capabilities": "changedetection.fetch-safety",
+        "why": "SSRF checks per redirect hop, open-redirect guard"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/extensions/TimeExtension.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/extensions/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/plugins/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/plugins/regex.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/jinja2_custom/safe_jinja.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/languages.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/llm/__init__.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/bm25_trim.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/client.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/evaluator.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/prompt_builder.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/response_parser.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/summary_jobs.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/llm/ui_strings.py",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/model/App.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/LLMSettings.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/Tag.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/Tags.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/Watch.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/__init__.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/persistence.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/model/schema_utils.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/notification/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/apprise_plugin/__init__.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/apprise_plugin/assets.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/apprise_plugin/custom_handlers.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/apprise_plugin/discord.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/email_helpers.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification/handler.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/notification_service.py",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/pluggy_interface.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "plugin hooks including restock overrides"
+      },
+      {
+        "prefix": "changedetectionio/processors/__init__.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/base.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/difference_base.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/exceptions.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/extract.py",
+        "capabilities": "changedetection.history-extraction",
+        "why": "regex-to-CSV time series from stored snapshots"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/__init__.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/difference.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/edit_hook.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/forms.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/image_handler/__init__.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_libvips.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/image_handler/isolated_opencv.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/image_handler/libvips_handler.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/preview.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/processor.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/templates/image_ssim_diff/diff.html",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/templates/image_ssim_diff/preview.html",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/image_ssim_diff/util.py",
+        "capabilities": "changedetection.image-diff",
+        "why": "OpenCV blurred absdiff screenshot comparison (not SSIM)"
+      },
+      {
+        "prefix": "changedetectionio/processors/magic.py",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/__init__.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/difference.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/forms.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/plugins/__init__.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/plugins/llm_restock.py",
+        "capabilities": "changedetection.llm-extraction",
+        "why": "model fallback for price and availability; price normaliser drops decimal commas"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/processor.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/pure_python_extractor.py",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/restock_diff/templates/restock_diff/difference.html",
+        "capabilities": "changedetection.restock-interpretation + changedetection.availability-mapping + changedetection.change-thresholds + changedetection.price-history",
+        "why": "structured-data extraction, availability substrings, price rules, price-level statistics"
+      },
+      {
+        "prefix": "changedetectionio/processors/templates/extract.html",
+        "capabilities": "changedetection.processor-framework",
+        "why": "processor discovery, fetch setup, checksums, content sniffing"
+      },
+      {
+        "prefix": "changedetectionio/processors/text_json_diff/__init__.py",
+        "capabilities": "changedetection.text-diff + changedetection.content-filter-dsl",
+        "why": "filter pipeline, ignore and trigger rules, checksums"
+      },
+      {
+        "prefix": "changedetectionio/processors/text_json_diff/difference.py",
+        "capabilities": "changedetection.text-diff + changedetection.content-filter-dsl",
+        "why": "filter pipeline, ignore and trigger rules, checksums"
+      },
+      {
+        "prefix": "changedetectionio/processors/text_json_diff/processor.py",
+        "capabilities": "changedetection.text-diff + changedetection.content-filter-dsl",
+        "why": "filter pipeline, ignore and trigger rules, checksums"
+      },
+      {
+        "prefix": "changedetectionio/queue_handlers.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/queuedWatchMetaData.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/realtime/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/realtime/events.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/realtime/socket_server.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/rss_tools.py",
+        "capabilities": "changedetection.content-filter-dsl",
+        "why": "CSS, XPath, JSONPath and jq filters, ignore and trigger rules"
+      },
+      {
+        "prefix": "changedetectionio/run_basic_tests.sh",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "changedetectionio/run_custom_browser_url_tests.sh",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "changedetectionio/run_proxy_tests.sh",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "changedetectionio/run_socks_proxy_tests.sh",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "changedetectionio/static/js/browser-steps.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/comparison-slider.js",
+        "capabilities": "changedetection.image-diff",
+        "why": "before and after slider"
+      },
+      {
+        "prefix": "changedetectionio/static/js/conditions.js",
+        "capabilities": "changedetection.conditions-engine",
+        "why": "conditions rule editor"
+      },
+      {
+        "prefix": "changedetectionio/static/js/csrf.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/diff-overview.js",
+        "capabilities": "changedetection.text-diff",
+        "why": "diff navigation; snippet export stamped with export time"
+      },
+      {
+        "prefix": "changedetectionio/static/js/diff-render.js",
+        "capabilities": "changedetection.text-diff",
+        "why": "diff navigation; snippet export stamped with export time"
+      },
+      {
+        "prefix": "changedetectionio/static/js/flask-toast-bridge.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/global-settings.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/hamburger-menu.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/language-selector.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/llm-summary.js",
+        "capabilities": "changedetection.llm-assist",
+        "why": "model change judgement and summaries, budgets, BM25 trimming"
+      },
+      {
+        "prefix": "changedetectionio/static/js/menu-pop.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/modal.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/notifications.js",
+        "capabilities": "changedetection.notifications",
+        "why": "Apprise dispatch, sandboxed templating, RSS feeds"
+      },
+      {
+        "prefix": "changedetectionio/static/js/plugins.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/preview.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/queue-sparkline.js",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/static/js/realtime.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/recheck-proxy.js",
+        "capabilities": "changedetection.access-diagnostics",
+        "why": "per-proxy reachability classification"
+      },
+      {
+        "prefix": "changedetectionio/static/js/restock-price-graph.js",
+        "capabilities": "changedetection.price-history",
+        "why": "price and stock timeline with monotone spline"
+      },
+      {
+        "prefix": "changedetectionio/static/js/scheduler.js",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/static/js/scrollable-title.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/search-modal.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/sidebar.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/snippet-to-image.js",
+        "capabilities": "changedetection.text-diff",
+        "why": "diff navigation; snippet export stamped with export time"
+      },
+      {
+        "prefix": "changedetectionio/static/js/stepper.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/sub-tabs.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/tabs.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/toast.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/toastify.min.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/toggle-theme.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/vis.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/visual-selector.js",
+        "capabilities": "changedetection.selector-authoring",
+        "why": "click hit-testing against scraped element boxes"
+      },
+      {
+        "prefix": "changedetectionio/static/js/watch-overview.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/js/watch-settings.js",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/diff-image.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/diff.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/flag-icons.min.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/pure-min.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/_settings.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/diff-image.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/diff.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_action_sidebar.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_add-watch.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_arrows.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_browser-steps.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_button.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_conditions_table.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_darkmode.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_diff_image.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_edit.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_extra_browsers.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_extra_proxies.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_hamburger_menu.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_language.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_lister_extra.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_llm.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_login_form.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_love.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_menu.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_minitabs.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_modal.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_notification_bubble.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_notifications.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_pagination.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_preview_text_filter.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_pwa_install.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_queue.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_restock_graph.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_search_modal.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_seg.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_socket.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_spinners.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_sub_tabs.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_table.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_tabs.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_toast.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_top_menu.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_variables.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_visualselector.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_watch_table-mobile.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_watch_table.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/parts/_widgets.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/scss/styles.scss",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/static/styles/styles.css",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/store/__init__.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/store/base.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/store/file_saving_datastore.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/store/updates.py",
+        "capabilities": "changedetection.watch-persistence",
+        "why": "watch models, atomic JSON, MD5-named snapshots, history index, migrations"
+      },
+      {
+        "prefix": "changedetectionio/strtobool.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/_common_fields.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/_helpers.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/_stab.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/base.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/edit/include_llm_intent.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/edit/include_subtract.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/edit/text-options.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/login.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/menu.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/templates/sidebar-nav.html",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/thread_supervisor.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/time_handler.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/translations_overlay/manage.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/validate_url.py",
+        "capabilities": "changedetection.fetch-safety",
+        "why": "SSRF checks per redirect hop, open-redirect guard"
+      },
+      {
+        "prefix": "changedetectionio/widgets/__init__.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/widgets/ternary_boolean.py",
+        "capabilities": "changedetection.ui",
+        "why": "web UI blueprints, templates, styles, scripts, forms and translations"
+      },
+      {
+        "prefix": "changedetectionio/worker.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "changedetectionio/worker_pool.py",
+        "capabilities": "changedetection.scheduling",
+        "why": "ticker with jitter, time windows, priority queue, workers"
+      },
+      {
+        "prefix": "docker-entrypoint.sh",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      },
+      {
+        "prefix": "docs/api_v1/index.html",
+        "capabilities": "changedetection.api",
+        "why": "OpenAPI contract and generated API documentation"
+      },
+      {
+        "prefix": "setup.py",
+        "capabilities": "changedetection.deployment",
+        "why": "packaging, entry point and container start"
+      }
+    ]
+  }
+}

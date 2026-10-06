@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "142fa812f0a004076e2158298a1e134d4f025184",
+  "assessed_parent_commit": "3d231058e44c0a9f23143ecc65f977479941f99a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,18 +14,18 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 226,
-    "semantic_censused_capabilities": 226,
+    "known_donor_capabilities": 242,
+    "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 39,
-    "benchmark_candidates": 30,
-    "algorithm_candidates": 15,
-    "reference_only": 50,
-    "study_complete_capabilities": 68,
-    "not_relevant_after_review": 24,
-    "research_questions_open": 84,
-    "knowledge_coverage_ratio": 0.628319
+    "study_candidates": 45,
+    "benchmark_candidates": 32,
+    "algorithm_candidates": 18,
+    "reference_only": 52,
+    "study_complete_capabilities": 70,
+    "not_relevant_after_review": 25,
+    "research_questions_open": 95,
+    "knowledge_coverage_ratio": 0.607438
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -34,7 +34,7 @@
     "donors_active_study": 17,
     "donors_study_complete": 1,
     "donors_structurally_censused": 18,
-    "donors_semantically_censused": 13,
+    "donors_semantically_censused": 14,
     "donors_with_open_candidates": 17,
     "donors_with_open_research": 66
   },
@@ -302,14 +302,30 @@
         "changedetection.change-thresholds BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)",
         "changedetection.availability-mapping STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
         "changedetection.text-diff BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)",
-        "changedetection.scheduling STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)"
+        "changedetection.scheduling STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)",
+        "changedetection.api STUDY_CANDIDATE(a versioned monitoring API exposing evidence (snapshot hash, fetch metadata, observed values with provenance) rather than file paths, with no side effects on reads)",
+        "changedetection.price-history ALGORITHM_CANDIDATE(time-weighted price statistics (low, typical, high) over observed points with gaps kept as gaps, instead of unweighted statistics over change events)",
+        "changedetection.selector-authoring STUDY_CANDIDATE(stability of click-derived selectors (name, id or class chain, positional XPath) across page revisions, with fallbacks stored beside the screenshot and element box as evidence)",
+        "changedetection.portability ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)",
+        "changedetection.access-diagnostics STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
+        "changedetection.llm-extraction BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
+        "changedetection.conditions-engine STUDY_CANDIDATE(declarative rules over typed observed fields (price, stock, similarity) that record which observed values met which rule when they fire)",
+        "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns, with a filter miss reported as missing evidence rather than no change)",
+        "changedetection.fetcher-selection BENCHMARK_CANDIDATE(when does a plain HTTP fetch yield the same price and stock evidence as a rendered browser, measured per site)",
+        "changedetection.browser-automation STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)",
+        "changedetection.history-extraction ALGORITHM_CANDIDATE(re-deriving typed time series from stored raw snapshots after the fact)"
       ],
       "resolved": [
         "changedetection.restock-interpretation STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](scraped text and LLM availability override structured data; float prices)",
         "changedetection.image-diff REFERENCE_ONLY(SSIM screenshot similarity for any future visual monitoring)",
         "changedetection.notifications REFERENCE_ONLY(notification semantics and channels; ECDEV persists local events only)",
         "changedetection.watch-persistence STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's persisted watches with leases and fenced restarts)",
-        "changedetection.ui NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)"
+        "changedetection.ui NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)",
+        "changedetection.llm-assist STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)",
+        "changedetection.anti-bot-evasion STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)",
+        "changedetection.processor-framework REFERENCE_ONLY(pluggable extraction processors and hooks, where every result should carry the strategy that produced it)",
+        "changedetection.fetch-safety REFERENCE_ONLY(SSRF validation on every redirect hop and open-redirect guards)",
+        "changedetection.deployment NO_RESEARCH_VALUE[RELEASE_TOOLING](packaging, console entry point and container start script)"
       ]
     },
     {
