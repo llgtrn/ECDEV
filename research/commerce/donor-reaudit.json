@@ -256,7 +256,7 @@
         "source_parsed": 170,
         "parse_unknown": 0,
         "parse_invalid_confirmed": 2,
-        "semantic_review": "FIRST_PARTY_COMPLETE_SUBMODULE_PENDING",
+        "semantic_review": "COMPLETE",
         "capabilities_extracted": 19,
         "capabilities_decided": 19,
         "research_questions_open": 11
@@ -379,7 +379,7 @@
       "capability_decisions": [
         {
           "capability": "social.trend-finder.clean_text",
-          "knowledge": "STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)"
+          "knowledge": "REFERENCE_ONLY(markdown and URL cleanup regexes; the donor pipeline never calls them)"
         },
         {
           "capability": "social.trend-finder.cluster_embeddings",
@@ -394,8 +394,48 @@
           "knowledge": "ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)"
         },
         {
-          "capability": "social.trend-finder.remaining-whole-donor",
-          "knowledge": "REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)"
+          "capability": "social.trend-finder.collect-reddit-listings",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](public Reddit listing JSON fetched through a third-party scraping proxy without OAuth or backoff; ECDEV uses official APIs within their terms)"
+        },
+        {
+          "capability": "social.trend-finder.embed-posts",
+          "knowledge": "REFERENCE_ONLY(MiniLM sentence embeddings stored in pgvector as a representation baseline)"
+        },
+        {
+          "capability": "social.trend-finder.post-store",
+          "knowledge": "REFERENCE_ONLY(Postgres and pgvector post schema with CSV load)"
+        },
+        {
+          "capability": "social.trend-finder.weekly-trend-pipeline",
+          "knowledge": "STUDY_CANDIDATE(per-week re-clustering with no cross-week cluster identity (and week numbers without a year) against a rolling window with tracked clusters for rising product-demand signals)"
+        },
+        {
+          "capability": "social.trend-finder.cluster-context-features",
+          "knowledge": "ALGORITHM_CANDIDATE(cluster-level PRODUCT and ORG entity frequency with title n-grams as candidate product names, measured for precision on product clusters)"
+        },
+        {
+          "capability": "social.trend-finder.llm-trend-summary",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an unvalidated model-written trend summary whose references are not checked against its inputs, shown as fact; ECDEV keeps model text labelled and tied to cited evidence)"
+        },
+        {
+          "capability": "social.trend-finder.clustering-comparison",
+          "knowledge": "BENCHMARK_CANDIDATE(on product-review or listing embeddings, does HDBSCAN beat KMeans or GMM once DBCV and noise-aware coverage are measured, rather than silhouette with noise excluded)"
+        },
+        {
+          "capability": "social.trend-finder.hdbscan-param-search",
+          "knowledge": "STUDY_CANDIDATE(does selection by a min-max composite of silhouette, Calinski-Harabasz and Davies-Bouldin pick the same configuration as DBCV with a coverage floor and stability across seeds)"
+        },
+        {
+          "capability": "social.trend-finder.gmm-bic-outliers",
+          "knowledge": "ALGORITHM_CANDIDATE(BIC-selected Gaussian mixtures with lowest-likelihood outliers as a flag for emerging niche products, against HDBSCAN noise)"
+        },
+        {
+          "capability": "social.trend-finder.trend-api",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](API responses delayed to simulate processing and an unauthenticated reload; ECDEV reports real timings)"
+        },
+        {
+          "capability": "social.trend-finder.trend-dashboard",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](generated React dashboard of the donor product)"
         }
       ],
       "rationale": "'ECDEV has no embeddings' was an adoption fact, not irrelevance: embedding + HDBSCAN clustering, within-platform cluster scoring and representative-post selection are benchmark and algorithm candidates against lexical clustering",
@@ -413,10 +453,10 @@
         "source_parsed": 85,
         "parse_unknown": 0,
         "parse_invalid_confirmed": 0,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 5,
-        "capabilities_decided": 5,
-        "research_questions_open": 3
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 15,
+        "capabilities_decided": 15,
+        "research_questions_open": 7
       },
       "benchmark_results": {
         "cluster_embeddings": "answered in research/commerce/trend-finder-clustering-benchmark.json: per niche-week precision 0.29 vs chance 0.19, recall 0.26; pooled weeks merge niches (938-post cluster); ECDEV lexical precision 1.0, recall 0.003; DELIBERATE_SEMANTIC_DIVERGENCE"
@@ -465,6 +505,30 @@
         {
           "capability": "social.trendradar.ui-and-reports",
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)"
+        },
+        {
+          "capability": "social.trendradar.crawl-persistence",
+          "knowledge": "STUDY_CANDIDATE(a cross-day item identity for ranked lists (normalised URL, title fingerprint or both) with per-crawl ranks, so first-seen, dwell time and re-entry survive day boundaries and missing crawls are not read as off-list)"
+        },
+        {
+          "capability": "social.trendradar.trend-analytics",
+          "knowledge": "BENCHMARK_CANDIDATE(do rank-trajectory metrics (velocity, peak, time to peak, dwell above a threshold, re-entries) predict product-demand spikes better than daily title-count trend, lifecycle and viral heuristics with fixed thresholds)"
+        },
+        {
+          "capability": "social.trendradar.ai-interest-filter",
+          "knowledge": "STUDY_CANDIDATE(model-extracted interest tags with per-item relevance as product-category tagging: precision and cost, with model, prompt and version provenance on every stored score)"
+        },
+        {
+          "capability": "social.trendradar.ai-trend-briefing",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model-written intelligence briefing shown without a model label or source links; ECDEV keeps model text labelled and apart from measured metrics)"
+        },
+        {
+          "capability": "social.trendradar.runtime-config",
+          "knowledge": "REFERENCE_ONLY(per-period collect, analyse and push timeline configuration)"
+        },
+        {
+          "capability": "social.trendradar.deployment-tooling",
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](CLI diagnostics, container manager and start scripts)"
         }
       ],
       "rationale": "rank-exposure weighting of ranked lists and public hot-list sources are study candidates; feed parsing and transport are independent natives; HTML report UI has no research value",
@@ -479,13 +543,13 @@
       "semantic_coverage": {
         "files_inventoried": 162,
         "first_party_source_files": 81,
-        "source_parsed": 80,
-        "parse_unknown": 1,
+        "source_parsed": 81,
+        "parse_unknown": 0,
         "parse_invalid_confirmed": 0,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 7,
-        "capabilities_decided": 7,
-        "research_questions_open": 2
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 13,
+        "capabilities_decided": 13,
+        "research_questions_open": 5
       }
     },
     {
@@ -599,6 +663,10 @@
         {
           "capability": "social.mediacrawler.application",
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](React task console and VitePress documentation site of the donor product)"
+        },
+        {
+          "capability": "social.mediacrawler.creator-profile-harvesting",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](earlier versions harvest creator profiles, follower graphs and raw user identifiers with IP locations; ECDEV keeps no personal profiles and pseudonymises any author reference)"
         }
       ],
       "rationale": "its value is the platforms' record structures and counter semantics, kept as references; every crawling flow requires authentication ECDEV never bypasses",
@@ -617,8 +685,8 @@
         "parse_unknown": 0,
         "parse_invalid_confirmed": 1,
         "semantic_review": "COMPLETE",
-        "capabilities_extracted": 25,
-        "capabilities_decided": 25,
+        "capabilities_extracted": 26,
+        "capabilities_decided": 26,
         "research_questions_open": 5
       }
     },

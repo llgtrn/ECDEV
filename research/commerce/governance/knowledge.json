@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "b2ae2eaa88c9f237cccc180f85a64b56e6af7578",
+  "assessed_parent_commit": "39fef73c8dd658add30ea77a9f5cec74ee8414bf",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,18 +14,18 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 209,
-    "semantic_censused_capabilities": 209,
+    "known_donor_capabilities": 226,
+    "semantic_censused_capabilities": 226,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 36,
-    "benchmark_candidates": 28,
-    "algorithm_candidates": 13,
-    "reference_only": 47,
-    "study_complete_capabilities": 63,
-    "not_relevant_after_review": 22,
-    "research_questions_open": 77,
-    "knowledge_coverage_ratio": 0.631579
+    "study_candidates": 39,
+    "benchmark_candidates": 30,
+    "algorithm_candidates": 15,
+    "reference_only": 50,
+    "study_complete_capabilities": 68,
+    "not_relevant_after_review": 24,
+    "research_questions_open": 84,
+    "knowledge_coverage_ratio": 0.628319
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 48,
@@ -34,7 +34,7 @@
     "donors_active_study": 17,
     "donors_study_complete": 1,
     "donors_structurally_censused": 18,
-    "donors_semantically_censused": 10,
+    "donors_semantically_censused": 13,
     "donors_with_open_candidates": 17,
     "donors_with_open_research": 65
   },
@@ -1100,7 +1100,8 @@
         "social.mediacrawler.request-signing STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](re-implemented, executed or hooked platform request signatures)",
         "social.mediacrawler.anti-detection STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth scripts, real-browser attach, automated slider-CAPTCHA solving, dummy gateway headers and fake navigation)",
         "social.mediacrawler.sms-code-relay STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](relays SMS codes into an automated phone login)",
-        "social.mediacrawler.application NO_RESEARCH_VALUE[FRONTEND](React task console and VitePress documentation site of the donor product)"
+        "social.mediacrawler.application NO_RESEARCH_VALUE[FRONTEND](React task console and VitePress documentation site of the donor product)",
+        "social.mediacrawler.creator-profile-harvesting STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](earlier versions harvest creator profiles, follower graphs and raw user identifiers with IP locations; ECDEV keeps no personal profiles and pseudonymises any author reference)"
       ]
     },
     {
@@ -1184,14 +1185,20 @@
       },
       "open": [
         "social.trendradar.calculate_news_weight STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)",
-        "social.trendradar.hot-list-sources STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)"
+        "social.trendradar.hot-list-sources STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)",
+        "social.trendradar.crawl-persistence STUDY_CANDIDATE(a cross-day item identity for ranked lists (normalised URL, title fingerprint or both) with per-crawl ranks, so first-seen, dwell time and re-entry survive day boundaries and missing crawls are not read as off-list)",
+        "social.trendradar.trend-analytics BENCHMARK_CANDIDATE(do rank-trajectory metrics (velocity, peak, time to peak, dwell above a threshold, re-entries) predict product-demand spikes better than daily title-count trend, lifecycle and viral heuristics with fixed thresholds)",
+        "social.trendradar.ai-interest-filter STUDY_CANDIDATE(model-extracted interest tags with per-item relevance as product-category tagging: precision and cost, with model, prompt and version provenance on every stored score)"
       ],
       "resolved": [
         "social.trendradar.word_matches REFERENCE_ONLY(user-defined keyword and regex filters; ECDEV matches Unicode terms)",
         "social.trendradar.parse_json_feed STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's JSON Feed reader)",
         "social.trendradar.fetch_feed STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded public transport)",
         "social.trendradar.notifications REFERENCE_ONLY(multi-channel notification fan-out)",
-        "social.trendradar.ui-and-reports NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)"
+        "social.trendradar.ui-and-reports NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)",
+        "social.trendradar.ai-trend-briefing STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model-written intelligence briefing shown without a model label or source links; ECDEV keeps model text labelled and apart from measured metrics)",
+        "social.trendradar.runtime-config REFERENCE_ONLY(per-period collect, analyse and push timeline configuration)",
+        "social.trendradar.deployment-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](CLI diagnostics, container manager and start scripts)"
       ]
     },
     {
@@ -1207,13 +1214,23 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "social.trend-finder.clean_text STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)",
         "social.trend-finder.score_clusters BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)",
-        "social.trend-finder.select_top_posts ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)"
+        "social.trend-finder.select_top_posts ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)",
+        "social.trend-finder.weekly-trend-pipeline STUDY_CANDIDATE(per-week re-clustering with no cross-week cluster identity (and week numbers without a year) against a rolling window with tracked clusters for rising product-demand signals)",
+        "social.trend-finder.cluster-context-features ALGORITHM_CANDIDATE(cluster-level PRODUCT and ORG entity frequency with title n-grams as candidate product names, measured for precision on product clusters)",
+        "social.trend-finder.clustering-comparison BENCHMARK_CANDIDATE(on product-review or listing embeddings, does HDBSCAN beat KMeans or GMM once DBCV and noise-aware coverage are measured, rather than silhouette with noise excluded)",
+        "social.trend-finder.hdbscan-param-search STUDY_CANDIDATE(does selection by a min-max composite of silhouette, Calinski-Harabasz and Davies-Bouldin pick the same configuration as DBCV with a coverage floor and stability across seeds)",
+        "social.trend-finder.gmm-bic-outliers ALGORITHM_CANDIDATE(BIC-selected Gaussian mixtures with lowest-likelihood outliers as a flag for emerging niche products, against HDBSCAN noise)"
       ],
       "resolved": [
+        "social.trend-finder.clean_text REFERENCE_ONLY(markdown and URL cleanup regexes; the donor pipeline never calls them)",
         "social.trend-finder.cluster_embeddings STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked on the donor corpus (research/commerce/trend-finder-clustering-benchmark.json): UMAP and HDBSCAN group same-product-line pairs at precision 0.29 against chance 0.19 and merge across niches when pooled, so its clusters are topics, not product lines; ECDEV does not adopt them as product topics)",
-        "social.trend-finder.remaining-whole-donor REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)"
+        "social.trend-finder.collect-reddit-listings STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](public Reddit listing JSON fetched through a third-party scraping proxy without OAuth or backoff; ECDEV uses official APIs within their terms)",
+        "social.trend-finder.embed-posts REFERENCE_ONLY(MiniLM sentence embeddings stored in pgvector as a representation baseline)",
+        "social.trend-finder.post-store REFERENCE_ONLY(Postgres and pgvector post schema with CSV load)",
+        "social.trend-finder.llm-trend-summary STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an unvalidated model-written trend summary whose references are not checked against its inputs, shown as fact; ECDEV keeps model text labelled and tied to cited evidence)",
+        "social.trend-finder.trend-api STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](API responses delayed to simulate processing and an unauthenticated reload; ECDEV reports real timings)",
+        "social.trend-finder.trend-dashboard NO_RESEARCH_VALUE[FRONTEND](generated React dashboard of the donor product)"
       ]
     },
     {

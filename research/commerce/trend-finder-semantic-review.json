@@ -1,0 +1,442 @@
+{
+  "donor_id": "t4niha--Trend-Finder",
+  "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+  "license": "MIT",
+  "method": "read-only whole-source review; clean_text being unused was spot-checked",
+  "findings": [
+    "clean_text and combine_title_body are never called; no translation or language detection exists although a text_translated column is used",
+    "Reddit listings are fetched as public JSON through a third-party scraping proxy without OAuth or backoff; nothing connects the scraper to the database",
+    "Clustering comparisons use silhouette with noise excluded and ARI against subreddits; no DBCV; the grid search picks a min-max composite without a noise penalty across different UMAP spaces",
+    "The LLM trend summary is unvalidated, its references are not checked against the inputs, and it is shown as fact; the API delays responses to simulate processing"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "main.py",
+        "capabilities": "social.trend-finder.weekly-trend-pipeline",
+        "why": "per niche and ISO week (no year) clustering, scoring and summary"
+      },
+      {
+        "prefix": "support/__init__.py",
+        "capabilities": "social.trend-finder.post-store",
+        "why": "Postgres and pgvector schema, CSV load, queries"
+      },
+      {
+        "prefix": "support/backend/__init__.py",
+        "capabilities": "social.trend-finder.trend-api",
+        "why": "FastAPI over the cached JSON with a simulated delay"
+      },
+      {
+        "prefix": "support/backend/database.py",
+        "capabilities": "social.trend-finder.trend-api",
+        "why": "FastAPI over the cached JSON with a simulated delay"
+      },
+      {
+        "prefix": "support/backend/main.py",
+        "capabilities": "social.trend-finder.trend-api",
+        "why": "FastAPI over the cached JSON with a simulated delay"
+      },
+      {
+        "prefix": "support/backend/models.py",
+        "capabilities": "social.trend-finder.trend-api",
+        "why": "FastAPI over the cached JSON with a simulated delay"
+      },
+      {
+        "prefix": "support/clustering/__init__.py",
+        "capabilities": "social.trend-finder.post-store",
+        "why": "Postgres and pgvector schema, CSV load, queries"
+      },
+      {
+        "prefix": "support/clustering/gemini_trends.py",
+        "capabilities": "social.trend-finder.cluster-context-features + social.trend-finder.llm-trend-summary",
+        "why": "keywords, n-grams, NER and word-list sentiment feeding an unvalidated LLM trend summary"
+      },
+      {
+        "prefix": "support/clustering/weekly_hdbscan.py",
+        "capabilities": "social.trend-finder.cluster_embeddings + social.trend-finder.score_clusters + social.trend-finder.select_top_posts",
+        "why": "UMAP and HDBSCAN, cluster engagement score, probability and engagement post ranking"
+      },
+      {
+        "prefix": "support/compare_clustering.py",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/compare_clustering_full.py",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/config.py",
+        "capabilities": "social.trend-finder.weekly-trend-pipeline",
+        "why": "per niche and ISO week (no year) clustering, scoring and summary"
+      },
+      {
+        "prefix": "support/database_util.py",
+        "capabilities": "social.trend-finder.post-store",
+        "why": "Postgres and pgvector schema, CSV load, queries"
+      },
+      {
+        "prefix": "support/frontend/eslint.config.js",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/accordion.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/alert-dialog.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/alert.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/aspect-ratio.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/avatar.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/badge.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/breadcrumb.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/button.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/calendar.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/card.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/carousel.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/chart.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/checkbox.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/collapsible.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/command.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/context-menu.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/dialog.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/drawer.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/dropdown-menu.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/form.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/hover-card.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/input-otp.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/input.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/label.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/menubar.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/navigation-menu.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/pagination.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/popover.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/progress.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/radio-group.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/resizable.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/scroll-area.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/select.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/separator.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/sheet.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/sidebar.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/skeleton.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/slider.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/sonner.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/switch.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/table.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/tabs.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/textarea.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/toggle-group.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/toggle.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/components/ui/tooltip.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/hooks/use-mobile.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/lib/trend-api.ts",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/lib/utils.ts",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routeTree.gen.ts",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/router.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routes/__root.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routes/explore.$niche.$weekNumber.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routes/explore.$niche.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routes/explore.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/routes/index.tsx",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/src/styles.css",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/frontend/vite.config.ts",
+        "capabilities": "social.trend-finder.trend-dashboard",
+        "why": "generated React dashboard"
+      },
+      {
+        "prefix": "support/generate_embeddings.py",
+        "capabilities": "social.trend-finder.embed-posts",
+        "why": "MiniLM embeddings into pgvector"
+      },
+      {
+        "prefix": "support/gridsearch_hdbscan.py",
+        "capabilities": "social.trend-finder.hdbscan-param-search",
+        "why": "350-combination sweep chosen by a min-max composite without a noise penalty"
+      },
+      {
+        "prefix": "support/load_reddit_data.py",
+        "capabilities": "social.trend-finder.post-store",
+        "why": "Postgres and pgvector schema, CSV load, queries"
+      },
+      {
+        "prefix": "support/notebooks/Agglomerative_Clustering_Analysis.ipynb",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/notebooks/dbscan_clustering.ipynb",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/notebooks/gmm_reddit_n.ipynb",
+        "capabilities": "social.trend-finder.gmm-bic-outliers",
+        "why": "per-niche GMM by BIC, log-likelihood outliers"
+      },
+      {
+        "prefix": "support/notebooks/hdbscan_clustering.ipynb",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/notebooks/kmeans_reddit.ipynb",
+        "capabilities": "social.trend-finder.clustering-comparison",
+        "why": "KMeans, GMM, agglomerative and HDBSCAN on internal metrics and ARI/NMI against subreddits; no DBCV"
+      },
+      {
+        "prefix": "support/notebooks/trend_finder_kmeans_llm.ipynb",
+        "capabilities": "social.trend-finder.llm-trend-summary",
+        "why": "prototype of the LLM summary on KMeans"
+      },
+      {
+        "prefix": "support/preprocessing/__init__.py",
+        "capabilities": "social.trend-finder.clean_text",
+        "why": "markdown and URL cleanup; never called"
+      },
+      {
+        "prefix": "support/preprocessing/text_cleaner.py",
+        "capabilities": "social.trend-finder.clean_text",
+        "why": "markdown and URL cleanup; never called"
+      },
+      {
+        "prefix": "support/scrape_reddit.py",
+        "capabilities": "social.trend-finder.collect-reddit-listings",
+        "why": "public Reddit listing JSON through a scraping proxy, no OAuth"
+      },
+      {
+        "prefix": "support/setup_database.py",
+        "capabilities": "social.trend-finder.post-store",
+        "why": "Postgres and pgvector schema, CSV load, queries"
+      }
+    ]
+  }
+}

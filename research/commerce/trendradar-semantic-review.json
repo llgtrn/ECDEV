@@ -1,0 +1,422 @@
+{
+  "donor_id": "sansan0--TrendRadar",
+  "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+  "license": "GPL-3.0: clean-room only",
+  "method": "read-only whole-source review; the weight formula and per-day databases spot-checked",
+  "findings": [
+    "All hot lists come from one third-party aggregator with a spoofed desktop user agent; returned URLs must match each source's domain",
+    "One database per day resets first-seen, last-seen and crawl counts daily; rank history keeps distinct ranks only; new items are detected by title while dedup is by URL",
+    "The analytics tools count daily title mentions; the sentiment tool returns a prompt instead of computing sentiment",
+    "LLM interest scores are stored without model provenance and the LLM briefing is shown without a model label"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "docker/entrypoint.sh",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "docker/manage.py",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "docs/assets/i18n.js",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "docs/assets/script.js",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "docs/assets/style.css",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "docs/index.html",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "index.html",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "mcp_server/__init__.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/server.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/services/__init__.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/services/cache_service.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/services/data_service.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/services/parser_service.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/__init__.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/analytics.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/article_reader.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/config_mgmt.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/data_query.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/notification.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "mcp_server/tools/search_tools.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/storage_sync.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/tools/system.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/utils/__init__.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/utils/date_parser.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/utils/errors.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "mcp_server/utils/validators.py",
+        "capabilities": "social.trendradar.trend-analytics",
+        "why": "title-count trend, lifecycle, viral and predict heuristics, cross-platform comparison, keyword co-occurrence"
+      },
+      {
+        "prefix": "setup-mac.sh",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "start-http.sh",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "trendradar/__init__.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/__main__.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/ai/__init__.py",
+        "capabilities": "social.trendradar.ai-trend-briefing",
+        "why": "LLM narrative briefing and translation shown without a model label"
+      },
+      {
+        "prefix": "trendradar/ai/analyzer.py",
+        "capabilities": "social.trendradar.ai-trend-briefing",
+        "why": "LLM narrative briefing and translation shown without a model label"
+      },
+      {
+        "prefix": "trendradar/ai/client.py",
+        "capabilities": "social.trendradar.ai-interest-filter",
+        "why": "LLM tag extraction and per-title classification stored as scores"
+      },
+      {
+        "prefix": "trendradar/ai/filter.py",
+        "capabilities": "social.trendradar.ai-interest-filter",
+        "why": "LLM tag extraction and per-title classification stored as scores"
+      },
+      {
+        "prefix": "trendradar/ai/filter_pipeline.py",
+        "capabilities": "social.trendradar.ai-interest-filter",
+        "why": "LLM tag extraction and per-title classification stored as scores"
+      },
+      {
+        "prefix": "trendradar/ai/formatter.py",
+        "capabilities": "social.trendradar.ai-trend-briefing",
+        "why": "LLM narrative briefing and translation shown without a model label"
+      },
+      {
+        "prefix": "trendradar/ai/prompt_loader.py",
+        "capabilities": "social.trendradar.ai-interest-filter",
+        "why": "LLM tag extraction and per-title classification stored as scores"
+      },
+      {
+        "prefix": "trendradar/ai/translator.py",
+        "capabilities": "social.trendradar.ai-trend-briefing",
+        "why": "LLM narrative briefing and translation shown without a model label"
+      },
+      {
+        "prefix": "trendradar/commands/__init__.py",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "trendradar/commands/doctor.py",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "trendradar/commands/status.py",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "trendradar/commands/version.py",
+        "capabilities": "social.trendradar.deployment-tooling",
+        "why": "CLI diagnostics, container manager and start scripts"
+      },
+      {
+        "prefix": "trendradar/context.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/core/__init__.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/core/analyzer.py",
+        "capabilities": "social.trendradar.calculate_news_weight",
+        "why": "0.6 rank + 0.3 capped frequency + 0.1 top-rank share; report modes"
+      },
+      {
+        "prefix": "trendradar/core/cdn.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/core/config.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/core/data.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/core/frequency.py",
+        "capabilities": "social.trendradar.word_matches",
+        "why": "frequency-word DSL: required, filter, regex, alias, per-group caps"
+      },
+      {
+        "prefix": "trendradar/core/loader.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/core/scheduler.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/crawler/__init__.py",
+        "capabilities": "social.trendradar.hot-list-sources",
+        "why": "third-party hot-list aggregator with a spoofed desktop user agent and a domain check"
+      },
+      {
+        "prefix": "trendradar/crawler/fetcher.py",
+        "capabilities": "social.trendradar.hot-list-sources",
+        "why": "third-party hot-list aggregator with a spoofed desktop user agent and a domain check"
+      },
+      {
+        "prefix": "trendradar/crawler/rss/__init__.py",
+        "capabilities": "social.trendradar.parse_json_feed",
+        "why": "RSS, Atom and JSON Feed parsing"
+      },
+      {
+        "prefix": "trendradar/crawler/rss/fetcher.py",
+        "capabilities": "social.trendradar.fetch_feed",
+        "why": "RSS session with freshness filter"
+      },
+      {
+        "prefix": "trendradar/crawler/rss/parser.py",
+        "capabilities": "social.trendradar.parse_json_feed",
+        "why": "RSS, Atom and JSON Feed parsing"
+      },
+      {
+        "prefix": "trendradar/notification/__init__.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/batch.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/dispatcher.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/formatters.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/renderer.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/senders.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/notification/splitter.py",
+        "capabilities": "social.trendradar.notifications",
+        "why": "multi-channel transports and byte-size batching"
+      },
+      {
+        "prefix": "trendradar/report/__init__.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/report/formatter.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/report/generator.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/report/helpers.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/report/html.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/report/rss_html.py",
+        "capabilities": "social.trendradar.ui-and-reports",
+        "why": "HTML reports, sample report and config-editor site"
+      },
+      {
+        "prefix": "trendradar/storage/__init__.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/ai_filter_schema.sql",
+        "capabilities": "social.trendradar.ai-interest-filter",
+        "why": "LLM tag extraction and per-title classification stored as scores"
+      },
+      {
+        "prefix": "trendradar/storage/base.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/local.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/manager.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/remote.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/rss_schema.sql",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/schema.sql",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/storage/sqlite_mixin.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      },
+      {
+        "prefix": "trendradar/utils/__init__.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/utils/time.py",
+        "capabilities": "social.trendradar.runtime-config",
+        "why": "YAML and environment loading, period timeline, orchestration"
+      },
+      {
+        "prefix": "trendradar/utils/url.py",
+        "capabilities": "social.trendradar.crawl-persistence",
+        "why": "one database per day, first/last crawl, crawl count, distinct-rank history, off-list markers, title-based new items"
+      }
+    ]
+  }
+}
