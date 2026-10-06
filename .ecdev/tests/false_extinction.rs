@@ -248,6 +248,36 @@ fn donor_source_hidden_in_research_or_fixtures() {
 }
 
 #[test]
+fn tool_naming_the_donor_checkout_is_an_edge() {
+    // An oracle script that reads and executes the untracked checkout, in POSIX and Windows
+    // spelling; neither imports a package, so only the source-path reference reveals it.
+    for (file, text) in [
+        (
+            "tools/oracle.py",
+            "DONOR='research/checkouts/geo'\nexec(open(DONOR+'/x.py').read())\n",
+        ),
+        (
+            "tools/build.cmd",
+            "set SRC=research\\checkouts\\geo\\src\ncl %SRC%\\a.cpp\n",
+        ),
+    ] {
+        let r = extinct_baseline("checkout");
+        r.write(file, text);
+        r.edit(|d| d.donors[0].source_paths = vec!["research/checkouts/geo".into()]);
+        let a = not_extinct(&r, Gate::BuildEdges);
+        assert!(
+            a.donor("geo")
+                .unwrap()
+                .facts
+                .build
+                .iter()
+                .any(|o| o.file == file),
+            "{file}"
+        );
+    }
+}
+
+#[test]
 fn deletion_is_not_extinction() {
     // The directory is gone and the claim says EXTINCT, but nothing was ever decomposed,
     // replaced or proven.

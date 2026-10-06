@@ -414,6 +414,8 @@ const EXECUTABLE: &[&str] = &[
     ".yml",
     ".yaml",
     ".ps1",
+    ".cmd",
+    ".bat",
     "Makefile",
     "Justfile",
     "justfile",
@@ -622,7 +624,8 @@ pub fn observe(files: &Files, d: &Declaration, excluded: &[String], c: &mut Cens
         }
         if !in_governance {
             for p in &donor_paths {
-                if text.contains(p.as_str()) {
+                // Windows scripts name the same path with backslashes.
+                if text.contains(p.as_str()) || text.contains(&p.replace('/', "\\")) {
                     c.observations.insert(Observation {
                         file: f.clone(),
                         ecosystem: Ecosystem::Native,
