@@ -34,8 +34,10 @@ jobs:
           rustc --edition=2021 tools/commerce/shape_gate.rs --extern ecdev_governance=.ecdev/target/debug/libecdev_governance.rlib -L dependency=.ecdev/target/debug/deps -o target/shape-gate
           target/shape-gate . > /tmp/repository-shape.json
           python tools/commerce/check_shape_gate.py target/shape-gate
+          rustc --edition=2021 tools/commerce/lifecycle_review.rs --extern ecdev_governance=.ecdev/target/debug/libecdev_governance.rlib -L dependency=.ecdev/target/debug/deps -o target/lifecycle-review
       - run: pip install -r tools/commerce/requirements.txt
       - run: python tools/commerce/validate.py --records-only
+      - run: python tools/commerce/validate.py --lifecycle-negative-cases
       - run: npm ci --prefix tests/commerce
       - name: MCP and HTTP integration
         env:

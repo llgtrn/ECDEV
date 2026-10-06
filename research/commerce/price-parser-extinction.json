@@ -1,0 +1,337 @@
+{
+  "donor_id": "scrapinghub--price-parser",
+  "origin": "https://github.com/scrapinghub/price-parser",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "license": "BSD-3-Clause",
+  "status": "EXTINCT",
+  "definition": "All semantics ECDEV relies on are natively implemented and proven against frozen oracles; every declared donor capability is relied on or justified NOT_RELEVANT_TO_ECDEV (price-parser-exclusions.json); no runtime/build/linked/test/import/resident edge remains; rollback needs no donor; frozen provenance, license and oracle outputs suffice for regression.",
+  "assessed_on_parent_commit": "4d1fea23faf891694b2edded0e82bca58efd4676",
+  "governance": {
+    "authority": ".ecdev",
+    "effective_state": "EXTINCT",
+    "gates": "14/14 pass (ecdev-gov extinction scrapinghub--price-parser)",
+    "declared_capabilities": 13,
+    "relied_on": 7,
+    "not_relevant_to_ecdev": 6
+  },
+  "census_repair": "The census did not observe Python imports, so tools/commerce/price_oracle.py's donor import (and extruct_oracle.py's) were invisible to the TEST/BUILD/SOURCE gates. A Python import observer (.ecdev/src/census/python.rs) now records them; the donors declare their PyPI packages so the edges attribute to them.",
+  "semantic_matrix": [
+    {
+      "symbol": "Price",
+      "donor_source": "price_parser/parser.py:13-25",
+      "behaviour": "attrs value object: amount Decimal|None, currency str|None, amount_text (repr=False); eq over all three fields; repr",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.object-contract",
+      "native_replacement": "adapter/web/src/price.rs Price/DecimalAmount",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_object_contract_oracle",
+        "adapter/web/src/price.rs::native_price_object_projection_preserves_nonfinite_and_resource_unknowns"
+      ],
+      "production_caller": "parse_price -> Price::fromstring -> Price::projection",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "Price (Python object model)",
+      "donor_source": "price_parser/parser.py:13 @attr.s; tests/test_price_parsing.py:23 subclass",
+      "behaviour": "hashability, attrs introspection, pickling, mutation, subclassing",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.python-object-model",
+      "native_replacement": null,
+      "oracle_and_regression_proofs": [],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "Price.amount_float",
+      "donor_source": "price_parser/parser.py:21-25",
+      "behaviour": "float(amount) or None",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.object-contract",
+      "native_replacement": "Price::amount_float",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_object_contract_oracle"
+      ],
+      "production_caller": "Price::projection",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "Price.fromstring / parse_price",
+      "donor_source": "price_parser/parser.py:28-75",
+      "behaviour": "currency extraction, digit-group removal, price text selection, number parsing",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "extract.price-public-api",
+      "native_replacement": "adapter/web/src/price.rs::parse_price",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_public_api_oracle",
+        "adapter/web/src/lib.rs::formatted_price_hints_preserve_unknown_observed_money_and_raw_source"
+      ],
+      "production_caller": "adapter/web/src/lib.rs offer price interpretation",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "or_regex(...).search",
+      "donor_source": "price_parser/parser.py:78-80,251-253",
+      "behaviour": "escaped literal alternation; leftmost then list order",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.literal-search",
+      "native_replacement": "literal_alternative",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_literal_helper_oracle",
+        "adapter/web/src/price.rs::literal_search_regressions"
+      ],
+      "production_caller": "currency_symbol",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "or_regex re.Pattern other methods",
+      "donor_source": "price_parser/parser.py:78-80",
+      "behaviour": "match/fullmatch/findall/sub/split/flags",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.compiled-pattern-object",
+      "native_replacement": null,
+      "oracle_and_regression_proofs": [],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "SAFE_CURRENCY_SYMBOLS / OTHER_CURRENCY_SYMBOLS / DOLLAR_CODES / _DOLLAR_REGEX",
+      "donor_source": "price_parser/parser.py:86-253; price_parser/_currencies.py",
+      "behaviour": "symbol tables and dollar-code regex",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.currency-tables",
+      "native_replacement": "adapter/web/data/price-currency.json (BSD-3-Clause data)",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
+        "adapter/web/src/price.rs::currency_lexicon_is_the_frozen_licensed_snapshot"
+      ],
+      "production_caller": "currency_symbol",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "CurrencyInfo / CURRENCY_CODES / CURRENCY_NATIONAL_SYMBOLS / CURRENCY_SYMBOLS",
+      "donor_source": "price_parser/_currencies.py:23-62,36-43",
+      "behaviour": "source tables from which the symbol lists are derived",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.currency-tables",
+      "native_replacement": "derived lists frozen in adapter/web/data/price-currency.json",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::currency_lexicon_is_the_frozen_licensed_snapshot"
+      ],
+      "production_caller": "currency_symbol",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "extract_currency_symbol",
+      "donor_source": "price_parser/parser.py:256-281",
+      "behaviour": "dollar-code precedence, safe then unsafe, price then hint",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.source-text",
+      "native_replacement": "currency_symbol",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
+        "adapter/web/src/price.rs::source_text_regressions"
+      ],
+      "production_caller": "parse_price",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "extract_price_text",
+      "donor_source": "price_parser/parser.py:284-360",
+      "behaviour": "first price-looking substring, Free -> 0, euro-as-separator",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.source-text",
+      "native_replacement": "price_text",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
+        "adapter/web/src/price.rs::source_text_regressions"
+      ],
+      "production_caller": "parse_price",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "get_decimal_separator",
+      "donor_source": "price_parser/parser.py:378-398",
+      "behaviour": "last separator with 1/2/4+ digit tail; Unicode Nd digits",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "price.decimal-separator",
+      "native_replacement": "decimal_separator",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
+        "adapter/web/src/price.rs::decimal_separator_regressions"
+      ],
+      "production_caller": "parse_number",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "parse_number",
+      "donor_source": "price_parser/parser.py:401-455",
+      "behaviour": "exact Decimal or None; unsupported selector AssertionError",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "extract.price-number",
+      "native_replacement": "parse_number / parse_decimal_number",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::locked_price_typed_scalar_oracle",
+        "adapter/web/src/price.rs::locked_price_parser_numeric_oracle",
+        "adapter/web/src/price.rs::typed_price_selector_errors_and_resource_unknowns_are_explicit",
+        "adapter/web/src/price.rs::precision_and_ambiguous_currency_do_not_invent_money"
+      ],
+      "production_caller": "adapter/web/src/lib.rs numeric offer lexemes",
+      "cutover_status": "CUT_OVER",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "interpreter-dependent semantics",
+      "donor_source": "price_parser/parser.py regexes (\\w, \\d) and decimal context",
+      "behaviour": "behaviour under Python/Unicode versions other than 3.11/14.0.0",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.runtime-version-profiles",
+      "native_replacement": null,
+      "oracle_and_regression_proofs": [],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "inputs beyond ECDEV bounds / non-string inputs",
+      "donor_source": "price_parser/parser.py:28-72,401-455",
+      "behaviour": "arbitrary length and arbitrary Python types",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.unbounded-inputs",
+      "native_replacement": "ECDEV defines UNKNOWN",
+      "oracle_and_regression_proofs": [
+        "adapter/web/src/price.rs::typed_price_selector_errors_and_resource_unknowns_are_explicit"
+      ],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "package: __init__.__all__, py.typed, pyproject.toml, tox.ini, CI, CHANGES/README",
+      "donor_source": "price_parser/__init__.py etc.",
+      "behaviour": "distribution metadata and tooling",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.packaging-and-distribution",
+      "native_replacement": null,
+      "oracle_and_regression_proofs": [],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    },
+    {
+      "symbol": "tests/test_price_parsing.py: Example, idfn, test_*",
+      "donor_source": "tests/test_price_parsing.py",
+      "behaviour": "pytest harness; data consumed as frozen oracle cases",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "price-parser.test-harness",
+      "native_replacement": null,
+      "oracle_and_regression_proofs": [],
+      "production_caller": null,
+      "cutover_status": "NOT_APPLICABLE",
+      "remaining_dependency": "none"
+    }
+  ],
+  "frozen_material": [
+    {
+      "path": "adapter/web/data/price-currency.json",
+      "sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-contract.json",
+      "sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-decimal-helper.json",
+      "sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-literal-helper.json",
+      "sha256": "323ab1bc39c90312f58ecb79c4401d73812198bd040cf52915b592ae607960d6"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-number.json",
+      "sha256": "98c6045041c276573bc8f7799e9a08dd601afa5f392cbc6f7f88af95477c0800"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-object-contract.json",
+      "sha256": "d02a82005bdcb975cc4a4cea3dad3e76a660db8099b5fe3c84a9ec39f26fcb45"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-scalar-contract.json",
+      "sha256": "64586b639da383db8cce21ab19359cb7d4787831d7885355aedfbe640523f80a"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-source-helpers.json",
+      "sha256": "7df15486ea4d9f3b05d681804b2d0708e596fa5416f5fe9ed62fff284df164f5"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-parser-LICENSE.txt",
+      "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+    }
+  ],
+  "frozen_oracle_cases": {
+    "public_api": 2937,
+    "numeric": 1235,
+    "decimal_separator": 3974,
+    "literal_search": 1576,
+    "source_helpers": 9560,
+    "object_contract": 1119,
+    "typed_scalar": 1134,
+    "total": 21535
+  },
+  "frozen_oracle_reproducibility": {
+    "method": "Re-ran the retired generator unmodified with CPython 3.11.17, attrs 26.1.0, pytest, against a fresh clone of the pinned commit in an isolated worktree",
+    "byte_identical": [
+      "price-source-helpers.json",
+      "price-literal-helper.json",
+      "price-decimal-helper.json",
+      "price-number.json"
+    ],
+    "canonically_equal": [
+      "price-currency.json",
+      "price-contract.json",
+      "price-object-contract.json",
+      "price-scalar-contract.json"
+    ],
+    "difference_cause": "OTHER_CURRENCY_SYMBOLS = sorted(set, key=len) orders equal-length symbols by hash-seeded set iteration, and python_version 3.11.15 vs 3.11.17; equal-length distinct literals cannot match at the same position, so the order is semantically irrelevant",
+    "native_tests_on_regenerated_permutation": "16 price tests passed"
+  },
+  "retired_generator": {
+    "path": "tools/commerce/price_oracle.py",
+    "last_blob": "d4832c93e9db0d0d3b1a9cc39f10b9944c7e7d29",
+    "sha256": "ca0f76ef9262420fa1822723b9a80493758a7f04d319a3315be44f71125aa166",
+    "last_commit_containing_it": "4d1fea2",
+    "reproduce": "git show 4d1fea2:tools/commerce/price_oracle.py; requires the pinned donor clone at research/commerce/donors/checkouts/scrapinghub--price-parser"
+  },
+  "builds_without_donor": {
+    "donor_checkout_present": false,
+    "python_interpreter_in_runtime": false,
+    "cargo_python_embedding": false,
+    "cargo_test_workspace": "passes with no donor checkout and no Python package installed"
+  },
+  "negative_checks": [
+    {
+      "probe": "a tracked tools/commerce/reentry_probe.py containing `from price_parser import parse_price`",
+      "result": "effective CUTOVER; BUILD_EDGES_ZERO and ROLLBACK_INDEPENDENT fail; ERROR CLAIM_EXCEEDS_EVIDENCE; verify and lifecycle.claims_within_evidence fail"
+    },
+    {
+      "probe": "one appended comment line in adapter/web/src/price.rs without re-proving",
+      "result": "effective NATIVE_SHADOW; parity and regression evidence STALE for all 7 relied-on capabilities"
+    }
+  ],
+  "license_and_provenance": {
+    "notice": "adapter/web/tests/fixtures/price-parser-LICENSE.txt",
+    "data": "adapter/web/data/price-currency.json records license, source commit and source sha256",
+    "census": "research/commerce/donors/census/scrapinghub--price-parser/"
+  }
+}

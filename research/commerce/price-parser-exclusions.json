@@ -1,0 +1,69 @@
+{
+  "donor_id": "scrapinghub--price-parser",
+  "commit_sha": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+  "purpose": "Exclusion review for donor behaviours ECDEV can never invoke. Each entry is NOT_RELEVANT_TO_ECDEV with source reference, reason, caller analysis, import analysis and proof that no ECDEV capability depends on it.",
+  "global_caller_analysis": {
+    "ecdev_runtime_languages": "Rust (cargo workspace) and TypeScript dashboard; no Python in any shipped artifact",
+    "python_files_outside_tools_research_tests": [],
+    "cargo_python_embedding_crates_in_lock": [],
+    "native_entry_points": [
+      "adapter/web/src/price.rs::parse_price",
+      "adapter/web/src/price.rs::parse_number",
+      "adapter/web/src/price.rs::formatted_money"
+    ],
+    "production_callers": [
+      "adapter/web/src/lib.rs (offer price interpretation, numeric offer lexemes)",
+      "adapter/web/src/page_product.rs (formatted_money)"
+    ],
+    "donor_imports_in_tracked_tree_after_cutover": "none (census Python import observation; see price-parser-extinction.json)"
+  },
+  "exclusions": [
+    {
+      "capability": "price-parser.python-object-model",
+      "donor_source": "price_parser/parser.py:13-25 (@attr.s(auto_attribs=True) class Price)",
+      "behaviour": "attrs-generated dunders beyond the proven equality/repr (unhashability, attr.fields/evolve/asdict introspection, pickling, mutation of instances, subclassing as tests/test_price_parsing.py:23 Example does)",
+      "reason": "These exist only for Python callers. ECDEV's Price is a Rust value type; no ECDEV code can subclass, pickle, introspect or mutate a Python object",
+      "depends_on_it": [],
+      "proven_relied_subset": "fields, amount_float, equality incl. amount_text, repr: adapter/web/src/price.rs::locked_price_object_contract_oracle (1119 cases)"
+    },
+    {
+      "capability": "price-parser.compiled-pattern-object",
+      "donor_source": "price_parser/parser.py:78-80 or_regex returns re.Pattern; :251-253 the donor itself binds only .search",
+      "behaviour": "re.Pattern methods other than search (match, fullmatch, findall, finditer, sub, split, flags, groups, pattern)",
+      "reason": "Neither the donor's own call paths nor any ECDEV caller uses them; ECDEV's literal_alternative implements exactly the search semantics",
+      "depends_on_it": [],
+      "proven_relied_subset": "adapter/web/src/price.rs::locked_price_literal_helper_oracle (1576 cases) and ::literal_search_regressions"
+    },
+    {
+      "capability": "price-parser.runtime-version-profiles",
+      "donor_source": "price_parser/parser.py regexes using \\w, \\d, str.isdigit and decimal.Decimal under the running interpreter",
+      "behaviour": "Results under Python/Unicode versions other than Python 3.11 / Unicode 14.0.0, and under non-default decimal contexts",
+      "reason": "The donor has no single behaviour across interpreter versions; ECDEV fixes one profile (Unicode 14 digit and word tables frozen in adapter/web/data/price-currency.json) and never runs a Python interpreter",
+      "depends_on_it": [],
+      "proven_relied_subset": "all frozen oracles record python 3.11 / unicode 14.0.0; currency_lexicon_is_the_frozen_licensed_snapshot pins the tables"
+    },
+    {
+      "capability": "price-parser.packaging-and-distribution",
+      "donor_source": "pyproject.toml, price_parser/__init__.py (__all__), price_parser/py.typed, tox.ini, .github/workflows/*, .pre-commit-config.yaml, codecov.yml, CHANGES.rst, README.rst",
+      "behaviour": "PyPI distribution metadata, attrs>=17.3.0 dependency, typing marker, CI and release tooling, documentation",
+      "reason": "ECDEV never installs or imports the distribution; the public names it relies on (Price, parse_price) are covered by native replacements",
+      "depends_on_it": [],
+      "license": "BSD-3-Clause notice retained at adapter/web/tests/fixtures/price-parser-LICENSE.txt"
+    },
+    {
+      "capability": "price-parser.test-harness",
+      "donor_source": "tests/test_price_parsing.py (Example, idfn, test_parsing, test_price_amount_float, test_price_decimal_separator)",
+      "behaviour": "pytest harness code",
+      "reason": "Its data is consumed as frozen oracle cases (price-contract.json 2937 cases incl. the executed Example set); the harness code itself is not behaviour ECDEV provides",
+      "depends_on_it": []
+    },
+    {
+      "capability": "price-parser.unbounded-inputs",
+      "donor_source": "price_parser/parser.py:28-72 fromstring and :401-455 parse_number accept arbitrarily long strings and arbitrary Python objects",
+      "behaviour": "Results for inputs above 4096 bytes, group separators above 64 bytes, exponents beyond +/-4096, and non-string inputs",
+      "reason": "ECDEV defines these as UNKNOWN by design (resource bounds) rather than reproducing the donor; callers check the bound (adapter/web/src/lib.rs marks >4096-byte price text UNKNOWN) and Rust types exclude non-strings",
+      "depends_on_it": [],
+      "proven_relied_subset": "adapter/web/src/price.rs::typed_price_selector_errors_and_resource_unknowns_are_explicit and ::native_price_object_projection_preserves_nonfinite_and_resource_unknowns"
+    }
+  ]
+}

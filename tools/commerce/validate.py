@@ -1,6 +1,7 @@
 """Verify record schemas, immutable source evidence, and honest completion gates."""
 import json,pathlib,sys,re,collections,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[2]
+LIFECYCLE=ROOT/('target/lifecycle-review.exe' if sys.platform=='win32' else 'target/lifecycle-review')
 sys.path.insert(0,str(ROOT/'.venv/research'))
 import jsonschema
 import census
@@ -47,24 +48,32 @@ def validate_lifecycle(d, summary, actual):
   assert required and all(c['parity_pass'] for c in required) and summary['semantic_review']=='COMPLETE', 'UNPROVEN_WHOLE_ORACLE_CLAIM'
 
 def lifecycle_negative_cases():
- d=next(d for d in read(ROOT/'research/commerce/donors/registry.json')['donors'] if d['donor_id']=='scrapinghub--price-parser')
- summary=read(ROOT/'research/commerce/donors/census/scrapinghub--price-parser/summary.json')
- actual=next(d for d in json.loads(subprocess.check_output([str(ROOT/'target/lifecycle-review.exe'),str(ROOT)])) if d['donor_id']=='scrapinghub--price-parser')
- validate_lifecycle(d,summary,actual)
- mutations=[(dict(d,extinction_status='EXTINCT'),actual),(d,dict(actual,effective='EXTINCT',extinct=True)),(dict(d,absorption_status='NATIVE_ABSORBED'),actual),(dict(d,oracle_status='ORACLE_VERIFIED'),actual)]
- for changed,evidence in mutations:
-  try:validate_lifecycle(changed,summary,evidence)
+ assessed={d['donor_id']:d for d in json.loads(subprocess.check_output([str(LIFECYCLE),str(ROOT)]))}
+ donors={d['donor_id']:d for d in read(ROOT/'research/commerce/donors/registry.json')['donors']}
+ summary=lambda k:read(ROOT/'research/commerce/donors/census'/k/'summary.json')
+ # The extinct donor is accepted exactly as governance assessed it.
+ validate_lifecycle(donors['scrapinghub--price-parser'],summary('scrapinghub--price-parser'),assessed['scrapinghub--price-parser'])
+ extinct=assessed['scrapinghub--price-parser']
+ for changed,census,evidence in [(donors['scrapinghub--price-parser'],summary('scrapinghub--price-parser'),dict(extinct,effective='CUTOVER',extinct=False)),(donors['scrapinghub--price-parser'],dict(summary('scrapinghub--price-parser'),status='CENSUS_PARTIAL'),extinct)]:
+  try:validate_lifecycle(changed,census,evidence)
+  except AssertionError:continue
+  raise AssertionError('EXTINCTION_WITHOUT_EVIDENCE_OR_CENSUS_ACCEPTED')
+ # A bounded, non-extinct donor rejects every unproven whole-donor claim.
+ k='scrapinghub--extruct';d=donors[k];actual=assessed[k];s=summary(k)
+ validate_lifecycle(d,s,actual)
+ for changed,evidence in [(dict(d,extinction_status='EXTINCT'),actual),(d,dict(actual,effective='EXTINCT',extinct=True)),(dict(d,absorption_status='NATIVE_ABSORBED'),actual),(dict(d,oracle_status='ORACLE_VERIFIED'),actual)]:
+  try:validate_lifecycle(changed,s,evidence)
   except AssertionError:continue
   raise AssertionError('UNPROVEN_WHOLE_DONOR_CLAIM_ACCEPTED')
- print('PASS: current bounded donor accepted; unproven extinction, incomplete semantic extinction, whole absorption and whole oracle claims rejected')
+ print('PASS: assessed extinct donor accepted; regressed evidence and incomplete census rejected; unproven extinction, whole absorption and whole oracle claims of a bounded donor rejected')
 def main():
  if '--inventory-negative-cases' in sys.argv:
   inventory_negative_cases();return
  if '--lifecycle-negative-cases' in sys.argv:
   lifecycle_negative_cases();return
  reg=read(ROOT/'research/commerce/donors/registry.json');schema=ROOT/'tools/commerce/schemas'
- authority=ROOT/'target/lifecycle-review.exe'
- assert authority.is_file(), 'Build canonical lifecycle-review before measuring donor lifecycle'
+ authority=LIFECYCLE
+ assert authority.is_file(), 'Build tools/commerce/lifecycle_review.rs against .ecdev before measuring donor lifecycle'
  assessed={d['donor_id']:d for d in json.loads(subprocess.check_output([str(authority),str(ROOT)]))}
  total=classified=source=parsed=unknown=tests=capabilities=0
  for d in reg['donors']:

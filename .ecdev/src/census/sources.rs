@@ -558,6 +558,33 @@ pub fn observe(files: &Files, d: &Declaration, excluded: &[String], c: &mut Cens
                 });
             }
         }
+        if f.ends_with(".py") && !foreign(f) {
+            let dir = f.rsplit_once('/').map(|(d, _)| d).unwrap_or("");
+            let local = |m: &str| {
+                [dir, ""].iter().any(|d| {
+                    let base = if d.is_empty() {
+                        m.to_string()
+                    } else {
+                        format!("{d}/{m}")
+                    };
+                    files.paths.contains(&format!("{base}.py"))
+                        || files.paths.contains(&format!("{base}/__init__.py"))
+                })
+            };
+            for m in super::python::imports(&text) {
+                if super::python::is_stdlib(&m) || local(&m) {
+                    continue;
+                }
+                c.observations.insert(Observation {
+                    file: f.clone(),
+                    ecosystem: Ecosystem::Python,
+                    name: super::python::distribution(&m),
+                    ident: m,
+                    scope: scope_of_file(f),
+                    via: Via::Import,
+                });
+            }
+        }
         if f.ends_with(".rs") {
             let toks = lex(&text);
             let roots = crate_roots(&toks);

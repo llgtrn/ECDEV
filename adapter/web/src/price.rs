@@ -951,6 +951,71 @@ mod tests {
         }
     }
     #[test]
+    fn decimal_separator_regressions() {
+        for (input, expected) in [
+            ("1,000.99", Some('.')),
+            ("1.000,99", Some(',')),
+            ("12,5", Some(',')),
+            ("1,000", None),
+            ("1.000", None),
+            ("1 000", None),
+            ("10", None),
+        ] {
+            assert_eq!(decimal_separator(input), expected, "{input}");
+        }
+    }
+
+    #[test]
+    fn literal_search_regressions() {
+        // Leftmost match first, then list order at the same position; no match is None.
+        assert_eq!(
+            literal_alternative("price: US$10", &["$", "US$"]),
+            Some((7, "US$"))
+        );
+        assert_eq!(literal_alternative("US$5", &["US", "US$"]), Some((0, "US")));
+        assert_eq!(literal_alternative("no euro", &["€"]), None);
+    }
+
+    #[test]
+    fn source_text_regressions() {
+        for (price, hint, currency, text) in [
+            (Some("$10"), None, Some("$"), Some("10")),
+            (Some("10 EUR"), None, Some("EUR"), Some("10")),
+            (Some("12,50 €"), None, Some("€"), Some("12,50")),
+            (None, Some("USD"), Some("USD"), None),
+            (Some("10"), Some("руб"), Some("руб"), Some("10")),
+            (Some("CHF 1.234,50"), None, Some("CHF"), Some("1.234,50")),
+            (
+                Some("Price: 1,234.99 USD"),
+                None,
+                Some("USD"),
+                Some("1,234.99"),
+            ),
+        ] {
+            assert_eq!(
+                currency_symbol(price, hint).as_deref(),
+                currency,
+                "{price:?} {hint:?}"
+            );
+            assert_eq!(price.and_then(price_text).as_deref(), text, "{price:?}");
+        }
+    }
+
+    #[test]
+    fn currency_lexicon_is_the_frozen_licensed_snapshot() {
+        let l = lexicon();
+        assert_eq!(l["safe"].as_array().unwrap().len(), 126);
+        assert_eq!(l["unsafe"].as_array().unwrap().len(), 300);
+        assert_eq!(l["dollar_codes"].as_array().unwrap().len(), 43);
+        assert_eq!(l["unicode_version"], "14.0.0");
+        assert_eq!(
+            l["source_commit"],
+            "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
+        );
+        assert!(l["license"].as_str().unwrap().contains("BSD"));
+    }
+
+    #[test]
     fn precision_and_ambiguous_currency_do_not_invent_money() {
         assert_eq!(formatted_money("2,980", "JPY")["minor"], 2980);
         assert_eq!(formatted_money("12,99", "EUR")["minor"], 1299);

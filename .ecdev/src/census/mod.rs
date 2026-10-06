@@ -8,6 +8,7 @@
 pub mod cargo;
 pub mod js;
 pub mod lock;
+pub mod python;
 pub mod shell;
 pub mod sources;
 

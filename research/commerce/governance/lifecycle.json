@@ -1,17 +1,20 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "7abc54ed8a874064370cacbd65a206c021874e46",
+  "assessed_parent_commit": "4d1fea23faf891694b2edded0e82bca58efd4676",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
   "donor_count": 60,
   "effective_states": {
-    "CENSUSED": 12,
+    "CENSUSED": 11,
     "DISCOVERED": 15,
+    "EXTINCT": 1,
     "NATIVE_SHADOW": 3,
     "REGISTERED": 30
   },
-  "extinct": [],
+  "extinct": [
+    "scrapinghub--price-parser"
+  ],
   "donors": [
     {
       "donor": "mrkooblu--semrush-mcp",
@@ -1528,8 +1531,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: IMPORT PYTHON extruct in tools/commerce/extruct_oracle.py"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -1588,17 +1591,17 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": true,
-          "detail": "no node consumes, calls, controls or shims the donor"
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
         }
       ]
     },
     {
       "donor": "scrapinghub--price-parser",
-      "claimed": "REGISTERED",
-      "effective": "CENSUSED",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): price-parser.remaining-helper-and-package-contracts",
+      "stopped_by": "",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1632,38 +1635,38 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: price-parser.remaining-helper-and-package-contracts"
+          "pass": true,
+          "detail": "all 7 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "2 of 2 required capabilities lack it: extract.price-public-api, price-parser.remaining-helper-and-package-contracts"
+          "pass": true,
+          "detail": "all 7 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "2 of 2 required capabilities lack it: extract.price-public-api, price-parser.remaining-helper-and-package-contracts"
+          "pass": true,
+          "detail": "all 7 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: price-parser.remaining-helper-and-package-contracts"
+          "pass": true,
+          "detail": "all 7 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: price-parser.remaining-helper-and-package-contracts"
+          "pass": true,
+          "detail": "all 7 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "3 of 3 declared capabilities have no resolved ECDEV relevance: extract.price-public-api, price-parser.remaining-helper-and-package-contracts, extract.price-number"
+          "pass": true,
+          "detail": "all 13 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
@@ -2003,7 +2006,7 @@
         {
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
-          "detail": "1 observed: MANIFEST PYTHON tree-sitter-language-pack in tools/commerce/requirements.txt"
+          "detail": "3 observed: IMPORT PYTHON tree-sitter-language-pack in tools/commerce/census.py; IMPORT PYTHON tree-sitter-language-pack in tools/commerce/review_frontier.py; MANIFEST PYTHON tree-sitter-language-pack in tools/commerce/requirements.txt"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -3030,7 +3033,7 @@
         {
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
-          "detail": "1 observed: MANIFEST PYTHON jsonschema in tools/commerce/requirements.txt"
+          "detail": "3 observed: IMPORT PYTHON jsonschema in tools/commerce/validate.py; IMPORT PYTHON jsonschema in tools/commerce/verify_sp_api.py; MANIFEST PYTHON jsonschema in tools/commerce/requirements.txt"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -3267,7 +3270,7 @@
         {
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
-          "detail": "1 observed: MANIFEST PYTHON w3lib in tools/commerce/requirements.txt"
+          "detail": "2 observed: IMPORT PYTHON w3lib in tools/commerce/document_oracle.py; MANIFEST PYTHON w3lib in tools/commerce/requirements.txt"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -3440,7 +3443,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "35 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/lib.rs"
+          "detail": "37 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -4403,7 +4406,7 @@
         {
           "gate": "PARITY_PROOFS_PASS",
           "pass": false,
-          "detail": "7 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.evaluate_thresholds, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "detail": "6 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
@@ -4482,7 +4485,7 @@
         {
           "gate": "PARITY_PROOFS_PASS",
           "pass": false,
-          "detail": "5 of 5 required capabilities lack it: social.trendradar.calculate_news_weight, social.trendradar.word_matches, social.trendradar.parse_json_feed, social.trendradar.fetch_feed, social.trendradar.remaining-whole-donor"
+          "detail": "4 of 5 required capabilities lack it: social.trendradar.word_matches, social.trendradar.parse_json_feed, social.trendradar.fetch_feed, social.trendradar.remaining-whole-donor"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
