@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "54518ed6c46fa1f0a8c13d32847abd580ecea09e",
+  "assessed_parent_commit": "b833a2193bbd7f21d820b03a6e6aba7b5631cb40",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2153,9 +2153,9 @@
       "claimed": "CUTOVER",
       "effective": "CUTOVER",
       "exception": "",
-      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
+      "stopped_by": "EXTINCT: failing gates: BUILD_EDGES_ZERO, ROLLBACK_INDEPENDENT",
       "runtime": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -2196,16 +2196,16 @@
         {
           "key": "extruct.rdfa",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(how often do commerce pages state product facts only in RDFa, and what would ECDEV miss?)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately not read: research/commerce/structured-data-benchmark.json found an RDFa product on 0 of 40 product pages across 8 retailers, against JSON-LD on 34; the 6 unreadable pages carried no structured product data in any format (client-side rendering); revisit if a targeted source states products only in RDFa)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "extruct.microformat",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(how often do commerce pages carry h-product microformats that JSON-LD and microdata lack?)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately not read: research/commerce/structured-data-benchmark.json found an h-product microformat on 0 of 40 product pages across 8 retailers, against JSON-LD on 34; the 6 unreadable pages carried no structured product data in any format; revisit if a targeted source states products only in h-product)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "extruct.dublincore",
@@ -2237,8 +2237,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: IMPORT PYTHON extruct in tools/commerce/structured_data_benchmark.py"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -2292,8 +2292,8 @@
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "2 of 9 declared capabilities still have open research: extruct.rdfa (BENCHMARK_CANDIDATE), extruct.microformat (BENCHMARK_CANDIDATE)"
+          "pass": true,
+          "detail": "all 9 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -2302,8 +2302,8 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": true,
-          "detail": "no node consumes, calls, controls or shims the donor"
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
         }
       ]
     },

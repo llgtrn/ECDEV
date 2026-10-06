@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "54518ed6c46fa1f0a8c13d32847abd580ecea09e",
+  "assessed_parent_commit": "b833a2193bbd7f21d820b03a6e6aba7b5631cb40",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,24 +19,24 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
-    "benchmark_candidates": 31,
+    "benchmark_candidates": 29,
     "algorithm_candidates": 10,
     "reference_only": 52,
-    "study_complete_capabilities": 84,
+    "study_complete_capabilities": 86,
     "not_relevant_after_review": 25,
-    "research_questions_open": 81,
-    "knowledge_coverage_ratio": 0.665289
+    "research_questions_open": 79,
+    "knowledge_coverage_ratio": 0.673554
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
     "donors_structural_census": 0,
     "donors_semantic_census": 0,
-    "donors_active_study": 17,
-    "donors_study_complete": 1,
+    "donors_active_study": 16,
+    "donors_study_complete": 2,
     "donors_structurally_censused": 18,
     "donors_semantically_censused": 14,
-    "donors_with_open_candidates": 17,
-    "donors_with_open_research": 66
+    "donors_with_open_candidates": 16,
+    "donors_with_open_research": 65
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -387,7 +387,7 @@
       "donor": "scrapinghub--extruct",
       "runtime": "CUTOVER",
       "effective": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -395,15 +395,14 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [
-        "extruct.rdfa BENCHMARK_CANDIDATE(how often do commerce pages state product facts only in RDFa, and what would ECDEV miss?)",
-        "extruct.microformat BENCHMARK_CANDIDATE(how often do commerce pages carry h-product microformats that JSON-LD and microdata lack?)"
-      ],
+      "open": [],
       "resolved": [
         "extruct.microdata STUDY_COMPLETE[DERIVED_NATIVE](microdata proven on 132 frozen donor cases)",
         "extruct.jsonld STUDY_COMPLETE[DERIVED_NATIVE](valid-JSON JSON-LD proven on 93 frozen donor cases)",
         "extruct.opengraph STUDY_COMPLETE[DERIVED_NATIVE](head OpenGraph proven on 93 frozen donor cases)",
         "extruct.jsonld-repair STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](repaired JSON-LD is the extractor's guess; ECDEV refuses it as INVALID_JSON_LD)",
+        "extruct.rdfa STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately not read: research/commerce/structured-data-benchmark.json found an RDFa product on 0 of 40 product pages across 8 retailers, against JSON-LD on 34; the 6 unreadable pages carried no structured product data in any format (client-side rendering); revisit if a targeted source states products only in RDFa)",
+        "extruct.microformat STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately not read: research/commerce/structured-data-benchmark.json found an h-product microformat on 0 of 40 product pages across 8 retailers, against JSON-LD on 34; the 6 unreadable pages carried no structured product data in any format; revisit if a targeted source states products only in h-product)",
         "extruct.dublincore REFERENCE_ONLY(DC term model; ECDEV keeps DC description metas as raw page assertions)",
         "extruct.uniform REFERENCE_ONLY(schema.org-like uniform rewrite; ECDEV keeps raw values with locators)",
         "extruct.cli-and-orchestration NO_RESEARCH_VALUE[RELEASE_TOOLING](command-line wrapper, syntax dispatch and package entry points)"
