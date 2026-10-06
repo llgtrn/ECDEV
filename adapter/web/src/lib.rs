@@ -414,7 +414,7 @@ impl Web {
         }
         let response = request.send().map_err(|_| "FETCH_NETWORK_ERROR")?;
         let status = response.status().as_u16();
-        let headers = json!({"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
+        let headers = json!({"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"content_length":response.headers().get("content-length").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
         if status != 200 {
             // Error, redirect and validator responses are control evidence; an unused
             // body read must not discard their status or Retry-After header.
@@ -645,11 +645,12 @@ impl Provider for Web {
             cost_minor: Some(0),
             run_id: r.run_id.clone(),
         };
+        let response_bytes = raw.len();
         Ok(AcquireResult {
             observations: vec![evidence],
             result,
             raw_payload: raw,
-            provider_cost: json!({"provider":self.id(),"request_count":requests,"robots_cache_hits":robots_cache_hits,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis(),"headers":headers,"quota_before":null,"quota_after":null,"cache_hit":false}),
+            provider_cost: json!({"provider":self.id(),"response_bytes":response_bytes,"request_count":requests,"robots_cache_hits":robots_cache_hits,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis(),"headers":headers,"quota_before":null,"quota_after":null,"cache_hit":false}),
         })
     }
 }

@@ -171,6 +171,45 @@ pub const ZERO_COST_STAGES: [(&str, bool); 14] = [
     ("live_ppc", false),
     ("regulatory_risk_validation", false),
 ];
+/// One access diagnosis per provider call: what happened when ECDEV asked for a route, with
+/// the real HTTP status and response size where known. A soft block is reported only when the
+/// provider asserted one (for example a CAPTCHA form); it is never guessed from page content.
+/// Error response bodies are never read, so their size is the declared Content-Length at most.
+pub fn access_diagnostics(calls: &[Value]) -> Vec<Value> {
+    calls
+        .iter()
+        .map(|c| {
+            let failure = &c["acquisition_failure"];
+            let reason = c["error"].as_str().unwrap_or("");
+            let status = failure["http_status"].as_u64();
+            let state = if c["status"] == "SOURCE_BLOCKED" {
+                "SOFT_BLOCKED"
+            } else if c["status"] != "FAILED" {
+                if c["result_count"].as_u64().is_some_and(|n| n > 0) {
+                    "REACHABLE_WITH_PRODUCT_DATA"
+                } else {
+                    "REACHABLE_NO_PRODUCT_DATA"
+                }
+            } else if reason.contains("ROBOTS") {
+                "ROBOTS_DENIED_OR_UNKNOWN"
+            } else {
+                match status {
+                    Some(401 | 403 | 451) => "BLOCKED",
+                    Some(429) => "RATE_LIMITED",
+                    Some(404 | 410) => "GONE",
+                    Some(500..=599) => "SERVER_ERROR",
+                    Some(_) => "HTTP_ERROR",
+                    None if reason == "FETCH_NETWORK_ERROR" || reason == "DNS_FAILED" => {
+                        "NETWORK_UNREACHABLE"
+                    }
+                    None => "NOT_FETCHED_BY_POLICY",
+                }
+            };
+            json!({"source":c["source"],"provider":c["provider"],"state":state,"http_status":status.or(if c["status"]=="FAILED" {None} else {Some(200)}),"response_bytes":c["response_bytes"],"reason":if reason.is_empty() {c["blocked_reason"].clone()} else {json!(reason)},"cache_hit":c["cache_hit"],"retry_not_before_ms":failure["retry_not_before_ms"]})
+        })
+        .collect()
+}
+
 impl Engine {
     pub fn inspect_candidate(&self, id: &str) -> Result<Value, String> {
         let candidate = self
@@ -677,7 +716,7 @@ impl Engine {
                             (prior, true)
                         } else {
                             failures.push(json!({"source":source.url,"provider":provider.id(),"status":if reason.contains("ROBOTS") || reason.contains("HTTP_STATUS_403") || reason.contains("REDIRECT_SCOPE_DENIED") {"SOURCE_BLOCKED"}else{"SOURCE_UNAVAILABLE"},"reason":reason,"acquisition_failure":failure}));
-                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":failure.request_count,"cache_hit":false,"error":reason,"acquisition_failure":failure}));
+                            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"source":source.url,"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":failure.request_count,"cache_hit":false,"error":reason,"acquisition_failure":failure}));
                             if let Some(lease) = &lease {
                                 let retryable =
                                     matches!(failure.http_status, Some(429 | 500..=599))
@@ -848,7 +887,7 @@ impl Engine {
                 let (seconds, basis) = freshness_lifetime(&captured["provider_cost"]["headers"]);
                 json!({"seconds": seconds, "basis": basis})
             };
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"cache_freshness":cache_freshness,"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"source":source.url,"response_bytes":captured["provider_cost"]["response_bytes"],"blocked_reason":result["blocked_reason"],"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"cache_freshness":cache_freshness,"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;
@@ -916,7 +955,7 @@ impl Engine {
             !observations.is_empty() && calls.iter().all(|c| c["cache_hit"] == true),
         );
         let cache_metrics = crate::intelligence::cache_metrics(&calls, accounting_mode);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"access_diagnostics":access_diagnostics(&calls),"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {
@@ -1105,6 +1144,46 @@ impl Engine {
 #[cfg(test)]
 mod budget_storage_tests {
     use super::*;
+    #[test]
+    fn access_diagnostics_classify_each_call_from_recorded_facts() {
+        let fail = |status: Option<u16>, reason: &str| json!({"source":"https://s.example/","provider":"native-web","status":"FAILED","error":reason,"cache_hit":false,"acquisition_failure":{"http_status":status,"retry_not_before_ms":null}});
+        let calls = vec![
+            json!({"source":"https://s.example/p","provider":"native-web","status":"COMPLETE","result_count":2,"response_bytes":5120,"cache_hit":false}),
+            json!({"source":"https://s.example/c","provider":"native-web","status":"COMPLETE","result_count":0,"response_bytes":900,"cache_hit":false}),
+            json!({"source":"https://www.amazon.co.jp/dp/X","provider":"public-amazon","status":"SOURCE_BLOCKED","result_count":0,"response_bytes":3000,"blocked_reason":"PUBLIC_AMAZON_CAPTCHA_FORM","cache_hit":false}),
+            fail(Some(403), "HTTP_STATUS_403"),
+            fail(Some(429), "HTTP_STATUS_429"),
+            fail(Some(410), "HTTP_STATUS_410"),
+            fail(Some(503), "HTTP_STATUS_503"),
+            fail(None, "ROBOTS_DENIED_OR_UNKNOWN"),
+            fail(None, "FETCH_NETWORK_ERROR"),
+            fail(None, "UNSUPPORTED_CONTENT_TYPE"),
+        ];
+        let d = access_diagnostics(&calls);
+        let states: Vec<_> = d.iter().map(|x| x["state"].as_str().unwrap()).collect();
+        assert_eq!(
+            states,
+            [
+                "REACHABLE_WITH_PRODUCT_DATA",
+                "REACHABLE_NO_PRODUCT_DATA",
+                "SOFT_BLOCKED",
+                "BLOCKED",
+                "RATE_LIMITED",
+                "GONE",
+                "SERVER_ERROR",
+                "ROBOTS_DENIED_OR_UNKNOWN",
+                "NETWORK_UNREACHABLE",
+                "NOT_FETCHED_BY_POLICY"
+            ]
+        );
+        assert_eq!(
+            (d[0]["http_status"].clone(), d[0]["response_bytes"].clone()),
+            (json!(200), json!(5120))
+        );
+        assert_eq!(d[2]["reason"], "PUBLIC_AMAZON_CAPTCHA_FORM");
+        assert_eq!(d[3]["http_status"], 403);
+        assert!(d[7]["http_status"].is_null() && d[8]["http_status"].is_null());
+    }
     #[test]
     fn reextraction_reports_where_the_current_extractor_disagrees_with_the_record() {
         use crate::provider::{AcquireError, AcquireResult, Provider};

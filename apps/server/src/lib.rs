@@ -1071,6 +1071,10 @@ mod research_tests {
             first["run_id"].as_str().unwrap().to_string(),
             second["run_id"].as_str().unwrap().to_string(),
         ];
+        let access = &first["access_diagnostics"][0];
+        assert_eq!(access["state"], "REACHABLE_WITH_PRODUCT_DATA");
+        assert_eq!(access["source"], "https://example.org/cup");
+        assert_eq!(access["response_bytes"], page("2,980").len());
         let out = e.research_reextract(&ids).unwrap();
         assert_eq!(out["network"], "NONE");
         assert!(

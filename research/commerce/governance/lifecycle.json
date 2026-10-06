@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8bacfcd58f49985c35f6a65e3a50660c0a09aef3",
+  "assessed_parent_commit": "54518ed6c46fa1f0a8c13d32847abd580ecea09e",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1646,9 +1646,9 @@
         {
           "key": "changedetection.access-diagnostics",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::access_diagnostics classifies every provider call of a research run (REACHABLE_WITH_PRODUCT_DATA, REACHABLE_NO_PRODUCT_DATA, SOFT_BLOCKED only when a provider asserts it, BLOCKED, RATE_LIMITED, GONE, SERVER_ERROR, ROBOTS_DENIED_OR_UNKNOWN, NETWORK_UNREACHABLE, NOT_FETCHED_BY_POLICY) with the real HTTP status and response size; error bodies are never read, so their size is at most the declared Content-Length)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.llm-assist",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "10 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
+          "detail": "9 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
