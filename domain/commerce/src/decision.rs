@@ -108,10 +108,7 @@ pub fn assess(candidates: &mut [Value], policy: &Policy, budget_exhausted: bool)
                     .flatten()
             })
             .any(|o| {
-                matches!(
-                    o["availability"].as_str(),
-                    Some("InStock" | "https://schema.org/InStock" | "http://schema.org/InStock")
-                )
+                crate::availability::availability_class(&o["availability"]) == "AVAILABLE_ONLINE"
             });
         if !in_stock {
             missing.push("OBSERVED_AVAILABLE_OFFER");

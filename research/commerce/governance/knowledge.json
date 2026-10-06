@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "1ce7d3f06341434913dcdf4790c7090675ef9d3f",
+  "assessed_parent_commit": "d937a7a7b7fa741350c0329ea42d9276bf36315e",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 45,
+    "study_candidates": 44,
     "benchmark_candidates": 32,
     "algorithm_candidates": 14,
     "reference_only": 52,
-    "study_complete_capabilities": 74,
+    "study_complete_capabilities": 75,
     "not_relevant_after_review": 25,
-    "research_questions_open": 91,
-    "knowledge_coverage_ratio": 0.623967
+    "research_questions_open": 90,
+    "knowledge_coverage_ratio": 0.628099
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -300,7 +300,6 @@
       },
       "open": [
         "changedetection.change-thresholds BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)",
-        "changedetection.availability-mapping STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
         "changedetection.text-diff BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)",
         "changedetection.scheduling STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)",
         "changedetection.api STUDY_CANDIDATE(a versioned monitoring API exposing evidence (snapshot hash, fetch metadata, observed values with provenance) rather than file paths, with no side effects on reads)",
@@ -316,6 +315,7 @@
       ],
       "resolved": [
         "changedetection.restock-interpretation STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](scraped text and LLM availability override structured data; float prices)",
+        "changedetection.availability-mapping STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/availability.rs derives a schema.org ItemAvailability term and buyer class (AVAILABLE_ONLINE, IN_STORE_ONLY, ORDERABLE_LATER, NOT_AVAILABLE, UNRECOGNISED) beside the unchanged observed value; the shortlist accepts any AVAILABLE_ONLINE spelling and the monitor no longer reports a spelling change of one term as AVAILABILITY_CHANGED; unrecognised text is never guessed)",
         "changedetection.image-diff REFERENCE_ONLY(SSIM screenshot similarity for any future visual monitoring)",
         "changedetection.notifications REFERENCE_ONLY(notification semantics and channels; ECDEV persists local events only)",
         "changedetection.watch-persistence STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's persisted watches with leases and fenced restarts)",

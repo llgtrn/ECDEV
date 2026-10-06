@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "1ce7d3f06341434913dcdf4790c7090675ef9d3f",
+  "assessed_parent_commit": "d937a7a7b7fa741350c0329ea42d9276bf36315e",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1569,9 +1569,9 @@
         {
           "key": "changedetection.availability-mapping",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/availability.rs derives a schema.org ItemAvailability term and buyer class (AVAILABLE_ONLINE, IN_STORE_ONLY, ORDERABLE_LATER, NOT_AVAILABLE, UNRECOGNISED) beside the unchanged observed value; the shortlist accepts any AVAILABLE_ONLINE spelling and the monitor no longer reports a spelling change of one term as AVAILABILITY_CHANGED; unrecognised text is never guessed)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.text-diff",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "14 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.conditions-engine (STUDY_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
+          "detail": "13 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.conditions-engine (STUDY_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -5419,7 +5419,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "45 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "46 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

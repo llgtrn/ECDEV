@@ -1,5 +1,6 @@
 //! Persisted bounded watches. Leases fence concurrent schedulers and survive restart.
 use crate::Engine;
+use crate::availability::{availability_term, derived_availability};
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::Deserialize;
 use serde_json::{Value, json};
@@ -577,8 +578,25 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
                 if !prev[field].is_null() && p[field].is_null() && !gap {
                     out.push(json!({"kind":"FIELD_NOT_OBSERVED","url":url,"product":key,"field":field,"last_observed":prev[field],"raw_capture_sha256":after["raw_capture_sha256"],"evidence":"CAPTURED_PRODUCT_WITHOUT_THE_FIELD"}));
                 }
-                if !prev[field].is_null() && !p[field].is_null() && prev[field] != p[field] {
-                    out.push(json!({"kind":kind,"url":url,"product":key,"before":prev[field],"after":p[field],"across_gap":gap,"raw_capture_sha256":after["raw_capture_sha256"]}));
+                let differs = if field == "availability" {
+                    // Two spellings of one schema.org term are not a stock change.
+                    match (
+                        availability_term(&prev[field]),
+                        availability_term(&p[field]),
+                    ) {
+                        (Some(a), Some(b)) => a != b,
+                        _ => prev[field] != p[field],
+                    }
+                } else {
+                    prev[field] != p[field]
+                };
+                if !prev[field].is_null() && !p[field].is_null() && differs {
+                    let mut event = json!({"kind":kind,"url":url,"product":key,"before":prev[field],"after":p[field],"across_gap":gap,"raw_capture_sha256":after["raw_capture_sha256"]});
+                    if field == "availability" {
+                        event["before_derived"] = derived_availability(&prev[field]);
+                        event["after_derived"] = derived_availability(&p[field]);
+                    }
+                    out.push(event);
                 }
             }
         }
@@ -588,6 +606,24 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn availability_spelling_is_not_a_stock_change() {
+        let page =
+            |a: &str| json!({"u":{"status":"AVAILABLE","products":{"cup":{"availability":a}}}});
+        let kinds = |a: &str, b: &str| {
+            changes(&page(a), &page(b))
+                .into_iter()
+                .filter(|c| c["kind"] == "AVAILABILITY_CHANGED")
+                .collect::<Vec<_>>()
+        };
+        assert!(kinds("InStock", "https://schema.org/InStock").is_empty());
+        let real = kinds("schema:InStock", "https://schema.org/OutOfStock");
+        assert_eq!(real.len(), 1);
+        assert_eq!(real[0]["before"], "schema:InStock");
+        assert_eq!(real[0]["after_derived"]["class"], "NOT_AVAILABLE");
+        // Unrecognised values still compare as observed strings.
+        assert_eq!(kinds("In stock", "in stock").len(), 1);
+    }
     #[test]
     fn watch_restart_fencing_and_changes_persist() {
         let root = std::env::temp_dir().join(format!("ecdev-watch-{}", Uuid::new_v4()));
