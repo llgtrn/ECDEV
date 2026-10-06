@@ -1,0 +1,956 @@
+{
+ "donor_id": "amzn--selling-partner-api-models",
+ "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+ "license": "Apache-2.0",
+ "oracle": "PINNED_OFFICIAL_MODELS_READ_AS_DATA",
+ "source_models": {
+  "models/catalog-items-api-model/catalogItems_2022-04-01.json": {
+   "blob_hash": "d9376f6300aa80a647c8965d3a66e8e1f9302d12",
+   "sha256": "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2"
+  },
+  "models/product-pricing-api-model/productPricingV0.json": {
+   "blob_hash": "d3ba384b8a100d998188be4a114a7280c0241fa7",
+   "sha256": "86d65f691a5611f951a4e61df206e518ec663064ecfa8733105f2ca259d4ded6"
+  },
+  "models/product-fees-api-model/productFeesV0.json": {
+   "blob_hash": "d0b56c2c1c242847651454f4b15e3d11edbb30ff",
+   "sha256": "d06ad35f909d8c0985845f21420c1f75599531465b27f46d4946f7d7f522fc35"
+  },
+  "models/listings-items-api-model/listingsItems_2021-08-01.json": {
+   "blob_hash": "ad58beae125fdb7ca6bd5bc774dfe99b85a481f9",
+   "sha256": "117617f4c86dbd5c1708913103806a24c0ef0bbcfb6054e415d044d07761faeb"
+  },
+  "models/fba-inventory-api-model/fbaInventory.json": {
+   "blob_hash": "636c6d1aa20e29b62e82a25fe07a966f87fd781e",
+   "sha256": "7c14bcdb22de8ca2df45e5a40f2a422cff344d45985a68b9515b2e800edcc5ab"
+  },
+  "models/sellers-api-model/sellers.json": {
+   "blob_hash": "cfc12825ca568cd4251c9c61d1fefe8f93ca7afd",
+   "sha256": "497862ea32de8040453649986e2cd7c6fcc15b55e8022becc783e4a6d6ffcffd"
+  },
+  "models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json": {
+   "blob_hash": "3d6312378d9cbd9b82f479ed8dd28074124f6b46",
+   "sha256": "9f54478fd9c145be65fd5b266d13770e4eb41f3d19f1ade5342ce64786af0aaa"
+  },
+  "models/orders-api-model/ordersV0.json": {
+   "blob_hash": "566fc81b44eba8b28cc8dd22f4766f359e608cb3",
+   "sha256": "027ac6f5c97126647c6925db9be09f78c7c741cd1d8727a5367374a1846bedc5"
+  },
+  "models/tokens-api-model/tokens_2021-03-01.json": {
+   "blob_hash": "bb2e19a4367a380ca0454e476a1bfd7f2081459b",
+   "sha256": "3cd09ae7f218c83f32536a894cb8c42f2191c94b9c27f6bcf0a164442089b061"
+  }
+ },
+ "generator_sha256": "c40d40f37c52a7e9c5beab575cc43f9b3232d6088a80264d8209e71b98a6ebd7",
+ "generator_source": "\"\"\"Frozen request contracts of the SP-API operations ECDEV knows, from the pinned official models.\n\npython sp_api_contracts.py <selling-partner-api-models clone with the model files at 3677bb9d> <out.json>\nFor each operation: method, path template and every declared parameter (in, required, type,\nenum, array item enum, collection format) resolved through local $refs; for body parameters the\nschema's required top-level properties. Nothing is executed; the models are read as data.\n\"\"\"\nimport hashlib, json, pathlib, subprocess, sys\n\nrepo = pathlib.Path(sys.argv[1]).resolve(); out = pathlib.Path(sys.argv[2])\nCOMMIT = \"3677bb9d96f4450e6843f1f8207005e925d5c867\"\nOPS = {\n    \"models/catalog-items-api-model/catalogItems_2022-04-01.json\": [\"getCatalogItem\"],\n    \"models/product-pricing-api-model/productPricingV0.json\": [\"getItemOffers\"],\n    \"models/product-fees-api-model/productFeesV0.json\": [\"getMyFeesEstimateForASIN\"],\n    \"models/listings-items-api-model/listingsItems_2021-08-01.json\": [\"getListingsItem\", \"putListingsItem\", \"patchListingsItem\", \"deleteListingsItem\"],\n    \"models/fba-inventory-api-model/fbaInventory.json\": [\"getInventorySummaries\"],\n    \"models/sellers-api-model/sellers.json\": [\"getMarketplaceParticipations\"],\n    \"models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json\": [\"searchDefinitionsProductTypes\", \"getDefinitionsProductType\"],\n    \"models/orders-api-model/ordersV0.json\": [\"getOrders\", \"getOrder\", \"getOrderBuyerInfo\", \"getOrderAddress\", \"getOrderItems\", \"getOrderItemsBuyerInfo\", \"updateShipmentStatus\", \"confirmShipment\", \"updateVerificationStatus\"],\n    \"models/tokens-api-model/tokens_2021-03-01.json\": [\"createRestrictedDataToken\"],\n}\n\ndef resolve(doc, node):\n    while isinstance(node, dict) and \"$ref\" in node:\n        ref = node[\"$ref\"]; assert ref.startswith(\"#/\")\n        target = doc\n        for part in ref[2:].split(\"/\"): target = target[part]\n        node = target\n    return node\n\ncontracts = []; sources = {}\nfor path, wanted in OPS.items():\n    raw = subprocess.check_output([\"git\", \"-C\", str(repo), \"show\", f\"{COMMIT}:{path}\"])\n    sources[path] = {\"blob_hash\": subprocess.check_output([\"git\", \"-C\", str(repo), \"rev-parse\", f\"{COMMIT}:{path}\"], text=True).strip(), \"sha256\": hashlib.sha256(raw).hexdigest()}\n    doc = json.loads(raw)\n    found = set()\n    for template, item in doc[\"paths\"].items():\n        shared = item.get(\"parameters\", [])\n        for method, op in item.items():\n            if method not in (\"get\", \"put\", \"post\", \"patch\", \"delete\") or op.get(\"operationId\") not in wanted: continue\n            params = []\n            for p in shared + op.get(\"parameters\", []):\n                p = resolve(doc, p)\n                entry = {\"name\": p[\"name\"], \"in\": p[\"in\"], \"required\": bool(p.get(\"required\", False))}\n                for k in (\"type\", \"enum\", \"collectionFormat\", \"maxItems\"):\n                    if k in p: entry[k] = p[k]\n                if \"items\" in p:\n                    items = resolve(doc, p[\"items\"])\n                    entry[\"items\"] = {k: items[k] for k in (\"type\", \"enum\") if k in items}\n                if p[\"in\"] == \"body\":\n                    schema = resolve(doc, p[\"schema\"])\n                    entry[\"body_required\"] = schema.get(\"required\", [])\n                params.append(entry)\n            contracts.append({\"operation_id\": op[\"operationId\"], \"method\": method.upper(), \"path\": template, \"model_path\": path, \"parameters\": params})\n            found.add(op[\"operationId\"])\n    assert found == set(wanted), (path, set(wanted) - found)\ngenerator = pathlib.Path(__file__).read_bytes()\nout.write_text(json.dumps({\"donor_id\": \"amzn--selling-partner-api-models\", \"commit_sha\": COMMIT, \"license\": \"Apache-2.0\",\n    \"oracle\": \"PINNED_OFFICIAL_MODELS_READ_AS_DATA\", \"source_models\": sources,\n    \"generator_sha256\": hashlib.sha256(generator).hexdigest(), \"generator_source\": generator.decode(),\n    \"contracts\": sorted(contracts, key=lambda c: c[\"operation_id\"])}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(len(contracts), \"operation contracts\")\n",
+ "contracts": [
+  {
+   "operation_id": "confirmShipment",
+   "method": "POST",
+   "path": "/orders/v0/orders/{orderId}/shipmentConfirmation",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "payload",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "marketplaceId",
+      "packageDetail"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "createRestrictedDataToken",
+   "method": "POST",
+   "path": "/tokens/2021-03-01/restrictedDataToken",
+   "model_path": "models/tokens-api-model/tokens_2021-03-01.json",
+   "parameters": [
+    {
+     "name": "body",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "restrictedResources"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "deleteListingsItem",
+   "method": "DELETE",
+   "path": "/listings/2021-08-01/items/{sellerId}/{sku}",
+   "model_path": "models/listings-items-api-model/listingsItems_2021-08-01.json",
+   "parameters": [
+    {
+     "name": "sellerId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "sku",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "maxItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "issueLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getCatalogItem",
+   "method": "GET",
+   "path": "/catalog/2022-04-01/items/{asin}",
+   "model_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+   "parameters": [
+    {
+     "name": "asin",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "includedData",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string",
+      "enum": [
+       "attributes",
+       "classifications",
+       "dimensions",
+       "identifiers",
+       "images",
+       "productTypes",
+       "relationships",
+       "salesRanks",
+       "summaries",
+       "vendorDetails"
+      ]
+     }
+    },
+    {
+     "name": "locale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getDefinitionsProductType",
+   "method": "GET",
+   "path": "/definitions/2020-09-01/productTypes/{productType}",
+   "model_path": "models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json",
+   "parameters": [
+    {
+     "name": "productType",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "sellerId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "productTypeVersion",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "requirements",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "LISTING",
+      "LISTING_PRODUCT_ONLY",
+      "LISTING_OFFER_ONLY"
+     ]
+    },
+    {
+     "name": "requirementsEnforced",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "ENFORCED",
+      "NOT_ENFORCED"
+     ]
+    },
+    {
+     "name": "locale",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "DEFAULT",
+      "ar",
+      "ar_AE",
+      "de",
+      "de_DE",
+      "en",
+      "en_AE",
+      "en_AU",
+      "en_CA",
+      "en_GB",
+      "en_IN",
+      "en_SG",
+      "en_US",
+      "es",
+      "es_ES",
+      "es_MX",
+      "es_US",
+      "fr",
+      "fr_CA",
+      "fr_FR",
+      "it",
+      "it_IT",
+      "ja",
+      "ja_JP",
+      "nl",
+      "nl_NL",
+      "pl",
+      "pl_PL",
+      "pt",
+      "pt_BR",
+      "pt_PT",
+      "sv",
+      "sv_SE",
+      "tr",
+      "tr_TR",
+      "zh",
+      "zh_CN",
+      "zh_TW"
+     ]
+    },
+    {
+     "name": "parentageLevel",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "NONE",
+      "CHILD",
+      "PARENT"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "getInventorySummaries",
+   "method": "GET",
+   "path": "/fba/inventory/v1/summaries",
+   "model_path": "models/fba-inventory-api-model/fbaInventory.json",
+   "parameters": [
+    {
+     "name": "details",
+     "in": "query",
+     "required": false,
+     "type": "boolean"
+    },
+    {
+     "name": "granularityType",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "enum": [
+      "Marketplace"
+     ]
+    },
+    {
+     "name": "granularityId",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "startDateTime",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "sellerSkus",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "maxItems": 50,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "sellerSku",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "nextToken",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "maxItems": 1,
+     "items": {
+      "type": "string"
+     }
+    }
+   ]
+  },
+  {
+   "operation_id": "getItemOffers",
+   "method": "GET",
+   "path": "/products/pricing/v0/items/{Asin}/offers",
+   "model_path": "models/product-pricing-api-model/productPricingV0.json",
+   "parameters": [
+    {
+     "name": "MarketplaceId",
+     "in": "query",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "ItemCondition",
+     "in": "query",
+     "required": true,
+     "type": "string",
+     "enum": [
+      "New",
+      "Used",
+      "Collectible",
+      "Refurbished",
+      "Club"
+     ]
+    },
+    {
+     "name": "Asin",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "CustomerType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "Consumer",
+      "Business"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "getListingsItem",
+   "method": "GET",
+   "path": "/listings/2021-08-01/items/{sellerId}/{sku}",
+   "model_path": "models/listings-items-api-model/listingsItems_2021-08-01.json",
+   "parameters": [
+    {
+     "name": "sellerId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "sku",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "issueLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "includedData",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string",
+      "enum": [
+       "summaries",
+       "attributes",
+       "issues",
+       "offers",
+       "fulfillmentAvailability",
+       "procurement",
+       "relationships",
+       "productTypes"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "operation_id": "getMarketplaceParticipations",
+   "method": "GET",
+   "path": "/sellers/v1/marketplaceParticipations",
+   "model_path": "models/sellers-api-model/sellers.json",
+   "parameters": []
+  },
+  {
+   "operation_id": "getMyFeesEstimateForASIN",
+   "method": "POST",
+   "path": "/products/fees/v0/items/{Asin}/feesEstimate",
+   "model_path": "models/product-fees-api-model/productFeesV0.json",
+   "parameters": [
+    {
+     "name": "body",
+     "in": "body",
+     "required": true,
+     "body_required": []
+    },
+    {
+     "name": "Asin",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrder",
+   "method": "GET",
+   "path": "/orders/v0/orders/{orderId}",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrderAddress",
+   "method": "GET",
+   "path": "/orders/v0/orders/{orderId}/address",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrderBuyerInfo",
+   "method": "GET",
+   "path": "/orders/v0/orders/{orderId}/buyerInfo",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrderItems",
+   "method": "GET",
+   "path": "/orders/v0/orders/{orderId}/orderItems",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "NextToken",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrderItemsBuyerInfo",
+   "method": "GET",
+   "path": "/orders/v0/orders/{orderId}/orderItems/buyerInfo",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "NextToken",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "getOrders",
+   "method": "GET",
+   "path": "/orders/v0/orders",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "CreatedAfter",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "CreatedBefore",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "LastUpdatedAfter",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "LastUpdatedBefore",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "OrderStatuses",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "MarketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "maxItems": 50,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "FulfillmentChannels",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "PaymentMethods",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "BuyerEmail",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "SellerOrderId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "MaxResultsPerPage",
+     "in": "query",
+     "required": false,
+     "type": "integer"
+    },
+    {
+     "name": "EasyShipShipmentStatuses",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "ElectronicInvoiceStatuses",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "NextToken",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "AmazonOrderIds",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "maxItems": 50,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "ActualFulfillmentSupplySourceId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "IsISPU",
+     "in": "query",
+     "required": false,
+     "type": "boolean"
+    },
+    {
+     "name": "StoreChainStoreId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "EarliestDeliveryDateBefore",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "EarliestDeliveryDateAfter",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "LatestDeliveryDateBefore",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "LatestDeliveryDateAfter",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "patchListingsItem",
+   "method": "PATCH",
+   "path": "/listings/2021-08-01/items/{sellerId}/{sku}",
+   "model_path": "models/listings-items-api-model/listingsItems_2021-08-01.json",
+   "parameters": [
+    {
+     "name": "sellerId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "sku",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "includedData",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string",
+      "enum": [
+       "identifiers",
+       "issues"
+      ]
+     }
+    },
+    {
+     "name": "mode",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "VALIDATION_PREVIEW"
+     ]
+    },
+    {
+     "name": "issueLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "body",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "productType",
+      "patches"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "putListingsItem",
+   "method": "PUT",
+   "path": "/listings/2021-08-01/items/{sellerId}/{sku}",
+   "model_path": "models/listings-items-api-model/listingsItems_2021-08-01.json",
+   "parameters": [
+    {
+     "name": "sellerId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "sku",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "maxItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "includedData",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string",
+      "enum": [
+       "identifiers",
+       "issues"
+      ]
+     }
+    },
+    {
+     "name": "mode",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "VALIDATION_PREVIEW"
+     ]
+    },
+    {
+     "name": "issueLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "body",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "productType",
+      "attributes"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "searchDefinitionsProductTypes",
+   "method": "GET",
+   "path": "/definitions/2020-09-01/productTypes",
+   "model_path": "models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json",
+   "parameters": [
+    {
+     "name": "keywords",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "itemName",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "locale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "searchLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    }
+   ]
+  },
+  {
+   "operation_id": "updateShipmentStatus",
+   "method": "POST",
+   "path": "/orders/v0/orders/{orderId}/shipment",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "payload",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "marketplaceId",
+      "shipmentStatus"
+     ]
+    }
+   ]
+  },
+  {
+   "operation_id": "updateVerificationStatus",
+   "method": "PATCH",
+   "path": "/orders/v0/orders/{orderId}/regulatedInfo",
+   "model_path": "models/orders-api-model/ordersV0.json",
+   "parameters": [
+    {
+     "name": "orderId",
+     "in": "path",
+     "required": true,
+     "type": "string"
+    },
+    {
+     "name": "payload",
+     "in": "body",
+     "required": true,
+     "body_required": [
+      "regulatedOrderVerificationStatus"
+     ]
+    }
+   ]
+  }
+ ]
+}

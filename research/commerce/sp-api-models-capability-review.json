@@ -1,0 +1,52 @@
+{
+  "donor_id": "amzn--selling-partner-api-models",
+  "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+  "license": "Apache-2.0",
+  "relied_on": [
+    {
+      "capability": "marketplace.official-product",
+      "what": "request contracts and response schemas of getCatalogItem, getItemOffers and getMyFeesEstimateForASIN",
+      "native": "adapter/marketplace/src/lib.rs::protocol and ::normalize",
+      "proof": "adapter/marketplace/tests/sp_api_contracts.rs (planned US and JP requests match the pinned models: method, path, declared parameters, required parameters, enums); locked model examples validate response normalisation"
+    },
+    {
+      "capability": "sp-api-models.seller-read-contracts",
+      "what": "request contracts of getListingsItem, getInventorySummaries, getMarketplaceParticipations, searchDefinitionsProductTypes, getDefinitionsProductType",
+      "native": "adapter/marketplace/src/reads.rs::protocol and ::normalize",
+      "proof": "the same contract test; locked read fixtures (seller_read.rs)"
+    },
+    {
+      "capability": "sp-api-models.restricted-and-write-denylist",
+      "what": "the 7 restricted (orders PII, RDT) and 6 write operations ECDEV refuses are named exactly as the models declare them, so the denylist cannot silently drift",
+      "native": "adapter/marketplace/src/reads.rs RESTRICTED_OPERATIONS, WRITE_OPERATIONS",
+      "proof": "contract test; seller_read.rs::restricted_unknown_and_non_official_reads_are_refused_before_io"
+    }
+  ],
+  "not_relevant": [
+    {
+      "capability": "sp-api-models.other-api-models",
+      "why": "ECDEV plans only the 8 read-only operations above; reports, feeds, finances, notifications, shipping, vendor and other APIs are never called"
+    },
+    {
+      "capability": "sp-api-models.language-clients",
+      "source": "clients/sellingpartner-api-aa-{java,csharp,javascript,php,python}",
+      "why": "SDK auth clients; ECDEV's LWA refresh is native and tested (transport.rs official_http_refresh_reuse_expiry_and_secret_exclusion) and uses no AWS SigV4"
+    },
+    {
+      "capability": "sp-api-models.rdt-samples",
+      "source": "clients/sample-code/*RestrictedDataToken*",
+      "why": "Restricted Data Token flows are a disabled security domain in ECDEV"
+    },
+    {
+      "capability": "sp-api-models.documents-helper",
+      "source": "clients/sellingpartner-api-documents-helper-java",
+      "why": "report/feed document encryption helpers; ECDEV uses no reports or feeds"
+    },
+    {
+      "capability": "sp-api-models.data-kiosk-schemas",
+      "source": "schemas/data-kiosk/*.graphql",
+      "why": "Data Kiosk analytics queries are not used; three of the four schemas stay PARSE_UNKNOWN"
+    }
+  ],
+  "census_note": "3 GraphQL schemas remain unparsed, so the census stays partial and no extinction is claimed"
+}

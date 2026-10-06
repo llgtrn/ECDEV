@@ -1,13 +1,13 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "024a306c8771df49d93a38d8a3c38431c5fe6baa",
+  "assessed_parent_commit": "291d82c1f38214825f03659383474f2e21288992",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
   "donor_count": 61,
   "effective_states": {
-    "CAPABILITY_RELEVANCE_RESOLVED": 1,
-    "CENSUSED": 4,
+    "CAPABILITY_RELEVANCE_RESOLVED": 2,
+    "CENSUSED": 3,
     "DISCOVERED": 15,
     "EXTINCT": 5,
     "PARITY_PROVEN": 1,
@@ -1288,9 +1288,9 @@
     {
       "donor": "amzn--selling-partner-api-models",
       "claimed": "REGISTERED",
-      "effective": "CENSUSED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): sp-api-models.remaining-api-and-sdk-contracts",
+      "stopped_by": "CUTOVER: no cutover declared",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1324,33 +1324,33 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 3 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "2 of 2 required capabilities lack it: marketplace.official-product, sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 3 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "1 of 2 required capabilities lack it: sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 3 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "2 of 2 declared capabilities have no resolved ECDEV relevance: marketplace.official-product, sp-api-models.remaining-api-and-sdk-contracts"
+          "pass": true,
+          "detail": "all 8 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -3527,7 +3527,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "42 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "43 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
