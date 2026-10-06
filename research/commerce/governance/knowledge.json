@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "c82e1399b5d2d86f7634e7dbb186f1eedc8e9736",
+  "assessed_parent_commit": "82401b670c725f1e4ea59cd0a4cb3911f47b29da",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,13 +19,13 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 42,
-    "benchmark_candidates": 32,
+    "benchmark_candidates": 31,
     "algorithm_candidates": 12,
     "reference_only": 52,
-    "study_complete_capabilities": 79,
+    "study_complete_capabilities": 80,
     "not_relevant_after_review": 25,
-    "research_questions_open": 86,
-    "knowledge_coverage_ratio": 0.644628
+    "research_questions_open": 85,
+    "knowledge_coverage_ratio": 0.64876
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -1278,7 +1278,6 @@
       },
       "open": [
         "zep.alias-canonicalizer STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)",
-        "zep.memory-benchmarks BENCHMARK_CANDIDATE(do LongMemEval knowledge-update, temporal-reasoning and abstention question types, restated over ECDEV observation histories, expose failures in fact supersession and as-of queries? The conversational datasets themselves are not the target)",
         "zep.retrieval-eval-harness STUDY_CANDIDATE(a two-axis evaluation for ECDEV research answers: evidence completeness before answer correctness, with deterministic recall against line-level evidence needles and a judge separate from the responder)",
         "zep.context-budget-sweep BENCHMARK_CANDIDATE(where is the accuracy-versus-evidence-budget knee for product, price and policy questions; LoCoMo plateaus near 1.4k tokens)",
         "zep.context-assembly STUDY_CANDIDATE(type quotas in a fixed order (summary, typed facts, entities, episodes) against one relevance-ranked list under the same budget, with document evidence labelled apart from memory)",
@@ -1291,6 +1290,7 @@
         "zep.legacy-server REFERENCE_ONLY(Postgres-backed memory server architecture)",
         "zep.ingestion-loaders-and-submission NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](loaders, submitters, thread upload and polling for Zep Cloud; the chunking transforms are zep.contextual-chunking)",
         "zep.mcp-and-integrations NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP pass-through server, SDK demos and agent-framework adapters for Zep Cloud; context templates and the placement benchmark are separate capabilities)",
+        "zep.memory-benchmarks STUDY_COMPLETE[INDEPENDENT_NATIVE](restated over a watch history (domain/commerce/src/monitor.rs::memory_questions_over_observed_history), the three question types found supersession correct but no as-of query at all; monitor::fact_as_of now answers OBSERVED only between first and last observation, CHANGE_TIME_UNKNOWN inside a gap before a superseding value, NOT_OBSERVED_SINCE with age after the last observation, UNKNOWN before the first or for a field never observed, and CONFLICT for disagreeing windows; the conversational datasets themselves are not the target)",
         "zep.repository-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)",
         "zep.context-placement-benchmark REFERENCE_ONLY(controlled replay comparing where an evidence block sits against cache hits, cost and latency)"
       ]

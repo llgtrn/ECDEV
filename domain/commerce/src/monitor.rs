@@ -381,6 +381,81 @@ fn snapshot(run: &Value, request: &Value) -> Value {
     }
     Value::Object(sources)
 }
+impl Engine {
+    /// What a watch knew about one product field at time `at`, from its stored fact windows.
+    pub fn monitor_fact_as_of(
+        &self,
+        watch_id: &str,
+        url: &str,
+        product: &str,
+        field: &str,
+        at: u64,
+    ) -> Result<Value, String> {
+        let db = self.db.lock().map_err(err)?;
+        let mut s = db
+            .prepare("SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product=?3 AND field=?4 ORDER BY id")
+            .map_err(err)?;
+        let windows = s
+            .query_map(params![watch_id, url, product, field], |r| {
+                Ok(FactWindow {
+                    url: r.get(0)?,
+                    product: r.get(1)?,
+                    field: r.get(2)?,
+                    value: r.get(3)?,
+                    valid_at: r.get(4)?,
+                    invalid_at: r.get(5)?,
+                    last_observed_at: r.get(6)?,
+                })
+            })
+            .map_err(err)?
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(err)?;
+        Ok(fact_as_of(&windows, at))
+    }
+}
+
+/// The answer one product field's fact windows give for time `at`. A value is OBSERVED only
+/// between its first and last observation; after the last observation it is the last observed
+/// value with its age (open window) or a change at an unknown time between the last observation
+/// and the superseding one (closed window). Before the first observation, and for a field never
+/// observed, the answer is UNKNOWN; windows that disagree at `at` are a CONFLICT.
+pub fn fact_as_of(windows: &[FactWindow], at: u64) -> Value {
+    let parse = |v: &str| serde_json::from_str::<Value>(v).unwrap_or(Value::Null);
+    let covering: Vec<&FactWindow> = windows
+        .iter()
+        .filter(|w| w.valid_at <= at && w.invalid_at.is_none_or(|i| at < i))
+        .collect();
+    let values: BTreeSet<&str> = covering.iter().map(|w| w.value.as_str()).collect();
+    if values.len() > 1 {
+        return json!({"at":at,"state":"CONFLICT","value":null,"values":values.iter().map(|v|parse(v)).collect::<Vec<_>>()});
+    }
+    let Some(w) = covering.first() else {
+        let first = windows.iter().map(|w| w.valid_at).min();
+        return json!({"at":at,"state":"UNKNOWN","value":null,"reason":if first.is_some(){"BEFORE_FIRST_OBSERVATION"}else{"NEVER_OBSERVED"},"first_observed_at":first});
+    };
+    let last = covering
+        .iter()
+        .map(|w| w.last_observed_at.unwrap_or(w.valid_at))
+        .max()
+        .unwrap_or(w.valid_at);
+    let value = parse(&w.value);
+    if at <= last {
+        return json!({"at":at,"state":"OBSERVED","value":value,"observed_from":w.valid_at,"observed_until":last});
+    }
+    match w.invalid_at {
+        None => {
+            json!({"at":at,"state":"NOT_OBSERVED_SINCE","value":null,"last_observed_value":value,"last_observed_at":last,"age_seconds":at-last})
+        }
+        Some(end) => {
+            let next = windows
+                .iter()
+                .find(|n| n.valid_at == end && n.value != w.value)
+                .map(|n| parse(&n.value));
+            json!({"at":at,"state":"CHANGE_TIME_UNKNOWN","value":null,"before":value,"after":next,"last_observed_at":last,"next_observed_at":end})
+        }
+    }
+}
+
 /// One stored fact window, as `price_statistics` reads it.
 #[derive(Clone, Debug)]
 pub struct FactWindow {
@@ -606,6 +681,94 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    /// LongMemEval's knowledge-update, temporal-reasoning and abstention question types,
+    /// restated over a watch's own observation history.
+    #[test]
+    fn memory_questions_over_observed_history() {
+        let root = std::env::temp_dir().join(format!("ecdev-asof-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        let watch=e.monitor_create(json!({"market":"PUBLIC_WEB","query":"Watch cup","targets":["https://shop.example/product"],"interval_seconds":60})).unwrap();
+        let id = watch["watch_id"].as_str().unwrap().to_string();
+        let url = "https://shop.example/product";
+        let run = |price: u64| json!({"run_id":"fixture","mode":"FIXTURE","errors":[],"snapshots":[{"source":url,"content_hash":"fixture","products":[{"sku":"Cup","title":"Cup","price_minor":price,"currency":"JPY"}]}]});
+        let tick = |at: u64, outcome: Value| {
+            e.db.lock()
+                .unwrap()
+                .execute("UPDATE watches SET next_due=?1", [at])
+                .unwrap();
+            let lease = e.claim_watch(at).unwrap().unwrap();
+            e.finish_watch(&lease, at, Ok(outcome)).unwrap();
+        };
+        tick(100, run(3000));
+        tick(200, run(3000));
+        tick(
+            300,
+            json!({"run_id":"gap","mode":"LIVE","errors":[{"source":url,"reason":"ROBOTS_DENIED_OR_UNKNOWN"}],"snapshots":[]}),
+        );
+        tick(400, run(4000));
+        let product = e.monitor_status(Some(&id)).unwrap()["facts"][0]["product"]
+            .as_str()
+            .unwrap()
+            .to_string();
+        let ask =
+            |field: &str, at: u64| e.monitor_fact_as_of(&id, url, &product, field, at).unwrap();
+        // Knowledge update: the latest answer is the superseding value.
+        let now = ask("price_minor", 400);
+        assert_eq!(
+            (now["state"].clone(), now["value"].clone()),
+            (json!("OBSERVED"), json!(4000))
+        );
+        // Temporal reasoning: an earlier time gets the value observed then ...
+        assert_eq!(ask("price_minor", 150)["value"], 3000);
+        // ... and a time inside the gap gets no value: the change happened somewhere in it.
+        let gap = ask("price_minor", 300);
+        assert_eq!(gap["state"], "CHANGE_TIME_UNKNOWN");
+        assert!(gap["value"].is_null());
+        assert_eq!(
+            (gap["before"].clone(), gap["after"].clone()),
+            (json!(3000), json!(4000))
+        );
+        assert_eq!(
+            (
+                gap["last_observed_at"].clone(),
+                gap["next_observed_at"].clone()
+            ),
+            (json!(200), json!(400))
+        );
+        // Abstention: before the first observation, a field never observed, and after the last.
+        let early = ask("price_minor", 50);
+        assert_eq!(
+            (early["state"].clone(), early["reason"].clone()),
+            (json!("UNKNOWN"), json!("BEFORE_FIRST_OBSERVATION"))
+        );
+        assert_eq!(ask("availability", 400)["reason"], "NEVER_OBSERVED");
+        let later = ask("price_minor", 1000);
+        assert_eq!(
+            (
+                later["state"].clone(),
+                later["value"].clone(),
+                later["age_seconds"].clone()
+            ),
+            (json!("NOT_OBSERVED_SINCE"), Value::Null, json!(600))
+        );
+    }
+
+    #[test]
+    fn disagreeing_windows_are_a_conflict() {
+        let w = |value: &str| FactWindow {
+            url: "u".into(),
+            product: "p".into(),
+            field: "price_minor".into(),
+            value: value.into(),
+            valid_at: 10,
+            invalid_at: None,
+            last_observed_at: Some(10),
+        };
+        let a = fact_as_of(&[w("1"), w("2")], 10);
+        assert_eq!(a["state"], "CONFLICT");
+        assert!(a["value"].is_null());
+    }
+
     #[test]
     fn availability_spelling_is_not_a_stock_change() {
         let page =
