@@ -1,17 +1,17 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "39fef73c8dd658add30ea77a9f5cec74ee8414bf",
+  "assessed_parent_commit": "142fa812f0a004076e2158298a1e134d4f025184",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
-  "donor_count": 66,
+  "donor_count": 67,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
     "CUTOVER": 4,
     "DISCOVERED": 13,
     "EXTINCT": 1,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 43
+    "REGISTERED": 44
   },
   "extinct": [
     "scrapinghub--price-parser"
@@ -3488,6 +3488,101 @@
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
           "detail": "2 observed: IMPORT NPM esbuild in tools/commerce/crawlee-oracle.mjs; MANIFEST NPM esbuild in tools/commerce/package.json"
+        },
+        {
+          "gate": "LINKED_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "TEST_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "SOURCE_IMPORTS_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "RESIDENT_SOURCE_ZERO",
+          "pass": true,
+          "detail": "no donor source tracked"
+        },
+        {
+          "gate": "CAPABILITY_COVERAGE_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "PARITY_PROOFS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "REGRESSION_TESTS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CANONICAL_REPLACEMENT_EXISTS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "TECHNOLOGY_MAPPING_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CAPABILITY_RELEVANCE_RESOLVED",
+          "pass": false,
+          "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
+          "gate": "CUTOVER_COMPLETED",
+          "pass": false,
+          "detail": "no cutover declared"
+        },
+        {
+          "gate": "ROLLBACK_INDEPENDENT",
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
+        }
+      ]
+    },
+    {
+      "donor": "dependency--github-com-sass-dart-sass",
+      "claimed": "REGISTERED",
+      "effective": "REGISTERED",
+      "exception": "",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "capabilities": [],
+      "gates": [
+        {
+          "gate": "RUNTIME_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "BUILD_EDGES_ZERO",
+          "pass": false,
+          "detail": "1 observed: MANIFEST NPM sass in tools/commerce/package.json"
         },
         {
           "gate": "LINKED_EDGES_ZERO",

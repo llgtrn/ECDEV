@@ -70,7 +70,7 @@ def main():
                     "reason_code": None, "first_error": None,
                 })
                 continue
-            result = census.parse_review(row["path"], blob)
+            result = census.parse_review(row["path"], blob, donor_tree=(checkout, summary["commit_sha"]))
             row["parse_status"] = result["status"]
             row["language"] = result["language"]
             if result["status"] == "PARSED":
@@ -128,7 +128,7 @@ def main():
             "template grammars are never fallbacks: they accept nearly any text",
             "notebooks: Python code cells only, IPython magic and shell-escape lines blanked in place",
             "reason codes label a failure; they never turn it into a parse",
-            "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web for JSX",
+            "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web, html5lib strict (WHATWG) with literal ampersands written out, dart-sass compiling inside the donor's own stylesheet tree",
             "PARSE_INVALID_CONFIRMED is never PARSED: the language's reference parser (CPython ast, html5lib strict, TypeScript) rejects the donor file itself; it counts apart from parse_unknown and its error is recorded",
         ],
         "semantic_completion": False,

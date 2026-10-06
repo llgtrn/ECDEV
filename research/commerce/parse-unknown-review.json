@@ -7,13 +7,13 @@
     "template grammars are never fallbacks: they accept nearly any text",
     "notebooks: Python code cells only, IPython magic and shell-escape lines blanked in place",
     "reason codes label a failure; they never turn it into a parse",
-    "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web for JSX",
+    "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web, html5lib strict (WHATWG) with literal ampersands written out, dart-sass compiling inside the donor's own stylesheet tree",
     "PARSE_INVALID_CONFIRMED is never PARSED: the language's reference parser (CPython ast, html5lib strict, TypeScript) rejects the donor file itself; it counts apart from parse_unknown and its error is recorded"
   ],
   "semantic_completion": false,
   "reviewed": 181,
-  "resolved": 136,
-  "remaining": 45,
+  "resolved": 161,
+  "remaining": 20,
   "resolved_by_method": {
     "TYPESCRIPT_COMPILER_SYNTAX": 16,
     "SQLGLOT_STRICT_DIALECT_PARSER": 2,
@@ -22,7 +22,8 @@
     "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER": 10,
     "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK": 12,
     "REFERENCE_PARSER_REJECTS": 5,
-    "JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED": 17,
+    "JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED": 18,
+    "DART_SASS_COMPILE_IN_DONOR_TREE": 24,
     "GRAPHQL_REFERENCE_PARSER": 3,
     "RECLASSIFIED_GENERATED": 1,
     "CYTHON_COMPILER_PARSER": 2,
@@ -30,13 +31,12 @@
     "SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY": 3
   },
   "remaining_by_reason": {
-    "GRAMMAR_REJECTS_CONSTRUCT": 20,
+    "GRAMMAR_REJECTS_CONSTRUCT": 9,
     "SQL_DIALECT_OUTSIDE_GRAMMAR": 1,
     "NO_GRAMMAR_FOR_LANGUAGE": 2,
     "PREPROCESSOR_MACRO_EXPANSION_REQUIRED": 6,
     "TEMPLATE_PLACEHOLDER_SOURCE": 1,
-    "TEMPLATE_LANGUAGE_IN_HOST_HTML": 2,
-    "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR": 13
+    "TEMPLATE_LANGUAGE_IN_HOST_HTML": 1
   },
   "files": [
     {
@@ -121,6 +121,47 @@
     {
       "donor_id": "firecrawl--firecrawl",
       "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/nuq-postgres/nuq.sql",
+      "blob_hash": "d20080e37be9b4ad30828c8ddd8049b0e1328829",
+      "sha256": "7e71e2ae5e6fb195feb3328a102da5489e62b1fc7c8f8acaa546b44a9935c51f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 8,
+        "error_byte_ratio": 0.0322
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/clickhouse/concurrency_logs.sql",
+      "blob_hash": "7f2b81498366ddc9592c8ce1a7b50144203e3354",
+      "sha256": "efaaea6538a10db9db330aa29e11b25308d68a161821b554dc3d2d5bc86771b4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "sql",
+        "grammar": "sqlglot 26.16.2 postgres",
+        "method": "SQLGLOT_STRICT_DIALECT_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
       "source_path": "apps/api/src/controllers/v2/types.ts",
       "blob_hash": "280d1021bd113b6a2b027327c0943e289b56ac62",
       "sha256": "68de7b0c2ef01c03cb039bb1468957fd61369367c2ef54e2367e38edb00cd338",
@@ -190,47 +231,6 @@
         "language": "typescript",
         "grammar": "typescript",
         "method": "TYPESCRIPT_COMPILER_SYNTAX"
-      },
-      "reason_code": null,
-      "first_error": null
-    },
-    {
-      "donor_id": "firecrawl--firecrawl",
-      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
-      "source_path": "apps/nuq-postgres/nuq.sql",
-      "blob_hash": "d20080e37be9b4ad30828c8ddd8049b0e1328829",
-      "sha256": "7e71e2ae5e6fb195feb3328a102da5489e62b1fc7c8f8acaa546b44a9935c51f",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 8,
-        "error_byte_ratio": 0.0322
-      }
-    },
-    {
-      "donor_id": "firecrawl--firecrawl",
-      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
-      "source_path": "apps/api/clickhouse/concurrency_logs.sql",
-      "blob_hash": "7f2b81498366ddc9592c8ce1a7b50144203e3354",
-      "sha256": "efaaea6538a10db9db330aa29e11b25308d68a161821b554dc3d2d5bc86771b4",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql"
-      },
-      "after": {
-        "parse_status": "PARSED",
-        "language": "sql",
-        "grammar": "sqlglot 26.16.2 postgres",
-        "method": "SQLGLOT_STRICT_DIALECT_PARSER"
       },
       "reason_code": null,
       "first_error": null
@@ -1253,25 +1253,6 @@
     {
       "donor_id": "microsoft--playwright",
       "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
-      "source_path": "packages/isomorphic/trace/trace.ts",
-      "blob_hash": "6c0a8a005b0fb04a5664bd48db4905a1c8e36164",
-      "sha256": "fe1d31f97c56d5495e588461471f4e04a0c4b77aa9dc35d0daf0bb6d6fc2ca78",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "typescript"
-      },
-      "after": {
-        "parse_status": "PARSED",
-        "language": "typescript",
-        "grammar": "typescript",
-        "method": "TYPESCRIPT_COMPILER_SYNTAX"
-      },
-      "reason_code": null,
-      "first_error": null
-    },
-    {
-      "donor_id": "microsoft--playwright",
-      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
       "source_path": "packages/playwright-core/bin/install_webkit_wsl.ps1",
       "blob_hash": "ccaaf1564d6b6f53e230d28cd40d8a92525a997c",
       "sha256": "bc61beda37a808eef27d39ce684baa792f6d17737a25a432b1a84d3b591ab815",
@@ -1548,6 +1529,25 @@
       "first_error": null
     },
     {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/isomorphic/trace/trace.ts",
+      "blob_hash": "6c0a8a005b0fb04a5664bd48db4905a1c8e36164",
+      "sha256": "fe1d31f97c56d5495e588461471f4e04a0c4b77aa9dc35d0daf0bb6d6fc2ca78",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "typescript",
+        "grammar": "typescript",
+        "method": "TYPESCRIPT_COMPILER_SYNTAX"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
       "donor_id": "browser-use--browser-use",
       "commit_sha": "302d8fcb245a7a63fb7531a4734c9ce3c7792779",
       "source_path": "bin/lint.sh",
@@ -1618,544 +1618,13 @@
         "language": "html"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "html",
-        "grammar": null,
-        "method": null
+        "grammar": "jinja2+html",
+        "method": "JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED"
       },
-      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 1.0
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/diff.scss",
-      "blob_hash": "ac0f993cfdfb6e80d466e5a979210517ed6ed922",
-      "sha256": "ecddfe1771ed520843fbedd23151632ec597ce7da373e409c86e9e4b85cdcddf",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0012
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_action_sidebar.scss",
-      "blob_hash": "2d855db8c779fff596f0b9e28df02b7dc86391de",
-      "sha256": "c6cce0c9d78ba0a802d4f627a8032449ef87eff29ce26497062e5882fef4d432",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 2,
-        "error_byte_ratio": 0.0096
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_add-watch.scss",
-      "blob_hash": "6ff5925be2f6f00f6da4396ffa897c12a5971029",
-      "sha256": "ae5106011ac0c96d866ded33272b1fd9a80d5afceebbc429f57bce3fa19103c1",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 2,
-        "error_byte_ratio": 0.0012
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_browser-steps.scss",
-      "blob_hash": "b8c3865fc7c28ce393f56c32ff60a9c35bb95d7c",
-      "sha256": "7db3d64b6ac8e00c90378f1490f89d715923c37a40d1c26a98128b1a67a5727b",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 36,
-        "error_byte_ratio": 0.0014
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_button.scss",
-      "blob_hash": "b418b003095bcca593291f11c005ad57e6701418",
-      "sha256": "b241a5af382080409b60a45d83df4505dcdde7a27e4fe19fcbfaf10ebf10e457",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0009
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_extra_browsers.scss",
-      "blob_hash": "b1e60e8ac8d2014de5335e0a5e8b155915bcdc2d",
-      "sha256": "22c68e5e6ebf7a12608847422fb6703a8d80cdc5f1bc40ee27a0162ef0d96f21",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 4,
-        "error_byte_ratio": 0.0015
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_extra_proxies.scss",
-      "blob_hash": "cee7deeaa1e9b0edf467d0fcf5d9f6a5aa2adc72",
-      "sha256": "07654465cb60059a0382d72390722767d9d7242bb2cf8f2789677a7e3e42b7a7",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 4,
-        "error_byte_ratio": 0.0015
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_hamburger_menu.scss",
-      "blob_hash": "4fd831becfeabbdb5c26cf921cc8fe92d8767b63",
-      "sha256": "875a900a870ed4553ed7c30ded0e3bb0fd37cefa8b54b43d9eddb21185cc0a5d",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 2,
-        "error_byte_ratio": 0.0012
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_language.scss",
-      "blob_hash": "d3df92923babdbff65e1a1a1954f1dd883a0dd3d",
-      "sha256": "20bdc72957b3db6efdf14c739cfbc70c6ce475572324b4d2ba8dfbf650491ccc",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 23,
-        "error_byte_ratio": 0.0007
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_llm.scss",
-      "blob_hash": "5a652b69104cd597d01200f9b04ecfae03b857de",
-      "sha256": "a3425cc6c433411ee28c0b1e56e5b6156547f191c9c514f4de5997b4721ef6bb",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 68,
-        "error_byte_ratio": 0.0071
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_love.scss",
-      "blob_hash": "42e2e3a367f7d22dfb72abc98feacfb153fd36eb",
-      "sha256": "6bbe14a71244a37b2bd2878174e77cd524ebfb8168701674643104fbfd7d2676",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0028
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_menu.scss",
-      "blob_hash": "852c9786a9d69fc80ad7b3b7538749c3052110c3",
-      "sha256": "f94461a7f10067e09d894e9fc156ef183c4fd917e9cf8d7359a899630476a59e",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0052
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_minitabs.scss",
-      "blob_hash": "a2dc2d49391a6de112762ebbeb2584842bf220ad",
-      "sha256": "3b0b1effe68d014310e706d7c40f15dfbd543cff146df4a226eac101b748badc",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 2,
-        "error_byte_ratio": 0.0027
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_notifications.scss",
-      "blob_hash": "174f53948817e69abb0802dc80db72ec4fe534ec",
-      "sha256": "8334bb17920192a377d2d4fd256366fa5e258ce02e7357d5c14a9a44c8ba8014",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0017
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_pagination.scss",
-      "blob_hash": "502a41f57e3f6854f2eaf9e4b431ff61ff0125bf",
-      "sha256": "beef8bb8b91d5f9ea593ba00239285c623318721e314bd2412aa72db52890a12",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 6,
-        "error_byte_ratio": 0.0021
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_pwa_install.scss",
-      "blob_hash": "997cabc89c925765b250ae0add2e91aa3ea021e3",
-      "sha256": "6cc23f4b4cbd22dc61f88e1e98378e7f7b0fc3458b002f90d1bdee50e779d966",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 29,
-        "error_byte_ratio": 0.0006
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_seg.scss",
-      "blob_hash": "26c2a5d9c927674ed01403ea12a63a10608af087",
-      "sha256": "1d2743d593502e614f954deb3dc5df155671df538464d924b53b4191f91b6612",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0014
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_sub_tabs.scss",
-      "blob_hash": "161a0c3d5c97a982c83052d1f06906bc29f7340d",
-      "sha256": "aefd86554c888d96b301c5feb968b3fd2b530896e2c6f65638458c44fe2763ef",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 189,
-        "error_byte_ratio": 0.0002
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_table.scss",
-      "blob_hash": "56de07cbe04b6b5639ba5e5e67d2e925dde9b279",
-      "sha256": "94e5f403795a95f1eed55563d485351624de9b6e1417b77218b6e929073e7ccc",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0022
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_top_menu.scss",
-      "blob_hash": "6e970ff8b4922ee08f5f57c9d71480ed4cbb4985",
-      "sha256": "805af2635603d3e15069c9cf5c8db3e812a013f1966577fc0ef9ff13e66e2ec1",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0057
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_visualselector.scss",
-      "blob_hash": "7fa046889993b2fb936cea8b2f08a71e2cc1fe4d",
-      "sha256": "1373d3b7b183263473361d7ccfdf6fec8259efedff93a70e5f19b5a8906ccb69",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 19,
-        "error_byte_ratio": 0.0031
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table-mobile.scss",
-      "blob_hash": "7481f60bafd303521053e845ee1a0dd81155b991",
-      "sha256": "860ae885fc9d872a2b8589d1181fc9abf67bf401cb3250051bfd03c195bc733d",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 131,
-        "error_byte_ratio": 0.0018
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table.scss",
-      "blob_hash": "36770661dcde12598ca37ac36929d89f73d250b4",
-      "sha256": "6896c156bfa99966ea30ebe419a6e5994edd89399c1a70cf38c5aa28c98caecf",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0012
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/scss/styles.scss",
-      "blob_hash": "40538d044a29a58999231bad728b88c668b6e78f",
-      "sha256": "6d88158cc0f0019070e705f415ab73166b075819058ea11e706fa0315c452552",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "scss",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 4,
-        "error_byte_ratio": 0.0004
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "dgtlmoon--changedetection.io",
@@ -2457,6 +1926,462 @@
         "language": "css",
         "grammar": "scss",
         "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/diff.scss",
+      "blob_hash": "ac0f993cfdfb6e80d466e5a979210517ed6ed922",
+      "sha256": "ecddfe1771ed520843fbedd23151632ec597ce7da373e409c86e9e4b85cdcddf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_action_sidebar.scss",
+      "blob_hash": "2d855db8c779fff596f0b9e28df02b7dc86391de",
+      "sha256": "c6cce0c9d78ba0a802d4f627a8032449ef87eff29ce26497062e5882fef4d432",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_add-watch.scss",
+      "blob_hash": "6ff5925be2f6f00f6da4396ffa897c12a5971029",
+      "sha256": "ae5106011ac0c96d866ded33272b1fd9a80d5afceebbc429f57bce3fa19103c1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_browser-steps.scss",
+      "blob_hash": "b8c3865fc7c28ce393f56c32ff60a9c35bb95d7c",
+      "sha256": "7db3d64b6ac8e00c90378f1490f89d715923c37a40d1c26a98128b1a67a5727b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_button.scss",
+      "blob_hash": "b418b003095bcca593291f11c005ad57e6701418",
+      "sha256": "b241a5af382080409b60a45d83df4505dcdde7a27e4fe19fcbfaf10ebf10e457",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_extra_browsers.scss",
+      "blob_hash": "b1e60e8ac8d2014de5335e0a5e8b155915bcdc2d",
+      "sha256": "22c68e5e6ebf7a12608847422fb6703a8d80cdc5f1bc40ee27a0162ef0d96f21",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_extra_proxies.scss",
+      "blob_hash": "cee7deeaa1e9b0edf467d0fcf5d9f6a5aa2adc72",
+      "sha256": "07654465cb60059a0382d72390722767d9d7242bb2cf8f2789677a7e3e42b7a7",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_hamburger_menu.scss",
+      "blob_hash": "4fd831becfeabbdb5c26cf921cc8fe92d8767b63",
+      "sha256": "875a900a870ed4553ed7c30ded0e3bb0fd37cefa8b54b43d9eddb21185cc0a5d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_language.scss",
+      "blob_hash": "d3df92923babdbff65e1a1a1954f1dd883a0dd3d",
+      "sha256": "20bdc72957b3db6efdf14c739cfbc70c6ce475572324b4d2ba8dfbf650491ccc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_llm.scss",
+      "blob_hash": "5a652b69104cd597d01200f9b04ecfae03b857de",
+      "sha256": "a3425cc6c433411ee28c0b1e56e5b6156547f191c9c514f4de5997b4721ef6bb",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_love.scss",
+      "blob_hash": "42e2e3a367f7d22dfb72abc98feacfb153fd36eb",
+      "sha256": "6bbe14a71244a37b2bd2878174e77cd524ebfb8168701674643104fbfd7d2676",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_menu.scss",
+      "blob_hash": "852c9786a9d69fc80ad7b3b7538749c3052110c3",
+      "sha256": "f94461a7f10067e09d894e9fc156ef183c4fd917e9cf8d7359a899630476a59e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_minitabs.scss",
+      "blob_hash": "a2dc2d49391a6de112762ebbeb2584842bf220ad",
+      "sha256": "3b0b1effe68d014310e706d7c40f15dfbd543cff146df4a226eac101b748badc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_notifications.scss",
+      "blob_hash": "174f53948817e69abb0802dc80db72ec4fe534ec",
+      "sha256": "8334bb17920192a377d2d4fd256366fa5e258ce02e7357d5c14a9a44c8ba8014",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_pagination.scss",
+      "blob_hash": "502a41f57e3f6854f2eaf9e4b431ff61ff0125bf",
+      "sha256": "beef8bb8b91d5f9ea593ba00239285c623318721e314bd2412aa72db52890a12",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_pwa_install.scss",
+      "blob_hash": "997cabc89c925765b250ae0add2e91aa3ea021e3",
+      "sha256": "6cc23f4b4cbd22dc61f88e1e98378e7f7b0fc3458b002f90d1bdee50e779d966",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_seg.scss",
+      "blob_hash": "26c2a5d9c927674ed01403ea12a63a10608af087",
+      "sha256": "1d2743d593502e614f954deb3dc5df155671df538464d924b53b4191f91b6612",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_sub_tabs.scss",
+      "blob_hash": "161a0c3d5c97a982c83052d1f06906bc29f7340d",
+      "sha256": "aefd86554c888d96b301c5feb968b3fd2b530896e2c6f65638458c44fe2763ef",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_table.scss",
+      "blob_hash": "56de07cbe04b6b5639ba5e5e67d2e925dde9b279",
+      "sha256": "94e5f403795a95f1eed55563d485351624de9b6e1417b77218b6e929073e7ccc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_top_menu.scss",
+      "blob_hash": "6e970ff8b4922ee08f5f57c9d71480ed4cbb4985",
+      "sha256": "805af2635603d3e15069c9cf5c8db3e812a013f1966577fc0ef9ff13e66e2ec1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_visualselector.scss",
+      "blob_hash": "7fa046889993b2fb936cea8b2f08a71e2cc1fe4d",
+      "sha256": "1373d3b7b183263473361d7ccfdf6fec8259efedff93a70e5f19b5a8906ccb69",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table-mobile.scss",
+      "blob_hash": "7481f60bafd303521053e845ee1a0dd81155b991",
+      "sha256": "860ae885fc9d872a2b8589d1181fc9abf67bf401cb3250051bfd03c195bc733d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table.scss",
+      "blob_hash": "36770661dcde12598ca37ac36929d89f73d250b4",
+      "sha256": "6896c156bfa99966ea30ebe419a6e5994edd89399c1a70cf38c5aa28c98caecf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/styles.scss",
+      "blob_hash": "40538d044a29a58999231bad728b88c668b6e78f",
+      "sha256": "6d88158cc0f0019070e705f415ab73166b075819058ea11e706fa0315c452552",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "scss",
+        "grammar": "dart-sass 1.93.2",
+        "method": "DART_SASS_COMPILE_IN_DONOR_TREE"
       },
       "reason_code": null,
       "first_error": null

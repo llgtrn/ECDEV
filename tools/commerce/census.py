@@ -135,7 +135,7 @@ def failure_reason(path, content, language):
  if suffix in {'.ts','.tsx'} and re.search(r'export type \*|^\s*(abstract|accessor|satisfies)\??:|import\("[^"]+"\)\.',text,re.M): return 'TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR'
  return 'GRAMMAR_REJECTS_CONSTRUCT'
 
-def parse_review(path, content):
+def parse_review(path, content, donor_tree=None):
  """Structural parse with the admissible grammars for a file, and a reason when none is clean."""
  language=source_language(path,content); suffix=pathlib.Path(path).suffix
  out={'status':'PARSE_UNKNOWN','language':language,'grammar':None,'method':None,'reason_code':None,'error':None,'symbols':[],'imports':[]}
@@ -180,7 +180,7 @@ def parse_review(path, content):
   walk(tree.root_node)
   out.update(status='PARSED',grammar=grammar,method=method if i==0 else 'SUPERSET_OR_HEADER_GRAMMAR_FALLBACK',reason_code=None,error=None,symbols=symbols,imports=imports)
   return out
- reference=reference_parse(path,content,language)
+ reference=reference_parse(path,content,language,donor_tree)
  if reference:
   out.update(status='PARSED',grammar=reference[0],method=reference[1],reason_code=None,error=None)
   return out
@@ -192,7 +192,7 @@ def parse_review(path, content):
 
 TEMPLATE_TAG = re.compile(r'\{%.*?%\}|\{\{.*?\}\}|\{#.*?#\}', re.S)
 
-def reference_parse(path, content, language):
+def reference_parse(path, content, language, donor_tree=None):
  """When the tree-sitter grammar rejects a file, the language's own reference parser may still
  accept it: graphql-core (port of graphql-js) for GraphQL; for a Jinja template, Jinja's parser
  for the template layer AND the HTML grammar on the text with every template tag blanked (a
@@ -210,7 +210,13 @@ def reference_parse(path, content, language):
    from tree_sitter_language_pack import get_parser
    jinja2.Environment().parse(text)
   except Exception: return None
-  blanked=TEMPLATE_TAG.sub(lambda m: re.sub(r'[^\n]',' ',m.group(0)),text)
+  # A tag standing for an unquoted attribute value (attr={{ x }}) becomes a placeholder value of
+  # the same length; every other tag becomes spaces. Literal ampersands are written out (the same
+  # document under WHATWG).
+  def blank(m):
+   if re.search(r'=\s*$',text[max(0,m.start()-3):m.start()]) and '\n' not in m.group(0): return 'x'*len(m.group(0))
+   return re.sub(r'[^\n]',' ',m.group(0))
+  blanked=literal_ampersands(TEMPLATE_TAG.sub(blank,text))
   if get_parser('html').parse(blanked.encode()).root_node.has_error: return None
   return ('jinja2+html','JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED')
  if language=='html' and not TEMPLATE_TAG.search(text):
@@ -227,6 +233,8 @@ def reference_parse(path, content, language):
     parser.parseFragment(body,container={'tr':'tbody','td':'tr','th':'tr','li':'ul','option':'select','tbody':'table','thead':'table'}.get(first.group(1).lower() if first else '','div'))
    return ('html5lib '+html5lib.__version__+' strict','WHATWG_PARSER_LITERAL_AMPERSANDS_NORMALISED')
   except Exception: return None
+ if language=='scss' and donor_tree:
+  return sass_compile(path,donor_tree)
  if language=='css':
   # CSS Syntax Module Level 3 (tinycss2): the browser parsing algorithm. Framework at-rules and
   # keyframe selector lists are valid syntax there; any parse-error node rejects the file.
@@ -242,6 +250,28 @@ def reference_parse(path, content, language):
   diagnostics=typescript_diagnostics(path,text)
   if diagnostics==[]: return ('typescript','TYPESCRIPT_COMPILER_SYNTAX')
  return None
+
+def sass_compile(path, tree):
+ """dart-sass, the reference Sass implementation pinned in tools/commerce/package-lock.json,
+ compiles the file inside the donor's own stylesheet tree at the census commit (every .scss, .sass
+ and .css blob extracted with git archive, so @use and @import resolve as the donor resolves
+ them). A clean compile parses every rule of the file; nothing of the donor is executed."""
+ import shutil,tempfile
+ checkout,commit=tree
+ sass=pathlib.Path(__file__).resolve().parent/'node_modules/.bin/sass'
+ if not sass.is_file(): return None
+ with tempfile.TemporaryDirectory() as root:
+  names=[n for n in subprocess.run(['git','ls-tree','-r','-z','--name-only',commit],cwd=checkout,capture_output=True).stdout.decode().split('\0') if n.endswith(('.scss','.sass','.css'))]
+  if path not in names: return None
+  archive=subprocess.run(['git','archive',commit,'--']+names,cwd=checkout,capture_output=True)
+  if archive.returncode!=0: return None
+  subprocess.run(['tar','-x','-C',root],input=archive.stdout,check=True)
+  target=pathlib.Path(root)/path
+  if not target.is_file(): return None
+  r=subprocess.run([str(sass),'--no-source-map','--quiet','--load-path',str(target.parent),'--load-path',root,str(target)],capture_output=True,timeout=120)
+  if r.returncode!=0: return None
+  version=subprocess.run([str(sass),'--version'],capture_output=True,text=True).stdout.split()[0]
+  return ('dart-sass '+version,'DART_SASS_COMPILE_IN_DONOR_TREE')
 
 def literal_ampersands(text):
  """Writes every "&" that starts no character reference as "&amp;" (WHATWG: such an ampersand is a
