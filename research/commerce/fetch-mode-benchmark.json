@@ -1,0 +1,820 @@
+{
+ "benchmark": "changedetection.fetcher-selection: when does a plain HTTP fetch give ECDEV the same price and stock evidence as a rendered browser?",
+ "sites": "public sites built for scraping practice (books.toscrape.com, scrapeme.live, webscraper.io e-commerce test sites, static and ajax variants); every URL allowed by ECDEV's robots evaluator; 2 s minimum per host; ECDEV user agent; GET only",
+ "extractor": "ECDEV's own adapter/web document::extract on both captures",
+ "renderer": "Chromium (Playwright 1.56.1, chromium-1194) through the session proxy with TLS verification, network-idle wait",
+ "evidence_state": "BENCHMARK_MEASUREMENT of fetch modes on practice sites; not evidence about any market",
+ "summary": {
+  "books.toscrape.com": {
+   "pages": 9,
+   "classes": {
+    "NEITHER": 9
+   },
+   "products_http": 0,
+   "products_rendered": 0,
+   "median_render_ms": 659
+  },
+  "scrapeme.live": {
+   "pages": 9,
+   "classes": {
+    "NEITHER": 2,
+    "SAME": 7
+   },
+   "products_http": 7,
+   "products_rendered": 7,
+   "median_render_ms": 2056
+  },
+  "webscraper.io-ajax": {
+   "pages": 7,
+   "classes": {
+    "RENDER_ADDS_PRODUCTS": 1,
+    "SAME": 6
+   },
+   "products_http": 6,
+   "products_rendered": 12,
+   "median_render_ms": 1377
+  },
+  "webscraper.io-static": {
+   "pages": 7,
+   "classes": {
+    "SAME": 7
+   },
+   "products_http": 12,
+   "products_rendered": 12,
+   "median_render_ms": 1311
+  }
+ },
+ "pages": [
+  {
+   "site": "books.toscrape.com",
+   "kind": "listing",
+   "url": "https://books.toscrape.com/",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 51294
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 51024,
+    "ms": 2265
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 9279
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 9037,
+    "ms": 668
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/tipping-the-velvet_999/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 10918
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 10692,
+    "ms": 659
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/soumission_998/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 12431
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 12213,
+    "ms": 629
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/sharp-objects_997/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 14847
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 14629,
+    "ms": 648
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/sapiens-a-brief-history-of-humankind_996/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 17026
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 16808,
+    "ms": 655
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/the-requiem-red_995/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 16468
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 16246,
+    "ms": 665
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/the-dirty-little-secrets-of-getting-your-dream-job_994/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 19806
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 19584,
+    "ms": 667
+   },
+   "differences": {}
+  },
+  {
+   "site": "books.toscrape.com",
+   "kind": "product",
+   "url": "https://books.toscrape.com/catalogue/the-coming-woman-a-novel-based-on-the-life-of-the-infamous-feminist-victoria-woodhull_993/index.html",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 23375
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 23085,
+    "ms": 656
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "listing",
+   "url": "https://scrapeme.live/shop/",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 75144
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 74915,
+    "ms": 3416
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/feed/",
+   "class": "NEITHER",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 9420
+   },
+   "rendered": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 11335,
+    "ms": 1116
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Bulbasaur/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64501
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66010,
+    "ms": 2534
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Ivysaur/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64404
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 65833,
+    "ms": 1956
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Venusaur/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64601
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66052,
+    "ms": 2589
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Charmander/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64672
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66145,
+    "ms": 2135
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Charmeleon/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64707
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66149,
+    "ms": 1890
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Charizard/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64687
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66164,
+    "ms": 1962
+   },
+   "differences": {}
+  },
+  {
+   "site": "scrapeme.live",
+   "kind": "product",
+   "url": "https://scrapeme.live/shop/Squirtle/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 64665
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 66184,
+    "ms": 2056
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "listing",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/computers/laptops",
+   "class": "SAME",
+   "http": {
+    "products": 6,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 37834
+   },
+   "rendered": {
+    "products": 6,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 68933,
+    "ms": 3473
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/31",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28027
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59047,
+    "ms": 1187
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/32",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28086
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59647,
+    "ms": 1300
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/33",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 27963
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 58994,
+    "ms": 1307
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/34",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28143
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59174,
+    "ms": 1311
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/35",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28093
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59094,
+    "ms": 1325
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-static",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/static/product/36",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 27973
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 58993,
+    "ms": 1477
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "listing",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/computers/laptops",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 56287
+   },
+   "rendered": {
+    "products": 6,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 94429,
+    "ms": 1414
+   },
+   "differences": {
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/32": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    },
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/60": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    },
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/61": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    },
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/62": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    },
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/63": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    },
+    "https://webscraper.io/test-sites/e-commerce/ajax/product/64": {
+     "http": null,
+     "rendered": [
+      null,
+      null,
+      null
+     ]
+    }
+   }
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/31",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28009
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59024,
+    "ms": 1377
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/32",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28068
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59073,
+    "ms": 1389
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/33",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 27945
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 58949,
+    "ms": 1324
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/34",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28125
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59139,
+    "ms": 1311
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/35",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 28075
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 59080,
+    "ms": 1314
+   },
+   "differences": {}
+  },
+  {
+   "site": "webscraper.io-ajax",
+   "kind": "product",
+   "url": "https://webscraper.io/test-sites/e-commerce/ajax/product/36",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 27955
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 58970,
+    "ms": 1456
+   },
+   "differences": {}
+  }
+ ],
+ "harness_sources": {
+  "http_side.py": "\"\"\"HTTP side of the fetch-mode benchmark: discovery, ECDEV robots decisions, plain HTTP captures.\n\npython -I http_side.py <out dir> <ecdev helper binary>\nPublic sites built for scraping practice only; every URL is checked with ECDEV's robots evaluator\n(agent ECDEV) before it is fetched; at least 2 s (or the robots crawl delay) between requests to\none host; ECDEV's user agent; no cookies, no login, nothing but GET.\n\"\"\"\nimport json, pathlib, re, subprocess, sys, time, urllib.parse\nimport requests\nout = pathlib.Path(sys.argv[1]); helper = sys.argv[2]; out.mkdir(parents=True, exist_ok=True)\nUA = \"ECDEV/0.1 (+read-only research)\"\nS = requests.Session(); S.headers[\"User-Agent\"] = UA\nSEEDS = {\n    \"books.toscrape.com\": (\"https://books.toscrape.com/\", r'href=\"(catalogue/(?!category/)[^\"]+/index\\.html)\"'),\n    \"scrapeme.live\": (\"https://scrapeme.live/shop/\", r'href=\"(https://scrapeme\\.live/shop/[^\"/]+/)\"'),\n    \"webscraper.io-static\": (\"https://webscraper.io/test-sites/e-commerce/static/computers/laptops\", r'href=\"(/test-sites/e-commerce/static/product/\\d+)\"'),\n}\nrobots_cache, last = {}, {}\ndef robots(url):\n    host = urllib.parse.urlsplit(url).netloc\n    if host not in robots_cache:\n        r = S.get(f\"https://{host}/robots.txt\", timeout=20)\n        path = out / f\"robots-{host}.txt\"\n        if r.status_code == 200: path.write_text(r.text)\n        robots_cache[host] = (path if r.status_code == 200 else None, r.status_code)\n        last[host] = time.time()\n    path, status = robots_cache[host]\n    d = json.loads(subprocess.check_output([helper, \"robots\", str(path) if path else \"-\", url]))\n    if status not in (200, 404): d[\"allowed\"] = False\n    return d\ndef get(url):\n    d = robots(url)\n    if not d[\"allowed\"]: return None, d\n    host = urllib.parse.urlsplit(url).netloc\n    wait = max(2.0, d[\"crawl_delay\"] or 0) - (time.time() - last.get(host, 0))\n    if wait > 0: time.sleep(wait)\n    r = S.get(url, timeout=30, allow_redirects=True); last[host] = time.time()\n    return r, d\ntargets = []\nfor site, (seed, pattern) in SEEDS.items():\n    r, d = get(seed)\n    targets.append({\"site\": site, \"kind\": \"listing\", \"url\": seed})\n    links = []\n    for m in re.findall(pattern, r.text):\n        u = urllib.parse.urljoin(seed, m)\n        if u not in links: links.append(u)\n    targets += [{\"site\": site, \"kind\": \"product\", \"url\": u} for u in links[:8]]\n    if site == \"webscraper.io-static\":\n        # The same catalogue served by the site's JavaScript-loaded variant.\n        targets.append({\"site\": \"webscraper.io-ajax\", \"kind\": \"listing\", \"url\": seed.replace(\"/static/\", \"/ajax/\")})\n        targets += [{\"site\": \"webscraper.io-ajax\", \"kind\": \"product\", \"url\": u.replace(\"/static/\", \"/ajax/\")} for u in links[:8]]\nfor i, t in enumerate(targets):\n    r, d = get(t[\"url\"])\n    t[\"robots\"] = d\n    if r is None:\n        t[\"http\"] = {\"status\": \"ROBOTS_DENIED\"}; continue\n    f = out / f\"http-{i:03d}.html\"; f.write_bytes(r.content)\n    t[\"http\"] = {\"status\": r.status_code, \"content_type\": r.headers.get(\"content-type\", \"\"), \"final_url\": r.url, \"file\": f.name, \"bytes\": len(r.content)}\n    t[\"id\"] = i\n(out / \"targets.json\").write_text(json.dumps(targets, indent=1))\nprint(len(targets), \"targets\", sum(1 for t in targets if t.get(\"http\", {}).get(\"status\") == 200), \"fetched\")\n",
+  "render_side.mjs": "// Rendered side of the fetch-mode benchmark: the same robots-allowed URLs in Chromium.\n// node render_side.mjs <out dir>   (reads targets.json written by http_side.py)\n// ECDEV user agent, the session proxy with TLS verification on, network-idle wait, 2 s per host.\nimport { createRequire } from 'module';\nimport fs from 'fs';\nconst require = createRequire('/opt/node-tools/');\nconst { chromium } = require('playwright');\nconst out = process.argv[2];\nconst targets = JSON.parse(fs.readFileSync(`${out}/targets.json`));\nconst browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', proxy: { server: process.env.https_proxy } });\nconst context = await browser.newContext({ userAgent: 'ECDEV/0.1 (+read-only research)' });\nconst last = {};\nfor (const t of targets) {\n  if (!t.robots?.allowed) continue;\n  const host = new URL(t.url).host;\n  const wait = 2000 - (Date.now() - (last[host] ?? 0));\n  if (wait > 0) await new Promise(r => setTimeout(r, wait));\n  const page = await context.newPage();\n  const started = Date.now();\n  try {\n    const resp = await page.goto(t.url, { waitUntil: 'networkidle', timeout: 45000 });\n    const html = await page.content();\n    fs.writeFileSync(`${out}/render-${String(t.id).padStart(3, '0')}.html`, html);\n    t.render = { status: resp?.status() ?? null, final_url: page.url(), bytes: Buffer.byteLength(html), ms: Date.now() - started, file: `render-${String(t.id).padStart(3, '0')}.html` };\n  } catch (e) { t.render = { status: 'ERROR', error: String(e).slice(0, 200) }; }\n  last[host] = Date.now();\n  await page.close();\n}\nawait browser.close();\nfs.writeFileSync(`${out}/targets.json`, JSON.stringify(targets, null, 1));\nconsole.log(targets.filter(t => t.render?.status === 200).length, 'rendered');\n",
+  "compare.py": "\"\"\"Compares ECDEV's extraction of the plain HTTP and the rendered capture of each URL.\n\npython -I compare.py <out dir> <ecdev helper binary> <record.json>\nAgreement is on the evidence ECDEV keeps: per product (keyed by title, else sku) the price in\nminor units, currency and availability. Classes: SAME, RENDER_ADDS_PRODUCTS, HTTP_ADDS_PRODUCTS,\nVALUES_DIFFER, NEITHER (no product evidence either way).\n\"\"\"\nimport collections, hashlib, json, pathlib, subprocess, sys\nout = pathlib.Path(sys.argv[1]); helper = sys.argv[2]; record = pathlib.Path(sys.argv[3])\ntargets = json.loads((out / \"targets.json\").read_text())\ndef extract(file, ct, url):\n    return json.loads(subprocess.check_output([helper, \"extract\", str(out / file), ct or \"text/html\", url]))\ndef evidence(x):\n    if not x.get(\"ok\"): return {}\n    return {str(p.get(\"title\") or p.get(\"sku\")): (p.get(\"price_minor\"), p.get(\"currency\"), p.get(\"availability\")) for p in x[\"products\"]}\nrows = []\nfor t in targets:\n    if \"file\" not in t.get(\"http\", {}) or \"file\" not in t.get(\"render\", {}): continue\n    h = extract(t[\"http\"][\"file\"], t[\"http\"][\"content_type\"], t[\"http\"][\"final_url\"])\n    r = extract(t[\"render\"][\"file\"], \"text/html; charset=utf-8\", t[\"render\"][\"final_url\"])\n    eh, er = evidence(h), evidence(r)\n    if not eh and not er: cls = \"NEITHER\"\n    elif eh == er: cls = \"SAME\"\n    elif set(er) > set(eh) and all(er[k] == v for k, v in eh.items()): cls = \"RENDER_ADDS_PRODUCTS\"\n    elif set(eh) > set(er) and all(eh[k] == v for k, v in er.items()): cls = \"HTTP_ADDS_PRODUCTS\"\n    else: cls = \"VALUES_DIFFER\"\n    fields = lambda e: {\"with_price\": sum(v[0] is not None for v in e.values()), \"with_availability\": sum(v[2] is not None for v in e.values())}\n    rows.append({\"site\": t[\"site\"], \"kind\": t[\"kind\"], \"url\": t[\"url\"], \"class\": cls,\n                 \"http\": {\"products\": len(eh), **fields(eh), \"bytes\": t[\"http\"][\"bytes\"]},\n                 \"rendered\": {\"products\": len(er), **fields(er), \"bytes\": t[\"render\"][\"bytes\"], \"ms\": t[\"render\"][\"ms\"]},\n                 \"differences\": {k: {\"http\": eh.get(k), \"rendered\": er.get(k)} for k in sorted(set(eh) | set(er)) if eh.get(k) != er.get(k)}})\nsummary = {}\nfor site in sorted({r[\"site\"] for r in rows}):\n    rs = [r for r in rows if r[\"site\"] == site]\n    summary[site] = {\"pages\": len(rs), \"classes\": dict(collections.Counter(r[\"class\"] for r in rs)),\n                     \"products_http\": sum(r[\"http\"][\"products\"] for r in rs), \"products_rendered\": sum(r[\"rendered\"][\"products\"] for r in rs),\n                     \"median_render_ms\": sorted(r[\"rendered\"][\"ms\"] for r in rs)[len(rs) // 2]}\nhere = pathlib.Path(__file__).parent\nrecord.write_text(json.dumps({\n    \"benchmark\": \"changedetection.fetcher-selection: when does a plain HTTP fetch give ECDEV the same price and stock evidence as a rendered browser?\",\n    \"sites\": \"public sites built for scraping practice (books.toscrape.com, scrapeme.live, webscraper.io e-commerce test sites, static and ajax variants); every URL allowed by ECDEV's robots evaluator; 2 s minimum per host; ECDEV user agent; GET only\",\n    \"extractor\": \"ECDEV's own adapter/web document::extract on both captures\",\n    \"renderer\": \"Chromium (Playwright 1.56.1, chromium-1194) through the session proxy with TLS verification, network-idle wait\",\n    \"evidence_state\": \"BENCHMARK_MEASUREMENT of fetch modes on practice sites; not evidence about any market\",\n    \"summary\": summary, \"pages\": rows,\n    \"harness_sources\": {n: (here / n).read_text() for n in [\"http_side.py\", \"render_side.mjs\", \"compare.py\"]} | {\"ecdev_side/src/main.rs\": (here / \"ecdev_side/src/main.rs\").read_text()},\n    \"captures_sha256\": {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.glob(\"*.html\"))}}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(json.dumps(summary, indent=1))\nfor r in rows:\n    if r[\"class\"] != \"SAME\": print(r[\"class\"], r[\"url\"], json.dumps(r[\"differences\"])[:300])\n",
+  "ecdev_side/src/main.rs": "//! ECDEV side of the fetch-mode benchmark, using ECDEV's own code paths.\n//!   robots <robots.txt file or -> <url>   -> prints {\"allowed\":bool,\"crawl_delay\":f64|null}\n//!   extract <html file> <content-type> <url> -> prints the products ECDEV extracts\nuse serde_json::{Value, json};\nfn main() {\n    let a: Vec<String> = std::env::args().collect();\n    match a[1].as_str() {\n        \"robots\" => {\n            let text = if a[2] == \"-\" { String::new() } else { std::fs::read_to_string(&a[2]).unwrap() };\n            let d = ecdev_web::robots::evaluate(&text, &a[3], \"ECDEV\");\n            println!(\"{}\", json!({\"allowed\": d.allowed, \"crawl_delay\": d.crawl_delay_seconds}));\n        }\n        \"extract\" => {\n            let bytes = std::fs::read(&a[2]).unwrap();\n            let out = match ecdev_web::document::extract(&bytes, &a[3], &a[4]) {\n                Ok(v) => {\n                    let products: Vec<Value> = v[\"products\"].as_array().into_iter().flatten().map(|p| json!({\n                        \"title\": p[\"title\"], \"sku\": p[\"sku\"], \"price_minor\": p[\"price_minor\"], \"currency\": p[\"currency\"],\n                        \"availability\": p[\"availability\"], \"price_source\": p[\"price\"][\"source\"].clone(),\n                    })).collect();\n                    json!({\"ok\": true, \"products\": products, \"page_role\": v[\"page_role\"]})\n                }\n                Err(e) => json!({\"ok\": false, \"error\": e}),\n            };\n            println!(\"{out}\");\n        }\n        _ => panic!(\"mode\"),\n    }\n}\n"
+ },
+ "captures_sha256": {
+  "http-000.html": "9fdd63da34161ebd13408d7a85105f83ec3c9f351c5d77cd0aa578790e121c1e",
+  "http-001.html": "a6e572bec156bf80ff3149b89b6d218cdcf8866ccc26ccf69a5431db8e142c6a",
+  "http-002.html": "3ebbc9a6c904a9f3420fd770b24a4c2ff9958fdb1359108fe37b951452f3d8da",
+  "http-003.html": "62b7d234ea2ef1052553914ad1c17f2ae984449c7325e753d07963adf5c4cbe1",
+  "http-004.html": "41ae9ef1bc17c9984b8e452c61f3370fc6e1868e9b699c803c7336136f57c0ef",
+  "http-005.html": "7cc763d13e3645f3f2aa981971c6442fe9b1a7dc85372799d2e3e5acb64fc223",
+  "http-006.html": "0d5b5198aa904b2a6fac14544d70d27cf4a723a710b8745caaaad9bdc8c358a1",
+  "http-007.html": "7659ec0efd845c6c2cc207ac0ea29051885de9e12b216f2e28181c61560c42d8",
+  "http-008.html": "42db4e6ee661bcdd66958ceda5444386a44253bdf6b8581ef73c273ceff32bf8",
+  "http-009.html": "286c4c813448dffc512a0b92ae027b10b77b57677ff3b166afdfc8b421177a38",
+  "http-010.html": "f91910948002ce911b35d220d7f7ab67e682877899865acd6aa9521ad2f2bb00",
+  "http-011.html": "490830e2d872e40bbaae10122f362eb45e857a32545a84992a6ab2486baa97e6",
+  "http-012.html": "86cdcf71aa20a7cd55b8ef3506280c55a53e6e811079767dfadbee8447b1c137",
+  "http-013.html": "d21882d290d0eacd1b439ee055f49412e7d418f3f68dcd1d3c85ce6bcdfc18fb",
+  "http-014.html": "8bcbbdb50a997a7c436c49d0a49b143ececc48fa1aa138b153fdb22cdd31465f",
+  "http-015.html": "378fbc36de7da3a0efc26473eaad1b8c032566a2d83daa6d5b52f65b2385f001",
+  "http-016.html": "0bdbc73c151eb6c1d7226fe9fa0a990336e9923f33a5754fad9b47d95c3bb423",
+  "http-017.html": "39115129d31acae3f029f890767ad66b4b461d2837c9acc2b62933909ff096bd",
+  "http-018.html": "b58e1de34145a16a1535a6076221a883dab20e339f29431b8f482f7ef69bca1c",
+  "http-019.html": "895d0f4fb5d93cffdfe07984466e7fb2f52fa8f04bf6f21cd78afc327b2655db",
+  "http-020.html": "e1aeea494c013082e0f8fa1763ba372194e3a73af2ea4779e41e46026b7bf977",
+  "http-021.html": "804490e7d8b4e9e747506755c0f29c0c70249056a1ead0b7fa2d9db23bfc44cc",
+  "http-022.html": "992f81bef7a699ec1cf9bac40fc314aa9a1f2665dd6301bd73d46e3beea3e7fd",
+  "http-023.html": "cacc0efc356b9b7f23299e56091d1b21e3fcf62f4378d6a5a23183a6e285b7a8",
+  "http-024.html": "4791221c05b7e8cc0f251ea412a0a9f5f85221e51a95a2637b2a15ba041c6965",
+  "http-025.html": "5617e2b3553b262cd73fd9cd29c9e8468e91e4d731f38531c757d8c6ff4c3ce9",
+  "http-026.html": "461ed27793ef5f8e6a7c8987de926bbda1b4b73a19d82fde598ba8a1571ccc36",
+  "http-027.html": "674671170476b9326c3be7d26acd7a88df6ad3e257c2a495de0c9bf9f1060b37",
+  "http-028.html": "625033fb17a64871a9f6108e29b75306223bcda6fea753457a87a6501b0dc733",
+  "http-029.html": "4e46b6bc5b494b8f09348390a3451ae15749e4c355252f920d7093daebd1b9c4",
+  "http-030.html": "5a31f15e3b25727977b0c0c967f294495c1d9fab3673be251dff1fd9a647ceb5",
+  "http-031.html": "9018a6136fe654cfb4c5d7988021f99f60093a1aebca29aa472e5352372b3f17",
+  "render-000.html": "569f5535da173563ade6cb45bd3f92018d2a691421f889e8e7f669b604235309",
+  "render-001.html": "fe252d58636096e094a21647402383e8d73949fe5b2b128cfb133e9209eff436",
+  "render-002.html": "af272be5f9e33fb5a01c1555c5ffcd4b78f0d029c741303b76eb0cb80fb361e3",
+  "render-003.html": "4d12de5c7a6666a7cb833c541c53f990edbd3d29909cb70a20a77003258ebcdd",
+  "render-004.html": "b6a8e9a518f4ed0de35a26ec944fdef2dacaa222f7ec4159b3c2ad18134fadcc",
+  "render-005.html": "2f020b0647c77a5a0b7f8ef9d3adbc879d7d7e548734f34f6d4d22abf8a2b91a",
+  "render-006.html": "a4bac9a5624495dea7387446cee038443338e244bdd92fdd5f8ed3ce0d222a9c",
+  "render-007.html": "fdf8c5ac673c708c6197045e59247944afa51d51d7ef9d0b858644bd4735cdc1",
+  "render-008.html": "a4037e4e10a9bf652bd8abe1d23d98ef1b5a0a9446c047c652ad11e0c19509f3",
+  "render-009.html": "62cb80d74074242133a45588234467a7a77f2aecc8fc4d3de18a0db08124fa9e",
+  "render-010.html": "33e62d97cf9e229ebc8f8930a02f17ab554a1968144975156f6ece8c75e5bd2f",
+  "render-011.html": "5be75a779812cd2bf129d3646f9f76b6a0f34f94d5f086828794206dee7db746",
+  "render-012.html": "c4b1bf250dc4d046a5ba053d6df60e78038fd31bbc9d9fa8a6ad917a169b069e",
+  "render-013.html": "d84495da64692a3ccae061e389097e5f49461f27e538b5aaabc746d693ac79ee",
+  "render-014.html": "0293adaec1915748e43532da4c1f88f422c2b0eafb1f2220aacf8a4d0a331617",
+  "render-015.html": "e65c1da06b890257f533b2ef3557d670a527b3c9d80defe69739e92cab37034c",
+  "render-016.html": "b4a515cc05c28aab015ce6e88c7e17ce44cbe21331fcd52398ad13ca5e64d7d3",
+  "render-017.html": "4a1f699757401c9d874d1b8500ea9678f774e6d9e75ec4d7bbd76d4108b49906",
+  "render-018.html": "797d2f1dbe9c7c8e2a16ce11f724e7def76bc59bd656f5fcd68e9b0c9d003b82",
+  "render-019.html": "4d98d7f1f43e1e51f3f79433f9d2c84488f4cdffcff6e943c532f9e66cd5e351",
+  "render-020.html": "ca28426732266181b6d98382969ef97ddce3b77b6bc2bef422cbc9c05e51e50c",
+  "render-021.html": "7cd65abe2e8de76cbd05bda9c5d12ec7ee7a1ae32015be79d6167771b0b8102e",
+  "render-022.html": "cd8b10cf1526dce06b8788558c4ce3ba4ed9e49bc6b8d00c1c35bf935c1c2df7",
+  "render-023.html": "1d346c8d3b0afdffd7878d46a29d8ac5b220970275a6746d8262fc903233ad77",
+  "render-024.html": "f7dc7e3ea1b780b0a85fa45bc837abc2cccbaf8836ae2f517e9e6fdbe3cbd93a",
+  "render-025.html": "f60170e62f7316ffa8c638a29f29916b67bdcd54e98b964186f4dc31e8db25ea",
+  "render-026.html": "737f3214f00877574154d0a73e111ec47c7fc185cfba48f8a4bf1e8eeb880093",
+  "render-027.html": "c717f59fa1cf07c8d0903ad35210d8380b0f25820cf8db7a870b185b2f95f5a4",
+  "render-028.html": "f79499e9c22acde8372b8899da60014778e1be0d60f9d5a51be3715beb495142",
+  "render-029.html": "eee090cc1fad47ce75d72abc30008615b66af864ed82591c089cc08993728792",
+  "render-030.html": "17fc0101949761717f257aa27c18a2956b955b61305d5b7f0be2d0b37d2e9ec7",
+  "render-031.html": "c28f1f477e56b0a9b80424d4cd55c69e6c18fa7485b89975a16071be3fde7003"
+ },
+ "findings": [
+  "scrapeme.live (WooCommerce, JSON-LD): the plain HTTP and the rendered capture give identical price, currency and availability on all 7 product pages",
+  "webscraper.io static and ajax: both modes yield products with no structured price or availability; the JavaScript-loaded listing gains 6 items only when rendered, none with price evidence",
+  "books.toscrape.com: prices and stock appear only as unstructured text, so ECDEV extracts no product in either mode; the limit is the evidence policy, not the fetch mode",
+  "Rendering added no price or stock evidence on any page, at a median 1.3 to 2.1 s per page plus a browser"
+ ],
+ "decision": {
+  "changedetection.fetcher-selection": "answered for practice sites: plain HTTP suffices wherever structured product data is served; the question stays open for real retail pages that inject JSON-LD with JavaScript"
+ },
+ "limits": "practice sites only; four hosts; 32 pages; no real retailer sampled"
+}
