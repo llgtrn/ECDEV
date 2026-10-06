@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "d223fcc32224bfe0bdb14072bce1a0f78285f219",
+  "assessed_parent_commit": "8a0af873dfd86ac79654e75fd0cd7ab643755418",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,18 +14,18 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 154,
-    "semantic_censused_capabilities": 154,
+    "known_donor_capabilities": 159,
+    "semantic_censused_capabilities": 159,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 26,
+    "study_candidates": 27,
     "benchmark_candidates": 18,
     "algorithm_candidates": 8,
-    "reference_only": 32,
+    "reference_only": 35,
     "study_complete_capabilities": 52,
-    "not_relevant_after_review": 18,
-    "research_questions_open": 52,
-    "knowledge_coverage_ratio": 0.662338
+    "not_relevant_after_review": 19,
+    "research_questions_open": 53,
+    "knowledge_coverage_ratio": 0.666667
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 45,
@@ -34,7 +34,7 @@
     "donors_active_study": 16,
     "donors_study_complete": 1,
     "donors_structurally_censused": 18,
-    "donors_semantically_censused": 5,
+    "donors_semantically_censused": 6,
     "donors_with_open_candidates": 16,
     "donors_with_open_research": 62
   },
@@ -989,13 +989,18 @@
         "social.mirofish.persona-construction STUDY_CANDIDATE(versioned, hashed segment personas; effect of persona text versus numeric parameters on simulated choices)",
         "social.mirofish.interview-probes STUDY_CANDIDATE(post-run survey probes as SIMULATED stated preference versus revealed actions)",
         "social.mirofish.config-generation BENCHMARK_CANDIDATE(LLM-proposed versus rule-default scenario parameters with per-value origin tags)",
-        "social.mirofish.cost-and-time-model BENCHMARK_CANDIDATE(LLM call and token scaling with agents x rounds; simulated calendar separate from wall clock)"
+        "social.mirofish.cost-and-time-model BENCHMARK_CANDIDATE(LLM call and token scaling with agents x rounds; simulated calendar separate from wall clock)",
+        "social.mirofish.ontology-induction STUDY_CANDIDATE(LLM-proposed market ontology (specific actor types plus fallback catch-alls) and equidistant representative chunk sampling for schema induction, kept as a candidate schema with model and prompt provenance, never as evidence)"
       ],
       "resolved": [
         "social.mirofish.output-provenance STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor writes simulated activity into observed graph memory with only a metadata label; ECDEV requires a provenance firewall between SIMULATED and OBSERVED)",
         "social.mirofish.graph-memory-and-reports REFERENCE_ONLY(Zep graph memory and LLM report agents)",
         "social.mirofish.web-application NO_RESEARCH_VALUE[FRONTEND](Flask routes, Vue frontend, locales and polling endpoints)",
-        "social.mirofish.zep-cloud-plumbing NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud batching, retries and memory-updater queues)"
+        "social.mirofish.zep-cloud-plumbing NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud SDK client setup, provider batch limits, paging calls and memory-updater queues; the reusable ingestion and lease patterns are social.mirofish.ingestion-idempotency-and-leases)",
+        "social.mirofish.ingestion-idempotency-and-leases REFERENCE_ONLY(content-addressed batch operation ids with writes never retried and ambiguous adds checked against server coverage, read-only retry honouring Retry-After, cursor non-advance guard and reader leases, as a reference for any remote evidence sync)",
+        "social.mirofish.llm-structured-output REFERENCE_ONLY(strict JSON output validation: leading-object acceptance, rejection of trailing JSON, finish-reason checks, no repair of truncated output)",
+        "social.mirofish.document-ingestion REFERENCE_ONLY(sentence-snapped character chunking and layered charset detection; the donor folds extraction failures into document text, which ECDEV keeps as an anti-reference)",
+        "social.mirofish.repository-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](GitHub star counter and star-history chart renderer)"
       ]
     },
     {

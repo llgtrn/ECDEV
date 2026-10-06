@@ -99,7 +99,27 @@
         },
         {
           "capability": "social.mirofish.zep-cloud-plumbing",
-          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud batching, retries and memory-updater queues)"
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud SDK client setup, provider batch limits, paging calls and memory-updater queues; the reusable ingestion and lease patterns are social.mirofish.ingestion-idempotency-and-leases)"
+        },
+        {
+          "capability": "social.mirofish.ingestion-idempotency-and-leases",
+          "knowledge": "REFERENCE_ONLY(content-addressed batch operation ids with writes never retried and ambiguous adds checked against server coverage, read-only retry honouring Retry-After, cursor non-advance guard and reader leases, as a reference for any remote evidence sync)"
+        },
+        {
+          "capability": "social.mirofish.ontology-induction",
+          "knowledge": "STUDY_CANDIDATE(LLM-proposed market ontology (specific actor types plus fallback catch-alls) and equidistant representative chunk sampling for schema induction, kept as a candidate schema with model and prompt provenance, never as evidence)"
+        },
+        {
+          "capability": "social.mirofish.llm-structured-output",
+          "knowledge": "REFERENCE_ONLY(strict JSON output validation: leading-object acceptance, rejection of trailing JSON, finish-reason checks, no repair of truncated output)"
+        },
+        {
+          "capability": "social.mirofish.document-ingestion",
+          "knowledge": "REFERENCE_ONLY(sentence-snapped character chunking and layered charset detection; the donor folds extraction failures into document text, which ECDEV keeps as an anti-reference)"
+        },
+        {
+          "capability": "social.mirofish.repository-tooling",
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](GitHub star counter and star-history chart renderer)"
         }
       ],
       "rationale": "the deep census (mirofish-simulation-census.json) found a usable simulation architecture (lifecycle, round-0 shocks, activation loop, closed action sets, interview probes) and also its gaps (no seeds, replication, dispersion, sensitivity or scenario pairing) and one anti-pattern (simulated activity written into observed memory). The earlier rejection reasoned from 'contributes zero observed metrics', which confuses SIMULATED with OBSERVED instead of keeping them apart",
@@ -116,10 +136,10 @@
         "first_party_source_files": 67,
         "source_parsed": 67,
         "parse_unknown": 0,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 17,
-        "capabilities_decided": 17,
-        "research_questions_open": 13
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 22,
+        "capabilities_decided": 22,
+        "research_questions_open": 14
       }
     },
     {
@@ -288,7 +308,7 @@
         },
         {
           "capability": "social.trend-finder.cluster_embeddings",
-          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked: topic clusters, not product lines)"
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked on the donor corpus (research/commerce/trend-finder-clustering-benchmark.json): UMAP and HDBSCAN group same-product-line pairs at precision 0.29 against chance 0.19 and merge across niches when pooled, so its clusters are topics, not product lines; ECDEV does not adopt them as product topics)"
         },
         {
           "capability": "social.trend-finder.score_clusters",
@@ -320,7 +340,7 @@
         "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
         "capabilities_extracted": 5,
         "capabilities_decided": 5,
-        "research_questions_open": 4
+        "research_questions_open": 3
       },
       "benchmark_results": {
         "cluster_embeddings": "answered in research/commerce/trend-finder-clustering-benchmark.json: per niche-week precision 0.29 vs chance 0.19, recall 0.26; pooled weeks merge niches (938-post cluster); ECDEV lexical precision 1.0, recall 0.003; DELIBERATE_SEMANTIC_DIVERGENCE"

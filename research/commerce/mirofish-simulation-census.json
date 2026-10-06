@@ -186,5 +186,264 @@
     "time-of-day multipliers and entity archetypes (no empirical grounding)",
     "status enums and filesystem IPC",
     "memory write-back design as an anti-reference"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "method": "the eleven simulation files were reviewed for the simulation census; the remaining backend files were read in full by four parallel read-only reviews whose concrete claims were spot-checked against the source (operation id hashing, unused reflection rounds, 'real interview' labelling, the Twitter seed-post overwrite, extraction failures folded into text, absent RNG seeding)",
+    "entries": [
+      {
+        "prefix": "backend/app/services/simulation_runner.py",
+        "capabilities": "social.mirofish.simulation-lifecycle + social.mirofish.event-loop-and-activation + social.mirofish.termination + social.mirofish.interview-probes + social.mirofish.cost-and-time-model",
+        "relevance": "STUDIED",
+        "why": "subprocess runner, run states and finalisation, round progress, batch interviews (simulation census concepts)"
+      },
+      {
+        "prefix": "backend/app/services/simulation_manager.py",
+        "capabilities": "social.mirofish.simulation-lifecycle + social.mirofish.population-construction",
+        "relevance": "STUDIED",
+        "why": "per-simulation state, entity-to-agent preparation"
+      },
+      {
+        "prefix": "backend/app/services/simulation_config_generator.py",
+        "capabilities": "social.mirofish.config-generation + social.mirofish.scenario-initialization + social.mirofish.event-loop-and-activation",
+        "relevance": "STUDIED",
+        "why": "LLM-proposed time, activity and seed-event parameters"
+      },
+      {
+        "prefix": "backend/app/services/simulation_ipc.py",
+        "capabilities": "social.mirofish.interview-probes + social.mirofish.simulation-lifecycle",
+        "relevance": "STUDIED",
+        "why": "filesystem command/response IPC to a live environment"
+      },
+      {
+        "prefix": "backend/app/services/oasis_profile_generator.py",
+        "capabilities": "social.mirofish.persona-construction",
+        "relevance": "STUDIED",
+        "why": "LLM personas from graph entities"
+      },
+      {
+        "prefix": "backend/app/services/zep_graph_memory_updater.py",
+        "capabilities": "social.mirofish.output-provenance + social.mirofish.zep-cloud-plumbing",
+        "relevance": "STUDIED",
+        "why": "writes simulated activity into the source graph labelled only by metadata"
+      },
+      {
+        "prefix": "backend/scripts/run_parallel_simulation.py",
+        "capabilities": "social.mirofish.event-loop-and-activation + social.mirofish.action-selection + social.mirofish.termination + social.mirofish.network-and-diffusion + social.mirofish.agent-and-environment-state",
+        "relevance": "STUDIED",
+        "why": "two-platform OASIS loop, peak/off-peak activation multipliers, closed action sets"
+      },
+      {
+        "prefix": "backend/scripts/action_logger.py",
+        "capabilities": "social.mirofish.output-provenance",
+        "relevance": "STUDIED",
+        "why": "per-round action log"
+      },
+      {
+        "prefix": "backend/scripts/run_reddit_simulation.py",
+        "capabilities": "social.mirofish.event-loop-and-activation + social.mirofish.action-selection + social.mirofish.scenario-initialization + social.mirofish.termination + social.mirofish.interview-probes",
+        "relevance": "STUDIED",
+        "why": "single-platform runner: same activation as the parallel runner, hourly per-round counts regardless of minutes_per_round, no RNG seed, shutdown honoured only after the loop, 13 actions"
+      },
+      {
+        "prefix": "backend/scripts/run_twitter_simulation.py",
+        "capabilities": "social.mirofish.event-loop-and-activation + social.mirofish.action-selection + social.mirofish.scenario-initialization + social.mirofish.termination + social.mirofish.interview-probes",
+        "relevance": "STUDIED",
+        "why": "as the Reddit runner with 6 actions; several seed posts of one agent overwrite each other (only the last is published)"
+      },
+      {
+        "prefix": "backend/app/api/simulation.py",
+        "capabilities": "social.mirofish.web-application + social.mirofish.simulation-lifecycle + social.mirofish.interview-probes",
+        "relevance": "STUDIED",
+        "why": "simulation routes and polling"
+      },
+      {
+        "prefix": "backend/app/api/graph.py",
+        "capabilities": "social.mirofish.web-application + social.mirofish.ingestion-idempotency-and-leases + social.mirofish.ontology-induction",
+        "relevance": "REVIEWED",
+        "why": "project/ontology/graph routes; resumable ingestion keyed by a content-derived operation id; consumer leases block graph deletion during analysis"
+      },
+      {
+        "prefix": "backend/app/api/report.py",
+        "capabilities": "social.mirofish.web-application + social.mirofish.graph-memory-and-reports + social.mirofish.output-provenance",
+        "relevance": "REVIEWED",
+        "why": "report generation gated on terminal ingestion; STOPPED runs report like COMPLETED; chat skips those gates and falls back to the project graph"
+      },
+      {
+        "prefix": "backend/app/api/__init__.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "blueprint declarations"
+      },
+      {
+        "prefix": "backend/app/__init__.py",
+        "capabilities": "social.mirofish.web-application + social.mirofish.simulation-lifecycle",
+        "relevance": "REVIEWED",
+        "why": "app factory, CORS, subprocess cleanup hook"
+      },
+      {
+        "prefix": "backend/app/config.py",
+        "capabilities": "social.mirofish.action-selection + social.mirofish.termination + social.mirofish.config-generation + social.mirofish.graph-memory-and-reports",
+        "relevance": "REVIEWED",
+        "why": "closed per-platform action vocabularies, default 10 rounds, report-agent tool-call budget"
+      },
+      {
+        "prefix": "backend/run.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "server entry point"
+      },
+      {
+        "prefix": "backend/app/models/project.py",
+        "capabilities": "social.mirofish.graph-memory-and-reports + social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "project record: files, extracted text, LLM ontology and summary stored beside source data with no generated-by marker"
+      },
+      {
+        "prefix": "backend/app/models/task.py",
+        "capabilities": "social.mirofish.web-application + social.mirofish.simulation-lifecycle",
+        "relevance": "REVIEWED",
+        "why": "in-memory task progress"
+      },
+      {
+        "prefix": "backend/app/models/__init__.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "re-exports"
+      },
+      {
+        "prefix": "backend/app/services/__init__.py",
+        "capabilities": "social.mirofish.graph-memory-and-reports",
+        "relevance": "REVIEWED",
+        "why": "service re-exports"
+      },
+      {
+        "prefix": "backend/app/services/graph_builder.py",
+        "capabilities": "social.mirofish.ingestion-idempotency-and-leases + social.mirofish.graph-memory-and-reports + social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "operation id = sha256(graph : sha256(chunks)); writes never retried, ambiguous adds checked against server coverage; pre-flight limits; strict completion audit; bi-temporal edge export without a source field"
+      },
+      {
+        "prefix": "backend/app/services/ontology_generator.py",
+        "capabilities": "social.mirofish.ontology-induction",
+        "relevance": "REVIEWED",
+        "why": "LLM schema induction (8 specific + Person/Organization fallback types), equidistant representative chunk sampling with head/tail excerpts, output canonicalisation and capping"
+      },
+      {
+        "prefix": "backend/app/utils/ontology.py",
+        "capabilities": "social.mirofish.ontology-induction",
+        "relevance": "REVIEWED",
+        "why": "schema sanitiser: coerce, drop, deduplicate, cap, reserved names"
+      },
+      {
+        "prefix": "backend/app/services/text_processor.py",
+        "capabilities": "social.mirofish.document-ingestion",
+        "relevance": "REVIEWED",
+        "why": "preprocessing and 500/50 chunking facade"
+      },
+      {
+        "prefix": "backend/app/utils/file_parser.py",
+        "capabilities": "social.mirofish.document-ingestion",
+        "relevance": "REVIEWED",
+        "why": "PDF/MD/TXT extraction, layered charset detection, sentence-snapped chunking; an extraction failure is folded into the text as content"
+      },
+      {
+        "prefix": "backend/app/services/zep_entity_reader.py",
+        "capabilities": "social.mirofish.population-construction + social.mirofish.graph-memory-and-reports + social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "only ontology-typed nodes become actors; no source filter, so simulation-derived facts return beside document facts"
+      },
+      {
+        "prefix": "backend/app/services/report_agent.py",
+        "capabilities": "social.mirofish.graph-memory-and-reports + social.mirofish.output-provenance + social.mirofish.interview-probes",
+        "relevance": "REVIEWED",
+        "why": "ReACT report agent with a 3-5 tool-call floor, fabricated tool-result stripping and full JSONL trace; frames simulation output as predicted future facts and quotes agent output as evidence; reflection declared but unimplemented"
+      },
+      {
+        "prefix": "backend/app/services/zep_tools.py",
+        "capabilities": "social.mirofish.graph-memory-and-reports + social.mirofish.interview-probes + social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "InsightForge sub-question decomposition, panorama active/historical split, quick search; interviews described as real answers though they are LLM agent output; graph ids dropped before the LLM sees facts"
+      },
+      {
+        "prefix": "backend/app/utils/llm_client.py",
+        "capabilities": "social.mirofish.llm-structured-output",
+        "relevance": "REVIEWED",
+        "why": "strict JSON parse, leading-object acceptance, rejection of trailing JSON, finish_reason checks, never repairs truncated JSON"
+      },
+      {
+        "prefix": "backend/app/utils/openai_chat_compat.py",
+        "capabilities": "social.mirofish.llm-structured-output + social.mirofish.cost-and-time-model",
+        "relevance": "REVIEWED",
+        "why": "model-family parameter adaptation; drops temperature for one family silently"
+      },
+      {
+        "prefix": "backend/app/utils/retry.py",
+        "capabilities": "social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "generic unclassified backoff helpers, without importers"
+      },
+      {
+        "prefix": "backend/app/utils/zep.py",
+        "capabilities": "social.mirofish.ingestion-idempotency-and-leases + social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "read-only retry: transport, 408, 429, 5xx, Retry-After honoured, capped exponential backoff; writes not retried"
+      },
+      {
+        "prefix": "backend/app/utils/zep_lifecycle.py",
+        "capabilities": "social.mirofish.ingestion-idempotency-and-leases",
+        "relevance": "REVIEWED",
+        "why": "process-local graph lock and reader leases"
+      },
+      {
+        "prefix": "backend/app/utils/zep_paging.py",
+        "capabilities": "social.mirofish.ingestion-idempotency-and-leases + social.mirofish.zep-cloud-plumbing",
+        "relevance": "REVIEWED",
+        "why": "cursor paging that fails when the cursor does not advance"
+      },
+      {
+        "prefix": "backend/app/utils/locale.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "locale tables and the LLM output-language instruction"
+      },
+      {
+        "prefix": "backend/app/utils/logger.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "logging setup"
+      },
+      {
+        "prefix": "backend/app/utils/__init__.py",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "re-exports"
+      },
+      {
+        "prefix": "backend/scripts/validate_zep_cloud_integration.py",
+        "capabilities": "social.mirofish.zep-cloud-plumbing + social.mirofish.output-provenance",
+        "relevance": "REVIEWED",
+        "why": "manual live check; writes simulated activity into the same graph as baseline facts"
+      },
+      {
+        "prefix": "scripts/",
+        "capabilities": "social.mirofish.repository-tooling",
+        "relevance": "REVIEWED",
+        "why": "star counter and star-history chart renderer (functions listed; renderer not read line by line: repository tooling)"
+      },
+      {
+        "prefix": "frontend/",
+        "capabilities": "social.mirofish.web-application",
+        "relevance": "REVIEWED",
+        "why": "Vue views, components, API clients, router and i18n"
+      }
+    ]
+  },
+  "whole_source_findings": [
+    "Simulated agent activity is written into the same graph as document-derived facts; readers (get_graph_data, ZepEntityReader, search tools) neither filter nor expose the difference",
+    "The report agent frames simulation output as predicted future facts and quotes agent output as core evidence; interview output is described as real answers, not LLM simulation",
+    "LLM-generated ontology and analysis summaries are stored beside source data without a generated-by marker; a failed file extraction becomes document text",
+    "No RNG seed anywhere: runs cannot be replicated",
+    "Reusable clean-room patterns: content-addressed idempotent ingestion with writes never retried, read-only retry honouring Retry-After, cursor non-advance guard, reader leases, strict JSON output validation, coverage-preserving corpus sampling for schema induction"
   ]
 }
