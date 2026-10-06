@@ -22,6 +22,18 @@ pub fn initialize(db: &Connection) -> Result<(), String> {
         db.execute_batch("ALTER TABLE watches ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1;")
             .map_err(err)?;
     }
+    let observed: bool = db
+        .prepare("PRAGMA table_info(watch_facts)")
+        .map_err(err)?
+        .query_map([], |r| r.get::<_, String>(1))
+        .map_err(err)?
+        .filter_map(Result::ok)
+        .any(|name| name == "last_observed_at");
+    if !observed {
+        // Facts recorded before this column existed were last observed when they began.
+        db.execute_batch("ALTER TABLE watch_facts ADD COLUMN last_observed_at INTEGER; UPDATE watch_facts SET last_observed_at=valid_at WHERE last_observed_at IS NULL;")
+            .map_err(err)?;
+    }
     Ok(())
 }
 #[derive(Deserialize)]
@@ -111,11 +123,11 @@ impl Engine {
             };
             let facts = {
                 let mut s = db
-                    .prepare("SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256 FROM watch_facts WHERE watch_id=?1 ORDER BY id DESC LIMIT 200")
+                    .prepare("SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at FROM watch_facts WHERE watch_id=?1 ORDER BY id DESC LIMIT 200")
                     .map_err(err)?;
                 let rows = s
                     .query_map([&id], |r| {
-                        Ok(json!({"url":r.get::<_,String>(0)?,"product":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"state":"OBSERVED"}))
+                        Ok(json!({"url":r.get::<_,String>(0)?,"product":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?,"state":"OBSERVED"}))
                     })
                     .map_err(err)?;
                 rows.collect::<Result<Vec<_>, _>>().map_err(err)?
@@ -186,10 +198,10 @@ impl Engine {
                     .unwrap_or(json!({}));
                 let current = snapshot(&run, &lease["request"]);
                 let changes = changes(&old, &current);
-                let mut baseline = old;
+                let mut baseline = old.clone();
                 for (url, source) in current.as_object().ok_or("INVALID_WATCH_SNAPSHOT")? {
                     if source["status"] != "UNKNOWN" {
-                        baseline[url] = source.clone();
+                        baseline[url] = carry_unobserved(&old[url], source, now);
                     }
                 }
                 record_facts(
@@ -224,7 +236,9 @@ impl Engine {
 /// Observed price and availability become facts with validity windows: a newly observed value
 /// starts a window at the observation time and closes every open window it supersedes
 /// (memory::superseded). Windows open at the same instant stay open side by side: a conflict,
-/// never a silent choice. Unknown observations change nothing.
+/// never a silent choice. Unknown observations change nothing. Re-observing an open value moves
+/// its `last_observed_at`; a value missing from a capture closes nothing, so a window kept open
+/// through a gap shows when it was last actually seen.
 fn record_facts(
     tx: &rusqlite::Transaction,
     watch: &str,
@@ -253,7 +267,12 @@ fn record_facts(
                     .collect::<Result<_, _>>()
                     .map_err(err)?;
                 let text = value.to_string();
-                if open.iter().any(|(_, v, _)| *v == text) {
+                if let Some((id, _, _)) = open.iter().find(|(_, v, _)| *v == text) {
+                    tx.execute(
+                        "UPDATE watch_facts SET last_observed_at=?2 WHERE id=?1",
+                        params![id, now],
+                    )
+                    .map_err(err)?;
                     continue;
                 }
                 let windows: Vec<crate::memory::Validity<u64>> = open
@@ -274,7 +293,7 @@ fn record_facts(
                     )
                     .map_err(err)?;
                 }
-                tx.execute("INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256) VALUES(?1,?2,?3,?4,?5,?6,NULL,?7,?8)",params![watch,url,product,field,text,now,run["run_id"].as_str(),source["raw_capture_sha256"].as_str()]).map_err(err)?;
+                tx.execute("INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at) VALUES(?1,?2,?3,?4,?5,?6,NULL,?7,?8,?6)",params![watch,url,product,field,text,now,run["run_id"].as_str(),source["raw_capture_sha256"].as_str()]).map_err(err)?;
             }
         }
     }
@@ -341,6 +360,67 @@ fn snapshot(run: &Value, request: &Value) -> Value {
     }
     Value::Object(sources)
 }
+/// Fields a capture may stop carrying; a gap is reported, never read as "unchanged".
+const TRACKED: [(&str, &str); 2] = [
+    ("price_minor", "PRICE_CHANGED"),
+    ("availability", "AVAILABILITY_CHANGED"),
+];
+
+/// The products of a baseline source as last observed in its latest capture: products and
+/// fields carried through a gap are left out, so a gap is reported once, not on every tick.
+fn observed_view(products: &Value) -> Value {
+    let mut out = serde_json::Map::new();
+    for (key, p) in products.as_object().into_iter().flatten() {
+        if !p["_unobserved_since"].is_null() {
+            continue;
+        }
+        let mut fields = serde_json::Map::new();
+        for (k, v) in p.as_object().into_iter().flatten() {
+            if k.starts_with('_') {
+                continue;
+            }
+            let gap = !p["_unobserved_fields"][k].is_null();
+            fields.insert(k.clone(), if gap { Value::Null } else { v.clone() });
+        }
+        out.insert(key.clone(), Value::Object(fields));
+    }
+    Value::Object(out)
+}
+
+/// The next baseline of a source: the new capture, with every product and tracked field it no
+/// longer carries kept at its last observed value and marked with when it stopped being seen.
+/// A later observation is compared against that last observed value.
+fn carry_unobserved(before: &Value, after: &Value, now: u64) -> Value {
+    let mut next = after.clone();
+    if after["status"] != "AVAILABLE" || before["status"] != "AVAILABLE" {
+        return next;
+    }
+    let Some(products) = next["products"].as_object_mut() else {
+        return next;
+    };
+    for (key, prev) in before["products"].as_object().into_iter().flatten() {
+        match products.get_mut(key) {
+            None => {
+                let mut carried = prev.clone();
+                if carried["_unobserved_since"].is_null() {
+                    carried["_unobserved_since"] = json!(now);
+                }
+                products.insert(key.clone(), carried);
+            }
+            Some(p) => {
+                for (field, _) in TRACKED {
+                    if p[field].is_null() && !prev[field].is_null() {
+                        p[field] = prev[field].clone();
+                        let since = prev["_unobserved_fields"][field].as_u64().unwrap_or(now);
+                        p["_unobserved_fields"][field] = json!(since);
+                    }
+                }
+            }
+        }
+    }
+    next
+}
+
 fn changes(old: &Value, new: &Value) -> Vec<Value> {
     let mut out = vec![];
     for (url, after) in new.as_object().into_iter().flatten() {
@@ -355,24 +435,30 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
         if after["status"] != "AVAILABLE" {
             continue;
         }
-        if before["products"] != after["products"] {
-            out.push(json!({"kind":"PRODUCT_DATA_CHANGED","url":url,"before":before["products"],"after":after["products"]}));
+        if observed_view(&before["products"]) != after["products"] {
+            out.push(json!({"kind":"PRODUCT_DATA_CHANGED","url":url,"before":observed_view(&before["products"]),"after":after["products"]}));
+        }
+        for (key, prev) in before["products"].as_object().into_iter().flatten() {
+            if after["products"][key].is_null() && prev["_unobserved_since"].is_null() {
+                out.push(json!({"kind":"PRODUCT_NOT_OBSERVED","url":url,"product":key,"last_observed":observed_view(&Value::Object([(key.clone(),prev.clone())].into_iter().collect()))[key.as_str()],"raw_capture_sha256":after["raw_capture_sha256"],"evidence":"CAPTURED_PAGE_WITHOUT_THE_PRODUCT"}));
+            }
         }
         for (key, p) in after["products"].as_object().into_iter().flatten() {
             let prev = &before["products"][key];
-            for (field, kind) in [
-                ("price_minor", "PRICE_CHANGED"),
-                ("availability", "AVAILABILITY_CHANGED"),
-            ] {
+            for (field, kind) in TRACKED {
+                let gap = !prev["_unobserved_since"].is_null()
+                    || !prev["_unobserved_fields"][field].is_null();
+                if !prev[field].is_null() && p[field].is_null() && !gap {
+                    out.push(json!({"kind":"FIELD_NOT_OBSERVED","url":url,"product":key,"field":field,"last_observed":prev[field],"raw_capture_sha256":after["raw_capture_sha256"],"evidence":"CAPTURED_PRODUCT_WITHOUT_THE_FIELD"}));
+                }
                 if !prev[field].is_null() && !p[field].is_null() && prev[field] != p[field] {
-                    out.push(json!({"kind":kind,"url":url,"product":key,"before":prev[field],"after":p[field],"raw_capture_sha256":after["raw_capture_sha256"]}));
+                    out.push(json!({"kind":kind,"url":url,"product":key,"before":prev[field],"after":p[field],"across_gap":gap,"raw_capture_sha256":after["raw_capture_sha256"]}));
                 }
             }
         }
     }
     out
 }
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -458,5 +544,101 @@ mod tests {
         let disabled=e.monitor_create(json!({"watch_id":id,"enabled":false,"market":"PUBLIC_WEB","query":"Watch cup","targets":["https://shop.example/product"],"interval_seconds":60})).unwrap();
         assert_eq!(disabled["status"], "DISABLED");
         assert!(e.claim_watch(1000).unwrap().is_none());
+    }
+
+    #[test]
+    fn a_missing_product_or_field_is_a_gap_never_unchanged() {
+        let root = std::env::temp_dir().join(format!("ecdev-watch-gap-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        let watch=e.monitor_create(json!({"market":"PUBLIC_WEB","query":"Gap cup","targets":["https://shop.example/p"],"interval_seconds":60})).unwrap();
+        let id = watch["watch_id"].as_str().unwrap().to_string();
+        let mut at = 100;
+        let mut tick = |products: Value| {
+            e.db.lock()
+                .unwrap()
+                .execute("UPDATE watches SET next_due=?1", [at])
+                .unwrap();
+            let lease = e.claim_watch(at).unwrap().unwrap();
+            e.finish_watch(&lease, at + 1, Ok(json!({"run_id":format!("r{at}"),"mode":"FIXTURE","errors":[],"snapshots":[{"source":"https://shop.example/p","content_hash":format!("h{at}"),"products":products}]}))).unwrap();
+            at += 100;
+        };
+        let cup = |price: Value, availability: Value| json!({"sku":"Cup","title":"Cup","price_minor":price,"availability":availability});
+        tick(json!([cup(json!(3000), json!("InStock"))]));
+        // The price is missing from a captured page: one FIELD_NOT_OBSERVED, not silence.
+        tick(json!([cup(Value::Null, json!("InStock"))]));
+        tick(json!([cup(Value::Null, json!("InStock"))]));
+        // The price returns changed: detected against the last observed value, across the gap.
+        tick(json!([cup(json!(2500), json!("InStock"))]));
+        // The product is missing from a captured page: one PRODUCT_NOT_OBSERVED.
+        tick(json!([]));
+        tick(json!([]));
+        tick(json!([cup(json!(2500), json!("InStock"))]));
+        let status = e.monitor_status(Some(&id)).unwrap();
+        let triggers: Vec<Value> = status["changes"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .rev()
+            .map(|c| c["trigger"].clone())
+            .collect();
+        let kinds: Vec<&str> = triggers
+            .iter()
+            .map(|t| t["kind"].as_str().unwrap())
+            .collect();
+        assert_eq!(
+            kinds.iter().filter(|k| **k == "FIELD_NOT_OBSERVED").count(),
+            1,
+            "{kinds:?}"
+        );
+        assert_eq!(
+            kinds
+                .iter()
+                .filter(|k| **k == "PRODUCT_NOT_OBSERVED")
+                .count(),
+            1,
+            "{kinds:?}"
+        );
+        let price = triggers
+            .iter()
+            .find(|t| t["kind"] == "PRICE_CHANGED")
+            .unwrap();
+        assert_eq!(
+            (
+                price["before"].as_i64(),
+                price["after"].as_i64(),
+                price["across_gap"].as_bool()
+            ),
+            (Some(3000), Some(2500), Some(true))
+        );
+        let missing = triggers
+            .iter()
+            .find(|t| t["kind"] == "FIELD_NOT_OBSERVED")
+            .unwrap();
+        assert_eq!(
+            (missing["field"].as_str(), missing["last_observed"].as_i64()),
+            (Some("price_minor"), Some(3000))
+        );
+        // Reappearing unchanged after a product gap raises no price change.
+        assert_eq!(
+            kinds.iter().filter(|k| **k == "PRICE_CHANGED").count(),
+            1,
+            "{kinds:?}"
+        );
+        // The 3000 window closed only when 2500 was observed; its last observation precedes the gap.
+        let facts = status["facts"].as_array().unwrap();
+        let old = facts
+            .iter()
+            .find(|f| f["field"] == "price_minor" && f["value"] == 3000)
+            .unwrap();
+        assert_eq!(
+            (
+                old["valid_at"].as_u64(),
+                old["last_observed_at"].as_u64(),
+                old["invalid_at"].as_u64()
+            ),
+            (Some(101), Some(101), Some(401))
+        );
+        let availability = facts.iter().find(|f| f["field"] == "availability").unwrap();
+        assert_eq!(availability["last_observed_at"].as_u64(), Some(701));
     }
 }

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "3d231058e44c0a9f23143ecc65f977479941f99a",
+  "assessed_parent_commit": "2b9b8bf52e7091da7a858f718f44290e8a8aa58f",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -310,7 +310,7 @@
         "changedetection.access-diagnostics STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
         "changedetection.llm-extraction BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
         "changedetection.conditions-engine STUDY_CANDIDATE(declarative rules over typed observed fields (price, stock, similarity) that record which observed values met which rule when they fire)",
-        "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns, with a filter miss reported as missing evidence rather than no change)",
+        "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns; reporting a miss as missing evidence is native (domain/commerce/src/monitor.rs PRODUCT_NOT_OBSERVED and FIELD_NOT_OBSERVED))",
         "changedetection.fetcher-selection BENCHMARK_CANDIDATE(when does a plain HTTP fetch yield the same price and stock evidence as a rendered browser, measured per site)",
         "changedetection.browser-automation STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)",
         "changedetection.history-extraction ALGORITHM_CANDIDATE(re-deriving typed time series from stored raw snapshots after the fact)"
