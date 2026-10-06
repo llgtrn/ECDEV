@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "2b9b8bf52e7091da7a858f718f44290e8a8aa58f",
+  "assessed_parent_commit": "ae70b01aa7a9eed2a702b5a2dba4d9505cdd898d",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1625,9 +1625,9 @@
         {
           "key": "changedetection.price-history",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(time-weighted price statistics (low, typical, high) over observed points with gaps kept as gaps, instead of unweighted statistics over change events)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs::price_statistics weighs each observed price by the time it was actually seen, reports unobserved time and refuses mixed currencies or overlapping windows; the donor ranks prices over change events)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.selector-authoring",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "15 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.price-history (ALGORITHM_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.conditions-engine (STUDY_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
+          "detail": "14 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.conditions-engine (STUDY_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

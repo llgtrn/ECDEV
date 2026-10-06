@@ -3,7 +3,7 @@ use crate::Engine;
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use uuid::Uuid;
 
 fn err(e: impl std::fmt::Display) -> String {
@@ -132,7 +132,27 @@ impl Engine {
                     .map_err(err)?;
                 rows.collect::<Result<Vec<_>, _>>().map_err(err)?
             };
-            watches.push(json!({"watch_id":id,"facts":facts,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":history("watch_changes")?,"notifications":"NONE"}));
+            let price_windows = {
+                let mut s = db
+                    .prepare("SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND field IN ('price_minor','currency') ORDER BY id")
+                    .map_err(err)?;
+                let rows = s
+                    .query_map([&id], |r| {
+                        Ok(FactWindow {
+                            url: r.get(0)?,
+                            product: r.get(1)?,
+                            field: r.get(2)?,
+                            value: r.get(3)?,
+                            valid_at: r.get(4)?,
+                            invalid_at: r.get(5)?,
+                            last_observed_at: r.get(6)?,
+                        })
+                    })
+                    .map_err(err)?;
+                rows.collect::<Result<Vec<_>, _>>().map_err(err)?
+            };
+            let price_statistics = price_statistics(&price_windows);
+            watches.push(json!({"watch_id":id,"facts":facts,"price_statistics":price_statistics,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":history("watch_changes")?,"notifications":"NONE"}));
         }
         if id.is_some() {
             watches.into_iter().next().ok_or("WATCH_NOT_FOUND".into())
@@ -251,7 +271,7 @@ fn record_facts(
             continue;
         }
         for (product, fields) in source["products"].as_object().into_iter().flatten() {
-            for field in ["price_minor", "availability"] {
+            for field in ["price_minor", "currency", "availability"] {
                 let value = &fields[field];
                 if value.is_null() {
                     continue;
@@ -360,6 +380,112 @@ fn snapshot(run: &Value, request: &Value) -> Value {
     }
     Value::Object(sources)
 }
+/// One stored fact window, as `price_statistics` reads it.
+#[derive(Clone, Debug)]
+pub struct FactWindow {
+    pub url: String,
+    pub product: String,
+    pub field: String,
+    pub value: String,
+    pub valid_at: u64,
+    pub invalid_at: Option<u64>,
+    pub last_observed_at: Option<u64>,
+}
+
+/// Time-weighted price statistics per watched product, over observed spans only. A price counts
+/// for the time it was actually seen, from its first to its last observation; the time between
+/// the last sighting of one price and the first of the next is unobserved and reported, never
+/// attributed. Low, quartiles, median and high are observed prices (no arithmetic on money).
+/// Overlapping windows with different prices, or more than one currency, give a CONFLICT with
+/// no statistics; no observed duration gives INSUFFICIENT_DURATION.
+pub fn price_statistics(windows: &[FactWindow]) -> Vec<Value> {
+    let mut by_product: BTreeMap<(String, String), Vec<&FactWindow>> = BTreeMap::new();
+    for w in windows {
+        by_product
+            .entry((w.url.clone(), w.product.clone()))
+            .or_default()
+            .push(w);
+    }
+    let mut out = vec![];
+    for ((url, product), facts) in by_product {
+        let currencies: BTreeSet<&str> = facts
+            .iter()
+            .filter(|w| w.field == "currency")
+            .map(|w| w.value.as_str())
+            .collect();
+        let mut prices: Vec<(i64, u64, u64)> = facts
+            .iter()
+            .filter(|w| w.field == "price_minor")
+            .filter_map(|w| {
+                let value = w.value.parse::<i64>().ok()?;
+                let seen = w.last_observed_at.unwrap_or(w.valid_at).max(w.valid_at);
+                Some((value, w.valid_at, seen))
+            })
+            .collect();
+        if prices.is_empty() {
+            continue;
+        }
+        prices.sort_by_key(|(_, start, _)| *start);
+        let base = json!({"url":url,"product":product,"method":"TIME_WEIGHTED_OBSERVED_SPANS","windows":prices.len(),"currency":if currencies.len()==1 {json!(currencies.iter().next())} else {Value::Null}});
+        let overlap = prices
+            .windows(2)
+            .any(|p| p[1].1 < p[0].2 && p[0].0 != p[1].0);
+        if currencies.len() > 1 || overlap {
+            let mut v = base;
+            v["state"] = json!("CONFLICT");
+            v["reason"] = json!(if overlap {
+                "OVERLAPPING_PRICE_WINDOWS"
+            } else {
+                "MORE_THAN_ONE_CURRENCY"
+            });
+            out.push(v);
+            continue;
+        }
+        let observed: u64 = prices.iter().map(|(_, a, b)| b - a).sum();
+        let span = prices.iter().map(|p| p.2).max().unwrap_or(0) - prices[0].1;
+        let mut v = base;
+        v["observed_seconds"] = json!(observed);
+        v["unobserved_seconds"] = json!(span.saturating_sub(observed));
+        v["currency_state"] = json!(if currencies.len() == 1 {
+            "OBSERVED"
+        } else {
+            "UNKNOWN"
+        });
+        if observed == 0 {
+            v["state"] = json!("INSUFFICIENT_DURATION");
+            v["observed_prices"] = json!(prices.iter().map(|p| p.0).collect::<Vec<_>>());
+            out.push(v);
+            continue;
+        }
+        let mut weighted: Vec<(i64, u64)> = prices.iter().map(|(p, a, b)| (*p, b - a)).collect();
+        weighted.sort();
+        // The observed price at which the cumulative observed time first reaches q of the total.
+        let quantile = |num: u64, den: u64| -> i64 {
+            let mut cumulative = 0u64;
+            for (price, seconds) in &weighted {
+                cumulative += seconds;
+                if cumulative * den >= observed * num && *seconds > 0 {
+                    return *price;
+                }
+            }
+            weighted.last().map(|w| w.0).unwrap_or_default()
+        };
+        let positive: Vec<i64> = weighted.iter().filter(|w| w.1 > 0).map(|w| w.0).collect();
+        let current = prices.last().map(|p| p.0).unwrap_or_default();
+        let below: u64 = weighted.iter().filter(|w| w.0 < current).map(|w| w.1).sum();
+        v["state"] = json!("DERIVED");
+        v["low_minor"] = json!(positive.first());
+        v["p25_minor"] = json!(quantile(1, 4));
+        v["median_minor"] = json!(quantile(1, 2));
+        v["p75_minor"] = json!(quantile(3, 4));
+        v["high_minor"] = json!(positive.last());
+        v["latest_minor"] = json!(current);
+        v["share_of_observed_time_below_latest_bps"] = json!(below * 10_000 / observed);
+        out.push(v);
+    }
+    out
+}
+
 /// Fields a capture may stop carrying; a gap is reported, never read as "unchanged".
 const TRACKED: [(&str, &str); 2] = [
     ("price_minor", "PRICE_CHANGED"),
@@ -546,6 +672,93 @@ mod tests {
         assert!(e.claim_watch(1000).unwrap().is_none());
     }
 
+    fn window(
+        field: &str,
+        value: &str,
+        valid_at: u64,
+        invalid_at: Option<u64>,
+        seen: u64,
+    ) -> FactWindow {
+        FactWindow {
+            url: "https://shop.example/p".into(),
+            product: "\"Cup\"".into(),
+            field: field.into(),
+            value: value.into(),
+            valid_at,
+            invalid_at,
+            last_observed_at: Some(seen),
+        }
+    }
+
+    #[test]
+    fn price_statistics_weigh_observed_time_not_change_events() {
+        const DAY: u64 = 86_400;
+        // 1000 held for 30 observed days, 900 and 1200 for one day each.
+        let w = [
+            window("price_minor", "1000", 0, Some(30 * DAY), 30 * DAY),
+            window("price_minor", "900", 30 * DAY, Some(31 * DAY), 31 * DAY),
+            window("price_minor", "1200", 31 * DAY, None, 32 * DAY),
+            window("currency", "\"USD\"", 0, None, 32 * DAY),
+        ];
+        let s = &price_statistics(&w)[0];
+        assert_eq!(s["state"], "DERIVED");
+        assert_eq!(
+            (
+                s["low_minor"].as_i64(),
+                s["median_minor"].as_i64(),
+                s["high_minor"].as_i64()
+            ),
+            (Some(900), Some(1000), Some(1200))
+        );
+        assert_eq!(
+            (s["p25_minor"].as_i64(), s["p75_minor"].as_i64()),
+            (Some(1000), Some(1000))
+        );
+        assert_eq!(s["currency"], "\"USD\"");
+        // 31 of 32 observed days were below the latest 1200.
+        assert_eq!(
+            s["share_of_observed_time_below_latest_bps"].as_u64(),
+            Some(9687)
+        );
+        assert_eq!(s["unobserved_seconds"].as_u64(), Some(0));
+    }
+
+    #[test]
+    fn price_statistics_report_gaps_and_refuse_conflicts() {
+        // Seen 0..100 at 1000, then nothing until 1200 is seen 200..300: 100 s unobserved.
+        let gap = price_statistics(&[
+            window("price_minor", "1000", 0, Some(200), 100),
+            window("price_minor", "1200", 200, None, 300),
+        ]);
+        assert_eq!(
+            (
+                gap[0]["observed_seconds"].as_u64(),
+                gap[0]["unobserved_seconds"].as_u64()
+            ),
+            (Some(200), Some(100))
+        );
+        assert_eq!(gap[0]["currency_state"], "UNKNOWN");
+        let currencies = price_statistics(&[
+            window("price_minor", "1000", 0, None, 100),
+            window("currency", "\"USD\"", 0, Some(50), 50),
+            window("currency", "\"JPY\"", 50, None, 100),
+        ]);
+        assert_eq!(
+            (
+                currencies[0]["state"].as_str(),
+                currencies[0]["reason"].as_str()
+            ),
+            (Some("CONFLICT"), Some("MORE_THAN_ONE_CURRENCY"))
+        );
+        assert!(currencies[0]["median_minor"].is_null());
+        let overlap = price_statistics(&[
+            window("price_minor", "1000", 0, None, 100),
+            window("price_minor", "1100", 50, None, 100),
+        ]);
+        assert_eq!(overlap[0]["reason"], "OVERLAPPING_PRICE_WINDOWS");
+        let once = price_statistics(&[window("price_minor", "1000", 7, None, 7)]);
+        assert_eq!(once[0]["state"], "INSUFFICIENT_DURATION");
+    }
     #[test]
     fn a_missing_product_or_field_is_a_gap_never_unchanged() {
         let root = std::env::temp_dir().join(format!("ecdev-watch-gap-{}", Uuid::new_v4()));
@@ -637,6 +850,16 @@ mod tests {
                 old["invalid_at"].as_u64()
             ),
             (Some(101), Some(101), Some(401))
+        );
+        // Statistics read every stored price window: 3000 seen at 101 only, 2500 seen 401..701.
+        let stats = &status["price_statistics"][0];
+        assert_eq!(
+            (
+                stats["state"].as_str(),
+                stats["median_minor"].as_i64(),
+                stats["observed_seconds"].as_u64()
+            ),
+            (Some("DERIVED"), Some(2500), Some(300))
         );
         let availability = facts.iter().find(|f| f["field"] == "availability").unwrap();
         assert_eq!(availability["last_observed_at"].as_u64(), Some(701));
