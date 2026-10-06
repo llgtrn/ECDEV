@@ -1,13 +1,13 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "3b7392f923a6ec17c9acefd4b2c5d8fad5fa6ed6",
+  "assessed_parent_commit": "5a9e1373d2ca60cbfad498c5e2d1c2af295d21b0",
   "working_tree_dirty_at_assessment": true,
-  "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
+  "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
   "suite": "ECDEV REPOSITORY CONFORMANCE",
   "source": "ecdev-gov conformance --json",
   "exit_code": 0,
-  "passed": 27,
-  "total": 27,
+  "passed": 28,
+  "total": 28,
   "failing": [],
   "checks": [
     {
@@ -38,7 +38,7 @@
     {
       "id": "graph.roundtrip",
       "pass": true,
-      "detail": "399 nodes, 573 edges, 98547 bytes"
+      "detail": "429 nodes, 603 edges, 103952 bytes"
     },
     {
       "id": "lifecycle.claims_within_evidence",
@@ -54,6 +54,11 @@
       "id": "lifecycle.relevance_justified",
       "pass": true,
       "detail": "every resolved capability relevance agrees with `required` and cites its review"
+    },
+    {
+      "id": "knowledge.irrelevance_admissible",
+      "pass": true,
+      "detail": "no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)"
     },
     {
       "id": "repository.builds_alone",
@@ -108,7 +113,7 @@
     {
       "id": "metrics.schema",
       "pass": true,
-      "detail": "77 metrics in schema order"
+      "detail": "92 metrics in schema order"
     },
     {
       "id": "governance.zero_dependency",
@@ -150,7 +155,7 @@
     {
       "metric": "extinction_ratio",
       "required": "1.000000",
-      "actual": "0.125000",
+      "actual": "0.025000",
       "pass": false
     },
     {
@@ -178,13 +183,13 @@
       "pass": false
     },
     {
-      "metric": "native_capability_ratio",
+      "metric": "production_native_ratio",
       "required": "1.000000",
       "actual": "1.000000",
       "pass": true
     },
     {
-      "metric": "proof_completion_ratio",
+      "metric": "production_proof_ratio",
       "required": "1.000000",
       "actual": "1.000000",
       "pass": true
@@ -209,7 +214,7 @@
     }
   ],
   "metrics": {
-    "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
+    "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
     "donors_discovered": 63,
     "donors_registered": 48,
     "donors_censused": 8,
@@ -217,15 +222,30 @@
     "donors_native_shadow": 8,
     "donors_parity_proven": 8,
     "donors_cutover": 5,
-    "donors_extinct": 5,
+    "donors_extinct": 1,
     "donors_blocked": 0,
     "donors_rejected": 8,
     "donors_superseded": 0,
     "donors_active": 40,
-    "capabilities_total": 25,
-    "capabilities_native": 25,
-    "capabilities_proven": 25,
-    "capabilities_remaining": 0,
+    "production_capabilities_required": 25,
+    "production_capabilities_native": 25,
+    "production_capabilities_proven": 25,
+    "production_capabilities_remaining": 0,
+    "known_donor_capabilities": 146,
+    "knowledge_unreviewed": 2,
+    "study_candidates": 24,
+    "benchmark_candidates": 18,
+    "algorithm_candidates": 7,
+    "reference_only": 30,
+    "study_complete_capabilities": 47,
+    "no_research_value": 18,
+    "research_questions_open": 51,
+    "knowledge_coverage_ratio": 0.650685,
+    "donors_knowledge_unreviewed": 45,
+    "donors_structural_census": 2,
+    "donors_active_study": 14,
+    "donors_study_complete": 2,
+    "donors_with_open_research": 61,
     "technologies_total": 36,
     "technologies_native": 1,
     "technologies_proven": 1,
@@ -244,10 +264,10 @@
     "documents_over_budget": 0,
     "repository_shape_conformance": 1.0,
     "ecdev_repository_conformance": 1.0,
-    "native_capability_ratio": 1.0,
-    "proof_completion_ratio": 1.0,
+    "production_native_ratio": 1.0,
+    "production_proof_ratio": 1.0,
     "technology_native_ratio": 0.027778,
-    "extinction_ratio": 0.125,
+    "extinction_ratio": 0.025,
     "donors_technology_mapped": 8,
     "donors_relevance_resolved": 7,
     "orphan_capabilities": 0,
@@ -280,7 +300,7 @@
     "native_shadow": 8,
     "parity_proven": 8,
     "cutover": 5,
-    "extinct": 5,
+    "extinct": 1,
     "unknown_identity": 9,
     "unverified_origin": 38,
     "unverified_license": 63,

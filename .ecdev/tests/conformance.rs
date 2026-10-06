@@ -77,7 +77,7 @@ fn the_declaration_set_is_the_single_authority() {
 fn not_relevant_requires_a_review_and_is_never_required() {
     let r = extinct_baseline("relevance");
     r.edit(|d| {
-        d.donors[0].capabilities[0].relevance = Relevance::NotRelevant("never called".into())
+        d.donors[0].capabilities[0].relevance = Relevance::NotAdopted("never called".into())
     });
     let a = r.assess();
     assert!(!check(&a, "lifecycle.relevance_justified").pass);
@@ -98,7 +98,7 @@ fn not_relevant_requires_a_review_and_is_never_required() {
         extra.key = "python-subclassing".into();
         extra.required = false;
         extra.spec = "research/exclusions/python-subclassing.json".into();
-        extra.relevance = Relevance::NotRelevant("ECDEV has no Python callers".into());
+        extra.relevance = Relevance::NotAdopted("ECDEV has no Python callers".into());
         extra.proofs.clear();
         extra.replacement = None;
         d.donors[0].capabilities.push(extra);
@@ -267,7 +267,7 @@ fn reclaim_withdraws_an_exception_the_evidence_does_not_allow() {
     let k = ecdev_governance::compact::facts::Knowledge::load(r.path());
     assert!(k.facts.iter().any(|f| f.subject == "geo"
         && f.key == "exception"
-        && f.value == "REJECTED: never adopted"));
+        && f.value == "REJECT_RUNTIME: never adopted"));
 }
 
 #[test]

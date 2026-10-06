@@ -114,17 +114,25 @@ pub fn render(a: &Assessment) -> String {
 /// How ECDEV relates to every declared donor capability: relied on (must become native) or
 /// justified as not relevant, and what remains unresolved.
 pub fn relevance_summary(a: &Assessment) -> String {
-    let caps: Vec<&Relevance> = a
+    let caps: Vec<&crate::declare::Capability> = a
         .declaration
         .donors
         .iter()
-        .flat_map(|dn| dn.capabilities.iter().map(|c| &c.relevance))
+        .flat_map(|dn| dn.capabilities.iter())
         .collect();
-    let n = |f: fn(&Relevance) -> bool| caps.iter().filter(|r| f(r)).count();
+    let n = |f: &dyn Fn(&crate::declare::Capability) -> bool| caps.iter().filter(|c| f(c)).count();
     format!(
-        "\nDONOR CAPABILITY RELEVANCE\n  relied on {}, not relevant to ECDEV {}, unresolved {}\n",
-        n(|r| matches!(r, Relevance::ReliedOn(_))),
-        n(|r| matches!(r, Relevance::NotRelevant(_))),
-        n(|r| matches!(r, Relevance::Unresolved)),
+        "\nDONOR CAPABILITY ADOPTION (production)\n  relied on {}, not adopted {}, unresolved {}\nDONOR CAPABILITY KNOWLEDGE (research, includes runtime-rejected donors)\n  open {} (unreviewed {}, study {}, benchmark {}, algorithm {}), reference only {}, study complete {}, no research value {}\n",
+        n(&|c| matches!(c.relevance, Relevance::ReliedOn(_))),
+        n(&|c| matches!(c.relevance, Relevance::NotAdopted(_))),
+        n(&|c| matches!(c.relevance, Relevance::Unresolved)),
+        n(&|c| c.knowledge.open()),
+        n(&|c| c.knowledge.status() == "UNREVIEWED"),
+        n(&|c| c.knowledge.status() == "STUDY_CANDIDATE"),
+        n(&|c| c.knowledge.status() == "BENCHMARK_CANDIDATE"),
+        n(&|c| c.knowledge.status() == "ALGORITHM_CANDIDATE"),
+        n(&|c| c.knowledge.status() == "REFERENCE_ONLY"),
+        n(&|c| c.knowledge.status() == "STUDY_COMPLETE"),
+        n(&|c| c.knowledge.status() == "NO_RESEARCH_VALUE"),
     )
 }

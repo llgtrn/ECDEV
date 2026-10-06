@@ -366,6 +366,34 @@ fn extinction(args: &Args, a: &Assessment) -> Out {
                     )
                     .with("stopped_by", &d.stopped_by)
                     .with(
+                        "runtime",
+                        if matches!(
+                            d.exception,
+                            Some((crate::schema::ExceptionKind::Rejected, _))
+                        ) {
+                            "REJECT_RUNTIME"
+                        } else {
+                            d.effective.wire()
+                        },
+                    )
+                    .with("knowledge", d.knowledge.wire())
+                    .with(
+                        "capabilities",
+                        Json::Array(
+                            d.capabilities
+                                .iter()
+                                .map(|c| {
+                                    Json::obj()
+                                        .with("key", &c.key)
+                                        .with("required", c.required)
+                                        .with("knowledge", &c.knowledge)
+                                        .with("knowledge_status", &c.knowledge_status)
+                                        .with("open", c.knowledge_open)
+                                })
+                                .collect(),
+                        ),
+                    )
+                    .with(
                         "gates",
                         Json::Array(
                             d.gates
@@ -397,10 +425,11 @@ fn extinction(args: &Args, a: &Assessment) -> Out {
         .filter(|d| only.is_none_or(|k| *k == d.key))
     {
         s.push_str(&format!(
-            "{}  claimed {}  effective {}{}\n",
+            "{}  claimed {}  effective {}  knowledge {}{}\n",
             d.key,
             d.claimed,
             d.effective,
+            d.knowledge,
             d.exception
                 .as_ref()
                 .map(|(k, r)| format!("  [{k}: {r}]"))

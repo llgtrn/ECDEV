@@ -96,9 +96,9 @@ pub fn external_governance_references(a: &Assessment) -> Vec<String> {
     out
 }
 
-/// Capability relevance that is undecided-but-claimed or contradicts `required`: a relied-on
-/// capability must be required; a NOT_RELEVANT_TO_ECDEV capability must not be required and
-/// must cite an existing exclusion review as its spec.
+/// Production adoption that is undecided-but-claimed or contradicts `required`: a relied-on
+/// capability must be required; a NOT_ADOPTED capability must not be required and must cite an
+/// existing review as its spec.
 pub fn relevance_violations(a: &Assessment) -> Vec<String> {
     let mut out = Vec::new();
     for d in &a.declaration.donors {
@@ -107,20 +107,40 @@ pub fn relevance_violations(a: &Assessment) -> Vec<String> {
                 declare::Relevance::ReliedOn(_) if !c.required => {
                     out.push(format!("{}/{}: RELIED_ON but not required", d.key, c.key))
                 }
-                declare::Relevance::NotRelevant(_) if c.required => out.push(format!(
-                    "{}/{}: NOT_RELEVANT_TO_ECDEV but required",
-                    d.key, c.key
-                )),
-                declare::Relevance::NotRelevant(_) if !a.files.exists(&c.spec) => {
-                    out.push(format!(
-                        "{}/{}: NOT_RELEVANT_TO_ECDEV without a tracked exclusion review ({})",
-                        d.key, c.key, c.spec
-                    ))
+                declare::Relevance::NotAdopted(_) if c.required => {
+                    out.push(format!("{}/{}: NOT_ADOPTED but required", d.key, c.key))
                 }
+                declare::Relevance::NotAdopted(_) if !a.files.exists(&c.spec) => out.push(format!(
+                    "{}/{}: NOT_ADOPTED without a tracked review ({})",
+                    d.key, c.key, c.spec
+                )),
                 r if !matches!(r, declare::Relevance::Unresolved) && !r.resolved() => {
                     out.push(format!("{}/{}: empty relevance reason", d.key, c.key))
                 }
                 _ => {}
+            }
+        }
+    }
+    out
+}
+
+/// Knowledge decisions that are not admissible: NO_RESEARCH_VALUE grounded in adoption facts
+/// (no caller, a different native implementation, a licence, "not evidence"), empty reasons,
+/// or a relied-on capability declared to have no research value.
+pub fn knowledge_violations(a: &Assessment) -> Vec<String> {
+    let mut out = Vec::new();
+    for d in &a.declaration.donors {
+        for c in &d.capabilities {
+            if let Some(why) = c.knowledge.inadmissible() {
+                out.push(format!("{}/{}: {why}", d.key, c.key));
+            }
+            if matches!(c.relevance, declare::Relevance::ReliedOn(_))
+                && matches!(c.knowledge, declare::Knowledge::NoResearchValue(..))
+            {
+                out.push(format!(
+                    "{}/{}: RELIED_ON in production yet declared NO_RESEARCH_VALUE",
+                    d.key, c.key
+                ));
             }
         }
     }
@@ -234,6 +254,11 @@ pub fn checks(a: &Assessment) -> Vec<Check> {
         "lifecycle.relevance_justified",
         relevance_violations(a),
         "every resolved capability relevance agrees with `required` and cites its review",
+    ));
+    v.push(list_check(
+        "knowledge.irrelevance_admissible",
+        knowledge_violations(a),
+        "no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)",
     ));
     v.push(no_findings(
         a,
@@ -396,6 +421,9 @@ pub fn probes() -> Vec<Check> {
         replacement_canonical: true,
         mapped: true,
         relevance_resolved: true,
+        knowledge: "STUDY_COMPLETE[DERIVED_NATIVE](probe)".into(),
+        knowledge_status: "STUDY_COMPLETE".into(),
+        knowledge_open: false,
         native: true,
         native_detail: String::new(),
         parity: vec![("t::p".into(), crate::evidence::Verdict::Pass)],

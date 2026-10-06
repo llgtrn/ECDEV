@@ -44,7 +44,25 @@ def main():
               "exit_code": code, "passed": sum(c["pass"] for c in checks), "total": len(checks),
               "failing": [c for c in checks if not c["pass"]], "checks": checks,
               "v1_gate": conformance["v1_gate"], "metrics": conformance["metrics"]}
+    metrics = dict(conformance["metrics"]) if isinstance(conformance["metrics"], dict) else {m["name"]: m["value"] for m in conformance["metrics"]}
+    knowledge_keys = ["known_donor_capabilities", "knowledge_unreviewed", "study_candidates", "benchmark_candidates",
+                      "algorithm_candidates", "reference_only", "study_complete_capabilities", "no_research_value",
+                      "research_questions_open", "knowledge_coverage_ratio", "donors_knowledge_unreviewed",
+                      "donors_structural_census", "donors_active_study", "donors_study_complete", "donors_with_open_research"]
+    production_keys = ["production_capabilities_required", "production_capabilities_native", "production_capabilities_proven",
+                       "production_capabilities_remaining", "production_native_ratio", "production_proof_ratio"]
+    knowledge = {**base, "source": "ecdev-gov extinction --json and conformance --json",
+                 "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
+                 "production": {k: metrics.get(k) for k in production_keys},
+                 "knowledge": {k: metrics.get(k) for k in knowledge_keys},
+                 "denominators": {"production": "required capabilities of runtime-active donors only",
+                                  "knowledge": "every declared capability of every declared donor, runtime-rejected donors included"},
+                 "donors": [{"donor": d["donor"], "runtime": d["runtime"], "effective": d["effective"], "knowledge": d["knowledge"],
+                             "open": [c["key"] + " " + c["knowledge"] for c in d["capabilities"] if c["open"]],
+                             "resolved": [c["key"] + " " + c["knowledge"] for c in d["capabilities"] if not c["open"]]}
+                            for d in donors]}
     OUT.mkdir(parents=True, exist_ok=True)
+    (OUT / "knowledge.json").write_text(json.dumps(knowledge, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (OUT / "lifecycle.json").write_text(json.dumps(lifecycle, indent=2) + "\n", encoding="utf-8")
     (OUT / "conformance.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
@@ -61,7 +79,8 @@ def main():
     review["assessment_refresh"] = f"ecdev-gov extinction at parent {head}"
     review_path.write_text(json.dumps(review, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({"conformance": f"{report['passed']}/{report['total']}", "effective_states": lifecycle["effective_states"],
-                      "extinct": lifecycle["extinct"]}))
+                      "extinct": lifecycle["extinct"], "knowledge_coverage": knowledge["knowledge"]["knowledge_coverage_ratio"],
+                      "research_questions_open": knowledge["knowledge"]["research_questions_open"]}))
 
 
 if __name__ == "__main__":

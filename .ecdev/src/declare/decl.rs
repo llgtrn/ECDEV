@@ -58,12 +58,27 @@ pub struct Proof {
     pub locator: &'static str,
 }
 
-/// How a donor capability relates to ECDEV: still undecided, relied on (which behaviour), or
-/// not relevant (why ECDEV can never invoke it).
+/// Production adoption of a donor capability: undecided, relied on (which behaviour), or not
+/// adopted (why production does not execute it). Not a statement about research value.
 pub enum Relevance {
     Unresolved,
     ReliedOn(&'static str),
-    NotRelevant(&'static str),
+    NotAdopted(&'static str),
+}
+
+pub use super::model::ResearchScope;
+
+/// What ECDEV still has to learn from a donor capability (see `model::Knowledge`).
+pub enum Knowledge {
+    Unreviewed,
+    StudyCandidate(&'static str),
+    BenchmarkCandidate(&'static str),
+    AlgorithmCandidate(&'static str),
+    ReferenceOnly(&'static str),
+    Absorbed(&'static str),
+    IndependentNative(&'static str),
+    Divergent(&'static str),
+    NoResearchValue(ResearchScope, &'static str),
 }
 
 pub struct Capability {
@@ -75,6 +90,7 @@ pub struct Capability {
     /// graph this donor capability maps to.
     pub maps_to: Option<&'static str>,
     pub relevance: Relevance,
+    pub knowledge: Knowledge,
     pub proofs: &'static [Proof],
 }
 
@@ -150,7 +166,22 @@ fn relevance(n: &Relevance) -> model::Relevance {
     match n {
         Relevance::Unresolved => model::Relevance::Unresolved,
         Relevance::ReliedOn(k) => model::Relevance::ReliedOn(k.to_string()),
-        Relevance::NotRelevant(r) => model::Relevance::NotRelevant(r.to_string()),
+        Relevance::NotAdopted(r) => model::Relevance::NotAdopted(r.to_string()),
+    }
+}
+
+fn knowledge(n: &Knowledge) -> model::Knowledge {
+    use model::Knowledge as K;
+    match n {
+        Knowledge::Unreviewed => K::Unreviewed,
+        Knowledge::StudyCandidate(t) => K::StudyCandidate(t.to_string()),
+        Knowledge::BenchmarkCandidate(t) => K::BenchmarkCandidate(t.to_string()),
+        Knowledge::AlgorithmCandidate(t) => K::AlgorithmCandidate(t.to_string()),
+        Knowledge::ReferenceOnly(t) => K::ReferenceOnly(t.to_string()),
+        Knowledge::Absorbed(t) => K::Absorbed(t.to_string()),
+        Knowledge::IndependentNative(t) => K::IndependentNative(t.to_string()),
+        Knowledge::Divergent(t) => K::Divergent(t.to_string()),
+        Knowledge::NoResearchValue(s, t) => K::NoResearchValue(*s, t.to_string()),
     }
 }
 
@@ -277,6 +308,7 @@ pub fn into_model(
                         replacement: c.replacement.map(str::to_string),
                         maps_to: c.maps_to.map(str::to_string),
                         relevance: relevance(&c.relevance),
+                        knowledge: knowledge(&c.knowledge),
                         proofs: c
                             .proofs
                             .iter()

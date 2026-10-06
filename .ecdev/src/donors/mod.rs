@@ -62,6 +62,22 @@ pub struct DonorAssessment {
     pub facts: DonorFacts,
     /// Why the effective state stops where it does.
     pub stopped_by: String,
+    /// What ECDEV has learned from the donor, independent of runtime adoption.
+    pub knowledge: crate::schema::KnowledgeState,
+}
+
+/// The knowledge state a donor's capability decisions add up to.
+pub fn knowledge_state(caps: &[CapabilityVerdict]) -> crate::schema::KnowledgeState {
+    use crate::schema::KnowledgeState as K;
+    if caps.is_empty() {
+        K::Unreviewed
+    } else if caps.iter().any(|c| c.knowledge_status == "UNREVIEWED") {
+        K::StructuralCensus
+    } else if caps.iter().any(|c| c.knowledge_open) {
+        K::ActiveStudy
+    } else {
+        K::StudyComplete
+    }
 }
 
 impl DonorAssessment {
@@ -455,11 +471,14 @@ fn capability_verdicts(
                 mapped: c.maps_to.as_deref().is_some_and(|k| !k.trim().is_empty()),
                 relevance_resolved: match &c.relevance {
                     crate::declare::Relevance::ReliedOn(_) => c.relevance.resolved() && c.required,
-                    crate::declare::Relevance::NotRelevant(_) => {
+                    crate::declare::Relevance::NotAdopted(_) => {
                         c.relevance.resolved() && !c.required && files.exists(&c.spec)
                     }
                     crate::declare::Relevance::Unresolved => false,
                 },
+                knowledge: c.knowledge.wire(),
+                knowledge_status: c.knowledge.status().into(),
+                knowledge_open: c.knowledge.open(),
                 native,
                 native_detail,
                 parity: verdicts(ProofKind::Parity),
@@ -799,6 +818,7 @@ fn assess(
         claimed: dn.claimed,
         effective,
         exception,
+        knowledge: knowledge_state(&caps),
         capabilities: caps,
         gates: gate_results,
         facts,

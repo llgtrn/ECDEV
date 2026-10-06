@@ -1443,6 +1443,7 @@ mod tests {
             replacement: None,
             maps_to: None,
             relevance: Default::default(),
+            knowledge: crate::declare::Knowledge::Absorbed("test".into()),
             proofs: vec![],
         };
         d.donors = vec![crate::declare::Donor {

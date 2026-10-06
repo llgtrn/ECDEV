@@ -705,8 +705,17 @@ pub fn assess(d: &Declaration, analysis: &Analysis, universe: &Universe, files: 
             .push(crate::graph::NodeId::of(&ns, &key).to_string());
         match &da.exception {
             Some((ExceptionKind::Rejected, why)) => {
-                acc.relevance
-                    .push(Relevance::NotRelevant(format!("rejected: {why}")));
+                // A runtime rejection is not a knowledge verdict: the relation stays relevant
+                // unless every extracted capability has no research value.
+                let all_without_value = !dn.capabilities.is_empty()
+                    && dn.capabilities.iter().all(|c| {
+                        matches!(c.knowledge, crate::declare::Knowledge::NoResearchValue(..))
+                    });
+                acc.relevance.push(if all_without_value {
+                    Relevance::NotRelevant(format!("runtime rejected and no research value: {why}"))
+                } else {
+                    Relevance::Relevant(format!("runtime rejected, knowledge retained: {why}"))
+                });
                 acc.raise(Layer::Universe(if da.effective >= DonorState::Registered {
                     UniverseState::RelevanceResolved
                 } else {

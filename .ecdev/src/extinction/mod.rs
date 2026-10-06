@@ -67,6 +67,10 @@ pub struct CapabilityVerdict {
     /// Its relevance to ECDEV is resolved and agrees with `required`: relied on (and required),
     /// or justified not relevant to ECDEV (and not required).
     pub relevance_resolved: bool,
+    /// The knowledge decision (`Knowledge::wire`) and whether a research question is still open.
+    pub knowledge: String,
+    pub knowledge_status: String,
+    pub knowledge_open: bool,
     /// Replacement exists, is canonical, and neither it nor anything it depends on uses the donor.
     pub native: bool,
     pub native_detail: String,
@@ -241,6 +245,32 @@ pub fn gates(facts: &DonorFacts, caps: &[CapabilityVerdict], cutover: bool) -> V
                         missing.len(),
                         caps.len(),
                         missing.join(", ")
+                    )
+                },
+            }
+        },
+        {
+            let open: Vec<String> = caps
+                .iter()
+                .filter(|c| c.knowledge_open)
+                .map(|c| format!("{} ({})", c.key, c.knowledge_status))
+                .collect();
+            GateResult {
+                gate: Gate::KnowledgeResolved,
+                pass: !caps.is_empty() && open.is_empty(),
+                detail: if caps.is_empty() {
+                    "no capability extracted: nothing is known about what the donor teaches".into()
+                } else if open.is_empty() {
+                    format!(
+                        "all {} declared capabilities have resolved knowledge",
+                        caps.len()
+                    )
+                } else {
+                    format!(
+                        "{} of {} declared capabilities still have open research: {}",
+                        open.len(),
+                        caps.len(),
+                        open.join(", ")
                     )
                 },
             }

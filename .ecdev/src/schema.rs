@@ -199,7 +199,7 @@ vocabulary! {
         NativeTargeted = "NATIVE_TARGETED": "every required capability names a declared native replacement node (it may be PLANNED: targeted, not yet shadowing)",
         NativeShadow = "NATIVE_SHADOW": "every required capability has an existing native replacement node",
         ParityProven = "PARITY_PROVEN": "every replacement is native and every required capability has fresh passing parity proofs",
-        RelevanceResolved = "CAPABILITY_RELEVANCE_RESOLVED": "every declared capability is either relied on by ECDEV (and required) or justified not relevant to ECDEV (and not required)",
+        RelevanceResolved = "CAPABILITY_RELEVANCE_RESOLVED": "every declared capability's production adoption is decided: relied on by ECDEV (and required) or not adopted with a review (and not required); research value is the separate knowledge dimension",
         Cutover = "CUTOVER": "cutover declared, no runtime or linked edge to the donor remains, regression proven",
         Extinct = "EXTINCT": "every extinction gate holds",
     }
@@ -236,10 +236,20 @@ vocabulary! {
 }
 
 vocabulary! {
+    /// What ECDEV has learned from a donor, independent of runtime adoption.
+    KnowledgeState {
+        Unreviewed = "UNREVIEWED": "no capability has been extracted from the donor",
+        StructuralCensus = "STRUCTURAL_CENSUS": "capabilities are extracted but some have no knowledge decision yet",
+        ActiveStudy = "ACTIVE_STUDY": "every capability is semantically reviewed and open study, benchmark or algorithm questions remain",
+        StudyComplete = "STUDY_COMPLETE": "every capability's knowledge is resolved (absorbed, independent, divergent, reference only, or no research value on an admissible ground)",
+    }
+}
+
+vocabulary! {
     /// Exceptional donor states and their exact semantics.
     ExceptionKind {
         Blocked = "BLOCKED": "progress halted by a named blocker; the donor keeps its effective state and stays in every denominator",
-        Rejected = "REJECTED": "evaluated and never adopted; legal only with zero observed edges now and in all census history",
+        Rejected = "REJECT_RUNTIME": "the donor's runtime implementation was evaluated and never adopted; legal only with zero observed edges now and in all census history. Says nothing about knowledge: the donor stays in the knowledge universe and every capability keeps its own knowledge status",
         Superseded = "SUPERSEDED": "merged into another registered donor that covers all of its capabilities; the successor carries its edges",
     }
 }
@@ -276,7 +286,8 @@ vocabulary! {
         RegressionTests = "REGRESSION_TESTS_PASS": "every required capability has a fresh passing regression proof",
         CanonicalReplacement = "CANONICAL_REPLACEMENT_EXISTS": "every replacement node exists, is active and sits in a canonical native role",
         TechnologyMapping = "TECHNOLOGY_MAPPING_FULL": "every required capability maps to a capability or technology of the canonical graph",
-        Relevance = "CAPABILITY_RELEVANCE_RESOLVED": "every declared capability is relied on by ECDEV (and required) or justified NOT_RELEVANT_TO_ECDEV with a tracked review (and not required)",
+        Relevance = "CAPABILITY_RELEVANCE_RESOLVED": "every declared capability's production adoption is decided: relied on by ECDEV (and required) or NOT_ADOPTED with a tracked review (and not required)",
+        KnowledgeResolved = "KNOWLEDGE_RESOLVED": "nothing is left to learn: no declared capability is unreviewed or an open study, benchmark or algorithm candidate (extinction removes a dependency only after its knowledge is absorbed)",
         CutoverDone = "CUTOVER_COMPLETED": "a cutover is declared",
         RollbackIndependent = "ROLLBACK_INDEPENDENT": "no node consumes, calls, controls or shims the donor",
     }

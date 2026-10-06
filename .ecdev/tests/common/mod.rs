@@ -126,6 +126,7 @@ pub fn donor(key: &str, package: &str) -> Donor {
             replacement: Some("geo".into()),
             maps_to: Some("capability/distance".into()),
             relevance: Relevance::ReliedOn("distance between two points".into()),
+            knowledge: Knowledge::Absorbed("native and proven".into()),
             proofs: vec![
                 proof(
                     ProofKind::Parity,

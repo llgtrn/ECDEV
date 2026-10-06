@@ -1,23 +1,20 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "3b7392f923a6ec17c9acefd4b2c5d8fad5fa6ed6",
+  "assessed_parent_commit": "5a9e1373d2ca60cbfad498c5e2d1c2af295d21b0",
   "working_tree_dirty_at_assessment": true,
-  "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
+  "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
   "source": "ecdev-gov extinction --json",
   "donor_count": 63,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 2,
+    "CUTOVER": 4,
     "DISCOVERED": 15,
-    "EXTINCT": 5,
+    "EXTINCT": 1,
     "PARITY_PROVEN": 1,
     "REGISTERED": 40
   },
   "extinct": [
-    "getzep--graphiti",
-    "purahmanian--keepa-mcp",
-    "scrapinghub--extruct",
-    "scrapinghub--price-parser",
-    "seomoz--reppy"
+    "scrapinghub--price-parser"
   ],
   "donors": [
     {
@@ -26,6 +23,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -88,6 +88,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -101,10 +106,77 @@
     },
     {
       "donor": "purahmanian--keepa-mcp",
-      "claimed": "EXTINCT",
-      "effective": "EXTINCT",
+      "claimed": "CUTOVER",
+      "effective": "CUTOVER",
       "exception": "",
-      "stopped_by": "",
+      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
+      "runtime": "CUTOVER",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "keepa.resolve-current",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](current-value resolution proven on 508 frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "keepa.get_product",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](product-summary slot mapping proven on 304 frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "keepa.get_price_history",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(decode Keepa csv price history (keepaTimeToDate, decodeSeries) into dated ESTIMATED price series for price-stability and demand-validation evidence before ECDEV's own watch history exists)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "keepa.get_sales_rank_history",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(decode sales-rank history into rank-velocity series as a labelled demand proxy (never sales) for demand validation)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "keepa.search_products",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(does Keepa's paid product finder surface candidates that zero-paid public discovery misses, at what cost per useful candidate?)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "keepa.get_best_sellers",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(do bestseller lists improve market discovery coverage over public research seeds, per category and marketplace?)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "keepa.get_deals",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(price-drop deal feeds as signals of competitor discounting and promotion dynamics)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "keepa.text-formatting",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](formats every domain as USD; ECDEV keeps typed minor units in the market currency)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "keepa.server-and-transport",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded Keepa transport with receipts and secret boundaries)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -167,6 +239,11 @@
           "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "5 of 9 declared capabilities still have open research: keepa.get_price_history (ALGORITHM_CANDIDATE), keepa.get_sales_rank_history (ALGORITHM_CANDIDATE), keepa.search_products (BENCHMARK_CANDIDATE), keepa.get_best_sellers (BENCHMARK_CANDIDATE), keepa.get_deals (STUDY_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": true,
           "detail": "cutover declared"
@@ -184,6 +261,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -244,6 +324,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -263,6 +348,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -323,6 +411,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -342,6 +435,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -402,6 +498,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -421,6 +522,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -481,6 +585,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -500,6 +609,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -560,6 +672,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -579,6 +696,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -639,6 +759,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -658,6 +783,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -718,6 +846,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -737,6 +870,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -797,6 +933,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -816,6 +957,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -878,6 +1022,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -895,6 +1044,38 @@
       "effective": "PARITY_PROVEN",
       "exception": "",
       "stopped_by": "CAPABILITY_RELEVANCE_RESOLVED: capabilities whose ECDEV relevance is unresolved or inconsistent with `required` (relevance): crawlee.remaining-crawler-framework",
+      "runtime": "PARITY_PROVEN",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "crawl.deduplicate",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](queue deduplication proven on 46 frozen traces)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "crawl.frontier",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](frontier ordering, leasing and reclaim proven on 46 frozen traces)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "crawlee.unique-key-url-normalization",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](normalizeUrl merges query orders, trailing slashes and utm variants that can name different products)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "crawlee.remaining-crawler-framework",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(autoscaled pools, session rotation, adaptive HTTP/browser crawling and request-list persistence versus ECDEV's lease-based frontier and bounded transport)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -957,6 +1138,11 @@
           "detail": "1 of 4 declared capabilities have no resolved ECDEV relevance: crawlee.remaining-crawler-framework"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "1 of 4 declared capabilities still have open research: crawlee.remaining-crawler-framework (STUDY_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -974,6 +1160,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1034,6 +1223,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -1053,6 +1247,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1113,6 +1310,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -1132,6 +1334,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1194,6 +1399,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -1209,8 +1419,75 @@
       "donor": "dgtlmoon--changedetection.io",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: its restock decision uses LLM and scraped-text stock guesses, float prices and range rules that suppress stock alerts; ECDEV monitors typed observed fields natively (research/commerce/changedetection-capability-review.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: its restock decision uses LLM and scraped-text stock guesses, float prices and range rules that suppress stock alerts; ECDEV monitors typed observed fields natively (research/commerce/changedetection-capability-review.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "changedetection.restock-interpretation",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](scraped text and LLM availability override structured data; float prices)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "changedetection.change-thresholds",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.availability-mapping",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.text-diff",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.image-diff",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(SSIM screenshot similarity for any future visual monitoring)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "changedetection.scheduling",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "changedetection.notifications",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(notification semantics and channels; ECDEV persists local events only)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "changedetection.watch-persistence",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's persisted watches with leases and fenced restarts)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "changedetection.ui",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1270,7 +1547,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 4 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "4 of 9 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.availability-mapping (STUDY_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -1290,6 +1572,66 @@
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
       "stopped_by": "CUTOVER: no cutover declared",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "marketplace.official-product",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](request contracts proven against the pinned models; response examples validated)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "sp-api-models.seller-read-contracts",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](seller read request contracts proven against the pinned models)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "sp-api-models.restricted-and-write-denylist",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](denylist names proven against the pinned models)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "sp-api-models.other-api-models",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(which read-only Reports, Finances, FBA fee, Notifications and Pricing APIs belong in the credential-ready layer for economics, seller operations and monitoring)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "sp-api-models.language-clients",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](language SDK wrappers around the LWA and HTTP protocol ECDEV speaks itself)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "sp-api-models.rdt-samples",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Restricted Data Token flow reference for a future, separately authorised PII domain)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "sp-api-models.documents-helper",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(report and feed document download and decryption, needed if read-only Reports APIs are studied)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "sp-api-models.data-kiosk-schemas",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(Data Kiosk sales-and-traffic and economics schemas as structured seller analytics for demand validation and economics)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1352,6 +1694,11 @@
           "detail": "all 8 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "3 of 8 declared capabilities still have open research: sp-api-models.other-api-models (STUDY_CANDIDATE), sp-api-models.documents-helper (STUDY_CANDIDATE), sp-api-models.data-kiosk-schemas (STUDY_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -1369,6 +1716,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1429,6 +1779,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
           "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -1448,6 +1803,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1510,6 +1868,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -1523,10 +1886,77 @@
     },
     {
       "donor": "scrapinghub--extruct",
-      "claimed": "EXTINCT",
-      "effective": "EXTINCT",
+      "claimed": "CUTOVER",
+      "effective": "CUTOVER",
       "exception": "",
-      "stopped_by": "",
+      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
+      "runtime": "CUTOVER",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "extruct.microdata",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](microdata proven on 132 frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "extruct.jsonld",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](valid-JSON JSON-LD proven on 93 frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "extruct.opengraph",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](head OpenGraph proven on 93 frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "extruct.jsonld-repair",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](repaired JSON-LD is the extractor's guess; ECDEV refuses it as INVALID_JSON_LD)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "extruct.rdfa",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(how often do commerce pages state product facts only in RDFa, and what would ECDEV miss?)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "extruct.microformat",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(how often do commerce pages carry h-product microformats that JSON-LD and microdata lack?)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "extruct.dublincore",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(DC term model; ECDEV keeps DC description metas as raw page assertions)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "extruct.uniform",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(schema.org-like uniform rewrite; ECDEV keeps raw values with locators)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "extruct.cli-and-orchestration",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](command-line wrapper, syntax dispatch and package entry points)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1589,6 +2019,11 @@
           "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "2 of 9 declared capabilities still have open research: extruct.rdfa (BENCHMARK_CANDIDATE), extruct.microformat (BENCHMARK_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": true,
           "detail": "cutover declared"
@@ -1606,6 +2041,101 @@
       "effective": "EXTINCT",
       "exception": "",
       "stopped_by": "",
+      "runtime": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
+      "capabilities": [
+        {
+          "key": "extract.price-public-api",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "extract.price-number",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price.object-contract",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price.decimal-separator",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price.literal-search",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price.source-text",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price.currency-tables",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price-parser.python-object-model",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](Python object protocol (dunders, pickling, introspection) of the returned value)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "price-parser.compiled-pattern-object",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](Python re.Pattern object surface beyond search)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "price-parser.runtime-version-profiles",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Python and Unicode version profiles; ECDEV pins one profile)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "price-parser.packaging-and-distribution",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](PyPI metadata and release tooling)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "price-parser.test-harness",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](donor test data consumed as frozen oracle cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "price-parser.unbounded-inputs",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](beyond resource bounds and for non-string inputs ECDEV defines UNKNOWN)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1668,6 +2198,11 @@
           "detail": "all 13 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": true,
+          "detail": "all 13 declared capabilities have resolved knowledge"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": true,
           "detail": "cutover declared"
@@ -1681,10 +2216,70 @@
     },
     {
       "donor": "seomoz--reppy",
-      "claimed": "EXTINCT",
-      "effective": "EXTINCT",
+      "claimed": "CUTOVER",
+      "effective": "CUTOVER",
       "exception": "",
-      "stopped_by": "",
+      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
+      "runtime": "CUTOVER",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "reppy.allow-decision",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](allow decisions proven on 1620 frozen cases, reproduced by MSVC and g++)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "reppy.crawl-delay",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](crawl-delay proven on the same 1620 cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "reppy.robots-url",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](robots URL proven on 14 frozen cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "reppy.sitemaps",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(Sitemap lines in robots.txt as zero-paid product-URL discovery; compare coverage with seed and link discovery)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "reppy.fetch-status-policy",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](reppy allows all on most 4xx; ECDEV denies every status but 200 and 404)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "reppy.ttl-and-cache",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(cache robots.txt per origin with Cache-Control TTL to save requests inside the fetch budget)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "reppy.url-library-remainder",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(public-suffix registrable-domain computation (url-cpp psl) for grouping independent origins and publishers)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "reppy.packaging-and-tooling",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](Cython bindings, packaging, benchmarks and CI scripts)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1747,6 +2342,11 @@
           "detail": "all 8 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "3 of 8 declared capabilities still have open research: reppy.sitemaps (STUDY_CANDIDATE), reppy.ttl-and-cache (STUDY_CANDIDATE), reppy.url-library-remainder (ALGORITHM_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": true,
           "detail": "cutover declared"
@@ -1764,6 +2364,9 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1826,6 +2429,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -1843,6 +2451,17 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "STRUCTURAL_CENSUS",
+      "capabilities": [
+        {
+          "key": "fetch.redirect",
+          "required": true,
+          "knowledge": "UNREVIEWED",
+          "knowledge_status": "UNREVIEWED",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1905,6 +2524,11 @@
           "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: fetch.redirect"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "1 of 1 declared capabilities still have open research: fetch.redirect (UNREVIEWED)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -1922,6 +2546,17 @@
       "effective": "DISCOVERED",
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
+      "runtime": "DISCOVERED",
+      "knowledge": "STRUCTURAL_CENSUS",
+      "capabilities": [
+        {
+          "key": "cache.ttl",
+          "required": true,
+          "knowledge": "UNREVIEWED",
+          "knowledge_status": "UNREVIEWED",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1984,6 +2619,11 @@
           "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: cache.ttl"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "1 of 1 declared capabilities still have open research: cache.ttl (UNREVIEWED)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2001,6 +2641,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2063,6 +2706,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2080,6 +2728,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2142,6 +2793,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2159,6 +2815,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2221,6 +2880,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2238,6 +2902,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2300,6 +2967,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2317,6 +2989,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2379,6 +3054,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2396,6 +3076,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2458,6 +3141,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2475,6 +3163,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2537,6 +3228,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2554,6 +3250,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2616,6 +3315,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2633,6 +3337,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2695,6 +3402,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2712,6 +3424,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2774,6 +3489,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2791,6 +3511,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2853,6 +3576,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2870,6 +3598,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2932,6 +3663,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -2949,6 +3685,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3011,6 +3750,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3028,6 +3772,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3090,6 +3837,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3107,6 +3859,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3169,6 +3924,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3186,6 +3946,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3248,6 +4011,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3265,6 +4033,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3327,6 +4098,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3344,6 +4120,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3406,6 +4185,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3423,6 +4207,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3485,6 +4272,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3502,6 +4294,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3564,6 +4359,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3581,6 +4381,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3643,6 +4446,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3660,6 +4468,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3722,6 +4533,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3739,6 +4555,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3801,6 +4620,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3818,6 +4642,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3880,6 +4707,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3897,6 +4729,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -3959,6 +4794,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -3976,6 +4816,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4038,6 +4881,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4055,6 +4903,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4117,6 +4968,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4134,6 +4990,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4196,6 +5055,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4213,6 +5077,9 @@
       "effective": "REGISTERED",
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "capabilities": [],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4275,6 +5142,11 @@
           "detail": "no capability declared: the donor is not decomposed"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4290,8 +5162,54 @@
       "donor": "666ghj--BettaFish",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: wanted techniques are independently native with different semantics; GPL code, models, crawlers and LLM agents not used (research/commerce/bettafish-semantic-matrix.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: wanted techniques are independently native with different semantics; GPL code, models, crawlers and LLM agents not used (research/commerce/bettafish-semantic-matrix.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.bettafish.deduplicate",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(URL or text-prefix near-duplicate detection versus ECDEV's stable-ID dedup with CONFLICT; duplicate recall on cross-posted content)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.bettafish.cluster-and-sample",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(sentence-embedding KMeans with diversity and hotness sampling versus lexical Jaccard plus temporal co-occurrence: topic purity, recall, stability, inspectability)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.bettafish.sentiment-models",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(fine-tuned multilingual sentiment models versus ECDEV's lexicon rule: accuracy, calibration, language coverage, cost)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.bettafish.corpus-search",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(keyword-optimisation and query expansion over a multi-source corpus for broader recall of product mentions)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.bettafish.logged-in-crawling",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(logged-in crawling and anti-bot evasion are prohibited by ECDEV policy; platform data structures only)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.bettafish.llm-agents-and-reports",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4354,6 +5272,11 @@
           "detail": "all 6 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "4 of 6 declared capabilities still have open research: social.bettafish.deduplicate (BENCHMARK_CANDIDATE), social.bettafish.cluster-and-sample (BENCHMARK_CANDIDATE), social.bettafish.sentiment-models (BENCHMARK_CANDIDATE), social.bettafish.corpus-search (STUDY_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4369,8 +5292,131 @@
       "donor": "666ghj--MiroFish",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: simulation stays an explicit SIMULATED boundary; AGPL simulator, personas and services not used (research/commerce/mirofish-semantic-matrix.json)",
+      "exception": "REJECT_RUNTIME: AGPL-3.0 runtime evaluated and not adopted; its simulation architecture stays under clean-room study (research/commerce/mirofish-simulation-census.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.mirofish.simulation-lifecycle",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(explicit per-scenario-run state machine with one finalisation path, for SIMULATED commerce scenarios)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.scenario-initialization",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.population-construction",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(buyer and competitor populations sampled from declared distributions instead of one agent per entity)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.agent-and-environment-state",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(typed agent state with a dead-parameter audit harness and a fresh per-run market store)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.event-loop-and-activation",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(capped random versus Poisson-rate activation against observed purchase-time histograms)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.action-selection",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(closed, validated commerce action set (buy, wait, switch, review, return))",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.termination",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(convergence-based versus fixed-horizon termination, recording the rule that fired)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.replication-and-dispersion",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(absent in the donor: seeded sub-streams, N replicates, dispersion and common random numbers for scenario lift)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.network-and-diffusion",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(injected referral graph and recommender weights; cascade size and sales concentration sensitivity against a Bass baseline)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.persona-construction",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(versioned, hashed segment personas; effect of persona text versus numeric parameters on simulated choices)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.interview-probes",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(post-run survey probes as SIMULATED stated preference versus revealed actions)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.config-generation",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(LLM-proposed versus rule-default scenario parameters with per-value origin tags)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.cost-and-time-model",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(LLM call and token scaling with agents x rounds; simulated calendar separate from wall clock)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.mirofish.output-provenance",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor writes simulated activity into observed graph memory with only a metadata label; ECDEV requires a provenance firewall between SIMULATED and OBSERVED)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.mirofish.graph-memory-and-reports",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Zep graph memory and LLM report agents)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mirofish.web-application",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](Flask routes, Vue frontend, locales and polling endpoints)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "social.mirofish.zep-cloud-plumbing",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud batching, retries and memory-updater queues)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4430,7 +5476,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 3 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 17 declared capabilities are relied on or justified not relevant to ECDEV"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "13 of 17 declared capabilities still have open research: social.mirofish.simulation-lifecycle (STUDY_CANDIDATE), social.mirofish.scenario-initialization (STUDY_CANDIDATE), social.mirofish.population-construction (STUDY_CANDIDATE), social.mirofish.agent-and-environment-state (ALGORITHM_CANDIDATE), social.mirofish.event-loop-and-activation (STUDY_CANDIDATE), social.mirofish.action-selection (STUDY_CANDIDATE), social.mirofish.termination (ALGORITHM_CANDIDATE), social.mirofish.replication-and-dispersion (BENCHMARK_CANDIDATE), social.mirofish.network-and-diffusion (STUDY_CANDIDATE), social.mirofish.persona-construction (STUDY_CANDIDATE), social.mirofish.interview-probes (STUDY_CANDIDATE), social.mirofish.config-generation (BENCHMARK_CANDIDATE), social.mirofish.cost-and-time-model (BENCHMARK_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4448,8 +5499,89 @@
       "donor": "NanmiCoder--MediaCrawler",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: non-commercial licence blocks absorption, and its logged-in platform crawling, session handling and media download are outside ECDEV's no-auth-bypass acquisition policy (research/commerce/social-donor-rejections-review.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: non-commercial licence blocks absorption, and its logged-in platform crawling, session handling and media download are outside ECDEV's no-auth-bypass acquisition policy (research/commerce/social-donor-rejections-review.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "STUDY_COMPLETE",
+      "capabilities": [
+        {
+          "key": "social.mediacrawler.store_content",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(post record schema of the crawled platforms)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.store_comment",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(comment record schema with parent links)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.store_creator",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(creator record schema; personal profiles are deliberately not stored)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.search",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(logged-in keyword search flow; ECDEV policy forbids authentication bypass)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.get_comments",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(bounded comment paging with semaphores and crawl intervals)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.get_creators_and_notes",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(creator note listing under access restrictions)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.download_media",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(media download; ECDEV keeps media references only)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.update_xhs_note",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Xiaohongshu note field mapping; ECDEV keeps absent counters UNKNOWN)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.update_xhs_note_comment",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(comment counter mapping; donor zero defaults would fabricate values)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.save_creator",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(creator persistence stub)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.mediacrawler.remaining-whole-donor",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(other platform crawlers, proxy pools and browser automation; platform structure reference only)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4512,6 +5644,11 @@
           "detail": "all 11 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": true,
+          "detail": "all 11 declared capabilities have resolved knowledge"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4527,8 +5664,54 @@
       "donor": "Shiva-74--viral-trend-agent",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: no licence grants any use; ECDEV's velocity, acceleration, decay and cross-platform measures are independent and expose components instead of a viral verdict (research/commerce/social-donor-rejections-review.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: no licence grants any use; ECDEV's velocity, acceleration, decay and cross-platform measures are independent and expose components instead of a viral verdict (research/commerce/social-donor-rejections-review.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.viral-trend-agent.get_upvote_velocity",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV computes velocity from actual snapshot timestamps)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.get_comment_velocity",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV rejects zero or non-monotonic elapsed time)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.get_cross_platform_bonus",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a platform-count bonus conflates platforms with independent publishers)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.get_recency_score",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV applies explicit half-life time decay)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.verdict",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.viral-trend-agent.remaining-whole-donor",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(agent orchestration, scrapers and LLM prompts)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4591,6 +5774,11 @@
           "detail": "all 6 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "1 of 6 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4608,6 +5796,73 @@
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
       "stopped_by": "CUTOVER: no cutover declared",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.harken.hn-bluesky-normalization",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](526 donor mentions match; deliberate differences pinned)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.harken.evaluate_thresholds",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](threshold rule proven on 320 frozen cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.harken.rss-feeds",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(bounded XML RSS/Atom reading for zero-paid public sources such as supplier and retail news feeds)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.harken.other-sources",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(public Mastodon timelines and Reddit/Stack Overflow public APIs as additional trend sources within their terms)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.harken.alert_metrics",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV snapshots disclose actual capture and publication windows)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.harken.track",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV acquisition runs keep partial source failures visible)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.harken.sentiment-and-themes",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(VADER-style lexicon with negation, intensifiers and contrast versus ECDEV's minimal rule on labelled commerce posts; TF theme extraction versus term clusters)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.harken.llm",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(LLM theme relabelling as presentation only, never evidence)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.harken.application",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted dashboard, login and CLI of the donor product)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4670,6 +5925,11 @@
           "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "3 of 9 declared capabilities still have open research: social.harken.rss-feeds (STUDY_CANDIDATE), social.harken.other-sources (STUDY_CANDIDATE), social.harken.sentiment-and-themes (BENCHMARK_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4685,8 +5945,61 @@
       "donor": "sansan0--TrendRadar",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: GPL-3.0 with a no-production-copy gate; its rank formula had no ECDEV caller and was removed, and ECDEV feeds, matching and transport are independent (research/commerce/trendradar-capability-review.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: GPL-3.0 with a no-production-copy gate; its rank formula had no ECDEV caller and was removed, and ECDEV feeds, matching and transport are independent (research/commerce/trendradar-capability-review.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.trendradar.calculate_news_weight",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trendradar.word_matches",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(user-defined keyword and regex filters; ECDEV matches Unicode terms)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.trendradar.parse_json_feed",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's JSON Feed reader)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.trendradar.fetch_feed",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded public transport)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.trendradar.hot-list-sources",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trendradar.notifications",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(multi-channel notification fan-out)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "social.trendradar.ui-and-reports",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4746,7 +6059,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 5 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 7 declared capabilities are relied on or justified not relevant to ECDEV"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "2 of 7 declared capabilities still have open research: social.trendradar.calculate_news_weight (STUDY_CANDIDATE), social.trendradar.hot-list-sources (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4764,8 +6082,47 @@
       "donor": "t4niha--Trend-Finder",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: its trends come from embedding clustering (HDBSCAN) that ECDEV does not use; ECDEV clusters and scores deterministically with exposed components (research/commerce/social-donor-rejections-review.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: its trends come from embedding clustering (HDBSCAN) that ECDEV does not use; ECDEV clusters and scores deterministically with exposed components (research/commerce/social-donor-rejections-review.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "social.trend-finder.clean_text",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trend-finder.cluster_embeddings",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trend-finder.score_clusters",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trend-finder.select_top_posts",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "social.trend-finder.remaining-whole-donor",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4828,6 +6185,11 @@
           "detail": "all 5 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "4 of 5 declared capabilities still have open research: social.trend-finder.clean_text (STUDY_CANDIDATE), social.trend-finder.cluster_embeddings (BENCHMARK_CANDIDATE), social.trend-finder.score_clusters (BENCHMARK_CANDIDATE), social.trend-finder.select_top_posts (ALGORITHM_CANDIDATE)"
+        },
+        {
           "gate": "CUTOVER_COMPLETED",
           "pass": false,
           "detail": "no cutover declared"
@@ -4843,8 +6205,75 @@
       "donor": "getzep--zep",
       "claimed": "REGISTERED",
       "effective": "REGISTERED",
-      "exception": "REJECTED: Evaluated, never adopted: provenance properties already native; remainder serves Zep Cloud or chat-memory benchmarks (research/commerce/zep-semantic-matrix.json)",
+      "exception": "REJECT_RUNTIME: Evaluated, never adopted: provenance properties already native; remainder serves Zep Cloud or chat-memory benchmarks (research/commerce/zep-semantic-matrix.json)",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REJECT_RUNTIME",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "zep.episode-validation",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV evidence requires explicit-offset timestamps, finite values and scalar metadata)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "zep.fact-validity",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](memory::Validity bi-temporal windows; studied against Graphiti)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "zep.alias-canonicalizer",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "zep.default-ontology",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(default entity and edge types as a reference for a commerce entity ontology)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "zep.legacy-server",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Postgres-backed memory server architecture)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "zep.ingestion-loaders-and-submission",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](batched submission, task polling and loaders for Zep Cloud)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "zep.mcp-and-integrations",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP proxy and agent-framework adapters for Zep Cloud)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "zep.memory-benchmarks",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[UNRELATED_DOMAIN](LOCOMO and LongMemEval chat-memory benchmarks)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "zep.repository-tooling",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4903,8 +6332,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
+          "pass": true,
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "detail": "1 of 9 declared capabilities still have open research: zep.alias-canonicalizer (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4920,10 +6354,112 @@
     },
     {
       "donor": "getzep--graphiti",
-      "claimed": "EXTINCT",
-      "effective": "EXTINCT",
+      "claimed": "CUTOVER",
+      "effective": "CUTOVER",
       "exception": "",
-      "stopped_by": "",
+      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
+      "runtime": "CUTOVER",
+      "knowledge": "ACTIVE_STUDY",
+      "capabilities": [
+        {
+          "key": "memory.name-similarity",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](name similarity proven on frozen donor cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "memory.fact-supersession",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](fact supersession proven on 600 window combinations)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "memory.rank-fusion",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(reciprocal rank fusion to merge rankings from several evidence layers (public listings, official catalog, trend score) into one research queue; compare with information-gain ordering)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "extract.publication-time",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](explicit-zone UTC normalisation proven on 901 cases)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "graphiti.label-propagation-clustering",
+          "required": false,
+          "knowledge": "ALGORITHM_CANDIDATE(label propagation over co-mention or co-purchase graphs for topic and product communities; compare with term clusters)",
+          "knowledge_status": "ALGORITHM_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "graphiti.duplicate-closure",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](transitive closure of uncertain similarity links would fabricate identity; ECDEV identity is key equality)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "graphiti.llm-extraction-and-prompts",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(LLM entity and edge extraction; outputs can never be evidence)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "graphiti.provider-clients",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](LLM, embedder and reranker provider client wrappers)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "graphiti.graph-database-drivers",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(temporal knowledge-graph query patterns over graph databases)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "graphiti.embedding-rerank",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(MMR diversity reranking of research result lists versus ECDEV ordering)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "graphiti.content-chunking",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(token-budget chunking strategies for any future model-assisted step)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "graphiti.persistence-models-and-facade",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](the bi-temporal field model informed memory::Validity)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "graphiti.telemetry-and-tracing",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[VENDOR_TELEMETRY](the vendor's usage telemetry and tracing)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "graphiti.hosted-services",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Graphiti MCP and REST service wrappers)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4984,6 +6520,11 @@
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
           "detail": "all 14 declared capabilities are relied on or justified not relevant to ECDEV"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "3 of 14 declared capabilities still have open research: memory.rank-fusion (BENCHMARK_CANDIDATE), graphiti.label-propagation-clustering (ALGORITHM_CANDIDATE), graphiti.embedding-rerank (BENCHMARK_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

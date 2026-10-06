@@ -312,7 +312,9 @@ fn json_inventories_join_the_declared_upstream() {
     assert_eq!(serde.claimed, UniverseState::Discovered);
     // No upstream anywhere: an unknown identity, explicitly.
     assert_eq!(src.records[1].global, None);
-    assert!(matches!(
+    // A legacy "REJECTED" status was a runtime decision; it is not read as research
+    // irrelevance, so the record's relevance stays to be decided.
+    assert!(!matches!(
         src.records[1].relevance,
         ecdev_governance::universe::Relevance::NotRelevant(_)
     ));

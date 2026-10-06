@@ -330,7 +330,7 @@ fn relevance(e: &Expr) -> Res<Relevance> {
         }
         _ => match tagged(e, "Relevance")? {
             ("ReliedOn", r) => Ok(Relevance::ReliedOn(r)),
-            ("NotRelevant", r) => Ok(Relevance::NotRelevant(r)),
+            ("NotAdopted", r) => Ok(Relevance::NotAdopted(r)),
             (v, _) => fail(e, format!("`Relevance::{v}` is not an ECDEV relevance")),
         },
     }
@@ -340,7 +340,59 @@ fn render_relevance(n: &Relevance) -> Expr {
     match n {
         Relevance::Unresolved => r::path("Relevance::Unresolved"),
         Relevance::ReliedOn(x) => r::call("Relevance::ReliedOn", vec![r::s(x)]),
-        Relevance::NotRelevant(x) => r::call("Relevance::NotRelevant", vec![r::s(x)]),
+        Relevance::NotAdopted(x) => r::call("Relevance::NotAdopted", vec![r::s(x)]),
+    }
+}
+
+fn knowledge(e: &Expr) -> Res<Knowledge> {
+    match &e.kind {
+        Kind::Path(p) if p.len() == 2 && p[0] == "Knowledge" && p[1] == "Unreviewed" => {
+            Ok(Knowledge::Unreviewed)
+        }
+        Kind::Call(p, args) if p.len() == 2 && p[0] == "Knowledge" && p[1] == "NoResearchValue" => {
+            if args.len() != 2 {
+                return fail(
+                    e,
+                    "expected `Knowledge::NoResearchValue(ResearchScope::<Variant>, \"..\")`",
+                );
+            }
+            let scope = variant(&args[0], "ResearchScope", ResearchScope::from_variant)?;
+            Ok(Knowledge::NoResearchValue(scope, string(&args[1])?))
+        }
+        _ => match tagged(e, "Knowledge")? {
+            ("StudyCandidate", t) => Ok(Knowledge::StudyCandidate(t)),
+            ("BenchmarkCandidate", t) => Ok(Knowledge::BenchmarkCandidate(t)),
+            ("AlgorithmCandidate", t) => Ok(Knowledge::AlgorithmCandidate(t)),
+            ("ReferenceOnly", t) => Ok(Knowledge::ReferenceOnly(t)),
+            ("Absorbed", t) => Ok(Knowledge::Absorbed(t)),
+            ("IndependentNative", t) => Ok(Knowledge::IndependentNative(t)),
+            ("Divergent", t) => Ok(Knowledge::Divergent(t)),
+            (v, _) => fail(
+                e,
+                format!("`Knowledge::{v}` is not an ECDEV knowledge status"),
+            ),
+        },
+    }
+}
+
+fn render_knowledge(k: &Knowledge) -> Expr {
+    let one = |v: &str, t: &str| r::call(&format!("Knowledge::{v}"), vec![r::s(t)]);
+    match k {
+        Knowledge::Unreviewed => r::path("Knowledge::Unreviewed"),
+        Knowledge::StudyCandidate(t) => one("StudyCandidate", t),
+        Knowledge::BenchmarkCandidate(t) => one("BenchmarkCandidate", t),
+        Knowledge::AlgorithmCandidate(t) => one("AlgorithmCandidate", t),
+        Knowledge::ReferenceOnly(t) => one("ReferenceOnly", t),
+        Knowledge::Absorbed(t) => one("Absorbed", t),
+        Knowledge::IndependentNative(t) => one("IndependentNative", t),
+        Knowledge::Divergent(t) => one("Divergent", t),
+        Knowledge::NoResearchValue(sc, t) => r::call(
+            "Knowledge::NoResearchValue",
+            vec![
+                r::path(&format!("ResearchScope::{}", sc.variant())),
+                r::s(t),
+            ],
+        ),
     }
 }
 
@@ -399,6 +451,7 @@ pub fn parse_donors(text: &str) -> Res<Vec<Donor>> {
                             replacement: opt_string(f.get("replacement")?)?,
                             maps_to: opt_string(f.get("maps_to")?)?,
                             relevance: relevance(f.get("relevance")?)?,
+                            knowledge: knowledge(f.get("knowledge")?)?,
                             proofs: list(f.get("proofs")?)?
                                 .iter()
                                 .map(|p| {
@@ -597,6 +650,7 @@ pub fn render_donors(donors: &[Donor]) -> String {
                                             ("replacement", r::opt(&c.replacement)),
                                             ("maps_to", r::opt(&c.maps_to)),
                                             ("relevance", render_relevance(&c.relevance)),
+                                            ("knowledge", render_knowledge(&c.knowledge)),
                                             (
                                                 "proofs",
                                                 r::list(
@@ -900,7 +954,11 @@ mod tests {
                     spec: "tests/serialize.rs".into(),
                     replacement: Some("core".into()),
                     maps_to: Some("technology/hash.sha256".into()),
-                    relevance: Relevance::NotRelevant("serialization is plumbing".into()),
+                    relevance: Relevance::NotAdopted("serialization is plumbing".into()),
+                    knowledge: Knowledge::NoResearchValue(
+                        ResearchScope::ReleaseTooling,
+                        "serialization plumbing".into(),
+                    ),
                     proofs: vec![Proof {
                         kind: ProofKind::Parity,
                         locator: "tests/serialize.rs::agrees".into(),

@@ -3,7 +3,7 @@
   "origin": "https://github.com/seomoz/reppy",
   "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
   "license": "MIT",
-  "status": "EXTINCT",
+  "status": "CUTOVER",
   "definition": "robots.txt allow decisions, crawl-delay and robots URL derivation, the reppy behaviours ECDEV relies on, are native and proven against the unmodified donor C++ (rep-cpp 9c1278b7, url-cpp f9f53c7c); sitemaps, the requests-based fetch status policy, TTL/caches, the rest of url-cpp and packaging are justified NOT_RELEVANT_TO_ECDEV; every first-party file of reppy and of both submodules is mapped in research/commerce/reppy-semantic-matrix.json.",
   "governance": "ecdev-gov extinction: all gates pass (research/commerce/governance/lifecycle.json)",
   "reproducibility": "the 1620-case MSVC fixture is reproduced 1620/1620 by an independent g++ 13 build of the same unmodified sources (reppy-robots-gpp.json); the only build accommodation is a command-line -include cstdint",
@@ -69,5 +69,6 @@
   "license_and_provenance": {
     "license": "MIT",
     "note": "MIT permits use with notice; ECDEV contains no donor code, only frozen outputs whose source evidence names the files and LICENSE blobs"
-  }
+  },
+  "knowledge_gate": "KNOWLEDGE_RESOLVED fails: the dependency is removed (every runtime/build/test/import edge gate passes) but open study, benchmark or algorithm candidates remain; extinction follows only once ECDEV has learned what the donor teaches (see the donor's capability knowledge in ecdev-gov extinction --json)"
 }

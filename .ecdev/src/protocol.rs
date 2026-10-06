@@ -114,7 +114,27 @@ pub fn schema_text() -> String {
         TechnologySharing::wire,
         TechnologySharing::meaning,
     );
-    s.push_str("capability_relevance UNRESOLVED | RELIED_ON(<ECDEV behaviour>) => required | NOT_RELEVANT_TO_ECDEV(<reason citing the exclusion review>) => not required\n");
+    s.push_str("capability_relevance (production adoption) UNRESOLVED | RELIED_ON(<ECDEV behaviour>) => required | NOT_ADOPTED(<reason citing the review>) => not required\n");
+    s.push_str("capability_knowledge (research value, independent of adoption) UNREVIEWED | STUDY_CANDIDATE(<question>) | BENCHMARK_CANDIDATE(<question>) | ALGORITHM_CANDIDATE(<what to prove>) | REFERENCE_ONLY(<reason>) | STUDY_COMPLETE[DERIVED_NATIVE|INDEPENDENT_NATIVE|DELIBERATE_SEMANTIC_DIVERGENCE](<reason>) | NO_RESEARCH_VALUE[<scope>](<reason>); open = UNREVIEWED or a candidate\n");
+    s.push_str(&format!(
+        "research_scope (the only admissible grounds of NO_RESEARCH_VALUE) {}\n",
+        crate::declare::ResearchScope::ALL
+            .iter()
+            .map(|s| s.word())
+            .collect::<Vec<_>>()
+            .join(" ")
+    ));
+    s.push_str(&format!(
+        "inadmissible_irrelevance (never ground NO_RESEARCH_VALUE: they constrain adoption, not knowledge) {}\n",
+        crate::declare::INADMISSIBLE_IRRELEVANCE.join(" | ")
+    ));
+    vocab(
+        &mut s,
+        "knowledge_state",
+        KnowledgeState::ALL,
+        KnowledgeState::wire,
+        KnowledgeState::meaning,
+    );
     vocab(
         &mut s,
         "universe_kind",

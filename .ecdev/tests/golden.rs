@@ -216,6 +216,7 @@ fn declared_repository_reaches_v1() {
         replacement: Some(node.into()),
         maps_to: Some(format!("capability/{key}")),
         relevance: Relevance::ReliedOn(format!("ECDEV calls {key} on its production path")),
+        knowledge: Knowledge::Absorbed("native and proven".into()),
         proofs: vec![
             proof(ProofKind::Parity, parity),
             proof(ProofKind::Regression, regression),
@@ -375,8 +376,8 @@ fn declared_repository_reaches_v1() {
     assert!(a.donor("d412-unknown").unwrap().resolved());
     assert_eq!(a.metric("extinction_ratio"), "1.000000");
     assert_eq!(a.metric("runtime_external_edges"), "0");
-    assert_eq!(a.metric("native_capability_ratio"), "1.000000");
-    assert_eq!(a.metric("proof_completion_ratio"), "1.000000");
+    assert_eq!(a.metric("production_native_ratio"), "1.000000");
+    assert_eq!(a.metric("production_proof_ratio"), "1.000000");
     assert_eq!(r.cli(&["census", "--record"]).0, 0);
 
     // 6. Compaction: documents become facts; then they may go.

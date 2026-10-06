@@ -43,13 +43,28 @@ pub const DEFINITIONS: &[MetricDef] = &[
     MetricDef { name: "donors_cutover", formula: "active donors with effective state >= CUTOVER" },
     MetricDef { name: "donors_extinct", formula: "active donors with effective state = EXTINCT" },
     MetricDef { name: "donors_blocked", formula: "donors with a legal BLOCKED exception" },
-    MetricDef { name: "donors_rejected", formula: "donors with a legal REJECTED exception (never participated in any census)" },
+    MetricDef { name: "donors_rejected", formula: "donors with a legal REJECT_RUNTIME exception: runtime never adopted (never participated in any census); they stay in every knowledge denominator" },
     MetricDef { name: "donors_superseded", formula: "donors with a legal SUPERSEDED exception (successor carries packages and capabilities)" },
     MetricDef { name: "donors_active", formula: "donors_registered - donors_rejected - donors_superseded (vanished donors stay active)" },
-    MetricDef { name: "capabilities_total", formula: "required capabilities of declared active donors" },
-    MetricDef { name: "capabilities_native", formula: "of those, with an existing canonical native replacement that does not use the donor, transitively" },
-    MetricDef { name: "capabilities_proven", formula: "of those native, with fresh passing parity proofs" },
-    MetricDef { name: "capabilities_remaining", formula: "capabilities_total - capabilities_proven" },
+    MetricDef { name: "production_capabilities_required", formula: "PRODUCTION ONLY: required (relied-on) capabilities of declared, runtime-active donors; not a measure of what ECDEV has learned" },
+    MetricDef { name: "production_capabilities_native", formula: "of those, with an existing canonical native replacement that does not use the donor, transitively" },
+    MetricDef { name: "production_capabilities_proven", formula: "of those native, with fresh passing parity proofs" },
+    MetricDef { name: "production_capabilities_remaining", formula: "production_capabilities_required - production_capabilities_proven; 0 means production adoption is done, never that the donor universe is studied" },
+    MetricDef { name: "known_donor_capabilities", formula: "KNOWLEDGE: every declared capability of every declared donor, runtime-rejected donors included" },
+    MetricDef { name: "knowledge_unreviewed", formula: "known capabilities with no knowledge decision (UNREVIEWED)" },
+    MetricDef { name: "study_candidates", formula: "known capabilities that are STUDY_CANDIDATE" },
+    MetricDef { name: "benchmark_candidates", formula: "known capabilities that are BENCHMARK_CANDIDATE" },
+    MetricDef { name: "algorithm_candidates", formula: "known capabilities that are ALGORITHM_CANDIDATE" },
+    MetricDef { name: "reference_only", formula: "known capabilities that are REFERENCE_ONLY" },
+    MetricDef { name: "study_complete_capabilities", formula: "known capabilities whose study is complete (derived native, independent native, or deliberate divergence)" },
+    MetricDef { name: "no_research_value", formula: "known capabilities without research value on an admissible scope ground" },
+    MetricDef { name: "research_questions_open", formula: "knowledge_unreviewed + study_candidates + benchmark_candidates + algorithm_candidates" },
+    MetricDef { name: "knowledge_coverage_ratio", formula: "(known_donor_capabilities - research_questions_open) / known_donor_capabilities; 0 when nothing is known" },
+    MetricDef { name: "donors_knowledge_unreviewed", formula: "declared donors with no extracted capability (knowledge UNREVIEWED)" },
+    MetricDef { name: "donors_structural_census", formula: "declared donors with some capability not yet knowledge-reviewed" },
+    MetricDef { name: "donors_active_study", formula: "declared donors fully reviewed with open study, benchmark or algorithm candidates" },
+    MetricDef { name: "donors_study_complete", formula: "declared donors whose every capability's knowledge is resolved" },
+    MetricDef { name: "donors_with_open_research", formula: "donors_knowledge_unreviewed + donors_structural_census + donors_active_study" },
     MetricDef { name: "technologies_total", formula: "declared technologies" },
     MetricDef { name: "technologies_native", formula: "technologies whose effective lifecycle >= NATIVE" },
     MetricDef { name: "technologies_proven", formula: "technologies whose effective lifecycle >= PROVEN" },
@@ -68,8 +83,8 @@ pub const DEFINITIONS: &[MetricDef] = &[
     MetricDef { name: "documents_over_budget", formula: "documents not permitted by the document budget" },
     MetricDef { name: "repository_shape_conformance", formula: "conformant units / units; units = root entries + active nodes + one failing unit per other shape violation (undeclared member, directory of unowned code, plane violation, research on the build path, tracked generated state, forbidden container); documents are gated by documents_over_budget" },
     MetricDef { name: "ecdev_repository_conformance", formula: "passed ECDEV repository conformance checks / ECDEV repository conformance checks" },
-    MetricDef { name: "native_capability_ratio", formula: "capabilities_native / capabilities_total; 1 when no active donor remains, 0 when active donors declare no capability" },
-    MetricDef { name: "proof_completion_ratio", formula: "capabilities_proven / capabilities_total; same guards" },
+    MetricDef { name: "production_native_ratio", formula: "PRODUCTION ONLY: production_capabilities_native / production_capabilities_required; 1 when no active donor remains, 0 when active donors declare no capability" },
+    MetricDef { name: "production_proof_ratio", formula: "PRODUCTION ONLY: production_capabilities_proven / production_capabilities_required; same guards" },
     MetricDef { name: "technology_native_ratio", formula: "technologies_native / technologies_total; 1 when there are none" },
     MetricDef { name: "extinction_ratio", formula: "donors_extinct / (donors_active + distinct unregistered external packages); 1 when the denominator is 0" },
     MetricDef { name: "donors_technology_mapped", formula: "active donors with effective state >= TECHNOLOGY_MAPPED" },
@@ -120,8 +135,8 @@ pub const V1_GATE: &[(&str, &str)] = &[
     ("build_external_edges", "0"),
     ("linked_external_edges", "0"),
     ("external_technology_edges", "0"),
-    ("native_capability_ratio", "1.000000"),
-    ("proof_completion_ratio", "1.000000"),
+    ("production_native_ratio", "1.000000"),
+    ("production_proof_ratio", "1.000000"),
     ("repository_shape_conformance", "1.000000"),
     ("documents_over_budget", "0"),
     ("ecdev_repository_conformance", "1.000000"),
@@ -202,6 +217,18 @@ pub struct Counts {
     pub unresolved_relevance: u64,
     pub ambiguous_donor_identities: u64,
     pub universe_sources_unreconciled: u64,
+    pub known_donor_capabilities: u64,
+    pub knowledge_unreviewed: u64,
+    pub study_candidates: u64,
+    pub benchmark_candidates: u64,
+    pub algorithm_candidates: u64,
+    pub reference_only: u64,
+    pub study_complete_capabilities: u64,
+    pub no_research_value: u64,
+    pub donors_knowledge_unreviewed: u64,
+    pub donors_structural_census: u64,
+    pub donors_active_study: u64,
+    pub donors_study_complete: u64,
 }
 
 impl Counts {
@@ -280,7 +307,19 @@ impl Counts {
             unverified_license,
             unresolved_relevance,
             ambiguous_donor_identities,
-            universe_sources_unreconciled
+            universe_sources_unreconciled,
+            known_donor_capabilities,
+            knowledge_unreviewed,
+            study_candidates,
+            benchmark_candidates,
+            algorithm_candidates,
+            reference_only,
+            study_complete_capabilities,
+            no_research_value,
+            donors_knowledge_unreviewed,
+            donors_structural_census,
+            donors_active_study,
+            donors_study_complete
         );
     }
 
@@ -299,9 +338,9 @@ impl Counts {
             ("donors_rejected", self.donors_rejected),
             ("donors_superseded", self.donors_superseded),
             ("unregistered_externals", self.unregistered_externals),
-            ("capabilities_total", self.capabilities_total),
-            ("capabilities_native", self.capabilities_native),
-            ("capabilities_proven", self.capabilities_proven),
+            ("production_capabilities_required", self.capabilities_total),
+            ("production_capabilities_native", self.capabilities_native),
+            ("production_capabilities_proven", self.capabilities_proven),
             ("runtime_external_edges", self.runtime_external_edges),
             ("build_external_edges", self.build_external_edges),
             ("linked_external_edges", self.linked_external_edges),
@@ -390,6 +429,24 @@ impl Counts {
                 "universe_sources_unreconciled",
                 self.universe_sources_unreconciled,
             ),
+            ("known_donor_capabilities", self.known_donor_capabilities),
+            ("knowledge_unreviewed", self.knowledge_unreviewed),
+            ("study_candidates", self.study_candidates),
+            ("benchmark_candidates", self.benchmark_candidates),
+            ("algorithm_candidates", self.algorithm_candidates),
+            ("reference_only", self.reference_only),
+            (
+                "study_complete_capabilities",
+                self.study_complete_capabilities,
+            ),
+            ("no_research_value", self.no_research_value),
+            (
+                "donors_knowledge_unreviewed",
+                self.donors_knowledge_unreviewed,
+            ),
+            ("donors_structural_census", self.donors_structural_census),
+            ("donors_active_study", self.donors_active_study),
+            ("donors_study_complete", self.donors_study_complete),
         ]
     }
 
@@ -410,9 +467,16 @@ impl Counts {
                 "donors_rejected" => c.donors_rejected = *v,
                 "donors_superseded" => c.donors_superseded = *v,
                 "unregistered_externals" => c.unregistered_externals = *v,
-                "capabilities_total" => c.capabilities_total = *v,
-                "capabilities_native" => c.capabilities_native = *v,
-                "capabilities_proven" => c.capabilities_proven = *v,
+                // Pre-knowledge records named the production counts without their prefix.
+                "production_capabilities_required" | "capabilities_total" => {
+                    c.capabilities_total = *v
+                }
+                "production_capabilities_native" | "capabilities_native" => {
+                    c.capabilities_native = *v
+                }
+                "production_capabilities_proven" | "capabilities_proven" => {
+                    c.capabilities_proven = *v
+                }
                 "runtime_external_edges" => c.runtime_external_edges = *v,
                 "build_external_edges" => c.build_external_edges = *v,
                 "linked_external_edges" => c.linked_external_edges = *v,
@@ -471,6 +535,18 @@ impl Counts {
                 "unresolved_relevance" => c.unresolved_relevance = *v,
                 "ambiguous_donor_identities" => c.ambiguous_donor_identities = *v,
                 "universe_sources_unreconciled" => c.universe_sources_unreconciled = *v,
+                "known_donor_capabilities" => c.known_donor_capabilities = *v,
+                "knowledge_unreviewed" => c.knowledge_unreviewed = *v,
+                "study_candidates" => c.study_candidates = *v,
+                "benchmark_candidates" => c.benchmark_candidates = *v,
+                "algorithm_candidates" => c.algorithm_candidates = *v,
+                "reference_only" => c.reference_only = *v,
+                "study_complete_capabilities" => c.study_complete_capabilities = *v,
+                "no_research_value" => c.no_research_value = *v,
+                "donors_knowledge_unreviewed" => c.donors_knowledge_unreviewed = *v,
+                "donors_structural_census" => c.donors_structural_census = *v,
+                "donors_active_study" => c.donors_active_study = *v,
+                "donors_study_complete" => c.donors_study_complete = *v,
                 _ => {}
             }
         }
@@ -524,14 +600,71 @@ impl Counts {
             ("donors_rejected", n(self.donors_rejected)),
             ("donors_superseded", n(self.donors_superseded)),
             ("donors_active", n(self.donors_active())),
-            ("capabilities_total", n(self.capabilities_total)),
-            ("capabilities_native", n(self.capabilities_native)),
-            ("capabilities_proven", n(self.capabilities_proven)),
             (
-                "capabilities_remaining",
+                "production_capabilities_required",
+                n(self.capabilities_total),
+            ),
+            (
+                "production_capabilities_native",
+                n(self.capabilities_native),
+            ),
+            (
+                "production_capabilities_proven",
+                n(self.capabilities_proven),
+            ),
+            (
+                "production_capabilities_remaining",
                 n(self
                     .capabilities_total
                     .saturating_sub(self.capabilities_proven)),
+            ),
+            ("known_donor_capabilities", n(self.known_donor_capabilities)),
+            ("knowledge_unreviewed", n(self.knowledge_unreviewed)),
+            ("study_candidates", n(self.study_candidates)),
+            ("benchmark_candidates", n(self.benchmark_candidates)),
+            ("algorithm_candidates", n(self.algorithm_candidates)),
+            ("reference_only", n(self.reference_only)),
+            (
+                "study_complete_capabilities",
+                n(self.study_complete_capabilities),
+            ),
+            ("no_research_value", n(self.no_research_value)),
+            (
+                "research_questions_open",
+                n(self.knowledge_unreviewed
+                    + self.study_candidates
+                    + self.benchmark_candidates
+                    + self.algorithm_candidates),
+            ),
+            (
+                "knowledge_coverage_ratio",
+                if self.known_donor_capabilities == 0 {
+                    Ratio::new(0, 1)
+                } else {
+                    Ratio::new(
+                        self.known_donor_capabilities.saturating_sub(
+                            self.knowledge_unreviewed
+                                + self.study_candidates
+                                + self.benchmark_candidates
+                                + self.algorithm_candidates,
+                        ),
+                        self.known_donor_capabilities,
+                    )
+                }
+                .render(),
+            ),
+            (
+                "donors_knowledge_unreviewed",
+                n(self.donors_knowledge_unreviewed),
+            ),
+            ("donors_structural_census", n(self.donors_structural_census)),
+            ("donors_active_study", n(self.donors_active_study)),
+            ("donors_study_complete", n(self.donors_study_complete)),
+            (
+                "donors_with_open_research",
+                n(self.donors_knowledge_unreviewed
+                    + self.donors_structural_census
+                    + self.donors_active_study),
             ),
             ("technologies_total", n(self.technologies_total)),
             ("technologies_native", n(self.technologies_native)),
@@ -566,11 +699,11 @@ impl Counts {
             ("repository_shape_conformance", shape.render()),
             ("ecdev_repository_conformance", conformance.render()),
             (
-                "native_capability_ratio",
+                "production_native_ratio",
                 self.capability_ratio(self.capabilities_native).render(),
             ),
             (
-                "proof_completion_ratio",
+                "production_proof_ratio",
                 self.capability_ratio(self.capabilities_proven).render(),
             ),
             (
@@ -723,6 +856,37 @@ mod tests {
     }
 
     #[test]
+    fn production_completion_is_not_knowledge_completion() {
+        // Every production capability proven, yet open research remains (including on a
+        // runtime-rejected donor): production reads 100 %, knowledge must not.
+        let c = Counts {
+            donors_registered: 2,
+            donors_rejected: 1,
+            capabilities_total: 3,
+            capabilities_native: 3,
+            capabilities_proven: 3,
+            known_donor_capabilities: 10,
+            study_candidates: 2,
+            benchmark_candidates: 1,
+            study_complete_capabilities: 5,
+            reference_only: 2,
+            donors_active_study: 1,
+            donors_study_complete: 1,
+            ..Counts::default()
+        };
+        let v = c.values();
+        let get = |k: &str| v.iter().find(|(n, _)| n == k).unwrap().1.clone();
+        assert_eq!(get("production_proof_ratio"), "1.000000");
+        assert_eq!(get("production_capabilities_remaining"), "0");
+        assert_eq!(get("research_questions_open"), "3");
+        assert_eq!(get("knowledge_coverage_ratio"), "0.700000");
+        assert_eq!(get("donors_with_open_research"), "1");
+        // The legacy name of a production count is still read from older records.
+        let back = Counts::from_raw(&[("capabilities_total".into(), 3)]);
+        assert_eq!(back.capabilities_total, 3);
+    }
+
+    #[test]
     fn denominator_cannot_be_gamed() {
         // Registered donors are counted forever; an active donor without capabilities is 0 %.
         let c = Counts {
@@ -733,7 +897,7 @@ mod tests {
         let v = c.values();
         let get = |k: &str| v.iter().find(|(n, _)| n == k).unwrap().1.clone();
         assert_eq!(get("extinction_ratio"), "0.500000");
-        assert_eq!(get("native_capability_ratio"), "0.000000");
+        assert_eq!(get("production_native_ratio"), "0.000000");
         // Unregistered externals join the denominator.
         let c = Counts {
             unregistered_externals: 1,

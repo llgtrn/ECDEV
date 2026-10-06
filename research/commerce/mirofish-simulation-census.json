@@ -1,0 +1,190 @@
+{
+  "donor_id": "666ghj--MiroFish",
+  "commit_sha": "7657031",
+  "license": "AGPL-3.0",
+  "method": "read-only semantic census of the pinned source; behaviour described in ECDEV's words, no donor code copied",
+  "dependencies": "camel-oasis==0.2.5, camel-ai==0.2.78, zep-cloud==3.25.0, openai>=1.0 (OASIS internals not verified: not installed)",
+  "boundary": "Every ECDEV use of these ideas is SIMULATED: SIMULATED != OBSERVED != DEMAND != SALES FORECAST",
+  "concepts": [
+    {
+      "concept": "simulation lifecycle",
+      "where": "backend/app/services/simulation_manager.py:25-35, simulation_runner.py:40-49, 620-760, 965",
+      "finding": "two status machines (created/preparing/ready/running/stopping/stopped/completed/failed; runner idle..failed), monitor polls action logs every 2 s, per-simulation finalisation lock; 'paused' declared but unreachable",
+      "commerce": "explicit per-scenario-run state machine with a single finalisation path"
+    },
+    {
+      "concept": "scenario initialisation",
+      "where": "backend/app/services/simulation_config_generator.py:648-812; scripts/run_parallel_simulation.py:1170-1210",
+      "finding": "LLM writes hot topics and initial posts; posts mapped to agents by entity type then alias then influence; injected as forced round-0 actions",
+      "commerce": "seed shocks (launch, price cut, competitor ad) as scripted round-0 events tied to typed actors"
+    },
+    {
+      "concept": "agent population construction",
+      "where": "backend/simulation_manager.py:290-318; oasis_profile_generator.py:205-1100",
+      "finding": "one agent per extracted knowledge-graph entity; no sampling or distribution; unseeded random fallbacks for counts and demographics",
+      "commerce": "sample buyer and competitor populations from declared distributions rather than one agent per entity"
+    },
+    {
+      "concept": "agent state",
+      "where": "backend/simulation_config_generator.py:53-82; run_parallel_simulation.py:1040-1090",
+      "finding": "activity config with many fields of which only active_hours and activity_level are read at runtime (dead parameters)",
+      "commerce": "typed numeric agent state (budget, price sensitivity, loyalty) with a harness proving every field is consumed"
+    },
+    {
+      "concept": "environment state",
+      "where": "backend/run_parallel_simulation.py:1150-1160",
+      "finding": "per-platform SQLite inside OASIS, deleted at run start",
+      "commerce": "one authoritative per-run market store rebuilt fresh"
+    },
+    {
+      "concept": "interaction loop and activation",
+      "where": "backend/run_parallel_simulation.py:1214-1280, 1413-1480",
+      "finding": "rounds = hours*60/minutes_per_round (default 72); per round an activation set chosen by unseeded random sampling with hour multipliers; concurrent LLM steps (semaphore 30); order nondeterministic",
+      "commerce": "discrete-time loop with explicit activation sets and an atomic market step logged per tick"
+    },
+    {
+      "concept": "action selection",
+      "where": "backend/run_parallel_simulation.py:177-202",
+      "finding": "closed platform action sets (6 Twitter, 13 Reddit); LLM chooses via tool calls over a recommender feed",
+      "commerce": "closed commerce action set (buy, wait, switch, review, return) with every choice validated"
+    },
+    {
+      "concept": "state transition",
+      "where": "inside OASIS",
+      "finding": "no MiroFish transition logic",
+      "commerce": "deterministic market-clearing function over chosen actions"
+    },
+    {
+      "concept": "termination",
+      "where": "backend/run_parallel_simulation.py:1600-1653; simulation_runner.py:909-963",
+      "finding": "fixed round count or signal; no convergence test",
+      "commerce": "fixed horizon or convergence criterion, recording which rule fired"
+    },
+    {
+      "concept": "multi-run and parallelism",
+      "where": "backend/run_parallel_simulation.py:984-1037, 1585",
+      "finding": "two platforms concurrently in one process; no Monte-Carlo replicates",
+      "commerce": "N independent seeded replicates per scenario"
+    },
+    {
+      "concept": "seeds, replication, dispersion, sensitivity, scenario comparison",
+      "where": "ABSENT (searched scripts/ and app/services/simulation*.py)",
+      "finding": "no seeds, single run per id, no variance, no sweeps, no baseline pairing",
+      "commerce": "the gaps define ECDEV's own requirements"
+    },
+    {
+      "concept": "aggregation",
+      "where": "backend/simulation_runner.py:110-200, ~1250-1362",
+      "finding": "per-round and per-agent counts only",
+      "commerce": "per-tick SIMULATED aggregates (units, share) with dispersion"
+    },
+    {
+      "concept": "persona construction",
+      "where": "backend/oasis_profile_generator.py:348-815, 1135-1160",
+      "finding": "LLM-written personas from graph search context; retries with decreasing temperature; random fallbacks",
+      "commerce": "segment personas frozen as versioned, hashed artifacts"
+    },
+    {
+      "concept": "network topology and diffusion",
+      "where": "backend/simulation_config_generator.py:340-360",
+      "finding": "no initial follow graph; recommender weights hard-coded but never passed to OASIS; diffusion only emergent",
+      "commerce": "explicit referral graph and injected recommender parameters; cascade metrics against a Bass baseline"
+    },
+    {
+      "concept": "interview probes / IPC",
+      "where": "backend/app/services/simulation_ipc.py:95-394",
+      "finding": "filesystem command queue; interview injects a manual action and reads the answer from the trace",
+      "commerce": "post-run survey probes recorded as SIMULATED stated preference"
+    },
+    {
+      "concept": "configuration generation",
+      "where": "backend/simulation_config_generator.py:244-646",
+      "finding": "LLM proposes horizon, cadence and per-agent parameters; some multipliers never applied",
+      "commerce": "LLM may propose parameters; a validator records proposed vs defaulted vs clamped"
+    },
+    {
+      "concept": "time model",
+      "where": "backend/run_parallel_simulation.py:1232-1234",
+      "finding": "simulated hour is only an activation label; logs use wall clock",
+      "commerce": "explicit simulated calendar separated from wall clock in every record"
+    },
+    {
+      "concept": "output provenance",
+      "where": "backend/scripts/action_logger.py:22-118; app/services/zep_graph_memory_updater.py:36-67, 494-515",
+      "finding": "simulated actions are written into the same knowledge graph as document-derived knowledge without a content label (metadata only) - an anti-reference",
+      "commerce": "separate SIMULATED, OBSERVED and DEMAND stores with a provenance firewall"
+    },
+    {
+      "concept": "cost budgeting",
+      "where": "ABSENT apart from concurrency",
+      "finding": "no token or cost accounting",
+      "commerce": "per-run call/token/cost ledger with a hard cap"
+    }
+  ],
+  "research_questions": [
+    {
+      "q": "replicate variance and the replicate count needed for a stable interval",
+      "kind": "BENCHMARK_CANDIDATE"
+    },
+    {
+      "q": "seed sub-streams (activation, persona sampling, shocks) for bit-reproducible LLM-free runs",
+      "kind": "ALGORITHM_CANDIDATE"
+    },
+    {
+      "q": "capped random activation versus Poisson-rate activation against observed purchase-time histograms",
+      "kind": "STUDY_CANDIDATE"
+    },
+    {
+      "q": "dead-parameter audit harness",
+      "kind": "ALGORITHM_CANDIDATE"
+    },
+    {
+      "q": "effect of persona text versus numeric segment parameters on simulated choices",
+      "kind": "STUDY_CANDIDATE"
+    },
+    {
+      "q": "provenance firewall blocking simulated writes into observed or demand stores, with leakage tests",
+      "kind": "ALGORITHM_CANDIDATE"
+    },
+    {
+      "q": "recommender-weight sensitivity of simulated sales concentration",
+      "kind": "STUDY_CANDIDATE"
+    },
+    {
+      "q": "initial referral-graph sensitivity of cascade size",
+      "kind": "STUDY_CANDIDATE"
+    },
+    {
+      "q": "common random numbers for baseline versus promotion lift",
+      "kind": "ALGORITHM_CANDIDATE"
+    },
+    {
+      "q": "LLM-proposed versus rule-default configuration effect on outcomes",
+      "kind": "BENCHMARK_CANDIDATE"
+    },
+    {
+      "q": "stated (interview) versus revealed (action) simulated preferences",
+      "kind": "STUDY_CANDIDATE"
+    },
+    {
+      "q": "LLM call and token scaling with agents x rounds x activation",
+      "kind": "BENCHMARK_CANDIDATE"
+    },
+    {
+      "q": "convergence-based versus fixed-horizon termination",
+      "kind": "ALGORITHM_CANDIDATE"
+    }
+  ],
+  "no_research_value": [
+    "Flask API routes and polling endpoints",
+    "Zep batch/ontology/retry plumbing and memory-updater queues",
+    "Windows and logging patches, i18n, JSON-repair helpers",
+    "Zep integration test scripts"
+  ],
+  "reference_only": [
+    "OASIS usage pattern",
+    "time-of-day multipliers and entity archetypes (no empirical grounding)",
+    "status enums and filesystem IPC",
+    "memory write-back design as an anti-reference"
+  ]
+}

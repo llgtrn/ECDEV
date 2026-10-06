@@ -1,0 +1,457 @@
+{
+  "scope": "re-audit of every runtime-rejected donor under the two-axis model (runtime adoption vs knowledge value)",
+  "model": "Exception::Rejected means REJECT_RUNTIME only; knowledge is per capability (ecdev-gov extinction --json)",
+  "donors": [
+    {
+      "donor": "666ghj--MiroFish",
+      "runtime_decision": "REJECT_RUNTIME: AGPL-3.0 runtime evaluated and not adopted; its simulation architecture stays under clean-room study (research/commerce/mirofish-simulation-census.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "AGPL-3.0: no code copy, no linking, no network service; reading, documenting behaviour and clean-room reimplementation remain possible",
+      "current_caller": "none; ECDEV has no simulation engine yet",
+      "potential_future_use": [
+        "simulation",
+        "demand validation (SIMULATED only)",
+        "competition analysis",
+        "decision support",
+        "trend intelligence"
+      ],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(absent in the donor: seeded sub-streams, N replicates, dispersion and common random numbers for scenario lift)",
+        "BENCHMARK_CANDIDATE(LLM-proposed versus rule-default scenario parameters with per-value origin tags)",
+        "BENCHMARK_CANDIDATE(LLM call and token scaling with agents x rounds; simulated calendar separate from wall clock)"
+      ],
+      "native_targets": [
+        "social.mirofish.simulation-lifecycle: STUDY_CANDIDATE(explicit per-scenario-run state machine with one finalisation path, for SIMULATED commerce scenarios)",
+        "social.mirofish.scenario-initialization: STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)",
+        "social.mirofish.population-construction: STUDY_CANDIDATE(buyer and competitor populations sampled from declared distributions instead of one agent per entity)",
+        "social.mirofish.agent-and-environment-state: ALGORITHM_CANDIDATE(typed agent state with a dead-parameter audit harness and a fresh per-run market store)",
+        "social.mirofish.event-loop-and-activation: STUDY_CANDIDATE(capped random versus Poisson-rate activation against observed purchase-time histograms)",
+        "social.mirofish.action-selection: STUDY_CANDIDATE(closed, validated commerce action set (buy, wait, switch, review, return))",
+        "social.mirofish.termination: ALGORITHM_CANDIDATE(convergence-based versus fixed-horizon termination, recording the rule that fired)",
+        "social.mirofish.network-and-diffusion: STUDY_CANDIDATE(injected referral graph and recommender weights; cascade size and sales concentration sensitivity against a Bass baseline)",
+        "social.mirofish.persona-construction: STUDY_CANDIDATE(versioned, hashed segment personas; effect of persona text versus numeric parameters on simulated choices)",
+        "social.mirofish.interview-probes: STUDY_CANDIDATE(post-run survey probes as SIMULATED stated preference versus revealed actions)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "social.mirofish.simulation-lifecycle",
+          "knowledge": "STUDY_CANDIDATE(explicit per-scenario-run state machine with one finalisation path, for SIMULATED commerce scenarios)"
+        },
+        {
+          "capability": "social.mirofish.scenario-initialization",
+          "knowledge": "STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)"
+        },
+        {
+          "capability": "social.mirofish.population-construction",
+          "knowledge": "STUDY_CANDIDATE(buyer and competitor populations sampled from declared distributions instead of one agent per entity)"
+        },
+        {
+          "capability": "social.mirofish.agent-and-environment-state",
+          "knowledge": "ALGORITHM_CANDIDATE(typed agent state with a dead-parameter audit harness and a fresh per-run market store)"
+        },
+        {
+          "capability": "social.mirofish.event-loop-and-activation",
+          "knowledge": "STUDY_CANDIDATE(capped random versus Poisson-rate activation against observed purchase-time histograms)"
+        },
+        {
+          "capability": "social.mirofish.action-selection",
+          "knowledge": "STUDY_CANDIDATE(closed, validated commerce action set (buy, wait, switch, review, return))"
+        },
+        {
+          "capability": "social.mirofish.termination",
+          "knowledge": "ALGORITHM_CANDIDATE(convergence-based versus fixed-horizon termination, recording the rule that fired)"
+        },
+        {
+          "capability": "social.mirofish.replication-and-dispersion",
+          "knowledge": "BENCHMARK_CANDIDATE(absent in the donor: seeded sub-streams, N replicates, dispersion and common random numbers for scenario lift)"
+        },
+        {
+          "capability": "social.mirofish.network-and-diffusion",
+          "knowledge": "STUDY_CANDIDATE(injected referral graph and recommender weights; cascade size and sales concentration sensitivity against a Bass baseline)"
+        },
+        {
+          "capability": "social.mirofish.persona-construction",
+          "knowledge": "STUDY_CANDIDATE(versioned, hashed segment personas; effect of persona text versus numeric parameters on simulated choices)"
+        },
+        {
+          "capability": "social.mirofish.interview-probes",
+          "knowledge": "STUDY_CANDIDATE(post-run survey probes as SIMULATED stated preference versus revealed actions)"
+        },
+        {
+          "capability": "social.mirofish.config-generation",
+          "knowledge": "BENCHMARK_CANDIDATE(LLM-proposed versus rule-default scenario parameters with per-value origin tags)"
+        },
+        {
+          "capability": "social.mirofish.cost-and-time-model",
+          "knowledge": "BENCHMARK_CANDIDATE(LLM call and token scaling with agents x rounds; simulated calendar separate from wall clock)"
+        },
+        {
+          "capability": "social.mirofish.output-provenance",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor writes simulated activity into observed graph memory with only a metadata label; ECDEV requires a provenance firewall between SIMULATED and OBSERVED)"
+        },
+        {
+          "capability": "social.mirofish.graph-memory-and-reports",
+          "knowledge": "REFERENCE_ONLY(Zep graph memory and LLM report agents)"
+        },
+        {
+          "capability": "social.mirofish.web-application",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](Flask routes, Vue frontend, locales and polling endpoints)"
+        },
+        {
+          "capability": "social.mirofish.zep-cloud-plumbing",
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud batching, retries and memory-updater queues)"
+        }
+      ],
+      "rationale": "the deep census (mirofish-simulation-census.json) found a usable simulation architecture (lifecycle, round-0 shocks, activation loop, closed action sets, interview probes) and also its gaps (no seeds, replication, dispersion, sensitivity or scenario pairing) and one anti-pattern (simulated activity written into observed memory). The earlier rejection reasoned from 'contributes zero observed metrics', which confuses SIMULATED with OBSERVED instead of keeping them apart"
+    },
+    {
+      "donor": "666ghj--BettaFish",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: wanted techniques are independently native with different semantics; GPL code, models, crawlers and LLM agents not used (research/commerce/bettafish-semantic-matrix.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "GPL-3.0 (plus logged-in crawling that ECDEV policy forbids): no code copy; algorithms can be studied and benchmarked clean-room",
+      "current_caller": "none; ECDEV's lexical Jaccard clustering, temporal co-occurrence, lexicon sentiment and stable-ID dedup are independent",
+      "potential_future_use": [
+        "trend intelligence",
+        "product discovery",
+        "market discovery",
+        "monitoring"
+      ],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(URL or text-prefix near-duplicate detection versus ECDEV's stable-ID dedup with CONFLICT; duplicate recall on cross-posted content)",
+        "BENCHMARK_CANDIDATE(sentence-embedding KMeans with diversity and hotness sampling versus lexical Jaccard plus temporal co-occurrence: topic purity, recall, stability, inspectability)",
+        "BENCHMARK_CANDIDATE(fine-tuned multilingual sentiment models versus ECDEV's lexicon rule: accuracy, calibration, language coverage, cost)"
+      ],
+      "native_targets": [
+        "social.bettafish.corpus-search: STUDY_CANDIDATE(keyword-optimisation and query expansion over a multi-source corpus for broader recall of product mentions)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "social.bettafish.deduplicate",
+          "knowledge": "BENCHMARK_CANDIDATE(URL or text-prefix near-duplicate detection versus ECDEV's stable-ID dedup with CONFLICT; duplicate recall on cross-posted content)"
+        },
+        {
+          "capability": "social.bettafish.cluster-and-sample",
+          "knowledge": "BENCHMARK_CANDIDATE(sentence-embedding KMeans with diversity and hotness sampling versus lexical Jaccard plus temporal co-occurrence: topic purity, recall, stability, inspectability)"
+        },
+        {
+          "capability": "social.bettafish.sentiment-models",
+          "knowledge": "BENCHMARK_CANDIDATE(fine-tuned multilingual sentiment models versus ECDEV's lexicon rule: accuracy, calibration, language coverage, cost)"
+        },
+        {
+          "capability": "social.bettafish.corpus-search",
+          "knowledge": "STUDY_CANDIDATE(keyword-optimisation and query expansion over a multi-source corpus for broader recall of product mentions)"
+        },
+        {
+          "capability": "social.bettafish.logged-in-crawling",
+          "knowledge": "REFERENCE_ONLY(logged-in crawling and anti-bot evasion are prohibited by ECDEV policy; platform data structures only)"
+        },
+        {
+          "capability": "social.bettafish.llm-agents-and-reports",
+          "knowledge": "REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)"
+        }
+      ],
+      "rationale": "ECDEV's current methods existing is not evidence they are better; embedding KMeans with diversity and hotness sampling, fine-tuned sentiment models and near-duplicate detection are benchmark candidates against them"
+    },
+    {
+      "donor": "getzep--zep",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: provenance properties already native; remainder serves Zep Cloud or chat-memory benchmarks (research/commerce/zep-semantic-matrix.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "Apache-2.0 open parts; Zep Cloud is a hosted service",
+      "current_caller": "none; ECDEV's episode timestamps and bi-temporal fact validity are independent natives",
+      "potential_future_use": [
+        "memory/evidence",
+        "entity resolution"
+      ],
+      "benchmark_questions": [],
+      "native_targets": [
+        "zep.alias-canonicalizer: STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "zep.episode-validation",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV evidence requires explicit-offset timestamps, finite values and scalar metadata)"
+        },
+        {
+          "capability": "zep.fact-validity",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](memory::Validity bi-temporal windows; studied against Graphiti)"
+        },
+        {
+          "capability": "zep.alias-canonicalizer",
+          "knowledge": "STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)"
+        },
+        {
+          "capability": "zep.default-ontology",
+          "knowledge": "REFERENCE_ONLY(default entity and edge types as a reference for a commerce entity ontology)"
+        },
+        {
+          "capability": "zep.legacy-server",
+          "knowledge": "REFERENCE_ONLY(Postgres-backed memory server architecture)"
+        },
+        {
+          "capability": "zep.ingestion-loaders-and-submission",
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](batched submission, task polling and loaders for Zep Cloud)"
+        },
+        {
+          "capability": "zep.mcp-and-integrations",
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP proxy and agent-framework adapters for Zep Cloud)"
+        },
+        {
+          "capability": "zep.memory-benchmarks",
+          "knowledge": "NO_RESEARCH_VALUE[UNRELATED_DOMAIN](LOCOMO and LongMemEval chat-memory benchmarks)"
+        },
+        {
+          "capability": "zep.repository-tooling",
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)"
+        }
+      ],
+      "rationale": "episode and fact-validity semantics are studied and natively covered (STUDY_COMPLETE, INDEPENDENT_NATIVE); alias canonicalisation stays a study candidate; Cloud plumbing, adapters and chat-memory benchmarks have no research value on admissible scope grounds"
+    },
+    {
+      "donor": "t4niha--Trend-Finder",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: its trends come from embedding clustering (HDBSCAN) that ECDEV does not use; ECDEV clusters and scores deterministically with exposed components (research/commerce/social-donor-rejections-review.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "MIT: reuse permitted; nothing adopted yet",
+      "current_caller": "none; ECDEV clusters lexically",
+      "potential_future_use": [
+        "trend intelligence",
+        "product discovery"
+      ],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)",
+        "BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)"
+      ],
+      "native_targets": [
+        "social.trend-finder.clean_text: STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)",
+        "social.trend-finder.select_top_posts: ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "social.trend-finder.clean_text",
+          "knowledge": "STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)"
+        },
+        {
+          "capability": "social.trend-finder.cluster_embeddings",
+          "knowledge": "BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)"
+        },
+        {
+          "capability": "social.trend-finder.score_clusters",
+          "knowledge": "BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)"
+        },
+        {
+          "capability": "social.trend-finder.select_top_posts",
+          "knowledge": "ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)"
+        },
+        {
+          "capability": "social.trend-finder.remaining-whole-donor",
+          "knowledge": "REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)"
+        }
+      ],
+      "rationale": "'ECDEV has no embeddings' was an adoption fact, not irrelevance: embedding + HDBSCAN clustering, within-platform cluster scoring and representative-post selection are benchmark and algorithm candidates against lexical clustering"
+    },
+    {
+      "donor": "sansan0--TrendRadar",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: GPL-3.0 with a no-production-copy gate; its rank formula had no ECDEV caller and was removed, and ECDEV feeds, matching and transport are independent (research/commerce/trendradar-capability-review.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "GPL-3.0: no code copy (the earlier reimplementation was removed); behaviour can be specified and reimplemented clean-room",
+      "current_caller": "none",
+      "potential_future_use": [
+        "trend intelligence",
+        "market discovery"
+      ],
+      "benchmark_questions": [],
+      "native_targets": [
+        "social.trendradar.calculate_news_weight: STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)",
+        "social.trendradar.hot-list-sources: STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "social.trendradar.calculate_news_weight",
+          "knowledge": "STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)"
+        },
+        {
+          "capability": "social.trendradar.word_matches",
+          "knowledge": "REFERENCE_ONLY(user-defined keyword and regex filters; ECDEV matches Unicode terms)"
+        },
+        {
+          "capability": "social.trendradar.parse_json_feed",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's JSON Feed reader)"
+        },
+        {
+          "capability": "social.trendradar.fetch_feed",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded public transport)"
+        },
+        {
+          "capability": "social.trendradar.hot-list-sources",
+          "knowledge": "STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)"
+        },
+        {
+          "capability": "social.trendradar.notifications",
+          "knowledge": "REFERENCE_ONLY(multi-channel notification fan-out)"
+        },
+        {
+          "capability": "social.trendradar.ui-and-reports",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)"
+        }
+      ],
+      "rationale": "rank-exposure weighting of ranked lists and public hot-list sources are study candidates; feed parsing and transport are independent natives; HTML report UI has no research value"
+    },
+    {
+      "donor": "NanmiCoder--MediaCrawler",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: non-commercial licence blocks absorption, and its logged-in platform crawling, session handling and media download are outside ECDEV's no-auth-bypass acquisition policy (research/commerce/social-donor-rejections-review.json)",
+      "knowledge_decision": "STUDY_COMPLETE",
+      "license_constraint": "NON-COMMERCIAL-LEARNING-1.1 (web UI GPL-3.0): no commercial absorption",
+      "current_caller": "none; logged-in crawling is forbidden by ECDEV policy",
+      "potential_future_use": [
+        "trend intelligence (platform data structures only)"
+      ],
+      "benchmark_questions": [],
+      "native_targets": [],
+      "capability_decisions": [
+        {
+          "capability": "social.mediacrawler.store_content",
+          "knowledge": "REFERENCE_ONLY(post record schema of the crawled platforms)"
+        },
+        {
+          "capability": "social.mediacrawler.store_comment",
+          "knowledge": "REFERENCE_ONLY(comment record schema with parent links)"
+        },
+        {
+          "capability": "social.mediacrawler.store_creator",
+          "knowledge": "REFERENCE_ONLY(creator record schema; personal profiles are deliberately not stored)"
+        },
+        {
+          "capability": "social.mediacrawler.search",
+          "knowledge": "REFERENCE_ONLY(logged-in keyword search flow; ECDEV policy forbids authentication bypass)"
+        },
+        {
+          "capability": "social.mediacrawler.get_comments",
+          "knowledge": "REFERENCE_ONLY(bounded comment paging with semaphores and crawl intervals)"
+        },
+        {
+          "capability": "social.mediacrawler.get_creators_and_notes",
+          "knowledge": "REFERENCE_ONLY(creator note listing under access restrictions)"
+        },
+        {
+          "capability": "social.mediacrawler.download_media",
+          "knowledge": "REFERENCE_ONLY(media download; ECDEV keeps media references only)"
+        },
+        {
+          "capability": "social.mediacrawler.update_xhs_note",
+          "knowledge": "REFERENCE_ONLY(Xiaohongshu note field mapping; ECDEV keeps absent counters UNKNOWN)"
+        },
+        {
+          "capability": "social.mediacrawler.update_xhs_note_comment",
+          "knowledge": "REFERENCE_ONLY(comment counter mapping; donor zero defaults would fabricate values)"
+        },
+        {
+          "capability": "social.mediacrawler.save_creator",
+          "knowledge": "REFERENCE_ONLY(creator persistence stub)"
+        },
+        {
+          "capability": "social.mediacrawler.remaining-whole-donor",
+          "knowledge": "REFERENCE_ONLY(other platform crawlers, proxy pools and browser automation; platform structure reference only)"
+        }
+      ],
+      "rationale": "its value is the platforms' record structures and counter semantics, kept as references; every crawling flow requires authentication ECDEV never bypasses"
+    },
+    {
+      "donor": "Shiva-74--viral-trend-agent",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: no licence grants any use; ECDEV's velocity, acceleration, decay and cross-platform measures are independent and expose components instead of a viral verdict (research/commerce/social-donor-rejections-review.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "no licence file: no permission to use code; behaviour can be described and benchmarked independently",
+      "current_caller": "none; ECDEV's velocity, acceleration and decay are independent natives",
+      "potential_future_use": [
+        "trend intelligence"
+      ],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)"
+      ],
+      "native_targets": [],
+      "capability_decisions": [
+        {
+          "capability": "social.viral-trend-agent.get_upvote_velocity",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV computes velocity from actual snapshot timestamps)"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_comment_velocity",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV rejects zero or non-monotonic elapsed time)"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_cross_platform_bonus",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a platform-count bonus conflates platforms with independent publishers)"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_recency_score",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV applies explicit half-life time decay)"
+        },
+        {
+          "capability": "social.viral-trend-agent.verdict",
+          "knowledge": "BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)"
+        },
+        {
+          "capability": "social.viral-trend-agent.remaining-whole-donor",
+          "knowledge": "REFERENCE_ONLY(agent orchestration, scrapers and LLM prompts)"
+        }
+      ],
+      "rationale": "velocities and recency are already independent natives; the cross-platform bonus is a deliberate divergence; whether a composite verdict predicts persistence better than ECDEV's components is a benchmark question, never a demand forecast"
+    },
+    {
+      "donor": "dgtlmoon--changedetection.io",
+      "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: its restock decision uses LLM and scraped-text stock guesses, float prices and range rules that suppress stock alerts; ECDEV monitors typed observed fields natively (research/commerce/changedetection-capability-review.json)",
+      "knowledge_decision": "ACTIVE_STUDY",
+      "license_constraint": "Apache-2.0: reuse permitted; nothing adopted",
+      "current_caller": "none; ECDEV's typed watch monitor is independent",
+      "potential_future_use": [
+        "monitoring",
+        "seller operations"
+      ],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)",
+        "BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)"
+      ],
+      "native_targets": [
+        "changedetection.availability-mapping: STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
+        "changedetection.scheduling: STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)"
+      ],
+      "capability_decisions": [
+        {
+          "capability": "changedetection.restock-interpretation",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](scraped text and LLM availability override structured data; float prices)"
+        },
+        {
+          "capability": "changedetection.change-thresholds",
+          "knowledge": "BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)"
+        },
+        {
+          "capability": "changedetection.availability-mapping",
+          "knowledge": "STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)"
+        },
+        {
+          "capability": "changedetection.text-diff",
+          "knowledge": "BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)"
+        },
+        {
+          "capability": "changedetection.image-diff",
+          "knowledge": "REFERENCE_ONLY(SSIM screenshot similarity for any future visual monitoring)"
+        },
+        {
+          "capability": "changedetection.scheduling",
+          "knowledge": "STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)"
+        },
+        {
+          "capability": "changedetection.notifications",
+          "knowledge": "REFERENCE_ONLY(notification semantics and channels; ECDEV persists local events only)"
+        },
+        {
+          "capability": "changedetection.watch-persistence",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's persisted watches with leases and fenced restarts)"
+        },
+        {
+          "capability": "changedetection.ui",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)"
+        }
+      ],
+      "rationale": "its restock interpretation diverges deliberately (LLM and scraped text over structured data, float prices, stock alerts suppressed by price ranges), but percent/range alert policies, a DERIVED in-stock flag, a text-diff fallback monitor and per-watch scheduling are benchmark and study candidates"
+    }
+  ]
+}

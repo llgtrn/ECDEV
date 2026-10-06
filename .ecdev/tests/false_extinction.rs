@@ -39,7 +39,7 @@ fn baseline_is_genuinely_extinct() {
     assert!(d.gates.iter().all(|g| g.pass));
     assert!(a.errors().next().is_none(), "{:#?}", a.findings);
     assert_eq!(a.metric("extinction_ratio"), "1.000000");
-    assert_eq!(a.metric("proof_completion_ratio"), "1.000000");
+    assert_eq!(a.metric("production_proof_ratio"), "1.000000");
 }
 
 #[test]

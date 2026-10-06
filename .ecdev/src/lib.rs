@@ -412,6 +412,28 @@ fn count(a: &Assessment) -> metrics::Counts {
             c.capabilities_proven += cap.proven() as u64;
         }
     }
+    // Knowledge is counted over every declared donor, runtime-rejected ones included: a donor
+    // whose runtime ECDEV refused can still teach it something.
+    for d in &a.analysis.donors {
+        match d.knowledge {
+            crate::schema::KnowledgeState::Unreviewed => c.donors_knowledge_unreviewed += 1,
+            crate::schema::KnowledgeState::StructuralCensus => c.donors_structural_census += 1,
+            crate::schema::KnowledgeState::ActiveStudy => c.donors_active_study += 1,
+            crate::schema::KnowledgeState::StudyComplete => c.donors_study_complete += 1,
+        }
+        for cap in &d.capabilities {
+            c.known_donor_capabilities += 1;
+            match cap.knowledge_status.as_str() {
+                "UNREVIEWED" => c.knowledge_unreviewed += 1,
+                "STUDY_CANDIDATE" => c.study_candidates += 1,
+                "BENCHMARK_CANDIDATE" => c.benchmark_candidates += 1,
+                "ALGORITHM_CANDIDATE" => c.algorithm_candidates += 1,
+                "REFERENCE_ONLY" => c.reference_only += 1,
+                "STUDY_COMPLETE" => c.study_complete_capabilities += 1,
+                _ => c.no_research_value += 1,
+            }
+        }
+    }
     // Discovered donors that participate are as unregistered as unknown externals.
     let discovered_active = a
         .analysis

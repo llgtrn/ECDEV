@@ -93,7 +93,8 @@ const SELECTED_WORDS: &[&str] = &[
     "MATERIALIZED",
 ];
 const UNREGISTERED_WORDS: &[&str] = &["DISCOVERED", "CANDIDATE"];
-const NOT_RELEVANT_WORDS: &[&str] = &["REJECTED", "NOT_RELEVANT", "DROP", "OUT_OF_SCOPE"];
+// A legacy "REJECTED" was a runtime decision, never a knowledge verdict, so it does not map here.
+const NOT_RELEVANT_WORDS: &[&str] = &["NOT_RELEVANT", "DROP", "OUT_OF_SCOPE"];
 
 /// The universe file of a legacy registry path.
 pub fn universe_file(from: &str) -> String {
