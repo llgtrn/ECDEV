@@ -1,4 +1,6 @@
 //! Official marketplace protocol boundary with explicit operator-gated HTTP and isolated fixtures.
+pub mod doctor;
+pub mod reads;
 pub mod transport;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
@@ -191,6 +193,15 @@ pub fn protocol(request: &AcquireRequest) -> Result<Value, String> {
     )
 }
 
+/// Dispatch an official capability to its request plan. Unknown capabilities never plan IO.
+pub fn plan(request: &AcquireRequest) -> Result<Value, String> {
+    match request.capability.as_str() {
+        "product.analyze.official" => protocol(request),
+        reads::READ_CAPABILITY => reads::protocol(request),
+        _ => Err("UNSUPPORTED_OFFICIAL_CAPABILITY".into()),
+    }
+}
+
 pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, String> {
     if body["errors"].as_array().is_some_and(|a| !a.is_empty()) {
         return Err("OFFICIAL_RESPONSE_ERRORS".into());
@@ -266,7 +277,7 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
                 json!({"state":"ESTIMATED","estimate":p["FeesEstimate"],"assumptions":request,"actual_fees":null,"expected_profit":null,"limitation":"Official estimate, not actual fulfillment cost; capture time does not replace TimeOfFeesEstimation"}),
             )
         }
-        _ => Err("UNSUPPORTED_OFFICIAL_OPERATION".into()),
+        _ => reads::normalize(operation, body, plan),
     }
 }
 
@@ -289,23 +300,26 @@ impl Provider for Amazon {
         ]
         .iter()
         .all(|k| std::env::var_os(k).is_some_and(|v| !v.is_empty()));
-        json!({"id":self.id(),"class":"OFFICIAL","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","adapter_state":"NATIVE_FIXTURE_PROTOCOL_LIVE_AUTH_NOT_IMPLEMENTED","auth_state":if configured{"CREDENTIALS_PRESENT_LIVE_NOT_AUTHORIZED"}else{"AUTH_REQUIRED"},"capabilities":["product.analyze.official"],"markets":["AMAZON_JP","AMAZON_US"],"fixture_supported":true,"live_supported":false,"fallback_providers":[],"cacheable":false,"estimated_cost_minor":null,"model_commit":MODEL_COMMIT,"reason":"Fixture and protocol boundary available; authenticated transport and actual account quota unverified; no public HTML or Keepa substitution"})
+        json!({"id":self.id(),"class":"OFFICIAL","source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","adapter_state":"NATIVE_FIXTURE_PROTOCOL_LIVE_AUTH_NOT_IMPLEMENTED","auth_state":if configured{"CREDENTIALS_PRESENT_LIVE_NOT_AUTHORIZED"}else{"AUTH_REQUIRED"},"capabilities":["product.analyze.official",reads::READ_CAPABILITY],"markets":["AMAZON_JP","AMAZON_US"],"fixture_supported":true,"live_supported":false,"fallback_providers":[],"cacheable":false,"estimated_cost_minor":null,"model_commit":MODEL_COMMIT,"reason":"Fixture and protocol boundary available; authenticated transport and actual account quota unverified; no public HTML or Keepa substitution"})
+    }
+    fn doctor(&self) -> Option<Value> {
+        Some(doctor::report(&doctor::ProcessEnv, None))
     }
     fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
-        if request.capability != "product.analyze.official" {
-            return Err("UNSUPPORTED_OFFICIAL_CAPABILITY".into());
-        }
-        let plan = protocol(request).map_err(AcquireError::from)?;
+        let plan = plan(request).map_err(AcquireError::from)?;
         let Some(fixtures) = request.query["fixture_responses"].as_object() else {
             let mut denied =
                 AcquireError::from("OFFICIAL_LIVE_AUTH_TRANSPORT_UNAVAILABLE_NO_REQUESTS");
             denied.request_count = Some(0);
             return Err(denied);
         };
-        if fixtures
-            .keys()
-            .any(|k| !matches!(k.as_str(), "catalog" | "offers" | "fees"))
-        {
+        let planned: Vec<&str> = plan["operations"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|o| o["operation"].as_str())
+            .collect();
+        if fixtures.keys().any(|k| !planned.contains(&k.as_str())) {
             return Err("INVALID_FIXTURE_OPERATION".into());
         }
         let mut observations = Vec::new();
@@ -341,19 +355,23 @@ impl Provider for Amazon {
             }
             let hash = format!("{:x}", Sha256::digest(raw.as_bytes()));
             let headers = json!({"x-amzn-requestid":capture["headers"]["x-amzn-requestid"],"x-amzn-ratelimit-limit":capture["headers"]["x-amzn-ratelimit-limit"],"retry-after":capture["headers"]["retry-after"]});
+            let observed_at = ecdev_core::service::timestamp().to_string();
             let normalized = if status == 200 {
                 let value: Value = serde_json::from_str(raw)
                     .map_err(|_| AcquireError::from("MALFORMED_OFFICIAL_FIXTURE_JSON"))?;
-                normalize(key, &value, &plan)
+                normalize(key, &value, &plan).map(|mut n| {
+                    reads::stamp_fields(&mut n, &json!({"provider":"amazon-sp-api","source_layer":"OFFICIAL_SP_API","observed_at":observed_at,"raw_capture_sha256":hash,"receipt":{"x-amzn-requestid":headers["x-amzn-requestid"]},"market":request.market,"marketplace_id":plan["marketplace_id"],"operation":key,"observation_mode":"FIXTURE"}));
+                    n
+                })
             } else {
                 Err(format!("OFFICIAL_HTTP_{status}"))
             };
             let evidence_id = Uuid::new_v4().to_string();
-            records.push(json!({"operation":key,"status":if normalized.is_ok(){"COMPLETE"}else{"UNAVAILABLE"},"normalized":normalized.as_ref().ok(),"reason":normalized.as_ref().err(),"http_status":status,"response_headers":headers,"raw_capture_sha256":hash,"raw_body":raw,"evidence_id":evidence_id,"requested_url":operation["requested_url"],"final_url":null,"request_count":0,"state":"FIXTURE","source_authenticity":"UNVERIFIED_SUPPLIED_FIXTURE_NOT_AUTHENTICATED","rate_scope":"HEADER_ACCOUNT_APPLICATION_PAIR_NOT_ALL_LIMITS"}));
-            observations.push(Evidence { id: evidence_id, mode: ObservationMode::Fixture, source_type:"API".into(), provider:self.id().into(), external_source:operation["requested_url"].as_str().unwrap().into(), market:request.market.clone(), query:operation.clone(), timestamp:ecdev_core::service::timestamp().to_string(), retrieved_at:ecdev_core::service::timestamp().to_string(), raw_hash:hash, normalized_value:json!({"operation":key,"status":if normalized.is_ok(){"DERIVED"}else{"UNKNOWN"},"value":normalized.ok(),"source_authenticity":"UNVERIFIED_SUPPLIED_FIXTURE"}), unit:"OFFICIAL_PROTOCOL_FIXTURE".into(), currency:Some(plan["currency"].as_str().unwrap().into()), confidence:None, freshness_seconds:None, cost_minor:Some(0), run_id:request.run_id.clone() });
+            records.push(json!({"operation":key,"status":if normalized.is_ok(){"COMPLETE"}else{"UNAVAILABLE"},"normalized":normalized.as_ref().ok(),"reason":normalized.as_ref().err(),"http_status":status,"response_headers":headers,"raw_capture_sha256":hash,"raw_body":raw,"evidence_id":evidence_id,"requested_url":operation["requested_url"],"final_url":null,"request_count":0,"state":"FIXTURE","source_authenticity":"UNVERIFIED_SUPPLIED_FIXTURE_NOT_AUTHENTICATED","rate_scope":"HEADER_ACCOUNT_APPLICATION_PAIR_NOT_ALL_LIMITS","provenance":{"provider":"amazon-sp-api","source_layer":"OFFICIAL_SP_API","observed_at":observed_at,"raw_capture_sha256":hash,"market":request.market,"marketplace_id":plan["marketplace_id"],"observation_mode":"FIXTURE","evidence_state":if normalized.is_ok(){"OBSERVED"}else{"UNKNOWN"}}}));
+            observations.push(Evidence { id: evidence_id, mode: ObservationMode::Fixture, source_type:"API".into(), provider:self.id().into(), external_source:operation["requested_url"].as_str().unwrap().into(), market:request.market.clone(), query:operation.clone(), timestamp:observed_at.clone(), retrieved_at:observed_at, raw_hash:hash, normalized_value:json!({"operation":key,"status":if normalized.is_ok(){"DERIVED"}else{"UNKNOWN"},"value":normalized.ok(),"source_authenticity":"UNVERIFIED_SUPPLIED_FIXTURE"}), unit:"OFFICIAL_PROTOCOL_FIXTURE".into(), currency:Some(plan["currency"].as_str().unwrap().into()), confidence:None, freshness_seconds:None, cost_minor:Some(0), run_id:request.run_id.clone() });
         }
         let complete = records.iter().all(|r| r["status"] == "COMPLETE");
-        let result = json!({"source_layer":"OFFICIAL_SP_API","mode":"FIXTURE","status":if complete{"COMPLETE_FIXTURE_WITH_UNKNOWNS"}else{"PARTIAL"},"plan":plan,"records":records,"official_live_validation":"UNAVAILABLE","sales":null,"demand":null,"profit_expected":null,"new_live_acquisition":false});
+        let result = json!({"source_layer":"OFFICIAL_SP_API","capability":request.capability,"mode":"FIXTURE","status":if complete{"COMPLETE_FIXTURE_WITH_UNKNOWNS"}else{"PARTIAL"},"plan":plan,"records":records,"official_live_validation":"UNAVAILABLE","sales":null,"demand":null,"profit_expected":null,"new_live_acquisition":false});
         Ok(AcquireResult {
             raw_payload: serde_json::to_vec(&result)
                 .map_err(|_| AcquireError::from("FIXTURE_SERIALIZATION_FAILED"))?,

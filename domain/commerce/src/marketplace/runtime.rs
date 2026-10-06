@@ -9,6 +9,33 @@ use sha2::{Digest, Sha256};
 use uuid::Uuid;
 
 impl Engine {
+    /// Official boundary readiness: zero network, never persisted, never secret-bearing.
+    pub(crate) fn provider_doctor(&self, args: Value) -> Result<Value, String> {
+        #[derive(Deserialize)]
+        #[serde(deny_unknown_fields)]
+        struct Input {
+            provider: Option<String>,
+        }
+        let input: Input = serde_json::from_value(if args.is_null() { json!({}) } else { args })
+            .map_err(|e| e.to_string())?;
+        let id = input.provider.unwrap_or_else(|| "amazon-sp-api".into());
+        if id != "amazon-sp-api" {
+            return Err("UNSUPPORTED_DOCTOR_PROVIDER".into());
+        }
+        let Some(mut report) = self
+            .providers
+            .iter()
+            .find(|p| p.id() == id)
+            .and_then(|p| p.doctor())
+        else {
+            return Ok(
+                json!({"provider":id,"source_layer":"OFFICIAL_SP_API","status":"OFFICIAL_ADAPTER_UNAVAILABLE","network":"NOT_PROBED","live_calls_made_by_doctor":0}),
+            );
+        };
+        let budget = crate::provider::BudgetPolicy::from_env();
+        report["core_monetary_ceiling"] = json!({"state":if budget.permits(0,0,0,0){"CONFIGURED_PERMITS_ONE_REQUEST"}else{"ZERO_OR_INCOMPLETE_BLOCKS_ENGINE_LIVE_ROUTE"},"applies_to":"ecdev.product.analyze evidence_layer=OFFICIAL_SP_API","actual_cost_minor":null});
+        Ok(report)
+    }
     pub(crate) fn official_product(&self, args: Value) -> Result<Value, String> {
         self.official_product_with_budget(args, &crate::provider::BudgetPolicy::from_env())
     }

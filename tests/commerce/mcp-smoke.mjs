@@ -7,14 +7,14 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,37);
+ const tools=await client.listTools();assert.equal(tools.tools.length,38);
  const officialFixtures=JSON.parse(await readFile(new URL('../../adapter/marketplace/tests/fixtures/official-responses.json',import.meta.url),'utf8'));
  const officialCase=officialFixtures.cases.find(c=>c.operation==='offers');
  const official=await client.callTool({name:'ecdev.product.analyze',arguments:{market:'AMAZON_US',asin:officialCase.asin,evidence_layer:'OFFICIAL_SP_API',include:['OFFERS'],fixture_responses:{offers:officialCase.response}}});
  assert.equal(official.isError,false);assert.equal(official.structuredContent.mode,'FIXTURE');assert.equal(official.structuredContent.network_calls,0);assert.equal(official.structuredContent.result.official_live_validation,'UNAVAILABLE');assert.equal(official.structuredContent.result.profit_expected,null);assert.equal(official.structuredContent.observations[0].raw_hash,createHash('sha256').update(officialCase.response.raw_body).digest('hex'));
  const officialStored=await client.callTool({name:'ecdev.runs.inspect',arguments:{run_id:official.structuredContent.run_id}});assert.equal(officialStored.isError,false);assert.equal(officialStored.structuredContent.raw_capture_verification,'VERIFIED_LOCAL_SHA256_NO_NETWORK');
  const officialDenied=await client.callTool({name:'ecdev.product.analyze',arguments:{market:'AMAZON_JP',asin:officialCase.asin,evidence_layer:'OFFICIAL_SP_API'}});assert.equal(officialDenied.isError,false);assert.equal(officialDenied.structuredContent.mode,'PLAN_ONLY');assert.equal(officialDenied.structuredContent.network_calls,0);assert.deepEqual(officialDenied.structuredContent.fallback_providers,[]);
- for(const name of ['ecdev.product.discover','ecdev.product.inspect','ecdev.product.compare','ecdev.provider.status','ecdev.monitor.create','ecdev.monitor.status'])assert.ok(tools.tools.some(t=>t.name===name),name);
+ for(const name of ['ecdev.product.discover','ecdev.product.inspect','ecdev.product.compare','ecdev.provider.status','ecdev.provider.doctor','ecdev.monitor.create','ecdev.monitor.status'])assert.ok(tools.tools.some(t=>t.name===name),name);
  const social=await client.callTool({name:'ecdev.trend.discover',arguments:{query:'matcha',fixture_now:10000,sources:[{platform:'HACKER_NEWS',fixture_raw:JSON.stringify({hits:[{objectID:'sdk-1',title:'matcha glass',created_at_i:9000}]})}]}});
  // HN IDs are strictly numeric; malformed input must fail rather than create an observation.
  assert.equal(social.isError,false);assert.equal(social.structuredContent.source_complete,false);assert.match(social.structuredContent.provider_failures[0].reason,/INVALID_HN_ID/);

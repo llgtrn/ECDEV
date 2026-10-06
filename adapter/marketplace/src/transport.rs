@@ -237,10 +237,33 @@ struct Session<W: Wire, C: Clock> {
     interval: BTreeMap<String, u64>,
     last_now: u64,
     auth_next: u64,
+    lwa_failed: bool,
+}
+fn min_interval_ms(key: &str) -> u64 {
+    reads::spec(key).map_or(1000, |s| s.min_interval_ms)
 }
 impl<W: Wire, C: Clock> Session<W, C> {
+    /// Non-secret token lifecycle state; never exposes the token or its expiry instant.
+    fn token_state(&self) -> &'static str {
+        let now = self.clock.now();
+        if now < self.auth_next {
+            "LWA_COOLDOWN"
+        } else if self
+            .token
+            .as_ref()
+            .is_some_and(|t| t.access_token_at(now).is_some())
+        {
+            "VALID_IN_MEMORY"
+        } else if self.lwa_failed {
+            "LAST_REFRESH_FAILED"
+        } else if self.token.is_some() {
+            "EXPIRED_RENEWAL_REQUIRED"
+        } else {
+            "NEVER_REQUESTED"
+        }
+    }
     fn execute(&mut self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
-        let plan = protocol(request).map_err(AcquireError::from)?;
+        let plan = plan(request).map_err(AcquireError::from)?;
         let now = self.clock.now();
         let mut denied =
             AcquireError::from("OFFICIAL_LIVE_AUTHORIZATION_OR_REQUEST_BUDGET_REQUIRED");
@@ -261,6 +284,14 @@ impl<W: Wire, C: Clock> Session<W, C> {
         let operations = plan["operations"]
             .as_array()
             .ok_or_else(|| AcquireError::from("INVALID_OFFICIAL_PLAN"))?;
+        // Only GET reads plus the read-only fee estimate POST may reach the wire.
+        if operations
+            .iter()
+            .any(|o| o["method"] != "GET" && o["operation"] != "fees")
+        {
+            denied.reason = "OFFICIAL_WRITES_DISABLED".into();
+            return Err(denied);
+        }
         for operation in operations {
             let key = operation["operation"].as_str().unwrap();
             if self.next.get(key).is_some_and(|time| now < *time) {
@@ -324,6 +355,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                             .retry_not_before_ms
                             .and_then(|n| u64::try_from(n).ok())
                             .unwrap_or(0);
+                        self.lwa_failed = true;
                         failure = Some(
                             json!({"phase":"LWA","error":error,"raw_capture":"NEVER_PERSIST_AUTHENTICATION_BODY"}),
                         );
@@ -340,6 +372,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                                 json!({"phase":"LWA","reason":"LWA_RESPONSE_INVALID_OR_TOKEN_TOO_SHORT","raw_capture":"NEVER_PERSIST_AUTHENTICATION_BODY"}),
                             );
                         }
+                        self.lwa_failed = failure.is_some();
                         self.token = token;
                     }
                 }
@@ -359,6 +392,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                         .and_then(|n| u64::try_from(n).ok())
                         .unwrap_or(0);
                     uncertain |= error.uncertain;
+                    self.lwa_failed = true;
                     failure = Some(
                         json!({"phase":"LWA","reason":error.reason,"http_status":error.status,"response_headers":error.headers,"raw_capture":"NEVER_PERSIST_AUTHENTICATION_BODY"}),
                     );
@@ -395,11 +429,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                     Ok(response) => {
                         completed += 1;
                         let received = self.clock.now();
-                        let base = match key {
-                            "catalog" => 500,
-                            "offers" => 2000,
-                            _ => 1000,
-                        };
+                        let base = min_interval_ms(key);
                         let interval = response
                             .headers
                             .get("x-amzn-ratelimit-limit")
@@ -440,11 +470,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                             completed += 1;
                         }
                         let received = self.clock.now();
-                        let base = match key {
-                            "catalog" => 500,
-                            "offers" => 2000,
-                            _ => 1000,
-                        };
+                        let base = min_interval_ms(key);
                         let interval = error
                             .headers
                             .get("x-amzn-ratelimit-limit")
@@ -510,6 +536,8 @@ impl<W: Wire, C: Clock> Session<W, C> {
                 record["state"] = json!("LIVE");
                 record["source_authenticity"] =
                     json!("OFFICIAL_ENDPOINT_HTTP_CAPTURE_NOT_COMMERCIAL_VALIDATION");
+                record["provenance"]["observation_mode"] = json!("LIVE");
+                reads::set_field_mode(&mut record["normalized"], "LIVE");
             }
         }
         for observation in &mut result.observations {
@@ -518,6 +546,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
             observation.unit = "OFFICIAL_HTTP_RESPONSE".into();
             observation.normalized_value["source_authenticity"] =
                 json!("OFFICIAL_ENDPOINT_HTTP_CAPTURE_NOT_COMMERCIAL_VALIDATION");
+            reads::set_field_mode(&mut observation.normalized_value["value"], "LIVE");
         }
         result.result["mode"] = json!(mode);
         result.result["new_live_acquisition"] = json!(completed > 0);
@@ -546,27 +575,33 @@ impl<W: Wire, C: Clock> Session<W, C> {
 pub struct ConfiguredAmazon {
     session: Option<Mutex<Session<Http, SystemClock>>>,
     reason: &'static str,
+    env: std::sync::Arc<dyn doctor::EnvSource>,
 }
 impl ConfiguredAmazon {
     pub fn from_env() -> Self {
-        let denied = |reason| Self {
+        Self::from_source(std::sync::Arc::new(doctor::ProcessEnv))
+    }
+    /// Operator gate and request budget are checked before any secret value is read.
+    pub fn from_source(env: std::sync::Arc<dyn doctor::EnvSource>) -> Self {
+        let denied = |reason, env| Self {
             session: None,
             reason,
+            env,
         };
-        if std::env::var("ECDEV_SPAPI_ALLOW_LIVE_READ").as_deref() != Ok("true") {
-            return denied("EXPLICIT_OPERATOR_LIVE_AUTHORIZATION_REQUIRED");
+        if env.setting(doctor::GATE_KEY).as_deref() != Some("true") {
+            return denied("EXPLICIT_OPERATOR_LIVE_AUTHORIZATION_REQUIRED", env);
         }
-        let Some(limit) = std::env::var("ECDEV_SPAPI_HTTP_REQUEST_LIMIT")
-            .ok()
+        let Some(limit) = env
+            .setting(doctor::LIMIT_KEY)
             .and_then(|s| s.parse::<u64>().ok())
             .filter(|n| (1..=1000).contains(n))
         else {
-            return denied("BOUNDED_SPAPI_HTTP_REQUEST_LIMIT_REQUIRED");
+            return denied("BOUNDED_SPAPI_HTTP_REQUEST_LIMIT_REQUIRED", env);
         };
         let credentials = Credentials {
-            client: std::env::var("SP_API_CLIENT_ID").unwrap_or_default(),
-            secret: std::env::var("SP_API_CLIENT_SECRET").unwrap_or_default(),
-            refresh: std::env::var("SP_API_REFRESH_TOKEN").unwrap_or_default(),
+            client: env.secret(doctor::CLIENT_ID).unwrap_or_default(),
+            secret: env.secret(doctor::CLIENT_SECRET).unwrap_or_default(),
+            refresh: env.secret(doctor::REFRESH_TOKEN).unwrap_or_default(),
         };
         if lwa_refresh_form(
             &credentials.client,
@@ -575,10 +610,10 @@ impl ConfiguredAmazon {
         )
         .is_err()
         {
-            return denied("SP_API_CREDENTIALS_REQUIRED_OR_INVALID");
+            return denied("SP_API_CREDENTIALS_REQUIRED_OR_INVALID", env);
         }
         let Ok(wire) = Http::new() else {
-            return denied("OFFICIAL_HTTP_CLIENT_UNAVAILABLE");
+            return denied("OFFICIAL_HTTP_CLIENT_UNAVAILABLE", env);
         };
         Self {
             session: Some(Mutex::new(Session {
@@ -593,9 +628,40 @@ impl ConfiguredAmazon {
                 interval: BTreeMap::new(),
                 last_now: 0,
                 auth_next: 0,
+                lwa_failed: false,
             })),
             reason: "EXPLICIT_AUTHORIZATION_CONFIGURED_LIVE_ACCOUNT_UNVERIFIED",
+            env,
         }
+    }
+    /// Readiness report: credential presence only, session counters and token lifecycle state.
+    pub fn doctor_report(&self) -> Value {
+        let view = match &self.session {
+            Some(session) => match session.lock() {
+                Ok(s) => doctor::SessionView {
+                    configured: true,
+                    reason: self.reason,
+                    attempts: s.attempts,
+                    limit: s.limit,
+                    token_state: s.token_state(),
+                },
+                Err(_) => doctor::SessionView {
+                    configured: false,
+                    reason: "OFFICIAL_SESSION_UNAVAILABLE",
+                    attempts: 0,
+                    limit: 0,
+                    token_state: "UNKNOWN_SESSION_UNAVAILABLE",
+                },
+            },
+            None => doctor::SessionView {
+                configured: false,
+                reason: self.reason,
+                attempts: 0,
+                limit: 0,
+                token_state: "NEVER_REQUESTED",
+            },
+        };
+        doctor::report(self.env.as_ref(), Some(view))
     }
 }
 impl Provider for ConfiguredAmazon {
@@ -613,16 +679,23 @@ impl Provider for ConfiguredAmazon {
             "UNAVAILABLE"
         });
         value["auth_state"] = json!(self.reason);
+        value["doctor"] = json!("ecdev.provider.doctor");
         value["reason"] = json!(
             "Authorized reads additionally require core explicit monetary ceilings; tokens memory-only, fixed HTTPS endpoints, no retries, no public/Keepa substitution"
         );
         value
     }
+    fn doctor(&self) -> Option<Value> {
+        Some(self.doctor_report())
+    }
     fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
         if request.query["fixture_responses"].is_object() {
             return Amazon.acquire(request);
         }
-        if request.capability != "product.analyze.official" {
+        if !matches!(
+            request.capability.as_str(),
+            "product.analyze.official" | reads::READ_CAPABILITY
+        ) {
             return Err("UNSUPPORTED_OFFICIAL_CAPABILITY".into());
         }
         let Some(session) = &self.session else {
@@ -766,6 +839,7 @@ mod tests {
                 interval: BTreeMap::new(),
                 last_now: 0,
                 auth_next: 0,
+                lwa_failed: false,
             },
             clock,
         )
@@ -943,6 +1017,7 @@ mod tests {
             interval: BTreeMap::new(),
             last_now: 0,
             auth_next: 0,
+            lwa_failed: false,
         };
         let result = s.execute(&intent()).unwrap();
         assert!(result.provider_cost["request_count"].is_null());
@@ -953,5 +1028,174 @@ mod tests {
         s.authorized = false;
         assert_eq!(s.execute(&intent()).err().unwrap().request_count, Some(0));
         assert_eq!(s.attempts, 1);
+    }
+    fn read_case(op: &str) -> Value {
+        reads::tests::cases()["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|c| c["operation"] == op)
+            .unwrap()
+            .clone()
+    }
+    fn read_body(op: &str) -> (u16, String, String) {
+        (
+            200,
+            "x-amzn-RequestId: mock-receipt-1\r\n".into(),
+            read_case(op)["response"]["raw_body"]
+                .as_str()
+                .unwrap()
+                .into(),
+        )
+    }
+    #[test]
+    fn official_http_seller_reads_use_locked_paths_and_stamp_live_provenance() {
+        let ops = [
+            "listings_item",
+            "inventory_summaries",
+            "marketplace_participations",
+            "product_type_search",
+            "product_type_definition",
+        ];
+        let mut responses = vec![token()];
+        responses.extend(ops.iter().map(|op| read_body(op)));
+        let (wire, server) = mock(responses);
+        let (mut s, _) = session(wire);
+        for (i, op) in ops.iter().enumerate() {
+            let request = reads::tests::read_request("AMAZON_US", read_case(op)["query"].clone());
+            let result = s.execute(&request).unwrap();
+            assert_eq!(result.result["mode"], "LIVE", "{op}");
+            assert_eq!(result.result["status"], "COMPLETE_WITH_UNKNOWNS", "{op}");
+            assert_eq!(
+                result.provider_cost["request_count"],
+                if i == 0 { 2 } else { 1 }
+            );
+            assert!(result.provider_cost["actual_cost_minor"].is_null());
+            let record = &result.result["records"][0];
+            assert_eq!(record["state"], "LIVE");
+            assert_eq!(record["provenance"]["observation_mode"], "LIVE");
+            assert_eq!(
+                record["response_headers"]["x-amzn-requestid"],
+                "mock-receipt-1"
+            );
+            for f in record["normalized"]["fields"].as_array().unwrap() {
+                assert_eq!(f["observation_mode"], "LIVE");
+                assert_eq!(f["source_layer"], "OFFICIAL_SP_API");
+                assert_eq!(f["receipt"]["x-amzn-requestid"], "mock-receipt-1");
+                assert_eq!(f["raw_capture_sha256"], record["raw_capture_sha256"]);
+            }
+            let observation = &result.observations[0];
+            assert_eq!(observation.mode, ObservationMode::Live);
+            observation.validate().unwrap();
+            assert!(
+                observation.normalized_value["value"]["fields"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .all(|f| f["observation_mode"] == "LIVE")
+            );
+            let text = result.result.to_string();
+            for secret in ["mock-secret", "mock-refresh", "mock-access-token"] {
+                assert!(!text.contains(secret));
+            }
+            assert_eq!(
+                s.next[*op] - 1_700_000_000_000,
+                reads::spec(op).unwrap().min_interval_ms
+            );
+        }
+        assert_eq!(s.token_state(), "VALID_IN_MEMORY");
+        let requests: Vec<String> = server
+            .join()
+            .unwrap()
+            .iter()
+            .map(|r| r.to_ascii_lowercase())
+            .collect();
+        assert_eq!(requests.len(), 6);
+        assert!(
+            requests[1].starts_with("get /listings/2021-08-01/items/a1exampleseller/gm-zdpi-9b4e?")
+        );
+        assert!(requests[1].contains("marketplaceids=atvpdkikx0der"));
+        assert!(
+            requests[1]
+                .contains("includeddata=summaries%2coffers%2cfulfillmentavailability%2cissues")
+        );
+        assert!(requests[2].starts_with("get /fba/inventory/v1/summaries?"));
+        assert!(requests[2].contains("granularitytype=marketplace"));
+        assert!(requests[2].contains("sellerskus=synth-sku-1%2csynth-sku-2"));
+        assert!(requests[2].contains("details=true"));
+        assert!(requests[3].starts_with("get /sellers/v1/marketplaceparticipations"));
+        assert!(requests[4].starts_with("get /definitions/2020-09-01/producttypes?"));
+        assert!(requests[4].contains("keywords=luggage"));
+        assert!(requests[5].starts_with("get /definitions/2020-09-01/producttypes/luggage?"));
+        assert!(requests[5].contains("requirements=listing"));
+        for api in &requests[1..] {
+            assert!(api.contains("x-amz-access-token: mock-access-token"));
+            assert!(api.contains("host: sellingpartnerapi-na.amazon.com"));
+            assert!(!api.contains("client_secret"));
+        }
+    }
+    #[test]
+    fn official_restricted_and_write_intents_never_reach_wire() {
+        let (wire, server) = mock(vec![]);
+        let (mut s, _) = session(wire);
+        for query in [
+            json!({"operation":"ORDERS"}),
+            json!({"operation":"RESTRICTED_DATA_TOKEN"}),
+            json!({"operation":"PATCH_LISTINGS_ITEM"}),
+        ] {
+            let error = s
+                .execute(&reads::tests::read_request("AMAZON_US", query))
+                .err()
+                .unwrap();
+            assert!(matches!(
+                error.reason.as_str(),
+                "RESTRICTED_DOMAIN_DISABLED" | "OFFICIAL_WRITES_DISABLED"
+            ));
+        }
+        assert_eq!(s.attempts, 0);
+        assert_eq!(s.token_state(), "NEVER_REQUESTED");
+        assert!(server.join().unwrap().is_empty());
+    }
+    #[test]
+    fn official_token_state_transitions_are_reported_without_material() {
+        let (wire, server) = mock(vec![(429, "Retry-After: 10\r\n".into(), String::new())]);
+        let (mut s, clock) = session(wire);
+        assert_eq!(s.token_state(), "NEVER_REQUESTED");
+        s.execute(&intent()).unwrap();
+        assert_eq!(s.token_state(), "LWA_COOLDOWN");
+        let view = doctor::SessionView {
+            configured: true,
+            reason: "TEST",
+            attempts: s.attempts,
+            limit: s.limit,
+            token_state: s.token_state(),
+        };
+        let report = doctor::report(&doctor::MapEnv::new(&[]), Some(view));
+        assert!(
+            report["blockers"]
+                .as_array()
+                .unwrap()
+                .contains(&json!("LWA_COOLDOWN"))
+        );
+        assert_eq!(report["request_budget"]["attempts_this_session"], 1);
+        clock.fetch_add(11_000, Ordering::SeqCst);
+        assert_eq!(s.token_state(), "LAST_REFRESH_FAILED");
+        server.join().unwrap();
+        let (wire, server) = mock(vec![token(), offer()]);
+        let (mut s, clock) = session(wire);
+        s.execute(&intent()).unwrap();
+        assert_eq!(s.token_state(), "VALID_IN_MEMORY");
+        let view = doctor::SessionView {
+            configured: true,
+            reason: "TEST",
+            attempts: s.attempts,
+            limit: s.limit,
+            token_state: s.token_state(),
+        };
+        let text = doctor::report(&doctor::MapEnv::new(&[]), Some(view)).to_string();
+        assert!(!text.contains("mock-access-token") && !text.contains("mock-secret"));
+        clock.fetch_add(3_600_000, Ordering::SeqCst);
+        assert_eq!(s.token_state(), "EXPIRED_RENEWAL_REQUIRED");
+        server.join().unwrap();
     }
 }

@@ -543,6 +543,7 @@ impl Engine {
             "ecdev.monitor.create" => self.monitor_create(args),
             "ecdev.monitor.status" => self.monitor_status(args["watch_id"].as_str()),
             "ecdev.provider.status" => Ok(self.providers()),
+            "ecdev.provider.doctor" => self.provider_doctor(args),
             "ecdev.product.inspect" => self.inspect_candidate(required_str(&args, "candidate_id")?),
             "ecdev.product.compare" => self.compare_candidates(args),
             "ecdev.research.status" => {
@@ -627,6 +628,7 @@ pub fn tool_definitions() -> Vec<Value> {
     out.push(json!({"name":"ecdev.product.inspect","description":"Inspect one persisted candidate with field provenance, conflicts and economics uncertainty; zero network","inputSchema":{"type":"object","properties":{"candidate_id":{"type":"string"}},"required":["candidate_id"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.product.compare","description":"Compare 2 to 20 captured candidates without network acquisition or invented market ranking","inputSchema":{"type":"object","properties":{"candidate_ids":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":20}},"required":["candidate_ids"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.provider.status","description":"Provider availability and credentials state without secrets or network","inputSchema":empty}));
+    out.push(json!({"name":"ecdev.provider.doctor","description":"Official SP-API credential readiness without secrets or network: credential presence, operator gate, request budget, regions, token state, read operations available or blocked, restricted PII/RDT domain and writes disabled","inputSchema":{"type":"object","properties":{"provider":{"enum":["amazon-sp-api"],"default":"amazon-sp-api"}},"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.monitor.create","description":"Create or update a persisted public watch for up to five URLs; watch_id updates and enabled=false disables; refresh acquisitions use native robots/budget policy; no external notifications","inputSchema":{"type":"object","properties":{"watch_id":{"type":"string"},"enabled":{"type":"boolean","default":true},"market":{"enum":["PUBLIC_WEB","AMAZON_JP","AMAZON_US"]},"query":{"type":"string","maxLength":500},"targets":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":5},"interval_seconds":{"type":"integer","minimum":60,"maximum":604800}},"required":["market","query","targets","interval_seconds"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.monitor.status","description":"Persisted watch schedule, snapshots, change triggers and acquisition errors; omit watch_id to list","inputSchema":{"type":"object","properties":{"watch_id":{"type":"string"}},"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.evidence.graph","description":"Actual persisted candidate/evidence edges","inputSchema":empty}));

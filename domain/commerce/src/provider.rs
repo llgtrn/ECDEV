@@ -387,6 +387,10 @@ pub fn retry_after_not_before(header: &str, received_at_ms: i64) -> Option<i64> 
 pub trait Provider: Send + Sync {
     fn id(&self) -> &str;
     fn metadata(&self) -> Value;
+    /// Credential/readiness report without secrets or network. None when unsupported.
+    fn doctor(&self) -> Option<Value> {
+        None
+    }
     fn normalize_query(&self, query: &Value) -> Result<Value, String> {
         Ok(query.clone())
     }

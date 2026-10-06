@@ -1,0 +1,99 @@
+{
+ "commit": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+ "note": "Bodies are unmodified x-amzn-api-sandbox static 200 responses from the locked models (sha256 verified against research/commerce/donors/census/amzn--selling-partner-api-models/files.jsonl) except inventory_summaries, which is schema-shaped synthetic because fbaInventory.json carries no 200 example. Not live captures.",
+ "cases": [
+  {
+   "operation": "listings_item",
+   "source_path": "models/listings-items-api-model/listingsItems_2021-08-01.json",
+   "source_sha256": "117617f4c86dbd5c1708913103806a24c0ef0bbcfb6054e415d044d07761faeb",
+   "source_pointer": "/paths/~1listings~12021-08-01~1items~1{sellerId}~1{sku}/get/responses/200/x-amzn-api-sandbox/static/0/response",
+   "provenance": "LOCKED_MODEL_EXAMPLE_SHA256_MATCHES_CENSUS",
+   "market": "AMAZON_US",
+   "query": {
+    "operation": "LISTINGS_ITEM",
+    "seller_id": "A1EXAMPLESELLER",
+    "sku": "GM-ZDPI-9B4E",
+    "included_data": [
+     "summaries",
+     "offers",
+     "fulfillmentAvailability",
+     "issues"
+    ]
+   },
+   "response": {
+    "status": 200,
+    "raw_body": "{\"sku\":\"GM-ZDPI-9B4E\",\"summaries\":[{\"marketplaceId\":\"ATVPDKIKX0DER\",\"asin\":\"B071VG5N9D\",\"productType\":\"LUGGAGE\",\"conditionType\":\"new_new\",\"status\":[\"BUYABLE\"],\"itemName\":\"Hardside Carry-On Spinner Suitcase Luggage\",\"createdDate\":\"2021-02-01T00:00:00Z\",\"lastUpdatedDate\":\"2021-03-01T00:00:00Z\",\"mainImage\":{\"link\":\"https://www.example.com/luggage.png\",\"height\":500,\"width\":500}},{\"marketplaceId\":\"A2EUQ1WTGCTBG2\",\"asin\":\"B071VG5N9D\",\"productType\":\"LUGGAGE\",\"conditionType\":\"new_new\",\"status\":[],\"itemName\":\"Hardside Carry-On Spinner Suitcase Luggage\",\"createdDate\":\"2021-02-02T01:00:00Z\",\"lastUpdatedDate\":\"2021-03-05T00:00:00Z\",\"mainImage\":{\"link\":\"https://www.example.com/luggage.png\",\"height\":500,\"width\":500}}],\"offers\":[{\"marketplaceId\":\"ATVPDKIKX0DER\",\"offerType\":\"B2C\",\"price\":{\"currencyCode\":\"USD\",\"amount\":\"100.00\"},\"audience\":{\"value\":\"ALL\",\"displayName\":\"Sell on Amazon\"}},{\"marketplaceId\":\"A2EUQ1WTGCTBG2\",\"offerType\":\"B2C\",\"price\":{\"currencyCode\":\"CAD\",\"amount\":\"130.00\"},\"audience\":{\"value\":\"ALL\",\"displayName\":\"Sell on Amazon\"}}],\"fulfillmentAvailability\":[{\"fulfillmentChannelCode\":\"DEFAULT\",\"quantity\":100}],\"issues\":[{\"code\":\"90220\",\"message\":\"'size' is required but not supplied.\",\"severity\":\"ERROR\",\"attributeNames\":[\"size\"],\"categories\":[\"MISSING_ATTRIBUTE\",\"LISTING\"],\"marketplaceIds\":[\"ATVPDKIKX0DER\"]},{\"code\":\"18027\",\"message\":\"We believe the main image has text, logo, graphic, or watermark that is not permitted for this product type. Submit a compliant image to lift the suppression. Also refer to Product image requirements.\",\"severity\":\"ERROR\",\"categories\":[\"INVALID_IMAGE\",\"LISTING\"],\"enforcements\":{\"actions\":[{\"action\":\"SEARCH_SUPPRESSED\"}],\"exemption\":{\"status\":\"EXEMPT_UNTIL_EXPIRY_DATE\",\"expiryDate\":\"2025-05-28T00:36:48.914Z\"}},\"marketplaceIds\":[\"ATVPDKIKX0DER\",\"A2EUQ1WTGCTBG2\"]},{\"code\":\"99300\",\"message\":\"Product Detail Page Rules Violation (Inaccurate information on product detail page).\",\"severity\":\"ERROR\",\"categories\":[\"PRODUCT\"],\"enforcements\":{\"actions\":[{\"action\":\"ATTRIBUTE_SUPPRESSED\"}],\"exemption\":{\"status\":\"EXEMPT\"}},\"marketplaceIds\":[\"ATVPDKIKX0DER\",\"A2EUQ1WTGCTBG2\"]},{\"code\":\"18155\",\"message\":\"The 'minimum price' is greater than the selling price (excluding shipping) for the listing. Review and update your price and/or minimum price.\",\"severity\":\"ERROR\",\"categories\":[\"INVALID_PRICE\",\"LISTING\"],\"enforcements\":{\"actions\":[{\"action\":\"LISTING_SUPPRESSED\"}],\"exemption\":{\"status\":\"NOT_EXEMPT\"}},\"marketplaceIds\":[\"ATVPDKIKX0DER\"]},{\"code\":\"18742\",\"message\":\"Restricted Products Policy Violation\",\"severity\":\"ERROR\",\"categories\":[\"PRODUCT\"],\"enforcements\":{\"actions\":[{\"action\":\"CATALOG_ITEM_REMOVED\"}],\"exemption\":{\"status\":\"NOT_EXEMPT\"}},\"marketplaceIds\":[\"ATVPDKIKX0DER\"]}]}"
+   }
+  },
+  {
+   "operation": "marketplace_participations",
+   "source_path": "models/sellers-api-model/sellers.json",
+   "source_sha256": "497862ea32de8040453649986e2cd7c6fcc15b55e8022becc783e4a6d6ffcffd",
+   "source_pointer": "/paths/~1sellers~1v1~1marketplaceParticipations/get/responses/200/x-amzn-api-sandbox/static/0/response",
+   "provenance": "LOCKED_MODEL_EXAMPLE_SHA256_MATCHES_CENSUS",
+   "market": "AMAZON_US",
+   "query": {
+    "operation": "MARKETPLACE_PARTICIPATIONS"
+   },
+   "response": {
+    "status": 200,
+    "raw_body": "{\"payload\":[{\"marketplace\":{\"id\":\"ATVPDKIKX0DER\",\"countryCode\":\"US\",\"name\":\"Amazon.com\",\"defaultCurrencyCode\":\"USD\",\"defaultLanguageCode\":\"en_US\",\"domainName\":\"www.amazon.com\"},\"storeName\":\"BestSellerStore\",\"participation\":{\"isParticipating\":true,\"hasSuspendedListings\":false}}]}"
+   }
+  },
+  {
+   "operation": "product_type_search",
+   "source_path": "models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json",
+   "source_sha256": "9f54478fd9c145be65fd5b266d13770e4eb41f3d19f1ade5342ce64786af0aaa",
+   "source_pointer": "/paths/~1definitions~12020-09-01~1productTypes/get/responses/200/x-amzn-api-sandbox/static/0/response",
+   "provenance": "LOCKED_MODEL_EXAMPLE_SHA256_MATCHES_CENSUS",
+   "market": "AMAZON_US",
+   "query": {
+    "operation": "PRODUCT_TYPE_SEARCH",
+    "keywords": [
+     "luggage"
+    ]
+   },
+   "response": {
+    "status": 200,
+    "raw_body": "{\"productTypes\":[{\"name\":\"LUGGAGE\",\"displayName\":\"Luggage\",\"marketplaceIds\":[\"ATVPDKIKX0DER\"]}],\"productTypeVersion\":\"UHqSqmb4FNUk=\"}"
+   }
+  },
+  {
+   "operation": "product_type_definition",
+   "source_path": "models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json",
+   "source_sha256": "9f54478fd9c145be65fd5b266d13770e4eb41f3d19f1ade5342ce64786af0aaa",
+   "source_pointer": "/paths/~1definitions~12020-09-01~1productTypes~1{productType}/get/responses/200/x-amzn-api-sandbox/static/0/response",
+   "provenance": "LOCKED_MODEL_EXAMPLE_SHA256_MATCHES_CENSUS",
+   "market": "AMAZON_US",
+   "query": {
+    "operation": "PRODUCT_TYPE_DEFINITION",
+    "product_type": "LUGGAGE",
+    "locale": "en_US"
+   },
+   "response": {
+    "status": 200,
+    "raw_body": "{\"metaSchema\":{\"link\":{\"resource\":\"https://meta-schema-url\",\"verb\":\"GET\"},\"checksum\":\"c7af9479ca7261645cea9db56c5f720d\"},\"schema\":{\"link\":{\"resource\":\"https://schema-url\",\"verb\":\"GET\"},\"checksum\":\"c7af9479ca7261645cea9db56c5f720d\"},\"requirements\":\"LISTING\",\"requirementsEnforced\":\"ENFORCED\",\"propertyGroups\":{\"product_identity\":{\"title\":\"Product Identity\",\"description\":\"Information to uniquely identify your product (e.g., UPC, EAN, GTIN, Product Type, Brand)\",\"propertyNames\":[\"item_name\",\"brand\",\"external_product_id\",\"gtin_exemption_reason\",\"merchant_suggested_asin\",\"product_type\",\"product_category\",\"product_subcategory\",\"item_type_keyword\"]}},\"locale\":\"en_US\",\"marketplaceIds\":[\"ATVPDKIKX0DER\"],\"productType\":\"LUGGAGE\",\"displayName\":\"Luggage\",\"productTypeVersion\":{\"version\":\"UHqSqmb4FNUk=\",\"latest\":true,\"releaseCandidate\":false}}"
+   }
+  },
+  {
+   "operation": "inventory_summaries",
+   "source_path": "models/fba-inventory-api-model/fbaInventory.json",
+   "source_sha256": "7c14bcdb22de8ca2df45e5a40f2a422cff344d45985a68b9515b2e800edcc5ab",
+   "source_pointer": "/definitions/GetInventorySummariesResponse",
+   "provenance": "SCHEMA_SHAPED_SYNTHETIC_LOCKED_MODEL_HAS_NO_200_EXAMPLE",
+   "market": "AMAZON_US",
+   "query": {
+    "operation": "INVENTORY_SUMMARIES",
+    "seller_skus": [
+     "SYNTH-SKU-1",
+     "SYNTH-SKU-2"
+    ],
+    "details": true
+   },
+   "response": {
+    "status": 200,
+    "raw_body": "{\"payload\":{\"granularity\":{\"granularityType\":\"Marketplace\",\"granularityId\":\"ATVPDKIKX0DER\"},\"inventorySummaries\":[{\"asin\":\"B0SYNTH001\",\"fnSku\":\"X00SYNTH01\",\"sellerSku\":\"SYNTH-SKU-1\",\"condition\":\"NewItem\",\"inventoryDetails\":{\"fulfillableQuantity\":5,\"inboundWorkingQuantity\":0,\"inboundShippedQuantity\":1,\"inboundReceivingQuantity\":1,\"reservedQuantity\":{\"totalReservedQuantity\":0}},\"lastUpdatedTime\":\"2026-01-01T00:00:00Z\",\"productName\":\"Synthetic schema-shaped item\",\"totalQuantity\":7},{\"sellerSku\":\"SYNTH-SKU-2\",\"condition\":\"NewItem\",\"totalQuantity\":0}]},\"pagination\":{\"nextToken\":\"synthetic-next-token\"}}"
+   }
+  }
+ ]
+}

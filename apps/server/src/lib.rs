@@ -338,9 +338,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
     }
     let e = configured_engine()?;
     let value = match cmd {
-        "doctor" => {
-            json!({"storage":e.call("ecdev.system.health",json!({}))?,"provider_config":e.providers(),"web_assets":"EMBEDDED","network":"NOT_PROBED","MCP_endpoint":"NOT_PROBED","market_support":"NATIVE_PUBLIC_SOURCES; OFFICIAL_API_UNAVAILABLE","cache":"PERSISTENT_TTL_CONDITIONAL","budget":e.budget_status()?})
-        }
+        "doctor" => doctor_command(&e, a.get(1).map(String::as_str))?,
         "providers" => e.providers(),
         "status" => e.status()?,
         "runs" => {
@@ -363,13 +361,26 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
         _ => {
             println!(
-                "ecdev server | stdio | doctor | status | providers | runs [inspect|replay ID] | call TOOL [input.json] | governance COMMAND | mcp-config"
+                "ecdev server | stdio | doctor [sp-api] | status | providers | runs [inspect|replay ID] | call TOOL [input.json] | governance COMMAND | mcp-config"
             );
             return Ok(());
         }
     };
     println!("{}", serde_json::to_string_pretty(&value)?);
     Ok(())
+}
+/// `ecdev doctor` and `ecdev doctor sp-api`. Neither probes the network nor reveals secrets.
+pub fn doctor_command(e: &Engine, target: Option<&str>) -> Result<Value, String> {
+    match target {
+        None => {
+            let official = e.call("ecdev.provider.doctor", json!({}))?;
+            Ok(
+                json!({"storage":e.call("ecdev.system.health",json!({}))?,"provider_config":e.providers(),"web_assets":"EMBEDDED","network":"NOT_PROBED","MCP_endpoint":"NOT_PROBED","market_support":"NATIVE_PUBLIC_SOURCES; OFFICIAL_API_UNAVAILABLE","official_sp_api":{"status":official["status"],"detail":"ecdev doctor sp-api"},"cache":"PERSISTENT_TTL_CONDITIONAL","budget":e.budget_status()?}),
+            )
+        }
+        Some("sp-api") => e.call("ecdev.provider.doctor", json!({"provider":"amazon-sp-api"})),
+        Some(_) => Err("Unknown doctor target; expected: sp-api".into()),
+    }
 }
 fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
@@ -380,6 +391,78 @@ fn configured_engine() -> Result<Engine, String> {
         .with_provider(std::sync::Arc::new(
             ecdev_web::amazon::PublicAmazon::default(),
         )))
+}
+#[cfg(test)]
+mod doctor_tests {
+    use super::*;
+    use ecdev_marketplace::{doctor::MapEnv, transport::ConfiguredAmazon};
+    fn engine(pairs: &[(&str, &str)]) -> Engine {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-doctor-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ConfiguredAmazon::from_source(Arc::new(
+                MapEnv::new(pairs),
+            ))))
+    }
+    #[test]
+    fn doctor_sp_api_cli_and_mcp_report_blocked_credentials_without_secrets() {
+        let e = engine(&[]);
+        let cli = doctor_command(&e, Some("sp-api")).unwrap();
+        assert_eq!(cli["status"], "LIVE_AUTH_BLOCKED_BY_CREDENTIALS");
+        assert_eq!(cli["source_layer"], "OFFICIAL_SP_API");
+        assert_eq!(cli["token_state"], "NEVER_REQUESTED");
+        assert_eq!(cli["live_calls_made_by_doctor"], 0);
+        assert!(cli["core_monetary_ceiling"]["state"].is_string());
+        let mcp = e.call("ecdev.provider.doctor", json!({})).unwrap();
+        assert_eq!(mcp["status"], cli["status"]);
+        assert_eq!(mcp["operations"], cli["operations"]);
+        assert!(
+            tool_definitions()
+                .iter()
+                .any(|t| t["name"] == "ecdev.provider.doctor")
+        );
+        assert_eq!(
+            doctor_command(&e, None).unwrap()["official_sp_api"]["status"],
+            "LIVE_AUTH_BLOCKED_BY_CREDENTIALS"
+        );
+        assert!(doctor_command(&e, Some("keepa")).is_err());
+        assert!(
+            e.call("ecdev.provider.doctor", json!({"provider":"keepa"}))
+                .is_err()
+        );
+        assert!(
+            e.call("ecdev.provider.doctor", json!({"extra":true}))
+                .is_err()
+        );
+        let fake = [
+            ("SP_API_CLIENT_ID", "srv-FAKE-cid-Qw8xZr"),
+            ("SP_API_CLIENT_SECRET", "srv-FAKE-csec-Vb3nYt"),
+            ("SP_API_REFRESH_TOKEN", "Atzr|srv-FAKE-rtok-Kp4mJh"),
+        ];
+        let e = engine(&fake);
+        let report = doctor_command(&e, Some("sp-api")).unwrap();
+        assert_eq!(report["status"], "LIVE_READ_BLOCKED_BY_OPERATOR_GATE");
+        assert_eq!(report["app_credentials"]["state"], "PRESENT_UNVALIDATED");
+        let text = report.to_string() + &e.providers().to_string();
+        for (_, secret) in fake {
+            assert!(!text.contains(secret));
+            assert!(!text.contains(&secret[..12]));
+        }
+        let bare = Engine::open(
+            &std::env::temp_dir().join(format!("ecdev-doctor-bare-{}", std::process::id())),
+        )
+        .unwrap();
+        assert_eq!(
+            bare.call("ecdev.provider.doctor", json!({})).unwrap()["status"],
+            "OFFICIAL_ADAPTER_UNAVAILABLE"
+        );
+    }
 }
 #[cfg(test)]
 mod research_tests {
