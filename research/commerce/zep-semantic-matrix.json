@@ -1,0 +1,77 @@
+{
+  "donor_id": "getzep--zep",
+  "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+  "license": "Apache-2.0",
+  "tracked_files": 947,
+  "scope": "Module-level semantic matrix of every top-level area (947 tracked files). Studied for episode/fact/provenance/history continuity useful to commerce evidence.",
+  "rows": [
+    {
+      "source": "legacy/ (105 files, Go)",
+      "behaviour": "Zep Community Edition server: Postgres store, REST API handlers, telemetry, config",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "deprecated CE server over Postgres; ECDEV owns its SQLite run store and MCP/HTTP server"
+    },
+    {
+      "source": "ingestion/src/zep_ingest/types.py Episode, _validation.py check_timestamp/check_scalar_map/_first_non_finite",
+      "behaviour": "episode text/type/source timestamp validation; RFC3339 with mandatory offset; scalar-only metadata; non-finite rejection",
+      "ecdev_relevance": "ALREADY_NATIVE",
+      "reason": "ECDEV Evidence::validate requires provider, source layer, timestamps and raw hash; adapter/web/src/social.rs::published rejects naive datetimes; price and JSON paths reject non-finite numbers"
+    },
+    {
+      "source": "ingestion/src/zep_ingest/triples.py FactTriple",
+      "behaviour": "fact edge with valid_at/invalid_at/created_at, SCREAMING_SNAKE fact names, at most one label per node, UUID pinning",
+      "ecdev_relevance": "ALREADY_NATIVE",
+      "reason": "domain/commerce/src/memory.rs::Validity and monitor watch_facts carry validity windows; ECDEV edges are typed by its own vocabulary; identity pinning is ECDEV's assertion-based resolution"
+    },
+    {
+      "source": "ingestion/src/zep_ingest/transforms/canonicalizer.py AliasCanonicalizer",
+      "behaviour": "rewrite or annotate entity aliases before ingestion with a risky-word guard",
+      "ecdev_relevance": "NOT_ADOPTED",
+      "reason": "rewriting source text would alter evidence; ECDEV keeps raw text and proposes uncertain links instead (memory::match_names)"
+    },
+    {
+      "source": "ingestion/src/zep_ingest/transforms/_splitting.py, threads.py, loaders/*, submitters/*, pipeline.py, result.py",
+      "behaviour": "chunking for LLM ingestion, Slack/transcript/JSON loaders, batched submission to Zep Cloud, task polling",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "exists to feed the managed Zep Cloud API; ECDEV performs no LLM ingestion and has no Zep Cloud dependency"
+    },
+    {
+      "source": "mcp/zep-mcp-server",
+      "behaviour": "MCP server proxying Zep Cloud",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "ECDEV exposes its own MCP server; no managed memory service"
+    },
+    {
+      "source": "examples/ (Python, TypeScript, Go)",
+      "behaviour": "Zep Cloud SDK usage examples",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "documentation of a paid managed service"
+    },
+    {
+      "source": "integrations/ (ADK, LiveKit, CrewAI, Mastra, Vercel AI, AG2, AutoGen, LangGraph, PydanticAI, Strands, MS Agent Framework)",
+      "behaviour": "agent-framework adapters for Zep Cloud",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "ECDEV is reached by agents through MCP, not framework plugins"
+    },
+    {
+      "source": "benchmarks/ (LOCOMO, LongMemEval), zep-eval-harness/",
+      "behaviour": "conversational-memory benchmarks and evaluation runs",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "measure chat memory recall, not commerce evidence"
+    },
+    {
+      "source": "ontology/default_ontology.py",
+      "behaviour": "default entity/edge types for Zep Cloud",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "ECDEV's ontology is its own evidence and commerce vocabulary"
+    },
+    {
+      "source": ".github/, .cursor/, packaging and community files",
+      "behaviour": "CI, editor config, docs",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "tooling"
+    }
+  ],
+  "conclusion": "Every provenance property ECDEV needs from this repository is already native (timezone-required timestamps, validity windows, raw-hash provenance, non-finite rejection); the remainder serves the managed Zep Cloud service or chat-memory benchmarks. Nothing is adopted, no package is depended on and no edge was ever observed, so the donor is REJECTED (evaluated, never adopted).",
+  "observed_edges": "none in any census"
+}

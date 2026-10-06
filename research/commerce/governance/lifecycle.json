@@ -1,16 +1,17 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "92354cb406bfb96d54007ff969d8b375759f2ae8",
+  "assessed_parent_commit": "1579b0cc3760857955dd7f79ae49398f20660916",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
   "donor_count": 60,
   "effective_states": {
-    "CENSUSED": 11,
+    "CENSUSED": 9,
     "DISCOVERED": 15,
     "EXTINCT": 1,
     "NATIVE_SHADOW": 3,
-    "REGISTERED": 30
+    "PARITY_PROVEN": 1,
+    "REGISTERED": 31
   },
   "extinct": [
     "scrapinghub--price-parser"
@@ -4601,9 +4602,9 @@
     {
       "donor": "getzep--zep",
       "claimed": "REGISTERED",
-      "effective": "CENSUSED",
-      "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): memory.zep.remaining-whole-donor",
+      "effective": "REGISTERED",
+      "exception": "REJECTED: Evaluated, never adopted: provenance properties already native; remainder serves Zep Cloud or chat-memory benchmarks (research/commerce/zep-semantic-matrix.json)",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4638,32 +4639,32 @@
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: memory.zep.remaining-whole-donor"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: memory.zep.remaining-whole-donor"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: memory.zep.remaining-whole-donor"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: memory.zep.remaining-whole-donor"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: memory.zep.remaining-whole-donor"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
-          "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: memory.zep.remaining-whole-donor"
+          "detail": "no capability declared: the donor is not decomposed"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4680,9 +4681,9 @@
     {
       "donor": "getzep--graphiti",
       "claimed": "REGISTERED",
-      "effective": "CENSUSED",
+      "effective": "PARITY_PROVEN",
       "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): memory.graphiti.remaining-whole-donor",
+      "stopped_by": "CAPABILITY_RELEVANCE_RESOLVED: capabilities whose ECDEV relevance is unresolved or inconsistent with `required` (relevance): memory.rank-fusion, graphiti.label-propagation-clustering, graphiti.duplicate-closure",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4716,33 +4717,33 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "1 of 5 required capabilities lack it: memory.graphiti.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 3 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "1 of 5 required capabilities lack it: memory.graphiti.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 5 required capabilities lack it: memory.graphiti.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "1 of 5 required capabilities lack it: memory.graphiti.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 3 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "1 of 5 required capabilities lack it: memory.graphiti.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 3 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
-          "detail": "3 of 5 declared capabilities have no resolved ECDEV relevance: memory.rank-fusion, extract.publication-time, memory.graphiti.remaining-whole-donor"
+          "detail": "3 of 14 declared capabilities have no resolved ECDEV relevance: memory.rank-fusion, graphiti.label-propagation-clustering, graphiti.duplicate-closure"
         },
         {
           "gate": "CUTOVER_COMPLETED",
