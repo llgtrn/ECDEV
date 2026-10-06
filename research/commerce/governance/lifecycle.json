@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "802462579766daebb30ba8988c2747722157fa9d",
+  "assessed_parent_commit": "5286182f4188d4adfb18a46be221d87327da868b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
@@ -9,7 +9,8 @@
     "CENSUSED": 7,
     "DISCOVERED": 15,
     "EXTINCT": 3,
-    "NATIVE_SHADOW": 2,
+    "NATIVE_SHADOW": 1,
+    "PARITY_PROVEN": 1,
     "REGISTERED": 33
   },
   "extinct": [
@@ -890,9 +891,9 @@
     {
       "donor": "apify--crawlee",
       "claimed": "REGISTERED",
-      "effective": "NATIVE_SHADOW",
+      "effective": "PARITY_PROVEN",
       "exception": "",
-      "stopped_by": "PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: crawl.deduplicate",
+      "stopped_by": "CAPABILITY_RELEVANCE_RESOLVED: capabilities whose ECDEV relevance is unresolved or inconsistent with `required` (relevance): crawlee.remaining-crawler-framework",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -927,32 +928,32 @@
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
           "pass": true,
-          "detail": "all 1 required capabilities have a valid native replacement"
+          "detail": "all 2 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: crawl.deduplicate"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: crawl.deduplicate"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
           "pass": true,
-          "detail": "all 1 required capabilities have an existing canonical replacement node"
+          "detail": "all 2 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
           "pass": true,
-          "detail": "all 1 required capabilities map to a capability or technology of the canonical graph"
+          "detail": "all 2 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": false,
-          "detail": "2 of 2 declared capabilities have no resolved ECDEV relevance: crawl.deduplicate, crawl.frontier"
+          "detail": "1 of 4 declared capabilities have no resolved ECDEV relevance: crawlee.remaining-crawler-framework"
         },
         {
           "gate": "CUTOVER_COMPLETED",

@@ -1,0 +1,35 @@
+{
+  "donor_id": "apify--crawlee",
+  "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+  "license": "Apache-2.0",
+  "scope": "request-queue deduplication and frontier semantics only; the rest of the crawler framework is NOT yet reviewed (declared as an unresolved capability)",
+  "decisions": [
+    {
+      "capability": "crawl.deduplicate",
+      "relevance": "RELIED_ON",
+      "donor_source": "packages/core/src/storages/request_queue.ts addRequest (uniqueKey cache) and packages/fs-storage request-queue backend",
+      "native": "domain/commerce/src/frontier.rs::Frontier::enqueue",
+      "production_caller": "domain/commerce/src/research.rs (Frontier::open, enqueue of discovered URLs)",
+      "proof": "domain/commerce/tests/frontier.rs::locked_crawlee_queue_oracle: 46 frozen traces, 220 adds of which 36 are duplicates and 3 re-add an already handled key; regression persistence_priority_handled_and_deduplication",
+      "scope_note": "parity is for deduplication given an explicit key (the oracle passes uniqueKey explicitly); how the key is derived from a URL is the separate capability below"
+    },
+    {
+      "capability": "crawl.frontier",
+      "relevance": "RELIED_ON",
+      "native": "domain/commerce/src/frontier.rs lease/complete/reclaim",
+      "production_caller": "domain/commerce/src/research.rs",
+      "proof": "locked_crawlee_queue_oracle (FIFO/forefront order, leased exclusion, reclaim, expiry, reopen recovery); regressions reclaim_is_fenced_and_cannot_evade_retry_exhaustion, retries_obey_backoff_retry_after_and_exhaustion"
+    },
+    {
+      "capability": "crawlee.unique-key-url-normalization",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "donor_source": "packages/core/src/request.ts:293 computeUniqueKey -> normalizeUrl from @apify/utilities ^3.0.1 (lowercases, removes trailing slash, sorts query, drops utm_* and fragment)",
+      "reason": "ECDEV identity (frontier.rs::canonicalize) is deliberately conservative: query order, repeated slashes and product parameters stay identity-bearing unless an explicit UrlPolicy says otherwise, because merging them can conflate different products (identity_preserves_product_parameters_and_normalizes_safe_variants). The donor rule is not wanted, so it is not reproduced. The function also lives in a different donor (apify-shared-js)."
+    },
+    {
+      "capability": "crawlee.remaining-crawler-framework",
+      "relevance": "UNRESOLVED",
+      "reason": "browser/HTTP crawlers, autoscaling, sessions, proxies, storages beyond the queue, router, CLI and templates have not been reviewed file by file; crawlee cannot pass the relevance gate until they are"
+    }
+  ]
+}
