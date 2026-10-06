@@ -260,6 +260,74 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
         _ => {}
     }
 }
+/// The page a URL names: host and path, without query, fragment or trailing slash.
+fn page_key(url: &Url) -> String {
+    format!(
+        "{}{}",
+        url.host_str().unwrap_or("").to_ascii_lowercase(),
+        url.path().trim_end_matches('/')
+    )
+}
+
+/// Each product's relation to the captured page, from the URL the product itself states
+/// (JSON-LD `url`, else `@id`; a fragment `@id` names a node of this page). PAGE_SUBJECT: it
+/// names this page or its canonical URL. PAGE_SUBJECT_VARIANT: a variant (`hasVariant`) of a
+/// product group that is the page subject, wherever the variant's own page is. OTHER_PAGE: it
+/// names another page, as recommendation and listing products do. NOT_STATED: no URL, and no
+/// group that states one, so no claim either way.
+fn annotate_page_relation(
+    found: &mut [Value],
+    structured_data: &[Value],
+    base: &Url,
+    page_metadata: &Value,
+) {
+    let mut pages: BTreeSet<String> = BTreeSet::from([page_key(base)]);
+    for c in page_metadata["canonical_urls"]
+        .as_array()
+        .into_iter()
+        .flatten()
+    {
+        if let Some(u) = c["value"].as_str().and_then(|u| Url::parse(u).ok())
+            && u.host_str() == base.host_str()
+        {
+            pages.insert(page_key(&u));
+        }
+    }
+    let stated = |v: &Value| -> Option<Url> {
+        v["url"]
+            .as_str()
+            .or_else(|| v["@id"].as_str())
+            .and_then(|u| base.join(u).ok())
+    };
+    let is_page = |u: &Url| pages.contains(&page_key(u));
+    for product in found.iter_mut() {
+        let own = stated(&product["raw_json_ld"]);
+        let group = product["json_pointer"]
+            .as_str()
+            .and_then(|pointer| {
+                pointer
+                    .rfind("/hasVariant/")
+                    .map(|at| pointer[..at].to_string())
+            })
+            .and_then(|parent| {
+                let script = product["provenance"]["script_index"].as_u64();
+                structured_data
+                    .iter()
+                    .find(|d| d["script_index"].as_u64() == script)
+                    .and_then(|d| d["value"].pointer(&parent))
+                    .and_then(stated)
+            });
+        let (relation, basis) = match (&own, &group) {
+            (_, Some(g)) if is_page(g) => ("PAGE_SUBJECT_VARIANT", "PRODUCT_GROUP_URL_OR_ID"),
+            (Some(u), _) if is_page(u) => ("PAGE_SUBJECT", "JSON_LD_URL_OR_ID"),
+            (Some(_), _) => ("OTHER_PAGE", "JSON_LD_URL_OR_ID"),
+            (None, Some(_)) => ("OTHER_PAGE", "PRODUCT_GROUP_URL_OR_ID"),
+            (None, None) => ("NOT_STATED", "NONE"),
+        };
+        product["page_relation"] = json!({"relation":relation,"stated_url":own.as_ref().map(Url::as_str),"group_url":group.as_ref().map(Url::as_str),"basis":basis,"page_urls":pages});
+    }
+}
+
 pub fn extract(html: &str, source: &str) -> Result<Value, String> {
     extract_with_hash(
         html,
@@ -357,6 +425,7 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
         .map(|n| n.text().collect::<String>());
     let page_metadata = commerce::page_metadata(&doc, &base, &found, hash);
     page_product::enrich(&mut found, &page_metadata, &structured_data, source, hash);
+    annotate_page_relation(&mut found, &structured_data, &base, &page_metadata);
     let mut supplier_leads = supplier::extract(&doc, &base, &structured_data, hash);
     supplier_leads.extend(supplier_terms::extract(&base, &structured_data, hash));
     supplier_leads.extend(supplier_terms::microdata(
@@ -657,6 +726,40 @@ impl Provider for Web {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn products_state_their_relation_to_the_page() {
+        // Shapes seen on real retail pages: a product group identified by a fragment with
+        // variants on sibling colour pages (allbirds.com), the page's own product with its URL
+        // and recommendation products naming other pages (zappos.com), and a product with none.
+        let html = r##"<link rel="canonical" href="https://shop.example/products/runner">
+<script type="application/ld+json">{"@type":"ProductGroup","@id":"#runner","name":"Runner","hasVariant":[
+ {"@type":"Product","name":"Runner Grey 8","offers":{"price":"98","priceCurrency":"USD"}},
+ {"@type":"Product","name":"Runner Navy 8","url":"https://shop.example/products/runner-navy?size=8","offers":{"price":"98","priceCurrency":"USD"}}]}</script>
+<script type="application/ld+json">{"@type":"Product","name":"Runner","url":"/products/runner?ref=x","offers":{"price":"98","priceCurrency":"USD"}}</script>
+<script type="application/ld+json">[{"@type":"Product","name":"Sandal","url":"/products/sandal?ref=pd_sims","offers":{"price":"40","priceCurrency":"USD"}},{"@type":"Product","name":"Loose","offers":{"price":"1","priceCurrency":"USD"}}]</script>"##;
+        let r = extract(html, "https://shop.example/products/runner?utm=1").unwrap();
+        let relation = |name: &str| {
+            r["products"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|p| p["title"] == name)
+                .unwrap()["page_relation"]["relation"]
+                .clone()
+        };
+        assert_eq!(relation("Runner Grey 8"), "PAGE_SUBJECT_VARIANT");
+        assert_eq!(relation("Runner Navy 8"), "PAGE_SUBJECT_VARIANT");
+        assert_eq!(relation("Runner"), "PAGE_SUBJECT");
+        assert_eq!(relation("Sandal"), "OTHER_PAGE");
+        assert_eq!(relation("Loose"), "NOT_STATED");
+        // A page that names nothing as its own leaves every product as it states.
+        let listing = extract(r#"<script type="application/ld+json">{"@type":"Product","name":"Sandal","url":"/products/sandal"}</script>"#, "https://shop.example/p/old-item").unwrap();
+        assert_eq!(
+            listing["products"][0]["page_relation"]["relation"],
+            "OTHER_PAGE"
+        );
+    }
+
     #[test]
     fn xml_responses_are_read_only_as_sitemaps() {
         assert!(is_xml("application/xml; charset=UTF-8") && is_xml("TEXT/XML"));

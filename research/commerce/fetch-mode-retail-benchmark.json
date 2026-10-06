@@ -2050,5 +2050,10 @@
   "audit": "all 110 URLs fetched by both earlier benchmarks are allowed by ECDEV's evaluator after the fix; none matches a rule that disallows it",
   "this_benchmark": "used ECDEV's evaluator for every URL"
  },
- "limits": "16 pages on five retailers, one capture time, one settle time; price-only-after-render sites were not found in this sample"
+ "limits": "16 pages on five retailers, one capture time, one settle time; price-only-after-render sites were not found in this sample",
+ "follow_up_fix": {
+  "finding": "ECDEV's extractor reported recommendation and listing products as products of the page",
+  "fix": "every extracted product now carries page_relation from the URL it states (PAGE_SUBJECT, PAGE_SUBJECT_VARIANT, OTHER_PAGE, NOT_STATED; adapter/web/src/lib.rs::annotate_page_relation), and watches track only the page's own products when the page states them (domain/commerce/src/monitor.rs::snapshot)",
+  "checked_on_these_captures": "allbirds.com: 42 PAGE_SUBJECT_VARIANT per page (other colours of the page's product group); ikea.com and the zappos.com product pages: PAGE_SUBJECT; zappos.com recommendations and the two zappos.com pages whose own product is absent: OTHER_PAGE; uniqlo.com rendered variants: PAGE_SUBJECT_VARIANT"
+ }
 }

@@ -341,7 +341,21 @@ fn snapshot(run: &Value, request: &Value) -> Value {
             .find(|s| s["source"] == url);
         if let Some(page) = page {
             let mut products: BTreeMap<String, Value> = BTreeMap::new();
-            for p in page["products"].as_array().into_iter().flatten() {
+            // When the page states which products are its own, only those are watched: listed
+            // and recommended products of other pages rotate and are not this page's facts.
+            let all: Vec<&Value> = page["products"].as_array().into_iter().flatten().collect();
+            let own = |p: &&Value| {
+                matches!(
+                    p["page_relation"]["relation"].as_str(),
+                    Some("PAGE_SUBJECT" | "PAGE_SUBJECT_VARIANT")
+                )
+            };
+            let watched: Vec<&Value> = if all.iter().any(own) {
+                all.iter().copied().filter(own).collect()
+            } else {
+                all
+            };
+            for p in watched {
                 let key = if p["sku"].is_string() {
                     p["sku"].to_string()
                 } else {
@@ -1254,6 +1268,29 @@ mod tests {
         let a = fact_as_of(&[w("1"), w("2")], 10);
         assert_eq!(a["state"], "CONFLICT");
         assert!(a["value"].is_null());
+    }
+
+    #[test]
+    fn watches_track_the_page_subject_not_rotating_neighbours() {
+        let request = json!({"sources":[{"url":"https://shop.example/p/cup"}]});
+        let product = |sku: &str, relation: &str| json!({"sku":sku,"title":sku,"price_minor":100,"currency":"JPY","page_relation":{"relation":relation}});
+        let run = |neighbour: &str| json!({"snapshots":[{"source":"https://shop.example/p/cup","content_hash":"h","products":[product("cup","PAGE_SUBJECT"),product(neighbour,"OTHER_PAGE")]}]});
+        let a = snapshot(&run("bowl"), &request);
+        let b = snapshot(&run("plate"), &request);
+        let keys = |s: &Value| {
+            s["https://shop.example/p/cup"]["products"]
+                .as_object()
+                .unwrap()
+                .keys()
+                .cloned()
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(keys(&a), ["\"cup\""]);
+        // A rotated recommendation is neither a disappeared nor a new product.
+        assert!(changes(&a, &b).is_empty());
+        // Pages that state no relation keep every product, as before.
+        let plain = json!({"snapshots":[{"source":"https://shop.example/p/cup","content_hash":"h","products":[{"sku":"x","title":"x"},{"sku":"y","title":"y"}]}]});
+        assert_eq!(keys(&snapshot(&plain, &request)).len(), 2);
     }
 
     #[test]
