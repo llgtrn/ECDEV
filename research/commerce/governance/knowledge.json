@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "15cb84bdadfd736a9353d0317b6702c4e0fc5477",
+  "assessed_parent_commit": "c584449d9e5556a110ac4d1eab60c53597a27a12",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,24 +18,24 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 40,
+    "study_candidates": 39,
     "benchmark_candidates": 28,
     "algorithm_candidates": 10,
     "reference_only": 52,
-    "study_complete_capabilities": 87,
+    "study_complete_capabilities": 88,
     "not_relevant_after_review": 25,
-    "research_questions_open": 78,
-    "knowledge_coverage_ratio": 0.677686
+    "research_questions_open": 77,
+    "knowledge_coverage_ratio": 0.681818
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
     "donors_structural_census": 0,
-    "donors_semantic_census": 0,
-    "donors_active_study": 16,
+    "donors_semantic_census": 1,
+    "donors_active_study": 15,
     "donors_study_complete": 2,
     "donors_structurally_censused": 18,
     "donors_semantically_censused": 14,
-    "donors_with_open_candidates": 16,
+    "donors_with_open_candidates": 15,
     "donors_with_open_research": 65
   },
   "denominators": {
@@ -504,7 +504,7 @@
       "donor": "tkem--cachetools",
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -512,11 +512,10 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [
-        "cachetools.size-eviction STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)"
-      ],
+      "open": [],
       "resolved": [
         "cache.ttl STUDY_COMPLETE[DERIVED_NATIVE](TTL freshness proven on 884 frozen TTLCache reads, expiry instant included)",
+        "cachetools.size-eviction STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::trim_fetch_cache bounds the persistent fetch cache at 256 MiB of stored captures and evicts by remaining value rather than recency: first entries past the stale-if-error window with no ETag or Last-Modified (they can neither stand in for a failed fetch nor make a refetch conditional), then soonest expiry; nothing moves under the bound. Refetch-cost weighting (robots delay) is not modelled because the cache does not record it)",
         "cachetools.per-entry-expiry STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::freshness_lifetime derives each fetch-cache entry lifetime from the response (RFC 9111 private cache: no-store and no-cache revalidate, max-age, Expires minus Date, minus Age, bounded at 24 h, default 1 h) and records its basis; volatility-based expiry stays unexplored)",
         "cachetools.memoization-decorators REFERENCE_ONLY(cached and cachedmethod key construction, locking and condition-based stampede protection)"
       ]

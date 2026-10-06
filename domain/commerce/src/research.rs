@@ -145,6 +145,52 @@ pub fn freshness_lifetime(headers: &Value) -> (u64, &'static str) {
 
 /// A cached entry is fresh strictly before its expiry: at the expiry instant it is stale
 /// (cachetools TTLCache: `timer() < expires`).
+/// Total bytes of cached captures a store keeps before evicting.
+pub const MAX_FETCH_CACHE_BYTES: i64 = 256 * 1024 * 1024;
+
+/// Bounds the fetch cache by stored bytes. Nothing is evicted under the bound. Over it, entries
+/// go in order of remaining value: first those past the stale-if-error window that carry no
+/// validator (they can neither answer a failed fetch nor make the next one conditional), then
+/// the soonest-expiring. An expired entry with an ETag or Last-Modified can still turn a
+/// refetch into a 304 that reuses the stored capture, so it is kept ahead of valueless entries.
+/// Returns how many entries were evicted.
+pub fn trim_fetch_cache(
+    db: &rusqlite::Connection,
+    now: u64,
+    max_bytes: i64,
+) -> Result<usize, String> {
+    let total: i64 = db
+        .query_row(
+            "SELECT COALESCE(SUM(LENGTH(payload)),0) FROM fetch_cache",
+            [],
+            |r| r.get(0),
+        )
+        .map_err(err)?;
+    if total <= max_bytes {
+        return Ok(0);
+    }
+    let horizon = now.saturating_sub(STALE_IF_ERROR_SECONDS) as i64;
+    let mut stmt = db
+        .prepare("SELECT key,LENGTH(payload) FROM fetch_cache ORDER BY CASE WHEN expires_at<?1 AND json_extract(payload,'$.provider_cost.headers.etag') IS NULL AND json_extract(payload,'$.provider_cost.headers.last_modified') IS NULL THEN 0 ELSE 1 END, expires_at, key")
+        .map_err(err)?;
+    let rows: Vec<(String, i64)> = stmt
+        .query_map([horizon], |r| Ok((r.get(0)?, r.get(1)?)))
+        .map_err(err)?
+        .collect::<Result<_, _>>()
+        .map_err(err)?;
+    let (mut remaining, mut evicted) = (total, 0);
+    for (key, len) in rows {
+        if remaining <= max_bytes {
+            break;
+        }
+        db.execute("DELETE FROM fetch_cache WHERE key=?1", [&key])
+            .map_err(err)?;
+        remaining -= len;
+        evicted += 1;
+    }
+    Ok(evicted)
+}
+
 pub fn cache_fresh(expires_at: u64, now: u64) -> bool {
     now < expires_at
 }
@@ -751,6 +797,11 @@ impl Engine {
                         ],
                     )
                     .map_err(err)?;
+                trim_fetch_cache(
+                    &*self.db.lock().map_err(err)?,
+                    timestamp(),
+                    MAX_FETCH_CACHE_BYTES,
+                )?;
             }
             let evidence = captured["observations"]
                 .as_array_mut()
@@ -1144,6 +1195,56 @@ impl Engine {
 #[cfg(test)]
 mod budget_storage_tests {
     use super::*;
+    #[test]
+    fn fetch_cache_is_bounded_and_keeps_what_still_has_value() {
+        let db = rusqlite::Connection::open_in_memory().unwrap();
+        db.execute_batch("CREATE TABLE fetch_cache(key TEXT PRIMARY KEY, payload TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL);").unwrap();
+        let now = 1_000_000u64;
+        let put = |key: &str, expires: u64, etag: Option<&str>| {
+            let payload = json!({"provider_cost":{"headers":{"etag":etag}},"pad":"x".repeat(1000)})
+                .to_string();
+            db.execute(
+                "INSERT INTO fetch_cache VALUES(?1,?2,0,?3)",
+                params![key, payload, expires],
+            )
+            .unwrap();
+        };
+        put(
+            "long-dead-no-validator",
+            now - STALE_IF_ERROR_SECONDS - 10,
+            None,
+        );
+        put(
+            "long-dead-with-etag",
+            now - STALE_IF_ERROR_SECONDS - 20,
+            Some("\"v1\""),
+        );
+        put("fresh-soon", now + 60, None);
+        put("fresh-later", now + 3600, None);
+        let size: i64 = db
+            .query_row("SELECT SUM(LENGTH(payload)) FROM fetch_cache", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        // Under the bound nothing moves.
+        assert_eq!(trim_fetch_cache(&db, now, size).unwrap(), 0);
+        let keys = || {
+            db.prepare("SELECT key FROM fetch_cache ORDER BY key")
+                .unwrap()
+                .query_map([], |r| r.get::<_, String>(0))
+                .unwrap()
+                .map(Result::unwrap)
+                .collect::<Vec<_>>()
+        };
+        // One entry over: the valueless one goes first, not the older one with a validator.
+        assert_eq!(trim_fetch_cache(&db, now, size - 1).unwrap(), 1);
+        assert_eq!(keys(), ["fresh-later", "fresh-soon", "long-dead-with-etag"]);
+        // Then by soonest expiry, which puts the long-expired validator entry next.
+        assert_eq!(trim_fetch_cache(&db, now, size / 2).unwrap(), 1);
+        assert_eq!(keys(), ["fresh-later", "fresh-soon"]);
+        assert_eq!(trim_fetch_cache(&db, now, 1).unwrap(), 2);
+        assert!(keys().is_empty());
+    }
     #[test]
     fn access_diagnostics_classify_each_call_from_recorded_facts() {
         let fail = |status: Option<u16>, reason: &str| json!({"source":"https://s.example/","provider":"native-web","status":"FAILED","error":reason,"cache_hit":false,"acquisition_failure":{"http_status":status,"retry_not_before_ms":null}});

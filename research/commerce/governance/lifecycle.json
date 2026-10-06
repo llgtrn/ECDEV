@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "15cb84bdadfd736a9353d0317b6702c4e0fc5477",
+  "assessed_parent_commit": "c584449d9e5556a110ac4d1eab60c53597a27a12",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2886,7 +2886,7 @@
       "exception": "",
       "stopped_by": "CUTOVER: no cutover declared",
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -2906,9 +2906,9 @@
         {
           "key": "cachetools.size-eviction",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::trim_fetch_cache bounds the persistent fetch cache at 256 MiB of stored captures and evicts by remaining value rather than recency: first entries past the stale-if-error window with no ETag or Last-Modified (they can neither stand in for a failed fetch nor make a refetch conditional), then soonest expiry; nothing moves under the bound. Refetch-cost weighting (robots delay) is not modelled because the cache does not record it)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "cachetools.per-entry-expiry",
@@ -2989,7 +2989,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "1 of 4 declared capabilities still have open research: cachetools.size-eviction (STUDY_CANDIDATE)"
+          "detail": "every declared capability is resolved, but the whole-source semantic review is PENDING: capabilities may remain unextracted"
         },
         {
           "gate": "CUTOVER_COMPLETED",
