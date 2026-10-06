@@ -1,36 +1,42 @@
 {
   "scope": "Donor source files the census left PARSE_UNKNOWN, re-read from locked blobs (blob hash and sha256 verified)",
-  "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 (tools/commerce/requirements.txt)",
+  "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 and the reference parsers pinned in tools/commerce/requirements.txt",
   "admissibility": [
     "PARSED requires a parse tree with no ERROR or MISSING node",
     "fallback grammars only where the grammar accepts a superset of the file language (SCSS for CSS, TSX for JSX) or a language a .h header can hold (C++, Objective-C)",
     "template grammars are never fallbacks: they accept nearly any text",
     "notebooks: Python code cells only, IPython magic and shell-escape lines blanked in place",
-    "reason codes label a failure; they never turn it into a parse"
+    "reason codes label a failure; they never turn it into a parse",
+    "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web for JSX",
+    "PARSE_INVALID_CONFIRMED is never PARSED: the language's reference parser (CPython ast, html5lib strict, TypeScript) rejects the donor file itself; it counts apart from parse_unknown and its error is recorded"
   ],
   "semantic_completion": false,
   "reviewed": 181,
-  "resolved": 99,
-  "remaining": 82,
+  "resolved": 120,
+  "remaining": 61,
   "resolved_by_method": {
+    "SQLGLOT_STRICT_DIALECT_PARSER": 2,
     "PRIMARY_GRAMMAR": 36,
     "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED": 28,
+    "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER": 10,
     "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK": 12,
+    "REFERENCE_PARSER_REJECTS": 5,
     "JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED": 17,
     "GRAPHQL_REFERENCE_PARSER": 3,
     "RECLASSIFIED_GENERATED": 1,
-    "CYTHON_COMPILER_PARSER": 2
+    "CYTHON_COMPILER_PARSER": 2,
+    "SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY": 3,
+    "TYPESCRIPT_COMPILER_JSX_SYNTAX": 1
   },
   "remaining_by_reason": {
-    "GRAMMAR_REJECTS_CONSTRUCT": 38,
+    "GRAMMAR_REJECTS_CONSTRUCT": 25,
     "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR": 11,
-    "SQL_DIALECT_OUTSIDE_GRAMMAR": 6,
+    "SQL_DIALECT_OUTSIDE_GRAMMAR": 1,
     "NO_GRAMMAR_FOR_LANGUAGE": 2,
     "PREPROCESSOR_MACRO_EXPANSION_REQUIRED": 6,
     "TEMPLATE_PLACEHOLDER_SOURCE": 1,
     "TEMPLATE_LANGUAGE_IN_HOST_HTML": 2,
-    "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR": 13,
-    "CSS_FRAMEWORK_AT_RULE": 3
+    "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR": 13
   },
   "files": [
     {
@@ -119,28 +125,6 @@
       "first_error": {
         "line": 52,
         "error_byte_ratio": 0.0001
-      }
-    },
-    {
-      "donor_id": "firecrawl--firecrawl",
-      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
-      "source_path": "apps/api/clickhouse/concurrency_logs.sql",
-      "blob_hash": "7f2b81498366ddc9592c8ce1a7b50144203e3354",
-      "sha256": "efaaea6538a10db9db330aa29e11b25308d68a161821b554dc3d2d5bc86771b4",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 10,
-        "error_byte_ratio": 0.1513
       }
     },
     {
@@ -252,6 +236,25 @@
         "line": 8,
         "error_byte_ratio": 0.0322
       }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/clickhouse/concurrency_logs.sql",
+      "blob_hash": "7f2b81498366ddc9592c8ce1a7b50144203e3354",
+      "sha256": "efaaea6538a10db9db330aa29e11b25308d68a161821b554dc3d2d5bc86771b4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "sql",
+        "grammar": "sqlglot 26.16.2 postgres",
+        "method": "SQLGLOT_STRICT_DIALECT_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "firecrawl--firecrawl",
@@ -969,16 +972,13 @@
         "language": "css"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "css",
-        "grammar": null,
-        "method": null
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 20,
-        "error_byte_ratio": 0.0236
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "apify--crawlee",
@@ -1295,50 +1295,6 @@
     {
       "donor_id": "microsoft--playwright",
       "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
-      "source_path": "packages/dashboard/src/dashboard.css",
-      "blob_hash": "2da2f34e02c0031983de0cce803c114cb68d29b8",
-      "sha256": "0ca56b2bfa8277dfc3020d2e2ba126bf01e602c0489bfdc25b74d1f2d2d28422",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 78,
-        "error_byte_ratio": 0.0009
-      }
-    },
-    {
-      "donor_id": "microsoft--playwright",
-      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
-      "source_path": "packages/injected/src/highlight.css",
-      "blob_hash": "2a83b23985ed74bd8b07df88524add02aede5139",
-      "sha256": "64a3cd3e3ab7bf90a268517dd6b72ed7a86b643185d8b60da7c170a730ba498c",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 197,
-        "error_byte_ratio": 0.02
-      }
-    },
-    {
-      "donor_id": "microsoft--playwright",
-      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
       "source_path": "packages/isomorphic/trace/trace.ts",
       "blob_hash": "6c0a8a005b0fb04a5664bd48db4905a1c8e36164",
       "sha256": "fe1d31f97c56d5495e588461471f4e04a0c4b77aa9dc35d0daf0bb6d6fc2ca78",
@@ -1599,6 +1555,44 @@
       "first_error": null
     },
     {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/dashboard/src/dashboard.css",
+      "blob_hash": "2da2f34e02c0031983de0cce803c114cb68d29b8",
+      "sha256": "0ca56b2bfa8277dfc3020d2e2ba126bf01e602c0489bfdc25b74d1f2d2d28422",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/injected/src/highlight.css",
+      "blob_hash": "2a83b23985ed74bd8b07df88524add02aede5139",
+      "sha256": "64a3cd3e3ab7bf90a268517dd6b72ed7a86b643185d8b60da7c170a730ba498c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
       "donor_id": "browser-use--browser-use",
       "commit_sha": "302d8fcb245a7a63fb7531a4734c9ce3c7792779",
       "source_path": "bin/lint.sh",
@@ -1631,16 +1625,13 @@
         "language": "html"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSE_INVALID_CONFIRMED",
         "language": "html",
-        "grammar": null,
-        "method": null
+        "grammar": "html5lib 1.1 strict (WHATWG parsing algorithm, document)",
+        "method": "REFERENCE_PARSER_REJECTS"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 37,
-        "error_byte_ratio": 0.001
-      }
+      "reason_code": "INVALID_IN_DONOR",
+      "first_error": "Unexpected character after / in tag. Expected >"
     },
     {
       "donor_id": "scrapy--scrapy",
@@ -1653,16 +1644,13 @@
         "language": "html"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSE_INVALID_CONFIRMED",
         "language": "html",
-        "grammar": null,
-        "method": null
+        "grammar": "html5lib 1.1 strict (WHATWG parsing algorithm, document)",
+        "method": "REFERENCE_PARSER_REJECTS"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 37,
-        "error_byte_ratio": 0.001
-      }
+      "reason_code": "INVALID_IN_DONOR",
+      "first_error": "Unexpected character after / in tag. Expected >"
     },
     {
       "donor_id": "dgtlmoon--changedetection.io",
@@ -1684,50 +1672,6 @@
       "first_error": {
         "line": 1,
         "error_byte_ratio": 1.0
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/diff.css",
-      "blob_hash": "009a47e300b0d22eaf7aaf7c9fb521641c5aa218",
-      "sha256": "e4ec1c1fb8fd988c376cefb8a118b2ee555f79ba36849459b968865176ea3d5d",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0002
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/flag-icons.min.css",
-      "blob_hash": "9c18720d8869dcc3d3b41f4c6acb9f9f744a770c",
-      "sha256": "30a20bd36cf5a8b93d6097c77c9c9117d3cf9b2bd6085d139d1168857477a4df",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 6,
-        "error_byte_ratio": 0.077
       }
     },
     {
@@ -2261,28 +2205,6 @@
     {
       "donor_id": "dgtlmoon--changedetection.io",
       "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
-      "source_path": "changedetectionio/static/styles/styles.css",
-      "blob_hash": "0a97256d9c21f4ea25b7f57ff6a9ba518f9cb62c",
-      "sha256": "38d92b520d2e04a8e00c5957f0563b346d3ce5257cf6324a126659d64167525f",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 1,
-        "error_byte_ratio": 0.0002
-      }
-    },
-    {
-      "donor_id": "dgtlmoon--changedetection.io",
-      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
       "source_path": "changedetectionio/blueprint/backups/templates/backup_create.html",
       "blob_hash": "0718c5b738bf8d7263e7f7e26c8a9039c24350f5",
       "sha256": "979379ee6632173f7325ee2fb29f19bcfa9e2fc8ab565e663beec53e0694d2b9",
@@ -2530,6 +2452,44 @@
     {
       "donor_id": "dgtlmoon--changedetection.io",
       "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/diff.css",
+      "blob_hash": "009a47e300b0d22eaf7aaf7c9fb521641c5aa218",
+      "sha256": "e4ec1c1fb8fd988c376cefb8a118b2ee555f79ba36849459b968865176ea3d5d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/flag-icons.min.css",
+      "blob_hash": "9c18720d8869dcc3d3b41f4c6acb9f9f744a770c",
+      "sha256": "30a20bd36cf5a8b93d6097c77c9c9117d3cf9b2bd6085d139d1168857477a4df",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
       "source_path": "changedetectionio/static/styles/pure-min.css",
       "blob_hash": "cd877cb663cd886fb7773dd6d021361a941e2010",
       "sha256": "2d0b11cc95b046dabdab9a5bbe9c3035d2db1d7036e644acbb9e00b7c639f3f6",
@@ -2542,6 +2502,25 @@
         "language": "css",
         "grammar": "scss",
         "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/styles.css",
+      "blob_hash": "0a97256d9c21f4ea25b7f57ff6a9ba518f9cb62c",
+      "sha256": "38d92b520d2e04a8e00c5957f0563b346d3ce5257cf6324a126659d64167525f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
       },
       "reason_code": null,
       "first_error": null
@@ -2785,28 +2764,6 @@
     {
       "donor_id": "666ghj--BettaFish",
       "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
-      "source_path": "MindSpider/schema/mindspider_tables.sql",
-      "blob_hash": "1b05489c288ee6b2027df384d32ef104b9576237",
-      "sha256": "3155ac36e4abc7b825f21f5a3b64354daa591fa7b326324f21cf2e5b0686738a",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "sql",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 30,
-        "error_byte_ratio": 0.0004
-      }
-    },
-    {
-      "donor_id": "666ghj--BettaFish",
-      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
       "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
       "blob_hash": "f1f62982bfe239677429a9479fbfc2106c6514dc",
       "sha256": "5ef3f85d2c03925f7e780020456ac705a2db7754067cb8895b42002d58c2788f",
@@ -2815,16 +2772,13 @@
         "language": "python"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSE_INVALID_CONFIRMED",
         "language": "python",
-        "grammar": null,
-        "method": null
+        "grammar": "CPython 3.11.17 ast",
+        "method": "REFERENCE_PARSER_REJECTS"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 103,
-        "error_byte_ratio": 0.0017
-      }
+      "reason_code": "INVALID_IN_DONOR",
+      "first_error": "invalid syntax at line 103"
     },
     {
       "donor_id": "666ghj--BettaFish",
@@ -2837,16 +2791,32 @@
         "language": "html"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSE_INVALID_CONFIRMED",
         "language": "html",
-        "grammar": null,
-        "method": null
+        "grammar": "html5lib 1.1 strict (WHATWG parsing algorithm, document)",
+        "method": "REFERENCE_PARSER_REJECTS"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 562,
-        "error_byte_ratio": 0.0003
-      }
+      "reason_code": "INVALID_IN_DONOR",
+      "first_error": "Unexpected end tag (thead) in the table body phase. Ignored."
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "MindSpider/schema/mindspider_tables.sql",
+      "blob_hash": "1b05489c288ee6b2027df384d32ef104b9576237",
+      "sha256": "3155ac36e4abc7b825f21f5a3b64354daa591fa7b326324f21cf2e5b0686738a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "sql",
+        "grammar": "sqlglot 26.16.2 mysql",
+        "method": "SQLGLOT_STRICT_DIALECT_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "666ghj--BettaFish",
@@ -3212,28 +3182,6 @@
     {
       "donor_id": "sansan0--TrendRadar",
       "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
-      "source_path": "docs/assets/style.css",
-      "blob_hash": "c688a7eac293d2a814ba3269e93d5a8a29d35a29",
-      "sha256": "e3b6d87bdcd7f2bdd70ab2ed19c7fbf8f0fe588c609f1430ff8388cb8a91ce11",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 409,
-        "error_byte_ratio": 0.0001
-      }
-    },
-    {
-      "donor_id": "sansan0--TrendRadar",
-      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
       "source_path": "docs/index.html",
       "blob_hash": "35a7b4d85eb445744de1f8b3ecd93dfae45fa19c",
       "sha256": "20dbedada058a09c059cec71a26be1c81f14c85412b69a023726683b6d73019b",
@@ -3256,6 +3204,25 @@
     {
       "donor_id": "sansan0--TrendRadar",
       "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "docs/assets/style.css",
+      "blob_hash": "c688a7eac293d2a814ba3269e93d5a8a29d35a29",
+      "sha256": "e3b6d87bdcd7f2bdd70ab2ed19c7fbf8f0fe588c609f1430ff8388cb8a91ce11",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
       "source_path": "trendradar/storage/ai_filter_schema.sql",
       "blob_hash": "bdc69dff0a2c5a040e8dd08c32bed85569e46048",
       "sha256": "a33cc6f22bf22cdc8afca70eeab13ff0df2983972b036c639c56f61d58bcda57",
@@ -3264,16 +3231,13 @@
         "language": "sql"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "sql",
-        "grammar": null,
-        "method": null
+        "grammar": "sqlite3 3.45.1",
+        "method": "SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY"
       },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 11,
-        "error_byte_ratio": 0.007
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "sansan0--TrendRadar",
@@ -3286,16 +3250,13 @@
         "language": "sql"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "sql",
-        "grammar": null,
-        "method": null
+        "grammar": "sqlite3 3.45.1",
+        "method": "SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY"
       },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 25,
-        "error_byte_ratio": 0.0082
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "sansan0--TrendRadar",
@@ -3308,16 +3269,13 @@
         "language": "sql"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "sql",
-        "grammar": null,
-        "method": null
+        "grammar": "sqlite3 3.45.1",
+        "method": "SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY"
       },
-      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
-      "first_error": {
-        "line": 19,
-        "error_byte_ratio": 0.0145
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "VladUZH--harken",
@@ -3349,16 +3307,13 @@
         "language": "css"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "css",
-        "grammar": null,
-        "method": null
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
       },
-      "reason_code": "CSS_FRAMEWORK_AT_RULE",
-      "first_error": {
-        "line": 2,
-        "error_byte_ratio": 0.007
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "t4niha--Trend-Finder",
@@ -3485,38 +3440,13 @@
         "language": "html"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSE_INVALID_CONFIRMED",
         "language": "html",
-        "grammar": null,
-        "method": null
+        "grammar": "html5lib 1.1 strict (WHATWG parsing algorithm, document)",
+        "method": "REFERENCE_PARSER_REJECTS"
       },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 152,
-        "error_byte_ratio": 0.0002
-      }
-    },
-    {
-      "donor_id": "NanmiCoder--MediaCrawler",
-      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
-      "source_path": "webui/src/index.css",
-      "blob_hash": "3a5cf7fea94bf0cb2d22a9428b452cbb0367a87f",
-      "sha256": "7b758bb5497688dd138b8fa6db1e060c2176931c0f1976961700f45bc395d18e",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "css",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "CSS_FRAMEWORK_AT_RULE",
-      "first_error": {
-        "line": 408,
-        "error_byte_ratio": 0.0005
-      }
+      "reason_code": "INVALID_IN_DONOR",
+      "first_error": "Unexpected end tag (head). Ignored."
     },
     {
       "donor_id": "NanmiCoder--MediaCrawler",
@@ -3557,48 +3487,23 @@
       "first_error": null
     },
     {
-      "donor_id": "getzep--zep",
-      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
-      "source_path": "examples/python/elevenlabs-zep-example/react-app/src/App.jsx",
-      "blob_hash": "affc368b1df2288091a60cce315c6179d1a33268",
-      "sha256": "92b61ae6b1b76157693b554f789bf2d82a57629f895696022cd71a2ba06b9241",
-      "before": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "javascript"
-      },
-      "after": {
-        "parse_status": "PARSE_UNKNOWN",
-        "language": "javascript",
-        "grammar": null,
-        "method": null
-      },
-      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
-      "first_error": {
-        "line": 206,
-        "error_byte_ratio": 0.0025
-      }
-    },
-    {
-      "donor_id": "getzep--zep",
-      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
-      "source_path": "examples/typescript/zep-graph-visualization/src/app/globals.css",
-      "blob_hash": "4ab60a6d3ece55cd4d4e101aef6d7219661841ef",
-      "sha256": "16e4937c8dd08b3cc99dffcf19aab5df79584131b6e8f706bfdb641e3d3f4027",
+      "donor_id": "NanmiCoder--MediaCrawler",
+      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+      "source_path": "webui/src/index.css",
+      "blob_hash": "3a5cf7fea94bf0cb2d22a9428b452cbb0367a87f",
+      "sha256": "7b758bb5497688dd138b8fa6db1e060c2176931c0f1976961700f45bc395d18e",
       "before": {
         "parse_status": "PARSE_UNKNOWN",
         "language": "css"
       },
       "after": {
-        "parse_status": "PARSE_UNKNOWN",
+        "parse_status": "PARSED",
         "language": "css",
-        "grammar": null,
-        "method": null
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
       },
-      "reason_code": "CSS_FRAMEWORK_AT_RULE",
-      "first_error": {
-        "line": 3,
-        "error_byte_ratio": 0.0143
-      }
+      "reason_code": null,
+      "first_error": null
     },
     {
       "donor_id": "getzep--zep",
@@ -3641,6 +3546,25 @@
     {
       "donor_id": "getzep--zep",
       "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/python/elevenlabs-zep-example/react-app/src/App.jsx",
+      "blob_hash": "affc368b1df2288091a60cce315c6179d1a33268",
+      "sha256": "92b61ae6b1b76157693b554f789bf2d82a57629f895696022cd71a2ba06b9241",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "javascript"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "javascript",
+        "grammar": "typescript",
+        "method": "TYPESCRIPT_COMPILER_JSX_SYNTAX"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
       "source_path": "examples/python/langgraph-agent/agent.ipynb",
       "blob_hash": "44d73bc38f1ee6ee0fff5d90401f186437672672",
       "sha256": "b3d7bccedf5b6bb6d7501acd2b9924b844b95f55ea1bdb25329ef4da03ceaeae",
@@ -3672,6 +3596,25 @@
         "language": "python",
         "grammar": "python",
         "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/typescript/zep-graph-visualization/src/app/globals.css",
+      "blob_hash": "4ab60a6d3ece55cd4d4e101aef6d7219661841ef",
+      "sha256": "16e4937c8dd08b3cc99dffcf19aab5df79584131b6e8f706bfdb641e3d3f4027",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "tinycss2",
+        "method": "CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER"
       },
       "reason_code": null,
       "first_error": null

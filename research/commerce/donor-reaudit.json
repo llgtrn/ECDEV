@@ -136,6 +136,7 @@
         "first_party_source_files": 67,
         "source_parsed": 67,
         "parse_unknown": 0,
+        "parse_invalid_confirmed": 0,
         "semantic_review": "COMPLETE",
         "capabilities_extracted": 22,
         "capabilities_decided": 22,
@@ -200,8 +201,9 @@
       "semantic_coverage": {
         "files_inventoried": 301,
         "first_party_source_files": 172,
-        "source_parsed": 169,
-        "parse_unknown": 3,
+        "source_parsed": 170,
+        "parse_unknown": 0,
+        "parse_invalid_confirmed": 2,
         "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
         "capabilities_extracted": 6,
         "capabilities_decided": 6,
@@ -275,8 +277,9 @@
       "semantic_coverage": {
         "files_inventoried": 947,
         "first_party_source_files": 453,
-        "source_parsed": 451,
-        "parse_unknown": 2,
+        "source_parsed": 453,
+        "parse_unknown": 0,
+        "parse_invalid_confirmed": 0,
         "semantic_review": "BOUNDED_SOURCE_CONTRACT_REVIEW_WHOLE_DONOR_INCOMPLETE",
         "capabilities_extracted": 9,
         "capabilities_decided": 9,
@@ -335,8 +338,9 @@
       "semantic_coverage": {
         "files_inventoried": 120,
         "first_party_source_files": 85,
-        "source_parsed": 84,
-        "parse_unknown": 1,
+        "source_parsed": 85,
+        "parse_unknown": 0,
+        "parse_invalid_confirmed": 0,
         "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
         "capabilities_extracted": 5,
         "capabilities_decided": 5,
@@ -403,8 +407,9 @@
       "semantic_coverage": {
         "files_inventoried": 162,
         "first_party_source_files": 81,
-        "source_parsed": 76,
-        "parse_unknown": 5,
+        "source_parsed": 80,
+        "parse_unknown": 1,
+        "parse_invalid_confirmed": 0,
         "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
         "capabilities_extracted": 7,
         "capabilities_decided": 7,
@@ -480,8 +485,9 @@
       "semantic_coverage": {
         "files_inventoried": 347,
         "first_party_source_files": 213,
-        "source_parsed": 211,
-        "parse_unknown": 2,
+        "source_parsed": 212,
+        "parse_unknown": 0,
+        "parse_invalid_confirmed": 1,
         "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
         "capabilities_extracted": 11,
         "capabilities_decided": 11,
@@ -523,8 +529,60 @@
           "knowledge": "BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)"
         },
         {
-          "capability": "social.viral-trend-agent.remaining-whole-donor",
-          "knowledge": "REFERENCE_ONLY(agent orchestration, scrapers and LLM prompts)"
+          "capability": "social.viral-trend-agent.trend-persistence",
+          "knowledge": "BENCHMARK_CANDIDATE(the donor never re-reads a stored post, so its velocities are membership churn: does per-item engagement re-polled over time predict trend persistence 24 to 72 hours ahead better than cluster-sum deltas?)"
+        },
+        {
+          "capability": "social.viral-trend-agent.source-mixing",
+          "knowledge": "BENCHMARK_CANDIDATE(per-source percentile or z-score normalisation versus raw sums of mixed engagement units and fixed proxy values)"
+        },
+        {
+          "capability": "social.viral-trend-agent.public-trend-sources",
+          "knowledge": "STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); Mastodon and Bluesky trending endpoints as zero-paid public sources)"
+        },
+        {
+          "capability": "social.viral-trend-agent.circumventing-sources",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor reads Reddit through mirrors chosen to avoid OAuth and YouTube through yt-dlp; ECDEV keeps to official APIs)"
+        },
+        {
+          "capability": "social.viral-trend-agent.geo-market-filter",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](market targeting by a deny-list of nationality and language keywords; ECDEV scopes markets positively by marketplace and locale)"
+        },
+        {
+          "capability": "social.viral-trend-agent.text-normalisation",
+          "knowledge": "REFERENCE_ONLY(cleaning steps, bot-post phrases and title-weighted embedding text)"
+        },
+        {
+          "capability": "social.viral-trend-agent.cross-source-story-matching",
+          "knowledge": "BENCHMARK_CANDIDATE(which sentence-embedding cosine threshold separates same story or product from same topic across sources: precision and recall from 0.75 to 0.92 on labelled pairs)"
+        },
+        {
+          "capability": "social.viral-trend-agent.topic-clustering-and-continuity",
+          "knowledge": "STUDY_CANDIDATE(trend identity continuity across runs by centroid cosine 0.75 with 6 hour expiry: identity churn against a labelled trend timeline)"
+        },
+        {
+          "capability": "social.viral-trend-agent.cluster-labeling",
+          "knowledge": "REFERENCE_ONLY(stopword-filtered top-term cluster labels)"
+        },
+        {
+          "capability": "social.viral-trend-agent.growth-detection",
+          "knowledge": "ALGORITHM_CANDIDATE(small-count-safe growth: a rate-ratio or Poisson z-test instead of raw percent change, never an invented baseline growth for new clusters)"
+        },
+        {
+          "capability": "social.viral-trend-agent.emotion-detection",
+          "knowledge": "BENCHMARK_CANDIDATE(does the dominant emotion of posts about a product correlate with sales-rank lift in held-out data, before any score uses emotion?)"
+        },
+        {
+          "capability": "social.viral-trend-agent.viral-prediction",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an uncalibrated weighted heuristic shown as a probability with static spread-path and peak-time tables; ECDEV requires a reliability curve and Brier score before any probability)"
+        },
+        {
+          "capability": "social.viral-trend-agent.linguistic-markers",
+          "knowledge": "STUDY_CANDIDATE(listing-title markers (numbers, superlatives, 60 to 100 characters) against click-through or sales, controlled for category and price)"
+        },
+        {
+          "capability": "social.viral-trend-agent.application",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](Telegram bot commands, Streamlit dashboard and scheduler wiring of the donor product)"
         }
       ],
       "rationale": "velocities and recency are already independent natives; the cross-platform bonus is a deliberate divergence; whether a composite verdict predicts persistence better than ECDEV's components is a benchmark question, never a demand forecast",
@@ -541,10 +599,11 @@
         "first_party_source_files": 28,
         "source_parsed": 28,
         "parse_unknown": 0,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 6,
-        "capabilities_decided": 6,
-        "research_questions_open": 1
+        "parse_invalid_confirmed": 0,
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 19,
+        "capabilities_decided": 19,
+        "research_questions_open": 9
       }
     },
     {
@@ -615,8 +674,9 @@
       "semantic_coverage": {
         "files_inventoried": 1156,
         "first_party_source_files": 288,
-        "source_parsed": 260,
-        "parse_unknown": 28,
+        "source_parsed": 263,
+        "parse_unknown": 25,
+        "parse_invalid_confirmed": 0,
         "semantic_review": "PENDING",
         "capabilities_extracted": 9,
         "capabilities_decided": 9,

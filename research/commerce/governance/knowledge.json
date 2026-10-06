@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8a0af873dfd86ac79654e75fd0cd7ab643755418",
+  "assessed_parent_commit": "b25166b5a0ccd3c0a93769558d275f22c8732f63",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,29 +14,29 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 159,
-    "semantic_censused_capabilities": 159,
+    "known_donor_capabilities": 177,
+    "semantic_censused_capabilities": 177,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 27,
-    "benchmark_candidates": 18,
-    "algorithm_candidates": 8,
-    "reference_only": 35,
-    "study_complete_capabilities": 52,
-    "not_relevant_after_review": 19,
-    "research_questions_open": 53,
-    "knowledge_coverage_ratio": 0.666667
+    "study_candidates": 30,
+    "benchmark_candidates": 22,
+    "algorithm_candidates": 9,
+    "reference_only": 40,
+    "study_complete_capabilities": 56,
+    "not_relevant_after_review": 20,
+    "research_questions_open": 61,
+    "knowledge_coverage_ratio": 0.655367
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 45,
+    "donors_knowledge_unreviewed": 48,
     "donors_structural_census": 0,
     "donors_semantic_census": 1,
     "donors_active_study": 16,
     "donors_study_complete": 1,
     "donors_structurally_censused": 18,
-    "donors_semantically_censused": 6,
+    "donors_semantically_censused": 8,
     "donors_with_open_candidates": 16,
-    "donors_with_open_research": 62
+    "donors_with_open_research": 65
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -762,6 +762,51 @@
       "resolved": []
     },
     {
+      "donor": "dependency--github-com-kozea-tinycss2",
+      "runtime": "REGISTERED",
+      "effective": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
+      "open": [],
+      "resolved": []
+    },
+    {
+      "donor": "dependency--github-com-tobymao-sqlglot",
+      "runtime": "REGISTERED",
+      "effective": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
+      "open": [],
+      "resolved": []
+    },
+    {
+      "donor": "dependency--github-com-html5lib-html5lib-python",
+      "runtime": "REGISTERED",
+      "effective": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
+      "open": [],
+      "resolved": []
+    },
+    {
       "donor": "dependency--github-com-rusqlite-rusqlite",
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
@@ -1043,14 +1088,27 @@
         "native_reimplementation": "CLEAN_ROOM_ONLY"
       },
       "open": [
-        "social.viral-trend-agent.verdict BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)"
+        "social.viral-trend-agent.verdict BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)",
+        "social.viral-trend-agent.trend-persistence BENCHMARK_CANDIDATE(the donor never re-reads a stored post, so its velocities are membership churn: does per-item engagement re-polled over time predict trend persistence 24 to 72 hours ahead better than cluster-sum deltas?)",
+        "social.viral-trend-agent.source-mixing BENCHMARK_CANDIDATE(per-source percentile or z-score normalisation versus raw sums of mixed engagement units and fixed proxy values)",
+        "social.viral-trend-agent.public-trend-sources STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); Mastodon and Bluesky trending endpoints as zero-paid public sources)",
+        "social.viral-trend-agent.cross-source-story-matching BENCHMARK_CANDIDATE(which sentence-embedding cosine threshold separates same story or product from same topic across sources: precision and recall from 0.75 to 0.92 on labelled pairs)",
+        "social.viral-trend-agent.topic-clustering-and-continuity STUDY_CANDIDATE(trend identity continuity across runs by centroid cosine 0.75 with 6 hour expiry: identity churn against a labelled trend timeline)",
+        "social.viral-trend-agent.growth-detection ALGORITHM_CANDIDATE(small-count-safe growth: a rate-ratio or Poisson z-test instead of raw percent change, never an invented baseline growth for new clusters)",
+        "social.viral-trend-agent.emotion-detection BENCHMARK_CANDIDATE(does the dominant emotion of posts about a product correlate with sales-rank lift in held-out data, before any score uses emotion?)",
+        "social.viral-trend-agent.linguistic-markers STUDY_CANDIDATE(listing-title markers (numbers, superlatives, 60 to 100 characters) against click-through or sales, controlled for category and price)"
       ],
       "resolved": [
         "social.viral-trend-agent.get_upvote_velocity STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV computes velocity from actual snapshot timestamps)",
         "social.viral-trend-agent.get_comment_velocity STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV rejects zero or non-monotonic elapsed time)",
         "social.viral-trend-agent.get_cross_platform_bonus STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a platform-count bonus conflates platforms with independent publishers)",
         "social.viral-trend-agent.get_recency_score STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV applies explicit half-life time decay)",
-        "social.viral-trend-agent.remaining-whole-donor REFERENCE_ONLY(agent orchestration, scrapers and LLM prompts)"
+        "social.viral-trend-agent.circumventing-sources STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor reads Reddit through mirrors chosen to avoid OAuth and YouTube through yt-dlp; ECDEV keeps to official APIs)",
+        "social.viral-trend-agent.geo-market-filter STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](market targeting by a deny-list of nationality and language keywords; ECDEV scopes markets positively by marketplace and locale)",
+        "social.viral-trend-agent.text-normalisation REFERENCE_ONLY(cleaning steps, bot-post phrases and title-weighted embedding text)",
+        "social.viral-trend-agent.cluster-labeling REFERENCE_ONLY(stopword-filtered top-term cluster labels)",
+        "social.viral-trend-agent.viral-prediction STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an uncalibrated weighted heuristic shown as a probability with static spread-path and peak-time tables; ECDEV requires a reliability curve and Brier score before any probability)",
+        "social.viral-trend-agent.application NO_RESEARCH_VALUE[FRONTEND](Telegram bot commands, Streamlit dashboard and scheduler wiring of the donor product)"
       ]
     },
     {
@@ -1076,7 +1134,12 @@
         "social.harken.alert_metrics STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV snapshots disclose actual capture and publication windows)",
         "social.harken.track STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV acquisition runs keep partial source failures visible)",
         "social.harken.llm REFERENCE_ONLY(LLM theme relabelling as presentation only, never evidence)",
-        "social.harken.application NO_RESEARCH_VALUE[FRONTEND](self-hosted dashboard, login and CLI of the donor product)"
+        "social.harken.application NO_RESEARCH_VALUE[FRONTEND](self-hosted dashboard, login and CLI of the donor product)",
+        "social.harken.persistence REFERENCE_ONLY(WAL SQLite with schema versioning, scan cursors advanced only after rows commit, durable alert outbox)",
+        "social.harken.observability REFERENCE_ONLY(structured event logging and Prometheus source metrics)",
+        "social.harken.evaluation-harness REFERENCE_ONLY(versioned labelled dataset loader with confusion matrix and macro-F1 usable as a CI gate; the donor score is in-sample)",
+        "social.harken.alert-delivery REFERENCE_ONLY(webhook and email delivery with hashed target keys and secret-scrubbed errors)",
+        "social.harken.sample-data STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](demo data attributes invented quotes to real public handles beside live data; ECDEV fixtures are labelled and never attribute invented text to real people)"
       ]
     },
     {

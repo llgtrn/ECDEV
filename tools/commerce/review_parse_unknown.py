@@ -83,6 +83,11 @@ def main():
             if result["status"] == "PARSED":
                 row["parse_grammar"] = result["grammar"]
                 row["parse_method"] = result["method"]
+            elif result["status"] == "PARSE_INVALID_CONFIRMED":
+                row["parse_reason_code"] = result["reason_code"]
+                row["parse_grammar"] = result["grammar"]
+                row["parse_method"] = result["method"]
+                row["parse_reason"] = "The language's reference parser rejects the donor file itself: " + result["error"]
             else:
                 row["parse_reason_code"] = result["reason_code"]
                 row["parse_reason"] = "No admissible grammar parses this file without error nodes; retained as parse_unknown"
@@ -93,10 +98,12 @@ def main():
                 "reason_code": result["reason_code"], "first_error": result["error"],
             })
         source = [r for r in rows if r["classification"] == "FIRST_PARTY_SOURCE"]
-        unknown = [r for r in source if r.get("parse_status") != "PARSED"]
+        invalid = [r for r in source if r.get("parse_status") == "PARSE_INVALID_CONFIRMED"]
+        unknown = [r for r in source if r.get("parse_status") not in ("PARSED", "PARSE_INVALID_CONFIRMED")]
         counts = collections.Counter(r["classification"] for r in rows)
         summary.update(classification_counts=dict(counts), first_party_source_files=len(source),
-                       source_parsed=len(source) - len(unknown), parse_unknown=len(unknown), symbols=len(symbols))
+                       source_parsed=len(source) - len(unknown) - len(invalid), parse_unknown=len(unknown),
+                       parse_invalid_confirmed=len(invalid), symbols=len(symbols))
         donor["source_census_status"] = "STRUCTURAL_PARSED" if not unknown else "PARTIAL"
         donor["primary_languages"] = dict(collections.Counter(r["language"] for r in rows if r.get("language")))
         census.jsonl(directory / "files.jsonl", rows)
@@ -108,18 +115,21 @@ def main():
         risks = json.loads((directory / "risks.json").read_text(encoding="utf-8"))
         risks["parse_unknown"] = [r["path"] for r in unknown]
         risks["parse_unknown_reasons"] = {r["path"]: r["parse_reason_code"] for r in unknown}
+        risks["parse_invalid_confirmed"] = {r["path"]: r["parse_reason"] for r in invalid}
         census.dump(directory / "risks.json", risks)
     census.dump(registry_path, registry)
-    resolved = [f for f in reviewed if f["after"]["parse_status"] == "PARSED" or f["after"]["method"] == "RECLASSIFIED_GENERATED"]
+    resolved = [f for f in reviewed if f["after"]["parse_status"] in ("PARSED", "PARSE_INVALID_CONFIRMED") or f["after"]["method"] == "RECLASSIFIED_GENERATED"]
     census.dump(AUDIT, {
         "scope": "Donor source files the census left PARSE_UNKNOWN, re-read from locked blobs (blob hash and sha256 verified)",
-        "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 (tools/commerce/requirements.txt)",
+        "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 and the reference parsers pinned in tools/commerce/requirements.txt",
         "admissibility": [
             "PARSED requires a parse tree with no ERROR or MISSING node",
             "fallback grammars only where the grammar accepts a superset of the file language (SCSS for CSS, TSX for JSX) or a language a .h header can hold (C++, Objective-C)",
             "template grammars are never fallbacks: they accept nearly any text",
             "notebooks: Python code cells only, IPython magic and shell-escape lines blanked in place",
             "reason codes label a failure; they never turn it into a parse",
+            "a language reference parser may accept a file the grammar rejects: graphql-core, Jinja with HTML, tinycss2 (CSS Syntax Level 3), SQLite's own engine on a private in-memory schema-only database or sqlglot in strict mode, the TypeScript compiler locked in apps/web for JSX",
+            "PARSE_INVALID_CONFIRMED is never PARSED: the language's reference parser (CPython ast, html5lib strict, TypeScript) rejects the donor file itself; it counts apart from parse_unknown and its error is recorded",
         ],
         "semantic_completion": False,
         "reviewed": len(reviewed),

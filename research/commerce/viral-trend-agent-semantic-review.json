@@ -1,0 +1,149 @@
+{
+  "donor_id": "Shiva-74--viral-trend-agent",
+  "commit_sha": "aad0f3e46bf159dc98a2bc8a13ea9fe5d1bfe7c1",
+  "license": "UNKNOWN (no licence file): clean-room only",
+  "method": "every first-party file read in full by a read-only review; behaviour described in ECDEV's words, no donor code copied",
+  "findings": [
+    "Engagement is frozen: save_batch skips stored post ids, so a post's upvotes and comments are never re-read; every velocity is a cluster-sum delta driven by membership churn, not engagement growth",
+    "Engagement units are mixed and partly invented: Reddit/HN/Mastodon scores, Google Trends traffic bands or a default 200, Google News constant 300, Bluesky constant 200, YouTube views/1000 with likes stored as comments",
+    "Reddit is read through third-party mirrors chosen to avoid OAuth, and YouTube through yt-dlp because the trending page blocks automated clients: authentication and bot-defence circumvention ECDEV never adopts",
+    "Market targeting is a deny-list of nationality and language keywords",
+    "The predictor shows an uncalibrated weighted heuristic as a probability, with static spread-path and peak-time tables presented as forecasts; new clusters receive an invented 10-100% growth",
+    "The scorer omits emotion and score_breakdown keys, so emotion alerts never fire and the breakdown chart never renders"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "intelligence/virality_scorer.py",
+        "capabilities": "social.viral-trend-agent.get_upvote_velocity + social.viral-trend-agent.get_comment_velocity + social.viral-trend-agent.get_cross_platform_bonus + social.viral-trend-agent.get_recency_score + social.viral-trend-agent.verdict",
+        "why": "weights 0.35/0.20/0.20/0.15/0.10 over growth/300, upvote velocity/5000, comment velocity/500, sources/5 + bonus, 2^(-age/3h)"
+      },
+      {
+        "prefix": "intelligence/growth_detector.py",
+        "capabilities": "social.viral-trend-agent.growth-detection",
+        "why": "30-minute lookback percent change clamped to [-100,1000]; invented baseline growth for new clusters"
+      },
+      {
+        "prefix": "intelligence/emotion_detector.py",
+        "capabilities": "social.viral-trend-agent.emotion-detection",
+        "why": "DistilRoBERTa emotion labels summed over the top 8 posts at confidence 0.25; static spread explanations"
+      },
+      {
+        "prefix": "intelligence/clusterer.py",
+        "capabilities": "social.viral-trend-agent.topic-clustering-and-continuity + social.viral-trend-agent.cluster-labeling",
+        "why": "size-adaptive HDBSCAN, centroid continuity at cosine 0.75, 6 h expiry, stopword top-term labels"
+      },
+      {
+        "prefix": "predictor/viral_predictor.py",
+        "capabilities": "social.viral-trend-agent.viral-prediction + social.viral-trend-agent.linguistic-markers",
+        "why": "0.35 similarity + 0.25 linguistic + 0.20 emotion + 0.10 hour + 0.10 cross shown as a probability"
+      },
+      {
+        "prefix": "processing/deduplicator.py",
+        "capabilities": "social.viral-trend-agent.cross-source-story-matching",
+        "why": "cosine >= 0.82 across distinct sources within 3 h, anchored greedy matching"
+      },
+      {
+        "prefix": "processing/embedder.py",
+        "capabilities": "social.viral-trend-agent.cross-source-story-matching + social.viral-trend-agent.topic-clustering-and-continuity",
+        "why": "MiniLM-L6 normalised 384-d vectors stored as JSON"
+      },
+      {
+        "prefix": "processing/cleaner.py",
+        "capabilities": "social.viral-trend-agent.text-normalisation",
+        "why": "HTML, URL, mention and emoji stripping; bot phrases; title-weighted embedding text"
+      },
+      {
+        "prefix": "database/models.py",
+        "capabilities": "social.viral-trend-agent.trend-persistence",
+        "why": "raw posts, clusters, snapshots, alert subscriptions"
+      },
+      {
+        "prefix": "fetchers/base.py",
+        "capabilities": "social.viral-trend-agent.trend-persistence + social.viral-trend-agent.geo-market-filter + social.viral-trend-agent.source-mixing",
+        "why": "retry/backoff, md5 ids, insert-only dedup, nationality keyword deny-list"
+      },
+      {
+        "prefix": "fetchers/google_trends_fetcher.py",
+        "capabilities": "social.viral-trend-agent.public-trend-sources + social.viral-trend-agent.source-mixing",
+        "why": "Google Trends and Google News public RSS; traffic bands parsed or defaulted"
+      },
+      {
+        "prefix": "fetchers/hn_fetcher.py",
+        "capabilities": "social.viral-trend-agent.public-trend-sources",
+        "why": "official HN Firebase API, score >= 10"
+      },
+      {
+        "prefix": "fetchers/rss_fetcher.py",
+        "capabilities": "social.viral-trend-agent.public-trend-sources",
+        "why": "publisher RSS feeds"
+      },
+      {
+        "prefix": "fetchers/nitter_fetcher.py",
+        "capabilities": "social.viral-trend-agent.public-trend-sources + social.viral-trend-agent.circumventing-sources",
+        "why": "Mastodon and Bluesky trends (public), Reddit through the PullPush mirror"
+      },
+      {
+        "prefix": "fetchers/reddit_fetcher.py",
+        "capabilities": "social.viral-trend-agent.circumventing-sources",
+        "why": "Reddit through the Arctic Shift mirror instead of the OAuth API"
+      },
+      {
+        "prefix": "fetchers/youtube_fetcher.py",
+        "capabilities": "social.viral-trend-agent.circumventing-sources",
+        "why": "yt-dlp search scraping"
+      },
+      {
+        "prefix": "config.py",
+        "capabilities": "social.viral-trend-agent.verdict + social.viral-trend-agent.geo-market-filter",
+        "why": "weights, thresholds, country lists, model names"
+      },
+      {
+        "prefix": "scheduler.py",
+        "capabilities": "social.viral-trend-agent.application",
+        "why": "APScheduler wiring"
+      },
+      {
+        "prefix": "bot/",
+        "capabilities": "social.viral-trend-agent.application",
+        "why": "Telegram commands and alert broadcasts"
+      },
+      {
+        "prefix": "dashboard/",
+        "capabilities": "social.viral-trend-agent.application",
+        "why": "Streamlit views"
+      },
+      {
+        "prefix": "verify_setup.py",
+        "capabilities": "social.viral-trend-agent.application",
+        "why": "import smoke test"
+      },
+      {
+        "prefix": "database/__init__.py",
+        "capabilities": "social.viral-trend-agent.trend-persistence",
+        "why": "empty"
+      },
+      {
+        "prefix": "fetchers/__init__.py",
+        "capabilities": "social.viral-trend-agent.public-trend-sources",
+        "why": "empty"
+      },
+      {
+        "prefix": "intelligence/__init__.py",
+        "capabilities": "social.viral-trend-agent.verdict",
+        "why": "empty"
+      },
+      {
+        "prefix": "predictor/__init__.py",
+        "capabilities": "social.viral-trend-agent.viral-prediction",
+        "why": "empty"
+      },
+      {
+        "prefix": "processing/__init__.py",
+        "capabilities": "social.viral-trend-agent.text-normalisation",
+        "why": "empty"
+      }
+    ]
+  }
+}

@@ -185,6 +185,9 @@ def parse_review(path, content):
   out.update(status='PARSED',grammar=reference[0],method=reference[1],reason_code=None,error=None)
   return out
  if out['reason_code']!='NO_GRAMMAR_IN_PINNED_PARSER_PACK' or out['error']: out['reason_code']=failure_reason(path,content,language)
+ invalid=confirm_invalid(path,content,language)
+ if invalid:
+  out.update(status='PARSE_INVALID_CONFIRMED',grammar=invalid[0],method='REFERENCE_PARSER_REJECTS',reason_code='INVALID_IN_DONOR',error=invalid[1])
  return out
 
 TEMPLATE_TAG = re.compile(r'\{%.*?%\}|\{\{.*?\}\}|\{#.*?#\}', re.S)
@@ -210,6 +213,97 @@ def reference_parse(path, content, language):
   blanked=TEMPLATE_TAG.sub(lambda m: re.sub(r'[^\n]',' ',m.group(0)),text)
   if get_parser('html').parse(blanked.encode()).root_node.has_error: return None
   return ('jinja2+html','JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED')
+ if language=='css':
+  # CSS Syntax Module Level 3 (tinycss2): the browser parsing algorithm. Framework at-rules and
+  # keyframe selector lists are valid syntax there; any parse-error node rejects the file.
+  try:
+   import tinycss2
+   if not css_errors(tinycss2.parse_stylesheet(text,skip_comments=True,skip_whitespace=True)):
+    return ('tinycss2','CSS_SYNTAX_LEVEL_3_REFERENCE_PARSER')
+  except Exception: return None
+  return None
+ if language=='sql':
+  return sql_parse(text)
+ if language=='javascript' and pathlib.Path(path).suffix=='.jsx':
+  diagnostics=typescript_diagnostics(path,text)
+  if diagnostics==[]: return ('typescript','TYPESCRIPT_COMPILER_JSX_SYNTAX')
+ return None
+
+def css_errors(nodes):
+ out=[]
+ for n in nodes:
+  if n.type=='error': out.append(n.message)
+  for attr in ('prelude','content'):
+   v=getattr(n,attr,None)
+   if isinstance(v,list): out+=css_errors(v)
+ return out
+
+def sql_parse(text):
+ """SQLite's own engine compiles the schema in a private in-memory database whose authorizer
+ admits only schema statements (nothing touches a file or the network); otherwise sqlglot in
+ strict mode for MySQL or PostgreSQL. Returns (parser, method) or None."""
+ import sqlite3
+ c=sqlite3.connect(':memory:')
+ allowed={sqlite3.SQLITE_CREATE_TABLE,sqlite3.SQLITE_CREATE_INDEX,sqlite3.SQLITE_CREATE_TRIGGER,sqlite3.SQLITE_CREATE_VIEW,sqlite3.SQLITE_DROP_TABLE,sqlite3.SQLITE_DROP_INDEX,sqlite3.SQLITE_INSERT,sqlite3.SQLITE_READ,sqlite3.SQLITE_UPDATE,sqlite3.SQLITE_DELETE,sqlite3.SQLITE_SELECT,sqlite3.SQLITE_FUNCTION,sqlite3.SQLITE_TRANSACTION,sqlite3.SQLITE_ALTER_TABLE,sqlite3.SQLITE_REINDEX}
+ c.set_authorizer(lambda action,*_: sqlite3.SQLITE_OK if action in allowed else sqlite3.SQLITE_DENY)
+ try:
+  c.executescript(text); return ('sqlite3 '+sqlite3.sqlite_version,'SQLITE_ENGINE_IN_MEMORY_SCHEMA_ONLY')
+ except Exception: pass
+ finally: c.close()
+ try:
+  import sqlglot
+  from sqlglot.errors import ErrorLevel
+ except Exception: return None
+ for dialect in ('mysql','postgres'):
+  try:
+   # Unsupported syntax degrades to an opaque Command node: that is not a parse.
+   trees=sqlglot.parse(text,read=dialect,error_level=ErrorLevel.RAISE)
+   if trees and all(t is not None and not isinstance(t,sqlglot.exp.Command) and not t.find(sqlglot.exp.Command) for t in trees):
+    return ('sqlglot '+sqlglot.__version__+' '+dialect,'SQLGLOT_STRICT_DIALECT_PARSER')
+  except Exception: continue
+ return None
+
+def typescript_diagnostics(path, text):
+ """Syntactic diagnostics of the TypeScript compiler locked in apps/web (no type checking, no
+ emit). None when the compiler is unavailable."""
+ ts=pathlib.Path(__file__).resolve().parents[2]/'apps/web/node_modules/typescript/lib/typescript.js'
+ if not ts.is_file(): return None
+ script=("const ts=require(process.argv[1]);let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{"
+         "const f=ts.createSourceFile(process.argv[2],s,ts.ScriptTarget.Latest,false,ts.ScriptKind.JSX);"
+         "console.log(JSON.stringify({version:ts.version,errors:f.parseDiagnostics.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')+' @'+d.start)}))})")
+ try: r=subprocess.run(['node','-e',script,str(ts),path],input=text.encode(),capture_output=True,timeout=60,check=True)
+ except Exception: return None
+ return json.loads(r.stdout)['errors']
+
+def confirm_invalid(path, content, language):
+ """When no admissible parser accepts a file, ask the language's reference parser whether the
+ file itself is invalid. Returns (parser, first error) only when the reference parser rejects it;
+ a confirmed-invalid file is a donor defect, not an unknown."""
+ text=content.decode('utf-8','replace')
+ try:
+  if language=='python':
+   import ast,platform
+   try: ast.parse(text); return None
+   except SyntaxError as e: return ('CPython '+platform.python_version()+' ast',f'{e.msg} at line {e.lineno}')
+  if language=='html':
+   import html5lib
+   # A template partial is a fragment, not a document; and html5lib predates the WHATWG change
+   # that made a bare "&" before whitespace valid, so its entity complaint never confirms.
+   if TEMPLATE_TAG.search(text): return None  # template tags generate markup: never confirm from raw text
+   document=re.match(r'\s*(<!--.*?-->\s*)*<(!doctype|html)\b',text,re.I|re.S)
+   first=re.search(r'<([a-zA-Z][a-zA-Z0-9]*)',text)
+   container={'tr':'tbody','td':'tr','th':'tr','li':'ul','option':'select','tbody':'table','thead':'table'}.get(first.group(1).lower() if first else '','div')
+   try:
+    parser=html5lib.HTMLParser(strict=True)
+    parser.parse(text) if document else parser.parseFragment(text,container=container)
+    return None
+   except Exception as e:
+    if 'entity' in str(e).lower(): return None
+    return ('html5lib '+html5lib.__version__+' strict (WHATWG parsing algorithm, '+('document' if document else 'fragment')+')',str(e)[:200])
+  if language=='javascript' and pathlib.Path(path).suffix=='.jsx':
+   d=typescript_diagnostics(path,text)
+   if d: return ('typescript (apps/web lock)',d[0][:200])
+ except Exception: return None
  return None
 
 def parse_source(path, content):

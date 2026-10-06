@@ -17,7 +17,9 @@ def validate_inventory(summary, files):
  source=[f for f in files if f['classification']=='FIRST_PARTY_SOURCE']
  assert len(source)==summary['first_party_source_files'], 'CENSUS_SOURCE_MISMATCH'
  assert sum(f.get('parse_status')=='PARSED' for f in source)==summary['source_parsed'], 'CENSUS_PARSED_MISMATCH'
- assert sum(f.get('parse_status')!='PARSED' for f in source)==summary['parse_unknown'], 'CENSUS_PARSE_UNKNOWN_MISMATCH'
+ assert sum(f.get('parse_status') not in ('PARSED','PARSE_INVALID_CONFIRMED') for f in source)==summary['parse_unknown'], 'CENSUS_PARSE_UNKNOWN_MISMATCH'
+ assert sum(f.get('parse_status')=='PARSE_INVALID_CONFIRMED' for f in source)==summary.get('parse_invalid_confirmed',0), 'CENSUS_INVALID_CONFIRMED_MISMATCH'
+ assert all(f.get('parse_grammar') and f.get('parse_reason') for f in source if f.get('parse_status')=='PARSE_INVALID_CONFIRMED'), 'INVALID_WITHOUT_REFERENCE_PARSER_ERROR'
  assert counts['TEST']==summary['tests'], 'CENSUS_TEST_MISMATCH'
  assert counts['FIXTURE']==summary['fixtures'], 'CENSUS_FIXTURE_MISMATCH'
 

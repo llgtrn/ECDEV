@@ -1,0 +1,98 @@
+{
+  "donor_id": "VladUZH--harken",
+  "commit_sha": "d0710a427dbbe712594ef3a6c25112e1d14cc027",
+  "license": "MIT",
+  "method": "every Python file read in full and the web static and template files for purpose, by a read-only review; behaviour described in ECDEV's words",
+  "findings": [
+    "Every source falls back to the current time when a timestamp is missing; the invented time feeds alert windows (ECDEV leaves it UNKNOWN: pinned in adapter/web/tests/harken_sources.rs)",
+    "LLM and lexicon sentiment share one column with no analyzer field; LLM theme names silently overwrite computed labels; missing sentiment counts as neutral",
+    "Demo data attributes invented quotes to real public handles and is stored beside live data",
+    "The 96.7% sentiment accuracy is in-sample on 60 examples written with the lexicon",
+    "No source bypasses authentication: Reddit uses OAuth client credentials, X and YouTube official keyed APIs"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "src/harken/sources/hackernews.py",
+        "capabilities": "social.harken.hn-bluesky-normalization",
+        "why": "Algolia search_by_date, substring keep rule"
+      },
+      {
+        "prefix": "src/harken/sources/bluesky.py",
+        "capabilities": "social.harken.hn-bluesky-normalization",
+        "why": "public AppView searchPosts, indexedAt before createdAt"
+      },
+      {
+        "prefix": "src/harken/sources/base.py",
+        "capabilities": "social.harken.hn-bluesky-normalization",
+        "why": "fetch pages, timeout, honest user agent"
+      },
+      {
+        "prefix": "src/harken/sources/rss.py",
+        "capabilities": "social.harken.rss-feeds",
+        "why": "feed reading with substring filter"
+      },
+      {
+        "prefix": "src/harken/sources/",
+        "capabilities": "social.harken.other-sources",
+        "why": "Mastodon, Reddit OAuth, Stack Exchange, X API v2, YouTube Data API, registry"
+      },
+      {
+        "prefix": "src/harken/thresholds.py",
+        "capabilities": "social.harken.evaluate_thresholds",
+        "why": "volume ratio and sentiment drop rules"
+      },
+      {
+        "prefix": "src/harken/store.py",
+        "capabilities": "social.harken.alert_metrics + social.harken.persistence",
+        "why": "windowed counts and net sentiment; WAL SQLite, cursors, outbox, sessions"
+      },
+      {
+        "prefix": "src/harken/pipeline.py",
+        "capabilities": "social.harken.track + social.harken.llm + social.harken.alert-delivery",
+        "why": "scan orchestration, retries with Retry-After, LLM batches with strict validation"
+      },
+      {
+        "prefix": "src/harken/models.py",
+        "capabilities": "social.harken.track",
+        "why": "mention model and ids"
+      },
+      {
+        "prefix": "src/harken/analyze/",
+        "capabilities": "social.harken.sentiment-and-themes",
+        "why": "lexicon sentiment with negation, intensifiers, contrast; DF-greedy themes"
+      },
+      {
+        "prefix": "src/harken/llm/",
+        "capabilities": "social.harken.llm",
+        "why": "provider adapters"
+      },
+      {
+        "prefix": "src/harken/evaluate.py",
+        "capabilities": "social.harken.evaluation-harness",
+        "why": "labelled dataset loader, confusion matrix, macro-F1"
+      },
+      {
+        "prefix": "src/harken/alerts.py",
+        "capabilities": "social.harken.alert-delivery",
+        "why": "webhook and email transports with hashed target keys"
+      },
+      {
+        "prefix": "src/harken/observability.py",
+        "capabilities": "social.harken.observability",
+        "why": "structured logging"
+      },
+      {
+        "prefix": "src/harken/sample_data.py",
+        "capabilities": "social.harken.sample-data",
+        "why": "synthetic demo mentions"
+      },
+      {
+        "prefix": "src/harken/",
+        "capabilities": "social.harken.application",
+        "why": "package init, config, auth, CLI, web app, static assets and templates"
+      }
+    ]
+  }
+}
