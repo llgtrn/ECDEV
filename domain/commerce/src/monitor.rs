@@ -2,7 +2,7 @@
 use crate::Engine;
 use crate::availability::{availability_term, derived_availability};
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 use uuid::Uuid;
@@ -48,6 +48,8 @@ struct WatchInput {
     query: String,
     targets: Vec<String>,
     interval_seconds: u64,
+    #[serde(default)]
+    conditions: Vec<Condition>,
 }
 fn default_enabled() -> bool {
     true
@@ -64,6 +66,7 @@ impl Engine {
         {
             return Err("INVALID_WATCH_LIMITS".into());
         }
+        validate_conditions(&input.conditions)?;
         let mut sources = vec![];
         for target in input.targets {
             let identity = crate::frontier::canonicalize(
@@ -74,7 +77,7 @@ impl Engine {
             )?;
             sources.push(json!({"url":identity.canonical_url}));
         }
-        let request = json!({"market":input.market,"query":input.query,"sources":sources,"max_pages":sources.len(),"max_depth":0,"max_urls":sources.len(),"deadline_seconds":120,"force_refresh":true});
+        let request = json!({"market":input.market,"query":input.query,"sources":sources,"max_pages":sources.len(),"max_depth":0,"max_urls":sources.len(),"deadline_seconds":120,"force_refresh":true,"conditions":input.conditions});
         let id = input
             .watch_id
             .clone()
@@ -218,7 +221,11 @@ impl Engine {
                     .map_err(err)?
                     .unwrap_or(json!({}));
                 let current = snapshot(&run, &lease["request"]);
-                let changes = changes(&old, &current);
+                let mut changes = changes(&old, &current);
+                let conditions: Vec<Condition> =
+                    serde_json::from_value(lease["request"]["conditions"].clone())
+                        .unwrap_or_default();
+                changes.extend(conditions_met(&conditions, &old, &current));
                 let mut baseline = old.clone();
                 for (url, source) in current.as_object().ok_or("INVALID_WATCH_SNAPSHOT")? {
                     if source["status"] != "UNKNOWN" {
@@ -456,6 +463,153 @@ pub fn fact_as_of(windows: &[FactWindow], at: u64) -> Value {
     }
 }
 
+/// A declarative rule over one observed product field of a watch.
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct Condition {
+    pub id: String,
+    pub field: String,
+    pub op: String,
+    pub value: Value,
+    #[serde(default)]
+    pub currency: Option<String>,
+}
+
+pub const MAX_CONDITIONS: usize = 10;
+const PRICE_OPS: [&str; 6] = ["lt", "lte", "gt", "gte", "change_bps_lte", "change_bps_gte"];
+const AVAILABILITY_CLASSES: [&str; 5] = [
+    "AVAILABLE_ONLINE",
+    "IN_STORE_ONLY",
+    "ORDERABLE_LATER",
+    "NOT_AVAILABLE",
+    "UNRECOGNISED",
+];
+
+fn validate_conditions(conditions: &[Condition]) -> Result<(), String> {
+    let ids: BTreeSet<&str> = conditions.iter().map(|c| c.id.as_str()).collect();
+    let valid = conditions.len() <= MAX_CONDITIONS
+        && ids.len() == conditions.len()
+        && conditions.iter().all(|c| {
+            !c.id.is_empty()
+                && c.id.len() <= 64
+                && match c.field.as_str() {
+                    "price_minor" => {
+                        PRICE_OPS.contains(&c.op.as_str())
+                            && c.currency.as_ref().is_some_and(|k| {
+                                k.len() == 3 && k.bytes().all(|b| b.is_ascii_uppercase())
+                            })
+                            && if c.op.starts_with("change_bps") {
+                                c.value.as_i64().is_some()
+                            } else {
+                                c.value.as_u64().is_some()
+                            }
+                    }
+                    "availability" => {
+                        matches!(c.op.as_str(), "class_is" | "class_is_not")
+                            && c.currency.is_none()
+                            && c.value
+                                .as_str()
+                                .is_some_and(|v| AVAILABILITY_CLASSES.contains(&v))
+                    }
+                    _ => false,
+                }
+        });
+    if valid {
+        Ok(())
+    } else {
+        Err("INVALID_WATCH_CONDITION".into())
+    }
+}
+
+/// Whether one observed product meets a threshold rule. None when the rule cannot be judged
+/// (no observed value, another currency): never met by default.
+fn threshold_met(c: &Condition, product: &Value) -> Option<bool> {
+    let observed = &product[c.field.as_str()];
+    if observed.is_null() {
+        return None;
+    }
+    match c.field.as_str() {
+        "price_minor" => {
+            if product["currency"].as_str() != c.currency.as_deref() {
+                return None;
+            }
+            let (v, t) = (observed.as_i64()?, c.value.as_i64()?);
+            Some(match c.op.as_str() {
+                "lt" => v < t,
+                "lte" => v <= t,
+                "gt" => v > t,
+                "gte" => v >= t,
+                _ => return None,
+            })
+        }
+        "availability" => {
+            let class = crate::availability::availability_class(observed);
+            let target = c.value.as_str()?;
+            Some(if c.op == "class_is" {
+                class == target
+            } else {
+                class != target
+            })
+        }
+        _ => None,
+    }
+}
+
+/// Conditions judged on the values observed in this capture only (carried values never fire).
+/// Thresholds fire when they become met against the previous observed value; a change rule
+/// fires when the change from the previous observed price, in the same currency, meets it.
+/// Each firing records the rule, the observed value and the previous observed value.
+fn conditions_met(conditions: &[Condition], old: &Value, new: &Value) -> Vec<Value> {
+    let mut out = vec![];
+    for (url, after) in new.as_object().into_iter().flatten() {
+        if after["status"] != "AVAILABLE" {
+            continue;
+        }
+        let before_products = &old[url]["products"];
+        let before = observed_view(before_products);
+        for (key, p) in after["products"].as_object().into_iter().flatten() {
+            let prev_raw = &before_products[key];
+            let prev = &before[key];
+            for c in conditions {
+                let gap = !prev_raw["_unobserved_since"].is_null()
+                    || !prev_raw["_unobserved_fields"][c.field.as_str()].is_null();
+                let previous = if gap {
+                    &prev_raw[c.field.as_str()]
+                } else {
+                    &prev[c.field.as_str()]
+                };
+                let previous_product = if gap { prev_raw } else { prev };
+                let fired = if c.op.starts_with("change_bps") {
+                    let same_currency = p["currency"].as_str() == c.currency.as_deref()
+                        && previous_product["currency"].as_str() == c.currency.as_deref();
+                    match (
+                        previous.as_i64(),
+                        p["price_minor"].as_i64(),
+                        c.value.as_i64(),
+                    ) {
+                        (Some(b), Some(a), Some(t)) if same_currency && b > 0 && a != b => {
+                            let bps = (i128::from(a) - i128::from(b)) * 10_000 / i128::from(b);
+                            if c.op == "change_bps_lte" {
+                                bps <= i128::from(t)
+                            } else {
+                                bps >= i128::from(t)
+                            }
+                        }
+                        _ => false,
+                    }
+                } else {
+                    threshold_met(c, p) == Some(true)
+                        && threshold_met(c, previous_product) != Some(true)
+                };
+                if fired {
+                    out.push(json!({"kind":"CONDITION_MET","condition":c,"url":url,"product":key,"field":c.field,"observed":p[c.field.as_str()],"currency":p["currency"],"previous_observed":previous,"across_gap":gap,"raw_capture_sha256":after["raw_capture_sha256"],"evidence":"VALUE_OBSERVED_IN_THIS_CAPTURE"}));
+                }
+            }
+        }
+    }
+    out
+}
+
 /// One stored fact window, as `price_statistics` reads it.
 #[derive(Clone, Debug)]
 pub struct FactWindow {
@@ -681,6 +835,84 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn conditions_fire_on_observed_values_and_record_them() {
+        let root = std::env::temp_dir().join(format!("ecdev-cond-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        let url = "https://shop.example/product";
+        let conditions = json!([
+            {"id":"below","field":"price_minor","op":"lt","value":2900,"currency":"JPY"},
+            {"id":"drop5","field":"price_minor","op":"change_bps_lte","value":-500,"currency":"JPY"},
+            {"id":"gone","field":"availability","op":"class_is","value":"NOT_AVAILABLE"}
+        ]);
+        let watch = e.monitor_create(json!({"market":"PUBLIC_WEB","query":"Watch cup","targets":[url],"interval_seconds":60,"conditions":conditions})).unwrap();
+        let id = watch["watch_id"].as_str().unwrap().to_string();
+        let run = |price: Value, availability: &str| json!({"run_id":"fixture","mode":"FIXTURE","errors":[],"snapshots":[{"source":url,"content_hash":"fixture","products":[{"sku":"Cup","title":"Cup","price_minor":price,"currency":"JPY","availability":availability}]}]});
+        let fired = |at: u64, outcome: Value| -> Vec<(String, Value, bool)> {
+            e.db.lock()
+                .unwrap()
+                .execute("UPDATE watches SET next_due=?1", [at])
+                .unwrap();
+            let lease = e.claim_watch(at).unwrap().unwrap();
+            e.finish_watch(&lease, at, Ok(outcome)).unwrap();
+            e.monitor_status(Some(&id)).unwrap()["changes"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|c| c["at"] == at && c["trigger"]["kind"] == "CONDITION_MET")
+                .map(|c| {
+                    (
+                        c["trigger"]["condition"]["id"]
+                            .as_str()
+                            .unwrap()
+                            .to_string(),
+                        c["trigger"]["observed"].clone(),
+                        c["trigger"]["across_gap"].as_bool().unwrap(),
+                    )
+                })
+                .collect()
+        };
+        let ids =
+            |v: &[(String, Value, bool)]| v.iter().map(|x| x.0.clone()).collect::<BTreeSet<_>>();
+        assert!(fired(100, run(json!(3000), "InStock")).is_empty());
+        // 3000 -> 2800: below 2900 for the first time, and a 6.66 % drop.
+        let f = fired(200, run(json!(2800), "InStock"));
+        assert_eq!(
+            ids(&f),
+            BTreeSet::from(["below".to_string(), "drop5".to_string()])
+        );
+        assert!(f.iter().all(|x| x.1 == 2800 && !x.2));
+        // 2800 -> 2700: still below (no new edge), a 3.57 % drop is not 5 %.
+        assert!(fired(300, run(json!(2700), "InStock")).is_empty());
+        // A capture without the price carries nothing that could fire.
+        assert!(fired(400, run(Value::Null, "InStock")).is_empty());
+        // 2700 -> 2000 across the gap: the drop is measured from the last observed price.
+        let f = fired(500, run(json!(2000), "https://schema.org/OutOfStock"));
+        assert_eq!(
+            ids(&f),
+            BTreeSet::from(["drop5".to_string(), "gone".to_string()])
+        );
+        assert!(f.iter().any(|x| x.0 == "drop5" && x.2));
+        // Other change events are never suppressed by conditions.
+        let all = e.monitor_status(Some(&id)).unwrap()["changes"]
+            .as_array()
+            .unwrap()
+            .len();
+        assert!(all > 4);
+        for bad in [
+            json!([{"id":"x","field":"price_minor","op":"lt","value":1}]),
+            json!([{"id":"x","field":"price_minor","op":"lt","value":-1,"currency":"JPY"}]),
+            json!([{"id":"x","field":"availability","op":"class_is","value":"InStock"}]),
+            json!([{"id":"x","field":"title","op":"eq","value":"a"}]),
+            json!([{"id":"x","field":"availability","op":"class_is","value":"NOT_AVAILABLE"},{"id":"x","field":"availability","op":"class_is","value":"NOT_AVAILABLE"}]),
+        ] {
+            assert_eq!(
+                e.monitor_create(json!({"market":"PUBLIC_WEB","query":"q","targets":[url],"interval_seconds":60,"conditions":bad})).unwrap_err(),
+                "INVALID_WATCH_CONDITION"
+            );
+        }
+    }
+
     /// LongMemEval's knowledge-update, temporal-reasoning and abstention question types,
     /// restated over a watch's own observation history.
     #[test]

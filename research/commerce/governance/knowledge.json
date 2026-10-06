@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "67554dae96a280862830dea67cd586024f8f1db5",
+  "assessed_parent_commit": "7a8b217f229fbd05fc517e7c994203a080955a15",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 42,
+    "study_candidates": 41,
     "benchmark_candidates": 31,
     "algorithm_candidates": 12,
     "reference_only": 52,
-    "study_complete_capabilities": 80,
+    "study_complete_capabilities": 81,
     "not_relevant_after_review": 25,
-    "research_questions_open": 85,
-    "knowledge_coverage_ratio": 0.64876
+    "research_questions_open": 84,
+    "knowledge_coverage_ratio": 0.652893
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -307,7 +307,6 @@
         "changedetection.portability ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)",
         "changedetection.access-diagnostics STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
         "changedetection.llm-extraction BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
-        "changedetection.conditions-engine STUDY_CANDIDATE(declarative rules over typed observed fields (price, stock, similarity) that record which observed values met which rule when they fire)",
         "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns; reporting a miss as missing evidence is native (domain/commerce/src/monitor.rs PRODUCT_NOT_OBSERVED and FIELD_NOT_OBSERVED))",
         "changedetection.fetcher-selection BENCHMARK_CANDIDATE(on real retail pages that inject structured product data with JavaScript, does rendering add price or stock evidence a plain fetch misses? On practice sites (research/commerce/fetch-mode-benchmark.json) it added none)",
         "changedetection.browser-automation STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)",
@@ -322,6 +321,7 @@
         "changedetection.ui NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)",
         "changedetection.price-history STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs::price_statistics weighs each observed price by the time it was actually seen, reports unobserved time and refuses mixed currencies or overlapping windows; the donor ranks prices over change events)",
         "changedetection.llm-assist STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)",
+        "changedetection.conditions-engine STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs conditions: up to ten declared rules per watch over observed price (thresholds with a required currency, or basis-point change from the previous observed price) and derived availability class, judged only on values observed in the capture, thresholds on their edge; each CONDITION_MET records the rule, observed and previous observed value and whether a gap lay between, and never suppresses other change events; similarity rules are not implemented)",
         "changedetection.anti-bot-evasion STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)",
         "changedetection.processor-framework REFERENCE_ONLY(pluggable extraction processors and hooks, where every result should carry the strategy that produced it)",
         "changedetection.fetch-safety REFERENCE_ONLY(SSRF validation on every redirect hop and open-redirect guards)",
