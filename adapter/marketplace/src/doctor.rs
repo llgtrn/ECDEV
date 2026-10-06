@@ -161,7 +161,7 @@ pub fn report(env: &dyn EnvSource, session: Option<SessionView>) -> Value {
         .iter()
         .map(|s| {
             let route = if s.capability == reads::READ_CAPABILITY {
-                "ADAPTER_CAPABILITY_seller.read.official_NOT_EXPOSED_AS_MCP_TOOL"
+                "ecdev.seller.read"
             } else {
                 "ecdev.product.analyze evidence_layer=OFFICIAL_SP_API (also requires core monetary ceilings)"
             };
