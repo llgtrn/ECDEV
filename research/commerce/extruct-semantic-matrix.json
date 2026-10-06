@@ -1,0 +1,167 @@
+{
+  "donor_id": "scrapinghub--extruct",
+  "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+  "license": "BSD-3-Clause",
+  "scope": "every first-party source file of the pinned donor",
+  "oracles": [
+    {
+      "fixture": "adapter/web/tests/fixtures/extruct-microdata.json",
+      "sha256": "568280728a1aed7b2fbf4cf87c207cbccc8b25b66152efc2266a306dd663e84d",
+      "cases": 132,
+      "generator": "retired tools/commerce/extruct_oracle.py (see extruct-extinction.json)"
+    },
+    {
+      "fixture": "adapter/web/tests/fixtures/extruct-jsonld-opengraph.json",
+      "sha256": "a3165efe5ae5c8f6606dc816e232472fe7e8626bcf93e0c42fe9d9c7dd3eb739",
+      "cases": 93,
+      "generator": "embedded generator_source, sha256 69bcf42e5b42b0ee427b8a34323db15091fd430eb6bd841bb3727666f55a7b82; runs jsonld/opengraph/utils through a namespace package so extruct/__init__ (rdflib, pyRdfa, mf2py) never loads"
+    }
+  ],
+  "rows": [
+    {
+      "source": "extruct/w3cmicrodata.py (+ utils.parse_html)",
+      "behaviour": "W3C microdata items, itemref, URL-valued properties, nested items, strict/non-strict text",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "extruct.microdata",
+      "native": "adapter/web/src/microdata.rs::extract, ::normalize",
+      "production_caller": "adapter/web/src/lib.rs::extract_with_hash (microdata products)",
+      "proof": "PARITY_PROVEN: 132 frozen cases (adapter/web/tests/fixtures/extruct-microdata.json); regression microdata_regressions"
+    },
+    {
+      "source": "extruct/jsonld.py (valid-JSON path)",
+      "behaviour": "script[type=application/ld+json] decoded as JSON; arrays contribute items",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "extruct.jsonld",
+      "native": "adapter/web/src/lib.rs::extract_with_hash (structured_data)",
+      "production_caller": "adapter/web/src/lib.rs::products (JSON-LD products and offers)",
+      "proof": "PARITY_PROVEN on every valid-JSON script of 93 frozen cases; numbers compared by value because ECDEV keeps exact literals; JSON-LD MIME type matched case-insensitively by ECDEV (1 pinned case)",
+      "note": "the oracle exposed an ECDEV defect: inner_html() escaped & and > in script text; fixed and covered by json_ld_string_values_keep_raw_ampersands_and_angles"
+    },
+    {
+      "source": "extruct/jsonld.py (repair path: framing strip, escape repair, quote guessing, leading-value decode, html.unescape, strict=False control characters)",
+      "behaviour": "best-effort recovery of malformed JSON-LD",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.jsonld-repair",
+      "native": null,
+      "proof": "ECDEV refuses every such script as INVALID_JSON_LD (extruct_jsonld_repair_partition_is_refused_not_guessed)",
+      "note": "a repaired value is the extractor's guess, not an assertion the page made; ECDEV evidence must be OBSERVED exactly as captured"
+    },
+    {
+      "source": "extruct/opengraph.py",
+      "behaviour": "head meta[property][content] with OpenGraph namespaces",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "extruct.opengraph",
+      "native": "adapter/web/src/commerce.rs::page_metadata (open_graph)",
+      "production_caller": "adapter/web/src/page_product.rs::enrich",
+      "proof": "PARITY_PROVEN on og:/product: head properties of 93 frozen cases; extruct's bare 'og' property (no colon) is not an OpenGraph property and is not read by ECDEV (1 pinned case)",
+      "note": "ECDEV additionally reads twitter: and name= metas and body metas as separate page assertions with locators"
+    },
+    {
+      "source": "extruct/rdfa.py, extruct/xmldom.py, utils.parse_xmldom_html",
+      "behaviour": "RDFa via pyRdfa/rdflib over a minidom adapter",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.rdfa",
+      "native": null,
+      "proof": null,
+      "note": "extruct delegates RDFa to pyRdfa3 and rdflib; ECDEV's acquisition reads JSON-LD, microdata and meta assertions only, and no ECDEV caller requests RDFa"
+    },
+    {
+      "source": "extruct/microformat.py",
+      "behaviour": "mf2py wrapper",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.microformat",
+      "native": null,
+      "proof": null,
+      "note": "10-line delegation to mf2py; no ECDEV caller requests microformats"
+    },
+    {
+      "source": "extruct/dublincore.py",
+      "behaviour": "DC elements/terms from meta and link[rel=schema.*] with namespace URI expansion",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.dublincore",
+      "native": null,
+      "proof": null,
+      "note": "ECDEV reads dc:description/dcterms:description metas as raw page assertions under its own policy (commerce.rs::page_metadata, named_metadata_preserves_repeated_claims_conflicts_and_exact_locators); extruct's DC namespace and term-URI model is not used"
+    },
+    {
+      "source": "extruct/uniform.py",
+      "behaviour": "schema.org-like flattening of OpenGraph, microdata, microformat and DC output",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.uniform",
+      "native": null,
+      "proof": null,
+      "note": "ECDEV keeps raw values with JSON pointers and locators instead of a uniform rewrite"
+    },
+    {
+      "source": "extruct/_extruct.py, extruct/tool.py, extruct/__main__.py, extruct/__init__.py, setup.py",
+      "behaviour": "syntax dispatch, error modes, CLI with requests, packaging",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "extruct.cli-and-orchestration",
+      "native": null,
+      "proof": null,
+      "note": "ECDEV has its own acquisition pipeline and makes no requests through the donor"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "extruct/w3cmicrodata.py",
+        "capabilities": "extruct.microdata"
+      },
+      {
+        "prefix": "extruct/utils.py",
+        "capabilities": "extruct.microdata + extruct.rdfa"
+      },
+      {
+        "prefix": "extruct/jsonld.py",
+        "capabilities": "extruct.jsonld + extruct.jsonld-repair"
+      },
+      {
+        "prefix": "extruct/opengraph.py",
+        "capabilities": "extruct.opengraph"
+      },
+      {
+        "prefix": "extruct/rdfa.py",
+        "capabilities": "extruct.rdfa"
+      },
+      {
+        "prefix": "extruct/xmldom.py",
+        "capabilities": "extruct.rdfa"
+      },
+      {
+        "prefix": "extruct/microformat.py",
+        "capabilities": "extruct.microformat"
+      },
+      {
+        "prefix": "extruct/dublincore.py",
+        "capabilities": "extruct.dublincore"
+      },
+      {
+        "prefix": "extruct/uniform.py",
+        "capabilities": "extruct.uniform"
+      },
+      {
+        "prefix": "extruct/_extruct.py",
+        "capabilities": "extruct.cli-and-orchestration"
+      },
+      {
+        "prefix": "extruct/tool.py",
+        "capabilities": "extruct.cli-and-orchestration"
+      },
+      {
+        "prefix": "extruct/__main__.py",
+        "capabilities": "extruct.cli-and-orchestration"
+      },
+      {
+        "prefix": "extruct/__init__.py",
+        "capabilities": "extruct.cli-and-orchestration"
+      },
+      {
+        "prefix": "setup.py",
+        "capabilities": "extruct.cli-and-orchestration"
+      }
+    ]
+  },
+  "status": "SEMANTIC_MATRIX_FILE_LEVEL_COMPLETE_ALL_CAPABILITIES_RESOLVED"
+}

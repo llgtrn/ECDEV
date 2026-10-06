@@ -372,6 +372,42 @@ pub fn normalize(items: &Value) -> (Value, BTreeMap<String, String>) {
 mod tests {
     use super::*;
     #[test]
+    fn microdata_regressions() {
+        let base = Url::parse("https://shop.example/items/cup").unwrap();
+        // Nested offers, relative URL resolution and an itemref cycle that must terminate.
+        let html = concat!(
+            r#"<div id="p" itemscope itemtype="https://schema.org/Product" itemref="x">"#,
+            r#"<span itemprop="name">Cup</span><img itemprop="image" src="../cup.png">"#,
+            r#"<div itemprop="offers" itemscope itemtype="https://schema.org/Offer">"#,
+            r#"<meta itemprop="price" content="2980"><meta itemprop="priceCurrency" content="JPY"></div></div>"#,
+            r#"<div id="x" itemscope itemtype="https://schema.org/Thing" itemprop="related" itemref="p">"#,
+            r#"<span itemprop="name">Loop</span></div>"#
+        );
+        let items = extract(&Html::parse_document(html), Some(&base), false);
+        let product = &items[0];
+        assert_eq!(product["type"], "https://schema.org/Product");
+        assert_eq!(product["properties"]["name"], "Cup");
+        assert_eq!(
+            product["properties"]["image"],
+            "https://shop.example/cup.png"
+        );
+        assert_eq!(
+            product["properties"]["offers"]["properties"]["price"],
+            "2980"
+        );
+        let (normalized, paths) = normalize(&items);
+        assert!(normalized.to_string().contains("\"price\":\"2980\""));
+        assert!(!paths.is_empty());
+        // No items without itemscope.
+        let none = extract(
+            &Html::parse_document("<span itemprop='name'>x</span>"),
+            Some(&base),
+            false,
+        );
+        assert_eq!(none, serde_json::json!([]));
+    }
+
+    #[test]
     fn locked_extruct_microdata_oracle() {
         let fixture: Value =
             serde_json::from_str(include_str!("../tests/fixtures/extruct-microdata.json")).unwrap();

@@ -70,7 +70,7 @@ def lifecycle_negative_cases():
   except AssertionError:continue
   raise AssertionError('EXTINCTION_WITHOUT_EVIDENCE_OR_CENSUS_ACCEPTED')
  # A bounded, non-extinct donor rejects every unproven whole-donor claim.
- k='scrapinghub--extruct';d=donors[k];actual=assessed[k];s=summary(k)
+ k='apify--crawlee';d=donors[k];actual=assessed[k];s=summary(k)
  validate_lifecycle(d,s,actual)
  for changed,evidence in [(dict(d,extinction_status='EXTINCT'),actual),(d,dict(actual,effective='EXTINCT',extinct=True)),(dict(d,absorption_status='NATIVE_ABSORBED'),actual),(dict(d,oracle_status='ORACLE_VERIFIED'),actual)]:
   try:validate_lifecycle(changed,s,evidence)

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "3f49ee09d00aeb0c390e34716e2719913206f753",
+  "assessed_parent_commit": "802462579766daebb30ba8988c2747722157fa9d",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
@@ -8,12 +8,13 @@
   "effective_states": {
     "CENSUSED": 7,
     "DISCOVERED": 15,
-    "EXTINCT": 2,
-    "NATIVE_SHADOW": 3,
+    "EXTINCT": 3,
+    "NATIVE_SHADOW": 2,
     "REGISTERED": 33
   },
   "extinct": [
     "getzep--graphiti",
+    "scrapinghub--extruct",
     "scrapinghub--price-parser"
   ],
   "donors": [
@@ -1520,10 +1521,10 @@
     },
     {
       "donor": "scrapinghub--extruct",
-      "claimed": "REGISTERED",
-      "effective": "NATIVE_SHADOW",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: extract.structured_data",
+      "stopped_by": "",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1532,8 +1533,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": false,
-          "detail": "2 observed: IMPORT PYTHON extruct in tools/commerce/extruct_oracle.py; SOURCE_REFERENCE NATIVE research/commerce/donors/checkouts/scrapinghub--extruct in tools/commerce/extruct_oracle.py"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -1558,42 +1559,42 @@
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
           "pass": true,
-          "detail": "all 1 required capabilities have a valid native replacement"
+          "detail": "all 3 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: extract.structured_data"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "1 of 1 required capabilities lack it: extract.structured_data"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
           "pass": true,
-          "detail": "all 1 required capabilities have an existing canonical replacement node"
+          "detail": "all 3 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
           "pass": true,
-          "detail": "all 1 required capabilities map to a capability or technology of the canonical graph"
+          "detail": "all 3 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: extract.structured_data"
+          "pass": true,
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: tools.commerce (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },

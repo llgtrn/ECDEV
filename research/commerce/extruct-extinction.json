@@ -1,0 +1,72 @@
+{
+  "donor_id": "scrapinghub--extruct",
+  "origin": "https://github.com/scrapinghub/extruct",
+  "commit_sha": "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf",
+  "license": "BSD-3-Clause",
+  "status": "EXTINCT",
+  "definition": "Microdata, valid-JSON JSON-LD and OpenGraph reading, the extruct behaviours ECDEV relies on, are native and proven against frozen outputs of the pinned donor; JSON-LD repair, RDFa, microformats, Dublin Core term expansion, uniform rewriting and the CLI are justified NOT_RELEVANT_TO_ECDEV; all 14 first-party source files map to research/commerce/extruct-semantic-matrix.json; no runtime/build/linked/test/import/source-reference edge remains.",
+  "governance": "ecdev-gov extinction: all gates pass (research/commerce/governance/lifecycle.json)",
+  "defect_found_by_oracle": "ECDEV read JSON-LD with inner_html(), which escaped & and > inside string values for XHTML-doctype documents; fixed in 8024625 (raw script text) with regression json_ld_string_values_keep_raw_ampersands_and_angles",
+  "pinned_divergences": [
+    {
+      "case": "derived/ld-type-case",
+      "ecdev": "reads type=Application/LD+JSON (MIME types are case-insensitive)",
+      "extruct": "exact lowercase XPath match only"
+    },
+    {
+      "case": "tests/samples/songkick/elysianfields_1.html",
+      "ecdev": "ignores property=\"og\" (no OpenGraph property name)",
+      "extruct": "keeps it because it checks only the namespace before the first colon"
+    },
+    {
+      "case": "repair partition (24 scripts in the frozen corpus)",
+      "ecdev": "INVALID_JSON_LD, no value",
+      "extruct": "repaired value"
+    }
+  ],
+  "frozen_material": [
+    {
+      "path": "adapter/web/tests/fixtures/extruct-microdata.json",
+      "sha256": "568280728a1aed7b2fbf4cf87c207cbccc8b25b66152efc2266a306dd663e84d"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/extruct-jsonld-opengraph.json",
+      "sha256": "a3165efe5ae5c8f6606dc816e232472fe7e8626bcf93e0c42fe9d9c7dd3eb739"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/extruct-LICENSE.txt",
+      "sha256": "3867c3ec55d2088f90b7e5559b5177ddacce592e6be255291294d6a238b00c1b"
+    }
+  ],
+  "retired_generator": {
+    "path": "tools/commerce/extruct_oracle.py",
+    "last_blob": "b96d590aa0f6356db6579d08fdeb5ac504968386",
+    "sha256": "f02e468b2e3d27980ff63ee97a4b698013458501a9d6933ed01cd2beb774abe1",
+    "last_commit_containing_it": "8024625",
+    "reproduce": "git show 8024625:tools/commerce/extruct_oracle.py; requires the pinned clone at research/commerce/donors/checkouts/scrapinghub--extruct"
+  },
+  "builds_without_donor": {
+    "donor_checkout_present": false,
+    "python_in_build": false,
+    "cargo_test_ecdev_web": "45 ecdev-web tests (including all extruct oracles) pass with no extruct clone on disk"
+  },
+  "negative_checks": [
+    {
+      "probe": "a tracked tools/commerce/reentry_probe.py containing `from extruct.jsonld import JsonLdExtractor`",
+      "result": "effective CUTOVER; BUILD_EDGES_ZERO and ROLLBACK_INDEPENDENT fail; verify fails"
+    },
+    {
+      "probe": "the retired tools/commerce/extruct_oracle.py restored and tracked",
+      "result": "effective CUTOVER; import and checkout SOURCE_REFERENCE edges; verify fails"
+    },
+    {
+      "probe": "one appended comment line in adapter/web/src/microdata.rs without re-proving",
+      "result": "effective NATIVE_SHADOW; parity and regression evidence STALE; verify fails"
+    }
+  ],
+  "license_and_provenance": {
+    "license": "BSD-3-Clause",
+    "license_text": "adapter/web/tests/fixtures/extruct-LICENSE.txt",
+    "census": "research/commerce/donors/census/scrapinghub--extruct/"
+  }
+}
