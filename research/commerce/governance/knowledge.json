@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "7a8b217f229fbd05fc517e7c994203a080955a15",
+  "assessed_parent_commit": "19eb9fa35bdf4acddc864a66f6926a02839efd03",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 41,
     "benchmark_candidates": 31,
-    "algorithm_candidates": 12,
+    "algorithm_candidates": 11,
     "reference_only": 52,
-    "study_complete_capabilities": 81,
+    "study_complete_capabilities": 82,
     "not_relevant_after_review": 25,
-    "research_questions_open": 84,
-    "knowledge_coverage_ratio": 0.652893
+    "research_questions_open": 83,
+    "knowledge_coverage_ratio": 0.657025
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -304,7 +304,6 @@
         "changedetection.scheduling STUDY_CANDIDATE(per-watch recheck scheduling and jitter versus ECDEV's lease-based watches)",
         "changedetection.api STUDY_CANDIDATE(a versioned monitoring API exposing evidence (snapshot hash, fetch metadata, observed values with provenance) rather than file paths, with no side effects on reads)",
         "changedetection.selector-authoring STUDY_CANDIDATE(stability of click-derived selectors (name, id or class chain, positional XPath) across page revisions, with fallbacks stored beside the screenshot and element box as evidence)",
-        "changedetection.portability ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)",
         "changedetection.access-diagnostics STUDY_CANDIDATE(classifying each route as reachable, blocked, soft-blocked or filter-missing with the real status and response size recorded)",
         "changedetection.llm-extraction BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
         "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns; reporting a miss as missing evidence is native (domain/commerce/src/monitor.rs PRODUCT_NOT_OBSERVED and FIELD_NOT_OBSERVED))",
@@ -320,6 +319,7 @@
         "changedetection.watch-persistence STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's persisted watches with leases and fenced restarts)",
         "changedetection.ui NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)",
         "changedetection.price-history STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs::price_statistics weighs each observed price by the time it was actually seen, reports unobserved time and refuses mixed currencies or overlapping windows; the donor ranks prices over change events)",
+        "changedetection.portability STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs::monitor_export writes a watch history (request, snapshots, change triggers, fact windows with times) with per-record SHA-256 over canonical JSON and a chained root, so edits, removals, additions and reordering are detected; monitor_import verifies and replays it as a disabled watch, refusing an existing id; a re-export of an import reproduces the records and root; raw captures travel only as hashes)",
         "changedetection.llm-assist STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)",
         "changedetection.conditions-engine STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs conditions: up to ten declared rules per watch over observed price (thresholds with a required currency, or basis-point change from the previous observed price) and derived availability class, judged only on values observed in the capture, thresholds on their edge; each CONDITION_MET records the rule, observed and previous observed value and whether a gap lay between, and never suppresses other change events; similarity rules are not implemented)",
         "changedetection.anti-bot-evasion STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)",

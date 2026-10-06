@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "7a8b217f229fbd05fc517e7c994203a080955a15",
+  "assessed_parent_commit": "19eb9fa35bdf4acddc864a66f6926a02839efd03",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1639,9 +1639,9 @@
         {
           "key": "changedetection.portability",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(a backup and export format with a manifest, per-file hashes and capture times so history is replayable and tamper-evident)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs::monitor_export writes a watch history (request, snapshots, change triggers, fact windows with times) with per-record SHA-256 over canonical JSON and a chained root, so edits, removals, additions and reordering are detected; monitor_import verifies and replays it as a disabled watch, refusing an existing id; a re-export of an import reproduces the records and root; raw captures travel only as hashes)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.access-diagnostics",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "12 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.portability (ALGORITHM_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
+          "detail": "11 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.access-diagnostics (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE), changedetection.history-extraction (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -3139,7 +3139,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "14 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
+          "detail": "15 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

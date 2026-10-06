@@ -463,6 +463,163 @@ pub fn fact_as_of(windows: &[FactWindow], at: u64) -> Value {
     }
 }
 
+pub const EXPORT_FORMAT: &str = "ECDEV_WATCH_EXPORT_V1";
+
+fn sha256_hex(bytes: &[u8]) -> String {
+    use sha2::{Digest, Sha256};
+    format!("{:x}", Sha256::digest(bytes))
+}
+
+/// The manifest of an export's records: each record's SHA-256 over its canonical JSON (sorted
+/// keys), and a chain over them in order, so an edited, removed, added or reordered record
+/// changes the root.
+pub fn export_manifest(watch: &Value, records: &[Value]) -> Value {
+    let watch_sha256 = sha256_hex(watch.to_string().as_bytes());
+    let mut chain = sha256_hex(format!("{EXPORT_FORMAT}:{watch_sha256}").as_bytes());
+    let entries: Vec<Value> = records
+        .iter()
+        .enumerate()
+        .map(|(i, r)| {
+            let sha = sha256_hex(r.to_string().as_bytes());
+            chain = sha256_hex(format!("{chain}:{sha}").as_bytes());
+            json!({"index":i,"kind":r["kind"],"at":r["at"],"sha256":sha})
+        })
+        .collect();
+    json!({"format":EXPORT_FORMAT,"watch_sha256":watch_sha256,"entries":entries,"root_sha256":chain,"raw_captures":"HASHES_ONLY_NOT_INCLUDED"})
+}
+
+/// Recomputes an export's manifest; Err names the first disagreement.
+pub fn verify_export(bundle: &Value) -> Result<(), String> {
+    if bundle["format"] != EXPORT_FORMAT {
+        return Err("EXPORT_FORMAT_UNKNOWN".into());
+    }
+    let records = bundle["records"]
+        .as_array()
+        .ok_or("EXPORT_RECORDS_MISSING")?;
+    let expected = export_manifest(&bundle["watch"], records);
+    let stated = &bundle["manifest"];
+    if stated["watch_sha256"] != expected["watch_sha256"] {
+        return Err("EXPORT_WATCH_HASH_MISMATCH".into());
+    }
+    if stated["entries"] != expected["entries"] {
+        return Err("EXPORT_RECORD_HASH_MISMATCH".into());
+    }
+    if stated["root_sha256"] != expected["root_sha256"] {
+        return Err("EXPORT_ROOT_MISMATCH".into());
+    }
+    Ok(())
+}
+
+impl Engine {
+    /// A watch's history as a self-verifying bundle: its request, every snapshot, change and
+    /// fact window with its times, and a hash manifest. Leases, tokens and errors are runtime
+    /// state and are left out; whether the watch was enabled is reported outside the hashed
+    /// content (an import is always disabled); raw captures appear only as their hashes.
+    pub fn monitor_export(&self, watch_id: &str) -> Result<Value, String> {
+        let db = self.db.lock().map_err(err)?;
+        let (args, interval, enabled, baseline): (String, u64, bool, Option<String>) = db
+            .query_row(
+                "SELECT args,interval_secs,enabled,baseline FROM watches WHERE id=?1",
+                [watch_id],
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?, r.get(3)?)),
+            )
+            .optional()
+            .map_err(err)?
+            .ok_or("WATCH_NOT_FOUND")?;
+        let parse = |s: &str| serde_json::from_str::<Value>(s).map_err(err);
+        let watch = json!({"id":watch_id,"request":parse(&args)?,"interval_seconds":interval,"baseline":baseline.as_deref().map(parse).transpose()?});
+        let mut records = vec![];
+        for (kind, table) in [("SNAPSHOT", "watch_snapshots"), ("CHANGE", "watch_changes")] {
+            let mut s = db
+                .prepare(&format!(
+                    "SELECT at,payload FROM {table} WHERE watch_id=?1 ORDER BY id"
+                ))
+                .map_err(err)?;
+            let rows = s
+                .query_map([watch_id], |r| {
+                    Ok((r.get::<_, u64>(0)?, r.get::<_, String>(1)?))
+                })
+                .map_err(err)?;
+            for row in rows {
+                let (at, payload) = row.map_err(err)?;
+                records.push(json!({"kind":kind,"at":at,"payload":parse(&payload)?}));
+            }
+        }
+        let mut s = db
+            .prepare("SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at FROM watch_facts WHERE watch_id=?1 ORDER BY id")
+            .map_err(err)?;
+        let rows = s
+            .query_map([watch_id], |r| {
+                Ok(json!({"kind":"FACT","at":r.get::<_,u64>(4)?,"url":r.get::<_,String>(0)?,"product":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":r.get::<_,String>(3)?,"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?}))
+            })
+            .map_err(err)?;
+        for row in rows {
+            records.push(row.map_err(err)?);
+        }
+        let manifest = export_manifest(&watch, &records);
+        Ok(
+            json!({"format":EXPORT_FORMAT,"exported_at":crate::service::timestamp(),"enabled_at_export":enabled,"watch":watch,"records":records,"manifest":manifest}),
+        )
+    }
+
+    /// Replays a verified export into this engine as a disabled watch with the same id. An
+    /// existing watch id is refused, never merged or overwritten.
+    pub fn monitor_import(&self, bundle: &Value) -> Result<Value, String> {
+        verify_export(bundle)?;
+        let watch = &bundle["watch"];
+        let id = watch["id"].as_str().ok_or("EXPORT_WATCH_ID_MISSING")?;
+        {
+            let mut db = self.db.lock().map_err(err)?;
+            let tx = db
+                .transaction_with_behavior(TransactionBehavior::Immediate)
+                .map_err(err)?;
+            let exists: bool = tx
+                .query_row("SELECT count(*)>0 FROM watches WHERE id=?1", [id], |r| {
+                    r.get(0)
+                })
+                .map_err(err)?;
+            if exists {
+                return Err("WATCH_EXISTS".into());
+            }
+            tx.execute(
+                "INSERT INTO watches(id,args,interval_secs,next_due,enabled,baseline) VALUES(?1,?2,?3,?4,0,?5)",
+                params![
+                    id,
+                    watch["request"].to_string(),
+                    watch["interval_seconds"].as_u64().ok_or("EXPORT_INTERVAL_MISSING")?,
+                    crate::service::timestamp(),
+                    (!watch["baseline"].is_null()).then(|| watch["baseline"].to_string())
+                ],
+            )
+            .map_err(err)?;
+            for r in bundle["records"].as_array().into_iter().flatten() {
+                match r["kind"].as_str() {
+                    Some(kind @ ("SNAPSHOT" | "CHANGE")) => {
+                        let table = if kind == "SNAPSHOT" {
+                            "watch_snapshots"
+                        } else {
+                            "watch_changes"
+                        };
+                        tx.execute(
+                            &format!("INSERT INTO {table}(watch_id,at,payload) VALUES(?1,?2,?3)"),
+                            params![id, r["at"].as_u64(), r["payload"].to_string()],
+                        )
+                        .map_err(err)?;
+                    }
+                    Some("FACT") => {
+                        tx.execute("INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10)", params![id,r["url"].as_str(),r["product"].as_str(),r["field"].as_str(),r["value"].as_str(),r["valid_at"].as_u64(),r["invalid_at"].as_u64(),r["run_id"].as_str(),r["raw_capture_sha256"].as_str(),r["last_observed_at"].as_u64()]).map_err(err)?;
+                    }
+                    _ => return Err("EXPORT_RECORD_KIND_UNKNOWN".into()),
+                }
+            }
+            tx.commit().map_err(err)?;
+        }
+        Ok(
+            json!({"watch_id":id,"imported_records":bundle["records"].as_array().map_or(0,Vec::len),"root_sha256":bundle["manifest"]["root_sha256"],"enabled":false,"state":"IMPORTED_VERIFIED_DISABLED"}),
+        )
+    }
+}
+
 /// A declarative rule over one observed product field of a watch.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -835,6 +992,104 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn exports_replay_identically_and_reveal_tampering() {
+        let root = std::env::temp_dir().join(format!("ecdev-export-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        let url = "https://shop.example/product";
+        let watch = e.monitor_create(json!({"market":"PUBLIC_WEB","query":"Watch cup","targets":[url],"interval_seconds":60})).unwrap();
+        let id = watch["watch_id"].as_str().unwrap().to_string();
+        let run = |price: u64| json!({"run_id":"fixture","mode":"FIXTURE","errors":[],"snapshots":[{"source":url,"content_hash":"fixture","products":[{"sku":"Cup","title":"Cup","price_minor":price,"currency":"JPY"}]}]});
+        for (at, price) in [(100, 3000), (200, 3000), (300, 2500)] {
+            e.db.lock()
+                .unwrap()
+                .execute("UPDATE watches SET next_due=?1", [at])
+                .unwrap();
+            let lease = e.claim_watch(at).unwrap().unwrap();
+            e.finish_watch(&lease, at, Ok(run(price))).unwrap();
+        }
+        let bundle = e.monitor_export(&id).unwrap();
+        verify_export(&bundle).unwrap();
+        let kinds: BTreeSet<_> = bundle["records"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|r| r["kind"].as_str().unwrap())
+            .collect();
+        assert_eq!(kinds, BTreeSet::from(["SNAPSHOT", "CHANGE", "FACT"]));
+        // Through text, into a fresh engine, and out again: the same records and root.
+        let text = bundle.to_string();
+        let other =
+            Engine::open(&std::env::temp_dir().join(format!("ecdev-import-{}", Uuid::new_v4())))
+                .unwrap();
+        let imported = other
+            .monitor_import(&serde_json::from_str(&text).unwrap())
+            .unwrap();
+        assert_eq!(imported["enabled"], false);
+        let again = other.monitor_export(&id).unwrap();
+        assert_eq!(again["records"], bundle["records"]);
+        assert_eq!(
+            again["manifest"]["root_sha256"],
+            bundle["manifest"]["root_sha256"]
+        );
+        assert_eq!(
+            other
+                .monitor_fact_as_of(
+                    &id,
+                    url,
+                    bundle["records"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .find(|r| r["kind"] == "FACT")
+                        .unwrap()["product"]
+                        .as_str()
+                        .unwrap(),
+                    "price_minor",
+                    300
+                )
+                .unwrap()["value"],
+            2500
+        );
+        // A second import of the same id is refused, never merged.
+        assert_eq!(other.monitor_import(&bundle).unwrap_err(), "WATCH_EXISTS");
+        // Edited, removed and reordered records are all detected.
+        let mut edited = bundle.clone();
+        let fact = edited["records"]
+            .as_array_mut()
+            .unwrap()
+            .iter_mut()
+            .find(|r| r["kind"] == "FACT")
+            .unwrap();
+        fact["value"] = json!("1");
+        assert_eq!(
+            verify_export(&edited).unwrap_err(),
+            "EXPORT_RECORD_HASH_MISMATCH"
+        );
+        let mut removed = bundle.clone();
+        removed["records"].as_array_mut().unwrap().pop();
+        assert_eq!(
+            verify_export(&removed).unwrap_err(),
+            "EXPORT_RECORD_HASH_MISMATCH"
+        );
+        let mut reordered = bundle.clone();
+        reordered["records"].as_array_mut().unwrap().swap(0, 1);
+        assert!(verify_export(&reordered).is_err());
+        let mut rewatched = bundle.clone();
+        rewatched["watch"]["interval_seconds"] = json!(61);
+        assert_eq!(
+            verify_export(&rewatched).unwrap_err(),
+            "EXPORT_WATCH_HASH_MISMATCH"
+        );
+        // Recomputing the entries without the chain still cannot hide a change.
+        let mut forged = edited.clone();
+        forged["manifest"]["entries"] =
+            export_manifest(&edited["watch"], edited["records"].as_array().unwrap())["entries"]
+                .clone();
+        assert_eq!(verify_export(&forged).unwrap_err(), "EXPORT_ROOT_MISMATCH");
+        assert_eq!(e.monitor_export("missing").unwrap_err(), "WATCH_NOT_FOUND");
+    }
+
     #[test]
     fn conditions_fire_on_observed_values_and_record_them() {
         let root = std::env::temp_dir().join(format!("ecdev-cond-{}", Uuid::new_v4()));
