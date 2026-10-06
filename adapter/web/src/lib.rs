@@ -28,11 +28,13 @@ use url::Url;
 use uuid::Uuid;
 pub struct Web {
     gate: Mutex<Option<Instant>>,
+    robots: Mutex<robots::RobotsCache>,
 }
 impl Default for Web {
     fn default() -> Self {
         Self {
             gate: Mutex::new(None),
+            robots: Mutex::new(robots::RobotsCache::default()),
         }
     }
 }
@@ -423,7 +425,7 @@ impl Provider for Web {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;
         let start = Instant::now();
-        let (raw, mode, headers, requests, final_url) = if let Some(html) =
+        let (raw, mode, headers, requests, robots_cache_hits, final_url) = if let Some(html) =
             r.query["fixture_html"].as_str()
         {
             if html.len() > 4 * 1024 * 1024 {
@@ -434,11 +436,13 @@ impl Provider for Web {
                 ObservationMode::Fixture,
                 json!({}),
                 0,
+                0,
                 normalized.clone(),
             )
         } else {
             let mut url = Url::parse(&normalized).map_err(|_| "INVALID_URL")?;
             let mut requests = 0;
+            let mut robots_cache_hits = 0;
             let mut visited = BTreeSet::new();
             let mut body = None;
             for hop in 0..6 {
@@ -450,9 +454,27 @@ impl Provider for Web {
                     return Err("REDIRECT_LOOP".into());
                 }
                 let robot = robots::robots_url(&url);
-                let (rs, policy, robot_headers) =
-                    self.request(&robot, &json!({}), Duration::from_millis(750))?;
-                requests += 1;
+                let kept = self
+                    .robots
+                    .lock()
+                    .map_err(|_| "ROBOTS_CACHE_POISONED")?
+                    .get(&robot, timestamp());
+                let (rs, policy, robot_headers) = match kept {
+                    Some(e) => {
+                        robots_cache_hits += 1;
+                        (e.status, e.body, json!({}))
+                    }
+                    None => {
+                        let fetched =
+                            self.request(&robot, &json!({}), Duration::from_millis(750))?;
+                        requests += 1;
+                        self.robots
+                            .lock()
+                            .map_err(|_| "ROBOTS_CACHE_POISONED")?
+                            .put(&robot, fetched.0, &fetched.1, &fetched.2, timestamp());
+                        fetched
+                    }
+                };
                 let policy = if rs == 200 {
                     std::str::from_utf8(&policy)
                         .map_err(|_| "ROBOTS_ENCODING_UNKNOWN")?
@@ -495,7 +517,7 @@ impl Provider for Web {
                         observations: vec![],
                         result: json!({"not_modified":true,"headers":headers,"validated_url":url.as_str()}),
                         raw_payload: vec![],
-                        provider_cost: json!({"request_count":requests,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis()}),
+                        provider_cost: json!({"request_count":requests,"robots_cache_hits":robots_cache_hits,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis()}),
                     });
                 }
                 if let Some(next) = redirect_target(&url, status, headers["location"].as_str())? {
@@ -522,7 +544,14 @@ impl Provider for Web {
                 break;
             }
             let (content, headers, final_url) = body.ok_or("REDIRECT_LIMIT")?;
-            (content, ObservationMode::Live, headers, requests, final_url)
+            (
+                content,
+                ObservationMode::Live,
+                headers,
+                requests,
+                robots_cache_hits,
+                final_url,
+            )
         };
         let mut result = document::extract(
             &raw,
@@ -556,7 +585,7 @@ impl Provider for Web {
             observations: vec![evidence],
             result,
             raw_payload: raw,
-            provider_cost: json!({"provider":self.id(),"request_count":requests,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis(),"headers":headers,"quota_before":null,"quota_after":null,"cache_hit":false}),
+            provider_cost: json!({"provider":self.id(),"request_count":requests,"robots_cache_hits":robots_cache_hits,"actual_cost_minor":0,"latency_ms":start.elapsed().as_millis(),"headers":headers,"quota_before":null,"quota_after":null,"cache_hit":false}),
         })
     }
 }

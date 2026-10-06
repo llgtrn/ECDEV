@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "eea5a97c6ceb76e91e20aeac0dca62c6ed4160f1",
+  "assessed_parent_commit": "e3f07fe7d3f776ca5f47955d17b45bc24fcd699b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2549,9 +2549,9 @@
         {
           "key": "reppy.ttl-and-cache",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(cache robots.txt per origin with Cache-Control TTL to save requests inside the fetch budget)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/robots.rs::RobotsCache keeps a 200 or 404 robots.txt outcome per robots URL for its header-derived freshness lifetime (research::freshness_lifetime: no-store and no-cache never kept, default 1 h, at most 24 h per RFC 9309), bounded at 256 origins with soonest-expiry eviction; 429, 5xx and other statuses are refetched every time; acquisitions record robots_cache_hits beside request_count)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "reppy.url-library-remainder",
@@ -2632,7 +2632,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "3 of 8 declared capabilities still have open research: reppy.sitemaps (STUDY_CANDIDATE), reppy.ttl-and-cache (STUDY_CANDIDATE), reppy.url-library-remainder (ALGORITHM_CANDIDATE)"
+          "detail": "2 of 8 declared capabilities still have open research: reppy.sitemaps (STUDY_CANDIDATE), reppy.url-library-remainder (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

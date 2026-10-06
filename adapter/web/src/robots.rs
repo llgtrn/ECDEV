@@ -84,6 +84,87 @@ fn matches(pattern: &str, path: &str) -> bool {
 }
 /// The robots.txt governing `url`: same scheme, host and port, with credentials, query and
 /// fragment dropped (Rep::Robots::robotsUrl).
+/// Origins whose robots.txt outcome a process keeps at once.
+pub const ROBOTS_CACHE_ORIGINS: usize = 256;
+
+/// A fetched robots.txt outcome kept for its HTTP freshness lifetime (RFC 9309 section 2.4:
+/// at most 24 hours, via `freshness_lifetime`). Only 200 and 404 are kept: 429, 5xx and anything
+/// else are refetched every time, so an outage never becomes a cached allow or deny.
+#[derive(Clone, Debug, PartialEq)]
+pub struct RobotsEntry {
+    pub status: u16,
+    pub body: Vec<u8>,
+    pub fetched_at: u64,
+    pub expires_at: u64,
+    pub basis: &'static str,
+}
+
+#[derive(Default)]
+pub struct RobotsCache {
+    entries: std::collections::BTreeMap<String, RobotsEntry>,
+}
+
+impl RobotsCache {
+    /// The kept outcome for this robots URL while it is fresh (`now < expires_at`).
+    pub fn get(&mut self, robots: &Url, now: u64) -> Option<RobotsEntry> {
+        let key = robots.as_str();
+        match self.entries.get(key) {
+            Some(e) if now < e.expires_at => Some(e.clone()),
+            Some(_) => {
+                self.entries.remove(key);
+                None
+            }
+            None => None,
+        }
+    }
+    /// Keeps a 200 or 404 outcome for its header-derived lifetime; returns whether it was kept.
+    pub fn put(
+        &mut self,
+        robots: &Url,
+        status: u16,
+        body: &[u8],
+        headers: &Value,
+        now: u64,
+    ) -> bool {
+        if status != 200 && status != 404 {
+            return false;
+        }
+        let (lifetime, basis) = ecdev_core::research::freshness_lifetime(headers);
+        if lifetime == 0 {
+            return false;
+        }
+        self.entries.retain(|_, e| now < e.expires_at);
+        while self.entries.len() >= ROBOTS_CACHE_ORIGINS {
+            let soonest = self
+                .entries
+                .iter()
+                .min_by_key(|(_, e)| e.expires_at)
+                .map(|(k, _)| k.clone());
+            match soonest {
+                Some(k) => self.entries.remove(&k),
+                None => break,
+            };
+        }
+        self.entries.insert(
+            robots.as_str().to_string(),
+            RobotsEntry {
+                status,
+                body: body.to_vec(),
+                fetched_at: now,
+                expires_at: now.saturating_add(lifetime),
+                basis,
+            },
+        );
+        true
+    }
+    pub fn len(&self) -> usize {
+        self.entries.len()
+    }
+    pub fn is_empty(&self) -> bool {
+        self.entries.is_empty()
+    }
+}
+
 pub fn robots_url(url: &Url) -> Url {
     let mut robots = url.clone();
     robots.set_path("/robots.txt");
@@ -224,6 +305,56 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn robots_outcomes_are_kept_for_their_http_lifetime_only() {
+        let u = Url::parse("https://shop.example/robots.txt").unwrap();
+        let mut c = RobotsCache::default();
+        assert!(c.put(
+            &u,
+            200,
+            b"User-agent: *\nDisallow: /x",
+            &json!({"cache_control":"max-age=600"}),
+            1000
+        ));
+        assert_eq!(c.get(&u, 1599).unwrap().basis, "MAX_AGE");
+        assert!(c.get(&u, 1600).is_none());
+        assert!(c.is_empty());
+        // No freshness information: the default hour; never beyond 24 hours.
+        assert!(c.put(&u, 404, b"", &json!({}), 0));
+        assert_eq!(c.get(&u, 0).unwrap().expires_at, 3600);
+        assert!(c.put(&u, 200, b"", &json!({"cache_control":"max-age=999999"}), 0));
+        assert_eq!(c.get(&u, 0).unwrap().expires_at, 86_400);
+        // Outages and no-store are never kept.
+        let mut d = RobotsCache::default();
+        for s in [429, 500, 503, 401, 403] {
+            assert!(
+                !d.put(&u, s, b"", &json!({"cache_control":"max-age=600"}), 0),
+                "{s}"
+            );
+        }
+        assert!(!d.put(&u, 200, b"", &json!({"cache_control":"no-store"}), 0));
+        assert!(d.is_empty());
+    }
+
+    #[test]
+    fn robots_cache_is_bounded_and_evicts_the_soonest_expiry() {
+        let mut c = RobotsCache::default();
+        for i in 0..ROBOTS_CACHE_ORIGINS as u64 + 5 {
+            let u = Url::parse(&format!("https://s{i}.example/robots.txt")).unwrap();
+            let age = json!({"cache_control": format!("max-age={}", 1000 + i)});
+            assert!(c.put(&u, 200, b"", &age, 0));
+        }
+        assert_eq!(c.len(), ROBOTS_CACHE_ORIGINS);
+        let first = Url::parse("https://s0.example/robots.txt").unwrap();
+        let last = Url::parse(&format!(
+            "https://s{}.example/robots.txt",
+            ROBOTS_CACHE_ORIGINS + 4
+        ))
+        .unwrap();
+        assert!(c.get(&first, 1).is_none());
+        assert!(c.get(&last, 1).is_some());
+    }
+
     #[test]
     fn locked_reppy_robots_url_and_gpp_reproduction() {
         let fixture: Value =

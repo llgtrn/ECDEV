@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "eea5a97c6ceb76e91e20aeac0dca62c6ed4160f1",
+  "assessed_parent_commit": "e3f07fe7d3f776ca5f47955d17b45bc24fcd699b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 44,
+    "study_candidates": 43,
     "benchmark_candidates": 32,
     "algorithm_candidates": 13,
     "reference_only": 52,
-    "study_complete_capabilities": 76,
+    "study_complete_capabilities": 77,
     "not_relevant_after_review": 25,
-    "research_questions_open": 89,
-    "knowledge_coverage_ratio": 0.632231
+    "research_questions_open": 88,
+    "knowledge_coverage_ratio": 0.636364
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -452,7 +452,6 @@
       },
       "open": [
         "reppy.sitemaps STUDY_CANDIDATE(Sitemap lines in robots.txt as zero-paid product-URL discovery; compare coverage with seed and link discovery)",
-        "reppy.ttl-and-cache STUDY_CANDIDATE(cache robots.txt per origin with Cache-Control TTL to save requests inside the fetch budget)",
         "reppy.url-library-remainder ALGORITHM_CANDIDATE(public-suffix registrable-domain computation (url-cpp psl) for grouping independent origins and publishers)"
       ],
       "resolved": [
@@ -460,6 +459,7 @@
         "reppy.crawl-delay STUDY_COMPLETE[DERIVED_NATIVE](crawl-delay proven on the same 1620 cases)",
         "reppy.robots-url STUDY_COMPLETE[DERIVED_NATIVE](robots URL proven on 14 frozen cases)",
         "reppy.fetch-status-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](reppy allows all on most 4xx; ECDEV denies every status but 200 and 404)",
+        "reppy.ttl-and-cache STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/robots.rs::RobotsCache keeps a 200 or 404 robots.txt outcome per robots URL for its header-derived freshness lifetime (research::freshness_lifetime: no-store and no-cache never kept, default 1 h, at most 24 h per RFC 9309), bounded at 256 origins with soonest-expiry eviction; 429, 5xx and other statuses are refetched every time; acquisitions record robots_cache_hits beside request_count)",
         "reppy.packaging-and-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](Cython bindings, packaging, benchmarks and CI scripts)"
       ]
     },
