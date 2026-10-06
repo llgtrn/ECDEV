@@ -220,7 +220,7 @@ def main():
  social_oracle=read(ROOT/'research/commerce/social-oracle-report.json')
  import hashlib
  assert social_oracle['status']=='PASS';assert hashlib.sha256((ROOT/social_oracle['fixture']).read_bytes()).hexdigest()==social_oracle['fixture_sha256']
- report['oracle_compared_capabilities']+=social_oracle['families'];report['oracle_proven_native_capabilities']+=social_oracle['families'];report['oracle_cases_executed']+=social_oracle['cases'];report['rust_replacement_capabilities']+=2
+ report['oracle_compared_capabilities']+=social_oracle['families'];report['oracle_proven_native_capabilities']+=social_oracle['families'];report['oracle_cases_executed']+=social_oracle['cases'];report['rust_replacement_capabilities']+=social_oracle['families']
  memory_graph=ROOT/'research/commerce/memory-capability-graph.json'
  if memory_graph.exists():
   report['source_reviewed_contracts']+=len(read(memory_graph)['contracts']);report['mapped_capabilities']+=len(read(memory_graph)['contracts'])

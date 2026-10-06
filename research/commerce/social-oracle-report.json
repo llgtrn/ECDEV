@@ -1,7 +1,7 @@
 {
   "status": "PASS",
-  "families": 2,
-  "cases": 560,
+  "families": 1,
+  "cases": 320,
   "fixture": "research/commerce/social-oracle-fixtures.json",
   "fixture_sha256": "a4a10d469a6d7c1270f72623a1a5d74a072f2abb0dc1d04c8eb2ac1b1d433288",
   "native_test": "domain/commerce/src/social.rs::independent_social_donor_oracles",
@@ -48,5 +48,11 @@
     "last_commit_containing_it": "25c36c1",
     "reproduce": "git show 25c36c1:tools/commerce/social_oracle.py; requires the pinned clones at research/commerce/donors/checkouts/{sansan0--TrendRadar,VladUZH--harken}",
     "why": "it git-showed and exec'd donor source from checkouts through a runtime-built path the source-reference observer cannot attribute; the frozen fixture is unchanged"
+  },
+  "withdrawn": {
+    "family": "rank_exposure",
+    "donor": "sansan0--TrendRadar",
+    "cases": 240,
+    "why": "GPL-3.0 (license gate STRONG_COPYLEFT_NO_PRODUCTION_COPY); the native reimplementation had no production caller and was removed. Cases stay in the frozen fixture, unexecuted."
   }
 }

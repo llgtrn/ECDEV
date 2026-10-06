@@ -258,16 +258,6 @@ pub fn sentiment(post: &SocialPost) -> Value {
     json!({"label":label,"method":"ECDEV_SMALL_ENGLISH_TOKEN_RULE_V1","language":post.language,"confidence":if english {json!(0.3)} else {Value::Null},"state":if english {"DERIVED"}else{"UNKNOWN"},"evidence_ids":[post.evidence_id],"limitations":"No sarcasm/negation/model calibration; neutral means no matched tokens, never purchase intent"})
 }
 
-pub fn rank_exposure(ranks: &[u64], count: u64, threshold: u64, weights: [f64; 3]) -> f64 {
-    if ranks.is_empty() {
-        return 0.;
-    }
-    let n = ranks.len() as f64;
-    let rank = ranks.iter().map(|r| 11 - r.min(&10)).sum::<u64>() as f64 / n * 10.;
-    rank * weights[0]
-        + count.min(10) as f64 * 10. * weights[1]
-        + ranks.iter().filter(|r| **r <= threshold).count() as f64 / n * 100. * weights[2]
-}
 pub fn threshold_events(input: &Value) -> Value {
     let m = &input["metrics"];
     let cur = m["current_count"].as_f64().unwrap_or(0.);
@@ -491,31 +481,16 @@ mod tests {
         .unwrap();
         assert_eq!(fixture["families"].as_array().unwrap().len(), 2);
         assert_eq!(fixture["cases"].as_array().unwrap().len(), 560);
+        // The frozen fixture keeps TrendRadar's 240 rank-exposure cases; that GPL-3.0 formula was
+        // withdrawn from ECDEV (research/commerce/trendradar-capability-review.json).
+        let mut executed = 0;
         for c in fixture["cases"].as_array().unwrap() {
-            let i = &c["input"];
-            if c["family"] == "rank_exposure" {
-                let ranks: Vec<_> = i["ranks"]
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .map(|v| v.as_u64().unwrap())
-                    .collect();
-                let w = i["weights"].as_array().unwrap();
-                let actual = rank_exposure(
-                    &ranks,
-                    i["count"].as_u64().unwrap(),
-                    i["threshold"].as_u64().unwrap(),
-                    [
-                        w[0].as_f64().unwrap(),
-                        w[1].as_f64().unwrap(),
-                        w[2].as_f64().unwrap(),
-                    ],
-                );
-                assert!((actual - c["expected"].as_f64().unwrap()).abs() < 1e-9);
-            } else {
-                assert_eq!(threshold_events(i), c["expected"]);
+            if c["family"] == "thresholds" {
+                assert_eq!(threshold_events(&c["input"]), c["expected"]);
+                executed += 1;
             }
         }
+        assert_eq!(executed, 320);
     }
     #[test]
     fn actual_timestamps_and_decay() {

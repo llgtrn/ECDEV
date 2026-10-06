@@ -1,0 +1,40 @@
+{
+  "donor_id": "sansan0--TrendRadar",
+  "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+  "license": "GPL-3.0",
+  "license_gate": "STRONG_COPYLEFT_NO_PRODUCTION_COPY (research/commerce/social-license-review.json)",
+  "decision": "REJECTED: evaluated, nothing adopted",
+  "capabilities": [
+    {
+      "capability": "social.trendradar.calculate_news_weight",
+      "source": "trendradar/core/analyzer.py",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "why": "ECDEV's reimplementation reproduced the GPL formula's constants, had no production caller (only its oracle test called it) and ranks hot-list positions ECDEV never acquires; it was removed. The 240 frozen cases stay in social-oracle-fixtures.json, unexecuted."
+    },
+    {
+      "capability": "social.trendradar.word_matches",
+      "source": "trendradar/core/frequency.py _word_matches",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "why": "substring/regex keyword filters; ECDEV matches Unicode terms with its own rule (social.rs::terms) and never takes user regexes"
+    },
+    {
+      "capability": "social.trendradar.parse_json_feed",
+      "source": "trendradar/crawler/rss/parser.py",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "why": "ECDEV's JSON Feed reader (adapter/web/src/social.rs::normalize) is an independent implementation requiring a jsonfeed.org version and native ids"
+    },
+    {
+      "capability": "social.trendradar.fetch_feed",
+      "source": "trendradar/crawler/rss/fetcher.py",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "why": "ECDEV's public transport has DNS pinning, bounded redirects and request budgets of its own"
+    },
+    {
+      "capability": "social.trendradar.platform-crawlers-notifiers-and-ui",
+      "source": "remaining crawlers, notification channels, MCP server, storage, report templates, docs site",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "why": "hot-list scraping of Chinese platforms, push notifications and HTML reports are outside ECDEV's acquisition policy and evidence model"
+    }
+  ],
+  "edges": "no tracked ECDEV file imports or executes TrendRadar since tools/commerce/social_oracle.py was retired (bc24b88)"
+}
