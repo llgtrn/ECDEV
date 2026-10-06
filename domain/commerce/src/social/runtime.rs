@@ -67,6 +67,8 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_REGIME_CHANGE",
     "ENGAGEMENT_SPIKE",
     "TREND_DISAPPEARANCE",
+    "VOLUME_SPIKE",
+    "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
     let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304}},"required":["platform"],"additionalProperties":false});
@@ -78,7 +80,7 @@ pub fn tool_definitions() -> Vec<Value> {
         json!({"name":"ecdev.trend.explain","description":"Explain explicit heuristic components, provenance, unknowns and conflicts for a frozen snapshot","inputSchema":inspect}),
         json!({"name":"ecdev.trend.hypothesize","description":"Turn a frozen trend snapshot into product hypotheses, unverified candidate links and ranked zero-paid research actions; never demand, never shortlist; no network","inputSchema":{"type":"object","properties":{"snapshot_id":{"type":"string"}},"required":["snapshot_id"],"additionalProperties":false}}),
         json!({"name":"ecdev.trend.compare","description":"Compare two compatible snapshots with actual timestamps; fixture/live/simulation scopes cannot mix","inputSchema":{"type":"object","properties":{"before_snapshot_id":{"type":"string"},"after_snapshot_id":{"type":"string"}},"required":["before_snapshot_id","after_snapshot_id"],"additionalProperties":false}}),
-        json!({"name":"ecdev.trend.watch","description":"Create/update persisted public trend watch or action=list; nine trigger kinds, fenced leases, local events, minimum sample and complete-source policy; enabled=false disables","inputSchema":{"type":"object","properties":{"action":{"enum":["create","list"]},"watch_id":{"type":"string"},"query":{"type":"string","maxLength":500},"research":discover,"triggers":{"type":"array","items":{"enum":TRIGGERS},"minItems":1},"interval_seconds":{"type":"integer","minimum":60,"maximum":604800},"minimum_mentions":{"type":"integer","minimum":2},"threshold":{"type":"number","minimum":0},"enabled":{"type":"boolean"}},"additionalProperties":false}}),
+        json!({"name":"ecdev.trend.watch","description":"Create/update persisted public trend watch or action=list; eleven trigger kinds (VOLUME_SPIKE and SENTIMENT_DROP use harken-parity threshold rules), fenced leases, local events, minimum sample and complete-source policy; enabled=false disables","inputSchema":{"type":"object","properties":{"action":{"enum":["create","list"]},"watch_id":{"type":"string"},"query":{"type":"string","maxLength":500},"research":discover,"triggers":{"type":"array","items":{"enum":TRIGGERS},"minItems":1},"interval_seconds":{"type":"integer","minimum":60,"maximum":604800},"minimum_mentions":{"type":"integer","minimum":2},"threshold":{"type":"number","minimum":0},"volume_multiplier":{"type":"number","minimum":0},"sentiment_drop":{"type":"number","minimum":0},"enabled":{"type":"boolean"}},"additionalProperties":false}}),
     ]
 }
 
@@ -586,7 +588,7 @@ impl Engine {
         let same = old["query"] == query
             && old["research"] == *research
             && old["triggers"] == args["triggers"];
-        let value = json!({"watch_id":id,"query":query,"research":research,"triggers":triggers,"interval_seconds":interval,"minimum_mentions":args["minimum_mentions"].as_u64().unwrap_or(3).max(2),"threshold":args["threshold"].as_f64().unwrap_or(1.).max(0.),"enabled":args["enabled"].as_bool().unwrap_or(true),"baseline":if same{old["baseline"].clone()}else{Value::Null},"last_snapshot":if same{old["last_snapshot"].clone()}else{Value::Null},"events":if same{old["events"].clone()}else{json!([])},"lease_state":"IDLE","notification_policy":"PERSIST_LOCAL_EVENTS_ONLY_MINIMUM_SAMPLE_AND_COMPLETE_ACQUISITION"});
+        let value = json!({"watch_id":id,"query":query,"research":research,"triggers":triggers,"interval_seconds":interval,"minimum_mentions":args["minimum_mentions"].as_u64().unwrap_or(3).max(2),"threshold":args["threshold"].as_f64().unwrap_or(1.).max(0.),"volume_multiplier":args["volume_multiplier"].as_f64().unwrap_or(2.).max(0.),"sentiment_drop":args["sentiment_drop"].as_f64().unwrap_or(0.5).max(0.),"enabled":args["enabled"].as_bool().unwrap_or(true),"baseline":if same{old["baseline"].clone()}else{Value::Null},"last_snapshot":if same{old["last_snapshot"].clone()}else{Value::Null},"events":if same{old["events"].clone()}else{json!([])},"lease_state":"IDLE","notification_policy":"PERSIST_LOCAL_EVENTS_ONLY_MINIMUM_SAMPLE_AND_COMPLETE_ACQUISITION"});
         tx.execute("INSERT INTO trend_watches VALUES(?1,?2,?3,0,NULL,?4) ON CONFLICT(id) DO UPDATE SET enabled=excluded.enabled,next_due=excluded.next_due,lease_until=0,lease_token=NULL,payload=excluded.payload",params![id,value["enabled"].as_bool().unwrap(),timestamp()+interval,value.to_string()]).map_err(err)?;
         tx.commit().map_err(err)?;
         Ok(value)
@@ -707,6 +709,25 @@ pub fn watch_events(before: &Value, after: &Value, policy: &Value) -> Value {
                     && sentiment_net(after)
                         .zip(sentiment_net(before))
                         .is_some_and(|(a, b)| (a - b).abs() >= delta)
+            }
+            // harken thresholds.py semantics (parity: social.rs::independent_social_donor_oracles):
+            // the previous complete snapshot is the baseline window.
+            "VOLUME_SPIKE" | "SENTIMENT_DROP" => {
+                let events = crate::social::threshold_events(&json!({
+                    "metrics": {
+                        "current_count": n, "baseline_count": old, "baseline_average": old,
+                        "current_net_sentiment": sentiment_net(after),
+                        "baseline_net_sentiment": sentiment_net(before),
+                    },
+                    "minimum_mentions": min,
+                    "volume_multiplier": policy["volume_multiplier"].as_f64().unwrap_or(2.),
+                    "sentiment_drop": policy["sentiment_drop"].as_f64().unwrap_or(0.5),
+                }));
+                events[if t == "VOLUME_SPIKE" {
+                    "volume_spike"
+                } else {
+                    "sentiment_drop"
+                }] == true
             }
             "ENGAGEMENT_SPIKE" => {
                 n >= min && compatible_engagement_delta(before, after).is_some_and(|v| v >= delta)

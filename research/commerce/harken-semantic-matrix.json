@@ -1,0 +1,149 @@
+{
+  "donor_id": "VladUZH--harken",
+  "commit_sha": "d0710a427dbbe712594ef3a6c25112e1d14cc027",
+  "license": "MIT",
+  "oracles": [
+    {
+      "fixture": "adapter/web/tests/fixtures/harken-sources-oracle.json",
+      "sha256": "c4f1ceff3b9596dea49f5f5cfd989de2f9f71d1d227ae0f65db6c4b2c63fd614",
+      "cases": 240,
+      "generator": "embedded generator_source"
+    },
+    {
+      "fixture": "research/commerce/social-oracle-fixtures.json",
+      "family": "thresholds",
+      "cases": 320,
+      "generator": "retired tools/commerce/social_oracle.py (social-oracle-report.json)"
+    }
+  ],
+  "rows": [
+    {
+      "capability": "social.harken.hn-bluesky-normalization",
+      "source": "src/harken/sources/hackernews.py, bluesky.py fetch_page; sources/base.py strip_html",
+      "ecdev_relevance": "RELIED_ON",
+      "native": "adapter/web/src/social.rs::normalize",
+      "production_caller": "adapter/web/src/social.rs Social provider acquire (ecdev.trend.discover)",
+      "proof": "PARITY_PROVEN: 526 donor mentions from 240 frozen captured bodies match on canonical URL, author, score, text and published time",
+      "divergences": [
+        "harken drops items without the keyword (236); ECDEV keeps every returned item as an observation of the query",
+        "harken stamps the current time when a timestamp is missing (63); ECDEV keeps it UNKNOWN",
+        "harken prefers Bluesky indexedAt (185); ECDEV keeps the author's createdAt",
+        "harken identifies Bluesky authors by handle; ECDEV by DID, with the handle in the URL"
+      ]
+    },
+    {
+      "capability": "social.harken.evaluate_thresholds",
+      "source": "src/harken/thresholds.py",
+      "ecdev_relevance": "RELIED_ON",
+      "native": "domain/commerce/src/social.rs::threshold_events",
+      "production_caller": "domain/commerce/src/social/runtime.rs::watch_events VOLUME_SPIKE and SENTIMENT_DROP triggers",
+      "proof": "PARITY_PROVEN 320 cases (social-oracle-fixtures.json); regression volume_spike_and_sentiment_drop_follow_harken_thresholds",
+      "note": "the native rule had no production caller until the two trend-watch triggers were added"
+    },
+    {
+      "capability": "social.harken.rss-feeds",
+      "source": "src/harken/sources/rss.py (feedparser)",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "ECDEV reads JSON Feed natively and reports XML RSS as explicitly unsupported"
+    },
+    {
+      "capability": "social.harken.other-sources",
+      "source": "src/harken/sources/mastodon.py, reddit.py, stackoverflow.py, x.py, youtube.py",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "ECDEV acquires only Hacker News, Bluesky and JSON Feed; the others need keys, OAuth or scraping ECDEV does not do"
+    },
+    {
+      "capability": "social.harken.alert_metrics",
+      "source": "src/harken/store.py alert_metrics and SQLite store",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "ECDEV snapshots disclose their actual capture and publication windows and persist in its own store"
+    },
+    {
+      "capability": "social.harken.track",
+      "source": "src/harken/pipeline.py",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "ECDEV acquisition runs keep partial source failures visible and suppress disappearance alerts; the donor pipeline is not reproduced"
+    },
+    {
+      "capability": "social.harken.sentiment-and-themes",
+      "source": "src/harken/analyze/sentiment.py, insights.py, evaluate.py",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "ECDEV keeps a disclosed minimal sentiment rule and its own term clusters; a larger uncalibrated lexicon would add apparent precision without evidence"
+    },
+    {
+      "capability": "social.harken.llm",
+      "source": "src/harken/llm/*",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "LLM labels are not evidence; zero-paid default"
+    },
+    {
+      "capability": "social.harken.application",
+      "source": "src/harken/web/*, auth.py, cli.py, config.py, alerts.py, observability.py, sample_data.py, models.py, __init__.py",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "note": "self-hosted UI, login, CLI, outbound alerts and logging; ECDEV has its own server and local events only"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "src/harken/sources/hackernews.py",
+        "capabilities": "social.harken.hn-bluesky-normalization"
+      },
+      {
+        "prefix": "src/harken/sources/bluesky.py",
+        "capabilities": "social.harken.hn-bluesky-normalization"
+      },
+      {
+        "prefix": "src/harken/sources/base.py",
+        "capabilities": "social.harken.hn-bluesky-normalization"
+      },
+      {
+        "prefix": "src/harken/sources/__init__.py",
+        "capabilities": "social.harken.application"
+      },
+      {
+        "prefix": "src/harken/sources/rss.py",
+        "capabilities": "social.harken.rss-feeds"
+      },
+      {
+        "prefix": "src/harken/sources/",
+        "capabilities": "social.harken.other-sources"
+      },
+      {
+        "prefix": "src/harken/thresholds.py",
+        "capabilities": "social.harken.evaluate_thresholds"
+      },
+      {
+        "prefix": "src/harken/store.py",
+        "capabilities": "social.harken.alert_metrics"
+      },
+      {
+        "prefix": "src/harken/pipeline.py",
+        "capabilities": "social.harken.track"
+      },
+      {
+        "prefix": "src/harken/analyze/",
+        "capabilities": "social.harken.sentiment-and-themes"
+      },
+      {
+        "prefix": "src/harken/evaluate.py",
+        "capabilities": "social.harken.sentiment-and-themes"
+      },
+      {
+        "prefix": "src/harken/llm/",
+        "capabilities": "social.harken.llm"
+      },
+      {
+        "prefix": "src/harken/web/",
+        "capabilities": "social.harken.application"
+      },
+      {
+        "prefix": "src/harken/",
+        "capabilities": "social.harken.application"
+      }
+    ]
+  },
+  "census_note": "src/harken/web/templates/dashboard.html stays PARSE_UNKNOWN (Jinja in host HTML); the census is therefore not complete and no extinction is claimed",
+  "status": "SEMANTIC_MATRIX_FILE_LEVEL_COMPLETE_ALL_CAPABILITIES_RESOLVED_CENSUS_PARTIAL"
+}

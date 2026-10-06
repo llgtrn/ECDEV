@@ -1,12 +1,13 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "bc24b88f1e3b8ddc6c46de9cc16392bb1f1a1e18",
+  "assessed_parent_commit": "a64ceaa748dff2b612959d3be99a5d62c3c9d934",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
   "donor_count": 61,
   "effective_states": {
-    "CENSUSED": 6,
+    "CAPABILITY_RELEVANCE_RESOLVED": 1,
+    "CENSUSED": 5,
     "DISCOVERED": 15,
     "EXTINCT": 5,
     "PARITY_PROVEN": 1,
@@ -3526,7 +3527,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "41 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "42 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -4447,9 +4448,9 @@
     {
       "donor": "VladUZH--harken",
       "claimed": "REGISTERED",
-      "effective": "CENSUSED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
-      "stopped_by": "TECHNOLOGY_MAPPED: capabilities not mapped to a capability or technology of the canonical graph (maps_to): social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor",
+      "stopped_by": "CUTOVER: no cutover declared",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -4483,33 +4484,33 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 2 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "7 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.evaluate_thresholds, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 2 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 2 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "6 of 7 required capabilities lack it: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 2 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "7 of 7 declared capabilities have no resolved ECDEV relevance: social.harken.fetch_page, social.harken.fetch_page, social.harken.fetch, social.harken.evaluate_thresholds, social.harken.alert_metrics, social.harken.track, social.harken.remaining-whole-donor"
+          "pass": true,
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",

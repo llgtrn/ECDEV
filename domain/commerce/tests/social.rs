@@ -390,6 +390,50 @@ fn watch_policy_rejects_noise_failures_and_incomplete_disappearance() {
     );
 }
 #[test]
+fn volume_spike_and_sentiment_drop_follow_harken_thresholds() {
+    use ecdev_core::social::runtime::watch_events;
+    let a = post("1", "BLUESKY", 9000);
+    let mut before = snapshot(
+        std::slice::from_ref(&a),
+        &[],
+        "matcha",
+        10000,
+        86400,
+        "FIXTURE",
+    );
+    before["source_complete"] = json!(true);
+    before["mention_count"] = json!(4);
+    before["sentiment"] =
+        json!([{"label":"POSITIVE"},{"label":"POSITIVE"},{"label":"NEUTRAL"},{"label":"POSITIVE"}]);
+    let mut after = before.clone();
+    after["captured_at"] = json!(13600);
+    let policy = json!({"minimum_mentions":3,"volume_multiplier":2.0,"sentiment_drop":0.5,"triggers":["VOLUME_SPIKE","SENTIMENT_DROP"]});
+    let kinds = |b: &serde_json::Value, a: &serde_json::Value| -> Vec<String> {
+        watch_events(b, a, &policy)
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|e| e["trigger"].as_str().unwrap().to_owned())
+            .collect()
+    };
+    // 4 -> 7 is below 2x the baseline; 4 -> 8 reaches it.
+    after["mention_count"] = json!(7);
+    assert!(kinds(&before, &after).is_empty());
+    after["mention_count"] = json!(8);
+    assert_eq!(kinds(&before, &after), vec!["VOLUME_SPIKE"]);
+    // Net sentiment 0.75 -> -0.5 is a drop of at least 0.5 with enough samples on both sides.
+    after["mention_count"] = json!(4);
+    after["sentiment"] =
+        json!([{"label":"NEGATIVE"},{"label":"NEGATIVE"},{"label":"POSITIVE"},{"label":"NEUTRAL"}]);
+    assert_eq!(kinds(&before, &after), vec!["SENTIMENT_DROP"]);
+    // Unknown (non-English) sentiment never drops; incomplete acquisitions never fire.
+    after["sentiment"] = json!([{"label":"UNKNOWN"}]);
+    assert!(kinds(&before, &after).is_empty());
+    after["mention_count"] = json!(8);
+    after["source_complete"] = json!(false);
+    assert!(kinds(&before, &after).is_empty());
+}
+#[test]
 fn watch_and_simulation_boundary_persist_after_restart() {
     let path = root();
     let engine = Engine::open(&path).unwrap();
