@@ -353,6 +353,73 @@ pub fn deduplicate(posts: &[SocialPost]) -> (Vec<SocialPost>, Vec<Value>) {
 }
 
 /// Deterministic lexical similarity is a topic link, never verified product identity.
+pub const REPRESENTATIVES_PER_CLUSTER: usize = 3;
+
+fn post_terms(p: &SocialPost) -> BTreeSet<String> {
+    let mut t = terms(&p.text);
+    t.extend(p.hashtags.iter().map(|s| s.to_lowercase()));
+    t
+}
+
+/// Explainable cluster summaries: posts ranked by lexical centrality (mean Jaccard similarity to
+/// the cluster's other posts, two decimals), then by engagement rank among the cluster's posts of
+/// the same platform (likes; counters of different platforms are never compared), unknown
+/// engagement last and never zero, then by post key. Each pick carries both components.
+pub fn representatives(posts: &[&SocialPost]) -> Vec<Value> {
+    let sets: Vec<_> = posts.iter().map(|p| post_terms(p)).collect();
+    let mut rows: Vec<(i64, Option<f64>, String, Value)> = posts
+        .iter()
+        .enumerate()
+        .map(|(i, p)| {
+            let others: Vec<f64> = (0..posts.len())
+                .filter(|&j| j != i)
+                .map(|j| {
+                    let union = sets[i].union(&sets[j]).count();
+                    if union == 0 {
+                        0.
+                    } else {
+                        sets[i].intersection(&sets[j]).count() as f64 / union as f64
+                    }
+                })
+                .collect();
+            let centrality = if others.is_empty() {
+                1.
+            } else {
+                others.iter().sum::<f64>() / others.len() as f64
+            };
+            let peers: Vec<u64> = posts
+                .iter()
+                .filter(|q| q.platform == p.platform)
+                .filter_map(|q| q.engagement.likes)
+                .collect();
+            let rank = p.engagement.likes.map(|l| {
+                if peers.len() < 2 {
+                    1.
+                } else {
+                    peers.iter().filter(|&&x| x < l).count() as f64 / (peers.len() - 1) as f64
+                }
+            });
+            let rounded = (centrality * 100.).round() as i64;
+            let row = json!({"post_key":p.key(),"evidence_id":p.evidence_id,"platform":p.platform,"centrality":rounded as f64 / 100.,"engagement_rank_within_platform":rank,"engagement_counter":"likes"});
+            (rounded, rank, p.key(), row)
+        })
+        .collect();
+    rows.sort_by(|a, b| {
+        b.0.cmp(&a.0)
+            .then_with(|| match (a.1, b.1) {
+                (Some(x), Some(y)) => y.total_cmp(&x),
+                (Some(_), None) => std::cmp::Ordering::Less,
+                (None, Some(_)) => std::cmp::Ordering::Greater,
+                (None, None) => std::cmp::Ordering::Equal,
+            })
+            .then_with(|| a.2.cmp(&b.2))
+    });
+    rows.into_iter()
+        .take(REPRESENTATIVES_PER_CLUSTER)
+        .map(|r| r.3)
+        .collect()
+}
+
 pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
     let mut groups: Vec<(BTreeSet<String>, Vec<&SocialPost>)> = vec![];
     for p in posts {
@@ -379,7 +446,7 @@ pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
             groups.push((t, vec![p]));
         }
     }
-    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
+    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"representatives":representatives(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
 }
 
 pub fn snapshot(

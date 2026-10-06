@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e3f07fe7d3f776ca5f47955d17b45bc24fcd699b",
+  "assessed_parent_commit": "04b1275b901ee8d17843b1f3558afa85f410b74c",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 43,
     "benchmark_candidates": 32,
-    "algorithm_candidates": 13,
+    "algorithm_candidates": 12,
     "reference_only": 52,
-    "study_complete_capabilities": 77,
+    "study_complete_capabilities": 78,
     "not_relevant_after_review": 25,
-    "research_questions_open": 88,
-    "knowledge_coverage_ratio": 0.636364
+    "research_questions_open": 87,
+    "knowledge_coverage_ratio": 0.640496
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -1246,7 +1246,6 @@
       },
       "open": [
         "social.trend-finder.score_clusters BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)",
-        "social.trend-finder.select_top_posts ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)",
         "social.trend-finder.weekly-trend-pipeline STUDY_CANDIDATE(per-week re-clustering with no cross-week cluster identity (and week numbers without a year) against a rolling window with tracked clusters for rising product-demand signals)",
         "social.trend-finder.cluster-context-features ALGORITHM_CANDIDATE(cluster-level PRODUCT and ORG entity frequency with title n-grams as candidate product names, measured for precision on product clusters)",
         "social.trend-finder.clustering-comparison BENCHMARK_CANDIDATE(on product-review or listing embeddings, does HDBSCAN beat KMeans or GMM once DBCV and noise-aware coverage are measured, rather than silhouette with noise excluded)",
@@ -1256,6 +1255,7 @@
       "resolved": [
         "social.trend-finder.clean_text REFERENCE_ONLY(markdown and URL cleanup regexes; the donor pipeline never calls them)",
         "social.trend-finder.cluster_embeddings STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked on the donor corpus (research/commerce/trend-finder-clustering-benchmark.json): UMAP and HDBSCAN group same-product-line pairs at precision 0.29 against chance 0.19 and merge across niches when pooled, so its clusters are topics, not product lines; ECDEV does not adopt them as product topics)",
+        "social.trend-finder.select_top_posts STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social.rs::representatives picks up to three posts per lexical cluster by centrality (mean Jaccard to the other posts), then engagement rank among same-platform posts (never across platforms; unknown last, never zero), then key, and reports both components; clusters carry them as representatives)",
         "social.trend-finder.collect-reddit-listings STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](public Reddit listing JSON fetched through a third-party scraping proxy without OAuth or backoff; ECDEV uses official APIs within their terms)",
         "social.trend-finder.embed-posts REFERENCE_ONLY(MiniLM sentence embeddings stored in pgvector as a representation baseline)",
         "social.trend-finder.post-store REFERENCE_ONLY(Postgres and pgvector post schema with CSV load)",

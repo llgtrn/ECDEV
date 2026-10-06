@@ -678,3 +678,36 @@ fn sentiment_shares_carry_counts_and_intervals() {
     );
     assert_eq!(wilson_interval(0, 0), None);
 }
+#[test]
+fn cluster_representatives_rank_centrality_then_same_platform_engagement() {
+    let mut a = post("a", "BLUESKY", 9000);
+    a.text = "matcha glass cup review".into();
+    a.engagement.likes = Some(1);
+    let mut b = post("b", "BLUESKY", 9100);
+    b.text = "matcha glass cup review".into();
+    b.engagement.likes = Some(50);
+    let mut c = post("c", "HACKER_NEWS", 9200);
+    c.text = "matcha glass cup review".into();
+    c.engagement.likes = None;
+    let mut d = post("d", "BLUESKY", 9300);
+    d.text = "matcha glass cup offtopic tangent words".into();
+    d.engagement.likes = Some(1000);
+    let reps = representatives(&[&a, &b, &c, &d]);
+    let keys: Vec<_> = reps
+        .iter()
+        .map(|r| r["post_key"].as_str().unwrap())
+        .collect();
+    // Equal centrality: higher same-platform rank first, unknown engagement last; the most
+    // engaged but least central post is not chosen.
+    assert_eq!(keys, ["BLUESKY:b", "BLUESKY:a", "HACKER_NEWS:c"]);
+    assert!(reps[2]["engagement_rank_within_platform"].is_null());
+    assert_eq!(reps[0]["engagement_rank_within_platform"], 0.5);
+    let single = representatives(&[&d]);
+    assert_eq!(single[0]["centrality"], 1.);
+    let clustered = clusters(&[a, b, c, d]);
+    assert!(
+        clustered[0]["representatives"]
+            .as_array()
+            .is_some_and(|r| !r.is_empty())
+    );
+}
