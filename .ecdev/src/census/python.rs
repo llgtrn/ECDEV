@@ -211,6 +211,7 @@ pub const DISTRIBUTION_OF: &[(&str, &str)] = &[
     ("dateutil", "python-dateutil"),
     ("PIL", "pillow"),
     ("sklearn", "scikit-learn"),
+    ("graphql", "graphql-core"),
 ];
 
 /// Every absolute top-level module a Python source imports.

@@ -180,8 +180,37 @@ def parse_review(path, content):
   walk(tree.root_node)
   out.update(status='PARSED',grammar=grammar,method=method if i==0 else 'SUPERSET_OR_HEADER_GRAMMAR_FALLBACK',reason_code=None,error=None,symbols=symbols,imports=imports)
   return out
+ reference=reference_parse(path,content,language)
+ if reference:
+  out.update(status='PARSED',grammar=reference[0],method=reference[1],reason_code=None,error=None)
+  return out
  if out['reason_code']!='NO_GRAMMAR_IN_PINNED_PARSER_PACK' or out['error']: out['reason_code']=failure_reason(path,content,language)
  return out
+
+TEMPLATE_TAG = re.compile(r'\{%.*?%\}|\{\{.*?\}\}|\{#.*?#\}', re.S)
+
+def reference_parse(path, content, language):
+ """When the tree-sitter grammar rejects a file, the language's own reference parser may still
+ accept it: graphql-core (port of graphql-js) for GraphQL; for a Jinja template, Jinja's parser
+ for the template layer AND the HTML grammar on the text with every template tag blanked (a
+ template parser alone accepts nearly any text, so it never decides on its own)."""
+ text=content.decode('utf-8','replace')
+ if language=='graphql':
+  try:
+   import graphql
+   graphql.parse(text)
+   return ('graphql-core','GRAPHQL_REFERENCE_PARSER')
+  except Exception: return None
+ if language=='html' and TEMPLATE_TAG.search(text):
+  try:
+   import jinja2
+   from tree_sitter_language_pack import get_parser
+   jinja2.Environment().parse(text)
+  except Exception: return None
+  blanked=TEMPLATE_TAG.sub(lambda m: re.sub(r'[^\n]',' ',m.group(0)),text)
+  if get_parser('html').parse(blanked.encode()).root_node.has_error: return None
+  return ('jinja2+html','JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED')
+ return None
 
 def parse_source(path, content):
  r=parse_review(path,content)

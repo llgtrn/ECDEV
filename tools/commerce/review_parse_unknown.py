@@ -56,7 +56,7 @@ def main():
             saved = prior.get((donor["donor_id"], row["path"]))
             before = saved["before"] if saved else {"parse_status": row.get("parse_status"), "language": row.get("language")}
             kind = census.classify(row["path"], blob)
-            if kind != row["classification"]:
+            if kind != row["classification"] or kind != "FIRST_PARTY_SOURCE":
                 # Generated output (e.g. Cython's C++) is a build artifact, not first-party source.
                 before.setdefault("classification", row["classification"])
                 row["classification"] = kind
