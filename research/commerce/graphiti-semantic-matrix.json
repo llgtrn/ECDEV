@@ -1,0 +1,142 @@
+{
+  "donor_id": "getzep--graphiti",
+  "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+  "license": "Apache-2.0",
+  "scope": "Module-level semantic matrix of graphiti_core, mcp_server and server (274 Python files); commerce-useful deterministic semantics absorbed with oracles, the rest classified with reasons. ECDEV does not become a Graphiti clone.",
+  "oracle": {
+    "fixture": "domain/commerce/tests/fixtures/graphiti-semantics.json",
+    "cases": 1580,
+    "generator": "embedded as generator_source in the fixture; runs the unmodified pinned clone; no tracked file imports graphiti_core",
+    "reproducibility": "names, jaccard, invalidations and fusions identical across PYTHONHASHSEED 1-3; resolutions differ only by hash-seeded tie order, recorded as fuzzy_candidates_at_best_score"
+  },
+  "rows": [
+    {
+      "source": "graphiti_core/utils/maintenance/dedup_helpers.py",
+      "behaviour": "exact name normalization, entropy gate, 3-gram MinHash (BLAKE2b-64) with LSH bands, Jaccard>=0.9 candidate resolution, generic-label promotion",
+      "ecdev_relevance": "USEFUL",
+      "capability": "memory.name-similarity",
+      "native": "domain/commerce/src/memory.rs::match_names",
+      "proof": "PARITY_PROVEN: 130 name cases, 400 Jaccard pairs, 150 resolution scenarios; donor tie order is hash-seeded, ECDEV picks earliest existing candidate",
+      "note": "proposes candidate links only; ECDEV identity stays assertion-based (resolution.rs)"
+    },
+    {
+      "source": "graphiti_core/utils/maintenance/edge_operations.py:538-573 resolve_edge_contradictions",
+      "behaviour": "bi-temporal supersession: an earlier-valid fact ends when a newer contradicting fact starts; disjoint windows untouched",
+      "ecdev_relevance": "USEFUL",
+      "capability": "memory.fact-supersession",
+      "native": "domain/commerce/src/memory.rs::superseded",
+      "proof": "PARITY_PROVEN: 600 window combinations including unknown bounds; expired_at is wall-clock bookkeeping set by the caller",
+      "note": "contradiction detection itself is LLM-judged in the donor and is NOT absorbed"
+    },
+    {
+      "source": "graphiti_core/search/search_utils.py:1775-1790 rrf",
+      "behaviour": "reciprocal rank fusion with rank constant and minimum score; stable tie order",
+      "ecdev_relevance": "USEFUL",
+      "capability": "memory.rank-fusion",
+      "native": "domain/commerce/src/memory.rs::reciprocal_rank_fusion",
+      "proof": "PARITY_PROVEN: 300 fusion cases, bit-exact scores",
+      "note": null
+    },
+    {
+      "source": "graphiti_core/utils/datetime_utils.py ensure_utc",
+      "behaviour": "explicit-zone datetimes to UTC",
+      "ecdev_relevance": "ALREADY_NATIVE",
+      "capability": "extract.publication-time",
+      "native": "adapter/web/src/social.rs::published",
+      "proof": "PARITY_PROVEN earlier (graphiti_timezone_oracle, 901 cases); naive datetimes are rejected by ECDEV rather than assumed UTC",
+      "note": null
+    },
+    {
+      "source": "graphiti_core/search/search_utils.py maximal_marginal_relevance, calculate_cosine_similarity, node_distance_reranker",
+      "behaviour": "embedding/graph-distance reranking",
+      "ecdev_relevance": "NOT_RELEVANT_NOW",
+      "capability": "memory.embedding-rerank",
+      "native": null,
+      "proof": null,
+      "note": "ECDEV stores no embeddings and runs no vector search; revisit only if a native embedding store exists"
+    },
+    {
+      "source": "graphiti_core/utils/maintenance/community_operations.py label_propagation",
+      "behaviour": "community detection by label propagation over entity neighbours",
+      "ecdev_relevance": "CANDIDATE",
+      "capability": "social.topic-clustering",
+      "native": null,
+      "proof": null,
+      "note": "possible social topic clustering technique; LLM summarisation parts excluded; not studied to parity yet"
+    },
+    {
+      "source": "graphiti_core/utils/bulk_utils.py UnionFind, compress_uuid_map",
+      "behaviour": "duplicate-pair transitive closure",
+      "ecdev_relevance": "CANDIDATE",
+      "capability": "memory.duplicate-closure",
+      "native": null,
+      "proof": null,
+      "note": "small deterministic algorithm; absorb with next resolution wave"
+    },
+    {
+      "source": "graphiti_core/utils/content_chunking.py",
+      "behaviour": "token-estimate based JSON/text/message chunking for LLM prompts",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "exists to fit LLM context windows; ECDEV extraction is deterministic"
+    },
+    {
+      "source": "graphiti_core/utils/maintenance/node_operations.py, edge_operations.py (extract_*, resolve_* with LLM), combined_extraction.py, attribute_utils.py, prompts/",
+      "behaviour": "LLM entity/edge extraction, attribute extraction, summaries, contradiction judgement, prompt templates",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "LLM-generated facts are not evidence under ECDEV's OBSERVED/DERIVED/ESTIMATED/UNKNOWN/CONFLICT model"
+    },
+    {
+      "source": "graphiti_core/llm_client, embedder, cross_encoder",
+      "behaviour": "provider clients (OpenAI, Anthropic, Gemini, Groq, ...)",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "zero-paid default; no model provider dependency"
+    },
+    {
+      "source": "graphiti_core/driver (77 files)",
+      "behaviour": "Neo4j, FalkorDB, Kuzu, Neptune drivers and query builders",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "ECDEV persists evidence in its own SQLite runs; no graph database"
+    },
+    {
+      "source": "graphiti_core/graphiti.py, nodes.py, edges.py, namespaces/, models/",
+      "behaviour": "orchestration facade and persisted node/edge models",
+      "ecdev_relevance": "STUDIED_MODEL_ONLY",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "valid_at/invalid_at/expired_at/created_at bi-temporal fields informed memory::Validity; persistence models not absorbed"
+    },
+    {
+      "source": "graphiti_core/telemetry, tracer.py, decorators.py",
+      "behaviour": "usage telemetry and tracing",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "ECDEV sends no telemetry"
+    },
+    {
+      "source": "mcp_server/, server/",
+      "behaviour": "hosted MCP and REST services over Graphiti",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": null,
+      "native": null,
+      "proof": null,
+      "note": "ECDEV exposes its own MCP/HTTP server; no Graphiti service dependency"
+    }
+  ],
+  "production_callers": "none yet for memory.* — parity proven, relevance unresolved until a production caller exists",
+  "status": "SEMANTIC_MATRIX_MODULE_LEVEL_COMPLETE_CAPABILITY_ABSORPTION_PARTIAL"
+}

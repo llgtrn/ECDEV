@@ -5,6 +5,7 @@ pub mod economics;
 pub mod frontier;
 pub mod intelligence;
 pub mod marketplace;
+pub mod memory;
 pub mod monitor;
 pub mod planner;
 pub mod provider;
