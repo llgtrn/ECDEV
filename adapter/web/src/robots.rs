@@ -84,6 +84,39 @@ fn matches(pattern: &str, path: &str) -> bool {
 }
 /// The robots.txt governing `url`: same scheme, host and port, with credentials, query and
 /// fragment dropped (Rep::Robots::robotsUrl).
+/// Sitemaps a robots.txt declares (`Sitemap:` lines are not group-scoped; RFC 9309 section
+/// 2.2.4). Relative locations resolve against the robots URL; only http(s) URLs are kept,
+/// duplicates once, at most `MAX_DECLARED_SITEMAPS`. A sitemap on another host is kept: robots
+/// cross-submission is how a site declares it.
+pub const MAX_DECLARED_SITEMAPS: usize = 50;
+
+pub fn sitemaps(text: &str, robots: &Url) -> Vec<Url> {
+    let mut out: Vec<Url> = vec![];
+    for line in text.lines() {
+        let line = line.split('#').next().unwrap_or("").trim();
+        let Some((key, value)) = line.split_once(':') else {
+            continue;
+        };
+        if !key.trim().eq_ignore_ascii_case("sitemap") {
+            continue;
+        }
+        let value = value.trim();
+        if value.is_empty() {
+            continue;
+        }
+        let Ok(u) = robots.join(value) else {
+            continue;
+        };
+        if matches!(u.scheme(), "http" | "https") && !out.contains(&u) {
+            out.push(u);
+            if out.len() == MAX_DECLARED_SITEMAPS {
+                break;
+            }
+        }
+    }
+    out
+}
+
 /// Origins whose robots.txt outcome a process keeps at once.
 pub const ROBOTS_CACHE_ORIGINS: usize = 256;
 
@@ -305,6 +338,25 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn declared_sitemaps_are_resolved_and_deduplicated() {
+        let r = Url::parse("https://www.shop.example/robots.txt").unwrap();
+        let text = "User-agent: *\nDisallow: /cart\nSitemap: https://shop.example/sitemap.xml\nsitemap:/s2.xml # comment\nSITEMAP: https://shop.example/sitemap.xml\nSitemap: ftp://x.example/s.xml\nSitemap:\n";
+        let got: Vec<_> = sitemaps(text, &r).iter().map(Url::to_string).collect();
+        assert_eq!(
+            got,
+            [
+                "https://shop.example/sitemap.xml",
+                "https://www.shop.example/s2.xml"
+            ]
+        );
+        // A colon inside the URL survives; comments do not.
+        assert_eq!(
+            sitemaps("Sitemap: https://a.example:8443/s.xml", &r)[0].port(),
+            Some(8443)
+        );
+    }
+
     #[test]
     fn robots_outcomes_are_kept_for_their_http_lifetime_only() {
         let u = Url::parse("https://shop.example/robots.txt").unwrap();

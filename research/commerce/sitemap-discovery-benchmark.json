@@ -1,0 +1,336 @@
+{
+  "benchmark": "reppy.sitemaps: do Sitemap lines in robots.txt give zero-paid product-URL discovery beyond what a home page links to?",
+  "captured_on": "2026-10-06",
+  "sites": "five public sites (four direct-to-consumer retailers, one scraping practice site); every request allowed by robots.txt for the ECDEV agent; GET only; 1 s between requests; at most 6 sitemaps per site with product sitemaps first",
+  "evidence_state": "BENCHMARK_MEASUREMENT of discovery coverage on five sites at one time; not evidence about any market, catalogue size or product",
+  "product_url_rule": "path segment products|product|p|dp|item|items followed by a slug; compared by path so www and bare hosts match",
+  "harness_sources": {
+    "tools/commerce/sitemap_discovery_benchmark.py": "929c53db257eace3f6f66dc3f52700b006b000756a1d91eaa571cf053be7ea83"
+  },
+  "results": [
+    {
+      "site": "https://www.allbirds.com",
+      "robots_status": 200,
+      "declared_sitemaps": [
+        "https://www.allbirds.com/sitemap.xml"
+      ],
+      "home_status": 200,
+      "home_links": 55,
+      "home_product_urls": 0,
+      "sitemaps_fetched": 6,
+      "sitemap_budget_exhausted": true,
+      "sitemap_product_urls": 692,
+      "home_products_in_sitemaps": 0,
+      "home_products_missing_from_sitemaps": 0,
+      "missing_examples": []
+    },
+    {
+      "site": "https://www.gymshark.com",
+      "robots_status": 200,
+      "declared_sitemaps": [
+        "https://www.gymshark.com/sitemap.xml"
+      ],
+      "home_status": 200,
+      "home_links": 219,
+      "home_product_urls": 20,
+      "sitemaps_fetched": 6,
+      "sitemap_budget_exhausted": true,
+      "sitemap_product_urls": 4954,
+      "home_products_in_sitemaps": 20,
+      "home_products_missing_from_sitemaps": 0,
+      "missing_examples": []
+    },
+    {
+      "site": "https://www.glossier.com",
+      "robots_status": 200,
+      "declared_sitemaps": [
+        "https://www.glossier.com/sitemap.xml"
+      ],
+      "home_status": 200,
+      "home_links": 308,
+      "home_product_urls": 18,
+      "sitemaps_fetched": 6,
+      "sitemap_budget_exhausted": true,
+      "sitemap_product_urls": 97,
+      "home_products_in_sitemaps": 16,
+      "home_products_missing_from_sitemaps": 2,
+      "missing_examples": [
+        "/products/glossier-holiday-you-duo",
+        "/products/mini-you-wardrobe-set"
+      ]
+    },
+    {
+      "site": "https://books.toscrape.com",
+      "robots_status": 404,
+      "declared_sitemaps": [],
+      "home_status": 200,
+      "home_links": 77,
+      "home_product_urls": 0,
+      "sitemaps_fetched": 0,
+      "sitemap_budget_exhausted": false,
+      "sitemap_product_urls": 0,
+      "home_products_in_sitemaps": 0,
+      "home_products_missing_from_sitemaps": 0,
+      "missing_examples": []
+    },
+    {
+      "site": "https://www.rothys.com",
+      "robots_status": 200,
+      "declared_sitemaps": [
+        "https://rothys.com/sitemap.xml"
+      ],
+      "home_status": 200,
+      "home_links": 80,
+      "home_product_urls": 7,
+      "sitemaps_fetched": 6,
+      "sitemap_budget_exhausted": true,
+      "sitemap_product_urls": 2518,
+      "home_products_in_sitemaps": 7,
+      "home_products_missing_from_sitemaps": 0,
+      "missing_examples": []
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://www.allbirds.com/robots.txt",
+      "status": 200,
+      "bytes": 5495,
+      "sha256": "c9733b5b6b448f7056fe3a3d8140cee3784e8b9ef075a9c5002f41b73c9d9bca"
+    },
+    {
+      "url": "https://www.allbirds.com/",
+      "status": 200,
+      "bytes": 717000,
+      "sha256": "146670ebcef6deaafab5cb6721df723e9cd8b17c3cf0da570b1d8359a910f0c9"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap.xml",
+      "status": 200,
+      "bytes": 969,
+      "sha256": "f832372f3b2d0d244c8b8c6a086363840e4c404f88b11ab7d330ef54f7682ea3"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap_products_1.xml?from=1878193471557&to=7369944137808",
+      "status": 200,
+      "bytes": 363650,
+      "sha256": "5004f772ce864dab730ba8d88cfd2a55522e102089276621db6d7bbe022ee7cb"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap_agentic_discovery.xml",
+      "status": 200,
+      "bytes": 213,
+      "sha256": "3a201c1476738ef46825421f4b95e8d7f4956a325add6337352c12f6b0bf4e9c"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap_pages_1.xml?from=154421575&to=94891114576",
+      "status": 200,
+      "bytes": 30163,
+      "sha256": "de991c3f30adc7382b1b78d5fe4a6a5469ad6fb25b2fa108685349d7fb60fffd"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap_collections_1.xml?from=423410055&to=279444029520",
+      "status": 200,
+      "bytes": 248203,
+      "sha256": "31963ed5d1abac6d97d0999fd7d7718cc5d9c78734b9ac709d240ee6876e48dd"
+    },
+    {
+      "url": "https://www.allbirds.com/sitemap_blogs_1.xml",
+      "status": 200,
+      "bytes": 36049,
+      "sha256": "0724640563ec79d2cdc5c59ea139065f0acdf7c9203c72fde3f15f269bc4b971"
+    },
+    {
+      "url": "https://www.gymshark.com/robots.txt",
+      "status": 200,
+      "bytes": 3123,
+      "sha256": "8b1027003bcdd5e1bb392d057f6cb818939c109df42b6270ca03a9384c29fe82"
+    },
+    {
+      "url": "https://www.gymshark.com/",
+      "status": 200,
+      "bytes": 1793325,
+      "sha256": "03cb1a3d5ed8e8d9257e7de46e02641faa184a5eb38f53edff8d8e0ad1c79a55"
+    },
+    {
+      "url": "https://www.gymshark.com/sitemap.xml",
+      "status": 200,
+      "bytes": 1070,
+      "sha256": "01e79e09a156704aa6c2a0e085b417297d22206ac385064dd1f8d2c00a03459f"
+    },
+    {
+      "url": "https://www.gymshark.com/sitemap_products_1.xml",
+      "status": 200,
+      "bytes": 1686317,
+      "sha256": "7490385444a2a59b9ab0df084a982331e3afe13d7a8a255c1e9d2448605553be"
+    },
+    {
+      "url": "https://www.gymshark.com/es-US/sitemap_products_1.xml",
+      "status": 200,
+      "bytes": 1701179,
+      "sha256": "390c27b041b646386a1700b8b33aef8e213d999c0f85c3cf200f64de8e17d24d"
+    },
+    {
+      "url": "https://www.gymshark.com/sitemap_pages_1.xml",
+      "status": 200,
+      "bytes": 34387,
+      "sha256": "e9b0c04a5d9aba05c169c1573e891dd30cdb780383559f9f758ef78eaa65df22"
+    },
+    {
+      "url": "https://www.gymshark.com/sitemap_collections_1.xml",
+      "status": 200,
+      "bytes": 260973,
+      "sha256": "a063396977a6e257ab827d1338182fb287c9adc409dc7588c9210bbca89bd934"
+    },
+    {
+      "url": "https://www.gymshark.com/hreflang_sitemap.xml",
+      "status": 200,
+      "bytes": 80773,
+      "sha256": "a44c4787a75bba846990f89ca247e88b84cf6c17edb2cc61ae67edb5d5727550"
+    },
+    {
+      "url": "https://www.glossier.com/robots.txt",
+      "status": 200,
+      "bytes": 3632,
+      "sha256": "67b4c9096d11f8314174dadee8b921e01219edf056f3d51d1fa9c7340aa27002"
+    },
+    {
+      "url": "https://www.glossier.com/",
+      "status": 200,
+      "bytes": 416109,
+      "sha256": "aba079c1d38ac211b48307ce1577fd34c4144a32b7aabe91035abe44b417245e"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap.xml",
+      "status": 200,
+      "bytes": 26829,
+      "sha256": "d5ade130d42bf5ec9cfad236c35a3197f06730c4f0382aa6c743c8dd1cf50305"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap_products_1.xml?from=7774946722037&to=9763083223285",
+      "status": 200,
+      "bytes": 44636,
+      "sha256": "86fac5be490079cd48d4e8022377611b61a752b9154f9c519bead2d5d87027d7"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap_agentic_discovery.xml",
+      "status": 200,
+      "bytes": 213,
+      "sha256": "e77618b95998a4e1cd35afefd8e05a6c0fd66cae03839426285d2a04b34a2a2e"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap_pages_1.xml?from=94974345461&to=163549511925",
+      "status": 200,
+      "bytes": 14965,
+      "sha256": "9ae35c253a573b8d2e42efeec2f59b7c4fdb1579683d55d9727519b50efd2372"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap_collections_1.xml?from=391404716277&to=511274615029",
+      "status": 200,
+      "bytes": 19339,
+      "sha256": "597b8ab8dc7229fea7a42f6067638bfa9ca41a636f7a0217e694b8e4c28380cd"
+    },
+    {
+      "url": "https://www.glossier.com/sitemap_blogs_1.xml",
+      "status": 200,
+      "bytes": 333,
+      "sha256": "4a817bc79b8a019662db625d4022ef8c6372cc5c0a82ce79971ebc3134896002"
+    },
+    {
+      "url": "https://books.toscrape.com/robots.txt",
+      "status": 404,
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "url": "https://books.toscrape.com/",
+      "status": 200,
+      "bytes": 51294,
+      "sha256": "9fdd63da34161ebd13408d7a85105f83ec3c9f351c5d77cd0aa578790e121c1e"
+    },
+    {
+      "url": "https://www.rothys.com/robots.txt",
+      "status": 200,
+      "bytes": 5643,
+      "sha256": "8e83e25b4ce166b44a6f9c5fe1efb99b91902757f931f234b79f00bf42d36b6a"
+    },
+    {
+      "url": "https://www.rothys.com/",
+      "status": 200,
+      "bytes": 1189442,
+      "sha256": "5b49bd7a474a60b4f26b0092f700cbc95bfcbe5a617a6902c91c6b3817910905"
+    },
+    {
+      "url": "https://rothys.com/sitemap.xml",
+      "status": 200,
+      "bytes": 20575,
+      "sha256": "2d6554934c95e19be6ce7d37d6056bbdf2b9bff6a782578e40c68e3fb2e97ed6"
+    },
+    {
+      "url": "https://rothys.com/sitemap_products_1.xml?from=1308979298412&to=15413188395102",
+      "status": 200,
+      "bytes": 297704,
+      "sha256": "882440b49b2058246392f35a009dc4b880c6a1a0491f62196cb8398b3e11104a"
+    },
+    {
+      "url": "https://rothys.com/en-ca/sitemap_products_1.xml?from=1308979298412&to=15413188395102",
+      "status": 200,
+      "bytes": 295896,
+      "sha256": "32a58bf61f5877250ffdcadf53f848e7a58d1689e6ac6dd76f6fbf3a142b9cad"
+    },
+    {
+      "url": "https://rothys.com/en-au/sitemap_products_1.xml?from=1308979298412&to=15413188395102",
+      "status": 200,
+      "bytes": 295896,
+      "sha256": "44d7f2ab82dcadf54dc4f1e877d8990a74a781212ab7f7b69081657066404d3f"
+    },
+    {
+      "url": "https://rothys.com/en-nz/sitemap_products_1.xml?from=1308979298412&to=15413188395102",
+      "status": 200,
+      "bytes": 295896,
+      "sha256": "8d84a79b03b05a2e8bf5e080a500cf73450aa0c54889d90b6599d88bd0781f75"
+    },
+    {
+      "url": "https://rothys.com/en-mx/sitemap_products_1.xml?from=1308979298412&to=15413188395102",
+      "status": 200,
+      "bytes": 245753,
+      "sha256": "dca0da7384c95478d288dfdd610051b036082b80c83e4a41f5495a02f6f1c386"
+    }
+  ],
+  "summary": {
+    "sites_with_declared_sitemaps": 4,
+    "sitemap_product_urls_within_6_sitemaps": {
+      "https://www.allbirds.com": 692,
+      "https://www.gymshark.com": 4954,
+      "https://www.glossier.com": 97,
+      "https://books.toscrape.com": 0,
+      "https://www.rothys.com": 2518
+    },
+    "home_page_product_urls": {
+      "https://www.allbirds.com": 0,
+      "https://www.gymshark.com": 20,
+      "https://www.glossier.com": 18,
+      "https://books.toscrape.com": 0,
+      "https://www.rothys.com": 7
+    },
+    "home_page_products_found_in_sitemaps": "43 of 45 (two seasonal bundles on glossier.com were absent)",
+    "request_count": 34
+  },
+  "findings": [
+    "Where a sitemap is declared, a handful of requests lists 97 to 4954 product URLs; the home page links to 0 to 20.",
+    "allbirds.com links no product URL in its static home page HTML (rendered navigation); its sitemaps list 692.",
+    "Sitemaps lag the storefront: 2 of 45 home-page products (seasonal bundles) were not yet listed, so sitemap discovery complements link discovery rather than replacing it.",
+    "rothys.com robots.txt on www declares a sitemap on the bare host: cross-host declaration is normal and must not be dropped.",
+    "No sampled sitemap carried lastmod, so recency cannot be read from these sitemaps.",
+    "books.toscrape.com declares no sitemap and its product paths (/catalogue/) fall outside the product rule: the rule undercounts, never overcounts, such sites."
+  ],
+  "decision": {
+    "knowledge": "INDEPENDENT_NATIVE",
+    "native": [
+      "adapter/web/src/robots.rs::sitemaps",
+      "adapter/web/src/sitemap.rs::parse"
+    ],
+    "validated": "the native parser reads 9, 2477 and 181 entries from captured gymshark.com and rothys.com sitemaps, equal to their <loc> element counts, with no image:loc entry",
+    "runtime": "frontier seeding from sitemaps is not wired yet; each sitemap URL must still pass the robots evaluator and the fetch budget like any other URL"
+  },
+  "limits": "five sites, one capture time, six sitemaps per site, a path rule for product URLs; catalogue completeness of sitemaps was not measured"
+}

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "04b1275b901ee8d17843b1f3558afa85f410b74c",
+  "assessed_parent_commit": "eaa06650ca67c7255e87b54c2647bb4b36ce447b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 43,
+    "study_candidates": 42,
     "benchmark_candidates": 32,
     "algorithm_candidates": 12,
     "reference_only": 52,
-    "study_complete_capabilities": 78,
+    "study_complete_capabilities": 79,
     "not_relevant_after_review": 25,
-    "research_questions_open": 87,
-    "knowledge_coverage_ratio": 0.640496
+    "research_questions_open": 86,
+    "knowledge_coverage_ratio": 0.644628
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -451,13 +451,13 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "reppy.sitemaps STUDY_CANDIDATE(Sitemap lines in robots.txt as zero-paid product-URL discovery; compare coverage with seed and link discovery)",
         "reppy.url-library-remainder ALGORITHM_CANDIDATE(public-suffix registrable-domain computation (url-cpp psl) for grouping independent origins and publishers)"
       ],
       "resolved": [
         "reppy.allow-decision STUDY_COMPLETE[DERIVED_NATIVE](allow decisions proven on 1620 frozen cases, reproduced by MSVC and g++)",
         "reppy.crawl-delay STUDY_COMPLETE[DERIVED_NATIVE](crawl-delay proven on the same 1620 cases)",
         "reppy.robots-url STUDY_COMPLETE[DERIVED_NATIVE](robots URL proven on 14 frozen cases)",
+        "reppy.sitemaps STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/sitemap-discovery-benchmark.json: on four retailers declaring sitemaps, six sitemap requests listed 97 to 4954 product URLs against 0 to 20 home-page product links, and held 43 of 45 home-page products (seasonal bundles lag); adapter/web/src/robots.rs::sitemaps and adapter/web/src/sitemap.rs::parse read declared sitemaps and bounded urlset/index entries natively; frontier seeding is not wired)",
         "reppy.fetch-status-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](reppy allows all on most 4xx; ECDEV denies every status but 200 and 404)",
         "reppy.ttl-and-cache STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/robots.rs::RobotsCache keeps a 200 or 404 robots.txt outcome per robots URL for its header-derived freshness lifetime (research::freshness_lifetime: no-store and no-cache never kept, default 1 h, at most 24 h per RFC 9309), bounded at 256 origins with soonest-expiry eviction; 429, 5xx and other statuses are refetched every time; acquisitions record robots_cache_hits beside request_count)",
         "reppy.packaging-and-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](Cython bindings, packaging, benchmarks and CI scripts)"
