@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "75b8e5799f5cc3f4a83578149e5d46386e6ceb36",
+  "assessed_parent_commit": "45d884e152139ee98bd1153a013c29260fa475e1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -6641,9 +6641,9 @@
         {
           "key": "social.trend-finder.cluster_embeddings",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked on the donor corpus (research/commerce/trend-finder-clustering-benchmark.json): UMAP and HDBSCAN group same-product-line pairs at precision 0.29 against chance 0.19 and merge across niches when pooled, so its clusters are topics, not product lines; ECDEV does not adopt them as product topics)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.trend-finder.score_clusters",
@@ -6731,7 +6731,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "4 of 5 declared capabilities still have open research: social.trend-finder.clean_text (STUDY_CANDIDATE), social.trend-finder.cluster_embeddings (BENCHMARK_CANDIDATE), social.trend-finder.score_clusters (BENCHMARK_CANDIDATE), social.trend-finder.select_top_posts (ALGORITHM_CANDIDATE)"
+          "detail": "3 of 5 declared capabilities still have open research: social.trend-finder.clean_text (STUDY_CANDIDATE), social.trend-finder.score_clusters (BENCHMARK_CANDIDATE), social.trend-finder.select_top_posts (ALGORITHM_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

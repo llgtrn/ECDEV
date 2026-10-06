@@ -1,0 +1,113 @@
+{
+ "benchmark": "social.trend-finder.cluster_embeddings: do sentence embeddings with UMAP + HDBSCAN recover commerce topics that ECDEV's lexical clustering misses, without merging unrelated ones?",
+ "donor_id": "t4niha--Trend-Finder",
+ "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+ "license": "MIT",
+ "embedding_model": {
+  "id": "sentence-transformers/all-MiniLM-L6-v2",
+  "revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "license": "apache-2.0"
+ },
+ "corpus": {
+  "source": "data/final_trendingtopics_reddit.csv in the pinned donor (not copied into ECDEV)",
+  "blob": "69a26cebb3c6c1922f7e364e0cede681af9aacee",
+  "posts": 7090,
+  "labelled_product_posts": 638
+ },
+ "ground_truth": "PROXY: product-line labels from brand/model mentions in smartphones, technology and gaming posts (exactly one family); token-derived labels favour lexical clustering",
+ "evidence_state": "BENCHMARK_MEASUREMENT on a fixed public corpus; not evidence about any market, demand or product",
+ "embed_seconds_cpu": 113.8,
+ "results": {
+  "niche_week": {
+   "groups": 30,
+   "skipped_groups": 0,
+   "trend_finder_umap_hdbscan": {
+    "posts": 7090,
+    "clusters": 181,
+    "coverage": 0.7441,
+    "median_cluster_size": 21,
+    "max_cluster_size": 228,
+    "product_pair_recall": 0.2556,
+    "product_pair_precision": 0.2909,
+    "product_pairs": 5184,
+    "chance_precision": 0.1939,
+    "product_pair_f1": 0.2721,
+    "niche_purity": 1.0,
+    "mixed_niche_clusters": 0,
+    "cluster_seconds": 22.987
+   },
+   "ecdev_lexical": {
+    "posts": 7090,
+    "clusters": 303,
+    "coverage": 0.097,
+    "median_cluster_size": 2,
+    "max_cluster_size": 7,
+    "product_pair_recall": 0.0031,
+    "product_pair_precision": 1.0,
+    "product_pairs": 5184,
+    "chance_precision": 0.1939,
+    "product_pair_f1": 0.0062,
+    "niche_purity": 1.0,
+    "mixed_niche_clusters": 0,
+    "cluster_seconds": 1.75
+   },
+   "adjusted_rand_between_methods": 0.0054
+  },
+  "pooled_week": {
+   "groups": 5,
+   "skipped_groups": 0,
+   "trend_finder_umap_hdbscan": {
+    "posts": 7090,
+    "clusters": 89,
+    "coverage": 0.8982,
+    "median_cluster_size": 20,
+    "max_cluster_size": 938,
+    "product_pair_recall": 0.8769,
+    "product_pair_precision": 0.1955,
+    "product_pairs": 6070,
+    "chance_precision": 0.1356,
+    "product_pair_f1": 0.3197,
+    "niche_purity": 0.7335,
+    "mixed_niche_clusters": 68,
+    "cluster_seconds": 20.701
+   },
+   "ecdev_lexical": {
+    "posts": 7090,
+    "clusters": 329,
+    "coverage": 0.1054,
+    "median_cluster_size": 2,
+    "max_cluster_size": 7,
+    "product_pair_recall": 0.003,
+    "product_pair_precision": 1.0,
+    "product_pairs": 6070,
+    "chance_precision": 0.1356,
+    "product_pair_f1": 0.0059,
+    "niche_purity": 0.9545,
+    "mixed_niche_clusters": 34,
+    "cluster_seconds": 8.21
+   },
+   "adjusted_rand_between_methods": 0.0006
+  }
+ },
+ "outputs_sha256": {
+  "donor.json": "c4166be1cf079cf2756b2d6d004391bf5571f969493d5612311c268d688d7962",
+  "ecdev.json": "c72435a1f622833f7a0f8912ec6b2e6baa257fe6a2e20a8142748607f51488c1",
+  "posts.jsonl": "6debde713c3521dd54e8a141659b11ef8e287f27fcc3e880c76695ec7ff6b603"
+ },
+ "harness_sources": {
+  "donor_side.py": "\"\"\"Trend-Finder side of the clustering benchmark.\n\npython -I donor_side.py <Trend-Finder checkout at 5135bb0e> <out dir>\nEmbeds every post with all-MiniLM-L6-v2 (pinned revision) on the donor's own text\n(text_translated, else full_text), then runs the donor's unmodified cluster_embeddings\n(UMAP 10-d cosine, random_state 42, then HDBSCAN min_cluster_size 10, min_samples 5, EOM) per\n(niche, ISO week) — the donor's setting — and per pooled ISO week (all niches together).\nWrites posts.jsonl (shared input for ECDEV) and donor.json (labels, probabilities, timings).\n\"\"\"\nimport csv, json, pathlib, subprocess, sys, time\ncheckout = pathlib.Path(sys.argv[1]).resolve(); out = pathlib.Path(sys.argv[2]); out.mkdir(parents=True, exist_ok=True)\nCOMMIT = \"5135bb0e2a6a3f62d3f0153554d09505075578ef\"\nMODEL = \"sentence-transformers/all-MiniLM-L6-v2\"; MODEL_REVISION = \"1110a243fdf4706b3f48f1d95db1a4f5529b4d41\"\nassert subprocess.check_output([\"git\", \"-C\", str(checkout), \"rev-parse\", \"HEAD\"], text=True).strip() == COMMIT\nsys.path.insert(0, str(checkout / \"support\")); sys.path.insert(0, str(checkout / \"support\" / \"clustering\"))\nimport numpy as np\nfrom datetime import datetime, timezone\nfrom sentence_transformers import SentenceTransformer\nimport weekly_hdbscan\nassert pathlib.Path(weekly_hdbscan.__file__).resolve().is_relative_to(checkout)\n\ncsv.field_size_limit(10**9)\ndata = checkout / \"data/final_trendingtopics_reddit.csv\"\nrows = list(csv.DictReader(open(data, encoding=\"utf-8\")))\nposts = []\nfor r in rows:\n    ts = datetime.strptime(r[\"timestamp_utc\"], \"%Y-%m-%d %H:%M:%S\").replace(tzinfo=timezone.utc)\n    text = r[\"text_translated\"] or r[\"full_text\"]\n    posts.append({\"id\": r[\"post_id\"], \"niche\": r[\"niche\"], \"published_at\": int(ts.timestamp()),\n                  \"week\": int(ts.isocalendar().week), \"text\": text})\nwith open(out / \"posts.jsonl\", \"w\", encoding=\"utf-8\") as f:\n    for p in posts: f.write(json.dumps(p, ensure_ascii=False) + \"\\n\")\n\nmodel = SentenceTransformer(MODEL, revision=MODEL_REVISION, device=\"cpu\")\nt0 = time.time()\nemb = model.encode([p[\"text\"] for p in posts], batch_size=32, convert_to_numpy=True, show_progress_bar=False)\nembed_seconds = time.time() - t0\n\ndef groups(setting):\n    g = {}\n    for i, p in enumerate(posts):\n        k = (p[\"niche\"], p[\"week\"]) if setting == \"niche_week\" else (\"ALL\", p[\"week\"])\n        g.setdefault(k, []).append(i)\n    return g\n\nresult = {\"setting\": {}}\nfor setting in [\"niche_week\", \"pooled_week\"]:\n    runs = []\n    for (niche, week), idx in sorted(groups(setting).items()):\n        if len(idx) < 12:  # the donor's HDBSCAN cannot form a cluster below min_cluster_size + UMAP minimum\n            runs.append({\"niche\": niche, \"week\": week, \"posts\": [posts[i][\"id\"] for i in idx], \"skipped\": \"TOO_FEW_POSTS\"}); continue\n        t = time.time()\n        labels, prob, _ = weekly_hdbscan.cluster_embeddings(emb[idx])\n        runs.append({\"niche\": niche, \"week\": week, \"posts\": [posts[i][\"id\"] for i in idx],\n                     \"labels\": [int(x) for x in labels], \"probabilities\": [round(float(x), 6) for x in prob],\n                     \"seconds\": round(time.time() - t, 3)})\n    result[\"setting\"][setting] = runs\nresult.update({\"donor_id\": \"t4niha--Trend-Finder\", \"commit_sha\": COMMIT, \"model\": MODEL, \"model_revision\": MODEL_REVISION,\n               \"data_blob\": subprocess.check_output([\"git\", \"-C\", str(checkout), \"rev-parse\", f\"{COMMIT}:data/final_trendingtopics_reddit.csv\"], text=True).strip(),\n               \"posts\": len(posts), \"embed_seconds\": round(embed_seconds, 1)})\n(out / \"donor.json\").write_text(json.dumps(result))\nprint(\"posts\", len(posts), \"embed s\", round(embed_seconds, 1))\n",
+  "evaluate.py": "\"\"\"Scores the Trend-Finder clustering benchmark (donor.json, ecdev.json) and writes the record.\n\npython -I evaluate.py <out dir> <record.json>\nGround truth is a proxy, stated as such: product-line labels from brand/model mentions (a post\nis labelled only when exactly one family matches), plus pairs of posts linking the same external\nURL. Product labels come from tokens, which favours lexical clustering; the result is a\nbenchmark answer under that proxy, not topic truth.\n\"\"\"\nimport hashlib, itertools, json, pathlib, re, statistics, sys\nfrom collections import Counter\nout = pathlib.Path(sys.argv[1]); record = pathlib.Path(sys.argv[2])\nposts = {json.loads(l)[\"id\"]: json.loads(l) for l in open(out / \"posts.jsonl\", encoding=\"utf-8\")}\ndonor = json.loads((out / \"donor.json\").read_text()); ecdev = json.loads((out / \"ecdev.json\").read_text())\nFAMILIES = {\n    \"apple-iphone\": r\"\\biphone\", \"apple-ipad\": r\"\\bipad\", \"apple-mac\": r\"\\bmacbook|\\bimac\\b|\\bmac (mini|studio|pro)\\b\",\n    \"apple-watch\": r\"\\bapple watch\", \"apple-airpods\": r\"\\bairpods\", \"samsung-galaxy\": r\"\\bgalaxy\\b|\\bsamsung\\b\",\n    \"google-pixel\": r\"\\bpixel\\b\", \"oneplus\": r\"\\boneplus\\b\", \"xiaomi\": r\"\\bxiaomi\\b|\\bredmi\\b|\\bpoco\\b\",\n    \"nothing\": r\"\\bnothing phone\\b|\\bcmf\\b\", \"motorola\": r\"\\bmotorola\\b|\\bmoto [gex]\\d*\\b|\\brazr\\b\",\n    \"huawei-honor\": r\"\\bhuawei\\b|\\bhonor\\b\", \"oppo-vivo-realme\": r\"\\boppo\\b|\\bvivo\\b|\\brealme\\b\", \"sony-xperia\": r\"\\bxperia\\b\",\n    \"nintendo\": r\"\\bnintendo\\b|\\bswitch 2\\b\", \"playstation\": r\"\\bps5\\b|\\bplaystation\\b\", \"xbox\": r\"\\bxbox\\b\",\n    \"steam-hardware\": r\"\\bsteam deck\\b|\\bsteam machine\\b\", \"nvidia-gpu\": r\"\\bnvidia\\b|\\brtx\\b|\\bgeforce\\b\", \"tesla\": r\"\\btesla\\b\",\n}\nCOMMERCE_NICHES = {\"smartphones\", \"technology\", \"gaming\"}\ndef family(p):\n    if p[\"niche\"] not in COMMERCE_NICHES: return None\n    t = p[\"text\"].lower(); hits = [f for f, rx in FAMILIES.items() if re.search(rx, t)]\n    return hits[0] if len(hits) == 1 else None\nfam = {i: family(p) for i, p in posts.items()}\n\ndef clusters_of(run):\n    \"\"\"Clusters of size >= 2 (donor noise -1 and ECDEV singletons are unclustered).\"\"\"\n    g = {}\n    for pid, l in zip(run[\"posts\"], run[\"labels\"]):\n        if l != -1: g.setdefault(l, []).append(pid)\n    return [m for m in g.values() if len(m) >= 2]\n\ndef score(runs):\n    same = co_same = co_labelled = labelled_pairs = 0; clustered = total = 0; sizes = []; seconds = 0.0\n    mixed = 0; majority = 0\n    for run in runs:\n        if \"labels\" not in run: total += len(run[\"posts\"]); continue\n        seconds += run[\"seconds\"]; total += len(run[\"posts\"]); cs = clusters_of(run)\n        cid = {pid: k for k, m in enumerate(cs) for pid in m}\n        clustered += len(cid); sizes += [len(m) for m in cs]\n        for m in cs:\n            niches = Counter(posts[p][\"niche\"] for p in m); majority += niches.most_common(1)[0][1]; mixed += len(niches) > 1\n        labelled = [p for p in run[\"posts\"] if fam[p]]\n        for a, b in itertools.combinations(labelled, 2):\n            together = a in cid and cid.get(a) == cid.get(b)\n            if fam[a] == fam[b]: same += 1; co_same += together\n            co_labelled += together; labelled_pairs += 1\n    return {\"posts\": total, \"clusters\": len(sizes), \"coverage\": round(clustered / total, 4),\n            \"median_cluster_size\": statistics.median(sizes) if sizes else 0, \"max_cluster_size\": max(sizes, default=0),\n            \"product_pair_recall\": round(co_same / same, 4) if same else None,\n            \"product_pair_precision\": round(co_same / co_labelled, 4) if co_labelled else None,\n            \"product_pairs\": same, \"chance_precision\": round(same / labelled_pairs, 4) if labelled_pairs else None,\n            \"product_pair_f1\": round(2 * co_same / (same + co_labelled), 4) if same + co_labelled else None, \"niche_purity\": round(majority / clustered, 4) if clustered else None,\n            \"mixed_niche_clusters\": mixed, \"cluster_seconds\": round(seconds, 3)}\n\ndef ari(runs_a, runs_b):\n    from sklearn.metrics import adjusted_rand_score\n    a_lab, b_lab = [], []\n    for ra, rb in zip(runs_a, runs_b):\n        if \"labels\" not in ra: continue\n        assert ra[\"posts\"] == rb[\"posts\"]\n        a_lab += [f\"{ra['niche']}{ra['week']}:{l}\" if l != -1 else f\"noise:{p}\" for p, l in zip(ra[\"posts\"], ra[\"labels\"])]\n        b_lab += [f\"{rb['niche']}{rb['week']}:{l}\" for l in rb[\"labels\"]]\n    return round(adjusted_rand_score(a_lab, b_lab), 4)\n\nresult = {}\nfor setting in [\"niche_week\", \"pooled_week\"]:\n    d, e = donor[\"setting\"][setting], ecdev[setting]\n    e_runs = [x for x in e if any(x[\"posts\"] == r[\"posts\"] for r in d if \"labels\" in r)]\n    d_runs = [r for r in d if \"labels\" in r]\n    result[setting] = {\"groups\": len(d_runs), \"skipped_groups\": len(d) - len(d_runs),\n                       \"trend_finder_umap_hdbscan\": score(d_runs), \"ecdev_lexical\": score(e_runs),\n                       \"adjusted_rand_between_methods\": ari(d_runs, e_runs)}\nhere = pathlib.Path(__file__).parent\nsources = {n: (here / n).read_text() for n in [\"donor_side.py\", \"evaluate.py\"]}\nsources[\"ecdev_side/src/main.rs\"] = (here / \"ecdev_side/src/main.rs\").read_text()\nrecord.write_text(json.dumps({\n    \"benchmark\": \"social.trend-finder.cluster_embeddings: do sentence embeddings with UMAP + HDBSCAN recover commerce topics that ECDEV's lexical clustering misses, without merging unrelated ones?\",\n    \"donor_id\": donor[\"donor_id\"], \"commit_sha\": donor[\"commit_sha\"], \"license\": \"MIT\",\n    \"embedding_model\": {\"id\": donor[\"model\"], \"revision\": donor[\"model_revision\"], \"license\": \"apache-2.0\"},\n    \"corpus\": {\"source\": \"data/final_trendingtopics_reddit.csv in the pinned donor (not copied into ECDEV)\", \"blob\": donor[\"data_blob\"],\n               \"posts\": donor[\"posts\"], \"labelled_product_posts\": sum(1 for v in fam.values() if v)},\n    \"ground_truth\": \"PROXY: product-line labels from brand/model mentions in smartphones, technology and gaming posts (exactly one family); token-derived labels favour lexical clustering\",\n    \"evidence_state\": \"BENCHMARK_MEASUREMENT on a fixed public corpus; not evidence about any market, demand or product\",\n    \"embed_seconds_cpu\": donor[\"embed_seconds\"], \"results\": result,\n    \"outputs_sha256\": {n: hashlib.sha256((out / n).read_bytes()).hexdigest() for n in [\"donor.json\", \"ecdev.json\", \"posts.jsonl\"]},\n    \"harness_sources\": sources}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(json.dumps(result, indent=1))\n",
+  "ecdev_side/src/main.rs": "//! ECDEV side of the Trend-Finder clustering benchmark: the unmodified\n//! ecdev_core::social::clusters over the same posts and the same groups as the donor run.\n//! usage: ecdev-side <out/posts.jsonl> <out/donor.json> <out/ecdev.json>\nuse ecdev_core::social::{EvidenceState, SocialEngagement, SocialPost, clusters};\nuse serde_json::{Value, json};\nuse std::collections::BTreeMap;\nuse std::time::Instant;\n\nfn main() {\n    let a: Vec<String> = std::env::args().collect();\n    let posts: BTreeMap<String, Value> = std::fs::read_to_string(&a[1])\n        .unwrap()\n        .lines()\n        .map(|l| {\n            let v: Value = serde_json::from_str(l).unwrap();\n            (v[\"id\"].as_str().unwrap().to_string(), v)\n        })\n        .collect();\n    let donor: Value = serde_json::from_str(&std::fs::read_to_string(&a[2]).unwrap()).unwrap();\n    let mut out = json!({});\n    for (setting, runs) in donor[\"setting\"].as_object().unwrap() {\n        let mut results = vec![];\n        for run in runs.as_array().unwrap() {\n            let social: Vec<SocialPost> = run[\"posts\"]\n                .as_array()\n                .unwrap()\n                .iter()\n                .map(|id| {\n                    let p = &posts[id.as_str().unwrap()];\n                    SocialPost {\n                        platform: \"REDDIT\".into(),\n                        provider: \"benchmark\".into(),\n                        source_url: String::new(),\n                        native_id: p[\"id\"].as_str().unwrap().into(),\n                        thread_id: None,\n                        author_id: None,\n                        publisher: None,\n                        published_at: p[\"published_at\"].as_u64(),\n                        captured_at: 0,\n                        text: p[\"text\"].as_str().unwrap().into(),\n                        language: Some(\"en\".into()),\n                        media: vec![],\n                        hashtags: vec![],\n                        mentions: vec![],\n                        entities: vec![],\n                        propagation: \"ORIGINAL\".into(),\n                        parent_id: None,\n                        engagement: SocialEngagement { views: None, likes: None, comments: None, reposts: None, favorites: None, followers: None },\n                        raw_hash: String::new(),\n                        raw_locator: String::new(),\n                        extraction_method: \"benchmark\".into(),\n                        state: EvidenceState::Observed,\n                        capture_mode: \"FIXTURE\".into(),\n                        evidence_id: p[\"id\"].as_str().unwrap().into(),\n                        freshness_seconds: None,\n                        origin_evidence_id: None,\n                    }\n                })\n                .collect();\n            let t = Instant::now();\n            let cs = clusters(&social);\n            let seconds = t.elapsed().as_secs_f64();\n            let mut label: BTreeMap<String, i64> = BTreeMap::new();\n            for (i, c) in cs.iter().enumerate() {\n                for k in c[\"observations\"].as_array().unwrap() {\n                    let id = k.as_str().unwrap().trim_start_matches(\"REDDIT:\").to_string();\n                    label.insert(id, i as i64);\n                }\n            }\n            let labels: Vec<i64> = run[\"posts\"].as_array().unwrap().iter().map(|id| label[id.as_str().unwrap()]).collect();\n            let terms: Vec<Value> = cs.iter().map(|c| c[\"terms\"].clone()).collect();\n            results.push(json!({\"niche\":run[\"niche\"],\"week\":run[\"week\"],\"posts\":run[\"posts\"],\"labels\":labels,\"terms\":terms,\"seconds\":seconds}));\n        }\n        out[setting] = json!(results);\n    }\n    std::fs::write(&a[3], serde_json::to_string(&out).unwrap()).unwrap();\n}\n"
+ },
+ "findings": [
+  "Per (niche, week), the donor's UMAP + HDBSCAN clusters 74% of posts but groups same-product-line pairs at precision 0.29 against a chance rate of 0.19 (recall 0.26): its clusters are topics (leaks, reviews, deals) that cut across brands, not product lines",
+  "Pooled across niches per week it reaches recall 0.88 only by merging: one 938-post cluster, 68 mixed-niche clusters, niche purity 0.73; embedding clusters must never pool unrelated communities",
+  "ECDEV's lexical clustering is exact (precision 1.0, niche purity 1.0 per niche-week) but links 0.3% of same-product pairs and clusters 10% of posts, at most 7 posts per cluster: it finds near-duplicates, not product topics",
+  "The two methods barely agree (adjusted Rand 0.005): they measure different things",
+  "Cost on CPU: 114 s to embed 7,090 posts plus 23 s of clustering, against 1.8 s for lexical clustering"
+ ],
+ "decision": {
+  "social.trend-finder.cluster_embeddings": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE]: embedding + HDBSCAN clusters are not adopted as product topics (precision about 1.5x chance on product lines); topic clusters stay a possible presentation layer, never evidence",
+  "follow_up": "ECDEV-native: product topics need product-family entity links (brand/model recognition with provenance) rather than either clustering; ECDEV lexical recall of 0.003 shows the gap"
+ }
+}

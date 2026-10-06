@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "75b8e5799f5cc3f4a83578149e5d46386e6ceb36",
+  "assessed_parent_commit": "45d884e152139ee98bd1153a013c29260fa475e1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,13 +19,13 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 26,
-    "benchmark_candidates": 19,
+    "benchmark_candidates": 18,
     "algorithm_candidates": 8,
     "reference_only": 32,
-    "study_complete_capabilities": 51,
+    "study_complete_capabilities": 52,
     "not_relevant_after_review": 18,
-    "research_questions_open": 53,
-    "knowledge_coverage_ratio": 0.655844
+    "research_questions_open": 52,
+    "knowledge_coverage_ratio": 0.662338
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 45,
@@ -1112,11 +1112,11 @@
       },
       "open": [
         "social.trend-finder.clean_text STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)",
-        "social.trend-finder.cluster_embeddings BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)",
         "social.trend-finder.score_clusters BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)",
         "social.trend-finder.select_top_posts ALGORITHM_CANDIDATE(representative-post selection balancing centrality and engagement for explainable cluster summaries)"
       ],
       "resolved": [
+        "social.trend-finder.cluster_embeddings STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](benchmarked on the donor corpus (research/commerce/trend-finder-clustering-benchmark.json): UMAP and HDBSCAN group same-product-line pairs at precision 0.29 against chance 0.19 and merge across niches when pooled, so its clusters are topics, not product lines; ECDEV does not adopt them as product topics)",
         "social.trend-finder.remaining-whole-donor REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)"
       ]
     },
