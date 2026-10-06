@@ -213,6 +213,20 @@ def reference_parse(path, content, language):
   blanked=TEMPLATE_TAG.sub(lambda m: re.sub(r'[^\n]',' ',m.group(0)),text)
   if get_parser('html').parse(blanked.encode()).root_node.has_error: return None
   return ('jinja2+html','JINJA_TEMPLATE_AND_HTML_WITH_TAGS_BLANKED')
+ if language=='html' and not TEMPLATE_TAG.search(text):
+  # WHATWG parsing (html5lib strict: any parse error rejects). html5lib predates the rule that an
+  # ampersand starting no character reference is a literal "&", so such ampersands are written as
+  # "&amp;" first: the same document under the current algorithm.
+  try:
+   import html5lib
+   parser=html5lib.HTMLParser(strict=True)
+   body=literal_ampersands(text)
+   if re.match(r'\s*(<!--.*?-->\s*)*<(!doctype|html)\b',text,re.I|re.S): parser.parse(body)
+   else:
+    first=re.search(r'<([a-zA-Z][a-zA-Z0-9]*)',text)
+    parser.parseFragment(body,container={'tr':'tbody','td':'tr','th':'tr','li':'ul','option':'select','tbody':'table','thead':'table'}.get(first.group(1).lower() if first else '','div'))
+   return ('html5lib '+html5lib.__version__+' strict','WHATWG_PARSER_LITERAL_AMPERSANDS_NORMALISED')
+  except Exception: return None
  if language=='css':
   # CSS Syntax Module Level 3 (tinycss2): the browser parsing algorithm. Framework at-rules and
   # keyframe selector lists are valid syntax there; any parse-error node rejects the file.
@@ -224,10 +238,23 @@ def reference_parse(path, content, language):
   return None
  if language=='sql':
   return sql_parse(text)
- if language=='javascript' and pathlib.Path(path).suffix=='.jsx':
+ if pathlib.Path(path).suffix in ('.jsx','.ts','.tsx','.mts','.cts'):
   diagnostics=typescript_diagnostics(path,text)
-  if diagnostics==[]: return ('typescript','TYPESCRIPT_COMPILER_JSX_SYNTAX')
+  if diagnostics==[]: return ('typescript','TYPESCRIPT_COMPILER_SYNTAX')
  return None
+
+def literal_ampersands(text):
+ """Writes every "&" that starts no character reference as "&amp;" (WHATWG: such an ampersand is a
+ literal); numeric references and known named references are left untouched."""
+ import html.entities
+ names=html.entities.html5
+ def keep(m):
+  rest=text[m.end():m.end()+40]
+  if re.match(r'#([0-9]+|[xX][0-9a-fA-F]+);?',rest): return '&'
+  word=re.match(r'[A-Za-z][A-Za-z0-9]*;?',rest)
+  if word and any(word.group(0)[:i] in names for i in range(len(word.group(0)),1,-1)): return '&'
+  return '&amp;'
+ return re.sub(r'&',keep,text)
 
 def css_errors(nodes):
  out=[]
@@ -269,7 +296,8 @@ def typescript_diagnostics(path, text):
  ts=pathlib.Path(__file__).resolve().parents[2]/'apps/web/node_modules/typescript/lib/typescript.js'
  if not ts.is_file(): return None
  script=("const ts=require(process.argv[1]);let s='';process.stdin.on('data',d=>s+=d).on('end',()=>{"
-         "const f=ts.createSourceFile(process.argv[2],s,ts.ScriptTarget.Latest,false,ts.ScriptKind.JSX);"
+         "const k={'.jsx':ts.ScriptKind.JSX,'.tsx':ts.ScriptKind.TSX}[require('path').extname(process.argv[2])]||ts.ScriptKind.TS;"
+         "const f=ts.createSourceFile(process.argv[2],s,ts.ScriptTarget.Latest,false,k);"
          "console.log(JSON.stringify({version:ts.version,errors:f.parseDiagnostics.map(d=>ts.flattenDiagnosticMessageText(d.messageText,' ')+' @'+d.start)}))})")
  try: r=subprocess.run(['node','-e',script,str(ts),path],input=text.encode(),capture_output=True,timeout=60,check=True)
  except Exception: return None
@@ -300,7 +328,7 @@ def confirm_invalid(path, content, language):
    except Exception as e:
     if 'entity' in str(e).lower(): return None
     return ('html5lib '+html5lib.__version__+' strict (WHATWG parsing algorithm, '+('document' if document else 'fragment')+')',str(e)[:200])
-  if language=='javascript' and pathlib.Path(path).suffix=='.jsx':
+  if pathlib.Path(path).suffix in ('.jsx','.ts','.tsx','.mts','.cts'):
    d=typescript_diagnostics(path,text)
    if d: return ('typescript (apps/web lock)',d[0][:200])
  except Exception: return None
