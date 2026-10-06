@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "d937a7a7b7fa741350c0329ea42d9276bf36315e",
+  "assessed_parent_commit": "eea5a97c6ceb76e91e20aeac0dca62c6ed4160f1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 44,
     "benchmark_candidates": 32,
-    "algorithm_candidates": 14,
+    "algorithm_candidates": 13,
     "reference_only": 52,
-    "study_complete_capabilities": 75,
+    "study_complete_capabilities": 76,
     "not_relevant_after_review": 25,
-    "research_questions_open": 90,
-    "knowledge_coverage_ratio": 0.628099
+    "research_questions_open": 89,
+    "knowledge_coverage_ratio": 0.632231
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -1038,13 +1038,13 @@
         "social.bettafish.query-expansion-keywords BENCHMARK_CANDIDATE(does rewriting a product query into consumer slang raise recall of relevant reviews and posts without collapsing precision at k on a labelled sample)",
         "social.bettafish.trending-topic-extraction STUDY_CANDIDATE(daily hot-list titles with keyword extraction as an early signal of emerging product categories and brands: lead time and hit rate against search-trend data)",
         "social.bettafish.topic-classification STUDY_CANDIDATE(supervised or retrieval-based routing of reviews and posts into product-category and aspect buckets (price, quality, logistics) at adequate macro-F1)",
-        "social.bettafish.sentiment-aggregation ALGORITHM_CANDIDATE(per-product sentiment shares reported with sample size and confidence intervals and tracked week over week, never percentages without counts)",
         "social.bettafish.web-news-search BENCHMARK_CANDIDATE(do paid AI-search APIs give a reproducible, dated evidence set for competitor launches and pricing news, and what share of their claims is source-backed)",
         "social.bettafish.report-ir-schema STUDY_CANDIDATE(a report schema requiring evidence references (observation ids and capture times) on every paragraph, figure, chart dataset and SWOT or PEST item; the donor schema has footnotes and cross-references it never renders)"
       ],
       "resolved": [
         "social.bettafish.logged-in-crawling REFERENCE_ONLY(logged-in crawling and anti-bot evasion are prohibited by ECDEV policy; platform data structures only)",
         "social.bettafish.llm-agents-and-reports REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)",
+        "social.bettafish.sentiment-aggregation STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social.rs::sentiment_summary reports each label share with its count, labelled denominator (UNKNOWN counted apart) and a 95 % Wilson interval, and calls a change against the prior snapshot only when intervals do not overlap; social::snapshot carries it as sentiment_summary)",
         "social.bettafish.multi-agent-moderation STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an LLM host whose trend forecasts are injected into every agent prompt; ECDEV never feeds model forecasts back as context)",
         "social.bettafish.llm-json-repair REFERENCE_ONLY(separating syntactic repairs (fences, commas, brackets) from meaning-changing ones (model rescue, fragment merging, dropped blocks), with a logged before and after)",
         "social.bettafish.chart-table-validation STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](chart series are null-padded, truncated or repaired by a model; ECDEV computes figures from stored evidence and shows data as unavailable when they fail)",

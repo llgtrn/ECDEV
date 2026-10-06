@@ -644,3 +644,37 @@ fn mention_growth_needs_a_captured_prior_window_and_enough_counts() {
     assert_eq!(few["mention_growth"]["comparison"]["before"], 1);
     assert_eq!(few["mention_growth"]["state"], "NO_DETECTABLE_CHANGE");
 }
+#[test]
+fn sentiment_shares_carry_counts_and_intervals() {
+    let rows =
+        |labels: &[&str]| -> Vec<Value> { labels.iter().map(|l| json!({"label":l})).collect() };
+    let s = sentiment_summary(
+        &rows(&["POSITIVE", "POSITIVE", "NEGATIVE", "UNKNOWN"]),
+        None,
+    );
+    assert_eq!(
+        (s["labelled_count"].clone(), s["unknown_count"].clone()),
+        (json!(3), json!(1))
+    );
+    assert_eq!(s["shares"]["POSITIVE"]["count"], 2);
+    let ci = &s["shares"]["POSITIVE"]["interval_95"];
+    // Wilson 2/3: [0.2077, 0.9385]; three posts say almost nothing.
+    assert!(
+        (ci[0].as_f64().unwrap() - 0.2077).abs() < 1e-3
+            && (ci[1].as_f64().unwrap() - 0.9385).abs() < 1e-3
+    );
+    assert!(s["shares"]["POSITIVE"]["versus_prior"].is_null());
+    // 2/3 positive -> 0/3 positive overlaps: not separated. 30/30 -> 0/30 is.
+    let few = sentiment_summary(&rows(&["NEGATIVE"; 3]), Some(&s));
+    assert_eq!(few["shares"]["POSITIVE"]["versus_prior"], "NOT_SEPARATED");
+    let many_before = sentiment_summary(&rows(&["POSITIVE"; 30]), None);
+    let many_after = sentiment_summary(&rows(&["NEGATIVE"; 30]), Some(&many_before));
+    assert_eq!(many_after["shares"]["POSITIVE"]["versus_prior"], "LOWER");
+    assert_eq!(many_after["shares"]["NEGATIVE"]["versus_prior"], "HIGHER");
+    let none = sentiment_summary(&rows(&["UNKNOWN"]), None);
+    assert!(
+        none["shares"]["POSITIVE"]["share"].is_null()
+            && none["shares"]["POSITIVE"]["interval_95"].is_null()
+    );
+    assert_eq!(wilson_interval(0, 0), None);
+}

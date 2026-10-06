@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "d937a7a7b7fa741350c0329ea42d9276bf36315e",
+  "assessed_parent_commit": "eea5a97c6ceb76e91e20aeac0dca62c6ed4160f1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -6228,9 +6228,9 @@
         {
           "key": "social.bettafish.sentiment-aggregation",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(per-product sentiment shares reported with sample size and confidence intervals and tracked week over week, never percentages without counts)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social.rs::sentiment_summary reports each label share with its count, labelled denominator (UNKNOWN counted apart) and a 95 % Wilson interval, and calls a change against the prior snapshot only when intervals do not overlap; social::snapshot carries it as sentiment_summary)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.bettafish.web-news-search",
@@ -6353,7 +6353,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "11 of 19 declared capabilities still have open research: social.bettafish.deduplicate (BENCHMARK_CANDIDATE), social.bettafish.cluster-and-sample (BENCHMARK_CANDIDATE), social.bettafish.sentiment-models (BENCHMARK_CANDIDATE), social.bettafish.corpus-search (STUDY_CANDIDATE), social.bettafish.engagement-hotness-scoring (BENCHMARK_CANDIDATE), social.bettafish.query-expansion-keywords (BENCHMARK_CANDIDATE), social.bettafish.trending-topic-extraction (STUDY_CANDIDATE), social.bettafish.topic-classification (STUDY_CANDIDATE), social.bettafish.sentiment-aggregation (ALGORITHM_CANDIDATE), social.bettafish.web-news-search (BENCHMARK_CANDIDATE), social.bettafish.report-ir-schema (STUDY_CANDIDATE)"
+          "detail": "10 of 19 declared capabilities still have open research: social.bettafish.deduplicate (BENCHMARK_CANDIDATE), social.bettafish.cluster-and-sample (BENCHMARK_CANDIDATE), social.bettafish.sentiment-models (BENCHMARK_CANDIDATE), social.bettafish.corpus-search (STUDY_CANDIDATE), social.bettafish.engagement-hotness-scoring (BENCHMARK_CANDIDATE), social.bettafish.query-expansion-keywords (BENCHMARK_CANDIDATE), social.bettafish.trending-topic-extraction (STUDY_CANDIDATE), social.bettafish.topic-classification (STUDY_CANDIDATE), social.bettafish.web-news-search (BENCHMARK_CANDIDATE), social.bettafish.report-ir-schema (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

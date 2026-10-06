@@ -260,6 +260,56 @@ pub fn sentiment(post: &SocialPost) -> Value {
     json!({"label":label,"method":"ECDEV_SMALL_ENGLISH_TOKEN_RULE_V1","language":post.language,"confidence":if english {json!(0.3)} else {Value::Null},"state":if english {"DERIVED"}else{"UNKNOWN"},"evidence_ids":[post.evidence_id],"limitations":"No sarcasm/negation/model calibration; neutral means no matched tokens, never purchase intent"})
 }
 
+/// Wilson score interval (95 %) for k successes in n trials; None when n is 0.
+pub fn wilson_interval(k: u64, n: u64) -> Option<(f64, f64)> {
+    if n == 0 || k > n {
+        return None;
+    }
+    let (z, n_f) = (1.959_963_984_540_054_f64, n as f64);
+    let p = k as f64 / n_f;
+    let denom = 1. + z * z / n_f;
+    let centre = (p + z * z / (2. * n_f)) / denom;
+    let half = z * (p * (1. - p) / n_f + z * z / (4. * n_f * n_f)).sqrt() / denom;
+    Some(((centre - half).max(0.), (centre + half).min(1.)))
+}
+
+pub const SENTIMENT_LABELS: [&str; 4] = ["POSITIVE", "NEGATIVE", "NEUTRAL", "MIXED"];
+
+/// Label shares over the posts that have a label, each with its count and a 95 % Wilson
+/// interval; UNKNOWN posts are counted apart and never enter a denominator. Against a prior
+/// summary, a share is only called changed when the two intervals do not overlap.
+pub fn sentiment_summary(rows: &[Value], prior: Option<&Value>) -> Value {
+    let label = |r: &Value| r["label"].as_str().map(str::to_owned);
+    let labelled = rows
+        .iter()
+        .filter(|r| label(r).is_some_and(|l| SENTIMENT_LABELS.contains(&l.as_str())))
+        .count() as u64;
+    let mut shares = serde_json::Map::new();
+    for l in SENTIMENT_LABELS {
+        let k = rows
+            .iter()
+            .filter(|r| label(r).as_deref() == Some(l))
+            .count() as u64;
+        let interval = wilson_interval(k, labelled);
+        let before = prior.map(|p| &p["shares"][l]);
+        let separated = before.and_then(|b| {
+            let (lo, hi) = interval?;
+            let (blo, bhi) = (b["interval_95"][0].as_f64()?, b["interval_95"][1].as_f64()?);
+            Some(if lo > bhi {
+                "HIGHER"
+            } else if hi < blo {
+                "LOWER"
+            } else {
+                "NOT_SEPARATED"
+            })
+        });
+        shares.insert(
+            l.into(),
+            json!({"count":k,"share":(labelled>0).then(|| k as f64 / labelled as f64),"interval_95":interval.map(|(a,b)|[a,b]),"versus_prior":separated}),
+        );
+    }
+    json!({"labelled_count":labelled,"unknown_count":rows.len() as u64-labelled,"shares":shares,"interval":"WILSON_SCORE_95","comparison":"NON_OVERLAPPING_INTERVALS_ONLY","method":"ECDEV_SMALL_ENGLISH_TOKEN_RULE_V1","scope":"CAPTURED_SAMPLE_ONLY"})
+}
 pub fn threshold_events(input: &Value) -> Value {
     let m = &input["metrics"];
     let cur = m["current_count"].as_f64().unwrap_or(0.);
@@ -479,6 +529,14 @@ pub fn snapshot(
         "counts": "RETRIEVED_SAMPLE_NOT_PLATFORM_TOTAL",
         "score_weight": 0,
     });
+    let summary = sentiment_summary(
+        result["sentiment"]
+            .as_array()
+            .map_or(&[][..], Vec::as_slice),
+        last.map(|old| &old["sentiment_summary"])
+            .filter(|v| v.is_object()),
+    );
+    result["sentiment_summary"] = summary;
     result["cluster_growth"] = metric(
         last.map(|old| {
             result["clusters"].as_array().map_or(0, Vec::len) as f64
