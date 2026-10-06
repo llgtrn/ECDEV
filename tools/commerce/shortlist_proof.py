@@ -36,7 +36,7 @@ def pointer(value, path):
 
 
 def main():
-    run = json.loads((ROOT / '.ynventa/materialized/live-shortlist.json').read_text(encoding='utf-8'))
+    run = json.loads((ROOT / '.ecdev-data/live-shortlist.json').read_text(encoding='utf-8'))
     assert run['mode'] == 'LIVE' and run['cost_minor'] == 0
     assert run['known_network_calls'] > 0
     assert all(call['provider'] == 'native-web' and call['actual_cost_minor'] == 0 for call in run['provider_calls'])
@@ -46,7 +46,7 @@ def main():
     recognized = 0
     for observation in run['observations']:
         assert observation['mode'] == 'LIVE'
-        raw = (ROOT / '.ynventa/materialized/raw' / (observation['raw_hash'] + '.html')).read_bytes()
+        raw = (ROOT / '.ecdev-data/raw' / (observation['raw_hash'] + '.html')).read_bytes()
         snapshot = observation['normalized_value']
         assert hashlib.sha256(raw).hexdigest() == observation['raw_hash'] == snapshot['content_hash']
         scripts = Scripts()

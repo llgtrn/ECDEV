@@ -20,13 +20,18 @@ jobs:
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo test --workspace --locked
-      - name: Canonical regression tests except the unresolved repository shard gate
-        run: cargo test --manifest-path .ynventa/Cargo.toml -- --skip dogfood_repository_conforms
-      - run: cargo run --manifest-path .ynventa/Cargo.toml -- protocol --check --root .
-      - name: Canonical repository shape and no crate buckets
+      - name: ECDEV governance format and lint
         run: |
-          cargo build --manifest-path .ynventa/Cargo.toml --lib
-          rustc --edition=2021 tools/commerce/shape_gate.rs --extern ynventa=.ynventa/target/debug/libynventa.rlib -L dependency=.ynventa/target/debug/deps -o target/shape-gate
+          cargo fmt --manifest-path .ecdev/Cargo.toml --check
+          cargo clippy --manifest-path .ecdev/Cargo.toml --all-targets -- -D warnings
+      - name: ECDEV governance tests, including repository self-conformance
+        run: cargo test --manifest-path .ecdev/Cargo.toml
+      - name: ECDEV repository conformance (enforced)
+        run: cargo run --manifest-path .ecdev/Cargo.toml -- conformance --root .
+      - name: Repository shape and no crate buckets
+        run: |
+          cargo build --manifest-path .ecdev/Cargo.toml --lib
+          rustc --edition=2021 tools/commerce/shape_gate.rs --extern ecdev_governance=.ecdev/target/debug/libecdev_governance.rlib -L dependency=.ecdev/target/debug/deps -o target/shape-gate
           target/shape-gate . > /tmp/repository-shape.json
           python tools/commerce/check_shape_gate.py target/shape-gate
       - run: pip install -r tools/commerce/requirements.txt
@@ -44,12 +49,12 @@ jobs:
             sleep 1
           done
           node tests/commerce/mcp-smoke.mjs
-      - name: Canonical gate report
+      - name: Governance gate report
         run: |
-          cargo run --manifest-path .ynventa/Cargo.toml -- conformance --root . > /tmp/conformance.txt 2>&1 || true
-          cat /tmp/conformance.txt
-          echo 'ECDEV shard registration remains an unresolved upstream gate; this workflow verifies native code, not V1 extinction.' >> "$GITHUB_STEP_SUMMARY"
+          cargo run --manifest-path .ecdev/Cargo.toml -- extinction --root . > /tmp/extinction.txt
+          cat /tmp/extinction.txt
+          echo 'ECDEV repository conformance is enforced above; V1 extinction is reported, not asserted.' >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         with:
-          name: canonical-gate-report
-          path: /tmp/conformance.txt
+          name: governance-gate-report
+          path: /tmp/extinction.txt

@@ -11,7 +11,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 
 def main():
     binary = pathlib.Path(sys.argv[1]).resolve()
-    runtime = ROOT / ".ynventa/materialized"
+    runtime = ROOT / ".ecdev-data"
     runtime.mkdir(parents=True, exist_ok=True)
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).decode().split("\0")
     with tempfile.TemporaryDirectory(prefix="shape-check-", dir=runtime) as directory:
@@ -40,7 +40,7 @@ def main():
             probe.unlink()
             probe.parent.rmdir()
 
-        declaration = fixture / ".ynventa/declared/repository.rs"
+        declaration = fixture / ".ecdev/declared/repository.rs"
         original = declaration.read_text(encoding="utf-8")
         edge = 'Edge { from: "commerce.web-research", to: "commerce", kind: EdgeKind::DependsOn, scope: Scope::Runtime },'
         assert edge in original

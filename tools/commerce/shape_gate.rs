@@ -1,7 +1,7 @@
-//! Read-only gate using the canonical Ynventa assessor, role table and ownership index.
-//! Build after `cargo build --manifest-path .ynventa/Cargo.toml --lib`:
-//! rustc --edition=2021 tools/commerce/shape_gate.rs --extern ynventa=.ynventa/target/debug/libynventa.rlib -L dependency=.ynventa/target/debug/deps -o target/shape-gate
-use ynventa::{
+//! Read-only gate using the ECDEV governance assessor, role table and ownership index.
+//! Build after `cargo build --manifest-path .ecdev/Cargo.toml --lib`:
+//! rustc --edition=2021 tools/commerce/shape_gate.rs --extern ecdev_governance=.ecdev/target/debug/libecdev_governance.rlib -L dependency=.ecdev/target/debug/deps -o target/shape-gate
+use ecdev_governance::{
     donors::NodeIndex,
     formats::json::Json,
     repository::{role_of_path, root_file_allowed},
@@ -9,7 +9,7 @@ use ynventa::{
 };
 fn main() {
     let root = std::env::args().nth(1).unwrap_or_else(|| ".".into());
-    let a = ynventa::assess(std::path::Path::new(&root)).expect("canonical assessment");
+    let a = ecdev_governance::assess(std::path::Path::new(&root)).expect("governance assessment");
     let index = NodeIndex::new(&a.declaration);
     let mut owned = 0u64;
     let mut unowned = 0u64;
@@ -90,7 +90,7 @@ fn main() {
         .iter()
         .filter(|f| f.code == "NONCANONICAL_TARGET" || f.code == "LEGACY_PLACEMENT")
         .count() as u64;
-    // Observe package dependencies with the canonical census, then require explicit
+    // Observe package dependencies with the governance census, then require explicit
     // graph authorization rather than treating a legal plane order as authorization.
     let mut undeclared_dependencies = Vec::new();
     let mut cargo_dependencies = Vec::new();
@@ -134,7 +134,7 @@ fn main() {
         .with("status", if ok { "PASS" } else { "FAIL" })
         .with(
             "authority",
-            ".ynventa/src/repository/{mod,shape,files}.rs; .ynventa/src/donors/mod.rs",
+            ".ecdev/src/repository/{mod,shape,files}.rs; .ecdev/src/donors/mod.rs",
         )
         .with("canonical_nodes", a.shape.nodes_total)
         .with("conformant_nodes", a.shape.nodes_conformant)

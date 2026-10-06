@@ -4,7 +4,7 @@ Rust commerce engine with a local MCP/HTTP server, TypeScript dashboard, persist
 
 The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable SQLite frontier with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Research runs now use this frontier and can resume saved captures through `crawl_run_id` without reacquiring handled URLs. Six behavioral regressions include forcibly terminating a worker after lease commit. Crawlee runtime oracle parity remains pending.
 
-Repository shape is checked by `tools/commerce/shape_gate.rs` using the unchanged canonical Ynventa assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes. The empty historical `crates` and `docs` roots have been removed. The separate upstream ECDEV registration proposal is recorded in `research/commerce/upstream-registration-action.json`; it has not been applied to canonical protocol bytes.
+ECDEV is a standalone repository. Its governance — repository graph, donor lifecycle, evidence, shape validator, extinction evaluator and ECDEV repository conformance — lives in `.ecdev/` and depends on no other repository. Repository shape is checked by `tools/commerce/shape_gate.rs` using the `.ecdev` assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes.
 
 ## Run
 
@@ -16,7 +16,7 @@ npm run build --prefix apps/web
 cargo run --locked --package ecdev-server --bin ecdev -- server
 ```
 
-The server binds to loopback only. Dashboard: `http://127.0.0.1:8765/`; MCP: `http://127.0.0.1:8765/mcp`; health: `/health`; API: `/api/status`; events: `/events`. Set `ECDEV_PORT` to change the port. SQLite WAL and captured raw responses live in ignored `.ynventa/materialized/` directories. Run from the repository root, or set `ECDEV_ROOT` to its absolute path.
+The server binds to loopback only. Dashboard: `http://127.0.0.1:8765/`; MCP: `http://127.0.0.1:8765/mcp`; health: `/health`; API: `/api/status`; events: `/events`. Set `ECDEV_PORT` to change the port. SQLite WAL and captured raw responses live in the ignored `.ecdev-data/` directory. Run from the repository root, or set `ECDEV_ROOT` to its absolute path.
 
 Register the running server with installed clients:
 
@@ -25,7 +25,7 @@ codex mcp add ecdev --url http://127.0.0.1:8765/mcp
 claude mcp add --transport http ecdev http://127.0.0.1:8765/mcp
 ```
 
-`ecdev stdio` uses the same engine. CLI commands include `doctor`, `status`, `providers`, `runs`, `runs inspect ID`, `runs replay ID`, and `call TOOL input.json`. Use `cargo run --locked --package ecdev-server --bin ecdev -- COMMAND` without installing the binary.
+`ecdev stdio` uses the same engine. CLI commands include `doctor`, `status`, `providers`, `runs`, `runs inspect ID`, `runs replay ID`, and `call TOOL input.json` and `governance COMMAND`. Use `cargo run --locked --package ecdev-server --bin ecdev -- COMMAND` without installing the binary.
 
 ## Current behavior
 
@@ -39,34 +39,29 @@ Public fetching denies private/special addresses, credential URLs and unsupporte
 
 Other provider adapters, multi-provider opportunity execution, supplier matching, PPC acquisition, trained models and complete donor extinction are pending. Review `research/commerce/wave-report.json` for measured progress and remaining gates.
 
-## Repository and Ynventa
+## Repository and governance
 
-The canonical subsystem is pinned byte-for-byte to [llgtrn/.Ynventa-](https://github.com/llgtrn/.Ynventa-) commit `c00a123c542b3c16fea4f82b45a5e544a1870178`. Typed declarations are authoritative. Code follows its role roots:
+`.ecdev/` is ECDEV's own governance authority (see `.ecdev/README.md`). Typed declarations are authoritative. Code follows its role roots:
 
 | Path | Responsibility |
 | --- | --- |
 | `domain/commerce` | Evidence types, economics, intent planner, provider boundary, durable runs |
-| `adapter/keepa`, `adapter/web` | Optional Keepa IO and native public fetching/extraction |
+| `adapter/keepa`, `adapter/web`, `adapter/marketplace` | Optional Keepa IO, native public fetching/extraction, official SP-API boundary |
 | `apps/server`, `apps/web` | MCP/HTTP/events and their dashboard projections |
-| `tools/commerce` | Full clone census, schemas, provenance and dependency registration |
+| `tools/commerce` | Full clone census, schemas, provenance, shape gate and governance snapshots |
 | `tests/commerce` | Independent official MCP SDK integration client |
 | `research/commerce` | Locked donor inventories, reviewed contracts and measured status |
-| `.ynventa` | Unmodified canonical protocol and repository-specific declarations/evidence |
+| `.ecdev` | ECDEV governance: declarations, evidence, lifecycle and repository conformance |
 
-Twenty-five donors have verified remotes and full clones: ten initial seeds and fifteen new crawling/browser/Amazon/extraction donors. All 12,972 tracked files are inventoried and classified; 134 first-party parses remain unknown. There are 59,180 inventoried symbols. Eight expansion contracts have source-reviewed capability mappings; other hypotheses remain unverified. Only Keepa's full semantic census is complete. Six bounded native oracle families match 3,595 executed cases: Keepa integer JSON (508), reppy robots (1,620), extruct microdata (132), Crawlee queue traces (46), declared HTML decoding (54), and formatted numeric amounts (1,235 cases covering 868 distinct numeric inputs and separator policies). Whole donor absorption remains unproven. Seed donors remain research inputs. Fourteen runtime foundation packages from thirteen upstreams remain explicitly registered external dependencies.
-
-Canonical conformance has one upstream gap: ECDEV is absent from the closed shard registry. Preserve this failing gate until upstream registration exists. No donor is declared extinct and V1 is not achieved.
+The recorded lifecycle and ECDEV repository conformance are in `research/commerce/governance/` (regenerate with `python tools/commerce/governance_snapshot.py`). The governance migration away from the earlier external subsystem is recorded in `research/commerce/governance/migration.json`.
 
 ```sh
-cargo run --manifest-path .ynventa/Cargo.toml -- protocol --check --root .
-cargo run --manifest-path .ynventa/Cargo.toml -- conformance --root .
-cargo run --manifest-path .ynventa/Cargo.toml -- extinction --root .
-cargo run --manifest-path .ynventa/Cargo.toml -- prove --root .
+cargo run --manifest-path .ecdev/Cargo.toml -- conformance --root .
+cargo run --manifest-path .ecdev/Cargo.toml -- extinction --root .
+cargo run --manifest-path .ecdev/Cargo.toml -- prove --root .
 ```
 
-New files must be staged before canonical indexed census/proofs. The full supplied specification is losslessly stored in `.ynventa/knowledge/8f30da7d287f8eae6dc86f6c0d286349.ynv`; reconstruct it with `knowledge view --document research/commerce/specification.md`. SHA-256: `6af066986bb05f97db7b345037e585d805eb64b0123a161dea5d076aa98f614c`.
-
-The expansion request is also retained losslessly in `.ynventa/knowledge/a295263e64e42920349e7b59a1e46c20.ynv`; reconstruct with `knowledge view --document research/commerce/expansion-specification.md`. SHA-256: `6079de368bbd45bf3246cda7e058d8ecf15b2d511e2d16fc4d1b4a64b4f2d898`.
+New files must be staged before the indexed census and proofs. The full supplied specification is stored losslessly in `.ecdev/knowledge`; reconstruct it with `knowledge view --document research/commerce/specification.md` (SHA-256 `6af066986bb05f97db7b345037e585d805eb64b0123a161dea5d076aa98f614c`), and the expansion request with `knowledge view --document research/commerce/expansion-specification.md` (SHA-256 `6079de368bbd45bf3246cda7e058d8ecf15b2d511e2d16fc4d1b4a64b4f2d898`).
 
 ## Verify
 
@@ -74,12 +69,12 @@ The expansion request is also retained losslessly in `.ynventa/knowledge/a295263
 cargo fmt --all --check
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
-cargo test --manifest-path .ynventa/Cargo.toml -- --skip dogfood_repository_conforms
+cargo test --manifest-path .ecdev/Cargo.toml
 npm ci --prefix tests/commerce
 node tests/commerce/mcp-smoke.mjs
 ```
 
-The skipped canonical dogfood test requires upstream ECDEV shard registration; running the entire suite retains that real failure. No canonical test or implementation is patched. The smoke test requires the running server and zero configured paid budget; it makes no paid acquisition requests. Census tools require Python and pinned `tools/commerce/requirements.txt`. `expand.py` preserves reviewed seed records while acquiring the next wave. `study_expansion.py` records narrow reviewed source contracts. `validate.py` checks commit-level provenance; `--records-only` validates committed inventories when checkouts are absent. `foundation.py` is an initial generator and must not be rerun over reviewed records. `register_dependencies.py` requires installed dependencies and network access. Clones, build products and credentials are ignored by Git.
+The governance suite includes ECDEV self-conformance and runs in full. The smoke test requires the running server and zero configured paid budget; it makes no paid acquisition requests. Census tools require Python and pinned `tools/commerce/requirements.txt`. `expand.py` preserves reviewed seed records while acquiring the next wave. `validate.py` checks commit-level provenance; `--records-only` validates committed inventories when checkouts are absent. One-shot generators that edited declarations in the retired grammar were removed; declarations change through typed edits and `ecdev-gov`. Clones, build products and credentials are ignored by Git.
 
 Native microdata extraction matches 132 cases executed against the locked extruct parser. Nested scopes, item references, repeated properties, value tags, URL resolution and cleaned text are covered. Raw microdata graph pointers remain inspectable in candidate field evidence. Conflicting JSON-LD and microdata prices clear the combined price instead of selecting a preferred format. Extruct is a research-only oracle; full donor absorption remains unproven.
 
@@ -99,6 +94,6 @@ System status and the dashboard now show historical zero-paid shortlist evidence
 
 Native HTTP response failures now retain status, known request counts and Retry-After headers. Delays reach the persistent frontier and its run-scoped origin cooldown; stale-cache completion can preserve that cooldown. Seconds and three HTTP-date forms have regression coverage. A fresh live Amazon request returned HTTP 503 without Retry-After; its two requests are now counted alongside four fallback requests, with one further-research shortlist and zero paid cost. Timing remains regression evidence. Redirect-specific deferral and broader origin coordination remain pending. See research/commerce/http-retry-proof.json.
 
-Published organization offers now retain JSON-LD and microdata term provenance, exact unit-price specifications, eligible-quantity lower bounds, delivery lead time and source claims. Offers and publishers stay separate; retail prices and unverified quotations never become product costs. A fresh three-page supplier pass used six HTTP requests at zero paid cost and found no structured commercial terms. See `research/commerce/supplier-terms-proof.json`. Current upstream Ynventa shape/schema/protocol files were also compared byte-for-byte at commit `3644acbacf3499b134b693dc7a884a64a9b096bc`; see `research/commerce/canonical-live-shape-review.json`.
+Published organization offers now retain JSON-LD and microdata term provenance, exact unit-price specifications, eligible-quantity lower bounds, delivery lead time and source claims. Offers and publishers stay separate; retail prices and unverified quotations never become product costs. A fresh three-page supplier pass used six HTTP requests at zero paid cost and found no structured commercial terms. See `research/commerce/supplier-terms-proof.json`.
 
 Competition reports now retain per-product-assertion availability, review, shipping and variation evidence with a fixed 24-field completeness denominator and heuristic metadata support. Multiple assertions may share one captured listing page; listing-page counts remain deduplicated. Brand-label proportions disclose all-candidate and known-label denominators, with ownership and market share unverified. The candidate detail dashboard includes a listing evidence table. A fresh two-page run made four HTTP requests at zero paid cost; a subsequent cached projection made no new requests. See `research/commerce/listing-quality-proof.json`. Browser visual verification was unavailable because automation kernel assets failed to load; the TypeScript build and served assets were verified.

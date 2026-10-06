@@ -69,7 +69,7 @@ impl Engine {
                     return Err("OFFICIAL_LIVE_ACQUISITION_NOT_AUTHORIZED".into());
                 }
                 if !fixture && (result.result["mode"] == "FIXTURE" || (result.result["mode"] == "LIVE" && result.provider_cost["known_request_count"].as_u64().unwrap_or(0)==0)) { return Err("OFFICIAL_LIVE_HTTP_WITNESS_REQUIRED".into()); }
-                let directory = self.root.join(".ynventa/materialized/raw");
+                let directory = self.root.join(".ecdev-data/raw");
                 std::fs::create_dir_all(&directory).map_err(|e| e.to_string())?;
                 let records = result.result["records"].as_array_mut().ok_or("OFFICIAL_CAPTURE_RECORDS_REQUIRED")?;
                 for observation in &result.observations {

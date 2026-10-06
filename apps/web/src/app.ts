@@ -1,6 +1,6 @@
 type Data = Record<string, unknown>;
 const content=document.querySelector<HTMLElement>('#content')!;
-const titles=['Overview','Research','Candidates','Provider calls','Budget','Evidence graph','Monitoring','Social / Trends','Ynventa','Providers','Product inspection','Runs','Economics','Opportunity plan','System'];
+const titles=['Overview','Research','Candidates','Provider calls','Budget','Evidence graph','Monitoring','Social / Trends','Governance','Providers','Product inspection','Runs','Economics','Opportunity plan','System'];
 let selected='Overview';
 let renderVersion=0;
 const el=(tag:string,text?:string)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
@@ -85,7 +85,7 @@ async function render(){
   panel('Frozen trend snapshots and time series').append(table(['Query','Mode','State','Captured','Mentions','Platforms','Score coverage','Detail'],d.snapshots.map((s:any)=>[el('span',s.query),el('span',s.capture_mode),el('span',s.state),el('span',new Date(s.captured_at*1000).toISOString()),el('span',String(s.mention_count)),el('span',String(s.platform_count)),el('span',`${(Number(s.score.known_weight_coverage)*100).toFixed(1)}%`),button('Inspect evidence',async()=>{try{detail(await api('/api/tools/ecdev.trend.explain',{snapshot_id:s.snapshot_id}));}catch(e){showError(e);}})])));
   const watch=panel('Persisted trend watches');const wi=el('textarea') as HTMLTextAreaElement;wi.value=JSON.stringify({query:'matcha',research:{query:'matcha',sources:[{platform:'HACKER_NEWS'}],request_budget:2,window_seconds:86400},triggers:['TOPIC_MENTION_GROWTH','CROSS_PLATFORM_APPEARANCE','NEW_SOURCE_APPEARANCE'],interval_seconds:3600,minimum_mentions:3,threshold:1,enabled:false},null,2);watch.append(el('p','Nine local trigger types use complete acquisition, minimum samples and fenced leases. This example is disabled until enabled explicitly.'),wi,button('Save trend watch',async()=>{try{panel('Saved trend watch').append(pretty(await api('/api/tools/ecdev.trend.watch',JSON.parse(wi.value))));}catch(e){showError(e);}}),pretty(d.watches));
   panel('Simulation boundary and donor provenance').append(pretty(d.simulation),el('p','MiroFish scenarios are SIMULATED and contribute zero observed metrics. Simulation execution is currently unavailable.'),el('p',`Contracts: ${d.donor_provenance}. License review: ${d.license_review}. No full donor extinction claimed.`));
- }else if(selected==='Ynventa'){
+ }else if(selected==='Governance'){
   const d=await api('/api/donors');const rows=d.donors.map((r:any)=>{const a=el('a',r.name) as HTMLAnchorElement;a.href=String(r.repository_url);a.target='_blank';a.rel='noopener';const inspect=button('Inspect',async()=>{try{const s=await api('/api/donors/'+encodeURIComponent(r.donor_id));const p=panel(r.name);p.append(pretty({identity:r,census:s}));}catch(e){showError(e);}});return[a,el('code',String(r.commit_sha)),el('span',r.donor_type),el('span',r.tree_status),el('span',r.source_census_status),el('span',r.capability_census_status),el('span',String(r.lifecycle_review?.assessment?.effective??'UNKNOWN')+' (recorded review)'),inspect];});
   panel('Donor census').append(table(['Repository','Locked HEAD','Type','Tree','Source','Capabilities','Absorption','Detail'],rows));
  }else if(selected==='Providers'){

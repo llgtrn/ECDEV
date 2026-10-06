@@ -8,7 +8,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def main():
-    run = json.loads((ROOT/'.ynventa/materialized/public-amazon-live.json').read_text(encoding='utf-8'))
+    run = json.loads((ROOT/'.ecdev-data/public-amazon-live.json').read_text(encoding='utf-8'))
     assert run['mode'] == 'LIVE' and run['cost_minor'] == 0
     assert any(c['provider'] == 'public-amazon' for c in run['provider_calls'])
     assert all(c['provider'] in ['public-amazon', 'native-web'] and c['actual_cost_minor'] == 0 for c in run['provider_calls'])
@@ -17,7 +17,7 @@ def main():
     captures = []
     for evidence in run['observations']:
         assert evidence['mode'] == 'LIVE'
-        raw = (ROOT/'.ynventa/materialized/raw'/(evidence['raw_hash']+'.html')).read_bytes()
+        raw = (ROOT/'.ecdev-data/raw'/(evidence['raw_hash']+'.html')).read_bytes()
         assert hashlib.sha256(raw).hexdigest() == evidence['raw_hash'] == evidence['normalized_value']['content_hash']
         captures.append(dict(provider=evidence['provider'],source=evidence['external_source'],requested_url=evidence['normalized_value']['requested_url'],final_url=evidence['normalized_value']['final_url'],raw_capture_sha256=evidence['raw_hash'],products=len(evidence['normalized_value']['products'])))
     with urllib.request.urlopen('http://127.0.0.1:8765/api/providers', timeout=30) as response:

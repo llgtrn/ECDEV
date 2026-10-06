@@ -45,14 +45,10 @@ pub(crate) fn verify(root: &Path, observation: &Value) -> Result<(), String> {
         .ok_or(UNAVAILABLE)?;
     let path = match observation["source_type"].as_str() {
         Some("PUBLIC_SOCIAL_JSON") => root
-            .join(".ynventa/materialized/runtime/social-captures")
+            .join(".ecdev-data/runtime/social-captures")
             .join(format!("{hash}.raw")),
-        Some("PUBLIC_HTML") => root
-            .join(".ynventa/materialized/raw")
-            .join(format!("{hash}.html")),
-        Some("API") => root
-            .join(".ynventa/materialized/raw")
-            .join(format!("{hash}.json")),
+        Some("PUBLIC_HTML") => root.join(".ecdev-data/raw").join(format!("{hash}.html")),
+        Some("API") => root.join(".ecdev-data/raw").join(format!("{hash}.json")),
         _ => return Err(UNAVAILABLE.into()),
     };
     let file = File::open(path).map_err(|_| UNAVAILABLE)?;
@@ -96,11 +92,11 @@ mod tests {
         let bytes = b"captured response";
         let hash = format!("{:x}", Sha256::digest(bytes));
         for (source, directory, extension) in [
-            ("PUBLIC_HTML", ".ynventa/materialized/raw", "html"),
-            ("API", ".ynventa/materialized/raw", "json"),
+            ("PUBLIC_HTML", ".ecdev-data/raw", "html"),
+            ("API", ".ecdev-data/raw", "json"),
             (
                 "PUBLIC_SOCIAL_JSON",
-                ".ynventa/materialized/runtime/social-captures",
+                ".ecdev-data/runtime/social-captures",
                 "raw",
             ),
         ] {

@@ -72,7 +72,7 @@ impl ServerHandler for Mcp {
         _: Option<PaginatedRequestParams>,
         _: RequestContext<RoleServer>,
     ) -> Result<ListResourceTemplatesResult, ErrorData> {
-        serde_json::from_value(json!({"resourceTemplates":[{"uriTemplate":"ecdev://run/{id}","name":"Persisted run","mimeType":"application/json"},{"uriTemplate":"ecdev://ynventa/donor/{id}","name":"Donor census","mimeType":"application/json"}]})).map_err(|e|ErrorData::internal_error(e.to_string(),None))
+        serde_json::from_value(json!({"resourceTemplates":[{"uriTemplate":"ecdev://run/{id}","name":"Persisted run","mimeType":"application/json"},{"uriTemplate":"ecdev://governance/donor/{id}","name":"Donor census","mimeType":"application/json"}]})).map_err(|e|ErrorData::internal_error(e.to_string(),None))
     }
     async fn read_resource(
         &self,
@@ -81,7 +81,7 @@ impl ServerHandler for Mcp {
     ) -> Result<ReadResourceResponse, ErrorData> {
         let result = if let Some(id) = r.uri.strip_prefix("ecdev://run/") {
             self.0.run(id)
-        } else if let Some(id) = r.uri.strip_prefix("ecdev://ynventa/donor/") {
+        } else if let Some(id) = r.uri.strip_prefix("ecdev://governance/donor/") {
             self.0.census(id)
         } else {
             Err("Unknown resource".into())
@@ -313,17 +313,17 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         scheduler.abort();
         return Ok(());
     }
-    if cmd == "ynventa" {
+    if cmd == "governance" {
         let status = std::process::Command::new("cargo")
             .args(["run", "--quiet", "--manifest-path"])
-            .arg(root().join(".ynventa/Cargo.toml"))
+            .arg(root().join(".ecdev/Cargo.toml"))
             .arg("--")
             .args(&a[1..])
             .arg("--root")
             .arg(root())
             .status()?;
         if !status.success() {
-            return Err("Canonical Ynventa command reported failing gates".into());
+            return Err("ECDEV governance command reported failing gates".into());
         }
         return Ok(());
     }
@@ -363,7 +363,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
         _ => {
             println!(
-                "ecdev server | stdio | doctor | status | providers | runs [inspect|replay ID] | call TOOL [input.json] | ynventa COMMAND | mcp-config"
+                "ecdev server | stdio | doctor | status | providers | runs [inspect|replay ID] | call TOOL [input.json] | governance COMMAND | mcp-config"
             );
             return Ok(());
         }
@@ -431,7 +431,7 @@ mod research_tests {
                     "json"
                 };
                 let path = root.join(format!(
-                    ".ynventa/materialized/raw/{}.{extension}",
+                    ".ecdev-data/raw/{}.{extension}",
                     o["raw_hash"].as_str().unwrap()
                 ));
                 let bytes = std::fs::read(&path).unwrap();
@@ -535,7 +535,7 @@ mod research_tests {
         assert!(only_alpha["velocity"]["value"].is_null());
 
         let raw_path = root
-            .join(".ynventa/materialized/runtime/social-captures")
+            .join(".ecdev-data/runtime/social-captures")
             .join(format!(
                 "{}.raw",
                 before["captured_posts"][0]["raw_hash"].as_str().unwrap()
@@ -699,7 +699,7 @@ mod research_tests {
         assert!(engine.run(id).is_ok());
         assert!(engine.inspect_candidate(candidate).is_ok());
         let replay = engine.replay(id).unwrap();
-        let path = root.join(".ynventa/materialized/raw").join(format!(
+        let path = root.join(".ecdev-data/raw").join(format!(
             "{}.html",
             first["observations"][0]["raw_hash"].as_str().unwrap()
         ));
@@ -796,7 +796,7 @@ mod research_tests {
                 .unwrap()["mode"],
             "PLAN_ONLY"
         );
-        let path = root.join(".ynventa/materialized/raw").join(format!(
+        let path = root.join(".ecdev-data/raw").join(format!(
             "{}.json",
             run["observations"][0]["raw_hash"].as_str().unwrap()
         ));

@@ -29,7 +29,7 @@ pub fn timestamp() -> u64 {
 }
 impl Engine {
     pub fn open(root: &Path) -> Result<Self, String> {
-        let dir = root.join(".ynventa/materialized/runtime");
+        let dir = root.join(".ecdev-data/runtime");
         fs::create_dir_all(&dir).map_err(error)?;
         let db = Connection::open(dir.join("ecdev.sqlite")).map_err(error)?;
         db.busy_timeout(std::time::Duration::from_secs(5))
@@ -86,6 +86,21 @@ impl Engine {
             };
         }
         Ok(registry)
+    }
+    /// The recorded governance lifecycle: effective donor states and their extinction gates,
+    /// exactly as `ecdev-gov extinction` judged them at the recorded commit.
+    pub fn lifecycle(&self) -> Result<Value, String> {
+        let l = self.read_json("research/commerce/governance/lifecycle.json")?;
+        let extinct = l["extinct"].as_array().cloned().unwrap_or_default();
+        Ok(json!({
+            "status": if extinct.is_empty() { "NO_DONOR_EXTINCT" } else { "SOME_DONORS_EXTINCT" },
+            "extinct": extinct,
+            "effective_states": l["effective_states"],
+            "assessed_parent_commit": l["assessed_parent_commit"],
+            "freshness": "RECORDED_ASSESSMENT_NOT_DYNAMIC",
+            "source": "research/commerce/governance/lifecycle.json",
+            "donors": l["donors"],
+        }))
     }
     pub fn metrics(&self) -> Result<Value, String> {
         let registry = self.registry()?;
@@ -326,7 +341,7 @@ impl Engine {
                 for observation in &result.observations {
                     observation.validate()?;
                 }
-                let dir = self.root.join(".ynventa/materialized/raw");
+                let dir = self.root.join(".ecdev-data/raw");
                 fs::create_dir_all(&dir).map_err(error)?;
                 for observation in &result.observations {
                     fs::write(
@@ -515,7 +530,7 @@ impl Engine {
     pub fn status(&self) -> Result<Value, String> {
         let live = self.live_research_status()?;
         Ok(
-            json!({"name":"ECDEV","version":env!("CARGO_PKG_VERSION"),"phase":"FOUNDATION","mcp":"SDK_STREAMABLE_HTTP","live_e2e":live["status"],"live_research":live,"protocol":"ynventa-v1","protocol_shard":"UNREGISTERED_UPSTREAM","metrics":self.metrics()?,"providers":self.providers()}),
+            json!({"name":"ECDEV","version":env!("CARGO_PKG_VERSION"),"phase":"FOUNDATION","mcp":"SDK_STREAMABLE_HTTP","live_e2e":live["status"],"live_research":live,"governance":"ecdev-governance-v1","governance_authority":".ecdev","metrics":self.metrics()?,"providers":self.providers()}),
         )
     }
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
@@ -536,7 +551,7 @@ impl Engine {
                     return Err("INVALID_CRAWL_RUN_ID".into());
                 }
                 let frontier = crate::frontier::Frontier::open(
-                    &self.root.join(".ynventa/materialized/runtime/ecdev.sqlite"),
+                    &self.root.join(".ecdev-data/runtime/ecdev.sqlite"),
                 )?;
                 match self.run(id) {
                     Ok(mut run) => {
@@ -571,12 +586,13 @@ impl Engine {
                 Ok(json!({"storage":"PASS","migrations":2,"live_providers":"UNAVAILABLE"}))
             }
             "ecdev.system.metrics" => self.metrics(),
-            "ecdev.ynventa.donors" => self.registry(),
-            "ecdev.ynventa.census" => self.census(required_str(&args, "donor_id")?),
-            "ecdev.ynventa.absorption" | "ecdev.ynventa.extinction" => Ok(
-                json!({"status":"PARTIAL_NOT_EXTINCT","metrics":self.metrics()?,"blockers":["Remaining semantic donor census","Remaining behavior contracts and parity","Live validation","Foundational external dependencies","ECDEV upstream shard registration"]}),
-            ),
-            "ecdev.ynventa.evidence" => self.read_json("research/commerce/capabilities.json"),
+            "ecdev.governance.donors" => self.registry(),
+            "ecdev.governance.census" => self.census(required_str(&args, "donor_id")?),
+            "ecdev.governance.absorption" | "ecdev.governance.extinction" => self.lifecycle(),
+            "ecdev.governance.conformance" => {
+                self.read_json("research/commerce/governance/conformance.json")
+            }
+            "ecdev.governance.evidence" => self.read_json("research/commerce/capabilities.json"),
             "ecdev.runs.list" => self.runs(),
             "ecdev.runs.inspect" => self.run(required_str(&args, "run_id")?),
             "ecdev.runs.replay" => self.replay(required_str(&args, "run_id")?),
@@ -647,17 +663,30 @@ pub fn tool_definitions() -> Vec<Value> {
         ("ecdev.system.health", "Storage health"),
         ("ecdev.system.metrics", "Metrics derived from donor records"),
         (
-            "ecdev.ynventa.donors",
+            "ecdev.governance.donors",
             "Verified donor identities and exact commits",
         ),
-        ("ecdev.ynventa.absorption", "Native absorption blockers"),
-        ("ecdev.ynventa.extinction", "Extinction blockers"),
-        ("ecdev.ynventa.evidence", "Source-backed capability ledger"),
+        (
+            "ecdev.governance.absorption",
+            "Recorded donor lifecycle and native absorption blockers",
+        ),
+        (
+            "ecdev.governance.extinction",
+            "Recorded extinction gates per donor",
+        ),
+        (
+            "ecdev.governance.conformance",
+            "Recorded ECDEV repository conformance",
+        ),
+        (
+            "ecdev.governance.evidence",
+            "Source-backed capability ledger",
+        ),
         ("ecdev.runs.list", "Persisted runs"),
     ] {
         out.push(json!({"name":name,"description":desc,"inputSchema":empty}));
     }
-    out.push(json!({"name":"ecdev.ynventa.census","description":"Donor census and unknowns","inputSchema":donor}));
+    out.push(json!({"name":"ecdev.governance.census","description":"Donor census and unknowns","inputSchema":donor}));
     for name in ["ecdev.runs.inspect", "ecdev.runs.replay"] {
         out.push(json!({"name":name,"description":"Inspect or replay recorded run without network","inputSchema":run}));
     }
@@ -743,10 +772,8 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
             if !acquired {
                 continue;
             }
-            let Ok(bytes) = fs::read(
-                root.join(".ynventa/materialized/raw")
-                    .join(format!("{hash}.html")),
-            ) else {
+            let Ok(bytes) = fs::read(root.join(".ecdev-data/raw").join(format!("{hash}.html")))
+            else {
                 continue;
             };
             if format!("{:x}", Sha256::digest(&bytes)) != hash {
@@ -841,7 +868,7 @@ mod tests {
                 assert_eq!(run["provider_calls"][0]["request_count"], json!(count));
                 assert_eq!(run["observations"], json!([]));
                 assert_eq!(run["new_live_acquisition"], false);
-                assert!(!path.join(".ynventa/materialized/raw").exists());
+                assert!(!path.join(".ecdev-data/raw").exists());
                 if count != Some(0) {
                     assert!(run["cost_minor"].is_null());
                 } else {
@@ -887,7 +914,7 @@ mod tests {
         use sha2::{Digest, Sha256};
         let root = temp();
         let engine = Engine::open(&root).unwrap();
-        let dir = root.join(".ynventa/materialized/raw");
+        let dir = root.join(".ecdev-data/raw");
         fs::create_dir_all(&dir).unwrap();
         let mut observations = vec![];
         let mut calls = vec![];

@@ -1,0 +1,61 @@
+{
+  "decision": "ECDEV is a standalone repository; governance is ECDEV-native at .ecdev/",
+  "from_authority": "former external subsystem directory (byte-identical copy pinned to another repository) at commit 7abc54ed8a874064370cacbd65a206c021874e46",
+  "to_authority": ".ecdev",
+  "removed_as_accidental_coupling": [
+    "closed shard registry and the system.shard_registered check (the only failing conformance check: 30/31)",
+    "byte-identical protocol snapshot and canonical-subsystem digest checks",
+    "multi-repository linker, capsules and system images",
+    "organism / material / promotion vocabulary, metrics and checks belonging to another repository",
+    "legacy .atlas importer dialects and LEGACY_INPUT shims",
+    "migrate scaffold (copying the subsystem into other repositories) and migrate schema (old grammar reader)",
+    "upstream registration proposal tooling and one-shot generators that edited declarations in the retired grammar"
+  ],
+  "preserved_machinery": [
+    "repository graph with stable node identities",
+    "typed declarations checked by rustc and read at run time",
+    "donor lifecycle evaluator and extinction gates",
+    "content-addressed evidence, history and knowledge",
+    "shape validator and graph-owned source",
+    "census (manifests, locks, imports, processes, resident source)",
+    "migration waves, path maps and shims",
+    "donor universe imports",
+    "knowledge extraction"
+  ],
+  "semantic_changes": {
+    "namespace": "node identities derived under `ecdev` (was the external system name); evidence is keyed by locator/subject keys, so no evidence changed meaning",
+    "record_format": "YNV/.ynv -> ECG/.ecg; 534 records re-encoded and round-trip verified; map in record-format-migration.json",
+    "relevance": "per-capability external-relevance field replaced by ECDEV relevance: RELIED_ON (required) or NOT_RELEVANT_TO_ECDEV (not required, tracked exclusion review); all prior values were judgements about another repository and were reset to UNRESOLVED",
+    "ladder": "NORL_RELEVANCE_RESOLVED -> CAPABILITY_RELEVANCE_RESOLVED at the same rung; its gate now covers every declared capability, not only required ones",
+    "graph": "every edge endpoint must resolve inside the ECDEV graph (no foreign references)",
+    "conformance": "ECDEV REPOSITORY CONFORMANCE: 27 checks of ECDEV invariants, including governance.single_authority, governance.no_external_authority, lifecycle.relevance_justified and shape.graph_owned_source",
+    "universe": "research/commerce/donors/registry.json is now a reconciled universe source; it was found STALE (changed since import) and re-imported (9 records added, 7 changed)",
+    "runtime_data": ".ynventa/materialized -> .ecdev-data (ignored); move existing local data with `mv .ynventa/materialized .ecdev-data`",
+    "mcp": "ecdev.ynventa.* tools -> ecdev.governance.*; extinction/absorption now return the recorded lifecycle instead of a hard-coded blocker list; added ecdev.governance.conformance"
+  },
+  "equivalence_proof": {
+    "donors_before": 60,
+    "donor_claimed_and_effective_states_identical": true,
+    "extinction_gate_results_identical_except_renamed_relevance_gate": true,
+    "baseline_effective_states": {
+      "CENSUSED": 12,
+      "DISCOVERED": 15,
+      "NATIVE_SHADOW": 3,
+      "REGISTERED": 30
+    },
+    "baseline_conformance": "30/31 (system.shard_registered failing)",
+    "baseline_metrics_kept": {
+      "donors_registered": 45,
+      "donors_censused": 15,
+      "donors_native_shadow": 3,
+      "capabilities_total": 67,
+      "capabilities_native": 9,
+      "capabilities_proven": 1,
+      "runtime_external_edges": 27,
+      "build_external_edges": 16,
+      "external_technology_edges": 40,
+      "repository_shape_conformance": 1.0
+    },
+    "method": "ecdev-gov extinction --json and metrics --json compared against the pre-migration assessment of the same tree"
+  }
+}

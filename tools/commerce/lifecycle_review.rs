@@ -1,7 +1,8 @@
-use ynventa::formats::json::Json;
+//! Donor lifecycle snapshot from the ECDEV governance assessment.
+use ecdev_governance::formats::json::Json;
 fn main() {
     let root = std::env::args().nth(1).unwrap_or_else(|| ".".into());
-    let assessment = ynventa::assess(std::path::Path::new(&root)).expect("canonical assessment");
+    let assessment = ecdev_governance::assess(std::path::Path::new(&root)).expect("governance assessment");
     let rows: Vec<_> = assessment
         .analysis
         .donors
@@ -17,6 +18,7 @@ fn main() {
                         .with("replacement_exists", capability.replacement_exists)
                         .with("native", capability.native)
                         .with("native_detail", &capability.native_detail)
+                        .with("relevance_resolved", capability.relevance_resolved)
                         .with("parity_pass", capability.parity_pass())
                         .with("regression_pass", capability.regression_pass())
                 })

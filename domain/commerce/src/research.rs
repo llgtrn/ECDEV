@@ -350,8 +350,7 @@ impl Engine {
         if !crate::service::valid_id(&crawl_id) {
             return Err("INVALID_CRAWL_RUN_ID".into());
         }
-        let mut frontier =
-            Frontier::open(&self.root.join(".ynventa/materialized/runtime/ecdev.sqlite"))?;
+        let mut frontier = Frontier::open(&self.root.join(".ecdev-data/runtime/ecdev.sqlite"))?;
         if input.crawl_run_id.is_none() {
             frontier.create_run(
                 &crawl_id,
@@ -551,7 +550,7 @@ impl Engine {
                             prior["provider_cost"] = result.provider_cost;
                             (prior, true)
                         } else {
-                            let dir = self.root.join(".ynventa/materialized/raw");
+                            let dir = self.root.join(".ecdev-data/raw");
                             std::fs::create_dir_all(&dir).map_err(err)?;
                             for observation in &result.observations {
                                 observation.validate()?;
@@ -939,7 +938,7 @@ mod budget_storage_tests {
                     assert_eq!(run["observations"].as_array().unwrap().len(), 1);
                 } else {
                     assert_eq!(run["observations"], json!([]));
-                    assert!(!root.join(".ynventa/materialized/raw").exists());
+                    assert!(!root.join(".ecdev-data/raw").exists());
                 }
                 assert_eq!(
                     e.run(run["run_id"].as_str().unwrap()).unwrap()["mode"],
@@ -1022,7 +1021,7 @@ mod budget_storage_tests {
             }
             drop(e);
             let mut reopened =
-                Frontier::open(&root.join(".ynventa/materialized/runtime/ecdev.sqlite")).unwrap();
+                Frontier::open(&root.join(".ecdev-data/runtime/ecdev.sqlite")).unwrap();
             assert!(reopened.lease(id, next_at - 1).unwrap().is_none());
             assert_eq!(reopened.lease(id, next_at).unwrap().unwrap().attempts, 2);
         }

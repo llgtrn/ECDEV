@@ -2,10 +2,10 @@
 import ast,hashlib,json,pathlib,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 def main():
- run=json.loads((ROOT/'.ynventa/materialized/document-live-run.json').read_text(encoding='utf-8'))
+ run=json.loads((ROOT/'.ecdev-data/document-live-run.json').read_text(encoding='utf-8'))
  assert run['mode']=='LIVE' and run['cost_minor']==0 and not run['errors']
  evidence=run['observations'][0];snapshot=evidence['normalized_value'];recipe=snapshot['document_decoding']
- raw=(ROOT/'.ynventa/materialized/raw'/f"{evidence['raw_hash']}.html").read_bytes()
+ raw=(ROOT/'.ecdev-data/raw'/f"{evidence['raw_hash']}.html").read_bytes()
  assert hashlib.sha256(raw).hexdigest()==evidence['raw_hash']==snapshot['content_hash']==recipe['wire_capture_sha256']
  assert recipe['encoding']=='UTF-8'
  assert hashlib.sha256(raw.decode('utf-8').encode()).hexdigest()==recipe['decoded_utf8_sha256']

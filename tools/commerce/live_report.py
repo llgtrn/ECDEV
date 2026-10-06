@@ -19,7 +19,7 @@ def main():
     captures = []
     for snapshot in snapshots:
         digest = snapshot["content_hash"]
-        raw = ROOT / ".ynventa/materialized/raw" / (digest + ".html")
+        raw = ROOT / ".ecdev-data/raw" / (digest + ".html")
         assert hashlib.sha256(raw.read_bytes()).hexdigest() == digest
         captures.append({"source": snapshot["source"], "sha256": digest,
                          "product_records": len(snapshot["products"])})

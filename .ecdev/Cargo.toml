@@ -1,0 +1,22 @@
+# ECDEV governance: the repository graph, donor lifecycle, evidence store, extinction evaluator,
+# shape validator and repository conformance owned by ECDEV alone. Its own empty `[workspace]`
+# keeps it independent of the product workspace. Zero dependencies: std only.
+[package]
+name = "ecdev-governance"
+version = "1.0.0"
+edition = "2021"
+rust-version = "1.87"
+publish = false
+description = "ECDEV governance: repository graph, donor lifecycle, extinction evaluator, metrics, compactor, migration and repository conformance"
+
+[lib]
+name = "ecdev_governance"
+path = "src/lib.rs"
+
+[[bin]]
+name = "ecdev-gov"
+path = "src/main.rs"
+
+[dependencies]
+
+[workspace]

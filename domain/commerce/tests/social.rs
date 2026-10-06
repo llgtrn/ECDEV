@@ -102,11 +102,7 @@ fn social_live_capture_requires_http_witness_and_preserves_unknown_counts() {
                 result["provider_failures"][0]["reason"],
                 "SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH"
             );
-            assert!(
-                !path
-                    .join(".ynventa/materialized/runtime/social-captures")
-                    .exists()
-            );
+            assert!(!path.join(".ecdev-data/runtime/social-captures").exists());
         }
         drop(engine);
         std::fs::remove_dir_all(path).unwrap();
@@ -141,7 +137,7 @@ fn cached_captures_require_original_bytes_and_never_establish_live_acquisition()
     p.capture_mode = "LIVE".into();
     p.captured_at = now;
     p.raw_hash = format!("{:x}", Sha256::digest(raw));
-    let dir = root.join(".ynventa/materialized/runtime/social-captures");
+    let dir = root.join(".ecdev-data/runtime/social-captures");
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join(format!("{}.raw", p.raw_hash));
     std::fs::write(&path, raw).unwrap();
@@ -154,8 +150,7 @@ fn cached_captures_require_original_bytes_and_never_establish_live_acquisition()
                 .as_bytes()
         )
     );
-    let db = rusqlite::Connection::open(root.join(".ynventa/materialized/runtime/ecdev.sqlite"))
-        .unwrap();
+    let db = rusqlite::Connection::open(root.join(".ecdev-data/runtime/ecdev.sqlite")).unwrap();
     db.execute(
         "INSERT INTO social_cache VALUES(?1,?2,?3)",
         rusqlite::params![key, now, json!([p]).to_string()],
@@ -486,7 +481,7 @@ fn expired_trend_watch_leases_recover_and_stale_workers_cannot_publish() {
     let path = root();
     let engine = Engine::open(&path).unwrap();
     let watch=engine.trend_watch(json!({"query":"matcha","research":{"query":"matcha","sources":[{"platform":"HACKER_NEWS"}]},"triggers":["TOPIC_MENTION_GROWTH"],"interval_seconds":60,"enabled":true})).unwrap();
-    let dbpath = path.join(".ynventa/materialized/runtime/ecdev.sqlite");
+    let dbpath = path.join(".ecdev-data/runtime/ecdev.sqlite");
     let db = rusqlite::Connection::open(&dbpath).unwrap();
     db.execute(
         "UPDATE trend_watches SET next_due=0,lease_until=1000,lease_token='OLD'",

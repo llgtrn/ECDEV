@@ -93,7 +93,7 @@ impl Engine {
         *checked.entry(post.raw_hash.clone()).or_insert_with(|| {
             let path = self
                 .root
-                .join(".ynventa/materialized/runtime/social-captures")
+                .join(".ecdev-data/runtime/social-captures")
                 .join(format!("{}.raw", post.raw_hash));
             fs::metadata(&path).is_ok_and(|m| m.is_file() && m.len() <= 4194304)
                 && fs::read(path)
@@ -344,9 +344,7 @@ impl Engine {
                     if posts.iter().any(|p| p.raw_hash != raw_hash) {
                         return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
                     }
-                    let rawdir = self
-                        .root
-                        .join(".ynventa/materialized/runtime/social-captures");
+                    let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
                     fs::create_dir_all(&rawdir).map_err(err)?;
                     fs::write(
                         rawdir.join(format!("{raw_hash}.raw")),
