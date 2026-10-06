@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "5286182f4188d4adfb18a46be221d87327da868b",
+  "assessed_parent_commit": "914e6d107fdae2ba85d14b3f28b493400632f390",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
@@ -9,9 +9,8 @@
     "CENSUSED": 7,
     "DISCOVERED": 15,
     "EXTINCT": 3,
-    "NATIVE_SHADOW": 1,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 33
+    "REGISTERED": 34
   },
   "extinct": [
     "getzep--graphiti",
@@ -1207,9 +1206,9 @@
     {
       "donor": "dgtlmoon--changedetection.io",
       "claimed": "REGISTERED",
-      "effective": "NATIVE_SHADOW",
-      "exception": "",
-      "stopped_by": "PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: monitor.change_detection",
+      "effective": "REGISTERED",
+      "exception": "REJECTED: Evaluated, never adopted: its restock decision uses LLM and scraped-text stock guesses, float prices and range rules that suppress stock alerts; ECDEV monitors typed observed fields natively (research/commerce/changedetection-capability-review.json)",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1243,33 +1242,33 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": true,
-          "detail": "all 1 required capabilities have a valid native replacement"
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: monitor.change_detection"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
           "pass": false,
-          "detail": "1 of 1 required capabilities lack it: monitor.change_detection"
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": true,
-          "detail": "all 1 required capabilities have an existing canonical replacement node"
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": true,
-          "detail": "all 1 required capabilities map to a capability or technology of the canonical graph"
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "1 of 1 declared capabilities have no resolved ECDEV relevance: monitor.change_detection"
+          "pass": true,
+          "detail": "all 4 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",

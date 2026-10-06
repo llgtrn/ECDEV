@@ -1,0 +1,51 @@
+{
+  "donor_id": "dgtlmoon--changedetection.io",
+  "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+  "license": "Apache-2.0",
+  "decision": "REJECTED: evaluated, nothing adopted",
+  "ecdev_native": {
+    "module": "domain/commerce/src/monitor.rs::changes",
+    "semantics": "per captured source, compares typed fields (price_minor exact integer minor units, availability, product data) and reports PRICE_CHANGED / AVAILABILITY_CHANGED / DISAPPEARED (only confirmed 404/410); blocked or UNKNOWN captures preserve the prior baseline; every observed value is also a validity-windowed fact (record_facts)"
+  },
+  "donor_paths_reviewed": [
+    {
+      "path": "changedetectionio/processors/restock_diff/processor.py:413-684 run_changedetection",
+      "behaviour": "restock/price alert decision",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "differences": [
+        "availability may come from an LLM plugin (get_itemprop_availability_from_plugin, llm.evaluator) - not evidence",
+        "text scraped by the browser fetcher ('Possibly in stock') overrides structured availability ('metadata lies') - a guess replacing an assertion",
+        "availability is in-stock when it contains any of instock/instoreonly/limitedavailability/onlineonly/presale as a lowercase substring - ECDEV keeps the observed schema.org value",
+        "prices compared as Python floats from babel parse_decimal - ECDEV compares exact minor units",
+        "a price inside price_change_min/max forces changed_detected=False even when stock changed - ECDEV never suppresses an observed availability change",
+        "percent threshold suppression and MD5 of a rendered 'In Stock: ... - Price: ...' snapshot string",
+        "multiple prices raise ProcessorException - ECDEV keeps conflicting offers as CONFLICT"
+      ]
+    },
+    {
+      "path": "changedetectionio/diff/__init__.py render_diff, processors/text_json_diff",
+      "behaviour": "generic text/word/JSON diffs",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "differences": [
+        "layout and copy churn would be reported as change; ECDEV monitors typed product fields"
+      ]
+    },
+    {
+      "path": "changedetectionio/processors/image_ssim_diff",
+      "behaviour": "screenshot similarity",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "differences": [
+        "ECDEV captures no screenshots"
+      ]
+    },
+    {
+      "path": "changedetectionio (flask UI, datastore, notifications via apprise, browser steps, content fetchers, scheduler)",
+      "behaviour": "self-hosted watch application",
+      "relevance": "NOT_RELEVANT_TO_ECDEV",
+      "differences": [
+        "ECDEV has its own MCP/HTTP server, SQLite store, bounded fetchers and persisted watches"
+      ]
+    }
+  ],
+  "edges": "no tracked ECDEV file imports or executes changedetection.io; no oracle was ever generated from it"
+}
