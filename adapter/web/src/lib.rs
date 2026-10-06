@@ -207,7 +207,9 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
         .select(&Selector::parse("script[type='application/ld+json']").unwrap())
         .enumerate()
     {
-        match serde_json::from_str::<Value>(&script.inner_html()) {
+        // Raw script text: re-serialising the element (inner_html) escapes `&` and `>` in
+        // documents html5ever does not treat as raw text, which corrupts string values.
+        match serde_json::from_str::<Value>(&script.text().collect::<String>()) {
             Ok(v) => {
                 structured_data.push(json!({"script_index":script_number,"value":v}));
                 let start = found.len();
@@ -624,5 +626,20 @@ mod tests {
             p["provenance"]["raw_capture_sha256"],
             format!("{:x}", Sha256::digest(html.as_bytes()))
         );
+    }
+    #[test]
+    fn json_ld_string_values_keep_raw_ampersands_and_angles() {
+        let html = concat!(
+            r#"<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">"#,
+            r#"<html xmlns="http://www.w3.org/1999/xhtml"><head><script type="application/ld+json">"#,
+            r#"{"@type":"Product","name":"Tom & Jerry > Cup","offers":{"price":"1","priceCurrency":"USD"}}"#,
+            "</script></head><body></body></html>"
+        );
+        let out = extract(html, "https://shop.example/cup").unwrap();
+        assert_eq!(
+            out["structured_data"][0]["value"]["name"],
+            "Tom & Jerry > Cup"
+        );
+        assert_eq!(out["products"][0]["title"], "Tom & Jerry > Cup");
     }
 }
