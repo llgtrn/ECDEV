@@ -538,6 +538,7 @@ impl Engine {
             "ecdev.trend.discover" => self.trend_discover(args),
             "ecdev.trend.inspect" | "ecdev.trend.explain" => self.trend_inspect(args),
             "ecdev.trend.compare" => self.trend_compare(args),
+            "ecdev.trend.hypothesize" => self.trend_hypothesize(args),
             "ecdev.trend.watch" => self.trend_watch(args),
             "ecdev.research.run" | "ecdev.product.discover" => self.research(args),
             "ecdev.monitor.create" => self.monitor_create(args),

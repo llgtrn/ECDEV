@@ -76,6 +76,7 @@ pub fn tool_definitions() -> Vec<Value> {
         json!({"name":"ecdev.trend.discover","description":"Bounded public social acquisition and evidence-linked sampled trends; zero paid; supplied raw data FIXTURE, cache_only makes no requests; missing counters/timestamps UNKNOWN, no social-only shortlist","inputSchema":discover}),
         json!({"name":"ecdev.trend.inspect","description":"Inspect frozen trend snapshots, source evidence, watches and simulation boundary without network; omit snapshot_id to list","inputSchema":inspect}),
         json!({"name":"ecdev.trend.explain","description":"Explain explicit heuristic components, provenance, unknowns and conflicts for a frozen snapshot","inputSchema":inspect}),
+        json!({"name":"ecdev.trend.hypothesize","description":"Turn a frozen trend snapshot into product hypotheses, unverified candidate links and ranked zero-paid research actions; never demand, never shortlist; no network","inputSchema":{"type":"object","properties":{"snapshot_id":{"type":"string"}},"required":["snapshot_id"],"additionalProperties":false}}),
         json!({"name":"ecdev.trend.compare","description":"Compare two compatible snapshots with actual timestamps; fixture/live/simulation scopes cannot mix","inputSchema":{"type":"object","properties":{"before_snapshot_id":{"type":"string"},"after_snapshot_id":{"type":"string"}},"required":["before_snapshot_id","after_snapshot_id"],"additionalProperties":false}}),
         json!({"name":"ecdev.trend.watch","description":"Create/update persisted public trend watch or action=list; nine trigger kinds, fenced leases, local events, minimum sample and complete-source policy; enabled=false disables","inputSchema":{"type":"object","properties":{"action":{"enum":["create","list"]},"watch_id":{"type":"string"},"query":{"type":"string","maxLength":500},"research":discover,"triggers":{"type":"array","items":{"enum":TRIGGERS},"minItems":1},"interval_seconds":{"type":"integer","minimum":60,"maximum":604800},"minimum_mentions":{"type":"integer","minimum":2},"threshold":{"type":"number","minimum":0},"enabled":{"type":"boolean"}},"additionalProperties":false}}),
     ]
@@ -122,6 +123,21 @@ impl Engine {
             .map_err(err)?;
         rows.map(|r| serde_json::from_str(&r.map_err(err)?).map_err(err))
             .collect()
+    }
+    /// Hypotheses from a verified frozen snapshot; persisted as a zero-network PLAN_ONLY run.
+    pub fn trend_hypothesize(&self, args: Value) -> Result<Value, String> {
+        let id = args["snapshot_id"]
+            .as_str()
+            .ok_or("snapshot_id is required")?;
+        let snapshot = self.trend_inspect(json!({"snapshot_id": id}))?;
+        let candidates = self.candidates()?;
+        let mut out = crate::hypothesis::hypothesize(
+            &snapshot,
+            candidates.as_array().map(Vec::as_slice).unwrap_or(&[]),
+        );
+        let run = self.persist(json!({"mode":"PLAN_ONLY","run_kind":"TREND_HYPOTHESIS","snapshot_id":id,"capture_mode":snapshot["capture_mode"],"hypotheses":out["hypotheses"],"observations":[],"cost_minor":0,"network_calls":0}))?;
+        out["run_id"] = run["run_id"].clone();
+        Ok(out)
     }
     pub fn trend_inspect(&self, args: Value) -> Result<Value, String> {
         if let Some(id) = args["snapshot_id"].as_str() {

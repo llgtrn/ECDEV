@@ -3,6 +3,7 @@ pub mod decision;
 pub mod domain;
 pub mod economics;
 pub mod frontier;
+pub mod hypothesis;
 pub mod intelligence;
 pub mod marketplace;
 pub mod memory;

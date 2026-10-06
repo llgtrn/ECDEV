@@ -7,7 +7,7 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,39);
+ const tools=await client.listTools();assert.equal(tools.tools.length,40);
  const officialFixtures=JSON.parse(await readFile(new URL('../../adapter/marketplace/tests/fixtures/official-responses.json',import.meta.url),'utf8'));
  const officialCase=officialFixtures.cases.find(c=>c.operation==='offers');
  const official=await client.callTool({name:'ecdev.product.analyze',arguments:{market:'AMAZON_US',asin:officialCase.asin,evidence_layer:'OFFICIAL_SP_API',include:['OFFERS'],fixture_responses:{offers:officialCase.response}}});

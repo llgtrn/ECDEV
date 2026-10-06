@@ -490,6 +490,30 @@ mod research_tests {
         let raw=json!({"hits":[{"objectID":"1","title":"matcha glass good","created_at_i":9000,"points":0},{"objectID":"2","title":"matcha glass bad","created_at_i":9200}]}).to_string();
         let before=engine.call("ecdev.trend.discover",json!({"query":"matcha","sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}],"fixture_now":10000})).unwrap();
         assert_eq!(before["mention_count"], 2);
+        let hyp = engine
+            .call(
+                "ecdev.trend.hypothesize",
+                json!({"snapshot_id": before["snapshot_id"]}),
+            )
+            .unwrap();
+        assert_eq!(hyp["network_calls"], 0);
+        assert!(hyp["run_id"].is_string());
+        for h in hyp["hypotheses"].as_array().unwrap() {
+            assert_eq!(h["shortlist_eligible"], false);
+            assert!(
+                h["blocked_by"]
+                    .as_array()
+                    .unwrap()
+                    .contains(&json!("SOCIAL_SIGNAL_IS_NOT_DEMAND"))
+            );
+        }
+        assert!(!hyp["hypotheses"].as_array().unwrap().is_empty());
+        assert!(
+            engine
+                .call("ecdev.trend.hypothesize", json!({"snapshot_id": "missing"}))
+                .is_err()
+        );
+        assert_eq!(engine.candidates().unwrap(), commercial_before);
         let empty_storage=engine.trend_discover(json!({"query":"storage","sources":[{"platform":"HACKER_NEWS","fixture_raw":"{\"hits\":[]}"}],"fixture_now":10000})).unwrap();
         assert_eq!(empty_storage["evidence_ids"], json!([]));
         assert_eq!(empty_storage["commerce_links"], json!([]));
