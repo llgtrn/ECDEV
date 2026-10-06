@@ -1,0 +1,178 @@
+{
+  "scope": "MediaCrawler, viral-trend-agent and Trend-Finder: capability-by-capability decisions with licence and caller analysis",
+  "edges": "no tracked ECDEV file imports, executes or names any of their checkouts; tools/commerce/intake_social.py and study_social.py only read census records",
+  "donors": {
+    "NanmiCoder--MediaCrawler": {
+      "license": "NON-COMMERCIAL-LEARNING-1.1 (webui/ GPL-3.0); gate BLOCKED_COMMERCIAL_ABSORPTION",
+      "decision": "REJECTED",
+      "capabilities": [
+        {
+          "capability": "social.mediacrawler.store_content",
+          "source": "base/base_crawler.py",
+          "symbol": "store_content",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.store_comment",
+          "source": "base/base_crawler.py",
+          "symbol": "store_comment",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.store_creator",
+          "source": "base/base_crawler.py",
+          "symbol": "store_creator",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.search",
+          "source": "media_platform/xhs/core.py",
+          "symbol": "search",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.get_comments",
+          "source": "media_platform/xhs/core.py",
+          "symbol": "get_comments",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.get_creators_and_notes",
+          "source": "media_platform/xhs/core.py",
+          "symbol": "get_creators_and_notes",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.download_media",
+          "source": "media_platform/xhs/core.py",
+          "symbol": "download_media",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "ECDEV keeps media references only and never downloads social media"
+        },
+        {
+          "capability": "social.mediacrawler.update_xhs_note",
+          "source": "store/xhs/__init__.py",
+          "symbol": "update_xhs_note",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.update_xhs_note_comment",
+          "source": "store/xhs/__init__.py",
+          "symbol": "update_xhs_note_comment",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.save_creator",
+          "source": "store/xhs/__init__.py",
+          "symbol": "save_creator",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "logged-in platform crawling (Xiaohongshu and others), session/cookie handling and storage callbacks; ECDEV never bypasses authentication, and the licence blocks commercial absorption"
+        },
+        {
+          "capability": "social.mediacrawler.remaining-whole-donor",
+          "source": null,
+          "symbol": null,
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "other platform crawlers, proxy pools, browser automation, web UI (GPL-3.0) and storage backends; outside ECDEV's policy and licence-blocked"
+        }
+      ]
+    },
+    "Shiva-74--viral-trend-agent": {
+      "license": "no licence file (gate BLOCKED_NO_LICENSE_PERMISSION)",
+      "decision": "REJECTED",
+      "capabilities": [
+        {
+          "capability": "social.viral-trend-agent.get_upvote_velocity",
+          "source": "intelligence/virality_scorer.py",
+          "symbol": "_get_upvote_velocity",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "no licence permits use; ECDEV computes velocity, acceleration and time decay independently from actual snapshot timestamps (social.rs) and rejects zero or non-monotonic elapsed time"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_comment_velocity",
+          "source": "intelligence/virality_scorer.py",
+          "symbol": "_get_comment_velocity",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "no licence permits use; ECDEV computes velocity, acceleration and time decay independently from actual snapshot timestamps (social.rs) and rejects zero or non-monotonic elapsed time"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_cross_platform_bonus",
+          "source": "intelligence/virality_scorer.py",
+          "symbol": "_get_cross_platform_bonus",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "ECDEV separates platform, source and publisher independence instead of adding a platform-count bonus"
+        },
+        {
+          "capability": "social.viral-trend-agent.get_recency_score",
+          "source": "intelligence/virality_scorer.py",
+          "symbol": "_get_recency_score",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "no licence permits use; ECDEV computes velocity, acceleration and time decay independently from actual snapshot timestamps (social.rs) and rejects zero or non-monotonic elapsed time"
+        },
+        {
+          "capability": "social.viral-trend-agent.verdict",
+          "source": "predictor/viral_predictor.py",
+          "symbol": "_verdict",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "a probability-labelled viral verdict is not a validated forecast; ECDEV never turns trend into demand"
+        },
+        {
+          "capability": "social.viral-trend-agent.remaining-whole-donor",
+          "source": null,
+          "symbol": null,
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "agent orchestration, scrapers and LLM prompts; no licence and outside ECDEV's evidence model"
+        }
+      ]
+    },
+    "t4niha--Trend-Finder": {
+      "license": "MIT",
+      "decision": "REJECTED",
+      "capabilities": [
+        {
+          "capability": "social.trend-finder.clean_text",
+          "source": "support/preprocessing/text_cleaner.py",
+          "symbol": "clean_text",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "cleaning exists to feed embeddings; ECDEV keeps original text and normalises derived terms only"
+        },
+        {
+          "capability": "social.trend-finder.cluster_embeddings",
+          "source": "support/clustering/weekly_hdbscan.py",
+          "symbol": "cluster_embeddings",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "ECDEV stores no embeddings; its term clusters (social.rs::clusters) and component scores are deterministic and keep original text and provenance"
+        },
+        {
+          "capability": "social.trend-finder.score_clusters",
+          "source": "support/clustering/weekly_hdbscan.py",
+          "symbol": "score_clusters",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "mixes counters from different platforms into one total; ECDEV never sums incompatible counters"
+        },
+        {
+          "capability": "social.trend-finder.select_top_posts",
+          "source": "support/clustering/weekly_hdbscan.py",
+          "symbol": "select_top_posts",
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "ECDEV stores no embeddings; its term clusters (social.rs::clusters) and component scores are deterministic and keep original text and provenance"
+        },
+        {
+          "capability": "social.trend-finder.remaining-whole-donor",
+          "source": null,
+          "symbol": null,
+          "relevance": "NOT_RELEVANT_TO_ECDEV",
+          "why": "Reddit collection, notebooks, LLM summaries and the frontend; outside ECDEV's sources and evidence model"
+        }
+      ]
+    }
+  }
+}
