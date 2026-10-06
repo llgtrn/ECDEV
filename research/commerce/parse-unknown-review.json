@@ -1,0 +1,3776 @@
+{
+  "scope": "Donor source files the census left PARSE_UNKNOWN, re-read from locked blobs (blob hash and sha256 verified)",
+  "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 (tools/commerce/requirements.txt)",
+  "admissibility": [
+    "PARSED requires a parse tree with no ERROR or MISSING node",
+    "fallback grammars only where the grammar accepts a superset of the file language (SCSS for CSS, TSX for JSX) or a language a .h header can hold (C++, Objective-C)",
+    "template grammars are never fallbacks: they accept nearly any text",
+    "notebooks: Python code cells only, IPython magic and shell-escape lines blanked in place",
+    "reason codes label a failure; they never turn it into a parse"
+  ],
+  "semantic_completion": false,
+  "reviewed": 181,
+  "resolved": 76,
+  "remaining": 105,
+  "resolved_by_method": {
+    "PRIMARY_GRAMMAR": 36,
+    "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED": 28,
+    "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK": 12
+  },
+  "remaining_by_reason": {
+    "GRAMMAR_REJECTS_CONSTRUCT": 41,
+    "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR": 11,
+    "SQL_DIALECT_OUTSIDE_GRAMMAR": 6,
+    "NO_GRAMMAR_FOR_LANGUAGE": 4,
+    "PREPROCESSOR_MACRO_EXPANSION_REQUIRED": 6,
+    "TEMPLATE_PLACEHOLDER_SOURCE": 1,
+    "TEMPLATE_LANGUAGE_IN_HOST_HTML": 19,
+    "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR": 13,
+    "GENERATED_SOURCE": 1,
+    "CSS_FRAMEWORK_AT_RULE": 3
+  },
+  "files": [
+    {
+      "donor_id": "purahmanian--junglescout-mcp",
+      "commit_sha": "0341f4a252443a720bc2a4f517d43e118892e506",
+      "source_path": "selfhost/selfhost-setup.sh",
+      "blob_hash": "72c114affcf724b6babdba0adaeade1f52447dd4",
+      "sha256": "79c97c97098c6032df9d1ad2ce15126b88a50c8a25822b82d878daaf6a62b624",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 92,
+        "error_byte_ratio": 0.0041
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl-mcp-server",
+      "commit_sha": "8fd13724c9da7a859d7bf95e735bb8b462de2c0c",
+      "source_path": "src/research.ts",
+      "blob_hash": "fab78edd59a9dbe93885d149e63c5093ef9d0b4f",
+      "sha256": "bac3dff5c28ce2afce562f1a99fe7d5ad6a18ffa38bd0c029f8507442d1bfb41",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 91,
+        "error_byte_ratio": 0.0006
+      }
+    },
+    {
+      "donor_id": "apify--apify-mcp-server",
+      "commit_sha": "1b8d4e0236e3b4e17a51c42ebdfcb60d2d4956de",
+      "source_path": "src/web/src/components/actor/ActorCard.tsx",
+      "blob_hash": "83a876692ccfc3b848c4a6e87a31f62babceac71",
+      "sha256": "259c2b875c048e33350065dffd79f5575dd1750b418e7f934c999d86ce8bec7c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "tsx"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "tsx",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 18,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "apify--apify-mcp-server",
+      "commit_sha": "1b8d4e0236e3b4e17a51c42ebdfcb60d2d4956de",
+      "source_path": "src/web/src/pages/ActorSearch/ActorSearchDetail.tsx",
+      "blob_hash": "1c1d6f832737f816cd1b42fd908edf6e157f7043",
+      "sha256": "5bc78310dec6ac20c8868ddc1e5393a087c9fe21db42c9a1fbff33a06d552f30",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "tsx"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "tsx",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 52,
+        "error_byte_ratio": 0.0001
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/clickhouse/concurrency_logs.sql",
+      "blob_hash": "7f2b81498366ddc9592c8ce1a7b50144203e3354",
+      "sha256": "efaaea6538a10db9db330aa29e11b25308d68a161821b554dc3d2d5bc86771b4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 10,
+        "error_byte_ratio": 0.1513
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/src/controllers/v2/types.ts",
+      "blob_hash": "280d1021bd113b6a2b027327c0943e289b56ac62",
+      "sha256": "68de7b0c2ef01c03cb039bb1468957fd61369367c2ef54e2367e38edb00cd338",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 1597,
+        "error_byte_ratio": 0.0006
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/src/lib/entities.ts",
+      "blob_hash": "440bf134f5a0d85ea1611efc6b6d7cac68ee131a",
+      "sha256": "2d44c67867f224f0ae49b3d9e30596c78aa2c8bb658a8338c18afc136133024c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 167,
+        "error_byte_ratio": 0.0137
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/api/src/scraper/scrapeURL/engines/wikipedia/index.ts",
+      "blob_hash": "f479ad7dfdaa6092001dfd835eb2f2ef419a1cbb",
+      "sha256": "421b700aff9ad4810f40a382aeb33c770daf5f83ac7d0da98858a91ccdbe32da",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 205,
+        "error_byte_ratio": 0.0009
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/js-sdk/firecrawl/src/v2/types.ts",
+      "blob_hash": "fb0b6f8fc63930835a0f16c21d2a0afd64a0abc9",
+      "sha256": "79f6bc9ed4fd8b2418e09d087da4902fc1f34b2bec35b62241e9d25e165ce7d9",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 2164,
+        "error_byte_ratio": 0.0003
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/nuq-postgres/nuq.sql",
+      "blob_hash": "d20080e37be9b4ad30828c8ddd8049b0e1328829",
+      "sha256": "7e71e2ae5e6fb195feb3328a102da5489e62b1fc7c8f8acaa546b44a9935c51f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 8,
+        "error_byte_ratio": 0.0322
+      }
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/components/BaseHead.astro",
+      "blob_hash": "2e321b6dbac6edca0caf4fcf92ec243923c02b88",
+      "sha256": "f95f756a1c1dae8eebdfa0dce87860cd89c518444e345f7b4de7b7247fd7656c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/components/Footer.astro",
+      "blob_hash": "6b849873a5cc0850cab69bcba1ccd3d1a343efc2",
+      "sha256": "a5fa9155f6fde079fbbeb75d975ff8615bba440a7c0691f8ef13c5dbb550d610",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/components/FormattedDate.astro",
+      "blob_hash": "8f5959010345e456fe12663ad29bb0ae24698c2f",
+      "sha256": "dd42882bbf8dededdbefaa785d51dfb9f9f41cf82bf36db8db00a14cdcc0d4bc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/components/Header.astro",
+      "blob_hash": "2d323181a48181f3ccdf2b6268e9ac52c8737124",
+      "sha256": "2da47b6ebb507d095ad5b1250b762eaad0e1cbb6b1100640b3dc0d68ddd6cc7a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/components/HeaderLink.astro",
+      "blob_hash": "41da8462e8e3f7f4cf4cb9ce8bc0aba253910673",
+      "sha256": "885f9b2a0fa4d0ea85696b94124a0141c0501edc798a0b6896058d211e1e1a1a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/layouts/BlogPost.astro",
+      "blob_hash": "f6c2b49cfcfc787e07975ae7ae0319d14119b019",
+      "sha256": "256a123643367cfe2e2ac03a9161a5dc62f7338c901a5b820d6c9324d97c0e11",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/about.astro",
+      "blob_hash": "121d8d6f1f22df0baecab07d7d7d13cfc54af822",
+      "sha256": "1adc9ae9b111de593bd0a62c4a38169f4fa50e32c52c0b37969a94844318fe0a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/blog/[...slug].astro",
+      "blob_hash": "89e38a706ab7a3c3a676f941b62239c6e54743c1",
+      "sha256": "115c3aa83c8430299fc488218bc6b5c2100d4eb4ae4cfd5c79a000cbcba5a057",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/blog/category/[...slug].astro",
+      "blob_hash": "5cf7747a20a6b87951dfa24cda2901add4b0193f",
+      "sha256": "5f538ccf3ed984a6396ecb6c76996784e94c1bd3b66ad1e47c8040276e6a903f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/blog/category/deep/nested/path/index.astro",
+      "blob_hash": "ffb4e0f5820404ebb4cf0d70f88e067095036d87",
+      "sha256": "85e6934857f5e0bd8c6d998af7379e7d0bad909c9fc1edf6274607de0b44d485",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/blog/index.astro",
+      "blob_hash": "c9e78680e59daec0453cb2179147742c9f4c18c9",
+      "sha256": "d40d30cc1e4605681f3e8c69d240925b03516ecbc926d591b67715f6ffd7bd02",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/branding-declared-only.astro",
+      "blob_hash": "56ac9abb0c703e65b2666f6a75d819b4b2982a61",
+      "sha256": "e0e270f3807fd24c38f8eb51e4218d944f55225126b2ad327267905c67da26d8",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/code-block.astro",
+      "blob_hash": "655da778b1daf7deb3c5d0e429f2fc0716fb1034",
+      "sha256": "1f71179b81a56a951d48ffe4715999022e0506da7d38b2518628c400a64a25e7",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/index.astro",
+      "blob_hash": "a06155dfafdc7f38b95818012b48519992cdf412",
+      "sha256": "eef172c13faed74ec871559c61b31c8235068fb4f585c04cd7e747027b920e09",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/product.astro",
+      "blob_hash": "b6e14c241cae0ffafe66748d41460034ef5cc145",
+      "sha256": "4219e6a77defb44b8defff871ef3e7004ca75d2f87de1800088f45ae22779817",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-site/src/pages/prompt-injection.astro",
+      "blob_hash": "9d2ac1db7c4b5c647cc436d641d3ce427dd2896f",
+      "sha256": "5f696324c92d902629a07e7ab5f87ed31ab3f83729c125dbbe3a57194b58d44f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "astro",
+        "grammar": "astro",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "apps/test-suite/index-benchmark/run.ipynb",
+      "blob_hash": "0790bd991030dacbf79df8c1ad0c34074c60e01c",
+      "sha256": "dfd5958d22ae9e54707f57d3348c4517825991d47724f6db0852fac28579ae68",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/amazon-price-tracking/notebook.ipynb",
+      "blob_hash": "cec05a05134566a55116f4960bbd2a86a36552ad",
+      "sha256": "1da455968acb3c58c387f2f0e7e3fb49fac193af52fe80b1293ad16e8d776baa",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/deploying_web_scrapers/notebook.ipynb",
+      "blob_hash": "90f1370304b1f8b81abad01ceb3dfb0b7954b67e",
+      "sha256": "a07707edd68148369cb7cafdee6b17fe00ae967ddaf77932e24f10dc603c039a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/github-actions-tutorial/notebook.ipynb",
+      "blob_hash": "42041b34375f0ee50c8f5d18baa2d1ecb418acae",
+      "sha256": "0d86272cbe4f1ff7fa8083284dcf8b8f60b7b22fcaa826451127a69bf463d477",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/mastering-map-endpoint/mastering-map-endpoint.ipynb",
+      "blob_hash": "fd533ad416713ca85e7533d03806cfbf3e5d6c6d",
+      "sha256": "12de7fde8b311dbbca1b87b5e22cc61bfa9963e016a1671ee9ca31b98b336a89",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/mastering-scrape-endpoint/mastering-scrape-endpoint.ipynb",
+      "blob_hash": "6be1ed3588308968c747b23ef5ef5d4b7cf48e26",
+      "sha256": "c2aaf9f3e00b9d10d2256d1833861ea642c73a91e2352947a81e705d0ac582f4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/mastering-the-crawl-endpoint/mastering-the-crawl-endpoint.ipynb",
+      "blob_hash": "aad70fbdd12a867f1bf07d1fa3d327484302ba1e",
+      "sha256": "1ea32fcd1aef97b4083d963d2115b1d64668210c6682c317e63fd1fd32249ce1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/blog-articles/scheduling_scrapers/notebook.ipynb",
+      "blob_hash": "7c7d4ca4ab47fe70dfba7a05886dd26fece683e1",
+      "sha256": "292149bb494530e7ad7f1b2f759ec4f9cbb8269e673c234472d229d684a2e528",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/find_internal_link_opportunites/find_internal_link_opportunites.ipynb",
+      "blob_hash": "d6168878522bf8993d41d6bbd2ea10fbee6f17b5",
+      "sha256": "2146f5e7006300419abaea03b8d4e9908e91773bbe7430b00b0bf81b1f6b6faf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/simple_web_data_extraction_with_claude/simple_web_data_extraction_with_claude.ipynb",
+      "blob_hash": "ee14f14708c759fe40311779039b10d4938a83b5",
+      "sha256": "79fec16950fcfafd34824253443efeaf879f5555556e9a43757172a312c1245c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/visualize_website_topics_e2b/claude-visualize-website-topics.ipynb",
+      "blob_hash": "a96c4c8cc95a8a29c418b31ff77e9588da885e73",
+      "sha256": "11d44e5fa1472af1ae7572b7be676b92c72cf8b5a8c886e65b0343ea99d3ad5a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/website_qa_with_gemini_caching/website_qa_with_gemini_caching.ipynb",
+      "blob_hash": "9a2244a17472cfb2889ca145dd5f96a2f1a2df97",
+      "sha256": "2ff9fb46f2b6bef951aaaf464618a3b6fa4aa99d39b5d6a4a8edafa2d914cc7e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "firecrawl--firecrawl",
+      "commit_sha": "e76d5b6fcdce84a8a8ec85e17969e018c9c17147",
+      "source_path": "examples/website_qa_with_gemini_caching/website_qa_with_gemini_flash_caching.ipynb",
+      "blob_hash": "19d72c9d7974a6c069eef975799aeba09ac95ae7",
+      "sha256": "9c37b8663fabcca9bb30193eb8ef2ac59fe6157a47b3cb5bde448adf347a7039",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/basic-crawler/src/internals/crawlers/index.ts",
+      "blob_hash": "ad002da1057f7543c5d73c7cdf5a831fac182a1e",
+      "sha256": "1c82a458c4ffce24fb8e7976f3bacf5c3e82f4ab03f6e4302fc403e5929ca4a9",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0265
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/core/src/events/index.ts",
+      "blob_hash": "d2fc8c735788d084dd00568530d5241225b41202",
+      "sha256": "2ed298dda0190fba4a19f1728067e34dd924323e12f21b1ef946876d6767d8c8",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 3,
+        "error_byte_ratio": 0.0342
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/core/src/storages/index.ts",
+      "blob_hash": "05dcca6e2cb8214e5422e7cfd04371682203b6df",
+      "sha256": "8ac99f0e0336a1a0dbcb7aab35184624148776be6633eaeafed6929d7ce06679",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 5,
+        "error_byte_ratio": 0.0089
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/otel/src/index.ts",
+      "blob_hash": "5b04f3c8abcbf99fefa603f0db54db920662e18a",
+      "sha256": "d9be3e067651932d9658316a4fd6cf6c4fac75344bee9cb9ac8c0ab494934f16",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0274
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/playwright-crawler/src/internals/playwright-launcher.ts",
+      "blob_hash": "63636d7e790837dca511967f44b13e42d50d6fdb",
+      "sha256": "cac1c34b7e971cb7d22612859ecae79712c8242a16f7a86874a30dcdd025781b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 105,
+        "error_byte_ratio": 0.0001
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/stagehand-crawler/src/internals/stagehand-launcher.ts",
+      "blob_hash": "9c4d2e29839e8f32a41f00f4276e6e3be736c6cc",
+      "sha256": "30907908a7d200f59df657b544044e457dd66c0ab15c9a46ce49a9ed6b949004",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 74,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "packages/types/src/index.ts",
+      "blob_hash": "c0da6dc916d990a207150535db2616f3a9952e34",
+      "sha256": "dd8e6b69498b28d0cc24b1027f5e6a5f3369fdbdec4aef32819161ed859f0dd1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.1077
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "website/src/components/Highlights.module.css",
+      "blob_hash": "447d29daffb72562618e0720465496aecc743e50",
+      "sha256": "102c06736f71da41adea1508cd5f65c4b772a4b27d1786ce50c11f02a432dc26",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 20,
+        "error_byte_ratio": 0.0236
+      }
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "website/src/components/Homepage/LanguageSwitch.jsx",
+      "blob_hash": "7f497018d8706e0a174921907d9fedd2f1d4f0fc",
+      "sha256": "64446f754d37b14db77cb7309e78bbe1bf57f0c541d6af45a37ccb370ec92ae4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "javascript"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "javascript",
+        "grammar": "tsx",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "website/src/components/Homepage/RiverSection.module.css",
+      "blob_hash": "0937780743430e2ca41187e7fb7f4565c257c213",
+      "sha256": "e8dad0b05279c2027b61b30fed4351d85c19d4343db8f687af4163b858a8630c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "scss",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "website/src/pages/index.module.css",
+      "blob_hash": "909913e69950bd2088a27f12b6a61e8f231bee67",
+      "sha256": "2cdcae7638b96cf8377067421a9963105a06d2687135f65455ad6a49e2b1f023",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "scss",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "apify--crawlee",
+      "commit_sha": "438e3419626bd070f8984566bfb86ab9355f55d6",
+      "source_path": "website/src/pages/js.module.css",
+      "blob_hash": "c3734c5a5b13c2c0e38657727a8baaa1ac230f86",
+      "sha256": "79c6baf538c3ab28709919a7e706a5024135c498b9f0d52842392a4e4d69d748",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "scss",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/pipe/nsIRemoteDebuggingPipe.idl",
+      "blob_hash": "ac91b636155a3e0090fa09319412af30f01175ef",
+      "sha256": "d4cb2daeb7f57f4efccf0d159b40e9841c5c04376e304ea557f592a9a66ec172",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null,
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "NO_GRAMMAR_FOR_LANGUAGE",
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/pipe/nsRemoteDebuggingPipe.cpp",
+      "blob_hash": "abcb0a758fac13bde592970bedea338fbc94ec3b",
+      "sha256": "61d9d58dbe036c077f543554eb07f545b3062a93dc1674a70fda8960a59f4cb9",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 23,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/pipe/nsRemoteDebuggingPipe.h",
+      "blob_hash": "be4cb2675e78106df8ace11162f9089b6fe146e9",
+      "sha256": "ba6309e08b1c5947661e1beef8425efaf0a39c1f1157a11fef27ec74327e5dca",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 14,
+        "error_byte_ratio": 0.0963
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/screencast/HeadlessWindowCapturer.h",
+      "blob_hash": "371b604207e0f51fb82673626a8a84677980c00f",
+      "sha256": "d8abe8a01ff6ea7d1264b4f357025ee2bd9eb335b48bbfb176a552630b285294",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "cpp",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/screencast/nsIScreencastService.idl",
+      "blob_hash": "d764e03008def83a01ff25d2c57fc6ba5bc537fc",
+      "sha256": "bc3e352e80247229b563171f5b6e4cd756b46f27bb072e391c2965a9a251ecf2",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null,
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "NO_GRAMMAR_FOR_LANGUAGE",
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/screencast/nsScreencastService.cpp",
+      "blob_hash": "a8d2fd49913b23c682495a71c3a71bd32e7d96cd",
+      "sha256": "09c9d6d4be210046011a5b8f42089c18fd1cd2d6df3ccb2a64bf2a8caff9acfd",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 39,
+        "error_byte_ratio": 0.0004
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/firefox/juggler/screencast/nsScreencastService.h",
+      "blob_hash": "419603e0e69b0a1ca7033ba7c7dfc19a0e85b422",
+      "sha256": "f695ec35ad4894149e58dd9a039b6eaa691ce9031de45b1b761b37ea949d1382",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 13,
+        "error_byte_ratio": 0.0789
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/MBToolbarItem.h",
+      "blob_hash": "9971d4c1023a9f6e57c6058ae20729e51bb6d503",
+      "sha256": "82c6cf0cd1270268b23be9c01cd59e8f15899c4b118fdd9986668ccdd525226b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "objc",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/mac/AppDelegate.h",
+      "blob_hash": "f3ebb86b818ec892dec84d61f73c240ae3d025bd",
+      "sha256": "cb7d7d3d73930162ce18aa1cdbe76b47727d048287d4e6f5375e258853c36d3c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "objc",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/mac/BrowserWindowController.h",
+      "blob_hash": "dd9ff40910e5bcc88cb806e868a87f414e4179f2",
+      "sha256": "a4dcd1c85d4dbd8bf3d60c180aef93161efad0dc58eeb5df499403e80d6ed869",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "objc",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/mac/BrowserWindowController.m",
+      "blob_hash": "9c468dc95e5bf1c0999a7d3237f16daae98aed77",
+      "sha256": "a88e67f203a730f99acd1857c99feff92f7a18803c2b38ab77020478d675a6b0",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "objc"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "objc",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 93,
+        "error_byte_ratio": 0.8892
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/mac/Playwright_Prefix.pch",
+      "blob_hash": "ab6e9bce9a41291bb35664c2c63751c3413601f2",
+      "sha256": "097d49c2f70129680aba72c60040180e4f1b10e4db3e5498b92d6123b3823d1b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "objc",
+        "grammar": "objc",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/Common.h",
+      "blob_hash": "29edbe39dad34cfcc028b56d784ff1d8162cb526",
+      "sha256": "525531472a94e7ca035d7cfb09e9f450ce4045faa409f38027be986a2403a439",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "cpp",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/DialogHelper.h",
+      "blob_hash": "6590fe00255841fa93a0fe7c6bffbc0dc13fd2d0",
+      "sha256": "bf013764bc5ee6c750de986150bf85c2936c026d13ecdfa71a9180f42d220dee",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 34,
+        "error_byte_ratio": 0.0565
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/MainWindow.cpp",
+      "blob_hash": "ca65ccb0221fcf5623d5e331d28c443868664da5",
+      "sha256": "ff842dbed782740fea5ed269f92dc3dd003aea36eb3d01a448348daf2b7bef3b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 45,
+        "error_byte_ratio": 0.0027
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/MainWindow.h",
+      "blob_hash": "e0af565f4b98bb7b0d82fb7f42ae533274a20d21",
+      "sha256": "6307e4b08a76cde765f78b03bb590c0f881bc8e70f5a816bc4d05a3e40dc3bb3",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 1.0
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/PlaywrightReplace.h",
+      "blob_hash": "dd134b879ea6aee23826e9ed2f6773d8c1466118",
+      "sha256": "c41951384ce6cc7232a00b577ef98845ac4bb7a9d719cb40b76775da1b876327",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "cpp",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/WebKitBrowserWindow.h",
+      "blob_hash": "6b677e808fb900f5a40f390bb37c94f2daefd678",
+      "sha256": "f0fb2825dd2e03de5d67b6864718e619cf711afcbb97a1dddcb5c81c8fb43731",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "c",
+        "grammar": "cpp",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "browser_patches/webkit/embedder/Playwright/win/WinMain.cpp",
+      "blob_hash": "585e1778b0a6da8e60722a1f033c0427eaed4940",
+      "sha256": "866253e1ef75924ab0fcc723f1b062090b5a2134d0a93247863c57f50f7aeacc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "PREPROCESSOR_MACRO_EXPANSION_REQUIRED",
+      "first_error": {
+        "line": 72,
+        "error_byte_ratio": 0.0054
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/dashboard/src/dashboard.css",
+      "blob_hash": "2da2f34e02c0031983de0cce803c114cb68d29b8",
+      "sha256": "0ca56b2bfa8277dfc3020d2e2ba126bf01e602c0489bfdc25b74d1f2d2d28422",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 78,
+        "error_byte_ratio": 0.0009
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/injected/src/highlight.css",
+      "blob_hash": "2a83b23985ed74bd8b07df88524add02aede5139",
+      "sha256": "64a3cd3e3ab7bf90a268517dd6b72ed7a86b643185d8b60da7c170a730ba498c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 197,
+        "error_byte_ratio": 0.02
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/isomorphic/trace/trace.ts",
+      "blob_hash": "6c0a8a005b0fb04a5664bd48db4905a1c8e36164",
+      "sha256": "fe1d31f97c56d5495e588461471f4e04a0c4b77aa9dc35d0daf0bb6d6fc2ca78",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "typescript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TYPESCRIPT_SYNTAX_NEWER_THAN_GRAMMAR",
+      "first_error": {
+        "line": 17,
+        "error_byte_ratio": 0.0062
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/playwright-core/bin/install_webkit_wsl.ps1",
+      "blob_hash": "ccaaf1564d6b6f53e230d28cd40d8a92525a997c",
+      "sha256": "bc61beda37a808eef27d39ce684baa792f6d17737a25a432b1a84d3b591ab815",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "powershell"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "powershell",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 32,
+        "error_byte_ratio": 0.0048
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "packages/playwright-core/src/server/android/driver/gradlew",
+      "blob_hash": "a69d9cb6c20655813e44515156e7253a2a239138",
+      "sha256": "8deee7d70dd19cf8180712bd9a4fc2f957ad4ce81f64ce825aec066275fdf761",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 173,
+        "error_byte_ratio": 0.0009
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "utils/doclint/templates/interface.cs",
+      "blob_hash": "317de64aeacec1ae1d4a64ccd1d597a40d449199",
+      "sha256": "50386633987c446033d19665ec84382f5cdc7db2782120d214f297c6422d790a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "csharp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "csharp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_PLACEHOLDER_SOURCE",
+      "first_error": {
+        "line": 40,
+        "error_byte_ratio": 0.0059
+      }
+    },
+    {
+      "donor_id": "microsoft--playwright",
+      "commit_sha": "b630e71fcda7885885c459bcbb88e5bfa7c0a1ac",
+      "source_path": "utils/libwebp-wasm/webp_wasm.c",
+      "blob_hash": "fe4167afad77f7a7cd6f6bd9ac16d17a342fa86f",
+      "sha256": "553367eaa798e4618ebdf177bb0a3dbecd88b740e8dc818f8d3af896c8eb08ed",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "c",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 34,
+        "error_byte_ratio": 0.0061
+      }
+    },
+    {
+      "donor_id": "browser-use--browser-use",
+      "commit_sha": "302d8fcb245a7a63fb7531a4734c9ce3c7792779",
+      "source_path": "bin/lint.sh",
+      "blob_hash": "e438ce3b880cf420012a24a58961e49e2da08dbf",
+      "sha256": "7d869802b5f6cd9546bd772cca5b7d8f99fe39e9fa630028dcee44dd5ebf4758",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "bash",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 68,
+        "error_byte_ratio": 0.0001
+      }
+    },
+    {
+      "donor_id": "scrapy--scrapy",
+      "commit_sha": "54f7ed9cccbe19db3fe6cd2252bf3c29326c67d7",
+      "source_path": "docs/_tests/quotes.html",
+      "blob_hash": "d1cfd9020b7b6d12cff438a2e35a32561c50c2c3",
+      "sha256": "b4ecfd833044829004b2b89dcf21e3fbb586e0cdd02f2376c7e98191e8fd0b74",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 37,
+        "error_byte_ratio": 0.001
+      }
+    },
+    {
+      "donor_id": "scrapy--scrapy",
+      "commit_sha": "54f7ed9cccbe19db3fe6cd2252bf3c29326c67d7",
+      "source_path": "docs/_tests/quotes1.html",
+      "blob_hash": "d1cfd9020b7b6d12cff438a2e35a32561c50c2c3",
+      "sha256": "b4ecfd833044829004b2b89dcf21e3fbb586e0cdd02f2376c7e98191e8fd0b74",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 37,
+        "error_byte_ratio": 0.001
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/backups/templates/backup_create.html",
+      "blob_hash": "0718c5b738bf8d7263e7f7e26c8a9039c24350f5",
+      "sha256": "979379ee6632173f7325ee2fb29f19bcfa9e2fc8ab565e663beec53e0694d2b9",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 28,
+        "error_byte_ratio": 0.0026
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/imports/templates/import.html",
+      "blob_hash": "097771425c5555e633444d945b31cbb430165743",
+      "sha256": "bf3083404aaacc6266a07679d272b3db2ee4bfe776a9a65919d3d8f215749fa5",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 11,
+        "error_byte_ratio": 0.0019
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/settings/templates/settings.html",
+      "blob_hash": "962d8871e93f5a26be5cb792e03d72c8a9aa0d86",
+      "sha256": "ba53f6da9532a325019a917a02f167db95be5591bbac4ecccfbe76d8d97c8fd7",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 26,
+        "error_byte_ratio": 0.0045
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/settings/templates/settings_llm_tab.html",
+      "blob_hash": "02a90e54b2ddd1f4eaf397f62b83cf6ce86c6fe2",
+      "sha256": "b4dc13e6566212e58793c8f173edc9f9211c95e7b77abb6df4b0a6847c8fe46b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 347,
+        "error_byte_ratio": 0.0014
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/tags/templates/edit-tag.html",
+      "blob_hash": "d86d8bafad19bb820b9eb93887153b3767e4daa0",
+      "sha256": "f41c557deaa943d92cfd4edf77671c2bba648b593399ce5841514300a4854013",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 35,
+        "error_byte_ratio": 0.0018
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/ui/templates/diff.html",
+      "blob_hash": "8165eb244c921bf461ae32e22a2d78c62e6db88f",
+      "sha256": "161da4ba9524805a9a745b256e7ddb9e45dfc76fe29c304a37eb27c16adee6be",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 26,
+        "error_byte_ratio": 0.0037
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/ui/templates/edit.html",
+      "blob_hash": "99b5d796985453c24b5725cfea69d9da25eeafbf",
+      "sha256": "4acdcae58851aedaf358e800fbad0a5438cc7043906b75f38eb250c24330764b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 64,
+        "error_byte_ratio": 0.001
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/ui/templates/preview.html",
+      "blob_hash": "ea9a49b9c258505aae9d60be7120afe71621c607",
+      "sha256": "7620a5528d87b2a12f1e39015ecba358aee65fd7eb9be0bac5afbf32143e2c65",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 18,
+        "error_byte_ratio": 0.0027
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/ui/templates/queue.html",
+      "blob_hash": "1cf7f1e30dddc5b5c179f3a4a50477883e0be753",
+      "sha256": "1357d6db736873235e87a247371e0b44624fdc7230af1c47b7448a1640d7ec73",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 59,
+        "error_byte_ratio": 0.0022
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/watchlist/templates/watch-overview-single-row.html",
+      "blob_hash": "0d738aaefcad892a15ec52f5fd205fa67cfcd724",
+      "sha256": "1869456ff91fd458026e6d520b981d416fc3c8e1413b5547ebbf3c4ada20f1bc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 1.0
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/blueprint/watchlist/templates/watch-overview.html",
+      "blob_hash": "a3eb63a2e5f742bf5d124c847916a7158c884150",
+      "sha256": "b254403359303e4d86b23b15b3187e2832461250c8b920c92d3390352af3f87e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 201,
+        "error_byte_ratio": 0.0074
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/processors/image_ssim_diff/templates/image_ssim_diff/diff.html",
+      "blob_hash": "98b4ddb034504e596c2112aa5846621b050df046",
+      "sha256": "daec8569c9026920ccd37088a06eb9a856a1b666c62080944151be09961f908e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 11,
+        "error_byte_ratio": 0.003
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/processors/image_ssim_diff/templates/image_ssim_diff/preview.html",
+      "blob_hash": "a1385cd319b103a819ba7e69e3b95e8cedcdcf57",
+      "sha256": "a95f8932a260cda14e9baca6ece639baafe21c1c69f6c98a34693aafdae3605f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 5,
+        "error_byte_ratio": 0.0041
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/processors/restock_diff/templates/restock_diff/difference.html",
+      "blob_hash": "4655e547c30fefeec623da994e0646af947a948e",
+      "sha256": "652e35ee7baabf0e40d2793465e72b548d680954db33515adc296f61eac73093",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 6,
+        "error_byte_ratio": 0.0042
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/diff.css",
+      "blob_hash": "009a47e300b0d22eaf7aaf7c9fb521641c5aa218",
+      "sha256": "e4ec1c1fb8fd988c376cefb8a118b2ee555f79ba36849459b968865176ea3d5d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/flag-icons.min.css",
+      "blob_hash": "9c18720d8869dcc3d3b41f4c6acb9f9f744a770c",
+      "sha256": "30a20bd36cf5a8b93d6097c77c9c9117d3cf9b2bd6085d139d1168857477a4df",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 6,
+        "error_byte_ratio": 0.077
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/pure-min.css",
+      "blob_hash": "cd877cb663cd886fb7773dd6d021361a941e2010",
+      "sha256": "2d0b11cc95b046dabdab9a5bbe9c3035d2db1d7036e644acbb9e00b7c639f3f6",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "css",
+        "grammar": "scss",
+        "method": "SUPERSET_OR_HEADER_GRAMMAR_FALLBACK"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/diff.scss",
+      "blob_hash": "ac0f993cfdfb6e80d466e5a979210517ed6ed922",
+      "sha256": "ecddfe1771ed520843fbedd23151632ec597ce7da373e409c86e9e4b85cdcddf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0012
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_action_sidebar.scss",
+      "blob_hash": "2d855db8c779fff596f0b9e28df02b7dc86391de",
+      "sha256": "c6cce0c9d78ba0a802d4f627a8032449ef87eff29ce26497062e5882fef4d432",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0096
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_add-watch.scss",
+      "blob_hash": "6ff5925be2f6f00f6da4396ffa897c12a5971029",
+      "sha256": "ae5106011ac0c96d866ded33272b1fd9a80d5afceebbc429f57bce3fa19103c1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0012
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_browser-steps.scss",
+      "blob_hash": "b8c3865fc7c28ce393f56c32ff60a9c35bb95d7c",
+      "sha256": "7db3d64b6ac8e00c90378f1490f89d715923c37a40d1c26a98128b1a67a5727b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 36,
+        "error_byte_ratio": 0.0014
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_button.scss",
+      "blob_hash": "b418b003095bcca593291f11c005ad57e6701418",
+      "sha256": "b241a5af382080409b60a45d83df4505dcdde7a27e4fe19fcbfaf10ebf10e457",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0009
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_extra_browsers.scss",
+      "blob_hash": "b1e60e8ac8d2014de5335e0a5e8b155915bcdc2d",
+      "sha256": "22c68e5e6ebf7a12608847422fb6703a8d80cdc5f1bc40ee27a0162ef0d96f21",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 4,
+        "error_byte_ratio": 0.0015
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_extra_proxies.scss",
+      "blob_hash": "cee7deeaa1e9b0edf467d0fcf5d9f6a5aa2adc72",
+      "sha256": "07654465cb60059a0382d72390722767d9d7242bb2cf8f2789677a7e3e42b7a7",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 4,
+        "error_byte_ratio": 0.0015
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_hamburger_menu.scss",
+      "blob_hash": "4fd831becfeabbdb5c26cf921cc8fe92d8767b63",
+      "sha256": "875a900a870ed4553ed7c30ded0e3bb0fd37cefa8b54b43d9eddb21185cc0a5d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0012
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_language.scss",
+      "blob_hash": "d3df92923babdbff65e1a1a1954f1dd883a0dd3d",
+      "sha256": "20bdc72957b3db6efdf14c739cfbc70c6ce475572324b4d2ba8dfbf650491ccc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 23,
+        "error_byte_ratio": 0.0007
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_llm.scss",
+      "blob_hash": "5a652b69104cd597d01200f9b04ecfae03b857de",
+      "sha256": "a3425cc6c433411ee28c0b1e56e5b6156547f191c9c514f4de5997b4721ef6bb",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 68,
+        "error_byte_ratio": 0.0071
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_love.scss",
+      "blob_hash": "42e2e3a367f7d22dfb72abc98feacfb153fd36eb",
+      "sha256": "6bbe14a71244a37b2bd2878174e77cd524ebfb8168701674643104fbfd7d2676",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0028
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_menu.scss",
+      "blob_hash": "852c9786a9d69fc80ad7b3b7538749c3052110c3",
+      "sha256": "f94461a7f10067e09d894e9fc156ef183c4fd917e9cf8d7359a899630476a59e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0052
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_minitabs.scss",
+      "blob_hash": "a2dc2d49391a6de112762ebbeb2584842bf220ad",
+      "sha256": "3b0b1effe68d014310e706d7c40f15dfbd543cff146df4a226eac101b748badc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.0027
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_notifications.scss",
+      "blob_hash": "174f53948817e69abb0802dc80db72ec4fe534ec",
+      "sha256": "8334bb17920192a377d2d4fd256366fa5e258ce02e7357d5c14a9a44c8ba8014",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0017
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_pagination.scss",
+      "blob_hash": "502a41f57e3f6854f2eaf9e4b431ff61ff0125bf",
+      "sha256": "beef8bb8b91d5f9ea593ba00239285c623318721e314bd2412aa72db52890a12",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 6,
+        "error_byte_ratio": 0.0021
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_pwa_install.scss",
+      "blob_hash": "997cabc89c925765b250ae0add2e91aa3ea021e3",
+      "sha256": "6cc23f4b4cbd22dc61f88e1e98378e7f7b0fc3458b002f90d1bdee50e779d966",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 29,
+        "error_byte_ratio": 0.0006
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_seg.scss",
+      "blob_hash": "26c2a5d9c927674ed01403ea12a63a10608af087",
+      "sha256": "1d2743d593502e614f954deb3dc5df155671df538464d924b53b4191f91b6612",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0014
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_sub_tabs.scss",
+      "blob_hash": "161a0c3d5c97a982c83052d1f06906bc29f7340d",
+      "sha256": "aefd86554c888d96b301c5feb968b3fd2b530896e2c6f65638458c44fe2763ef",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 189,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_table.scss",
+      "blob_hash": "56de07cbe04b6b5639ba5e5e67d2e925dde9b279",
+      "sha256": "94e5f403795a95f1eed55563d485351624de9b6e1417b77218b6e929073e7ccc",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0022
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_top_menu.scss",
+      "blob_hash": "6e970ff8b4922ee08f5f57c9d71480ed4cbb4985",
+      "sha256": "805af2635603d3e15069c9cf5c8db3e812a013f1966577fc0ef9ff13e66e2ec1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0057
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_visualselector.scss",
+      "blob_hash": "7fa046889993b2fb936cea8b2f08a71e2cc1fe4d",
+      "sha256": "1373d3b7b183263473361d7ccfdf6fec8259efedff93a70e5f19b5a8906ccb69",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 19,
+        "error_byte_ratio": 0.0031
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table-mobile.scss",
+      "blob_hash": "7481f60bafd303521053e845ee1a0dd81155b991",
+      "sha256": "860ae885fc9d872a2b8589d1181fc9abf67bf401cb3250051bfd03c195bc733d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 131,
+        "error_byte_ratio": 0.0018
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/parts/_watch_table.scss",
+      "blob_hash": "36770661dcde12598ca37ac36929d89f73d250b4",
+      "sha256": "6896c156bfa99966ea30ebe419a6e5994edd89399c1a70cf38c5aa28c98caecf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0012
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/scss/styles.scss",
+      "blob_hash": "40538d044a29a58999231bad728b88c668b6e78f",
+      "sha256": "6d88158cc0f0019070e705f415ab73166b075819058ea11e706fa0315c452552",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "scss",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SCSS_MODULE_SYSTEM_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 4,
+        "error_byte_ratio": 0.0004
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/static/styles/styles.css",
+      "blob_hash": "0a97256d9c21f4ea25b7f57ff6a9ba518f9cb62c",
+      "sha256": "38d92b520d2e04a8e00c5957f0563b346d3ce5257cf6324a126659d64167525f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/templates/_stab.html",
+      "blob_hash": "44244af08c9a7ea01b1e9df46d0bce2c4fad1093",
+      "sha256": "c629ad7e18d2a0d63570f2c222f4f559123883d21bed815197e79dbde48b8c9c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": null,
+        "error_byte_ratio": 0.0
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/templates/edit/include_llm_intent.html",
+      "blob_hash": "9c9535bdd3a25a767c8a029d627ac9c20edf7860",
+      "sha256": "744f4455c4548153c87bbb74bba62a8c4699ae61a6f82ddf4310d4a5fac07716",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 23,
+        "error_byte_ratio": 0.883
+      }
+    },
+    {
+      "donor_id": "dgtlmoon--changedetection.io",
+      "commit_sha": "a1ce35619aae9949d65ee8dcac068b76ca01ca67",
+      "source_path": "changedetectionio/templates/edit/include_subtract.html",
+      "blob_hash": "528fa5bee7a717dec84eb18e828d28f55f413c68",
+      "sha256": "453aecc5b068c5746da152cd21e41aa3ed85b0e369e6cd9ecd43e7cb8238c1bb",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 10,
+        "error_byte_ratio": 0.011
+      }
+    },
+    {
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "schemas/data-kiosk/analytics_economics_2024_03_15.graphql",
+      "blob_hash": "3a0c07ca5a413adaf8d32a889430d83a075562c8",
+      "sha256": "3e25dd8a34bdba0da1dbb6753c0785e1ddb2a6e6f15a5b374ec8b1c4b72f504c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 18,
+        "error_byte_ratio": 0.0122
+      }
+    },
+    {
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "schemas/data-kiosk/analytics_salesAndTraffic_2024_04_24.graphql",
+      "blob_hash": "63435088e3913de1399b0fdb7ff5988fd94914ca",
+      "sha256": "a416c7fc114947d62678088397c01dd4a2d1db9c7c457d09311e6c4a0ba64f46",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 735,
+        "error_byte_ratio": 0.0018
+      }
+    },
+    {
+      "donor_id": "amzn--selling-partner-api-models",
+      "commit_sha": "3677bb9d96f4450e6843f1f8207005e925d5c867",
+      "source_path": "schemas/data-kiosk/analytics_vendorAnalytics_2024_09_30.graphql",
+      "blob_hash": "56df5ce2640dc1e1a5d4a3e1bcdda31e5edc5fa9",
+      "sha256": "581a5183dcd07b8082ec064dc320854784af101c0117cf2898a3338f7a78e533",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "graphql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 302,
+        "error_byte_ratio": 0.0077
+      }
+    },
+    {
+      "donor_id": "seomoz--reppy",
+      "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+      "source_path": "reppy/robots.cpp",
+      "blob_hash": "3fa746100aaf801e309be8a1dac22fc1675eeec4",
+      "sha256": "183947cc9f921fb135b2e4f0c9e58e55307691f0af841a6c36ca255cd2d332e3",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "cpp",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GENERATED_SOURCE",
+      "first_error": {
+        "line": 1,
+        "error_byte_ratio": 1.0
+      }
+    },
+    {
+      "donor_id": "seomoz--reppy",
+      "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+      "source_path": "reppy/robots.pxd",
+      "blob_hash": "ee9beb740861ed381d32d341f5a7d3f7f8a44985",
+      "sha256": "eb628eb48cbe0e6a727bf371465086fb0559bd00e017a30cde49898f7466d65f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null,
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "NO_GRAMMAR_FOR_LANGUAGE",
+      "first_error": null
+    },
+    {
+      "donor_id": "seomoz--reppy",
+      "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+      "source_path": "reppy/robots.pyx",
+      "blob_hash": "cbb634dbf2aeee3732878b035b63a0b396bfddc7",
+      "sha256": "aa42e45460a52bfd9e170f1ee1ba16bcb16a36e20f5bee13fc90faae469f2061",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null,
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "NO_GRAMMAR_FOR_LANGUAGE",
+      "first_error": null
+    },
+    {
+      "donor_id": "httpie--cli",
+      "commit_sha": "5b604c37c6c67e18e7c3e9aee6c88a8c22b98345",
+      "source_path": "docs/packaging/windows-chocolatey/tools/chocolateyinstall.ps1",
+      "blob_hash": "e27045f342e139fc4d82eb7b9097d11140012039",
+      "sha256": "d3afd4693de8b129a7afd051ac159578194984f92a401f96d0b7abdcda1aed47",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "powershell"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "powershell",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.2214
+      }
+    },
+    {
+      "donor_id": "httpie--cli",
+      "commit_sha": "5b604c37c6c67e18e7c3e9aee6c88a8c22b98345",
+      "source_path": "extras/httpie-completion.fish",
+      "blob_hash": "c0cfc20ad9b8cff2017d3abeb17c166b6aacbef2",
+      "sha256": "621c850b33ed5b323223a96246e8ee7652c8eac1dd0a7b4d7161ef70c2e5c06a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "fish",
+        "grammar": "fish",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "encode--httpx",
+      "commit_sha": "b5addb64f0161ff6bfe94c124ef76f6a1fba5254",
+      "source_path": "docs/overrides/partials/nav.html",
+      "blob_hash": "d5a413f013d6984712d6e04c8fdb1e57e5156c1b",
+      "sha256": "92565621017a63c85f35f07b9f24f5cd787b14fc7549efb7218b63183a182aac",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 50,
+        "error_byte_ratio": 0.0007
+      }
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "MindSpider/schema/mindspider_tables.sql",
+      "blob_hash": "1b05489c288ee6b2027df384d32ef104b9576237",
+      "sha256": "3155ac36e4abc7b825f21f5a3b64354daa591fa7b326324f21cf2e5b0686738a",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 30,
+        "error_byte_ratio": 0.0004
+      }
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+      "blob_hash": "f1f62982bfe239677429a9479fbfc2106c6514dc",
+      "sha256": "5ef3f85d2c03925f7e780020456ac705a2db7754067cb8895b42002d58c2788f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "python"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "python",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 103,
+        "error_byte_ratio": 0.0017
+      }
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/dataset/intro.ipynb",
+      "blob_hash": "9e00bbc04ad19f512b5d1a19a9dfd06c039b37d0",
+      "sha256": "fa8d1c3f8ced069f77509e0210430b4a97bf24281bf402c5acfcc8c04adb05db",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/dataset/intro.ipynb",
+      "blob_hash": "9e00bbc04ad19f512b5d1a19a9dfd06c039b37d0",
+      "sha256": "fa8d1c3f8ced069f77509e0210430b4a97bf24281bf402c5acfcc8c04adb05db",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/dataset/intro.ipynb",
+      "blob_hash": "9e00bbc04ad19f512b5d1a19a9dfd06c039b37d0",
+      "sha256": "fa8d1c3f8ced069f77509e0210430b4a97bf24281bf402c5acfcc8c04adb05db",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--BettaFish",
+      "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+      "source_path": "final_reports/final_report__20250827_131630.html",
+      "blob_hash": "07983cc9b951e646701af92dce8080055da995aa",
+      "sha256": "640d46a0791e4a9f84caf4d2bbb9be232511dedc385ae86e3593d6738b0367fa",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 562,
+        "error_byte_ratio": 0.0003
+      }
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/App.vue",
+      "blob_hash": "b7cd71ca624e103a465ca5465fcf6cc1459a6109",
+      "sha256": "f183bcfb3900c3624490cacda0959b9f1106c7df00f4f51039177f1253766fc1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/GraphPanel.vue",
+      "blob_hash": "db18829821791f485c958a3c53bac426f9c8f379",
+      "sha256": "10f297a24b93155adee025f043a10813298738cb39f127af5d67deb669af0468",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/HistoryDatabase.vue",
+      "blob_hash": "5bcad63e30ecec49ec414abace557ed1325a64ba",
+      "sha256": "5689a7f8ab62d0abecea9330f7395c68895da3612feded54bcff2c016089a888",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/LanguageSwitcher.vue",
+      "blob_hash": "723d64b743d501342e2f05d057bc6f2e1da64680",
+      "sha256": "ada45b2c551c6e818791dfc495ffd492c9d6d9cd6a65a713a08ca9ecc4dedd58",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/Step1GraphBuild.vue",
+      "blob_hash": "687d1c7bb0383743f0d0dce923308193472dd994",
+      "sha256": "2eda6d5ad075363a9b4bc198eedf72ef04d52a41d9e539968d0c9371168e308d",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/Step2EnvSetup.vue",
+      "blob_hash": "4ed1474ba2733f3186f23d856c93c2a0520ff1ce",
+      "sha256": "d1df19add47b4d8e8a7608bfabe7c92e71e0b4fe8459f78460c51a26bd021f97",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/Step3Simulation.vue",
+      "blob_hash": "e9dd3dc38363a4ac2bb6d6a5a32850e977d26f2d",
+      "sha256": "66258c64ec91e4ebfc87e29013e3270bece2d526b43f384bcd4e9f1c90209d32",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/Step4Report.vue",
+      "blob_hash": "8e53ceb53b99c7fb61d263e4883cbe79d970ec94",
+      "sha256": "dcac96bdcb6b8df566155b543387cb51034e341f235a83b455608e34abd6bb4c",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/components/Step5Interaction.vue",
+      "blob_hash": "22b904650cf05d2edabdbc34644a27a7b91c5cf1",
+      "sha256": "067f165535e5b6583515ed30d9eb97727c273a410b81e0b7e95886bdb37d9541",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/Home.vue",
+      "blob_hash": "ca7ef6ff61c75bce0a15482fb225c8fac24123ff",
+      "sha256": "7ebc342c34556912542030bf9e7c98e6ee4d754fe93a44601cd5c7699adcb409",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/InteractionView.vue",
+      "blob_hash": "7e555b26e40bd3adb0fd06fef9f507d0bc4ddd51",
+      "sha256": "11c23dfcba96c9f7b32eb14128fbcd661795e70328125ba216008fb13ea194a2",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/MainView.vue",
+      "blob_hash": "cf600ff979c86e6cb946980c35c8675dab72a949",
+      "sha256": "a8ec014c42edf3b1b294f1f81e2d335efb7a635bb8d5df7733636d0c8da431c6",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/Process.vue",
+      "blob_hash": "dcddeaecafb21d01ac69524e8413f5119db01134",
+      "sha256": "23296f9e52a7c35f08756df3ffe411aa3030e0dfca5b6db6a487697d7d826c27",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/ReportView.vue",
+      "blob_hash": "ac054e47b6aefa64d4b206083601d51718e1c179",
+      "sha256": "ad15621e83d7c0a1499def1e8e2c08eab3d7a479ed75843e3d3d3bccf0ca6022",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/SimulationRunView.vue",
+      "blob_hash": "c675d87732c38a7a7497a99922578dc350d9bb08",
+      "sha256": "1b3da793fe8bf7c67f3455e35a81273c4dc61333732a1ab5924ea9be482ec944",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "666ghj--MiroFish",
+      "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+      "source_path": "frontend/src/views/SimulationView.vue",
+      "blob_hash": "f3e1c18e86b4ae4c19d113e745d474d168bfffd4",
+      "sha256": "6657200000a169337dd30d30c218362220e46b8d7b42b08225992a60e5f6a1bf",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "docs/assets/style.css",
+      "blob_hash": "c688a7eac293d2a814ba3269e93d5a8a29d35a29",
+      "sha256": "e3b6d87bdcd7f2bdd70ab2ed19c7fbf8f0fe588c609f1430ff8388cb8a91ce11",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 409,
+        "error_byte_ratio": 0.0001
+      }
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "docs/index.html",
+      "blob_hash": "35a7b4d85eb445744de1f8b3ecd93dfae45fa19c",
+      "sha256": "20dbedada058a09c059cec71a26be1c81f14c85412b69a023726683b6d73019b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 275,
+        "error_byte_ratio": 0.0023
+      }
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "trendradar/storage/ai_filter_schema.sql",
+      "blob_hash": "bdc69dff0a2c5a040e8dd08c32bed85569e46048",
+      "sha256": "a33cc6f22bf22cdc8afca70eeab13ff0df2983972b036c639c56f61d58bcda57",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 11,
+        "error_byte_ratio": 0.007
+      }
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "trendradar/storage/rss_schema.sql",
+      "blob_hash": "9ae517ea99a4f83187f419c4f867b9e4a7eb3b59",
+      "sha256": "eb8383b02894614590c5506b80f890c0dd21ea3e1815abc8867d20fe24d29d51",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 25,
+        "error_byte_ratio": 0.0082
+      }
+    },
+    {
+      "donor_id": "sansan0--TrendRadar",
+      "commit_sha": "792bcc3928b1617bba09df34989fd5675c159b86",
+      "source_path": "trendradar/storage/schema.sql",
+      "blob_hash": "38ee418f0013279645dacea71f98d09fdfe93dbd",
+      "sha256": "3acc4308f4c3c55c90ab09df2e89a8eab9fdd67924d6353caa1913579eb404c1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "sql",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "SQL_DIALECT_OUTSIDE_GRAMMAR",
+      "first_error": {
+        "line": 19,
+        "error_byte_ratio": 0.0145
+      }
+    },
+    {
+      "donor_id": "VladUZH--harken",
+      "commit_sha": "d0710a427dbbe712594ef3a6c25112e1d14cc027",
+      "source_path": "src/harken/web/templates/dashboard.html",
+      "blob_hash": "83a9b1cef2e35663d0c9fea1c3ed6e5c995280bf",
+      "sha256": "6ffcf9eb4c01f7f861451ea72683e79da17c9ab37f86b7eca8edba68812a4152",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "TEMPLATE_LANGUAGE_IN_HOST_HTML",
+      "first_error": {
+        "line": 132,
+        "error_byte_ratio": 0.0029
+      }
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/frontend/src/styles.css",
+      "blob_hash": "b12672073be4d416f62f71ff4f226e2f660d2919",
+      "sha256": "611ba2223f184555c31c95df06e1104540521dc7ea1a12c9e77fc1507b739906",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "CSS_FRAMEWORK_AT_RULE",
+      "first_error": {
+        "line": 2,
+        "error_byte_ratio": 0.007
+      }
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/Agglomerative_Clustering_Analysis.ipynb",
+      "blob_hash": "9709ee6e623af5c4bc92b1e6f911f5a83e4bfe9d",
+      "sha256": "8770230c342aada1b1dfca648cfec06d7b8d092ba1189a8605c30d98d03a1a33",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/dbscan_clustering.ipynb",
+      "blob_hash": "33b8911bbec61a1d9ec6153324cd337942aa8579",
+      "sha256": "31fdbfbe2dac45e080dda3203b716741e9c00e3f76244d11f1b63aa5693a638e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/gmm_reddit_n.ipynb",
+      "blob_hash": "2c4724709181e007de87489b1d89dff3cd910ea1",
+      "sha256": "c53e480d84848f5096ccb7c079a88d5a76b8c1907c1ac152c0f9690a15f15013",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/hdbscan_clustering.ipynb",
+      "blob_hash": "cad36c4c38d812aef8bbe746c9ce1f44cca03b45",
+      "sha256": "42ee4e625f0b6e9dee54049741bd1376d8b2376db6524ed52fe622918d6c6100",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/kmeans_reddit.ipynb",
+      "blob_hash": "1d3cac7a51b8e250dbda8fdf8824109a0344d43f",
+      "sha256": "22f25ff72af36bb23d4cf2ad19ac8f15295008f486f140386a54325c3a434583",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "t4niha--Trend-Finder",
+      "commit_sha": "5135bb0e2a6a3f62d3f0153554d09505075578ef",
+      "source_path": "support/notebooks/trend_finder_kmeans_llm.ipynb",
+      "blob_hash": "e70fe541ed7356b1ac189e3e17a25ebdbc6c5f1b",
+      "sha256": "c00dbc637e638a6d5da387ed989a544d69dcacf26febc7a9950228d807b0c6f9",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "NanmiCoder--MediaCrawler",
+      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+      "source_path": "docs/.vitepress/theme/DynamicAds.vue",
+      "blob_hash": "3a3cbeb1ff0c4ebe054c799f512e13dfeb88e08d",
+      "sha256": "3e09e31cd27b3779eb3026c88a540229b08792380017da2ca068569c91a0daf5",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "NanmiCoder--MediaCrawler",
+      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+      "source_path": "docs/.vitepress/theme/MyLayout.vue",
+      "blob_hash": "517f3b328fe8d57c823128d563d844f1744c38b9",
+      "sha256": "c29971ba44563a076f1e00560e6b8110a5795f1167e1c561fcf8540bf026ecc4",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "vue",
+        "grammar": "vue",
+        "method": "PRIMARY_GRAMMAR"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "NanmiCoder--MediaCrawler",
+      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+      "source_path": "media_platform/tieba/test_data/tieba_note_list.html",
+      "blob_hash": "abd423c9f4c19cd81139e7ba3c460f7b16a822c7",
+      "sha256": "20eef554b198cb10b64d19c3001503daac50bceb9b359ddfcc1a26173f9112f2",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "html",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 152,
+        "error_byte_ratio": 0.0002
+      }
+    },
+    {
+      "donor_id": "NanmiCoder--MediaCrawler",
+      "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+      "source_path": "webui/src/index.css",
+      "blob_hash": "3a5cf7fea94bf0cb2d22a9428b452cbb0367a87f",
+      "sha256": "7b758bb5497688dd138b8fa6db1e060c2176931c0f1976961700f45bc395d18e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "CSS_FRAMEWORK_AT_RULE",
+      "first_error": {
+        "line": 408,
+        "error_byte_ratio": 0.0005
+      }
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "benchmarks/longmemeval/zep_memgpt_eval.ipynb",
+      "blob_hash": "3746a911e5e8a0a5b32a11090cfe2a043712cd62",
+      "sha256": "1c226d55f60eaa73b18e0538dce6d96c80a2f6f0fa54191888504c540cccdba1",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/python/autogen-agent/agent.ipynb",
+      "blob_hash": "e9bf444b1b7ac5f73376e59a36704c27c54ed1bd",
+      "sha256": "72f5358ace1a0b979a466d0a9e221060ff1d01862c4835082c41a9156c1b3a5b",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/python/elevenlabs-zep-example/react-app/src/App.jsx",
+      "blob_hash": "affc368b1df2288091a60cce315c6179d1a33268",
+      "sha256": "92b61ae6b1b76157693b554f789bf2d82a57629f895696022cd71a2ba06b9241",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "javascript"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "javascript",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "GRAMMAR_REJECTS_CONSTRUCT",
+      "first_error": {
+        "line": 206,
+        "error_byte_ratio": 0.0025
+      }
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/python/langgraph-agent/agent.ipynb",
+      "blob_hash": "44d73bc38f1ee6ee0fff5d90401f186437672672",
+      "sha256": "b3d7bccedf5b6bb6d7501acd2b9924b844b95f55ea1bdb25329ef4da03ceaeae",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/python/quickstart/quickstart.ipynb",
+      "blob_hash": "30c4d195f8912c4d2d271c0e4e3a5b5803df42a0",
+      "sha256": "8b4ef79f44a9d8aa1646e916504864e263273be584d701b991831d8330f1b28f",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--zep",
+      "commit_sha": "e700e361cca9215a1d6db28044d460d8ca077f98",
+      "source_path": "examples/typescript/zep-graph-visualization/src/app/globals.css",
+      "blob_hash": "4ab60a6d3ece55cd4d4e101aef6d7219661841ef",
+      "sha256": "16e4937c8dd08b3cc99dffcf19aab5df79584131b6e8f706bfdb641e3d3f4027",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css"
+      },
+      "after": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": "css",
+        "grammar": null,
+        "method": null
+      },
+      "reason_code": "CSS_FRAMEWORK_AT_RULE",
+      "first_error": {
+        "line": 3,
+        "error_byte_ratio": 0.0143
+      }
+    },
+    {
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "examples/ecommerce/runner.ipynb",
+      "blob_hash": "b7316c0390ee5a66ee66cb3cbd1d7b450eccdf3e",
+      "sha256": "87188f90a0a68400dd606aef04fefb4608ca454bd6b0f9f9d353f2de3caf586e",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    },
+    {
+      "donor_id": "getzep--graphiti",
+      "commit_sha": "5d47d4d0182aa6350edeb435b734837a88ed9738",
+      "source_path": "examples/langgraph-agent/agent.ipynb",
+      "blob_hash": "be69409d1d8df6be4f5ad371849f1ebe2dd6c20e",
+      "sha256": "50c3d3a91bc3941875e27401316c927c2151f26bb0d6e1d5490ea3c55c8b27f0",
+      "before": {
+        "parse_status": "PARSE_UNKNOWN",
+        "language": null
+      },
+      "after": {
+        "parse_status": "PARSED",
+        "language": "python",
+        "grammar": "python",
+        "method": "NOTEBOOK_CODE_CELLS_MAGICS_BLANKED"
+      },
+      "reason_code": null,
+      "first_error": null
+    }
+  ]
+}

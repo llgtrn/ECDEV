@@ -392,6 +392,28 @@ fn configured_engine() -> Result<Engine, String> {
             ecdev_web::amazon::PublicAmazon::default(),
         )))
 }
+#[cfg(all(test, unix))]
+mod metrics_tests {
+    use super::*;
+    /// Extinction counts come from the recorded governance assessment, never a constant.
+    #[test]
+    fn extinct_metric_follows_the_recorded_lifecycle() {
+        let root = std::env::temp_dir().join(format!("ecdev-metrics-{}", std::process::id()));
+        std::fs::create_dir_all(&root).unwrap();
+        let link = root.join("research");
+        if !link.exists() {
+            std::os::unix::fs::symlink(super::root().join("research"), &link).unwrap();
+        }
+        let engine = Engine::open(&root).unwrap();
+        let metrics = engine.call("ecdev.system.metrics", json!({})).unwrap();
+        let extinct = engine.lifecycle().unwrap()["extinct"]
+            .as_array()
+            .unwrap()
+            .len();
+        assert_eq!(metrics["extinct"].as_u64().unwrap() as usize, extinct);
+        assert!(extinct >= 1);
+    }
+}
 #[cfg(test)]
 mod doctor_tests {
     use super::*;
