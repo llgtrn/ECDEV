@@ -64,6 +64,13 @@ fn no_current_caller_cannot_ground_no_research_value() {
             "accepted: {reason}"
         );
     }
+    // Reference-only cannot be reached on adoption grounds either.
+    with_extra(
+        &r,
+        "simulation",
+        Knowledge::ReferenceOnly("no current caller".into()),
+    );
+    assert!(!check(&r.assess(), "knowledge.irrelevance_admissible").pass);
     // The same capability as a study candidate is a valid state.
     with_extra(
         &r,

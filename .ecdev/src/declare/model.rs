@@ -315,7 +315,9 @@ impl Knowledge {
         if !matches!(self, Knowledge::Unreviewed) && self.text().trim().is_empty() {
             return Some("a knowledge decision must state its question or reason".into());
         }
-        if let Knowledge::NoResearchValue(_, t) = self {
+        // Closing a question as reference-only or without value must rest on what the
+        // capability is, not on what ECDEV happens to call today.
+        if let Knowledge::NoResearchValue(_, t) | Knowledge::ReferenceOnly(t) = self {
             let lower = t.to_lowercase();
             if let Some(p) = INADMISSIBLE_IRRELEVANCE.iter().find(|p| lower.contains(*p)) {
                 return Some(format!(
