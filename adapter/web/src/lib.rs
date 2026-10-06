@@ -39,6 +39,25 @@ impl Default for Web {
         }
     }
 }
+/// XML media types, read only as sitemaps.
+pub fn is_xml(content_type: &str) -> bool {
+    let media = content_type
+        .split(';')
+        .next()
+        .unwrap_or("")
+        .trim()
+        .to_ascii_lowercase();
+    media == "application/xml" || media == "text/xml"
+}
+
+/// A fetched sitemap as a research result: no products are asserted, its entries are links.
+pub fn sitemap_result(raw: &[u8], source: &str) -> Result<Value, String> {
+    let parsed = sitemap::parse(raw)?;
+    Ok(
+        json!({"source":source,"document_kind":"SITEMAP","products":[],"links":parsed.entries.iter().map(|(u,_)|u.as_str()).collect::<Vec<_>>(),"lastmod":parsed.entries.iter().map(|(_,l)|l).collect::<Vec<_>>(),"sitemap":parsed.evidence(),"raw_capture_sha256":format!("{:x}", Sha256::digest(raw))}),
+    )
+}
+
 pub fn normalize_url(input: &str) -> Result<String, String> {
     let mut u = Url::parse(input).map_err(|_| "INVALID_URL")?;
     if !matches!(u.scheme(), "http" | "https") || !u.username().is_empty() || u.password().is_some()
@@ -426,6 +445,7 @@ impl Provider for Web {
         let source = r.query["url"].as_str().ok_or("URL_REQUIRED")?;
         let normalized = normalize_url(source)?;
         let start = Instant::now();
+        let mut declared_sitemaps: Vec<String> = vec![];
         let (raw, mode, headers, requests, robots_cache_hits, final_url) = if let Some(html) =
             r.query["fixture_html"].as_str()
         {
@@ -484,6 +504,12 @@ impl Provider for Web {
                     ""
                 };
                 let decision = robots::evaluate(policy, url.as_str(), "ECDEV");
+                if hop == 0 && rs == 200 {
+                    declared_sitemaps = robots::sitemaps(policy, &robot)
+                        .iter()
+                        .map(Url::to_string)
+                        .collect();
+                }
                 if rs == 429 || (500..600).contains(&rs) {
                     return Err(AcquireError::http(
                         rs,
@@ -535,10 +561,9 @@ impl Provider for Web {
                             .unwrap_or((timestamp() * 1000) as i64),
                     ));
                 }
-                if !headers["content_type"]
-                    .as_str()
-                    .is_some_and(|c| c.contains("text/html") || c.contains("application/xhtml+xml"))
-                {
+                if !headers["content_type"].as_str().is_some_and(|c| {
+                    c.contains("text/html") || c.contains("application/xhtml+xml") || is_xml(c)
+                }) {
                     return Err("UNSUPPORTED_CONTENT_TYPE".into());
                 }
                 body = Some((content, headers, url.to_string()));
@@ -554,11 +579,17 @@ impl Provider for Web {
                 final_url,
             )
         };
-        let mut result = document::extract(
-            &raw,
-            headers["content_type"].as_str().unwrap_or(""),
-            &final_url,
-        )?;
+        let sitemap = is_xml(headers["content_type"].as_str().unwrap_or(""));
+        let mut result = if sitemap {
+            sitemap_result(&raw, &final_url)?
+        } else {
+            document::extract(
+                &raw,
+                headers["content_type"].as_str().unwrap_or(""),
+                &final_url,
+            )?
+        };
+        result["robots_sitemaps"] = json!(declared_sitemaps);
         result["requested_url"] = json!(normalized);
         result["final_url"] = json!(final_url);
         let hash = format!("{:x}", Sha256::digest(&raw));
@@ -566,7 +597,12 @@ impl Provider for Web {
         let evidence = Evidence {
             id: Uuid::new_v4().to_string(),
             mode,
-            source_type: "PUBLIC_HTML".into(),
+            source_type: if sitemap {
+                "PUBLIC_SITEMAP_XML"
+            } else {
+                "PUBLIC_HTML"
+            }
+            .into(),
             provider: self.id().into(),
             external_source: final_url,
             market: r.market.clone(),
@@ -593,6 +629,27 @@ impl Provider for Web {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn xml_responses_are_read_only_as_sitemaps() {
+        assert!(is_xml("application/xml; charset=UTF-8") && is_xml("TEXT/XML"));
+        assert!(!is_xml("application/rss+xml") && !is_xml("text/html"));
+        let r = sitemap_result(
+            b"<sitemapindex><sitemap><loc>https://shop.example/sitemap_products_1.xml?from=1&amp;to=9</loc></sitemap></sitemapindex>",
+            "https://shop.example/sitemap.xml",
+        )
+        .unwrap();
+        assert_eq!(r["document_kind"], "SITEMAP");
+        assert_eq!(r["products"], json!([]));
+        assert_eq!(r["sitemap"]["kind"], "SITEMAP_INDEX");
+        assert_eq!(
+            r["links"][0],
+            "https://shop.example/sitemap_products_1.xml?from=1&to=9"
+        );
+        assert_eq!(
+            sitemap_result(b"<rss></rss>", "https://shop.example/f").unwrap_err(),
+            "SITEMAP_ROOT_UNKNOWN"
+        );
+    }
     #[test]
     fn validators_go_only_to_the_url_that_produced_them() {
         let page = Url::parse("https://shop.example/p/1").unwrap();

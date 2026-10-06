@@ -800,7 +800,9 @@ impl Engine {
                             (timestamp() * 1000) as i64,
                         )
                     {
-                        let priority = if url.contains("/products/") {
+                        let priority = if result["sitemap"]["kind"] == "SITEMAP_INDEX" {
+                            95
+                        } else if url.contains("/products/") {
                             100
                         } else if url.contains("page=") {
                             90
@@ -810,6 +812,22 @@ impl Engine {
                             0
                         };
                         frontier.enqueue(&crawl_id, &identity, depth + 1, priority)?;
+                    }
+                }
+                // Sitemaps the seed's robots.txt declares: discovery only, each still leased,
+                // robots-checked and budgeted like any other URL.
+                if depth == 0 {
+                    for url in result["robots_sitemaps"].as_array().into_iter().flatten() {
+                        if let Some(url) = url.as_str()
+                            && let Ok(identity) = canonicalize(
+                                url,
+                                Some(&source.url),
+                                &UrlPolicy::default(),
+                                (timestamp() * 1000) as i64,
+                            )
+                        {
+                            frontier.enqueue(&crawl_id, &identity, depth + 1, 95)?;
+                        }
                     }
                 }
             }

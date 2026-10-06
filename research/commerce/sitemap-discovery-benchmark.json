@@ -330,7 +330,7 @@
       "adapter/web/src/sitemap.rs::parse"
     ],
     "validated": "the native parser reads 9, 2477 and 181 entries from captured gymshark.com and rothys.com sitemaps, equal to their <loc> element counts, with no image:loc entry",
-    "runtime": "frontier seeding from sitemaps is not wired yet; each sitemap URL must still pass the robots evaluator and the fetch budget like any other URL"
+    "runtime": "wired: the web provider reads XML responses only as sitemaps (source type PUBLIC_SITEMAP_XML, no products asserted, entries as links) and reports the sitemaps the origin's robots.txt declares; a research crawl enqueues those from depth-0 seeds and index children at priority 95, each URL still leased, robots-checked and inside the depth and URL budget. Not exercised live from the development sandbox, whose network blocks the provider's direct connections."
   },
   "limits": "five sites, one capture time, six sitemaps per site, a path rule for product URLs; catalogue completeness of sitemaps was not measured"
 }
