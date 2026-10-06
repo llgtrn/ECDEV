@@ -1,21 +1,22 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "9cf68e66f710d721fc3389c8bc91b193c12adb5a",
+  "assessed_parent_commit": "c929fa0b6a6b4296aa38a3dbfdca5ac7117805b5",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:d2674836dc8633c3a4ea66068537da099649c00e8da2cb9bc89396d8a1bbf768",
   "source": "ecdev-gov extinction --json",
-  "donor_count": 60,
+  "donor_count": 61,
   "effective_states": {
     "CENSUSED": 7,
     "DISCOVERED": 15,
-    "EXTINCT": 3,
+    "EXTINCT": 4,
     "PARITY_PROVEN": 1,
     "REGISTERED": 34
   },
   "extinct": [
     "getzep--graphiti",
     "scrapinghub--extruct",
-    "scrapinghub--price-parser"
+    "scrapinghub--price-parser",
+    "seomoz--reppy"
   ],
   "donors": [
     {
@@ -1679,10 +1680,10 @@
     },
     {
       "donor": "seomoz--reppy",
-      "claimed": "REGISTERED",
-      "effective": "REGISTERED",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "stopped_by": "",
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -1691,8 +1692,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": false,
-          "detail": "2 observed: SOURCE_REFERENCE NATIVE research/commerce/donors/checkouts/seomoz--reppy in tools/commerce/build_reppy_oracle.cmd; SOURCE_REFERENCE NATIVE research/commerce/donors/checkouts/seomoz--reppy in tools/commerce/reppy_oracle.py"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -1716,43 +1717,43 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 3 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 3 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 3 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 3 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: tools.commerce (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },
@@ -3036,6 +3037,85 @@
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
           "detail": "3 observed: IMPORT PYTHON jsonschema in tools/commerce/validate.py; IMPORT PYTHON jsonschema in tools/commerce/verify_sp_api.py; MANIFEST PYTHON jsonschema in tools/commerce/requirements.txt"
+        },
+        {
+          "gate": "LINKED_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "TEST_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "SOURCE_IMPORTS_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "RESIDENT_SOURCE_ZERO",
+          "pass": true,
+          "detail": "no donor source tracked"
+        },
+        {
+          "gate": "CAPABILITY_COVERAGE_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "PARITY_PROOFS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "REGRESSION_TESTS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CANONICAL_REPLACEMENT_EXISTS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "TECHNOLOGY_MAPPING_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CAPABILITY_RELEVANCE_RESOLVED",
+          "pass": false,
+          "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CUTOVER_COMPLETED",
+          "pass": false,
+          "detail": "no cutover declared"
+        },
+        {
+          "gate": "ROLLBACK_INDEPENDENT",
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
+        }
+      ]
+    },
+    {
+      "donor": "dependency--github-com-cython-cython",
+      "claimed": "REGISTERED",
+      "effective": "REGISTERED",
+      "exception": "",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "gates": [
+        {
+          "gate": "RUNTIME_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "BUILD_EDGES_ZERO",
+          "pass": false,
+          "detail": "2 observed: IMPORT PYTHON cython in tools/commerce/census.py; MANIFEST PYTHON cython in tools/commerce/requirements.txt"
         },
         {
           "gate": "LINKED_EDGES_ZERO",

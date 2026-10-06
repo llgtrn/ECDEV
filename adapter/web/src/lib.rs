@@ -401,9 +401,7 @@ impl Provider for Web {
                 if !visited.insert(url.to_string()) {
                     return Err("REDIRECT_LOOP".into());
                 }
-                let mut robot = url.clone();
-                robot.set_path("/robots.txt");
-                robot.set_query(None);
+                let robot = robots::robots_url(&url);
                 let (rs, policy, robot_headers) =
                     self.request(&robot, &json!({}), Duration::from_millis(750))?;
                 requests += 1;

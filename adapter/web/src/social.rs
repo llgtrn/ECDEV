@@ -194,9 +194,7 @@ impl Provider for Social {
             s.as_bytes().to_vec()
         } else {
             // Robots and content consume exactly two bounded requests; redirects denied to keep budget hard.
-            let mut policy = u.clone();
-            policy.set_path("/robots.txt");
-            policy.set_query(None);
+            let policy = robots::robots_url(&u);
             let (status, body, _) = self
                 .web
                 .request(&policy, &Value::Null, Duration::from_millis(750))

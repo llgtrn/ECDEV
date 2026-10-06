@@ -55,6 +55,21 @@ def main():
             assert committed == row["blob_hash"], (donor["donor_id"], row["path"])
             saved = prior.get((donor["donor_id"], row["path"]))
             before = saved["before"] if saved else {"parse_status": row.get("parse_status"), "language": row.get("language")}
+            kind = census.classify(row["path"], blob)
+            if kind != row["classification"]:
+                # Generated output (e.g. Cython's C++) is a build artifact, not first-party source.
+                before.setdefault("classification", row["classification"])
+                row["classification"] = kind
+                row["classification_reason"] = "Generated-file banner in the locked blob"
+                for key in ("parse_status", "parse_reason", "parse_reason_code", "parse_grammar", "parse_method"):
+                    row.pop(key, None)
+                reviewed.append({
+                    "donor_id": donor["donor_id"], "commit_sha": summary["commit_sha"], "source_path": row["path"],
+                    "blob_hash": row["blob_hash"], "sha256": row["sha256"], "before": before,
+                    "after": {"classification": kind, "parse_status": None, "language": row.get("language"), "grammar": None, "method": "RECLASSIFIED_GENERATED"},
+                    "reason_code": None, "first_error": None,
+                })
+                continue
             result = census.parse_review(row["path"], blob)
             row["parse_status"] = result["status"]
             row["language"] = result["language"]
@@ -79,7 +94,9 @@ def main():
             })
         source = [r for r in rows if r["classification"] == "FIRST_PARTY_SOURCE"]
         unknown = [r for r in source if r.get("parse_status") != "PARSED"]
-        summary.update(source_parsed=len(source) - len(unknown), parse_unknown=len(unknown), symbols=len(symbols))
+        counts = collections.Counter(r["classification"] for r in rows)
+        summary.update(classification_counts=dict(counts), first_party_source_files=len(source),
+                       source_parsed=len(source) - len(unknown), parse_unknown=len(unknown), symbols=len(symbols))
         donor["source_census_status"] = "STRUCTURAL_PARSED" if not unknown else "PARTIAL"
         donor["primary_languages"] = dict(collections.Counter(r["language"] for r in rows if r.get("language")))
         census.jsonl(directory / "files.jsonl", rows)
@@ -93,7 +110,7 @@ def main():
         risks["parse_unknown_reasons"] = {r["path"]: r["parse_reason_code"] for r in unknown}
         census.dump(directory / "risks.json", risks)
     census.dump(registry_path, registry)
-    resolved = [f for f in reviewed if f["after"]["parse_status"] == "PARSED"]
+    resolved = [f for f in reviewed if f["after"]["parse_status"] == "PARSED" or f["after"]["method"] == "RECLASSIFIED_GENERATED"]
     census.dump(AUDIT, {
         "scope": "Donor source files the census left PARSE_UNKNOWN, re-read from locked blobs (blob hash and sha256 verified)",
         "parser": "tree-sitter 0.25.2 / tree-sitter-language-pack 0.10.0 (tools/commerce/requirements.txt)",
@@ -109,7 +126,7 @@ def main():
         "resolved": len(resolved),
         "remaining": len(reviewed) - len(resolved),
         "resolved_by_method": dict(collections.Counter(f["after"]["method"] for f in resolved)),
-        "remaining_by_reason": dict(collections.Counter(f["reason_code"] for f in reviewed if f["after"]["parse_status"] != "PARSED")),
+        "remaining_by_reason": dict(collections.Counter(f["reason_code"] for f in reviewed if f not in resolved)),
         "files": reviewed,
     })
     print(f"reviewed {len(reviewed)}; resolved {len(resolved)}; remaining {len(reviewed) - len(resolved)}")

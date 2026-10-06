@@ -1,0 +1,426 @@
+{
+  "donor_id": "seomoz--reppy",
+  "commit_sha": "e92f22e0b6153772bb66cd41cde06a5a7ec04d66",
+  "license": "MIT",
+  "oracles": [
+    {
+      "fixture": "adapter/web/tests/fixtures/reppy-robots.json",
+      "sha256": "4425284e10ca480286e554449ce899fe7f596cf2f2423ea79c7d0e77ca933b20",
+      "cases": 1620,
+      "generator": "retired tools/commerce/reppy_oracle.py + build_reppy_oracle.cmd + reppy_oracle.cpp (see reppy-extinction.json)"
+    },
+    {
+      "fixture": "adapter/web/tests/fixtures/reppy-robots-gpp.json",
+      "sha256": "8192c9eb48667564644ec1cf57d937a148058574923fd4fc5a9ee18208ccdfcd",
+      "generator": "embedded generator_source"
+    }
+  ],
+  "rows": [
+    {
+      "source": "reppy/rep-cpp src/robots.cpp, agent.cpp, directive.cpp (+ url-cpp path escaping)",
+      "behaviour": "agent selection, longest-match allow/disallow with * and $ wildcards, percent-escape normalisation",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "reppy.allow-decision",
+      "native": "adapter/web/src/robots.rs::evaluate",
+      "production_caller": "adapter/web/src/lib.rs fetch path and adapter/web/src/social.rs",
+      "proof": "PARITY_PROVEN: 1620 frozen cases (reppy-robots.json, MSVC) reproduced 1620/1620 by an independent g++ build (reppy-robots-gpp.json)"
+    },
+    {
+      "source": "rep-cpp agent.cpp delay",
+      "behaviour": "Crawl-delay per selected agent",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "reppy.crawl-delay",
+      "native": "adapter/web/src/robots.rs::evaluate (crawl_delay_seconds)",
+      "production_caller": "adapter/web/src/lib.rs fetch interval and ROBOTS_DELAY_EXCEEDS_FETCH_BUDGET",
+      "proof": "PARITY_PROVEN in the same 1620 cases; regression crawl_delay_regressions"
+    },
+    {
+      "source": "rep-cpp Robots::robotsUrl",
+      "behaviour": "robots.txt URL for a page: scheme/host/port kept, credentials, query and fragment dropped",
+      "ecdev_relevance": "RELIED_ON",
+      "capability": "reppy.robots-url",
+      "native": "adapter/web/src/robots.rs::robots_url",
+      "production_caller": "adapter/web/src/lib.rs and adapter/web/src/social.rs",
+      "proof": "PARITY_PROVEN: 14 frozen cases (IDN hosts compared as parsed URLs)",
+      "note": "the oracle showed ECDEV kept credentials and fragments on the robots URL; both call sites now use robots_url"
+    },
+    {
+      "source": "rep-cpp Robots::sitemaps",
+      "behaviour": "Sitemap: lines",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "reppy.sitemaps",
+      "note": "ECDEV discovers URLs from supplied seeds and page links; it never reads sitemaps from robots.txt"
+    },
+    {
+      "source": "reppy/robots.pyx FetchMethod",
+      "behaviour": "HTTP fetch with requests; 401/403 -> AllowNone, other 4xx -> AllowAll, else BadStatusCode",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "reppy.fetch-status-policy",
+      "note": "ECDEV is stricter: only 200 is evaluated, 404 allows, 429/5xx are retryable errors, every other status denies (ROBOTS_DENIED_OR_UNKNOWN); fetching uses ECDEV's bounded transport"
+    },
+    {
+      "source": "reppy/ttl.py, reppy/cache/",
+      "behaviour": "Cache-Control/Expires TTL policies and LRU robots caches",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "reppy.ttl-and-cache",
+      "note": "ECDEV fetches robots per acquisition within a fixed request budget and has its own persistent TTL cache"
+    },
+    {
+      "source": "url-cpp punycode, psl, remaining url.cpp API",
+      "behaviour": "general URL library, public suffix list",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "reppy.url-library-remainder",
+      "note": "ECDEV uses the url crate; only the parts exercised by allow decisions and robotsUrl are relied on, and those are covered by the oracles"
+    },
+    {
+      "source": "reppy/robots.pyx wrappers, reppy/__init__.py, exceptions.py, util.py, setup.py, bench.py, scripts/, rep-cpp and url-cpp Makefile/Vagrantfile/scripts/bench, googletest",
+      "behaviour": "Cython bindings, packaging, benchmarks, CI",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "capability": "reppy.packaging-and-tooling",
+      "note": "no ECDEV caller"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "reppy/robots.pyx",
+        "capabilities": "reppy.allow-decision + reppy.fetch-status-policy + reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "reppy/robots.pxd",
+        "capabilities": "reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "reppy/robots.cpp",
+        "capabilities": "reppy.packaging-and-tooling (Cython-generated)"
+      },
+      {
+        "prefix": "reppy/ttl.py",
+        "capabilities": "reppy.ttl-and-cache"
+      },
+      {
+        "prefix": "reppy/cache/",
+        "capabilities": "reppy.ttl-and-cache"
+      },
+      {
+        "prefix": "reppy/__init__.py",
+        "capabilities": "reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "reppy/exceptions.py",
+        "capabilities": "reppy.fetch-status-policy"
+      },
+      {
+        "prefix": "reppy/util.py",
+        "capabilities": "reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "bench.py",
+        "capabilities": "reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "scripts/",
+        "capabilities": "reppy.packaging-and-tooling"
+      },
+      {
+        "prefix": "setup.py",
+        "capabilities": "reppy.packaging-and-tooling"
+      }
+    ]
+  },
+  "submodule_coverage": {
+    "rule": "every tracked file of each census submodule is listed; checked by tools/commerce/validate.py --records-only",
+    "reppy/rep-cpp": {
+      "commit_sha": "9c1278b754a7284304ee263f86adadeb0297b02f",
+      "files": [
+        {
+          "path": ".gitignore",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "f1e8001e410377c431dc13e9bc1370ab1c8c9a45",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": ".gitmodules",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "d9771e20ce120f39991e66f3d2bbbfbaff8d35ba",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": ".travis.yml",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "9d6a68a1ace35a207898aa76e8c05ea884a38feb",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "LICENSE",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "2d09752867695d1ca0476bd60cdad7165c00f0e5",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "Makefile",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "30abcefe976e0141f410c6f83ac5fd77afeb8406",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "README.md",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "620bc7b1bb17d99019cb5e0cfd9c4a3793e4c3a4",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "Vagrantfile",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "5725c121160375bf0cae20c9b74137fdc32e9a30",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "bench.cpp",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "9cb2db758a217638b5b4f20c6883ecd5ea352e4e",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "include/agent.h",
+          "role": "SOURCE",
+          "blob_hash": "73e6fddcb12901ea051334c333377e9fe5a8a932",
+          "capabilities": "reppy.allow-decision + reppy.crawl-delay"
+        },
+        {
+          "path": "include/directive.h",
+          "role": "SOURCE",
+          "blob_hash": "8b76dc51a450deae410853a1f62ac1cfc53fc35e",
+          "capabilities": "reppy.allow-decision"
+        },
+        {
+          "path": "include/robots.h",
+          "role": "SOURCE",
+          "blob_hash": "e5f7ff8cf042b9614f8bf2fbdd03d95f17ed0a16",
+          "capabilities": "reppy.allow-decision + reppy.robots-url + reppy.sitemaps"
+        },
+        {
+          "path": "scripts/check-coverage.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "53cd3faf81184bbb419d4a01688cc7d86417c1b4",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "scripts/travis/before_install.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "42276469b03459196b6918970f4a0dbfb025706f",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "scripts/travis/script.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "2754c5258a469b1aa6adb3dc9d30daa623a92ecf",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "scripts/vagrant/provision.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "e2a6335d63b90f5eb16acb5263a236fff5406f57",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "src/agent.cpp",
+          "role": "SOURCE",
+          "blob_hash": "da7768a10fcf0e31d14ae6b4fb09912abaadbb92",
+          "capabilities": "reppy.allow-decision + reppy.crawl-delay"
+        },
+        {
+          "path": "src/directive.cpp",
+          "role": "SOURCE",
+          "blob_hash": "21376b7056f653924e4814ffa0ad57e5320c7976",
+          "capabilities": "reppy.allow-decision"
+        },
+        {
+          "path": "src/robots.cpp",
+          "role": "SOURCE",
+          "blob_hash": "425f5704736cc91f077ac370f40acbe97a2128a7",
+          "capabilities": "reppy.allow-decision + reppy.crawl-delay + reppy.robots-url + reppy.sitemaps"
+        },
+        {
+          "path": "test/test-agent.cpp",
+          "role": "TEST",
+          "blob_hash": "cd8f989c06fdf65d9bbe3e8f96c13a459a13e0aa",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-all.cpp",
+          "role": "TEST",
+          "blob_hash": "64becff4b60f9b0c09fa54f7e3cb3b64360592bb",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-directive.cpp",
+          "role": "TEST",
+          "blob_hash": "3de471ee4687f529dc9ad859721a92549dc4f520",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-robots.cpp",
+          "role": "TEST",
+          "blob_hash": "7c6135268f4eb603c45bd26ef96708b92e48ab69",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        }
+      ],
+      "nested": {
+        "deps/url-cpp": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+        "deps/googletest": "test framework only; reppy.packaging-and-tooling"
+      }
+    },
+    "reppy/rep-cpp/deps/url-cpp": {
+      "commit_sha": "f9f53c7cadfbd26ab32fee1e86fa88393a1e7ddc",
+      "files": [
+        {
+          "path": ".gitignore",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "a58012826b55a18579ec149cd3ffc2c44e2dbb8e",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": ".travis.yml",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "eed6487ccdb5582642e564df7e8b9dbfee4ecf6c",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "LICENSE",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "4376ed47ccc97552116e07e2c403e832f3c99e0b",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "Makefile",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "611275fa32725c86c89aa78b1d43d5f4d4a44fad",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "README.md",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "ef9147114aa5fa50d451b4caac8b42fcfff8ac3c",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "Vagrantfile",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "a28bee37a94015643e2c3c93ce66ce88453bae2b",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "bench.cpp",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "211fcb96b47f44e47c438b5ea34b678972f3bb7f",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "include/psl.h",
+          "role": "SOURCE",
+          "blob_hash": "e1714f05a4c778520a3436f13cabfef77220693d",
+          "capabilities": "reppy.url-library-remainder"
+        },
+        {
+          "path": "include/punycode.h",
+          "role": "SOURCE",
+          "blob_hash": "9df73c632cb5c20c6721b59c3039da16cdb577d5",
+          "capabilities": "reppy.url-library-remainder"
+        },
+        {
+          "path": "include/url.h",
+          "role": "SOURCE",
+          "blob_hash": "62451242dc55fe072d6e594a4b1b0fedfb0faa1b",
+          "capabilities": "reppy.allow-decision + reppy.url-library-remainder"
+        },
+        {
+          "path": "include/utf8.h",
+          "role": "SOURCE",
+          "blob_hash": "b677ce881bc681f32ff10014c5eb44d3a92b2c2a",
+          "capabilities": "reppy.url-library-remainder"
+        },
+        {
+          "path": "scripts/check-coverage.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "ecd19bdf0f5435f46332de6f2c3f85c72c74cbd1",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "scripts/travis/before_install.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "6bb2db32740459e20a9f49616f097388f83e9e26",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "scripts/vagrant/provision.sh",
+          "role": "BUILD_DOC_CONFIG",
+          "blob_hash": "a7f40cf8040ff523119a8ed1b0ca5bf07429c3a3",
+          "capabilities": "reppy.packaging-and-tooling"
+        },
+        {
+          "path": "src/psl.cpp",
+          "role": "SOURCE",
+          "blob_hash": "91865f61242eb45ac6de8ba5939458b09bb07071",
+          "capabilities": "reppy.url-library-remainder"
+        },
+        {
+          "path": "src/punycode.cpp",
+          "role": "SOURCE",
+          "blob_hash": "04a3b2ffd836dd95adf10c3340883a929d69333c",
+          "capabilities": "reppy.url-library-remainder"
+        },
+        {
+          "path": "src/url.cpp",
+          "role": "SOURCE",
+          "blob_hash": "1f5432717c2a3ec99e500d51768e50575c976ff0",
+          "capabilities": "reppy.allow-decision + reppy.robots-url (path escaping, host/port normalisation used by matching and robotsUrl) + reppy.url-library-remainder"
+        },
+        {
+          "path": "src/utf8.cpp",
+          "role": "SOURCE",
+          "blob_hash": "35023776b94998ae6f6fa71086c0dcf2e4686b2a",
+          "capabilities": "reppy.allow-decision (escape handling) + reppy.url-library-remainder"
+        },
+        {
+          "path": "test/fixtures/test-psl/psl",
+          "role": "TEST",
+          "blob_hash": "35a399b6a5f788854484f9e9eb886181a526efbf",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-all.cpp",
+          "role": "TEST",
+          "blob_hash": "64becff4b60f9b0c09fa54f7e3cb3b64360592bb",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-psl.cpp",
+          "role": "TEST",
+          "blob_hash": "7a871881ae40189e9de676d8b433e5313de6ecc5",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-punycode.cpp",
+          "role": "TEST",
+          "blob_hash": "c6735162ffae1953614b1a1f3ef374f3b5dfb262",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-url.cpp",
+          "role": "TEST",
+          "blob_hash": "1187c77479217a842161ffd98dbd282fc6a7ada8",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        },
+        {
+          "path": "test/test-utf8.cpp",
+          "role": "TEST",
+          "blob_hash": "a2533ef910c5999bd5c8159dcb7f28a08daab4ff",
+          "capabilities": "donor test suite (executed indirectly: oracle cases cover the same contract)"
+        }
+      ]
+    }
+  },
+  "status": "SEMANTIC_MATRIX_FILE_LEVEL_COMPLETE_INCLUDING_SUBMODULES_ALL_CAPABILITIES_RESOLVED"
+}

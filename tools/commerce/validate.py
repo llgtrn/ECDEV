@@ -31,6 +31,9 @@ def validate_file_coverage(summary, files):
  hit=lambda p:any(p==x or (x.endswith('/') and p.startswith(x)) for x in prefixes)
  missing=[f['path'] for f in files if f['classification']=='FIRST_PARTY_SOURCE' and not hit(f['path'])]
  assert not missing, ('SEMANTIC_FILE_COVERAGE_INCOMPLETE',missing[:5])
+ for sub in summary.get('submodules',[]):
+  reviewed=matrix.get('submodule_coverage',{}).get(sub['path'])
+  assert reviewed and reviewed['commit_sha']==sub['commit_sha'] and reviewed['files'], ('SUBMODULE_NOT_SEMANTICALLY_REVIEWED',sub['path'])
 
 def inventory_negative_cases():
  path=ROOT/'research/commerce/donors/census/scrapinghub--price-parser'

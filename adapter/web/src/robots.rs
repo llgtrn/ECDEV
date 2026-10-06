@@ -82,6 +82,17 @@ fn matches(pattern: &str, path: &str) -> bool {
         return false;
     }
 }
+/// The robots.txt governing `url`: same scheme, host and port, with credentials, query and
+/// fragment dropped (Rep::Robots::robotsUrl).
+pub fn robots_url(url: &Url) -> Url {
+    let mut robots = url.clone();
+    robots.set_path("/robots.txt");
+    robots.set_query(None);
+    robots.set_fragment(None);
+    let _ = robots.set_username("");
+    let _ = robots.set_password(None);
+    robots
+}
 pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
     let denied = |reason: &str| Decision {
         allowed: false,
@@ -212,6 +223,31 @@ mod tests {
                 "Delay differs: {c} {d:?}"
             );
         }
+    }
+    #[test]
+    fn locked_reppy_robots_url_and_gpp_reproduction() {
+        let fixture: Value =
+            serde_json::from_str(include_str!("../tests/fixtures/reppy-robots-gpp.json")).unwrap();
+        let reproduction = &fixture["reproduction_of_msvc_fixture"];
+        assert_eq!(reproduction["fixture_cases"], 1620);
+        assert_eq!(reproduction["gpp_agreeing"], 1620);
+        for case in fixture["robots_url_cases"].as_array().unwrap() {
+            let url = Url::parse(case["url"].as_str().unwrap()).unwrap();
+            // The donor keeps IDN hosts in Unicode; parsing gives the same host in ASCII form.
+            let expected = Url::parse(case["robots_url"].as_str().unwrap()).unwrap();
+            assert_eq!(robots_url(&url), expected, "{}", case["url"]);
+        }
+    }
+    #[test]
+    fn crawl_delay_regressions() {
+        let delay =
+            |text: &str| evaluate(text, "https://shop.example/a", "ECDEV").crawl_delay_seconds;
+        assert_eq!(delay("User-agent: *\nCrawl-delay: 2.5\n"), Some(2.5));
+        assert_eq!(
+            delay("User-agent: ECDEV\nCrawl-delay: 1\nUser-agent: *\nCrawl-delay: 9\n"),
+            Some(1.0)
+        );
+        assert_eq!(delay("User-agent: *\nDisallow:\n"), None);
     }
     #[test]
     fn invalid_and_ambiguous_policy_remains_denied() {
