@@ -332,5 +332,11 @@
     "validated": "the native parser reads 9, 2477 and 181 entries from captured gymshark.com and rothys.com sitemaps, equal to their <loc> element counts, with no image:loc entry",
     "runtime": "wired: the web provider reads XML responses only as sitemaps (source type PUBLIC_SITEMAP_XML, no products asserted, entries as links) and reports the sitemaps the origin's robots.txt declares; a research crawl enqueues those from depth-0 seeds and index children at priority 95, each URL still leased, robots-checked and inside the depth and URL budget. Not exercised live from the development sandbox, whose network blocks the provider's direct connections."
   },
-  "limits": "five sites, one capture time, six sitemaps per site, a path rule for product URLs; catalogue completeness of sitemaps was not measured"
+  "limits": "five sites, one capture time, six sitemaps per site, a path rule for product URLs; catalogue completeness of sitemaps was not measured",
+  "robots_compliance": {
+    "harness": "Python urllib.robotparser, not ECDEV's evaluator",
+    "incident": "allbirds.com and ikea.com robots.txt contain rules beginning with a wildcard; ECDEV's evaluator then refused those files wholesale while robotparser skipped the rules, so pages ECDEV would have refused were fetched",
+    "audit": "after the evaluator fix (rules beginning with a wildcard honoured), all 110 URLs fetched by this and the companion benchmark are allowed by ECDEV's evaluator; none matches a rule that disallows it",
+    "see": "research/commerce/fetch-mode-retail-benchmark.json robots_incident"
+  }
 }

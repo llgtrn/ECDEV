@@ -31,10 +31,29 @@ fn normalized_path(raw: &str, base: &str) -> Option<String> {
     ))
 }
 fn pattern(raw: &str, base: &str) -> Option<String> {
-    if raw.starts_with('*') || raw.len() > 4096 {
+    if raw.len() > 4096 {
         return None;
     }
-    let p = normalized_path(raw, base)?;
+    // A rule may begin with a wildcard ("*/collections/*filter*", "*filters=*"): the wildcard
+    // matches any prefix of the path, so the rest is normalised as a path fragment and keeps
+    // its leading wildcard. Such rules are honoured, Disallow included, rather than voiding the
+    // whole file.
+    let p = match raw.strip_prefix('*') {
+        Some(rest) => {
+            let rest = rest.trim_start_matches('*');
+            if rest.is_empty() {
+                "/".to_string()
+            } else if rest.starts_with('/') {
+                format!("*{}", normalized_path(rest, base)?)
+            } else {
+                format!(
+                    "*{}",
+                    normalized_path(&format!("/{rest}"), base)?.strip_prefix('/')?
+                )
+            }
+        }
+        None => normalized_path(raw, base)?,
+    };
     if p.contains('$') && !p.ends_with('$') {
         return None;
     }
@@ -338,6 +357,37 @@ mod tests {
             );
         }
     }
+    #[test]
+    fn rules_beginning_with_a_wildcard_are_honoured_not_fatal() {
+        // Shapes seen in real retail robots.txt files (allbirds.com, ikea.com).
+        let text = "User-agent: *\nDisallow: */collections/*filter*&*filter*\nDisallow: *sort_by=*\nDisallow: /checkout\nAllow: *filters=*\nDisallow: /search\n";
+        let allowed = |u: &str| evaluate(text, u, "ECDEV").allowed;
+        assert!(allowed("https://shop.example/products/mens-wool-runners"));
+        assert!(!allowed(
+            "https://shop.example/collections/shoes?filter=a&filter=b"
+        ));
+        assert!(!allowed(
+            "https://shop.example/en/collections/shoes?filter=a&x=1&filter=b"
+        ));
+        assert!(allowed("https://shop.example/collections/shoes?filter=a"));
+        assert!(!allowed(
+            "https://shop.example/collections/shoes?sort_by=price"
+        ));
+        assert!(!allowed("https://shop.example/checkout"));
+        // The longer, more specific Allow wins over a shorter Disallow.
+        assert!(allowed("https://shop.example/search?filters=red"));
+        assert!(!allowed("https://shop.example/search?q=red"));
+        // A bare wildcard disallows everything, as "/" does.
+        assert!(
+            !evaluate(
+                "User-agent: *\nDisallow: *\n",
+                "https://shop.example/a",
+                "ECDEV"
+            )
+            .allowed
+        );
+    }
+
     #[test]
     fn declared_sitemaps_are_resolved_and_deduplicated() {
         let r = Url::parse("https://www.shop.example/robots.txt").unwrap();

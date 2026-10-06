@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "b833a2193bbd7f21d820b03a6e6aba7b5631cb40",
+  "assessed_parent_commit": "0786718cf52502e154790197c1d7f399c4a5b2fc",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1681,9 +1681,9 @@
         {
           "key": "changedetection.fetcher-selection",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(on real retail pages that inject structured product data with JavaScript, does rendering add price or stock evidence a plain fetch misses? On practice sites (research/commerce/fetch-mode-benchmark.json) it added none)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](plain HTTP stays the only fetch mode: on 16 real retail product pages (research/commerce/fetch-mode-retail-benchmark.json) rendering changed no plain-captured value, added only recommendation neighbours on zappos.com, and on client-rendered uniqlo.com added per-variant stock state but no price, at 10 to 14 s per page; practice sites (fetch-mode-benchmark.json) showed the same; client-rendered sources surface as REACHABLE_NO_PRODUCT_DATA)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.browser-automation",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "9 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.fetcher-selection (BENCHMARK_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
+          "detail": "8 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

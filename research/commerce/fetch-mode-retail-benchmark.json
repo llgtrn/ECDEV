@@ -1,0 +1,2054 @@
+{
+ "benchmark": "changedetection.fetcher-selection on real retail product pages: does rendering add price or stock evidence that a plain HTTP fetch misses?",
+ "sites": "16 product pages from five retailers' own sitemaps (uniqlo.com and zappos.com, whose plain HTML lacked product data in the structured-data benchmark, and allbirds.com, ikea.com and decathlon.com as controls); every URL allowed by ECDEV's robots evaluator; 2 s minimum per host; ECDEV user agent; GET only",
+ "extractor": "ECDEV's own adapter/web document::extract on both captures",
+ "renderer": "Chromium (Playwright, chromium-1194) through the session proxy with TLS verification, load event plus 8 s settle (these pages never reach network idle)",
+ "evidence_state": "BENCHMARK_MEASUREMENT of fetch modes on sampled retail pages at one time; not evidence about any product or market",
+ "summary": {
+  "www.allbirds.com": {
+   "pages": 2,
+   "classes": {
+    "SAME": 2
+   },
+   "products_http": 18,
+   "products_rendered": 18,
+   "median_render_ms": 10977
+  },
+  "www.decathlon.com": {
+   "pages": 2,
+   "classes": {
+    "SAME": 2
+   },
+   "products_http": 9,
+   "products_rendered": 9,
+   "median_render_ms": 9981
+  },
+  "www.ikea.com": {
+   "pages": 2,
+   "classes": {
+    "SAME": 2
+   },
+   "products_http": 2,
+   "products_rendered": 2,
+   "median_render_ms": 10902
+  },
+  "www.uniqlo.com": {
+   "pages": 5,
+   "classes": {
+    "RENDER_ADDS_PRODUCTS": 5
+   },
+   "products_http": 0,
+   "products_rendered": 150,
+   "median_render_ms": 14443
+  },
+  "www.zappos.com": {
+   "pages": 5,
+   "classes": {
+    "SAME": 2,
+    "RENDER_ADDS_PRODUCTS": 3
+   },
+   "products_http": 100,
+   "products_rendered": 151,
+   "median_render_ms": 11382
+  }
+ },
+ "pages": [
+  {
+   "site": "www.allbirds.com",
+   "kind": "product",
+   "url": "https://www.allbirds.com/products/mens-wool-runners",
+   "class": "SAME",
+   "http": {
+    "products": 9,
+    "with_price": 7,
+    "with_availability": 7,
+    "bytes": 749989
+   },
+   "rendered": {
+    "products": 9,
+    "with_price": 7,
+    "with_availability": 7,
+    "bytes": 666141,
+    "ms": 10977
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.allbirds.com",
+   "kind": "product",
+   "url": "https://www.allbirds.com/products/mens-wool-runners-natural-white",
+   "class": "SAME",
+   "http": {
+    "products": 9,
+    "with_price": 7,
+    "with_availability": 7,
+    "bytes": 757090
+   },
+   "rendered": {
+    "products": 9,
+    "with_price": 7,
+    "with_availability": 7,
+    "bytes": 677631,
+    "ms": 10659
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.ikea.com",
+   "kind": "product",
+   "url": "https://www.ikea.com/ee/et/p/zebrasaev-laelamp-valge-plast-10522481/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 1027656
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 1092391,
+    "ms": 10902
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.ikea.com",
+   "kind": "product",
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-valge-70620011/",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 996158
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 1059505,
+    "ms": 9277
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.uniqlo.com",
+   "kind": "product",
+   "url": "https://www.uniqlo.com/au/en/products/E442063-000/00",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 1024111
+   },
+   "rendered": {
+    "products": 49,
+    "with_price": 0,
+    "with_availability": 49,
+    "bytes": 1443977,
+    "ms": 16118
+   },
+   "differences": {
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BEIGE / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – BLACK / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – GRAY / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – LIGHT BLUE / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – NAVY / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – OFF WHITE / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "HEATTECH Fleece Turtleneck Long Sleeve T-Shirt – PURPLE / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.uniqlo.com",
+   "kind": "product",
+   "url": "https://www.uniqlo.com/au/en/products/E422992-000/00",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 1044549
+   },
+   "rendered": {
+    "products": 66,
+    "with_price": 0,
+    "with_availability": 66,
+    "bytes": 1695285,
+    "ms": 13261
+   },
+   "differences": {
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLACK / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – BLUE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – CREAM / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – DARK BROWN / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GRAY / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – GREEN / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – ORANGE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – PURPLE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / 3XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Uniqlo U Cotton Crew Neck T-Shirt – WHITE / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/OutOfStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.uniqlo.com",
+   "kind": "product",
+   "url": "https://www.uniqlo.com/au/en/products/E444715-000/00",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 1013760
+   },
+   "rendered": {
+    "products": 8,
+    "with_price": 0,
+    "with_availability": 8,
+    "bytes": 996760,
+    "ms": 14405
+   },
+   "differences": {
+    "Leggings – BLUE / 12-18M(84)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – BLUE / 18-24M(92)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – BLUE / 3(100)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – BLUE / 4(108)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – NAVY / 12-18M(84)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – NAVY / 18-24M(92)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – NAVY / 3(100)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Leggings – NAVY / 4(108)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.uniqlo.com",
+   "kind": "product",
+   "url": "https://www.uniqlo.com/au/en/products/E448034-000/00",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 1015526
+   },
+   "rendered": {
+    "products": 21,
+    "with_price": 0,
+    "with_availability": 21,
+    "bytes": 1435976,
+    "ms": 15249
+   },
+   "differences": {
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – BLACK / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – DARK GRAY / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / L": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / M": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / S": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / XL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / XS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / XXL": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Miracle Air Jacket (AirSense) (Wool Like) – NAVY / XXS": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.uniqlo.com",
+   "kind": "product",
+   "url": "https://www.uniqlo.com/au/en/products/E439340-000/00",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 998188
+   },
+   "rendered": {
+    "products": 6,
+    "with_price": 0,
+    "with_availability": 6,
+    "bytes": 1189986,
+    "ms": 14443
+   },
+   "differences": {
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age11-12(150)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age13(160)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age3-4(110)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age5-6(120)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age7-8(130)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "BOYS Boxer Briefs 3 Pairs – GRAY / Age9-10(140)": {
+     "http": null,
+     "rendered": [
+      null,
+      "AUD",
+      "https://schema.org/InStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.zappos.com",
+   "kind": "product",
+   "url": "https://www.zappos.com/p/camper-right-nina-21735/product/8267701",
+   "class": "SAME",
+   "http": {
+    "products": 2,
+    "with_price": 2,
+    "with_availability": 2,
+    "bytes": 347287
+   },
+   "rendered": {
+    "products": 2,
+    "with_price": 2,
+    "with_availability": 2,
+    "bytes": 405532,
+    "ms": 11057
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.zappos.com",
+   "kind": "product",
+   "url": "https://www.zappos.com/p/salt-water-sandal-by-hoy-shoes-sun-san-swimmer-toddler-little-kid/product/7128902",
+   "class": "SAME",
+   "http": {
+    "products": 96,
+    "with_price": 96,
+    "with_availability": 96,
+    "bytes": 1212466
+   },
+   "rendered": {
+    "products": 96,
+    "with_price": 96,
+    "with_availability": 96,
+    "bytes": 1324615,
+    "ms": 14102
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.zappos.com",
+   "kind": "product",
+   "url": "https://www.zappos.com/p/native-shoes-jefferson/product/7707372",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 915120
+   },
+   "rendered": {
+    "products": 6,
+    "with_price": 6,
+    "with_availability": 6,
+    "bytes": 1012842,
+    "ms": 10754
+   },
+   "differences": {
+    "Country Club Driver 2.0": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Jefferson (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Jefferson Cozy (Toddler)": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Jefferson Sugarlite Clog": {
+     "http": null,
+     "rendered": [
+      4925,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Neptune Slip-On": {
+     "http": null,
+     "rendered": [
+      7499,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.zappos.com",
+   "kind": "product",
+   "url": "https://www.zappos.com/p/aravon-revshow/product/8287705",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 0,
+    "with_price": 0,
+    "with_availability": 0,
+    "bytes": 258836
+   },
+   "rendered": {
+    "products": 32,
+    "with_price": 32,
+    "with_availability": 32,
+    "bytes": 492580,
+    "ms": 11769
+   },
+   "differences": {
+    "American Patriot (Toddler/Little Kid)": {
+     "http": null,
+     "rendered": [
+      5999,
+      "USD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Bevarin Strappy Block Heel Pumps": {
+     "http": null,
+     "rendered": [
+      12900,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Classic Clogs": {
+     "http": null,
+     "rendered": [
+      4999,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Classic Tall Whipstitch Knit": {
+     "http": null,
+     "rendered": [
+      21495,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Country Club Driver 2.0": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Court Borough Low (Big Kid)": {
+     "http": null,
+     "rendered": [
+      7000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Free Ride (Little Kid)": {
+     "http": null,
+     "rendered": [
+      7000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Hazmin": {
+     "http": null,
+     "rendered": [
+      12045,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Isla Midi": {
+     "http": null,
+     "rendered": [
+      19800,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Jefferson (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Jefferson (Toddler)": {
+     "http": null,
+     "rendered": [
+      5000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Jefferson Bio-Bling (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      4400,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Jefferson Print (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      5000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Jefferson Sugarlite Clog": {
+     "http": null,
+     "rendered": [
+      4925,
+      "USD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Louisiana": {
+     "http": null,
+     "rendered": [
+      37500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Miles Block (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      6000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Miles Slip-On Sneakers (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      2481,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Mountain Sweater Fleece 1/4 Zip": {
+     "http": null,
+     "rendered": [
+      15800,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Opal Knit Cardi": {
+     "http": null,
+     "rendered": [
+      16800,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Posh Driver 2.0": {
+     "http": null,
+     "rendered": [
+      3000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Posh Driver Patent": {
+     "http": null,
+     "rendered": [
+      6000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Prodigy Driver (Big Kid)": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Prodigy Driver (Toddler/Little Kid)": {
+     "http": null,
+     "rendered": [
+      4500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Prodigy Driver Metallic (Toddler/Little Kid)": {
+     "http": null,
+     "rendered": [
+      4500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Prodigy Driver Print (Toddler/Little Kid)": {
+     "http": null,
+     "rendered": [
+      5000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Rho LT Zip Neck": {
+     "http": null,
+     "rendered": [
+      12000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Robbie (Little Kid/Big Kid)": {
+     "http": null,
+     "rendered": [
+      5500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Shuv Leather Shearling Mules": {
+     "http": null,
+     "rendered": [
+      18000,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Slp Collapse": {
+     "http": null,
+     "rendered": [
+      8500,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "Sportstyle Left Chest Short Sleeve T-Shirt (Big Kid)": {
+     "http": null,
+     "rendered": [
+      1917,
+      "USD",
+      "https://schema.org/inStock"
+     ]
+    },
+    "T100 Elite Insole": {
+     "http": null,
+     "rendered": [
+      6495,
+      "USD",
+      "https://schema.org/OutOfStock"
+     ]
+    },
+    "Tech Wordmark Shorts (Big Kids)": {
+     "http": null,
+     "rendered": [
+      1824,
+      "USD",
+      "https://schema.org/OutOfStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.zappos.com",
+   "kind": "product",
+   "url": "https://www.zappos.com/p/sas-journey-mesh/product/8867821",
+   "class": "RENDER_ADDS_PRODUCTS",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 2780449
+   },
+   "rendered": {
+    "products": 15,
+    "with_price": 15,
+    "with_availability": 15,
+    "bytes": 2973185,
+    "ms": 11382
+   },
+   "differences": {
+    "928v3": {
+     "http": null,
+     "rendered": [
+      15995,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Addiction GTS 15": {
+     "http": null,
+     "rendered": [
+      13995,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Adrenaline GTS 25": {
+     "http": null,
+     "rendered": [
+      12495,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Ghost 18": {
+     "http": null,
+     "rendered": [
+      14995,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "High Street Lace Up Comfort Sneaker": {
+     "http": null,
+     "rendered": [
+      23895,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "JV Mesh Adjustable Comfort Walking Sneaker": {
+     "http": null,
+     "rendered": [
+      22495,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Jefferson Sugarlite Clog": {
+     "http": null,
+     "rendered": [
+      3997,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Journey Lux Comfort Walking Sneaker": {
+     "http": null,
+     "rendered": [
+      25895,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Journey ML Comfort Walking Sneakers": {
+     "http": null,
+     "rendered": [
+      23495,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "MW577": {
+     "http": null,
+     "rendered": [
+      8478,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Made in USA 990v6": {
+     "http": null,
+     "rendered": [
+      19995,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Marvel": {
+     "http": null,
+     "rendered": [
+      18000,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Time Out Lace Up Comfort Walking Shoe": {
+     "http": null,
+     "rendered": [
+      21895,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    },
+    "Venture Lace Up Comfort Sneaker": {
+     "http": null,
+     "rendered": [
+      21895,
+      "USD",
+      "https://schema.org/InStock"
+     ]
+    }
+   }
+  },
+  {
+   "site": "www.decathlon.com",
+   "kind": "product",
+   "url": "https://www.decathlon.com/products/decathlon-gift-card",
+   "class": "SAME",
+   "http": {
+    "products": 8,
+    "with_price": 8,
+    "with_availability": 8,
+    "bytes": 652285
+   },
+   "rendered": {
+    "products": 8,
+    "with_price": 8,
+    "with_availability": 8,
+    "bytes": 819703,
+    "ms": 9981
+   },
+   "differences": {}
+  },
+  {
+   "site": "www.decathlon.com",
+   "kind": "product",
+   "url": "https://www.decathlon.com/products/hiking-pole-arpenaz-200",
+   "class": "SAME",
+   "http": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 707300
+   },
+   "rendered": {
+    "products": 1,
+    "with_price": 1,
+    "with_availability": 1,
+    "bytes": 770973,
+    "ms": 9645
+   },
+   "differences": {}
+  }
+ ],
+ "harness_sources": {
+  "http_side.py": "\"\"\"HTTP side of the fetch-mode benchmark: discovery, ECDEV robots decisions, plain HTTP captures.\n\npython -I http_side.py <out dir> <ecdev helper binary>\nReal retail product pages (from their own sitemaps); every URL is checked with ECDEV's robots evaluator\n(agent ECDEV) before it is fetched; at least 2 s (or the robots crawl delay) between requests to\none host; ECDEV's user agent; no cookies, no login, nothing but GET.\n\"\"\"\nimport json, pathlib, re, subprocess, sys, time, urllib.parse\nimport requests\nout = pathlib.Path(sys.argv[1]); helper = sys.argv[2]; out.mkdir(parents=True, exist_ok=True)\nUA = \"ECDEV/0.1 (+read-only research)\"\nS = requests.Session(); S.headers[\"User-Agent\"] = UA\nSEEDS = {\n    \"books.toscrape.com\": (\"https://books.toscrape.com/\", r'href=\"(catalogue/(?!category/)[^\"]+/index\\.html)\"'),\n    \"scrapeme.live\": (\"https://scrapeme.live/shop/\", r'href=\"(https://scrapeme\\.live/shop/[^\"/]+/)\"'),\n    \"webscraper.io-static\": (\"https://webscraper.io/test-sites/e-commerce/static/computers/laptops\", r'href=\"(/test-sites/e-commerce/static/product/\\d+)\"'),\n}\nrobots_cache, last = {}, {}\ndef robots(url):\n    host = urllib.parse.urlsplit(url).netloc\n    if host not in robots_cache:\n        r = S.get(f\"https://{host}/robots.txt\", timeout=20)\n        path = out / f\"robots-{host}.txt\"\n        if r.status_code == 200: path.write_text(r.text)\n        robots_cache[host] = (path if r.status_code == 200 else None, r.status_code)\n        last[host] = time.time()\n    path, status = robots_cache[host]\n    d = json.loads(subprocess.check_output([helper, \"robots\", str(path) if path else \"-\", url]))\n    if status not in (200, 404): d[\"allowed\"] = False\n    return d\ndef get(url):\n    d = robots(url)\n    if not d[\"allowed\"]: return None, d\n    host = urllib.parse.urlsplit(url).netloc\n    wait = max(2.0, d[\"crawl_delay\"] or 0) - (time.time() - last.get(host, 0))\n    if wait > 0: time.sleep(wait)\n    r = S.get(url, timeout=30, allow_redirects=True); last[host] = time.time()\n    return r, d\ntargets = json.loads(pathlib.Path(sys.argv[3]).read_text())\nfor i, t in enumerate(targets):\n    r, d = get(t[\"url\"])\n    t[\"robots\"] = d\n    if r is None:\n        t[\"http\"] = {\"status\": \"ROBOTS_DENIED\"}; continue\n    f = out / f\"http-{i:03d}.html\"; f.write_bytes(r.content)\n    t[\"http\"] = {\"status\": r.status_code, \"content_type\": r.headers.get(\"content-type\", \"\"), \"final_url\": r.url, \"file\": f.name, \"bytes\": len(r.content)}\n    t[\"id\"] = i\n(out / \"targets.json\").write_text(json.dumps(targets, indent=1))\nprint(len(targets), \"targets\", sum(1 for t in targets if t.get(\"http\", {}).get(\"status\") == 200), \"fetched\")\n",
+  "render_side.mjs": "// Rendered side of the fetch-mode benchmark: the same robots-allowed URLs in Chromium.\n// node render_side.mjs <out dir>   (reads targets.json written by http_side.py)\n// ECDEV user agent, the session proxy with TLS verification on, load event plus 8 s settle (retail pages never reach network idle), 2 s per host.\nimport { createRequire } from 'module';\nimport fs from 'fs';\nconst require = createRequire('/opt/node-tools/');\nconst { chromium } = require('playwright');\nconst out = process.argv[2];\nconst targets = JSON.parse(fs.readFileSync(`${out}/targets.json`));\nconst browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', proxy: { server: process.env.https_proxy } });\nconst context = await browser.newContext({ userAgent: 'ECDEV/0.1 (+read-only research)' });\nconst last = {};\nfor (const t of targets) {\n  if (!t.robots?.allowed) continue;\n  const host = new URL(t.url).host;\n  const wait = 2000 - (Date.now() - (last[host] ?? 0));\n  if (wait > 0) await new Promise(r => setTimeout(r, wait));\n  const page = await context.newPage();\n  const started = Date.now();\n  try {\n    const resp = await page.goto(t.url, { waitUntil: 'load', timeout: 60000 });\n    await page.waitForTimeout(8000);\n    const html = await page.content();\n    fs.writeFileSync(`${out}/render-${String(t.id).padStart(3, '0')}.html`, html);\n    t.render = { status: resp?.status() ?? null, final_url: page.url(), bytes: Buffer.byteLength(html), ms: Date.now() - started, file: `render-${String(t.id).padStart(3, '0')}.html` };\n  } catch (e) { t.render = { status: 'ERROR', error: String(e).slice(0, 200) }; }\n  last[host] = Date.now();\n  await page.close();\n}\nawait browser.close();\nfs.writeFileSync(`${out}/targets.json`, JSON.stringify(targets, null, 1));\nconsole.log(targets.filter(t => t.render?.status === 200).length, 'rendered');\n",
+  "compare.py": "\"\"\"Compares ECDEV's extraction of the plain HTTP and the rendered capture of each URL.\n\npython -I compare.py <out dir> <ecdev helper binary> <record.json>\nAgreement is on the evidence ECDEV keeps: per product (keyed by title, else sku) the price in\nminor units, currency and availability. Classes: SAME, RENDER_ADDS_PRODUCTS, HTTP_ADDS_PRODUCTS,\nVALUES_DIFFER, NEITHER (no product evidence either way).\n\"\"\"\nimport collections, hashlib, json, pathlib, subprocess, sys\nout = pathlib.Path(sys.argv[1]); helper = sys.argv[2]; record = pathlib.Path(sys.argv[3])\ntargets = json.loads((out / \"targets.json\").read_text())\ndef extract(file, ct, url):\n    return json.loads(subprocess.check_output([helper, \"extract\", str(out / file), ct or \"text/html\", url]))\ndef evidence(x):\n    if not x.get(\"ok\"): return {}\n    return {str(p.get(\"title\") or p.get(\"sku\")): (p.get(\"price_minor\"), p.get(\"currency\"), p.get(\"availability\")) for p in x[\"products\"]}\nrows = []\nfor t in targets:\n    if \"file\" not in t.get(\"http\", {}) or \"file\" not in t.get(\"render\", {}): continue\n    h = extract(t[\"http\"][\"file\"], t[\"http\"][\"content_type\"], t[\"http\"][\"final_url\"])\n    r = extract(t[\"render\"][\"file\"], \"text/html; charset=utf-8\", t[\"render\"][\"final_url\"])\n    eh, er = evidence(h), evidence(r)\n    if not eh and not er: cls = \"NEITHER\"\n    elif eh == er: cls = \"SAME\"\n    elif set(er) > set(eh) and all(er[k] == v for k, v in eh.items()): cls = \"RENDER_ADDS_PRODUCTS\"\n    elif set(eh) > set(er) and all(eh[k] == v for k, v in er.items()): cls = \"HTTP_ADDS_PRODUCTS\"\n    else: cls = \"VALUES_DIFFER\"\n    fields = lambda e: {\"with_price\": sum(v[0] is not None for v in e.values()), \"with_availability\": sum(v[2] is not None for v in e.values())}\n    rows.append({\"site\": t[\"site\"], \"kind\": t[\"kind\"], \"url\": t[\"url\"], \"class\": cls,\n                 \"http\": {\"products\": len(eh), **fields(eh), \"bytes\": t[\"http\"][\"bytes\"]},\n                 \"rendered\": {\"products\": len(er), **fields(er), \"bytes\": t[\"render\"][\"bytes\"], \"ms\": t[\"render\"][\"ms\"]},\n                 \"differences\": {k: {\"http\": eh.get(k), \"rendered\": er.get(k)} for k in sorted(set(eh) | set(er)) if eh.get(k) != er.get(k)}})\nsummary = {}\nfor site in sorted({r[\"site\"] for r in rows}):\n    rs = [r for r in rows if r[\"site\"] == site]\n    summary[site] = {\"pages\": len(rs), \"classes\": dict(collections.Counter(r[\"class\"] for r in rs)),\n                     \"products_http\": sum(r[\"http\"][\"products\"] for r in rs), \"products_rendered\": sum(r[\"rendered\"][\"products\"] for r in rs),\n                     \"median_render_ms\": sorted(r[\"rendered\"][\"ms\"] for r in rs)[len(rs) // 2]}\nhere = pathlib.Path(__file__).parent\nrecord.write_text(json.dumps({\n    \"benchmark\": \"changedetection.fetcher-selection: when does a plain HTTP fetch give ECDEV the same price and stock evidence as a rendered browser?\",\n    \"sites\": \"public sites built for scraping practice (books.toscrape.com, scrapeme.live, webscraper.io e-commerce test sites, static and ajax variants); every URL allowed by ECDEV's robots evaluator; 2 s minimum per host; ECDEV user agent; GET only\",\n    \"extractor\": \"ECDEV's own adapter/web document::extract on both captures\",\n    \"renderer\": \"Chromium (Playwright 1.56.1, chromium-1194) through the session proxy with TLS verification, network-idle wait\",\n    \"evidence_state\": \"BENCHMARK_MEASUREMENT of fetch modes on practice sites; not evidence about any market\",\n    \"summary\": summary, \"pages\": rows,\n    \"harness_sources\": {n: (here / n).read_text() for n in [\"http_side.py\", \"render_side.mjs\", \"compare.py\"]} | {\"ecdev_side/src/main.rs\": (here / \"ecdev_side/src/main.rs\").read_text()},\n    \"captures_sha256\": {f.name: hashlib.sha256(f.read_bytes()).hexdigest() for f in sorted(out.glob(\"*.html\"))}}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(json.dumps(summary, indent=1))\nfor r in rows:\n    if r[\"class\"] != \"SAME\": print(r[\"class\"], r[\"url\"], json.dumps(r[\"differences\"])[:300])\n",
+  "ecdev_side/src/main.rs": "//! ECDEV side of the fetch-mode benchmark, using ECDEV's own code paths.\n//!   robots <robots.txt file or -> <url>   -> prints {\"allowed\":bool,\"crawl_delay\":f64|null}\n//!   extract <html file> <content-type> <url> -> prints the products ECDEV extracts\nuse serde_json::{Value, json};\nfn main() {\n    let a: Vec<String> = std::env::args().collect();\n    match a[1].as_str() {\n        \"robots\" => {\n            let text = if a[2] == \"-\" { String::new() } else { std::fs::read_to_string(&a[2]).unwrap() };\n            let d = ecdev_web::robots::evaluate(&text, &a[3], \"ECDEV\");\n            println!(\"{}\", json!({\"allowed\": d.allowed, \"crawl_delay\": d.crawl_delay_seconds, \"evidence\": d.evidence}));\n        }\n        \"extract\" => {\n            let bytes = std::fs::read(&a[2]).unwrap();\n            let out = match ecdev_web::document::extract(&bytes, &a[3], &a[4]) {\n                Ok(v) => {\n                    let products: Vec<Value> = v[\"products\"].as_array().into_iter().flatten().map(|p| json!({\n                        \"title\": p[\"title\"], \"sku\": p[\"sku\"], \"price_minor\": p[\"price_minor\"], \"currency\": p[\"currency\"],\n                        \"availability\": p[\"availability\"], \"price_source\": p[\"price\"][\"source\"].clone(),\n                    })).collect();\n                    json!({\"ok\": true, \"products\": products, \"page_role\": v[\"page_role\"]})\n                }\n                Err(e) => json!({\"ok\": false, \"error\": e}),\n            };\n            println!(\"{out}\");\n        }\n        _ => panic!(\"mode\"),\n    }\n}\n"
+ },
+ "captures_sha256": {
+  "http-000.html": "941ab7ab27ff135f354ffe9446fc646df9bd3b195eae33565830e88733fe34f3",
+  "http-001.html": "5deefaf7823f9b78b8b1335f79d0633f18dbcd0248a59c57dd8383872c599fdf",
+  "http-002.html": "101579b919757f158edb602c6b9a45374ece7e0cbfea625bdf3b1f4ab720c948",
+  "http-003.html": "051e55119f877f834d73c435d6ec4845998e89789fb7729f2c28d6b8fd600f57",
+  "http-004.html": "0803eb60e6247450ef66f490eea9923a06dca9261cdcde6937c253dbf5d1675e",
+  "http-005.html": "7ef608c0b2dcc2ba41e20e53c1e721d21731c7bf74d63fc044a1ca4cb4648446",
+  "http-006.html": "96106e66444d9caafce42152cd29b64be3533ba357ec5962b10b75e6dbec3482",
+  "http-007.html": "461f62f652c68f5916bd4eeecf75be248ba11d05a826cff90709d174164223bf",
+  "http-008.html": "818ac1e2a4a975e826d660d2e47313fb52ff9972e76298bf0de857ebfc9ca319",
+  "http-009.html": "a7d748a0566888fea560e562039052c739e7b2e65345b177ac33180fd9f62a10",
+  "http-010.html": "e68302f96cbc575fc11d1f4c0a15de4be678e7c72f00bc78830ed5a88ce36ba3",
+  "http-011.html": "e8b6cbc939d012aa9398a962ba73f2112850d2bfa296758f97b059a6b51ec43b",
+  "http-012.html": "7e9e8d0547464754198932cfa57041fa9905955e25d957c4d3c59803b19c8b75",
+  "http-013.html": "b2dbe65a264b7003e785f7e6b57bffdc6d2db753f5040f56b1cd4135efa93617",
+  "http-014.html": "03dc27e3acd95a8eb6d08189ab864ca076412ab536c8005cc9acf56a6e7a66dc",
+  "http-015.html": "b24d93d8d4f0314f3ca112fe81e19a19e68f815c8da7b915a769d694e39f30a9",
+  "render-000.html": "e1a7e952151079c873a0a1189a9ca75daa011b02d9ed05580334818f5ab9e3d5",
+  "render-001.html": "07cdc65c25c27fc19c8dca688814c296e4e7c78fbe3a3cdc01e9fa02001596ce",
+  "render-002.html": "52f8182282086fccaa7efd10dc865ad32b0ef629b9276128a5aba119b9dda5c7",
+  "render-003.html": "d078b2e08a5cf61f9cbd6d899a8ab1e99124284f3ea7b9cbf120ffba183c28c3",
+  "render-004.html": "5ed8bf74f65e7ebcabbfccb3319d02d7c471a6610dd9c9efebcd08e4be8f9afe",
+  "render-005.html": "00bb40dab7374a1232d8f714e424f0779bd8241ce34ab60cb0cec20d85f71fed",
+  "render-006.html": "98370aba7edc9d32de9aebfab9a66d815feac04fba816218067d890dfae732b9",
+  "render-007.html": "3d173a590072d6ed54728aa733b40c0a31362a9a9b4d8f03f8e018bea3fb42f8",
+  "render-008.html": "dd8bc3026891b674eee68f77ac5f535f50b43f823eb1a81e091222a1f31c4d3f",
+  "render-009.html": "5bc31826dcd77c5895da0c9b91d31d5b8302dbf1511fa12143a6fbd7b09df96e",
+  "render-010.html": "e8940f6b4d7faf3bb146cd900aa4cb74b3e72d4b45d1897dd35d895b7064e46e",
+  "render-011.html": "9960d49524b94100ff9489ea513f6b4903182985ae2fb4af916099f1ba17bb06",
+  "render-012.html": "68c3a172dc14630443f413dd9d271b567970576a1181ee9b0b448e2fcb3883fc",
+  "render-013.html": "a7e09016e9c3df273d1ddc59a18369912aa6c603a36595e827b2ee9022e71777",
+  "render-014.html": "66cac13fa7b7fa4a85fb1753af55f91322593d753acc7a5005aaab4ed59c7db6",
+  "render-015.html": "0d1b84676b278c3f602b6256540902f2546dd71d7de852e4d5398c2e32b9a5ec"
+ },
+ "captured_on": "2026-10-06",
+ "findings": [
+  "Controls (allbirds.com, ikea.com, decathlon.com, 6 pages): identical product evidence with and without rendering.",
+  "zappos.com (5 pages): every product, price and availability in the plain capture is unchanged after rendering; on 3 pages rendering adds 5 to 32 further products from recommendation widgets. On the one page whose own product is absent from the plain capture, it is absent after rendering too, so rendering added neighbours, not the page's missing product.",
+  "uniqlo.com (5 pages): the plain capture has no structured product data; rendering injects 150 per-variant product entries with currency and schema.org availability but no price. Rendering adds stock evidence there, never price evidence.",
+  "Rendering cost a median of about 10 to 14 s per page against one plain request.",
+  "ECDEV's extractor reads every product a page states, so injected recommendation products appear as products of the page; rendering would multiply such neighbours."
+ ],
+ "decision": {
+  "knowledge": "DELIBERATE_SEMANTIC_DIVERGENCE",
+  "runtime": "plain HTTP stays ECDEV's only fetch mode; client-rendered sources are reported as REACHABLE_NO_PRODUCT_DATA by access_diagnostics rather than rendered",
+  "revisit_when": "a targeted source states price only after client-side rendering and its terms allow automated rendering"
+ },
+ "robots_incident": {
+  "found": "ECDEV's evaluator refused allbirds.com and ikea.com robots.txt wholesale because they contain rules beginning with a wildcard (for example Disallow: */collections/*filter*&*filter*), which no rule of theirs makes disallowed for these pages",
+  "effect_on_earlier_benchmarks": "the sitemap-discovery and structured-data harnesses used Python's robotparser, which skips such rules, so they fetched allbirds.com (and ikea.com) pages that ECDEV's evaluator then refused",
+  "fix": "adapter/web/src/robots.rs now honours rules beginning with a wildcard (any prefix), Disallow included, instead of voiding the file",
+  "audit": "all 110 URLs fetched by both earlier benchmarks are allowed by ECDEV's evaluator after the fix; none matches a rule that disallows it",
+  "this_benchmark": "used ECDEV's evaluator for every URL"
+ },
+ "limits": "16 pages on five retailers, one capture time, one settle time; price-only-after-render sites were not found in this sample"
+}

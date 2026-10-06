@@ -1281,5 +1281,11 @@
     "revisit_when": "a source ECDEV targets states product facts only in RDFa or h-product",
     "follow_up": "client-rendered product data (uniqlo.com) belongs to the changedetection.fetcher-selection question"
   },
-  "limits": "40 product pages on 8 sites with usable samples, mostly direct-to-consumer and large retailers; small shops and marketplaces using RDFa themes were not sampled; one capture time"
+  "limits": "40 product pages on 8 sites with usable samples, mostly direct-to-consumer and large retailers; small shops and marketplaces using RDFa themes were not sampled; one capture time",
+  "robots_compliance": {
+    "harness": "Python urllib.robotparser, not ECDEV's evaluator",
+    "incident": "allbirds.com and ikea.com robots.txt contain rules beginning with a wildcard; ECDEV's evaluator then refused those files wholesale while robotparser skipped the rules, so pages ECDEV would have refused were fetched",
+    "audit": "after the evaluator fix (rules beginning with a wildcard honoured), all 110 URLs fetched by this and the companion benchmark are allowed by ECDEV's evaluator; none matches a rule that disallows it",
+    "see": "research/commerce/fetch-mode-retail-benchmark.json robots_incident"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "b833a2193bbd7f21d820b03a6e6aba7b5631cb40",
+  "assessed_parent_commit": "0786718cf52502e154790197c1d7f399c4a5b2fc",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,13 +19,13 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
-    "benchmark_candidates": 29,
+    "benchmark_candidates": 28,
     "algorithm_candidates": 10,
     "reference_only": 52,
-    "study_complete_capabilities": 86,
+    "study_complete_capabilities": 87,
     "not_relevant_after_review": 25,
-    "research_questions_open": 79,
-    "knowledge_coverage_ratio": 0.673554
+    "research_questions_open": 78,
+    "knowledge_coverage_ratio": 0.677686
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -306,7 +306,6 @@
         "changedetection.selector-authoring STUDY_CANDIDATE(stability of click-derived selectors (name, id or class chain, positional XPath) across page revisions, with fallbacks stored beside the screenshot and element box as evidence)",
         "changedetection.llm-extraction BENCHMARK_CANDIDATE(model price and availability extraction accuracy against structured data on pages that carry both, kept only as labelled inference with model, prompt and source excerpt)",
         "changedetection.content-filter-dsl STUDY_CANDIDATE(which mix of CSS, XPath, JSONPath and ignore or trigger rules keeps product-field extraction stable across redesigns; reporting a miss as missing evidence is native (domain/commerce/src/monitor.rs PRODUCT_NOT_OBSERVED and FIELD_NOT_OBSERVED))",
-        "changedetection.fetcher-selection BENCHMARK_CANDIDATE(on real retail pages that inject structured product data with JavaScript, does rendering add price or stock evidence a plain fetch misses? On practice sites (research/commerce/fetch-mode-benchmark.json) it added none)",
         "changedetection.browser-automation STUDY_CANDIDATE(variant or region selection (size, postcode) captured as reproducible step logs attached to each observation; login steps and stored credentials are out of scope)"
       ],
       "resolved": [
@@ -321,6 +320,7 @@
         "changedetection.access-diagnostics STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::access_diagnostics classifies every provider call of a research run (REACHABLE_WITH_PRODUCT_DATA, REACHABLE_NO_PRODUCT_DATA, SOFT_BLOCKED only when a provider asserts it, BLOCKED, RATE_LIMITED, GONE, SERVER_ERROR, ROBOTS_DENIED_OR_UNKNOWN, NETWORK_UNREACHABLE, NOT_FETCHED_BY_POLICY) with the real HTTP status and response size; error bodies are never read, so their size is at most the declared Content-Length)",
         "changedetection.llm-assist STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model verdict decides whether a change is kept (unparseable output counts as unimportant) and model summaries replace diffs; ECDEV never lets a model decide whether evidence is stored)",
         "changedetection.conditions-engine STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/monitor.rs conditions: up to ten declared rules per watch over observed price (thresholds with a required currency, or basis-point change from the previous observed price) and derived availability class, judged only on values observed in the capture, thresholds on their edge; each CONDITION_MET records the rule, observed and previous observed value and whether a gap lay between, and never suppresses other change events; similarity rules are not implemented)",
+        "changedetection.fetcher-selection STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](plain HTTP stays the only fetch mode: on 16 real retail product pages (research/commerce/fetch-mode-retail-benchmark.json) rendering changed no plain-captured value, added only recommendation neighbours on zappos.com, and on client-rendered uniqlo.com added per-variant stock state but no price, at 10 to 14 s per page; practice sites (fetch-mode-benchmark.json) showed the same; client-rendered sources surface as REACHABLE_NO_PRODUCT_DATA)",
         "changedetection.anti-bot-evasion STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth evasions, headless user-agent rewriting, a fake desktop user agent and jitter to look less robotic)",
         "changedetection.processor-framework REFERENCE_ONLY(pluggable extraction processors and hooks, where every result should carry the strategy that produced it)",
         "changedetection.history-extraction STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::research_reextract re-runs the capturing provider's current extraction (Provider::reextract; the web provider reuses the recorded decoding recipe) over hash-verified stored captures of up to 50 runs, reports per capture SAME_AS_RECORDED or each differing field, and returns price, currency and availability series ordered by capture time; missing or altered bytes contribute nothing; MCP ecdev.research.reextract)",
