@@ -289,7 +289,25 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
         }
         candidates.push(primary);
     }
-    let possible:Vec<_>=title_groups.into_iter().filter(|(_,ids)|ids.len()>1).map(|(title,ids)|json!({"relation":"POSSIBLE_EQUIVALENCE","status":"UNCERTAIN_NOT_MERGED","basis":"NORMALIZED_TITLE_ONLY","title":title,"entities":ids})).collect();
+    // Distinct titles that are near-duplicates (MinHash/LSH candidates with Jaccard >= 0.9 over
+    // character 3-grams) are proposed as uncertain links, never merged.
+    let mut known: Vec<crate::memory::NamedEntity> = Vec::new();
+    let mut similar = Vec::new();
+    for (title, ids) in &title_groups {
+        let incoming = crate::memory::NamedEntity {
+            id: title.clone(),
+            name: title.clone(),
+            labels: vec!["Entity".into()],
+        };
+        if let Some(crate::memory::NameMatch::Similar(i, score)) =
+            crate::memory::match_names(&mut known, std::slice::from_ref(&incoming)).pop()
+        {
+            similar.push(json!({"relation":"POSSIBLE_EQUIVALENCE","status":"UNCERTAIN_NOT_MERGED","basis":"TITLE_NAME_SIMILARITY_MINHASH_JACCARD","jaccard":score,"threshold":crate::memory::FUZZY_JACCARD_THRESHOLD,"titles":[known[i].name.clone(),title.clone()],"entities":[title_groups[&known[i].name].clone(),ids.clone()]}));
+        }
+        known.push(incoming);
+    }
+    let mut possible:Vec<_>=title_groups.into_iter().filter(|(_,ids)|ids.len()>1).map(|(title,ids)|json!({"relation":"POSSIBLE_EQUIVALENCE","status":"UNCERTAIN_NOT_MERGED","basis":"NORMALIZED_TITLE_ONLY","title":title,"entities":ids})).collect();
+    possible.extend(similar);
     let metrics = json!({"input_observations":input_count,"resolved_candidates":candidates.len(),"merged_observations":input_count-candidates.len(),"possible_equivalence_groups":possible,"policy":"Strong identifiers plus variant attributes; SKU confined to source origin; title alone never merges across pages"});
     (candidates, metrics)
 }
@@ -299,6 +317,37 @@ mod tests {
     use super::*;
     fn candidate(id: &str, origin: &str, sku: &str, color: &str) -> Value {
         json!({"id":id,"source":format!("https://{origin}/products/{id}"),"product":{"title":"Coffee Cup","sku":sku,"color":color,"brand":"Hario","price_minor":3000,"currency":"JPY"},"evidence_ids":[id],"state":"VALIDATING"})
+    }
+    #[test]
+    fn near_duplicate_titles_are_uncertain_links_never_merges() {
+        let titled = |id: &str, origin: &str, title: &str| {
+            let mut c = candidate(id, origin, id, "white");
+            c["product"]["title"] = json!(title);
+            c
+        };
+        let (rows, report) = resolve(vec![
+            titled(
+                "a",
+                "one.example",
+                "Hario V60 Ceramic Coffee Dripper 02 White",
+            ),
+            titled(
+                "b",
+                "two.example",
+                "HARIO V60 Ceramic Coffee Dripper 02 White!",
+            ),
+            titled("c", "three.example", "Kalita Wave 185 Stainless Dripper"),
+        ]);
+        assert_eq!(rows.len(), 3, "similar titles never merge");
+        let links: Vec<&Value> = report["possible_equivalence_groups"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|g| g["basis"] == "TITLE_NAME_SIMILARITY_MINHASH_JACCARD")
+            .collect();
+        assert_eq!(links.len(), 1, "{report}");
+        assert_eq!(links[0]["status"], "UNCERTAIN_NOT_MERGED");
+        assert!(links[0]["jaccard"].as_f64().unwrap() >= 0.9);
     }
     #[test]
     fn identity_does_not_merge_title_only_cross_origin_or_variants() {

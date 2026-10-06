@@ -10,7 +10,7 @@ fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
 pub fn initialize(db: &Connection) -> Result<(), String> {
-    db.execute_batch("CREATE TABLE IF NOT EXISTS watches(id TEXT PRIMARY KEY,args TEXT NOT NULL,interval_secs INTEGER NOT NULL,next_due INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,token TEXT,baseline TEXT,last_error TEXT); CREATE TABLE IF NOT EXISTS watch_snapshots(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watch_changes(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); PRAGMA user_version=2;").map_err(err)?;
+    db.execute_batch("CREATE TABLE IF NOT EXISTS watches(id TEXT PRIMARY KEY,args TEXT NOT NULL,interval_secs INTEGER NOT NULL,next_due INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,token TEXT,baseline TEXT,last_error TEXT); CREATE TABLE IF NOT EXISTS watch_snapshots(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watch_changes(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watch_facts(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),url TEXT NOT NULL,product TEXT NOT NULL,field TEXT NOT NULL,value TEXT NOT NULL,valid_at INTEGER NOT NULL,invalid_at INTEGER,run_id TEXT,raw_capture_sha256 TEXT); PRAGMA user_version=2;").map_err(err)?;
     let enabled: bool = db
         .prepare("PRAGMA table_info(watches)")
         .map_err(err)?
@@ -109,7 +109,18 @@ impl Engine {
                 rows.map(|r| serde_json::from_str(&r.map_err(err)?).map_err(err))
                     .collect()
             };
-            watches.push(json!({"watch_id":id,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":history("watch_changes")?,"notifications":"NONE"}));
+            let facts = {
+                let mut s = db
+                    .prepare("SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256 FROM watch_facts WHERE watch_id=?1 ORDER BY id DESC LIMIT 200")
+                    .map_err(err)?;
+                let rows = s
+                    .query_map([&id], |r| {
+                        Ok(json!({"url":r.get::<_,String>(0)?,"product":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"state":"OBSERVED"}))
+                    })
+                    .map_err(err)?;
+                rows.collect::<Result<Vec<_>, _>>().map_err(err)?
+            };
+            watches.push(json!({"watch_id":id,"facts":facts,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":history("watch_changes")?,"notifications":"NONE"}));
         }
         if id.is_some() {
             watches.into_iter().next().ok_or("WATCH_NOT_FOUND".into())
@@ -181,6 +192,13 @@ impl Engine {
                         baseline[url] = source.clone();
                     }
                 }
+                record_facts(
+                    &tx,
+                    lease["watch_id"].as_str().unwrap_or(""),
+                    now,
+                    &run,
+                    &current,
+                )?;
                 tx.execute("INSERT INTO watch_snapshots(watch_id,at,payload) VALUES(?1,?2,?3)",params![lease["watch_id"].as_str(),now,json!({"at":now,"run_id":run["run_id"],"mode":run["mode"],"sources":current}).to_string()]).map_err(err)?;
                 for change in changes {
                     tx.execute(
@@ -201,6 +219,66 @@ impl Engine {
         }
         tx.commit().map_err(err)
     }
+}
+
+/// Observed price and availability become facts with validity windows: a newly observed value
+/// starts a window at the observation time and closes every open window it supersedes
+/// (memory::superseded). Windows open at the same instant stay open side by side: a conflict,
+/// never a silent choice. Unknown observations change nothing.
+fn record_facts(
+    tx: &rusqlite::Transaction,
+    watch: &str,
+    now: u64,
+    run: &Value,
+    current: &Value,
+) -> Result<(), String> {
+    for (url, source) in current.as_object().into_iter().flatten() {
+        if source["status"] != "AVAILABLE" {
+            continue;
+        }
+        for (product, fields) in source["products"].as_object().into_iter().flatten() {
+            for field in ["price_minor", "availability"] {
+                let value = &fields[field];
+                if value.is_null() {
+                    continue;
+                }
+                let mut stmt = tx
+                    .prepare("SELECT id,value,valid_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product=?3 AND field=?4 AND invalid_at IS NULL ORDER BY id")
+                    .map_err(err)?;
+                let open: Vec<(i64, String, u64)> = stmt
+                    .query_map(params![watch, url, product, field], |r| {
+                        Ok((r.get(0)?, r.get(1)?, r.get(2)?))
+                    })
+                    .map_err(err)?
+                    .collect::<Result<_, _>>()
+                    .map_err(err)?;
+                let text = value.to_string();
+                if open.iter().any(|(_, v, _)| *v == text) {
+                    continue;
+                }
+                let windows: Vec<crate::memory::Validity<u64>> = open
+                    .iter()
+                    .map(|(_, _, at)| crate::memory::Validity {
+                        valid_at: Some(*at),
+                        invalid_at: None,
+                    })
+                    .collect();
+                let new = crate::memory::Validity {
+                    valid_at: Some(now),
+                    invalid_at: None,
+                };
+                for (i, end) in crate::memory::superseded(&new, &windows) {
+                    tx.execute(
+                        "UPDATE watch_facts SET invalid_at=?2 WHERE id=?1",
+                        params![open[i].0, end],
+                    )
+                    .map_err(err)?;
+                }
+                tx.execute("INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256) VALUES(?1,?2,?3,?4,?5,?6,NULL,?7,?8)",params![watch,url,product,field,text,now,run["run_id"].as_str(),source["raw_capture_sha256"].as_str()]).map_err(err)?;
+            }
+        }
+    }
+    Ok(())
 }
 
 fn snapshot(run: &Value, request: &Value) -> Value {
@@ -349,6 +427,33 @@ mod tests {
         assert_eq!(
             e.monitor_status(Some(id)).unwrap()["changes"][0]["trigger"]["kind"],
             "PAGE_DISAPPEARED"
+        );
+        // Observed values became facts: the first price window closed when the second began.
+        let facts = e.monitor_status(Some(id)).unwrap()["facts"].clone();
+        let price: Vec<&Value> = facts
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|f| f["field"] == "price_minor")
+            .collect();
+        assert_eq!(price.len(), 2, "{facts}");
+        let old = price.iter().find(|f| f["value"] == 3000).unwrap();
+        let new = price.iter().find(|f| f["value"] == 4000).unwrap();
+        assert_eq!(
+            (old["valid_at"].as_u64(), old["invalid_at"].as_u64()),
+            (Some(282), Some(343))
+        );
+        assert_eq!(
+            (new["valid_at"].as_u64(), new["invalid_at"].as_u64()),
+            (Some(343), None)
+        );
+        // Unknown and disappeared observations closed nothing.
+        assert!(
+            facts
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|f| f["invalid_at"].is_null() || f["invalid_at"] == 343)
         );
         let disabled=e.monitor_create(json!({"watch_id":id,"enabled":false,"market":"PUBLIC_WEB","query":"Watch cup","targets":["https://shop.example/product"],"interval_seconds":60})).unwrap();
         assert_eq!(disabled["status"], "DISABLED");
