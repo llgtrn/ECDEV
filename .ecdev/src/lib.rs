@@ -26,6 +26,7 @@ pub mod evidence;
 pub mod extinction;
 pub mod formats;
 pub mod graph;
+pub mod licence;
 pub mod metrics;
 pub mod migration;
 pub mod protocol;
@@ -418,13 +419,22 @@ fn count(a: &Assessment) -> metrics::Counts {
         match d.knowledge {
             crate::schema::KnowledgeState::Unreviewed => c.donors_knowledge_unreviewed += 1,
             crate::schema::KnowledgeState::StructuralCensus => c.donors_structural_census += 1,
+            crate::schema::KnowledgeState::SemanticCensus => c.donors_semantic_census += 1,
             crate::schema::KnowledgeState::ActiveStudy => c.donors_active_study += 1,
             crate::schema::KnowledgeState::StudyComplete => c.donors_study_complete += 1,
+        }
+        c.donors_semantically_censused += d.facts.semantic_complete() as u64;
+        if d.capabilities
+            .iter()
+            .any(|c| c.knowledge_open && c.knowledge_status.ends_with("_CANDIDATE"))
+        {
+            c.donors_with_open_candidates += 1;
         }
         for cap in &d.capabilities {
             c.known_donor_capabilities += 1;
             match cap.knowledge_status.as_str() {
                 "UNREVIEWED" => c.knowledge_unreviewed += 1,
+                donors::WITHDRAWN => c.capabilities_withdrawn += 1,
                 "STUDY_CANDIDATE" => c.study_candidates += 1,
                 "BENCHMARK_CANDIDATE" => c.benchmark_candidates += 1,
                 "ALGORITHM_CANDIDATE" => c.algorithm_candidates += 1,
@@ -432,6 +442,15 @@ fn count(a: &Assessment) -> metrics::Counts {
                 "STUDY_COMPLETE" => c.study_complete_capabilities += 1,
                 _ => c.no_research_value += 1,
             }
+        }
+    }
+    // Capabilities of donors no longer declared at all stay known and open: removing a donor
+    // never shrinks the knowledge denominator.
+    for k in &a.history.capabilities {
+        let donor = k.split_once('/').map_or(k.as_str(), |(d, _)| d);
+        if !declared.contains(donor) {
+            c.known_donor_capabilities += 1;
+            c.capabilities_withdrawn += 1;
         }
     }
     // Discovered donors that participate are as unregistered as unknown externals.

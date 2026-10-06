@@ -1,8 +1,8 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "08aaed1e27d19e462a213ecb71c05d072701b21d",
+  "assessed_parent_commit": "21d693a964c31f1f579f267bca16c714c9ff44cf",
   "working_tree_dirty_at_assessment": true,
-  "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
+  "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
@@ -15,24 +15,33 @@
   },
   "knowledge": {
     "known_donor_capabilities": 146,
-    "knowledge_unreviewed": 2,
+    "semantic_censused_capabilities": 144,
+    "unreviewed_capabilities": 2,
+    "capabilities_withdrawn": 0,
     "study_candidates": 24,
-    "benchmark_candidates": 18,
+    "benchmark_candidates": 19,
     "algorithm_candidates": 7,
     "reference_only": 30,
     "study_complete_capabilities": 47,
-    "no_research_value": 18,
-    "research_questions_open": 51,
-    "knowledge_coverage_ratio": 0.650685,
+    "not_relevant_after_review": 17,
+    "research_questions_open": 52,
+    "knowledge_coverage_ratio": 0.643836
+  },
+  "donor_coverage": {
     "donors_knowledge_unreviewed": 45,
     "donors_structural_census": 2,
+    "donors_semantic_census": 1,
     "donors_active_study": 14,
-    "donors_study_complete": 2,
-    "donors_with_open_research": 61
+    "donors_study_complete": 1,
+    "donors_structurally_censused": 18,
+    "donors_semantically_censused": 5,
+    "donors_with_open_candidates": 14,
+    "donors_with_open_research": 62
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
-    "knowledge": "every declared capability of every declared donor, runtime-rejected donors included"
+    "knowledge": "every declared capability of every declared donor, runtime-rejected donors included, plus every capability an earlier census recorded that is no longer declared or absorbed (capabilities_withdrawn)",
+    "donor_coverage": "every declared donor; STUDY_COMPLETE needs a census whole-source semantic_review of COMPLETE"
   },
   "donors": [
     {
@@ -40,6 +49,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -48,6 +64,13 @@
       "runtime": "CUTOVER",
       "effective": "CUTOVER",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "keepa.get_price_history ALGORITHM_CANDIDATE(decode Keepa csv price history (keepaTimeToDate, decodeSeries) into dated ESTIMATED price series for price-stability and demand-validation evidence before ECDEV's own watch history exists)",
         "keepa.get_sales_rank_history ALGORITHM_CANDIDATE(decode sales-rank history into rank-velocity series as a labelled demand proxy (never sales) for demand validation)",
@@ -67,6 +90,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -75,6 +105,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -83,6 +120,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -91,6 +135,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -99,6 +150,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -107,6 +165,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -115,6 +180,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -123,6 +195,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -131,6 +210,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "AGPL-3.0 (root); component licenses recorded separately",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -139,6 +225,13 @@
       "runtime": "PARITY_PROVEN",
       "effective": "PARITY_PROVEN",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "crawlee.remaining-crawler-framework STUDY_CANDIDATE(autoscaled pools, session rotation, adaptive HTTP/browser crawling and request-list persistence versus ECDEV's lease-based frontier and bounded transport)"
       ],
@@ -153,6 +246,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -161,6 +261,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -169,6 +276,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -177,6 +291,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "changedetection.change-thresholds BENCHMARK_CANDIDATE(percent and range price-change alert policies layered over ECDEV's observed facts (never suppressing facts or stock changes): alert precision versus any-change events)",
         "changedetection.availability-mapping STUDY_CANDIDATE(a DERIVED in-stock flag from schema.org availability values while keeping the observed value)",
@@ -196,6 +317,13 @@
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "sp-api-models.other-api-models STUDY_CANDIDATE(which read-only Reports, Finances, FBA fee, Notifications and Pricing APIs belong in the credential-ready layer for economics, seller operations and monitoring)",
         "sp-api-models.documents-helper STUDY_CANDIDATE(report and feed document download and decryption, needed if read-only Reports APIs are studied)",
@@ -214,6 +342,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -222,6 +357,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -230,6 +372,13 @@
       "runtime": "CUTOVER",
       "effective": "CUTOVER",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "extruct.rdfa BENCHMARK_CANDIDATE(how often do commerce pages state product facts only in RDFa, and what would ECDEV miss?)",
         "extruct.microformat BENCHMARK_CANDIDATE(how often do commerce pages carry h-product microformats that JSON-LD and microdata lack?)"
@@ -249,6 +398,13 @@
       "runtime": "EXTINCT",
       "effective": "EXTINCT",
       "knowledge": "STUDY_COMPLETE",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": [
         "extract.price-public-api STUDY_COMPLETE[DERIVED_NATIVE](behaviour native, derived from this donor and proven by its parity proofs)",
@@ -271,6 +427,13 @@
       "runtime": "CUTOVER",
       "effective": "CUTOVER",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "reppy.sitemaps STUDY_CANDIDATE(Sitemap lines in robots.txt as zero-paid product-URL discovery; compare coverage with seed and link discovery)",
         "reppy.ttl-and-cache STUDY_CANDIDATE(cache robots.txt per origin with Cache-Control TTL to save requests inside the fetch budget)",
@@ -289,6 +452,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": []
     },
@@ -297,6 +467,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "STRUCTURAL_CENSUS",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "fetch.redirect UNREVIEWED"
       ],
@@ -307,6 +484,13 @@
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
       "knowledge": "STRUCTURAL_CENSUS",
+      "licence_policy": {
+        "licence": "UNVERIFIED",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "cache.ttl UNREVIEWED"
       ],
@@ -317,6 +501,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -325,6 +516,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -333,6 +531,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -341,6 +546,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -349,6 +561,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "ISC",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -357,6 +576,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -365,6 +591,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -373,6 +606,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -381,6 +621,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "(Apache-2.0 OR MIT) AND BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -389,6 +636,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -397,6 +651,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -405,6 +666,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -413,6 +681,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -421,6 +696,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -429,6 +711,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -437,6 +726,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -445,6 +741,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -453,6 +756,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -461,6 +771,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -469,6 +786,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -477,6 +801,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -485,6 +816,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -493,6 +831,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -501,6 +846,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT OR Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -509,6 +861,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -517,6 +876,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -525,6 +891,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -533,6 +906,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "Apache-2.0 OR MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -541,6 +921,13 @@
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
       "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [],
       "resolved": []
     },
@@ -549,6 +936,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "GPL-2.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "social.bettafish.deduplicate BENCHMARK_CANDIDATE(URL or text-prefix near-duplicate detection versus ECDEV's stable-ID dedup with CONFLICT; duplicate recall on cross-posted content)",
         "social.bettafish.cluster-and-sample BENCHMARK_CANDIDATE(sentence-embedding KMeans with diversity and hotness sampling versus lexical Jaccard plus temporal co-occurrence: topic purity, recall, stability, inspectability)",
@@ -565,6 +959,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "AGPL-3.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "social.mirofish.simulation-lifecycle STUDY_CANDIDATE(explicit per-scenario-run state machine with one finalisation path, for SIMULATED commerce scenarios)",
         "social.mirofish.scenario-initialization STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)",
@@ -591,7 +992,14 @@
       "donor": "NanmiCoder--MediaCrawler",
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
-      "knowledge": "STUDY_COMPLETE",
+      "knowledge": "SEMANTIC_CENSUS",
+      "licence_policy": {
+        "licence": "NON-COMMERCIAL-LEARNING-1.1",
+        "family": "NON_COMMERCIAL",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [],
       "resolved": [
         "social.mediacrawler.store_content REFERENCE_ONLY(post record schema of the crawled platforms)",
@@ -612,6 +1020,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "UNKNOWN",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "social.viral-trend-agent.verdict BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)"
       ],
@@ -628,6 +1043,13 @@
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "social.harken.rss-feeds STUDY_CANDIDATE(bounded XML RSS/Atom reading for zero-paid public sources such as supplier and retail news feeds)",
         "social.harken.other-sources STUDY_CANDIDATE(public Mastodon timelines and Reddit/Stack Overflow public APIs as additional trend sources within their terms)",
@@ -647,6 +1069,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "GPL-3.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY"
+      },
       "open": [
         "social.trendradar.calculate_news_weight STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)",
         "social.trendradar.hot-list-sources STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)"
@@ -664,6 +1093,13 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "social.trend-finder.clean_text STUDY_CANDIDATE(text normalisation before representation learning, needed for the embedding benchmark)",
         "social.trend-finder.cluster_embeddings BENCHMARK_CANDIDATE(do sentence embeddings with HDBSCAN recover commerce topics lexical overlap misses, without merging unrelated ones; how stable across windows; can provenance stay inspectable; at what compute cost; does it improve product hypotheses?)",
@@ -679,8 +1115,16 @@
       "runtime": "REJECT_RUNTIME",
       "effective": "REGISTERED",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
-        "zep.alias-canonicalizer STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)"
+        "zep.alias-canonicalizer STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)",
+        "zep.memory-benchmarks BENCHMARK_CANDIDATE(do LongMemEval knowledge-update, temporal-reasoning and abstention question types, restated over ECDEV observation histories, expose failures in fact supersession and as-of queries? The conversational datasets themselves are not the target)"
       ],
       "resolved": [
         "zep.episode-validation STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV evidence requires explicit-offset timestamps, finite values and scalar metadata)",
@@ -689,7 +1133,6 @@
         "zep.legacy-server REFERENCE_ONLY(Postgres-backed memory server architecture)",
         "zep.ingestion-loaders-and-submission NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](batched submission, task polling and loaders for Zep Cloud)",
         "zep.mcp-and-integrations NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP proxy and agent-framework adapters for Zep Cloud)",
-        "zep.memory-benchmarks NO_RESEARCH_VALUE[UNRELATED_DOMAIN](LOCOMO and LongMemEval chat-memory benchmarks)",
         "zep.repository-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)"
       ]
     },
@@ -698,6 +1141,13 @@
       "runtime": "CUTOVER",
       "effective": "CUTOVER",
       "knowledge": "ACTIVE_STUDY",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
       "open": [
         "memory.rank-fusion BENCHMARK_CANDIDATE(reciprocal rank fusion to merge rankings from several evidence layers (public listings, official catalog, trend score) into one research queue; compare with information-gain ordering)",
         "graphiti.label-propagation-clustering ALGORITHM_CANDIDATE(label propagation over co-mention or co-purchase graphs for topic and product communities; compare with term clusters)",

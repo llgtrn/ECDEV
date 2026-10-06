@@ -1,13 +1,13 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "08aaed1e27d19e462a213ecb71c05d072701b21d",
+  "assessed_parent_commit": "21d693a964c31f1f579f267bca16c714c9ff44cf",
   "working_tree_dirty_at_assessment": true,
-  "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
+  "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "suite": "ECDEV REPOSITORY CONFORMANCE",
   "source": "ecdev-gov conformance --json",
   "exit_code": 0,
-  "passed": 28,
-  "total": 28,
+  "passed": 30,
+  "total": 30,
   "failing": [],
   "checks": [
     {
@@ -59,6 +59,16 @@
       "id": "knowledge.irrelevance_admissible",
       "pass": true,
       "detail": "no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)"
+    },
+    {
+      "id": "knowledge.denominator_preserved",
+      "pass": true,
+      "detail": "every capability known to an earlier census is still declared or absorbed; nothing left the knowledge denominator"
+    },
+    {
+      "id": "licence.derivation_admissible",
+      "pass": true,
+      "detail": "no capability is DERIVED_NATIVE from a donor whose licence allows only clean-room reimplementation"
     },
     {
       "id": "repository.builds_alone",
@@ -113,7 +123,7 @@
     {
       "id": "metrics.schema",
       "pass": true,
-      "detail": "92 metrics in schema order"
+      "detail": "98 metrics in schema order"
     },
     {
       "id": "governance.zero_dependency",
@@ -214,7 +224,7 @@
     }
   ],
   "metrics": {
-    "schema": "sha256:44f0a96cded8d77131553289dd17b0d9ffd32119656b872b339a6afe251d59ae",
+    "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
     "donors_discovered": 63,
     "donors_registered": 48,
     "donors_censused": 8,
@@ -232,20 +242,26 @@
     "production_capabilities_proven": 25,
     "production_capabilities_remaining": 0,
     "known_donor_capabilities": 146,
-    "knowledge_unreviewed": 2,
+    "unreviewed_capabilities": 2,
+    "capabilities_withdrawn": 0,
+    "semantic_censused_capabilities": 144,
     "study_candidates": 24,
-    "benchmark_candidates": 18,
+    "benchmark_candidates": 19,
     "algorithm_candidates": 7,
     "reference_only": 30,
     "study_complete_capabilities": 47,
-    "no_research_value": 18,
-    "research_questions_open": 51,
-    "knowledge_coverage_ratio": 0.650685,
+    "not_relevant_after_review": 17,
+    "research_questions_open": 52,
+    "knowledge_coverage_ratio": 0.643836,
     "donors_knowledge_unreviewed": 45,
     "donors_structural_census": 2,
+    "donors_semantic_census": 1,
     "donors_active_study": 14,
-    "donors_study_complete": 2,
-    "donors_with_open_research": 61,
+    "donors_study_complete": 1,
+    "donors_with_open_research": 62,
+    "donors_structurally_censused": 18,
+    "donors_semantically_censused": 5,
+    "donors_with_open_candidates": 14,
     "technologies_total": 36,
     "technologies_native": 1,
     "technologies_proven": 1,

@@ -102,7 +102,25 @@
           "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Zep Cloud batching, retries and memory-updater queues)"
         }
       ],
-      "rationale": "the deep census (mirofish-simulation-census.json) found a usable simulation architecture (lifecycle, round-0 shocks, activation loop, closed action sets, interview probes) and also its gaps (no seeds, replication, dispersion, sensitivity or scenario pairing) and one anti-pattern (simulated activity written into observed memory). The earlier rejection reasoned from 'contributes zero observed metrics', which confuses SIMULATED with OBSERVED instead of keeping them apart"
+      "rationale": "the deep census (mirofish-simulation-census.json) found a usable simulation architecture (lifecycle, round-0 shocks, activation loop, closed action sets, interview probes) and also its gaps (no seeds, replication, dispersion, sensitivity or scenario pairing) and one anti-pattern (simulated activity written into observed memory). The earlier rejection reasoned from 'contributes zero observed metrics', which confuses SIMULATED with OBSERVED instead of keeping them apart",
+      "licence_policy": {
+        "licence": "AGPL-3.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 128,
+        "first_party_source_files": 67,
+        "source_parsed": 67,
+        "parse_unknown": 0,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 17,
+        "capabilities_decided": 17,
+        "research_questions_open": 13
+      }
     },
     {
       "donor": "666ghj--BettaFish",
@@ -150,7 +168,25 @@
           "knowledge": "REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)"
         }
       ],
-      "rationale": "ECDEV's current methods existing is not evidence they are better; embedding KMeans with diversity and hotness sampling, fine-tuned sentiment models and near-duplicate detection are benchmark candidates against them"
+      "rationale": "ECDEV's current methods existing is not evidence they are better; embedding KMeans with diversity and hotness sampling, fine-tuned sentiment models and near-duplicate detection are benchmark candidates against them",
+      "licence_policy": {
+        "licence": "GPL-2.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 301,
+        "first_party_source_files": 172,
+        "source_parsed": 169,
+        "parse_unknown": 3,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 6,
+        "capabilities_decided": 6,
+        "research_questions_open": 4
+      }
     },
     {
       "donor": "getzep--zep",
@@ -160,9 +196,12 @@
       "current_caller": "none; ECDEV's episode timestamps and bi-temporal fact validity are independent natives",
       "potential_future_use": [
         "memory/evidence",
-        "entity resolution"
+        "entity resolution",
+        "learning (evaluation design)"
       ],
-      "benchmark_questions": [],
+      "benchmark_questions": [
+        "BENCHMARK_CANDIDATE(do LongMemEval knowledge-update, temporal-reasoning and abstention question types, restated over ECDEV observation histories, expose failures in fact supersession and as-of queries? The conversational datasets themselves are not the target)"
+      ],
       "native_targets": [
         "zep.alias-canonicalizer: STUDY_CANDIDATE(alias canonicalisation with a risky-word guard for brand and product entity resolution, as candidate links beside ECDEV's assertion-based identity)"
       ],
@@ -197,14 +236,32 @@
         },
         {
           "capability": "zep.memory-benchmarks",
-          "knowledge": "NO_RESEARCH_VALUE[UNRELATED_DOMAIN](LOCOMO and LongMemEval chat-memory benchmarks)"
+          "knowledge": "BENCHMARK_CANDIDATE(do LongMemEval knowledge-update, temporal-reasoning and abstention question types, restated over ECDEV observation histories, expose failures in fact supersession and as-of queries? The conversational datasets themselves are not the target)"
         },
         {
           "capability": "zep.repository-tooling",
           "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)"
         }
       ],
-      "rationale": "episode and fact-validity semantics are studied and natively covered (STUDY_COMPLETE, INDEPENDENT_NATIVE); alias canonicalisation stays a study candidate; Cloud plumbing, adapters and chat-memory benchmarks have no research value on admissible scope grounds"
+      "rationale": "episode and fact-validity semantics are studied and natively covered (STUDY_COMPLETE, INDEPENDENT_NATIVE); alias canonicalisation stays a study candidate; the memory benchmarks' question taxonomy is a benchmark candidate for ECDEV's as-of fact queries (the earlier UNRELATED_DOMAIN closure named the memory/evidence target domain and is refused by the target-domain rule); Cloud plumbing and adapters have no research value on admissible scope grounds",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 947,
+        "first_party_source_files": 453,
+        "source_parsed": 451,
+        "parse_unknown": 2,
+        "semantic_review": "BOUNDED_SOURCE_CONTRACT_REVIEW_WHOLE_DONOR_INCOMPLETE",
+        "capabilities_extracted": 9,
+        "capabilities_decided": 9,
+        "research_questions_open": 2
+      }
     },
     {
       "donor": "t4niha--Trend-Finder",
@@ -246,7 +303,25 @@
           "knowledge": "REFERENCE_ONLY(Reddit collection, notebooks, LLM summaries and the frontend)"
         }
       ],
-      "rationale": "'ECDEV has no embeddings' was an adoption fact, not irrelevance: embedding + HDBSCAN clustering, within-platform cluster scoring and representative-post selection are benchmark and algorithm candidates against lexical clustering"
+      "rationale": "'ECDEV has no embeddings' was an adoption fact, not irrelevance: embedding + HDBSCAN clustering, within-platform cluster scoring and representative-post selection are benchmark and algorithm candidates against lexical clustering",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 120,
+        "first_party_source_files": 85,
+        "source_parsed": 84,
+        "parse_unknown": 1,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 5,
+        "capabilities_decided": 5,
+        "research_questions_open": 4
+      }
     },
     {
       "donor": "sansan0--TrendRadar",
@@ -293,12 +368,30 @@
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)"
         }
       ],
-      "rationale": "rank-exposure weighting of ranked lists and public hot-list sources are study candidates; feed parsing and transport are independent natives; HTML report UI has no research value"
+      "rationale": "rank-exposure weighting of ranked lists and public hot-list sources are study candidates; feed parsing and transport are independent natives; HTML report UI has no research value",
+      "licence_policy": {
+        "licence": "GPL-3.0",
+        "family": "STRONG_COPYLEFT",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 162,
+        "first_party_source_files": 81,
+        "source_parsed": 76,
+        "parse_unknown": 5,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 7,
+        "capabilities_decided": 7,
+        "research_questions_open": 2
+      }
     },
     {
       "donor": "NanmiCoder--MediaCrawler",
       "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: non-commercial licence blocks absorption, and its logged-in platform crawling, session handling and media download are outside ECDEV's no-auth-bypass acquisition policy (research/commerce/social-donor-rejections-review.json)",
-      "knowledge_decision": "STUDY_COMPLETE",
+      "knowledge_decision": "SEMANTIC_CENSUS",
       "license_constraint": "NON-COMMERCIAL-LEARNING-1.1 (web UI GPL-3.0): no commercial absorption",
       "current_caller": "none; logged-in crawling is forbidden by ECDEV policy",
       "potential_future_use": [
@@ -352,7 +445,25 @@
           "knowledge": "REFERENCE_ONLY(other platform crawlers, proxy pools and browser automation; platform structure reference only)"
         }
       ],
-      "rationale": "its value is the platforms' record structures and counter semantics, kept as references; every crawling flow requires authentication ECDEV never bypasses"
+      "rationale": "its value is the platforms' record structures and counter semantics, kept as references; every crawling flow requires authentication ECDEV never bypasses",
+      "licence_policy": {
+        "licence": "NON-COMMERCIAL-LEARNING-1.1",
+        "family": "NON_COMMERCIAL",
+        "code_adoption": "NOT_COPIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 347,
+        "first_party_source_files": 213,
+        "source_parsed": 211,
+        "parse_unknown": 2,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 11,
+        "capabilities_decided": 11,
+        "research_questions_open": 0
+      }
     },
     {
       "donor": "Shiva-74--viral-trend-agent",
@@ -393,7 +504,25 @@
           "knowledge": "REFERENCE_ONLY(agent orchestration, scrapers and LLM prompts)"
         }
       ],
-      "rationale": "velocities and recency are already independent natives; the cross-platform bonus is a deliberate divergence; whether a composite verdict predicts persistence better than ECDEV's components is a benchmark question, never a demand forecast"
+      "rationale": "velocities and recency are already independent natives; the cross-platform bonus is a deliberate divergence; whether a composite verdict predicts persistence better than ECDEV's components is a benchmark question, never a demand forecast",
+      "licence_policy": {
+        "licence": "UNKNOWN",
+        "family": "UNVERIFIED",
+        "code_adoption": "NOT_COPIED_UNTIL_VERIFIED",
+        "knowledge_study": "STUDY_READ_ONLY",
+        "native_reimplementation": "CLEAN_ROOM_ONLY",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 37,
+        "first_party_source_files": 28,
+        "source_parsed": 28,
+        "parse_unknown": 0,
+        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
+        "capabilities_extracted": 6,
+        "capabilities_decided": 6,
+        "research_questions_open": 1
+      }
     },
     {
       "donor": "dgtlmoon--changedetection.io",
@@ -451,7 +580,27 @@
           "knowledge": "NO_RESEARCH_VALUE[FRONTEND](self-hosted web UI of the donor product)"
         }
       ],
-      "rationale": "its restock interpretation diverges deliberately (LLM and scraped text over structured data, float prices, stock alerts suppressed by price ranges), but percent/range alert policies, a DERIVED in-stock flag, a text-diff fallback monitor and per-watch scheduling are benchmark and study candidates"
+      "rationale": "its restock interpretation diverges deliberately (LLM and scraped text over structured data, float prices, stock alerts suppressed by price ranges), but percent/range alert policies, a DERIVED in-stock flag, a text-diff fallback monitor and per-watch scheduling are benchmark and study candidates",
+      "licence_policy": {
+        "licence": "Apache-2.0",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "semantic_coverage": {
+        "files_inventoried": 1156,
+        "first_party_source_files": 288,
+        "source_parsed": 260,
+        "parse_unknown": 28,
+        "semantic_review": "PENDING",
+        "capabilities_extracted": 9,
+        "capabilities_decided": 9,
+        "research_questions_open": 4
+      }
     }
-  ]
+  ],
+  "semantic_coverage_rule": "STUDY_COMPLETE requires the census whole-source semantic_review to be COMPLETE; extracted and decided capabilities alone reach SEMANTIC_CENSUS",
+  "licence_policy_rule": "licence_policy is read off the declared licence string by .ecdev/src/licence.rs; a governance policy, not a legal conclusion; no licence forbids study"
 }

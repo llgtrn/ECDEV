@@ -91,6 +91,8 @@ pub struct Capability {
     pub maps_to: Option<&'static str>,
     pub relevance: Relevance,
     pub knowledge: Knowledge,
+    /// Earlier capability keys of this donor whose knowledge this capability carries.
+    pub absorbs: &'static [&'static str],
     pub proofs: &'static [Proof],
 }
 
@@ -309,6 +311,7 @@ pub fn into_model(
                         maps_to: c.maps_to.map(str::to_string),
                         relevance: relevance(&c.relevance),
                         knowledge: knowledge(&c.knowledge),
+                        absorbs: strings(c.absorbs),
                         proofs: c
                             .proofs
                             .iter()

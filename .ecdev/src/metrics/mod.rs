@@ -50,21 +50,27 @@ pub const DEFINITIONS: &[MetricDef] = &[
     MetricDef { name: "production_capabilities_native", formula: "of those, with an existing canonical native replacement that does not use the donor, transitively" },
     MetricDef { name: "production_capabilities_proven", formula: "of those native, with fresh passing parity proofs" },
     MetricDef { name: "production_capabilities_remaining", formula: "production_capabilities_required - production_capabilities_proven; 0 means production adoption is done, never that the donor universe is studied" },
-    MetricDef { name: "known_donor_capabilities", formula: "KNOWLEDGE: every declared capability of every declared donor, runtime-rejected donors included" },
-    MetricDef { name: "knowledge_unreviewed", formula: "known capabilities with no knowledge decision (UNREVIEWED)" },
+    MetricDef { name: "known_donor_capabilities", formula: "KNOWLEDGE: every declared capability of every declared donor, runtime-rejected donors included, plus capabilities_withdrawn" },
+    MetricDef { name: "unreviewed_capabilities", formula: "known capabilities with no knowledge decision (UNREVIEWED)" },
+    MetricDef { name: "capabilities_withdrawn", formula: "capability keys recorded by an earlier census that no declared capability carries or absorbs; still known, still open: deleting a capability never shrinks the knowledge denominator" },
+    MetricDef { name: "semantic_censused_capabilities", formula: "known_donor_capabilities - unreviewed_capabilities - capabilities_withdrawn: capabilities whose knowledge was decided" },
     MetricDef { name: "study_candidates", formula: "known capabilities that are STUDY_CANDIDATE" },
     MetricDef { name: "benchmark_candidates", formula: "known capabilities that are BENCHMARK_CANDIDATE" },
     MetricDef { name: "algorithm_candidates", formula: "known capabilities that are ALGORITHM_CANDIDATE" },
     MetricDef { name: "reference_only", formula: "known capabilities that are REFERENCE_ONLY" },
     MetricDef { name: "study_complete_capabilities", formula: "known capabilities whose study is complete (derived native, independent native, or deliberate divergence)" },
-    MetricDef { name: "no_research_value", formula: "known capabilities without research value on an admissible scope ground" },
-    MetricDef { name: "research_questions_open", formula: "knowledge_unreviewed + study_candidates + benchmark_candidates + algorithm_candidates" },
+    MetricDef { name: "not_relevant_after_review", formula: "known capabilities reviewed and found without research value on an admissible scope ground (frontend, release tooling, assets, vendor telemetry, hosted-service plumbing, language bindings, unrelated domain); never an adoption fact" },
+    MetricDef { name: "research_questions_open", formula: "unreviewed_capabilities + capabilities_withdrawn + study_candidates + benchmark_candidates + algorithm_candidates" },
     MetricDef { name: "knowledge_coverage_ratio", formula: "(known_donor_capabilities - research_questions_open) / known_donor_capabilities; 0 when nothing is known" },
     MetricDef { name: "donors_knowledge_unreviewed", formula: "declared donors with no extracted capability (knowledge UNREVIEWED)" },
     MetricDef { name: "donors_structural_census", formula: "declared donors with some capability not yet knowledge-reviewed" },
+    MetricDef { name: "donors_semantic_census", formula: "declared donors whose extracted capabilities are all decided with none open, but whose whole-source semantic review is not COMPLETE" },
     MetricDef { name: "donors_active_study", formula: "declared donors fully reviewed with open study, benchmark or algorithm candidates" },
-    MetricDef { name: "donors_study_complete", formula: "declared donors whose every capability's knowledge is resolved" },
-    MetricDef { name: "donors_with_open_research", formula: "donors_knowledge_unreviewed + donors_structural_census + donors_active_study" },
+    MetricDef { name: "donors_study_complete", formula: "declared donors whose whole-source semantic review is COMPLETE and every capability's knowledge is resolved" },
+    MetricDef { name: "donors_with_open_research", formula: "donors_knowledge_unreviewed + donors_structural_census + donors_semantic_census + donors_active_study" },
+    MetricDef { name: "donors_structurally_censused", formula: "declared donors with at least one extracted capability: donors_structural_census + donors_semantic_census + donors_active_study + donors_study_complete" },
+    MetricDef { name: "donors_semantically_censused", formula: "declared donors whose census records a COMPLETE whole-source semantic review (every first-party source file read for meaning, not only inventoried and parsed)" },
+    MetricDef { name: "donors_with_open_candidates", formula: "declared donors with at least one STUDY, BENCHMARK or ALGORITHM candidate, whatever their runtime decision" },
     MetricDef { name: "technologies_total", formula: "declared technologies" },
     MetricDef { name: "technologies_native", formula: "technologies whose effective lifecycle >= NATIVE" },
     MetricDef { name: "technologies_proven", formula: "technologies whose effective lifecycle >= PROVEN" },
@@ -229,9 +235,23 @@ pub struct Counts {
     pub donors_structural_census: u64,
     pub donors_active_study: u64,
     pub donors_study_complete: u64,
+    pub capabilities_withdrawn: u64,
+    pub donors_with_open_candidates: u64,
+    pub donors_semantic_census: u64,
+    pub donors_semantically_censused: u64,
 }
 
 impl Counts {
+    /// Knowledge questions still open: unreviewed or withdrawn capabilities and every study,
+    /// benchmark or algorithm candidate.
+    pub fn research_questions_open(&self) -> u64 {
+        self.knowledge_unreviewed
+            + self.capabilities_withdrawn
+            + self.study_candidates
+            + self.benchmark_candidates
+            + self.algorithm_candidates
+    }
+
     pub fn add(&mut self, o: &Counts) {
         macro_rules! sum { ($($f:ident),*) => { $(self.$f += o.$f;)* } }
         sum!(
@@ -319,7 +339,11 @@ impl Counts {
             donors_knowledge_unreviewed,
             donors_structural_census,
             donors_active_study,
-            donors_study_complete
+            donors_study_complete,
+            capabilities_withdrawn,
+            donors_with_open_candidates,
+            donors_semantic_census,
+            donors_semantically_censused
         );
     }
 
@@ -430,7 +454,8 @@ impl Counts {
                 self.universe_sources_unreconciled,
             ),
             ("known_donor_capabilities", self.known_donor_capabilities),
-            ("knowledge_unreviewed", self.knowledge_unreviewed),
+            ("unreviewed_capabilities", self.knowledge_unreviewed),
+            ("capabilities_withdrawn", self.capabilities_withdrawn),
             ("study_candidates", self.study_candidates),
             ("benchmark_candidates", self.benchmark_candidates),
             ("algorithm_candidates", self.algorithm_candidates),
@@ -439,7 +464,7 @@ impl Counts {
                 "study_complete_capabilities",
                 self.study_complete_capabilities,
             ),
-            ("no_research_value", self.no_research_value),
+            ("not_relevant_after_review", self.no_research_value),
             (
                 "donors_knowledge_unreviewed",
                 self.donors_knowledge_unreviewed,
@@ -447,6 +472,15 @@ impl Counts {
             ("donors_structural_census", self.donors_structural_census),
             ("donors_active_study", self.donors_active_study),
             ("donors_study_complete", self.donors_study_complete),
+            (
+                "donors_with_open_candidates",
+                self.donors_with_open_candidates,
+            ),
+            ("donors_semantic_census", self.donors_semantic_census),
+            (
+                "donors_semantically_censused",
+                self.donors_semantically_censused,
+            ),
         ]
     }
 
@@ -536,13 +570,17 @@ impl Counts {
                 "ambiguous_donor_identities" => c.ambiguous_donor_identities = *v,
                 "universe_sources_unreconciled" => c.universe_sources_unreconciled = *v,
                 "known_donor_capabilities" => c.known_donor_capabilities = *v,
-                "knowledge_unreviewed" => c.knowledge_unreviewed = *v,
+                "unreviewed_capabilities" | "knowledge_unreviewed" => c.knowledge_unreviewed = *v,
+                "capabilities_withdrawn" => c.capabilities_withdrawn = *v,
+                "donors_with_open_candidates" => c.donors_with_open_candidates = *v,
+                "donors_semantic_census" => c.donors_semantic_census = *v,
+                "donors_semantically_censused" => c.donors_semantically_censused = *v,
                 "study_candidates" => c.study_candidates = *v,
                 "benchmark_candidates" => c.benchmark_candidates = *v,
                 "algorithm_candidates" => c.algorithm_candidates = *v,
                 "reference_only" => c.reference_only = *v,
                 "study_complete_capabilities" => c.study_complete_capabilities = *v,
-                "no_research_value" => c.no_research_value = *v,
+                "not_relevant_after_review" | "no_research_value" => c.no_research_value = *v,
                 "donors_knowledge_unreviewed" => c.donors_knowledge_unreviewed = *v,
                 "donors_structural_census" => c.donors_structural_census = *v,
                 "donors_active_study" => c.donors_active_study = *v,
@@ -619,7 +657,14 @@ impl Counts {
                     .saturating_sub(self.capabilities_proven)),
             ),
             ("known_donor_capabilities", n(self.known_donor_capabilities)),
-            ("knowledge_unreviewed", n(self.knowledge_unreviewed)),
+            ("unreviewed_capabilities", n(self.knowledge_unreviewed)),
+            ("capabilities_withdrawn", n(self.capabilities_withdrawn)),
+            (
+                "semantic_censused_capabilities",
+                n(self
+                    .known_donor_capabilities
+                    .saturating_sub(self.knowledge_unreviewed + self.capabilities_withdrawn)),
+            ),
             ("study_candidates", n(self.study_candidates)),
             ("benchmark_candidates", n(self.benchmark_candidates)),
             ("algorithm_candidates", n(self.algorithm_candidates)),
@@ -628,26 +673,16 @@ impl Counts {
                 "study_complete_capabilities",
                 n(self.study_complete_capabilities),
             ),
-            ("no_research_value", n(self.no_research_value)),
-            (
-                "research_questions_open",
-                n(self.knowledge_unreviewed
-                    + self.study_candidates
-                    + self.benchmark_candidates
-                    + self.algorithm_candidates),
-            ),
+            ("not_relevant_after_review", n(self.no_research_value)),
+            ("research_questions_open", n(self.research_questions_open())),
             (
                 "knowledge_coverage_ratio",
                 if self.known_donor_capabilities == 0 {
                     Ratio::new(0, 1)
                 } else {
                     Ratio::new(
-                        self.known_donor_capabilities.saturating_sub(
-                            self.knowledge_unreviewed
-                                + self.study_candidates
-                                + self.benchmark_candidates
-                                + self.algorithm_candidates,
-                        ),
+                        self.known_donor_capabilities
+                            .saturating_sub(self.research_questions_open()),
                         self.known_donor_capabilities,
                     )
                 }
@@ -658,13 +693,30 @@ impl Counts {
                 n(self.donors_knowledge_unreviewed),
             ),
             ("donors_structural_census", n(self.donors_structural_census)),
+            ("donors_semantic_census", n(self.donors_semantic_census)),
             ("donors_active_study", n(self.donors_active_study)),
             ("donors_study_complete", n(self.donors_study_complete)),
             (
                 "donors_with_open_research",
                 n(self.donors_knowledge_unreviewed
                     + self.donors_structural_census
+                    + self.donors_semantic_census
                     + self.donors_active_study),
+            ),
+            (
+                "donors_structurally_censused",
+                n(self.donors_structural_census
+                    + self.donors_semantic_census
+                    + self.donors_active_study
+                    + self.donors_study_complete),
+            ),
+            (
+                "donors_semantically_censused",
+                n(self.donors_semantically_censused),
+            ),
+            (
+                "donors_with_open_candidates",
+                n(self.donors_with_open_candidates),
             ),
             ("technologies_total", n(self.technologies_total)),
             ("technologies_native", n(self.technologies_native)),

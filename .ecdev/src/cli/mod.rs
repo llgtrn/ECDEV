@@ -314,6 +314,12 @@ fn census(args: &Args, a: &Assessment) -> Out {
     if args.flag("--record") {
         let mut registered = a.history.registered.clone();
         let mut active = a.history.active.clone();
+        let mut capabilities = a.history.capabilities.clone();
+        for dn in &a.declaration.donors {
+            for c in &dn.capabilities {
+                capabilities.insert(format!("{}/{}", dn.key, c.key));
+            }
+        }
         let mut states = Vec::new();
         for d in &a.analysis.donors {
             if d.effective >= DonorState::Registered {
@@ -335,6 +341,7 @@ fn census(args: &Args, a: &Assessment) -> Out {
             &Batch {
                 registered,
                 active,
+                capabilities,
                 rows: vec![row],
             },
         )
@@ -377,6 +384,22 @@ fn extinction(args: &Args, a: &Assessment) -> Out {
                         },
                     )
                     .with("knowledge", d.knowledge.wire())
+                    .with("licence_policy", {
+                        let licence = a
+                            .declaration
+                            .donors
+                            .iter()
+                            .find(|x| x.key == d.key)
+                            .map_or("", |x| x.license.as_str());
+                        let p = crate::licence::policy(licence);
+                        Json::obj()
+                            .with("licence", licence)
+                            .with("family", p.family.word())
+                            .with("code_adoption", p.code_adoption.word())
+                            .with("knowledge_study", p.knowledge_study.word())
+                            .with("native_reimplementation", p.native_reimplementation.word())
+                            .with("basis", crate::licence::BASIS)
+                    })
                     .with(
                         "capabilities",
                         Json::Array(

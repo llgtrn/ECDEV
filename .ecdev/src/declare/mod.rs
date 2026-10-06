@@ -452,6 +452,7 @@ pub fn parse_donors(text: &str) -> Res<Vec<Donor>> {
                             maps_to: opt_string(f.get("maps_to")?)?,
                             relevance: relevance(f.get("relevance")?)?,
                             knowledge: knowledge(f.get("knowledge")?)?,
+                            absorbs: f.strings("absorbs")?,
                             proofs: list(f.get("proofs")?)?
                                 .iter()
                                 .map(|p| {
@@ -651,6 +652,7 @@ pub fn render_donors(donors: &[Donor]) -> String {
                                             ("maps_to", r::opt(&c.maps_to)),
                                             ("relevance", render_relevance(&c.relevance)),
                                             ("knowledge", render_knowledge(&c.knowledge)),
+                                            ("absorbs", r::strs(&c.absorbs)),
                                             (
                                                 "proofs",
                                                 r::list(
@@ -959,6 +961,7 @@ mod tests {
                         ResearchScope::ReleaseTooling,
                         "serialization plumbing".into(),
                     ),
+                    absorbs: vec![],
                     proofs: vec![Proof {
                         kind: ProofKind::Parity,
                         locator: "tests/serialize.rs::agrees".into(),

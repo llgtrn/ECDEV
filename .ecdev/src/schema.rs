@@ -239,9 +239,10 @@ vocabulary! {
     /// What ECDEV has learned from a donor, independent of runtime adoption.
     KnowledgeState {
         Unreviewed = "UNREVIEWED": "no capability has been extracted from the donor",
-        StructuralCensus = "STRUCTURAL_CENSUS": "capabilities are extracted but some have no knowledge decision yet",
+        StructuralCensus = "STRUCTURAL_CENSUS": "capabilities are extracted but some have no knowledge decision yet (or a known capability was withdrawn)",
+        SemanticCensus = "SEMANTIC_CENSUS": "every extracted capability has a knowledge decision and none is open, but the donor's whole-source semantic review is not COMPLETE: capabilities may remain unextracted",
         ActiveStudy = "ACTIVE_STUDY": "every capability is semantically reviewed and open study, benchmark or algorithm questions remain",
-        StudyComplete = "STUDY_COMPLETE": "every capability's knowledge is resolved (absorbed, independent, divergent, reference only, or no research value on an admissible ground)",
+        StudyComplete = "STUDY_COMPLETE": "the donor's whole-source semantic review is COMPLETE and every capability's knowledge is resolved (absorbed, independent, divergent, reference only, or no research value on an admissible ground)",
     }
 }
 

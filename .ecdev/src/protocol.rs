@@ -125,6 +125,19 @@ pub fn schema_text() -> String {
             .join(" ")
     ));
     s.push_str(&format!(
+        "target_domains (an UNRELATED_DOMAIN reason naming one is refused: yes or uncertain keeps the question) {}\n",
+        crate::declare::TARGET_DOMAINS
+            .iter()
+            .map(|(d, _)| *d)
+            .collect::<Vec<_>>()
+            .join(" | ")
+    ));
+    s.push_str("capability_absorbs (earlier keys of the same donor this capability carries) a key known to any census stays in the knowledge denominator, WITHDRAWN and open, until a declared capability absorbs it\n");
+    s.push_str(&format!(
+        "licence_policy ({}) family PERMISSIVE | WEAK_COPYLEFT | STRONG_COPYLEFT | NON_COMMERCIAL | UNVERIFIED; code_adoption ADOPT_WITH_NOTICE | NOT_COPIED_WITHOUT_REVIEW | NOT_COPIED | NOT_COPIED_UNTIL_VERIFIED; knowledge_study STUDY_AND_DERIVE | STUDY_READ_ONLY (never forbidden); native_reimplementation DERIVED_WITH_ATTRIBUTION | CLEAN_ROOM_ONLY (refuses DERIVED_NATIVE)\n",
+        crate::licence::BASIS
+    ));
+    s.push_str(&format!(
         "inadmissible_irrelevance (never ground NO_RESEARCH_VALUE: they constrain adoption, not knowledge) {}\n",
         crate::declare::INADMISSIBLE_IRRELEVANCE.join(" | ")
     ));

@@ -211,3 +211,198 @@ fn production_completion_is_reported_apart_from_knowledge_completion() {
     assert_eq!(metric(&a, "research_questions_open"), "1");
     assert_eq!(metric(&a, "knowledge_coverage_ratio"), "0.500000");
 }
+
+#[test]
+fn deleting_a_capability_never_shrinks_the_knowledge_denominator() {
+    let r = extinct_baseline("withdrawn");
+    with_extra(
+        &r,
+        "simulation",
+        Knowledge::NoResearchValue(ResearchScope::Frontend, "the donor's dashboard".into()),
+    );
+    assert_eq!(
+        r.assess().donor("geo").unwrap().effective,
+        DonorState::Extinct
+    );
+    assert_eq!(r.cli(&["census", "--record"]).0, 0);
+    // The capability disappears from the declaration ...
+    r.edit(|d| d.donors[0].capabilities.retain(|c| c.key != "simulation"));
+    let a = r.assess();
+    // ... but it is still known, still open, and blocks both the study and the extinction.
+    assert!(finding(&a, "CAPABILITY_WITHDRAWN", "geo/simulation").is_some());
+    assert_eq!(metric(&a, "known_donor_capabilities"), "2");
+    assert_eq!(metric(&a, "capabilities_withdrawn"), "1");
+    assert_eq!(metric(&a, "research_questions_open"), "1");
+    assert_eq!(metric(&a, "semantic_censused_capabilities"), "1");
+    assert!(!check(&a, "knowledge.denominator_preserved").pass);
+    let geo = a.donor("geo").unwrap();
+    assert_eq!(geo.effective, DonorState::Cutover);
+    assert_eq!(geo.knowledge, KnowledgeState::StructuralCensus);
+    // A renamed capability that absorbs the old key carries its knowledge forward.
+    with_extra(
+        &r,
+        "scenario-simulation",
+        Knowledge::StudyCandidate("multi-run scenario aggregation, labelled SIMULATED".into()),
+    );
+    r.edit(|d| {
+        let c = d.donors[0]
+            .capabilities
+            .iter_mut()
+            .find(|c| c.key == "scenario-simulation")
+            .unwrap();
+        c.absorbs = vec!["simulation".into()];
+    });
+    let a = r.assess();
+    assert!(check(&a, "knowledge.denominator_preserved").pass);
+    assert_eq!(metric(&a, "capabilities_withdrawn"), "0");
+    assert_eq!(metric(&a, "known_donor_capabilities"), "2");
+    // Absorbing a key that is still declared hides nothing: it is refused.
+    r.edit(|d| {
+        let first = d.donors[0].capabilities[0].key.clone();
+        d.donors[0].capabilities[1].absorbs.push(first);
+    });
+    assert!(!check(&r.assess(), "knowledge.denominator_preserved").pass);
+}
+
+#[test]
+fn removing_a_donor_keeps_its_capabilities_known() {
+    let r = extinct_baseline("donor-removed");
+    with_extra(
+        &r,
+        "trend-scoring",
+        Knowledge::BenchmarkCandidate(
+            "does velocity scoring rank emerging products earlier?".into(),
+        ),
+    );
+    assert_eq!(r.cli(&["census", "--record"]).0, 0);
+    let before = r.assess();
+    assert_eq!(metric(&before, "known_donor_capabilities"), "2");
+    r.edit(|d| d.donors.clear());
+    let a = r.assess();
+    assert_eq!(metric(&a, "known_donor_capabilities"), "2");
+    assert_eq!(metric(&a, "capabilities_withdrawn"), "2");
+    assert_eq!(metric(&a, "research_questions_open"), "2");
+    assert!(!check(&a, "knowledge.denominator_preserved").pass);
+}
+
+#[test]
+fn spec_named_knowledge_metrics_separate_review_from_candidates() {
+    let r = extinct_baseline("spec-metrics");
+    with_extra(
+        &r,
+        "docs-site",
+        Knowledge::NoResearchValue(ResearchScope::Frontend, "documentation website".into()),
+    );
+    let a = r.assess();
+    assert_eq!(metric(&a, "not_relevant_after_review"), "1");
+    assert_eq!(metric(&a, "unreviewed_capabilities"), "0");
+    assert_eq!(metric(&a, "semantic_censused_capabilities"), "2");
+    assert_eq!(metric(&a, "donors_structurally_censused"), "1");
+    assert_eq!(metric(&a, "donors_semantically_censused"), "1");
+    assert_eq!(metric(&a, "donors_with_open_candidates"), "0");
+    with_extra(
+        &r,
+        "docs-site",
+        Knowledge::AlgorithmCandidate("clean-room ranking formula".into()),
+    );
+    let a = r.assess();
+    assert_eq!(metric(&a, "donors_with_open_candidates"), "1");
+    assert_eq!(metric(&a, "not_relevant_after_review"), "0");
+    with_extra(&r, "docs-site", Knowledge::Unreviewed);
+    let a = r.assess();
+    assert_eq!(metric(&a, "unreviewed_capabilities"), "1");
+    assert_eq!(metric(&a, "semantic_censused_capabilities"), "1");
+    // Whole-source semantic coverage is a census fact, not a capability count.
+    assert_eq!(metric(&a, "donors_semantically_censused"), "1");
+    assert_eq!(metric(&a, "donors_structurally_censused"), "1");
+}
+
+#[test]
+fn study_complete_requires_whole_source_semantic_coverage() {
+    let r = extinct_baseline("semantic-coverage");
+    assert_eq!(
+        r.assess().donor("geo").unwrap().knowledge,
+        KnowledgeState::StudyComplete
+    );
+    // Every declared capability resolved, but only part of the donor was read for meaning:
+    // capabilities may still be unextracted, so neither the study nor the extinction is done.
+    r.write(
+        "research/census/geo/summary.json",
+        "{\"semantic_review\": \"PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR\"}\n",
+    );
+    let a = r.assess();
+    let geo = a.donor("geo").unwrap();
+    assert_eq!(geo.knowledge, KnowledgeState::SemanticCensus);
+    assert_eq!(geo.effective, DonorState::Cutover);
+    assert!(!gate(&a, "geo", Gate::KnowledgeResolved));
+    assert_eq!(metric(&a, "donors_semantically_censused"), "0");
+    assert_eq!(metric(&a, "donors_semantic_census"), "1");
+    assert_eq!(metric(&a, "donors_with_open_research"), "1");
+    // No census at all is no coverage either.
+    r.remove("research/census/geo/summary.json");
+    let a = r.assess();
+    assert_eq!(
+        a.donor("geo").unwrap().knowledge,
+        KnowledgeState::SemanticCensus
+    );
+}
+
+#[test]
+fn a_restrictive_licence_narrows_reimplementation_never_study() {
+    let r = extinct_baseline("clean-room");
+    // The baseline capability is DERIVED_NATIVE (Absorbed) from an MIT donor: admissible.
+    assert!(check(&r.assess(), "licence.derivation_admissible").pass);
+    // The same relation to a GPL donor is refused: only a clean-room reimplementation is.
+    r.edit(|d| d.donors[0].license = "GPL-3.0".into());
+    let a = r.assess();
+    assert!(!check(&a, "licence.derivation_admissible").pass);
+    r.edit(|d| {
+        d.donors[0].capabilities[0].knowledge =
+            Knowledge::IndependentNative("written from the documented distance contract".into())
+    });
+    assert!(check(&r.assess(), "licence.derivation_admissible").pass);
+    // Study remains permitted, and the licence is never a research-value ground.
+    let p = ecdev_governance::licence::policy("GPL-3.0");
+    assert_eq!(
+        p.knowledge_study,
+        ecdev_governance::licence::KnowledgeStudy::StudyReadOnly
+    );
+    with_extra(
+        &r,
+        "ranking",
+        Knowledge::NoResearchValue(ResearchScope::UnrelatedDomain, "GPL code".into()),
+    );
+    assert!(!check(&r.assess(), "knowledge.irrelevance_admissible").pass);
+}
+
+#[test]
+fn a_capability_that_could_serve_a_target_domain_keeps_its_question() {
+    let r = extinct_baseline("target-domains");
+    for reason in [
+        "chat-memory benchmarks",
+        "agent-based social simulation",
+        "trend dashboards for news",
+        "supplier directory scraping",
+        "ad keyword bidding",
+    ] {
+        with_extra(
+            &r,
+            "candidate",
+            Knowledge::NoResearchValue(ResearchScope::UnrelatedDomain, reason.into()),
+        );
+        assert!(
+            !check(&r.assess(), "knowledge.irrelevance_admissible").pass,
+            "accepted: {reason}"
+        );
+    }
+    // A reason outside every target domain stands.
+    with_extra(
+        &r,
+        "candidate",
+        Knowledge::NoResearchValue(
+            ResearchScope::UnrelatedDomain,
+            "a bundled tic-tac-toe example game".into(),
+        ),
+    );
+    assert!(check(&r.assess(), "knowledge.irrelevance_admissible").pass);
+}

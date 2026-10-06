@@ -147,6 +147,69 @@ pub fn knowledge_violations(a: &Assessment) -> Vec<String> {
     out
 }
 
+/// Capabilities that claim a DERIVED_NATIVE relation to a donor whose licence allows only a
+/// clean-room reimplementation.
+pub fn derivation_violations(a: &Assessment) -> Vec<String> {
+    let mut out = Vec::new();
+    for d in &a.declaration.donors {
+        let p = crate::licence::policy(&d.license);
+        if p.native_reimplementation != crate::licence::NativeReimplementation::CleanRoomOnly {
+            continue;
+        }
+        for c in &d.capabilities {
+            if matches!(c.knowledge, declare::Knowledge::Absorbed(_)) {
+                out.push(format!(
+                    "{}/{}: DERIVED_NATIVE from a {} donor ({}); only INDEPENDENT_NATIVE or a deliberate divergence is admissible",
+                    d.key,
+                    c.key,
+                    p.family.word(),
+                    d.license
+                ));
+            }
+        }
+    }
+    out
+}
+
+/// Known donor capabilities that left the declaration without being absorbed, and `absorbs`
+/// entries that name a capability still declared (which would count it twice or hide it).
+pub fn denominator_violations(a: &Assessment) -> Vec<String> {
+    let mut out = Vec::new();
+    let declared: std::collections::BTreeSet<&str> = a
+        .declaration
+        .donors
+        .iter()
+        .map(|d| d.key.as_str())
+        .collect();
+    for d in &a.declaration.donors {
+        for k in crate::donors::withdrawn_capabilities(d, &a.history) {
+            out.push(format!(
+                "{}/{k}: known capability withdrawn without being absorbed",
+                d.key
+            ));
+        }
+        for c in &d.capabilities {
+            for x in &c.absorbs {
+                if d.capabilities.iter().any(|o| &o.key == x) {
+                    out.push(format!(
+                        "{}/{}: absorbs `{x}`, which is still declared",
+                        d.key, c.key
+                    ));
+                }
+            }
+        }
+    }
+    for k in &a.history.capabilities {
+        let donor = k.split_once('/').map_or(k.as_str(), |(d, _)| d);
+        if !declared.contains(donor) {
+            out.push(format!(
+                "{k}: known capability of a donor no longer declared"
+            ));
+        }
+    }
+    out
+}
+
 fn list_check(id: &'static str, v: Vec<String>, ok: &str) -> Check {
     Check::new(
         id,
@@ -259,6 +322,16 @@ pub fn checks(a: &Assessment) -> Vec<Check> {
         "knowledge.irrelevance_admissible",
         knowledge_violations(a),
         "no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)",
+    ));
+    v.push(list_check(
+        "knowledge.denominator_preserved",
+        denominator_violations(a),
+        "every capability known to an earlier census is still declared or absorbed; nothing left the knowledge denominator",
+    ));
+    v.push(list_check(
+        "licence.derivation_admissible",
+        derivation_violations(a),
+        "no capability is DERIVED_NATIVE from a donor whose licence allows only clean-room reimplementation",
     ));
     v.push(no_findings(
         a,
@@ -429,10 +502,14 @@ pub fn probes() -> Vec<Check> {
         parity: vec![("t::p".into(), crate::evidence::Verdict::Pass)],
         regression: vec![("t::r".into(), crate::evidence::Verdict::Pass)],
     };
-    let clean = gates(&DonorFacts::default(), std::slice::from_ref(&cap), true)
+    let studied = DonorFacts {
+        semantic_review: Some(crate::extinction::SEMANTIC_REVIEW_COMPLETE.into()),
+        ..DonorFacts::default()
+    };
+    let clean = gates(&studied, std::slice::from_ref(&cap), true)
         .iter()
         .all(|g| g.pass);
-    let mut dirty = DonorFacts::default();
+    let mut dirty = studied.clone();
     dirty.push(crate::census::Observation {
         file: "x/Cargo.toml".into(),
         ecosystem: crate::schema::Ecosystem::Cargo,

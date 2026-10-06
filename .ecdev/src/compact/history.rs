@@ -1,7 +1,9 @@
 //! Census history: content-addressed batches in `.ecdev/history/`. Each census adds a batch;
 //! concurrent branches add different files and never conflict; `compact` folds all batches into
 //! one. The union of every batch's registered donors is the denominator floor: a donor, once
-//! registered, is counted forever.
+//! registered, is counted forever. The union of every batch's capability keys is the knowledge
+//! floor: a donor capability, once known, stays in the knowledge denominator until a declared
+//! capability of the same donor absorbs it.
 
 use super::codec::{DecodeError, Decoder, Encoder};
 use super::write_addressed;
@@ -13,9 +15,12 @@ pub const HISTORY_DIR: &str = ".ecdev/history";
 /// Batches written before the donor ladder gained TECHNOLOGY_MAPPED and
 /// CAPABILITY_RELEVANCE_RESOLVED: donor states by their rank on the old ladder. Read, never written.
 pub const HISTORY_TAG_V1: u8 = 3;
+/// Batches written before the knowledge floor: donor states by word, no capability keys. Read,
+/// never written.
+pub const HISTORY_TAG_V2: u8 = 10;
 /// Current batches: donor states by protocol word, so the ladder can grow without
-/// reinterpreting history.
-pub const HISTORY_TAG: u8 = 10;
+/// reinterpreting history, and the known donor capability keys (`<donor>/<capability>`).
+pub const HISTORY_TAG: u8 = 11;
 
 /// The donor ladder as ranked by [`HISTORY_TAG_V1`] batches.
 const LADDER_V1: &[DonorState] = &[
@@ -43,6 +48,8 @@ pub struct Batch {
     pub registered: BTreeSet<String>,
     /// Donors observed participating (any edge, import or resident source) at some census.
     pub active: BTreeSet<String>,
+    /// Donor capabilities known at some census, as `<donor>/<capability>`.
+    pub capabilities: BTreeSet<String>,
     pub rows: Vec<Row>,
 }
 
@@ -51,6 +58,7 @@ impl Batch {
         let mut e = Encoder::new(HISTORY_TAG);
         e.strs(&self.registered.iter().cloned().collect::<Vec<_>>());
         e.strs(&self.active.iter().cloned().collect::<Vec<_>>());
+        e.strs(&self.capabilities.iter().cloned().collect::<Vec<_>>());
         let mut rows = self.rows.clone();
         rows.sort();
         rows.dedup();
@@ -70,10 +78,26 @@ impl Batch {
     }
 
     pub fn decode(b: &[u8]) -> Result<Batch, DecodeError> {
-        let v1 = Decoder::tag_of(b) == Some(HISTORY_TAG_V1);
-        let mut d = Decoder::open(b, if v1 { HISTORY_TAG_V1 } else { HISTORY_TAG })?;
+        let tag = Decoder::tag_of(b);
+        let v1 = tag == Some(HISTORY_TAG_V1);
+        let v2 = tag == Some(HISTORY_TAG_V2);
+        let mut d = Decoder::open(
+            b,
+            if v1 {
+                HISTORY_TAG_V1
+            } else if v2 {
+                HISTORY_TAG_V2
+            } else {
+                HISTORY_TAG
+            },
+        )?;
         let registered = d.strs()?.into_iter().collect();
         let active = d.strs()?.into_iter().collect();
+        let capabilities = if v1 || v2 {
+            BTreeSet::new()
+        } else {
+            d.strs()?.into_iter().collect()
+        };
         let mut rows = Vec::new();
         for _ in 0..d.u64()? {
             let seq = d.u64()?;
@@ -105,6 +129,7 @@ impl Batch {
         Ok(Batch {
             registered,
             active,
+            capabilities,
             rows,
         })
     }
@@ -115,6 +140,7 @@ impl Batch {
 pub struct History {
     pub registered: BTreeSet<String>,
     pub active: BTreeSet<String>,
+    pub capabilities: BTreeSet<String>,
     pub rows: Vec<Row>,
     pub files: Vec<String>,
     pub unreadable: Vec<String>,
@@ -128,6 +154,7 @@ impl History {
                 Ok(b) => {
                     h.registered.extend(b.registered);
                     h.active.extend(b.active);
+                    h.capabilities.extend(b.capabilities);
                     h.rows.extend(b.rows);
                     h.files.push(name);
                 }
@@ -157,6 +184,7 @@ impl History {
         let folded = Batch {
             registered: h.registered.clone(),
             active: h.active.clone(),
+            capabilities: h.capabilities.clone(),
             rows: h.rows.clone(),
         };
         let written = write_addressed(root, HISTORY_DIR, &folded.encode())?;
@@ -199,5 +227,17 @@ mod tests {
         let again = Batch::decode(&b.encode()).unwrap();
         assert_eq!(again, b);
         assert_eq!(Decoder::tag_of(&b.encode()), Some(HISTORY_TAG));
+    }
+
+    #[test]
+    fn batches_before_the_knowledge_floor_know_no_capabilities() {
+        let mut e = Encoder::new(HISTORY_TAG_V2);
+        e.strs(&["geo".to_string()]).strs(&[]);
+        e.u64(0);
+        let b = Batch::decode(&e.finish()).unwrap();
+        assert!(b.capabilities.is_empty());
+        let mut c = b.clone();
+        c.capabilities.insert("geo/distance".into());
+        assert_eq!(Batch::decode(&c.encode()).unwrap(), c);
     }
 }

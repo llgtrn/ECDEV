@@ -15,6 +15,10 @@ use crate::census::{Observation, Via};
 use crate::evidence::Verdict;
 use crate::schema::{Gate, Scope};
 
+/// The census `semantic_review` value that means every first-party source file was read for
+/// meaning, not only inventoried and parsed.
+pub const SEMANTIC_REVIEW_COMPLETE: &str = "COMPLETE";
+
 /// Everything observed about one donor.
 #[derive(Clone, Debug, Default)]
 pub struct DonorFacts {
@@ -28,6 +32,9 @@ pub struct DonorFacts {
     pub resident: Vec<String>,
     /// Nodes that consume, call, control or shim the donor, by key.
     pub dependents: Vec<String>,
+    /// The whole-source semantic review recorded by the donor's census (`summary.json`
+    /// `semantic_review`), if a census exists. Only `COMPLETE` lets the study be complete.
+    pub semantic_review: Option<String>,
 }
 
 impl DonorFacts {
@@ -41,6 +48,10 @@ impl DonorFacts {
         if !v.contains(&o) {
             v.push(o);
         }
+    }
+    /// Whether the donor's census records a COMPLETE whole-source semantic review.
+    pub fn semantic_complete(&self) -> bool {
+        self.semantic_review.as_deref() == Some(SEMANTIC_REVIEW_COMPLETE)
     }
     /// Whether the donor participates in the repository in any way.
     pub fn active(&self) -> bool {
@@ -255,11 +266,17 @@ pub fn gates(facts: &DonorFacts, caps: &[CapabilityVerdict], cutover: bool) -> V
                 .filter(|c| c.knowledge_open)
                 .map(|c| format!("{} ({})", c.key, c.knowledge_status))
                 .collect();
+            let semantic = facts.semantic_complete();
             GateResult {
                 gate: Gate::KnowledgeResolved,
-                pass: !caps.is_empty() && open.is_empty(),
+                pass: !caps.is_empty() && open.is_empty() && semantic,
                 detail: if caps.is_empty() {
                     "no capability extracted: nothing is known about what the donor teaches".into()
+                } else if open.is_empty() && !semantic {
+                    format!(
+                        "every declared capability is resolved, but the whole-source semantic review is {}: capabilities may remain unextracted",
+                        facts.semantic_review.as_deref().unwrap_or("NOT CENSUSED")
+                    )
                 } else if open.is_empty() {
                     format!(
                         "all {} declared capabilities have resolved knowledge",

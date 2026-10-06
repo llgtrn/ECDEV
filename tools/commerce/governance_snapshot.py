@@ -45,19 +45,25 @@ def main():
               "failing": [c for c in checks if not c["pass"]], "checks": checks,
               "v1_gate": conformance["v1_gate"], "metrics": conformance["metrics"]}
     metrics = dict(conformance["metrics"]) if isinstance(conformance["metrics"], dict) else {m["name"]: m["value"] for m in conformance["metrics"]}
-    knowledge_keys = ["known_donor_capabilities", "knowledge_unreviewed", "study_candidates", "benchmark_candidates",
-                      "algorithm_candidates", "reference_only", "study_complete_capabilities", "no_research_value",
-                      "research_questions_open", "knowledge_coverage_ratio", "donors_knowledge_unreviewed",
-                      "donors_structural_census", "donors_active_study", "donors_study_complete", "donors_with_open_research"]
+    knowledge_keys = ["known_donor_capabilities", "semantic_censused_capabilities", "unreviewed_capabilities",
+                      "capabilities_withdrawn", "study_candidates", "benchmark_candidates", "algorithm_candidates",
+                      "reference_only", "study_complete_capabilities", "not_relevant_after_review",
+                      "research_questions_open", "knowledge_coverage_ratio"]
+    donor_coverage_keys = ["donors_knowledge_unreviewed", "donors_structural_census", "donors_semantic_census",
+                           "donors_active_study", "donors_study_complete", "donors_structurally_censused",
+                           "donors_semantically_censused", "donors_with_open_candidates", "donors_with_open_research"]
     production_keys = ["production_capabilities_required", "production_capabilities_native", "production_capabilities_proven",
                        "production_capabilities_remaining", "production_native_ratio", "production_proof_ratio"]
     knowledge = {**base, "source": "ecdev-gov extinction --json and conformance --json",
                  "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
                  "production": {k: metrics.get(k) for k in production_keys},
                  "knowledge": {k: metrics.get(k) for k in knowledge_keys},
+                 "donor_coverage": {k: metrics.get(k) for k in donor_coverage_keys},
                  "denominators": {"production": "required capabilities of runtime-active donors only",
-                                  "knowledge": "every declared capability of every declared donor, runtime-rejected donors included"},
+                                  "knowledge": "every declared capability of every declared donor, runtime-rejected donors included, plus every capability an earlier census recorded that is no longer declared or absorbed (capabilities_withdrawn)",
+                                  "donor_coverage": "every declared donor; STUDY_COMPLETE needs a census whole-source semantic_review of COMPLETE"},
                  "donors": [{"donor": d["donor"], "runtime": d["runtime"], "effective": d["effective"], "knowledge": d["knowledge"],
+                             "licence_policy": {k: v for k, v in d["licence_policy"].items() if k != "basis"},
                              "open": [c["key"] + " " + c["knowledge"] for c in d["capabilities"] if c["open"]],
                              "resolved": [c["key"] + " " + c["knowledge"] for c in d["capabilities"] if not c["open"]]}
                             for d in donors]}

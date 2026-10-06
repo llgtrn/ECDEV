@@ -66,15 +66,81 @@ pub struct DonorAssessment {
     pub knowledge: crate::schema::KnowledgeState,
 }
 
-/// The knowledge state a donor's capability decisions add up to.
-pub fn knowledge_state(caps: &[CapabilityVerdict]) -> crate::schema::KnowledgeState {
+/// The knowledge status of a capability key recorded by an earlier census that no declared
+/// capability carries or absorbs.
+pub const WITHDRAWN: &str = "WITHDRAWN";
+
+/// Capability keys of `dn` recorded in history (`<donor>/<key>`) that no declared capability of
+/// `dn` carries or absorbs.
+pub fn withdrawn_capabilities(dn: &Donor, history: &History) -> Vec<String> {
+    let prefix = format!("{}/", dn.key);
+    let carried: BTreeSet<&str> = dn
+        .capabilities
+        .iter()
+        .flat_map(|c| std::iter::once(c.key.as_str()).chain(c.absorbs.iter().map(String::as_str)))
+        .collect();
+    history
+        .capabilities
+        .iter()
+        .filter_map(|k| k.strip_prefix(&prefix))
+        .filter(|k| !carried.contains(k))
+        .map(str::to_string)
+        .collect()
+}
+
+/// A withdrawn capability: still known, its knowledge open, so the donor cannot claim its study
+/// complete (nor reach EXTINCT) by deleting it.
+fn withdrawn_verdict(key: String) -> CapabilityVerdict {
+    CapabilityVerdict {
+        key,
+        required: false,
+        specified: true,
+        targeted: false,
+        replacement_exists: false,
+        replacement_canonical: false,
+        mapped: false,
+        relevance_resolved: true,
+        knowledge: format!("{WITHDRAWN}: no declared capability carries or absorbs it"),
+        knowledge_status: WITHDRAWN.into(),
+        knowledge_open: true,
+        native: false,
+        native_detail: "withdrawn from the declaration".into(),
+        parity: vec![],
+        regression: vec![],
+    }
+}
+
+/// The whole-source semantic review of the donor's census: `semantic_review` of the census
+/// `summary.json` beside any `identity.json` (or a `summary.json` itself) named in its provenance.
+pub fn semantic_review(files: &Files, dn: &Donor) -> Option<String> {
+    dn.provenance.iter().find_map(|p| {
+        let summary = if p.ends_with("/summary.json") {
+            p.clone()
+        } else {
+            format!("{}/summary.json", p.strip_suffix("/identity.json")?)
+        };
+        let v = crate::formats::json::parse(&files.read(&summary)?).ok()?;
+        v.str("semantic_review").map(str::to_string)
+    })
+}
+
+/// The knowledge state a donor's capability decisions and census coverage add up to.
+pub fn knowledge_state(
+    caps: &[CapabilityVerdict],
+    semantic_complete: bool,
+) -> crate::schema::KnowledgeState {
     use crate::schema::KnowledgeState as K;
     if caps.is_empty() {
         K::Unreviewed
-    } else if caps.iter().any(|c| c.knowledge_status == "UNREVIEWED") {
+    } else if caps
+        .iter()
+        .any(|c| c.knowledge_status == "UNREVIEWED" || c.knowledge_status == WITHDRAWN)
+    {
         K::StructuralCensus
     } else if caps.iter().any(|c| c.knowledge_open) {
         K::ActiveStudy
+    } else if !semantic_complete {
+        K::SemanticCensus
     } else {
         K::StudyComplete
     }
@@ -383,7 +449,18 @@ pub fn analyze(
 
     for dn in &d.donors {
         let f = facts.remove(dn.key.as_str()).unwrap();
-        let caps = capability_verdicts(d, files, store, dn, &|node| uses_donor(node, &dn.key));
+        let mut f = f;
+        f.semantic_review = semantic_review(files, dn);
+        let mut caps = capability_verdicts(d, files, store, dn, &|node| uses_donor(node, &dn.key));
+        for key in withdrawn_capabilities(dn, history) {
+            a.findings.push(Finding::new(
+                Severity::Error,
+                "CAPABILITY_WITHDRAWN",
+                &format!("{}/{key}", dn.key),
+                "recorded by an earlier census and no longer declared; a known capability leaves the knowledge denominator only when a declared capability of the same donor absorbs it (`absorbs`)",
+            ));
+            caps.push(withdrawn_verdict(key));
+        }
         let assessment = assess(d, dn, f, caps, history, &mut a.findings);
         a.donors.push(assessment);
     }
@@ -818,7 +895,7 @@ fn assess(
         claimed: dn.claimed,
         effective,
         exception,
-        knowledge: knowledge_state(&caps),
+        knowledge: knowledge_state(&caps, facts.semantic_complete()),
         capabilities: caps,
         gates: gate_results,
         facts,

@@ -49,19 +49,33 @@ fn legacy_repo() -> Repo {
         "/* sqlite btree */\nint sqlite3BtreeOpen(void) { return 0; }\n",
     );
     r.write("vendor/d412/x.c", "int x(void) { return 1; }\n");
-    let donor = |key: &str, origin: &str, license: &str, claimed: DonorState| Donor {
-        key: key.into(),
-        name: key.into(),
-        origin: origin.into(),
-        license: license.into(),
-        claimed,
-        exception: None,
-        packages: vec![],
-        source_paths: vec![],
-        capabilities: vec![],
-        cutover: None,
-        provenance: vec!["fixture".into()],
+    let donor = |key: &str, origin: &str, license: &str, claimed: DonorState| {
+        // Every fixture donor's whole source was read for meaning.
+        r.write(
+            &format!("research/census/{key}/summary.json"),
+            "{\"semantic_review\": \"COMPLETE\"}\n",
+        );
+        donor_record(key, origin, license, claimed)
     };
+    fn donor_record(key: &str, origin: &str, license: &str, claimed: DonorState) -> Donor {
+        Donor {
+            key: key.into(),
+            name: key.into(),
+            origin: origin.into(),
+            license: license.into(),
+            claimed,
+            exception: None,
+            packages: vec![],
+            source_paths: vec![],
+            capabilities: vec![],
+            cutover: None,
+            provenance: vec![
+                "fixture".into(),
+                format!("research/census/{key}/summary.json"),
+            ],
+        }
+    }
+
     let mut sqlite = donor(
         "d411-sqlite",
         "https://github.com/sqlite/sqlite",
@@ -217,6 +231,7 @@ fn declared_repository_reaches_v1() {
         maps_to: Some(format!("capability/{key}")),
         relevance: Relevance::ReliedOn(format!("ECDEV calls {key} on its production path")),
         knowledge: Knowledge::Absorbed("native and proven".into()),
+        absorbs: vec![],
         proofs: vec![
             proof(ProofKind::Parity, parity),
             proof(ProofKind::Regression, regression),

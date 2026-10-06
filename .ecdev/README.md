@@ -35,13 +35,34 @@ Two independent questions are asked of every donor capability.
   `NoResearchValue` is only admissible on a scope ground (frontend, release tooling, assets,
   vendor telemetry, hosted-service plumbing, language bindings, unrelated domain); "no current
   caller", "a different native implementation", "a restrictive licence" or "not evidence" are
-  rejected by `knowledge.irrelevance_admissible` — they constrain adoption, never knowledge.
+  rejected by `knowledge.irrelevance_admissible` — they constrain adoption, never knowledge. An
+  unrelated-domain closure whose own reason names an ECDEV target domain (market, product,
+  demand, competition, supplier, sourcing, economics, PPC, listing, seller operations,
+  monitoring, trends, memory/evidence, simulation, decision support, learning) is refused too:
+  "yes or uncertain" keeps the question open.
 
 A runtime-rejected donor stays in the knowledge universe; its donor knowledge state is
-`UNREVIEWED`, `STRUCTURAL_CENSUS`, `ACTIVE_STUDY` or `STUDY_COMPLETE`. Production metrics
+`UNREVIEWED`, `STRUCTURAL_CENSUS`, `SEMANTIC_CENSUS` (every extracted capability decided, but the
+census whole-source `semantic_review` is not `COMPLETE`), `ACTIVE_STUDY` or `STUDY_COMPLETE`
+(semantic review `COMPLETE` and every capability resolved). Production metrics
 (`production_capabilities_*`) and knowledge metrics (`known_donor_capabilities`,
-`research_questions_open`, `knowledge_coverage_ratio`, ...) are reported separately: 100 %
-production completion never means the known donor universe is studied.
+`semantic_censused_capabilities`, `unreviewed_capabilities`, `not_relevant_after_review`,
+`research_questions_open`, `knowledge_coverage_ratio`, `donors_semantically_censused`,
+`donors_with_open_candidates`, ...) are reported separately: 100 % production completion never
+means the known donor universe is studied.
+
+The knowledge denominator never shrinks. `census --record` stores every known
+`<donor>/<capability>` key in `.ecdev/history/`; a recorded key that is no longer declared counts
+as `capabilities_withdrawn` (known and open), raises `CAPABILITY_WITHDRAWN`, blocks the donor's
+study and extinction, and fails `knowledge.denominator_preserved` — unless a declared capability of
+the same donor lists it in `absorbs` (a rename or split).
+
+Licence policy is three separate answers read off the declared licence string (`src/licence.rs`;
+a governance policy, not a legal conclusion): code adoption (`ADOPT_WITH_NOTICE`,
+`NOT_COPIED_WITHOUT_REVIEW`, `NOT_COPIED`, `NOT_COPIED_UNTIL_VERIFIED`), knowledge study
+(`STUDY_AND_DERIVE` or `STUDY_READ_ONLY` — never forbidden), and native reimplementation
+(`DERIVED_WITH_ATTRIBUTION` or `CLEAN_ROOM_ONLY`). `licence.derivation_admissible` refuses an
+`Absorbed` (derived-native) capability of a clean-room-only donor.
 
 EXTINCT requires every gate: no runtime/build/linked/test edge, no import, no resident donor
 source, native canonical replacements with fresh parity and regression proofs, full mapping,

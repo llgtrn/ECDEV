@@ -127,6 +127,7 @@ pub fn donor(key: &str, package: &str) -> Donor {
             maps_to: Some("capability/distance".into()),
             relevance: Relevance::ReliedOn("distance between two points".into()),
             knowledge: Knowledge::Absorbed("native and proven".into()),
+            absorbs: vec![],
             proofs: vec![
                 proof(
                     ProofKind::Parity,
@@ -139,7 +140,10 @@ pub fn donor(key: &str, package: &str) -> Donor {
             ],
         }],
         cutover: Some("wave-geo".into()),
-        provenance: vec!["fixture".into()],
+        provenance: vec![
+            "fixture".into(),
+            format!("research/census/{key}/identity.json"),
+        ],
     }
 }
 
@@ -152,6 +156,11 @@ pub fn extinct_baseline(name: &str) -> Repo {
         "[workspace]\nresolver = \"2\"\nmembers = [\"core\", \"substrate/geo\", \"tests\"]\n",
     );
     r.write("README.md", "# fixture\n");
+    // The donor's whole source was read for meaning: its study can be complete.
+    r.write(
+        "research/census/geo/summary.json",
+        "{\"semantic_review\": \"COMPLETE\"}\n",
+    );
     r.write(
         "core/Cargo.toml",
         "[package]\nname = \"core-kernel\"\nversion = \"0.1.0\"\nedition = \"2021\"\n",

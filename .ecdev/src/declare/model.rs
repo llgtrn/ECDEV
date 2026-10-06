@@ -104,6 +104,10 @@ pub struct Capability {
     /// Knowledge value (question B), independent of adoption: what ECDEV still has to learn
     /// from this capability. A runtime-rejected donor keeps every capability here.
     pub knowledge: Knowledge,
+    /// Earlier capability keys of this donor (renamed or split) whose knowledge this capability
+    /// carries. A key recorded by an earlier census leaves the knowledge denominator only when
+    /// some declared capability absorbs it.
+    pub absorbs: Vec<String>,
     pub proofs: Vec<Proof>,
 }
 
@@ -225,6 +229,47 @@ pub enum Knowledge {
     NoResearchValue(ResearchScope, String),
 }
 
+/// ECDEV's target domains, each with the words that name it. Any capability that could serve
+/// one of them — or might — keeps a research question: an UNRELATED_DOMAIN closure whose own
+/// reason names a target domain is uncertain by its own words and is refused.
+pub const TARGET_DOMAINS: &[(&str, &[&str])] = &[
+    ("market discovery", &["market"]),
+    ("product discovery", &["product discovery", "catalog"]),
+    ("demand validation", &["demand", "sales"]),
+    ("competition analysis", &["competit", "rival"]),
+    ("supplier discovery", &["supplier", "manufactur"]),
+    ("sourcing", &["sourcing", "procure"]),
+    (
+        "economics",
+        &["margin", "fee", "price", "pricing", "cost", "profit"],
+    ),
+    ("PPC planning", &["ppc", "advertis", "keyword", "bid"]),
+    ("listing preparation", &["listing"]),
+    ("seller operations", &["seller", "inventory", "fulfil"]),
+    ("monitoring", &["monitor", "watch", "alert"]),
+    ("trend intelligence", &["trend", "viral", "social"]),
+    (
+        "memory and evidence",
+        &["memory", "evidence", "provenance", "temporal"],
+    ),
+    ("simulation", &["simulat", "scenario", "agent-based"]),
+    ("decision support", &["decision", "recommend", "forecast"]),
+    (
+        "learning",
+        &["learning", "ranking", "scoring", "cluster", "embedding"],
+    ),
+];
+
+/// The target domains an UNRELATED_DOMAIN reason itself names.
+pub fn target_domains_named(reason: &str) -> Vec<&'static str> {
+    let lower = reason.to_lowercase();
+    TARGET_DOMAINS
+        .iter()
+        .filter(|(_, words)| words.iter().any(|w| lower.contains(w)))
+        .map(|(d, _)| *d)
+        .collect()
+}
+
 /// Phrases that justify not adopting a capability but never its research irrelevance.
 pub const INADMISSIBLE_IRRELEVANCE: &[&str] = &[
     "no current caller",
@@ -322,6 +367,15 @@ impl Knowledge {
             if let Some(p) = INADMISSIBLE_IRRELEVANCE.iter().find(|p| lower.contains(*p)) {
                 return Some(format!(
                     "\"{p}\" constrains adoption, not research value; use NotAdopted for the runtime decision and a study, benchmark, algorithm or reference status for the knowledge"
+                ));
+            }
+        }
+        if let Knowledge::NoResearchValue(ResearchScope::UnrelatedDomain, t) = self {
+            let named = target_domains_named(t);
+            if !named.is_empty() {
+                return Some(format!(
+                    "UNRELATED_DOMAIN, yet the reason names ECDEV target domains ({}); a capability that could serve one keeps a study, benchmark, algorithm or reference status",
+                    named.join(", ")
                 ));
             }
         }
