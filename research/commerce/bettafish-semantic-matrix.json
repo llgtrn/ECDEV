@@ -1,0 +1,65 @@
+{
+  "donor_id": "666ghj--BettaFish",
+  "commit_sha": "b67928ff1ce515dd7672408221fb1e9500d0972d",
+  "license": "GPL-2.0",
+  "tracked_files": 302,
+  "license_constraint": "copyleft: clean-room study only; no code, prompts, weights or data copied into ECDEV",
+  "rows": [
+    {
+      "source": "InsightEngine/agent.py _deduplicate_results",
+      "behaviour": "dedup by URL else first 100 chars of text",
+      "ecdev_relevance": "NOT_RELIED_ON_INDEPENDENT_NATIVE",
+      "reason": "domain/commerce/src/social.rs::deduplicate collapses stable platform/native IDs and records text collisions as CONFLICT; text prefixes are never identity"
+    },
+    {
+      "source": "InsightEngine/agent.py _cluster_and_sample_results",
+      "behaviour": "sentence-embedding KMeans (k=max//per_cluster, seed 42) then top hotness per cluster",
+      "ecdev_relevance": "NOT_RELIED_ON_INDEPENDENT_NATIVE",
+      "reason": "domain/commerce/src/social.rs::clusters is deterministic lexical Jaccard with shared-term and 7-day co-occurrence rules; embedding similarity is explicitly UNAVAILABLE; hotness sampling would hide evidence"
+    },
+    {
+      "source": "InsightEngine/agent.py _perform_sentiment_analysis, SentimentAnalysisModel/ (55 files)",
+      "behaviour": "fine-tuned BERT/Qwen/ML Weibo sentiment models",
+      "ecdev_relevance": "NOT_RELIED_ON_INDEPENDENT_NATIVE",
+      "reason": "domain/commerce/src/social.rs::sentiment is a disclosed lexicon score; trained models and weights are not adopted (zero-paid, no model dependency)"
+    },
+    {
+      "source": "InsightEngine/agent.py execute_search_tool, InsightEngine/tools",
+      "behaviour": "query a crawled MySQL corpus with keyword-optimization LLM middleware",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "ECDEV queries public sources live through bounded, robots-respecting adapters"
+    },
+    {
+      "source": "MindSpider/ (21 files)",
+      "behaviour": "logged-in crawling of Weibo, Douyin, Xiaohongshu and others into MySQL",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "requires platform logins and anti-bot evasion; ECDEV never bypasses authentication or CAPTCHA"
+    },
+    {
+      "source": "QueryEngine/, MediaEngine/, ForumEngine/",
+      "behaviour": "LLM agents that search, summarise and debate",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "LLM summaries are not evidence under ECDEV evidence states"
+    },
+    {
+      "source": "ReportEngine/ (53 files)",
+      "behaviour": "LLM report generation with IR, templates and HTML/PDF renderers",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "ECDEV reports are derived from persisted evidence, not generated prose"
+    },
+    {
+      "source": "app.py, SingleEngineApp/, templates/, static/, logs/, *_streamlit_reports/, final_reports/",
+      "behaviour": "Flask/Streamlit apps and stored outputs",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "UI and sample outputs"
+    },
+    {
+      "source": "utils/, config.py, export/regenerate scripts, Docker, tests/, docs",
+      "behaviour": "plumbing, configuration, packaging",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "tooling"
+    }
+  ],
+  "conclusion": "Techniques ECDEV wanted (dedup, clustering, temporal movement, sentiment, noise handling) are independently native with different, evidence-preserving semantics; BettaFish behaviour is not reproduced or depended on and no code was copied (GPL). Crawling, LLM agents and reports are out of scope. Declared REJECTED: evaluated, never adopted.",
+  "observed_edges": "none in any census"
+}

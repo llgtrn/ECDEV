@@ -1,0 +1,41 @@
+{
+  "donor_id": "666ghj--MiroFish",
+  "commit_sha": "7657031ac01184afe2cb220f5ee3545573b5e843",
+  "license": "AGPL-3.0",
+  "tracked_files": 128,
+  "license_constraint": "copyleft: clean-room study only; no code, prompts, weights or data copied into ECDEV",
+  "rows": [
+    {
+      "source": "backend/app/services/simulation_manager.py, simulation_runner.py, simulation_config_generator.py",
+      "behaviour": "OASIS multi-agent social simulation lifecycle and LLM-generated configs",
+      "ecdev_relevance": "NOT_RELIED_ON_INDEPENDENT_NATIVE",
+      "reason": "ECDEV keeps an explicit SIMULATED boundary that contributes zero observed metrics; simulation execution is UNAVAILABLE and no simulator is adopted"
+    },
+    {
+      "source": "backend/app/services/oasis_profile_generator.py to_reddit_format/to_twitter_format",
+      "behaviour": "LLM-generated agent personas in platform formats",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "synthetic personas are not observations"
+    },
+    {
+      "source": "backend/app/services graph/memory (Zep Cloud) and report agents",
+      "behaviour": "knowledge graph via Zep Cloud and LLM reports",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "managed service and generated prose"
+    },
+    {
+      "source": "backend/app/api, models, utils; frontend/ (Vue); locales; static",
+      "behaviour": "web application",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "UI and plumbing"
+    },
+    {
+      "source": "backend/tests, tests/, scripts/ (star history), .github",
+      "behaviour": "tests and repository tooling",
+      "ecdev_relevance": "NOT_RELEVANT_TO_ECDEV",
+      "reason": "tooling"
+    }
+  ],
+  "conclusion": "Simulation is kept as an explicit SIMULATED boundary with zero observed contribution; MiroFish code, simulator and personas are not adopted (AGPL). Declared REJECTED: evaluated, never adopted.",
+  "observed_edges": "none in any census"
+}
