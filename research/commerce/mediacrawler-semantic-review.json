@@ -1,0 +1,1082 @@
+{
+  "donor_id": "NanmiCoder--MediaCrawler",
+  "commit_sha": "bf28178082bc69989954f65a13a17bc129b9aa6e",
+  "license": "NON-COMMERCIAL-LEARNING-1.1: clean-room only, nothing copied",
+  "method": "every first-party file reviewed by a read-only review (platform clients, login, signing and core modules read in detail; console and docs by purpose); slider-CAPTCHA solving, the dummy x-tt-argus gateway header and the cross-process SMS cache were spot-checked against the source",
+  "findings": [
+    "Every platform crawler forces a logged-in session (QR, phone/SMS or cookie capture) when a probe fails; data is in practice fetched logged in",
+    "Circumvention throughout: stealth scripts and AutomationControlled disabling, real-browser CDP attach, automated slider-CAPTCHA solving (OpenCV Canny + matchTemplate, eased drag trajectories), re-implemented or hooked request signatures (x-s, a_bogus, x-zse-96, WBI, __NS_hxfalcon), a dummy x-tt-argus header to pass an edge gateway, fake navigation paths and in-browser fetches to avoid TLS blocking, proxy rotation against IP bans",
+    "Non-circumvention patterns of value: comment trees flattened with parent ids and sub-comment counts, four cursor styles with a repeated-offset stall guard, date-sliced search with per-day quotas, jittered backoff on explicit throttle codes with non-retryable error classes, keyword-provenance tagging of stored posts, offline HTML fixtures for parser regression",
+    "Defects: CJK abbreviated counts (1.2万) lose their unit, the creator hash is unsalted and linkable, and the SMS relay cannot reach the login loop because each process has its own memory cache"
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "api/__init__.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/main.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/routers/__init__.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/routers/crawler.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/routers/data.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/routers/websocket.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/schemas/__init__.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/schemas/crawler.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/services/__init__.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "api/services/crawler_manager.py",
+        "capabilities": "social.mediacrawler.task-api",
+        "why": "single-flight job API, log streaming, data browser"
+      },
+      {
+        "prefix": "base/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "base/base_crawler.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "cache/__init__.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "expiring local and Redis cache"
+      },
+      {
+        "prefix": "cache/abs_cache.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "expiring local and Redis cache"
+      },
+      {
+        "prefix": "cache/cache_factory.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "expiring local and Redis cache"
+      },
+      {
+        "prefix": "cache/local_cache.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "expiring local and Redis cache"
+      },
+      {
+        "prefix": "cache/redis_cache.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "expiring local and Redis cache"
+      },
+      {
+        "prefix": "cmd_arg/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "cmd_arg/arg.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/base_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/bilibili_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/db_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/dy_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/ks_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/tieba_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/weibo_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/xhs_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "config/zhihu_config.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "constant/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "constant/baidu_tieba.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "constant/zhihu.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "database/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "database/db.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "database/db_session.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "database/models.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "database/mongodb_store_base.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "docs/.vitepress/config.mjs",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "docs/.vitepress/theme/DynamicAds.vue",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "docs/.vitepress/theme/MyLayout.vue",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "docs/.vitepress/theme/custom.css",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "docs/.vitepress/theme/index.js",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "libs/douyin.js",
+        "capabilities": "social.mediacrawler.request-signing",
+        "why": "platform request signatures re-implemented, executed from obfuscated JS, or hooked from the page"
+      },
+      {
+        "prefix": "libs/zhihu.js",
+        "capabilities": "social.mediacrawler.request-signing",
+        "why": "platform request signatures re-implemented, executed from obfuscated JS, or hooked from the page"
+      },
+      {
+        "prefix": "main.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "media_downloader/__init__.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_downloader/downloader.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_downloader/ffmpeg.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_downloader/paths.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_downloader/types.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/__init__.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/bilibili/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/bilibili/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/bilibili/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/bilibili/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/bilibili/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/bilibili/help.py",
+        "capabilities": "social.mediacrawler.request-signing + social.mediacrawler.response-extractors",
+        "why": "signature generation (a_bogus, x-zse-96, WBI w_rid, __NS_hxfalcon) plus URL and response parsing"
+      },
+      {
+        "prefix": "media_platform/bilibili/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/bilibili/media.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/douyin/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/douyin/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/douyin/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/douyin/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/douyin/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/douyin/help.py",
+        "capabilities": "social.mediacrawler.request-signing + social.mediacrawler.response-extractors",
+        "why": "signature generation (a_bogus, x-zse-96, WBI w_rid, __NS_hxfalcon) plus URL and response parsing"
+      },
+      {
+        "prefix": "media_platform/douyin/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/douyin/media.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/kuaishou/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/kuaishou/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/kuaishou/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/kuaishou/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/comment_list.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/search_query.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/video_detail.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/vision_profile.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/vision_profile_photo_list.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/vision_profile_user_list.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/graphql/vision_sub_comment_list.graphql",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/kuaishou/help.py",
+        "capabilities": "social.mediacrawler.request-signing + social.mediacrawler.response-extractors",
+        "why": "signature generation (a_bogus, x-zse-96, WBI w_rid, __NS_hxfalcon) plus URL and response parsing"
+      },
+      {
+        "prefix": "media_platform/kuaishou/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/kuaishou/media.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/tieba/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/tieba/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/tieba/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/tieba/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/tieba/help.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/tieba/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/weibo/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/weibo/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/weibo/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/weibo/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/weibo/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/weibo/help.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/weibo/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/weibo/media.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/xhs/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/xhs/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/xhs/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/xhs/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/xhs/extractor.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/xhs/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/xhs/help.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/xhs/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "media_platform/xhs/media.py",
+        "capabilities": "social.mediacrawler.download_media",
+        "why": "media URL extraction and resumable download"
+      },
+      {
+        "prefix": "media_platform/xhs/playwright_sign.py",
+        "capabilities": "social.mediacrawler.request-signing",
+        "why": "platform request signatures re-implemented, executed from obfuscated JS, or hooked from the page"
+      },
+      {
+        "prefix": "media_platform/xhs/xhs_sign.py",
+        "capabilities": "social.mediacrawler.request-signing",
+        "why": "platform request signatures re-implemented, executed from obfuscated JS, or hooked from the page"
+      },
+      {
+        "prefix": "media_platform/zhihu/__init__.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "package exports"
+      },
+      {
+        "prefix": "media_platform/zhihu/client.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.comment-tree-pagination",
+        "why": "HTTP clients, cursor pagination, retry and backoff, signing hooks"
+      },
+      {
+        "prefix": "media_platform/zhihu/core.py",
+        "capabilities": "social.mediacrawler.search + social.mediacrawler.get_comments + social.mediacrawler.get_creators_and_notes + social.mediacrawler.platform-orchestrators",
+        "why": "per-platform crawl modes, semaphore concurrency, sleeps; stealth injection"
+      },
+      {
+        "prefix": "media_platform/zhihu/exception.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/zhihu/field.py",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "enums, errors, URL and embedded-state parsers, GraphQL documents"
+      },
+      {
+        "prefix": "media_platform/zhihu/help.py",
+        "capabilities": "social.mediacrawler.request-signing + social.mediacrawler.response-extractors",
+        "why": "signature generation (a_bogus, x-zse-96, WBI w_rid, __NS_hxfalcon) plus URL and response parsing"
+      },
+      {
+        "prefix": "media_platform/zhihu/login.py",
+        "capabilities": "social.mediacrawler.platform-login",
+        "why": "QR, phone/SMS and cookie session capture"
+      },
+      {
+        "prefix": "model/__init__.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_baidu_tieba.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_bilibili.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_douyin.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_kuaishou.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_weibo.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_xiaohongshu.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "model/m_zhihu.py",
+        "capabilities": "social.mediacrawler.data-models",
+        "why": "content, comment and creator schemas"
+      },
+      {
+        "prefix": "proxy/__init__.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "expiring proxy leases, validation and rotation"
+      },
+      {
+        "prefix": "proxy/base_proxy.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "expiring proxy leases, validation and rotation"
+      },
+      {
+        "prefix": "proxy/providers/__init__.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "commercial proxy vendor adapters"
+      },
+      {
+        "prefix": "proxy/providers/jishu_http_proxy.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "commercial proxy vendor adapters"
+      },
+      {
+        "prefix": "proxy/providers/kuaidl_proxy.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "commercial proxy vendor adapters"
+      },
+      {
+        "prefix": "proxy/providers/wandou_http_proxy.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "commercial proxy vendor adapters"
+      },
+      {
+        "prefix": "proxy/proxy_ip_pool.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "expiring proxy leases, validation and rotation"
+      },
+      {
+        "prefix": "proxy/proxy_mixin.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "expiring proxy leases, validation and rotation"
+      },
+      {
+        "prefix": "proxy/types.py",
+        "capabilities": "social.mediacrawler.proxy-pool",
+        "why": "expiring proxy leases, validation and rotation"
+      },
+      {
+        "prefix": "recv_sms.py",
+        "capabilities": "social.mediacrawler.sms-code-relay",
+        "why": "SMS code relay for phone login (non-functional across processes)"
+      },
+      {
+        "prefix": "store/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/bilibili/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/bilibili/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/douyin/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/douyin/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/excel_store_base.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/kuaishou/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/kuaishou/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/tieba/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/tieba/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/weibo/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/weibo/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/xhs/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.update_xhs_note + social.mediacrawler.update_xhs_note_comment + social.mediacrawler.save_creator",
+        "why": "Xiaohongshu field mapping and persistence"
+      },
+      {
+        "prefix": "store/xhs/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.update_xhs_note + social.mediacrawler.update_xhs_note_comment + social.mediacrawler.save_creator",
+        "why": "Xiaohongshu field mapping and persistence"
+      },
+      {
+        "prefix": "store/zhihu/__init__.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "store/zhihu/_store_impl.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "tools/__init__.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/app_runner.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/async_file_writer.py",
+        "capabilities": "social.mediacrawler.store_content + social.mediacrawler.store_comment + social.mediacrawler.store_creator + social.mediacrawler.storage-backends",
+        "why": "store factory over file and database sinks"
+      },
+      {
+        "prefix": "tools/browser_launcher.py",
+        "capabilities": "social.mediacrawler.anti-detection",
+        "why": "automation hiding, OpenCV slider-CAPTCHA solving with human-like trajectories, real-browser CDP attach"
+      },
+      {
+        "prefix": "tools/cdp_browser.py",
+        "capabilities": "social.mediacrawler.anti-detection",
+        "why": "automation hiding, OpenCV slider-CAPTCHA solving with human-like trajectories, real-browser CDP attach"
+      },
+      {
+        "prefix": "tools/crawler_util.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/easing.py",
+        "capabilities": "social.mediacrawler.anti-detection",
+        "why": "automation hiding, OpenCV slider-CAPTCHA solving with human-like trajectories, real-browser CDP attach"
+      },
+      {
+        "prefix": "tools/file_header_manager.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/httpx_util.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/slider_util.py",
+        "capabilities": "social.mediacrawler.anti-detection",
+        "why": "automation hiding, OpenCV slider-CAPTCHA solving with human-like trajectories, real-browser CDP attach"
+      },
+      {
+        "prefix": "tools/time_util.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/user_hash.py",
+        "capabilities": "social.mediacrawler.privacy-pseudonymisation",
+        "why": "unsalted sha256 creator hash and masked nicknames"
+      },
+      {
+        "prefix": "tools/utils.py",
+        "capabilities": "social.mediacrawler.runtime-utils",
+        "why": "time, count and cookie parsing, UA pools, shutdown"
+      },
+      {
+        "prefix": "tools/words.py",
+        "capabilities": "social.mediacrawler.text-mining",
+        "why": "jieba word frequencies and word cloud"
+      },
+      {
+        "prefix": "var.py",
+        "capabilities": "social.mediacrawler.platform-orchestrators",
+        "why": "entry point, configuration, abstract interfaces"
+      },
+      {
+        "prefix": "webui/index.html",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/postcss.config.js",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/App.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/config/CrawlerConfigPanel.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/config/ParsedIdList.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/console/Terminal.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/console/TerminalLine.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/data/DataExplorer.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/data/DataExplorerDialog.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/data/FileCard.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/data/preview/DataPreviewDialog.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/data/preview/DataPreviewTable.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/env/EnvironmentCheck.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/layout/AuthorFooter.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/layout/LanguageSwitch.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/layout/MainContent.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/layout/Sidebar.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/layout/ThemeToggle.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/license/LicenseDisclaimer.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/accordion.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/badge.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/button.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/card.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/checkbox.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/dialog.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/input.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/label.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/scroll-area.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/select.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/components/ui/tabs.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/hooks/useCrawler.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/hooks/useWebSocket.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/i18n/index.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/index.css",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/lib/api.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/lib/urlParser.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/lib/utils.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/main.tsx",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/store/crawlerStore.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/store/themeStore.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/types/crawler.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/src/vite-env.d.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/tailwind.config.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "webui/vite.config.ts",
+        "capabilities": "social.mediacrawler.application",
+        "why": "React console and documentation site"
+      },
+      {
+        "prefix": "media_platform/tieba/test_data/note_comments.html",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "offline HTML fixtures for parser regression tests"
+      },
+      {
+        "prefix": "media_platform/tieba/test_data/note_detail.html",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "offline HTML fixtures for parser regression tests"
+      },
+      {
+        "prefix": "media_platform/tieba/test_data/note_sub_comments.html",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "offline HTML fixtures for parser regression tests"
+      },
+      {
+        "prefix": "media_platform/tieba/test_data/search_keyword_notes.html",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "offline HTML fixtures for parser regression tests"
+      },
+      {
+        "prefix": "media_platform/tieba/test_data/tieba_note_list.html",
+        "capabilities": "social.mediacrawler.response-extractors",
+        "why": "offline HTML fixtures for parser regression tests"
+      }
+    ]
+  }
+}

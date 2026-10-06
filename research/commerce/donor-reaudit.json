@@ -187,6 +187,58 @@
         {
           "capability": "social.bettafish.llm-agents-and-reports",
           "knowledge": "REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)"
+        },
+        {
+          "capability": "social.bettafish.engagement-hotness-scoring",
+          "knowledge": "BENCHMARK_CANDIDATE(does a per-platform weighted engagement score (comments x5, shares and favourites x10) rank product posts by later sales or search movement better than raw likes)"
+        },
+        {
+          "capability": "social.bettafish.query-expansion-keywords",
+          "knowledge": "BENCHMARK_CANDIDATE(does rewriting a product query into consumer slang raise recall of relevant reviews and posts without collapsing precision at k on a labelled sample)"
+        },
+        {
+          "capability": "social.bettafish.trending-topic-extraction",
+          "knowledge": "STUDY_CANDIDATE(daily hot-list titles with keyword extraction as an early signal of emerging product categories and brands: lead time and hit rate against search-trend data)"
+        },
+        {
+          "capability": "social.bettafish.topic-classification",
+          "knowledge": "STUDY_CANDIDATE(supervised or retrieval-based routing of reviews and posts into product-category and aspect buckets (price, quality, logistics) at adequate macro-F1)"
+        },
+        {
+          "capability": "social.bettafish.sentiment-aggregation",
+          "knowledge": "ALGORITHM_CANDIDATE(per-product sentiment shares reported with sample size and confidence intervals and tracked week over week, never percentages without counts)"
+        },
+        {
+          "capability": "social.bettafish.web-news-search",
+          "knowledge": "BENCHMARK_CANDIDATE(do paid AI-search APIs give a reproducible, dated evidence set for competitor launches and pricing news, and what share of their claims is source-backed)"
+        },
+        {
+          "capability": "social.bettafish.multi-agent-moderation",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](an LLM host whose trend forecasts are injected into every agent prompt; ECDEV never feeds model forecasts back as context)"
+        },
+        {
+          "capability": "social.bettafish.report-ir-schema",
+          "knowledge": "STUDY_CANDIDATE(a report schema requiring evidence references (observation ids and capture times) on every paragraph, figure, chart dataset and SWOT or PEST item; the donor schema has footnotes and cross-references it never renders)"
+        },
+        {
+          "capability": "social.bettafish.llm-json-repair",
+          "knowledge": "REFERENCE_ONLY(separating syntactic repairs (fences, commas, brackets) from meaning-changing ones (model rescue, fragment merging, dropped blocks), with a logged before and after)"
+        },
+        {
+          "capability": "social.bettafish.chart-table-validation",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](chart series are null-padded, truncated or repaired by a model; ECDEV computes figures from stored evidence and shows data as unavailable when they fail)"
+        },
+        {
+          "capability": "social.bettafish.report-pipeline",
+          "knowledge": "REFERENCE_ONLY(per-chapter plan, budget, generation, validation and capped retries persisted chapter by chapter; the donor density gates push length)"
+        },
+        {
+          "capability": "social.bettafish.report-rendering",
+          "knowledge": "REFERENCE_ONLY(single-file HTML and PDF export, with the question of showing provenance and model-written text visibly)"
+        },
+        {
+          "capability": "social.bettafish.application",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](web UI, Streamlit apps, Flask orchestrator and vendored front-end libraries of the donor product)"
         }
       ],
       "rationale": "ECDEV's current methods existing is not evidence they are better; embedding KMeans with diversity and hotness sampling, fine-tuned sentiment models and near-duplicate detection are benchmark candidates against them",
@@ -204,10 +256,10 @@
         "source_parsed": 170,
         "parse_unknown": 0,
         "parse_invalid_confirmed": 2,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 6,
-        "capabilities_decided": 6,
-        "research_questions_open": 4
+        "semantic_review": "FIRST_PARTY_COMPLETE_SUBMODULE_PENDING",
+        "capabilities_extracted": 19,
+        "capabilities_decided": 19,
+        "research_questions_open": 11
       }
     },
     {
@@ -250,11 +302,11 @@
         },
         {
           "capability": "zep.ingestion-loaders-and-submission",
-          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](batched submission, task polling and loaders for Zep Cloud)"
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](loaders, submitters, thread upload and polling for Zep Cloud; the chunking transforms are zep.contextual-chunking)"
         },
         {
           "capability": "zep.mcp-and-integrations",
-          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP proxy and agent-framework adapters for Zep Cloud)"
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](MCP pass-through server, SDK demos and agent-framework adapters for Zep Cloud; context templates and the placement benchmark are separate capabilities)"
         },
         {
           "capability": "zep.memory-benchmarks",
@@ -263,6 +315,26 @@
         {
           "capability": "zep.repository-tooling",
           "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](CI, editor configuration and community files)"
+        },
+        {
+          "capability": "zep.retrieval-eval-harness",
+          "knowledge": "STUDY_CANDIDATE(a two-axis evaluation for ECDEV research answers: evidence completeness before answer correctness, with deterministic recall against line-level evidence needles and a judge separate from the responder)"
+        },
+        {
+          "capability": "zep.context-budget-sweep",
+          "knowledge": "BENCHMARK_CANDIDATE(where is the accuracy-versus-evidence-budget knee for product, price and policy questions; LoCoMo plateaus near 1.4k tokens)"
+        },
+        {
+          "capability": "zep.context-assembly",
+          "knowledge": "STUDY_CANDIDATE(type quotas in a fixed order (summary, typed facts, entities, episodes) against one relevance-ranked list under the same budget, with document evidence labelled apart from memory)"
+        },
+        {
+          "capability": "zep.contextual-chunking",
+          "knowledge": "BENCHMARK_CANDIDATE(does a situating context with date and resolved pronouns improve evidence recall from product documents and reviews, at what cost)"
+        },
+        {
+          "capability": "zep.context-placement-benchmark",
+          "knowledge": "REFERENCE_ONLY(controlled replay comparing where an evidence block sits against cache hits, cost and latency)"
         }
       ],
       "rationale": "episode and fact-validity semantics are studied and natively covered (STUDY_COMPLETE, INDEPENDENT_NATIVE); alias canonicalisation stays a study candidate; the memory benchmarks' question taxonomy is a benchmark candidate for ECDEV's as-of fact queries (the earlier UNRELATED_DOMAIN closure named the memory/evidence target domain and is refused by the target-domain rule); Cloud plumbing and adapters have no research value on admissible scope grounds",
@@ -280,10 +352,10 @@
         "source_parsed": 453,
         "parse_unknown": 0,
         "parse_invalid_confirmed": 0,
-        "semantic_review": "BOUNDED_SOURCE_CONTRACT_REVIEW_WHOLE_DONOR_INCOMPLETE",
-        "capabilities_extracted": 9,
-        "capabilities_decided": 9,
-        "research_questions_open": 2
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 14,
+        "capabilities_decided": 14,
+        "research_questions_open": 6
       }
     },
     {
@@ -419,7 +491,7 @@
     {
       "donor": "NanmiCoder--MediaCrawler",
       "runtime_decision": "REJECT_RUNTIME: Evaluated, never adopted: non-commercial licence blocks absorption, and its logged-in platform crawling, session handling and media download are outside ECDEV's no-auth-bypass acquisition policy (research/commerce/social-donor-rejections-review.json)",
-      "knowledge_decision": "SEMANTIC_CENSUS",
+      "knowledge_decision": "ACTIVE_STUDY",
       "license_constraint": "NON-COMMERCIAL-LEARNING-1.1 (web UI GPL-3.0): no commercial absorption",
       "current_caller": "none; logged-in crawling is forbidden by ECDEV policy",
       "potential_future_use": [
@@ -469,8 +541,64 @@
           "knowledge": "REFERENCE_ONLY(creator persistence stub)"
         },
         {
-          "capability": "social.mediacrawler.remaining-whole-donor",
-          "knowledge": "REFERENCE_ONLY(other platform crawlers, proxy pools and browser automation; platform structure reference only)"
+          "capability": "social.mediacrawler.platform-orchestrators",
+          "knowledge": "REFERENCE_ONLY(per-platform search, detail and creator crawl modes under one semaphore with fixed sleeps)"
+        },
+        {
+          "capability": "social.mediacrawler.comment-tree-pagination",
+          "knowledge": "ALGORITHM_CANDIDATE(one paginator over opaque cursors, sentinel ends, max_id and offset paging with a repeated-cursor stall guard, plus date-sliced windows with per-day quotas for time-uniform samples)"
+        },
+        {
+          "capability": "social.mediacrawler.response-extractors",
+          "knowledge": "REFERENCE_ONLY(embedded-state and GraphQL response mapping with offline HTML fixtures for parser regression)"
+        },
+        {
+          "capability": "social.mediacrawler.data-models",
+          "knowledge": "STUDY_CANDIDATE(a canonical post, comment-tree and creator schema (root, reply, quoted target, reaction counts, region) for review mining across marketplaces and social platforms, with keyword provenance on every stored item)"
+        },
+        {
+          "capability": "social.mediacrawler.storage-backends",
+          "knowledge": "REFERENCE_ONLY(one store interface over file and database sinks)"
+        },
+        {
+          "capability": "social.mediacrawler.privacy-pseudonymisation",
+          "knowledge": "ALGORITHM_CANDIDATE(salted creator pseudonyms and masked display names; the donor hash is unsalted and linkable)"
+        },
+        {
+          "capability": "social.mediacrawler.text-mining",
+          "knowledge": "BENCHMARK_CANDIDATE(jieba segmentation with a domain lexicon as the baseline for product-term extraction from CJK comments)"
+        },
+        {
+          "capability": "social.mediacrawler.runtime-utils",
+          "knowledge": "ALGORITHM_CANDIDATE(normalising CJK abbreviated counts (1.2万) and relative times with their units kept; the donor drops the unit)"
+        },
+        {
+          "capability": "social.mediacrawler.proxy-pool",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](proxy rotation used to avoid IP bans; only the lease-with-expiry pattern is a reference)"
+        },
+        {
+          "capability": "social.mediacrawler.task-api",
+          "knowledge": "REFERENCE_ONLY(single-flight crawl job state machine with streamed logs)"
+        },
+        {
+          "capability": "social.mediacrawler.platform-login",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](QR, SMS and cookie capture of user sessions; ECDEV uses official APIs and never acts as a logged-in user)"
+        },
+        {
+          "capability": "social.mediacrawler.request-signing",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](re-implemented, executed or hooked platform request signatures)"
+        },
+        {
+          "capability": "social.mediacrawler.anti-detection",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](stealth scripts, real-browser attach, automated slider-CAPTCHA solving, dummy gateway headers and fake navigation)"
+        },
+        {
+          "capability": "social.mediacrawler.sms-code-relay",
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](relays SMS codes into an automated phone login)"
+        },
+        {
+          "capability": "social.mediacrawler.application",
+          "knowledge": "NO_RESEARCH_VALUE[FRONTEND](React task console and VitePress documentation site of the donor product)"
         }
       ],
       "rationale": "its value is the platforms' record structures and counter semantics, kept as references; every crawling flow requires authentication ECDEV never bypasses",
@@ -488,10 +616,10 @@
         "source_parsed": 212,
         "parse_unknown": 0,
         "parse_invalid_confirmed": 1,
-        "semantic_review": "PARTIAL_SOURCE_CONTRACTS_REVIEWED_NOT_WHOLE_DONOR",
-        "capabilities_extracted": 11,
-        "capabilities_decided": 11,
-        "research_questions_open": 0
+        "semantic_review": "COMPLETE",
+        "capabilities_extracted": 25,
+        "capabilities_decided": 25,
+        "research_questions_open": 5
       }
     },
     {

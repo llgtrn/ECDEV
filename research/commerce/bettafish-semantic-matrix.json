@@ -62,5 +62,879 @@
   ],
   "conclusion": "Techniques ECDEV wanted (dedup, clustering, temporal movement, sentiment, noise handling) are independently native with different, evidence-preserving semantics; BettaFish behaviour is not reproduced or depended on and no code was copied (GPL). Crawling, LLM agents and reports are out of scope. Declared REJECTED: evaluated, never adopted.",
   "observed_edges": "none in any census",
-  "knowledge_superseded": "NOT_RELEVANT_TO_ECDEV and REJECTED in this file are runtime-adoption decisions only. Knowledge value is decided per capability in .ecdev/declared/donors.rs and summarised in research/commerce/donor-reaudit.json and research/commerce/governance/knowledge.json"
+  "knowledge_superseded": "NOT_RELEVANT_TO_ECDEV and REJECTED in this file are runtime-adoption decisions only. Knowledge value is decided per capability in .ecdev/declared/donors.rs and summarised in research/commerce/donor-reaudit.json and research/commerce/governance/knowledge.json",
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "method": "two parallel read-only whole-source reviews (engines, sentiment models, MindSpider; ReportEngine, templates, static, final_reports); the ignored date filter and the fixed 0.8 LoRA confidence were spot-checked",
+    "submodule": "MindSpider/DeepSentimentCrawling/MediaCrawler is pinned at 4de2a325; NanmiCoder--MediaCrawler is reviewed at bf281780, so the submodule commit is not yet reviewed and the census stays partial",
+    "entries": [
+      {
+        "prefix": "ForumEngine/__init__.py",
+        "capabilities": "social.bettafish.multi-agent-moderation",
+        "why": "LLM host every 5 agent summaries; its speech is injected into agent prompts"
+      },
+      {
+        "prefix": "ForumEngine/llm_host.py",
+        "capabilities": "social.bettafish.multi-agent-moderation",
+        "why": "LLM host every 5 agent summaries; its speech is injected into agent prompts"
+      },
+      {
+        "prefix": "ForumEngine/monitor.py",
+        "capabilities": "social.bettafish.multi-agent-moderation",
+        "why": "LLM host every 5 agent summaries; its speech is injected into agent prompts"
+      },
+      {
+        "prefix": "InsightEngine/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/agent.py",
+        "capabilities": "social.bettafish.deduplicate + social.bettafish.cluster-and-sample + social.bettafish.llm-agents-and-reports",
+        "why": "exact URL/prefix dedup, KMeans k=10 sampling by an always-zero hotness, research loop"
+      },
+      {
+        "prefix": "InsightEngine/llms/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/llms/base.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/base_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/formatting_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/report_structure_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/search_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/nodes/summary_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/prompts/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/prompts/prompts.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/state/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/state/state.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/tools/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/tools/keyword_optimizer.py",
+        "capabilities": "social.bettafish.query-expansion-keywords",
+        "why": "LLM rewrites a query into 10-20 colloquial terms"
+      },
+      {
+        "prefix": "InsightEngine/tools/search.py",
+        "capabilities": "social.bettafish.corpus-search + social.bettafish.engagement-hotness-scoring",
+        "why": "SQL search over crawled tables; weighted hotness; search_topic_by_date ignores its dates"
+      },
+      {
+        "prefix": "InsightEngine/tools/sentiment_analyzer.py",
+        "capabilities": "social.bettafish.sentiment-models + social.bettafish.sentiment-aggregation",
+        "why": "batch 5-class inference, distribution and dominant label"
+      },
+      {
+        "prefix": "InsightEngine/utils/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/utils/config.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "InsightEngine/utils/db.py",
+        "capabilities": "social.bettafish.corpus-search",
+        "why": "async database layer"
+      },
+      {
+        "prefix": "InsightEngine/utils/text_processing.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/agent.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/llms/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/llms/base.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/base_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/formatting_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/report_structure_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/search_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/nodes/summary_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/prompts/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/prompts/prompts.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/state/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/state/state.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/tools/__init__.py",
+        "capabilities": "social.bettafish.web-news-search",
+        "why": "Tavily, Bocha and Anspire paid search wrappers"
+      },
+      {
+        "prefix": "MediaEngine/tools/search.py",
+        "capabilities": "social.bettafish.web-news-search",
+        "why": "Tavily, Bocha and Anspire paid search wrappers"
+      },
+      {
+        "prefix": "MediaEngine/utils/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/utils/config.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MediaEngine/utils/text_processing.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "MindSpider/BroadTopicExtraction/database_manager.py",
+        "capabilities": "social.bettafish.trending-topic-extraction",
+        "why": "hot lists via a third-party aggregator, LLM keyword and summary extraction"
+      },
+      {
+        "prefix": "MindSpider/BroadTopicExtraction/get_today_news.py",
+        "capabilities": "social.bettafish.trending-topic-extraction",
+        "why": "hot lists via a third-party aggregator, LLM keyword and summary extraction"
+      },
+      {
+        "prefix": "MindSpider/BroadTopicExtraction/main.py",
+        "capabilities": "social.bettafish.trending-topic-extraction",
+        "why": "hot lists via a third-party aggregator, LLM keyword and summary extraction"
+      },
+      {
+        "prefix": "MindSpider/BroadTopicExtraction/topic_extractor.py",
+        "capabilities": "social.bettafish.trending-topic-extraction",
+        "why": "hot lists via a third-party aggregator, LLM keyword and summary extraction"
+      },
+      {
+        "prefix": "MindSpider/DeepSentimentCrawling/keyword_manager.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/DeepSentimentCrawling/main.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/DeepSentimentCrawling/platform_crawler.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/config.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/main.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/__init__.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/db_manager.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/init_database.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/mindspider_tables.sql",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/models_bigdata.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "MindSpider/schema/models_sa.py",
+        "capabilities": "social.bettafish.logged-in-crawling + social.bettafish.corpus-search",
+        "why": "keyword selection and MediaCrawler runs with QR/phone/cookie login; 7-platform schemas"
+      },
+      {
+        "prefix": "QueryEngine/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/agent.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/llms/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/llms/base.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/base_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/formatting_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/report_structure_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/search_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/nodes/summary_node.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/prompts/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/prompts/prompts.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/state/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/state/state.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/tools/__init__.py",
+        "capabilities": "social.bettafish.web-news-search",
+        "why": "Tavily, Bocha and Anspire paid search wrappers"
+      },
+      {
+        "prefix": "QueryEngine/tools/search.py",
+        "capabilities": "social.bettafish.web-news-search",
+        "why": "Tavily, Bocha and Anspire paid search wrappers"
+      },
+      {
+        "prefix": "QueryEngine/utils/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/utils/config.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "QueryEngine/utils/text_processing.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "paragraph/reflection research loops, prompts, state, JSON repair"
+      },
+      {
+        "prefix": "ReportEngine/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/agent.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/core/__init__.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/core/chapter_storage.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/core/stitcher.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/core/template_parser.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/flask_interface.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/ir/__init__.py",
+        "capabilities": "social.bettafish.report-ir-schema",
+        "why": "chapter IR schema with 16 block types; footnotes and xrefs never rendered"
+      },
+      {
+        "prefix": "ReportEngine/ir/schema.py",
+        "capabilities": "social.bettafish.report-ir-schema",
+        "why": "chapter IR schema with 16 block types; footnotes and xrefs never rendered"
+      },
+      {
+        "prefix": "ReportEngine/ir/validator.py",
+        "capabilities": "social.bettafish.report-ir-schema",
+        "why": "chapter IR schema with 16 block types; footnotes and xrefs never rendered"
+      },
+      {
+        "prefix": "ReportEngine/llms/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/llms/base.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/nodes/__init__.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/nodes/base_node.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/nodes/chapter_generation_node.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/nodes/document_layout_node.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/nodes/template_selection_node.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/nodes/word_budget_node.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/prompts/__init__.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/prompts/prompts.py",
+        "capabilities": "social.bettafish.report-pipeline",
+        "why": "template selection, layout, word budget, chapter generation with density gates, stitching"
+      },
+      {
+        "prefix": "ReportEngine/renderers/__init__.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/chart_to_svg.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/html_renderer.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/libs/chart.js",
+        "capabilities": "social.bettafish.application",
+        "why": "vendored chart, PDF and math libraries and fonts"
+      },
+      {
+        "prefix": "ReportEngine/renderers/libs/chartjs-chart-sankey.js",
+        "capabilities": "social.bettafish.application",
+        "why": "vendored chart, PDF and math libraries and fonts"
+      },
+      {
+        "prefix": "ReportEngine/renderers/libs/mathjax.js",
+        "capabilities": "social.bettafish.application",
+        "why": "vendored chart, PDF and math libraries and fonts"
+      },
+      {
+        "prefix": "ReportEngine/renderers/markdown_renderer.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/math_to_svg.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/pdf_layout_optimizer.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/renderers/pdf_renderer.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/scripts/export_to_pdf.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/scripts/generate_all_blocks_demo.py",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "IR to HTML, PDF and Markdown"
+      },
+      {
+        "prefix": "ReportEngine/scripts/validate_ir.py",
+        "capabilities": "social.bettafish.report-ir-schema",
+        "why": "chapter IR schema with 16 block types; footnotes and xrefs never rendered"
+      },
+      {
+        "prefix": "ReportEngine/state/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/state/state.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/utils/__init__.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/utils/chart_repair_api.py",
+        "capabilities": "social.bettafish.chart-table-validation",
+        "why": "chart and table validation with null padding, truncation and LLM repair"
+      },
+      {
+        "prefix": "ReportEngine/utils/chart_review_service.py",
+        "capabilities": "social.bettafish.chart-table-validation",
+        "why": "chart and table validation with null padding, truncation and LLM repair"
+      },
+      {
+        "prefix": "ReportEngine/utils/chart_validator.py",
+        "capabilities": "social.bettafish.chart-table-validation",
+        "why": "chart and table validation with null padding, truncation and LLM repair"
+      },
+      {
+        "prefix": "ReportEngine/utils/config.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/utils/dependency_check.py",
+        "capabilities": "social.bettafish.llm-agents-and-reports",
+        "why": "Flask interface, LLM client, state, config"
+      },
+      {
+        "prefix": "ReportEngine/utils/json_parser.py",
+        "capabilities": "social.bettafish.llm-json-repair",
+        "why": "fence stripping, local fixes, json_repair, LLM repair"
+      },
+      {
+        "prefix": "ReportEngine/utils/table_validator.py",
+        "capabilities": "social.bettafish.chart-table-validation",
+        "why": "chart and table validation with null padding, truncation and LLM repair"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/BertTopicDetection_Finetuned/predict.py",
+        "capabilities": "social.bettafish.topic-classification",
+        "why": "supervised topic classifier over Q&A titles (training CSV truncated at the Excel row limit; train.py invalid Python)"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/BertTopicDetection_Finetuned/train.py",
+        "capabilities": "social.bettafish.topic-classification",
+        "why": "supervised topic classifier over Q&A titles (training CSV truncated at the Excel row limit; train.py invalid Python)"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboMultilingualSentiment/predict.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/BertChinese-Lora/predict_pipeline.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/adapter.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/dataset/intro.ipynb",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/Adapter.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/Roberta_adapter.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/example/gpt2_adapter.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/gpt2_adapter.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/predict.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-AdapterTuning/train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/dataset/intro.ipynb",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/predict.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_Finetuned/GPT2-Lora/train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/base_model.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bayes_train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/bert_train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/lstm_train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/predict.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/svm_train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/utils.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_MachineLearning/xgboost_train.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/base_model.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/dataset/intro.ipynb",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/models_config.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/predict_universal.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_embedding_universal.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SentimentAnalysisModel/WeiboSentiment_SmallQwen/qwen3_lora_universal.py",
+        "capabilities": "social.bettafish.sentiment-models",
+        "why": "NB/SVM/XGBoost/LSTM/frozen-BERT baselines, GPT-2 LoRA and adapters, an off-the-shelf Chinese BERT, a multilingual 5-class model, Qwen3 LoRA with fixed 0.8 confidence"
+      },
+      {
+        "prefix": "SingleEngineApp/insight_engine_streamlit_app.py",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "SingleEngineApp/media_engine_streamlit_app.py",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "SingleEngineApp/query_engine_streamlit_app.py",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "app.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "config.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "export_pdf.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "final_reports/final_report__20250827_131630.html",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "generated sample report output, an anti-reference for untraceable claims"
+      },
+      {
+        "prefix": "regenerate_latest_html.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "regenerate_latest_md.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "regenerate_latest_pdf.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "report_engine_only.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "scripts/fetch_star_count.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "scripts/star_history.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "static/Switch/index.html",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "static/Switch/js/script.js",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "static/v2_report_example/final_report_\u517b\u8001\u670d\u52a1\u53d1\u5c55\u8d8b\u52bf.html",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "generated sample report output, an anti-reference for untraceable claims"
+      },
+      {
+        "prefix": "static/v2_report_example/report_all_blocks_demo/report_html_all_blocks_demo.html",
+        "capabilities": "social.bettafish.report-rendering",
+        "why": "generated sample report output, an anti-reference for untraceable claims"
+      },
+      {
+        "prefix": "templates/index.html",
+        "capabilities": "social.bettafish.application",
+        "why": "web UI, Streamlit apps and assets"
+      },
+      {
+        "prefix": "utils/forum_reader.py",
+        "capabilities": "social.bettafish.multi-agent-moderation",
+        "why": "LLM host every 5 agent summaries; its speech is injected into agent prompts"
+      },
+      {
+        "prefix": "utils/github_issues.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      },
+      {
+        "prefix": "utils/retry_helper.py",
+        "capabilities": "social.bettafish.application",
+        "why": "orchestrator, configuration, export scripts, utilities and repository tooling"
+      }
+    ]
+  },
+  "whole_source_findings": [
+    "Sentiment is computed but never reaches the LLM, while prompts demand positive/negative/neutral percentages and per-platform counts as 'real data': high fabrication risk",
+    "search_topic_by_date parses its dates and never filters by them; cluster sampling ranks by a hotness that is always zero for topic search",
+    "The Qwen3 LoRA classifier reports a fixed 0.8 confidence and labels unparseable output negative; 'BertChinese-Lora' is an off-the-shelf model",
+    "Report claims are not traceable: engine reports enter as plain text, footnotes and xrefs are never rendered, chart repairs pad and truncate series, density gates push length, forecasts are prose",
+    "An LLM forum host's 'trend forecasts' are injected into every agent's prompts; the host prompt asserts an unverified ethics review"
+  ]
 }
