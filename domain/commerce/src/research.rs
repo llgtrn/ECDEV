@@ -71,6 +71,78 @@ pub fn cache_expiry(stored_at: u64) -> u64 {
     stored_at + FETCH_TTL_SECONDS
 }
 
+/// The longest any response may stay fresh in ECDEV's fetch cache, whatever the server says.
+pub const MAX_FRESHNESS_SECONDS: u64 = 86_400;
+
+/// RFC 9111 freshness lifetime of a response for ECDEV's private cache, from its captured
+/// headers: `no-store` or `no-cache` give 0 (always revalidated with the stored validators);
+/// otherwise `max-age`, else `Expires` minus `Date` (an invalid `Expires` means already stale),
+/// minus `Age`; with no freshness information the default `FETCH_TTL_SECONDS`. Bounded by
+/// `MAX_FRESHNESS_SECONDS`. Returns the lifetime and what it rests on.
+pub fn freshness_lifetime(headers: &Value) -> (u64, &'static str) {
+    let directives: Vec<(String, Option<String>)> = headers["cache_control"]
+        .as_str()
+        .unwrap_or("")
+        .split(',')
+        .filter_map(|d| {
+            let d = d.trim();
+            if d.is_empty() {
+                return None;
+            }
+            let (name, value) = d.split_once('=').map_or((d, None), |(n, v)| (n, Some(v)));
+            Some((
+                name.trim().to_ascii_lowercase(),
+                value.map(|v| v.trim().trim_matches('"').to_string()),
+            ))
+        })
+        .collect();
+    let has = |name: &str| directives.iter().any(|(n, _)| n == name);
+    if has("no-store") {
+        return (0, "NO_STORE");
+    }
+    if has("no-cache") {
+        return (0, "NO_CACHE_REVALIDATE");
+    }
+    let age = headers["age"]
+        .as_str()
+        .and_then(|a| a.trim().parse::<u64>().ok())
+        .unwrap_or(0);
+    let bounded = |lifetime: u64, basis| {
+        (
+            lifetime.saturating_sub(age).min(MAX_FRESHNESS_SECONDS),
+            basis,
+        )
+    };
+    if let Some((_, value)) = directives.iter().find(|(n, _)| n == "max-age") {
+        return match value.as_deref().and_then(|v| v.parse::<u64>().ok()) {
+            Some(seconds) => bounded(seconds, "MAX_AGE"),
+            None => (0, "MAX_AGE_INVALID"),
+        };
+    }
+    if let Some(expires) = headers["expires"].as_str() {
+        let date = |s: &str| {
+            (!s.trim().bytes().all(|b| b.is_ascii_digit()))
+                .then(|| crate::provider::retry_after_not_before(s, 0))
+                .flatten()
+        };
+        let Some(expires) = date(expires) else {
+            return (0, "EXPIRES_INVALID");
+        };
+        let served = headers["date"]
+            .as_str()
+            .and_then(date)
+            .or_else(|| headers["received_at_ms"].as_i64());
+        return match served {
+            Some(served) => bounded(
+                (expires.saturating_sub(served).max(0) / 1000) as u64,
+                "EXPIRES",
+            ),
+            None => (0, "EXPIRES_WITHOUT_DATE"),
+        };
+    }
+    bounded(FETCH_TTL_SECONDS, "DEFAULT")
+}
+
 /// A cached entry is fresh strictly before its expiry: at the expiry instant it is stale
 /// (cachetools TTLCache: `timer() < expires`).
 pub fn cache_fresh(expires_at: u64, now: u64) -> bool {
@@ -635,7 +707,8 @@ impl Engine {
                             key,
                             captured.to_string(),
                             timestamp(),
-                            cache_expiry(timestamp())
+                            timestamp()
+                                + freshness_lifetime(&captured["provider_cost"]["headers"]).0
                         ],
                     )
                     .map_err(err)?;
@@ -753,7 +826,11 @@ impl Engine {
                     },
                 )?;
             }
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
+            let cache_freshness = {
+                let (seconds, basis) = freshness_lifetime(&captured["provider_cost"]["headers"]);
+                json!({"seconds": seconds, "basis": basis})
+            };
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"cache_freshness":cache_freshness,"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;

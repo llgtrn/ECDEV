@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8a55d03b2030ab7eea9726402a85eb7a31e7537d",
+  "assessed_parent_commit": "2f151f3a142feeb1da2949eedd96ac0a87850b53",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2913,9 +2913,9 @@
         {
           "key": "cachetools.per-entry-expiry",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(per-entry expiry (TLRUCache time-to-use) from response Cache-Control and Expires or observed source volatility instead of one fixed TTL)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::freshness_lifetime derives each fetch-cache entry lifetime from the response (RFC 9111 private cache: no-store and no-cache revalidate, max-age, Expires minus Date, minus Age, bounded at 24 h, default 1 h) and records its basis; volatility-based expiry stays unexplored)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "cachetools.memoization-decorators",
@@ -2989,7 +2989,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "2 of 4 declared capabilities still have open research: cachetools.size-eviction (STUDY_CANDIDATE), cachetools.per-entry-expiry (ALGORITHM_CANDIDATE)"
+          "detail": "1 of 4 declared capabilities still have open research: cachetools.size-eviction (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

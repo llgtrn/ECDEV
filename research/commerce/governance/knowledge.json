@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8a55d03b2030ab7eea9726402a85eb7a31e7537d",
+  "assessed_parent_commit": "2f151f3a142feeb1da2949eedd96ac0a87850b53",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 45,
     "benchmark_candidates": 32,
-    "algorithm_candidates": 17,
+    "algorithm_candidates": 16,
     "reference_only": 52,
-    "study_complete_capabilities": 71,
+    "study_complete_capabilities": 72,
     "not_relevant_after_review": 25,
-    "research_questions_open": 94,
-    "knowledge_coverage_ratio": 0.61157
+    "research_questions_open": 93,
+    "knowledge_coverage_ratio": 0.615702
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 49,
@@ -514,11 +514,11 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "cachetools.size-eviction STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)",
-        "cachetools.per-entry-expiry ALGORITHM_CANDIDATE(per-entry expiry (TLRUCache time-to-use) from response Cache-Control and Expires or observed source volatility instead of one fixed TTL)"
+        "cachetools.size-eviction STUDY_CANDIDATE(which bounded eviction (LRU, LFU, FIFO, random, by size) fits a persistent fetch cache whose entries differ in refetch cost and robots delay; ECDEV's cache is unbounded today)"
       ],
       "resolved": [
         "cache.ttl STUDY_COMPLETE[DERIVED_NATIVE](TTL freshness proven on 884 frozen TTLCache reads, expiry instant included)",
+        "cachetools.per-entry-expiry STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/research.rs::freshness_lifetime derives each fetch-cache entry lifetime from the response (RFC 9111 private cache: no-store and no-cache revalidate, max-age, Expires minus Date, minus Age, bounded at 24 h, default 1 h) and records its basis; volatility-based expiry stays unexplored)",
         "cachetools.memoization-decorators REFERENCE_ONLY(cached and cachedmethod key construction, locking and condition-based stampede protection)"
       ]
     },
