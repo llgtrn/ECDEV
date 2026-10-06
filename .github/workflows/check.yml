@@ -38,6 +38,7 @@ jobs:
       - run: pip install -r tools/commerce/requirements.txt
       - run: python tools/commerce/validate.py --records-only
       - run: python tools/commerce/validate.py --lifecycle-negative-cases
+      - run: python tools/commerce/validate.py --inventory-negative-cases
       - run: npm ci --prefix tests/commerce
       - name: MCP and HTTP integration
         env:

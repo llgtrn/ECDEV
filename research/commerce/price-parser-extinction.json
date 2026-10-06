@@ -333,5 +333,28 @@
     "notice": "adapter/web/tests/fixtures/price-parser-LICENSE.txt",
     "data": "adapter/web/data/price-currency.json records license, source commit and source sha256",
     "census": "research/commerce/donors/census/scrapinghub--price-parser/"
+  },
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "price_parser/parser.py",
+        "capabilities": "price.object-contract + extract.price-public-api + price.literal-search + price.currency-tables + price.source-text + price.decimal-separator + extract.price-number + price-parser.python-object-model + price-parser.compiled-pattern-object + price-parser.runtime-version-profiles + price-parser.unbounded-inputs",
+        "relevance": "MIXED_RESOLVED",
+        "why": "every symbol is a semantic_matrix row: relied-on parsing native and proven; object-model, pattern-object, runtime-profile and unbounded-input surfaces justified"
+      },
+      {
+        "prefix": "price_parser/_currencies.py",
+        "capabilities": "price.currency-tables",
+        "relevance": "RELIED_ON",
+        "why": "currency code, symbol and safe-symbol tables reproduced natively and proven"
+      },
+      {
+        "prefix": "price_parser/__init__.py",
+        "capabilities": "price-parser.packaging-and-distribution",
+        "relevance": "NOT_RELEVANT",
+        "why": "package re-exports and version only"
+      }
+    ]
   }
 }

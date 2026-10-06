@@ -24,8 +24,11 @@ def validate_inventory(summary, files):
 def validate_file_coverage(summary, files):
  """A complete census names its semantic matrix; a matrix with file_coverage must map every
  first-party source file to a reviewed prefix (first match wins)."""
+ complete=summary['semantic_review']=='COMPLETE'
+ assert not complete or 'semantic_matrix' in summary, 'COMPLETE_SEMANTIC_REVIEW_WITHOUT_MATRIX'
  if 'semantic_matrix' not in summary: return
  matrix=read(ROOT/summary['semantic_matrix'])
+ assert not complete or 'file_coverage' in matrix, 'COMPLETE_SEMANTIC_REVIEW_WITHOUT_FILE_COVERAGE'
  if 'file_coverage' not in matrix: return
  prefixes=[e['prefix'] for e in matrix['file_coverage']['entries']]
  hit=lambda p:any(p==x or (x.endswith('/') and p.startswith(x)) for x in prefixes)
@@ -47,7 +50,15 @@ def inventory_negative_cases():
  try:validate_inventory(summary,files+[files[0]])
  except AssertionError:pass
  else:raise AssertionError('DUPLICATE_CENSUS_ACCEPTED')
- print('PASS: valid locked price-parser census; stale classification counts, source parser count, classified count and duplicate path rejected')
+ validate_file_coverage(summary,files)
+ for changed in [{k:v for k,v in summary.items() if k!='semantic_matrix'}]:
+  try:validate_file_coverage(changed,files)
+  except AssertionError:continue
+  raise AssertionError('COMPLETE_REVIEW_WITHOUT_MATRIX_ACCEPTED')
+ try:validate_file_coverage(summary,files+[dict(files[0],path='price_parser/unreviewed.py',classification='FIRST_PARTY_SOURCE')])
+ except AssertionError:pass
+ else:raise AssertionError('UNREVIEWED_SOURCE_FILE_ACCEPTED')
+ print('PASS: valid locked price-parser census; stale classification counts, source parser count, classified count, duplicate path, a COMPLETE review without a file-coverage matrix and an unreviewed source file rejected')
 
 def validate_lifecycle(d, summary, actual):
  assert actual is not None, 'DONOR_NOT_CANONICALLY_ASSESSED'
