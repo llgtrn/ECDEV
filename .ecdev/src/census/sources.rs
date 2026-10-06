@@ -7,7 +7,7 @@ use super::{is_excluded, js, scope_of_file, shell, Census, Observation, Via};
 use crate::declare::Declaration;
 use crate::repository::files::Files;
 use crate::schema::Ecosystem;
-use std::collections::BTreeSet;
+use std::collections::{BTreeMap, BTreeSet};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Tok {
@@ -479,6 +479,40 @@ fn own_binaries(files: &Files, c: &Census) -> BTreeSet<String> {
     own
 }
 
+/// The `ident` of a source reference into a checkout root that names no declared donor.
+pub const UNATTRIBUTED_CHECKOUT: &str = "UNATTRIBUTED_DONOR_CHECKOUT";
+
+/// Literal `<root>/<name>` references (either slash) whose `<root>/<name>` is no declared donor
+/// source path. A path assembled at runtime from the root alone names nothing and is not reported.
+fn unattributed_checkouts(
+    text: &str,
+    roots: &[String],
+    donor_paths: &[String],
+) -> BTreeSet<String> {
+    let mut out = BTreeSet::new();
+    for root in roots {
+        for sep in ['/', '\\'] {
+            let needle = format!("{}{sep}", root.replace('/', &sep.to_string()));
+            let mut rest = text;
+            while let Some(i) = rest.find(&needle) {
+                rest = &rest[i + needle.len()..];
+                let name: String = rest
+                    .chars()
+                    .take_while(|c| c.is_ascii_alphanumeric() || matches!(c, '.' | '_' | '-'))
+                    .collect();
+                if name.is_empty() {
+                    continue;
+                }
+                let path = format!("{root}/{name}");
+                if !donor_paths.contains(&path) {
+                    out.insert(path);
+                }
+            }
+        }
+    }
+    out
+}
+
 pub fn observe(files: &Files, d: &Declaration, excluded: &[String], c: &mut Census) {
     let donor_paths: Vec<String> = d
         .donors
@@ -486,6 +520,19 @@ pub fn observe(files: &Files, d: &Declaration, excluded: &[String], c: &mut Cens
         .flat_map(|dn| dn.source_paths.iter())
         .map(|p| p.trim_end_matches('/').to_string())
         .filter(|p| !p.is_empty())
+        .collect();
+    // A directory holding the source of two or more donors is a checkout root: anything named
+    // under it is some donor's code, attributable or not.
+    let mut parents: BTreeMap<&str, usize> = BTreeMap::new();
+    for p in &donor_paths {
+        if let Some((parent, _)) = p.rsplit_once('/') {
+            *parents.entry(parent).or_default() += 1;
+        }
+    }
+    let checkout_roots: Vec<String> = parents
+        .into_iter()
+        .filter(|(_, n)| *n >= 2)
+        .map(|(p, _)| p.to_string())
         .collect();
     // Paths whose code is not the repository's own: the subsystem, installed packages, research.
     let foreign = |f: &str| {
@@ -635,6 +682,16 @@ pub fn observe(files: &Files, d: &Declaration, excluded: &[String], c: &mut Cens
                         via: Via::SourceReference,
                     });
                 }
+            }
+            for name in unattributed_checkouts(&text, &checkout_roots, &donor_paths) {
+                c.observations.insert(Observation {
+                    file: f.clone(),
+                    ecosystem: Ecosystem::Native,
+                    name,
+                    ident: UNATTRIBUTED_CHECKOUT.into(),
+                    scope: scope_of_file(f),
+                    via: Via::SourceReference,
+                });
             }
         }
     }

@@ -376,6 +376,39 @@ fn unregistered_external_joins_the_denominator() {
 }
 
 #[test]
+fn checkout_named_for_no_donor_is_unregistered() {
+    let r = extinct_baseline("anonymous-checkout");
+    r.edit(|d| {
+        d.donors[0].source_paths = vec!["research/checkouts/geo".into()];
+        let mut other = donor("other", "other");
+        other.capabilities.clear();
+        other.claimed = DonorState::Registered;
+        other.source_paths = vec!["research/checkouts/other".into()];
+        d.donors.push(other);
+    });
+    // A literal checkout no donor declares is foreign code without a record.
+    r.write(
+        "tools/run.py",
+        "exec(open('research/checkouts/mystery/x.py').read())\n",
+    );
+    let a = r.assess();
+    assert!(finding(
+        &a,
+        "UNREGISTERED_EXTERNAL",
+        "NATIVE:research/checkouts/mystery"
+    )
+    .is_some());
+    // A path assembled at runtime from the root names no checkout and is not guessed at.
+    r.write(
+        "tools/run.py",
+        "root='research/checkouts'\nfor d in ['a']: print(root + '/' + d)\n",
+    );
+    let a = r.assess();
+    assert!(a.analysis.unregistered.is_empty());
+    assert_eq!(a.donor("geo").unwrap().effective, DonorState::Extinct);
+}
+
+#[test]
 fn platform_libraries_are_not_foreign() {
     let r = extinct_baseline("platform");
     r.write(

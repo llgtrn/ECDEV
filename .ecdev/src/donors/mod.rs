@@ -193,7 +193,12 @@ pub fn analyze(
                 }
             }
             None => {
-                if matches!(o.via, Via::SourceReference | Via::Lock) {
+                // A reference into a checkout root that names no declared donor is an
+                // unregistered external; other unowned source references and lock entries are not.
+                if o.via == Via::Lock
+                    || (o.via == Via::SourceReference
+                        && o.ident != crate::census::sources::UNATTRIBUTED_CHECKOUT)
+                {
                     continue;
                 }
                 if o.via == Via::Process && TOOLCHAIN_PROGRAMS.contains(&o.name.as_str()) {
