@@ -876,3 +876,41 @@ fn recurring_phrases_become_unverified_product_queries() {
     );
     assert_eq!(hyp["shortlist_eligible"], false);
 }
+
+#[test]
+fn bracketed_names_in_japanese_text_become_unverified_phrases() {
+    let mk = |id: &str, author: &str, text: &str| {
+        let mut p = post(id, "XML_FEED", 9000);
+        p.author_id = Some(author.into());
+        p.text = text.into();
+        p
+    };
+    let posts = [
+        mk("1", "ann", "新作「抹茶ラテ フロート」を限定発売"),
+        mk("2", "bob", "【抹茶ラテ　フロート】が人気、matcha float"),
+        mk("3", "cy", "「おすすめ」の新作"),
+        // One author repeating a span is not recurrence.
+        mk("4", "dee", "「ほうじ茶ラテ」発売"),
+        mk("5", "dee", "「ほうじ茶ラテ」再販"),
+        // A Japanese sentence never joins Latin words into a spaced phrase.
+        mk("6", "eve", "matcha 抹茶ラテが人気 float"),
+        mk("7", "fay", "matcha 抹茶ラテが人気 float"),
+    ];
+    let refs: Vec<&SocialPost> = posts.iter().collect();
+    let phrases = candidate_phrases(&refs);
+    let find = |t: &str| phrases.iter().find(|p| p["phrase"] == t);
+    // Brackets of either kind and a full-width space fold to one candidate.
+    let latte = find("抹茶ラテ フロート").expect("bracketed span");
+    assert_eq!(latte["method"], "BRACKETED_SPAN_MIN_2_POSTS_2_AUTHORS");
+    assert_eq!(latte["state"], "CANDIDATE_PRODUCT_PHRASE_UNVERIFIED");
+    assert_eq!(
+        (latte["posts"].clone(), latte["distinct_authors"].clone()),
+        (json!(2), json!(2))
+    );
+    assert!(find("おすすめ").is_none() && find("ほうじ茶ラテ").is_none());
+    assert!(
+        phrases
+            .iter()
+            .all(|p| !p["phrase"].as_str().unwrap().contains("人気 float"))
+    );
+}

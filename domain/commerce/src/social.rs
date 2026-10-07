@@ -506,8 +506,32 @@ const PHRASE_STOP_WORDS: &[&str] = &[
 /// phrase joins words the text kept apart. It must recur in at least two posts by at least two
 /// distinct authors (or sources when the author is unknown). Ranked by posts, then length, then
 /// text; a phrase inside a longer kept phrase with the same posts is dropped.
+/// Text inside 「」, 『』 or 【】, folded and with spaces collapsed, 2 to 30 characters, holding a
+/// letter or digit. Quotations are bracketed too, so a span is a candidate, never a name.
+fn bracketed_spans(text: &str) -> BTreeSet<String> {
+    let mut out = BTreeSet::new();
+    for (open, close) in [('「', '」'), ('『', '』'), ('【', '】')] {
+        let mut rest = text;
+        while let Some(i) = rest.find(open) {
+            let after = &rest[i + open.len_utf8()..];
+            let Some(j) = after.find(close) else { break };
+            let span = folded(&after[..j])
+                .split_whitespace()
+                .collect::<Vec<_>>()
+                .join(" ");
+            let n = span.chars().count();
+            if (2..=30).contains(&n) && span.chars().any(char::is_alphanumeric) {
+                out.insert(span);
+            }
+            rest = &after[j + close.len_utf8()..];
+        }
+    }
+    out
+}
+
 pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
     let mut seen: BTreeMap<String, PhraseSupport> = BTreeMap::new();
+    let mut bracketed: BTreeSet<String> = BTreeSet::new();
     for p in posts {
         let mut in_post = BTreeSet::new();
         for run in p
@@ -515,13 +539,23 @@ pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
             .to_lowercase()
             .split(|c: char| !(c.is_alphanumeric() || c == '\'' || c == '-'))
             .collect::<Vec<_>>()
-            .split(|w| w.is_empty() || PHRASE_STOP_WORDS.contains(w) || w.chars().count() < 2)
+            .split(|w| {
+                w.is_empty()
+                    || PHRASE_STOP_WORDS.contains(w)
+                    || w.chars().count() < 2
+                    || w.chars().any(is_cjk)
+            })
         {
             for n in 2..=3 {
                 for w in run.windows(n) {
                     in_post.insert(w.join(" "));
                 }
             }
+        }
+        // Bracketed spans (「」『』【】): how Japanese text marks names, products included.
+        for span in bracketed_spans(&p.text) {
+            bracketed.insert(span.clone());
+            in_post.insert(span);
         }
         let who = p.author_id.clone().unwrap_or_else(|| p.source_url.clone());
         for phrase in in_post {
@@ -554,7 +588,14 @@ pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
         }
     }
     kept.into_iter()
-        .map(|(phrase, posts, authors, ids)| json!({"phrase":phrase,"posts":posts,"distinct_authors":authors,"evidence_ids":ids,"state":"CANDIDATE_PRODUCT_PHRASE_UNVERIFIED","method":"CONTIGUOUS_2_3_GRAM_STOPWORD_BREAKS_MIN_2_POSTS_2_AUTHORS"}))
+        .map(|(phrase, posts, authors, ids)| {
+            let method = if bracketed.contains(&phrase) {
+                "BRACKETED_SPAN_MIN_2_POSTS_2_AUTHORS"
+            } else {
+                "CONTIGUOUS_2_3_GRAM_STOPWORD_BREAKS_MIN_2_POSTS_2_AUTHORS"
+            };
+            json!({"phrase":phrase,"posts":posts,"distinct_authors":authors,"evidence_ids":ids,"state":"CANDIDATE_PRODUCT_PHRASE_UNVERIFIED","method":method})
+        })
         .collect()
 }
 

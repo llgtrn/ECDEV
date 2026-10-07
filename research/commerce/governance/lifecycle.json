@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "49c21fa6292345ea30592f44b6f7bb7d70bed8d5",
+  "assessed_parent_commit": "e9d5d9653c6fdfdb0f69c541595b4d6ee35e5a52",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -6845,7 +6845,7 @@
         {
           "key": "social.mediacrawler.text-mining",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(query mentions in unspaced CJK text are native without a dictionary (domain/commerce/src/social.rs: character bigrams plus a verbatim run check; research/commerce/cjk-mention-benchmark.json: 86 of 86 verbatim mentions found in 324 Japanese feed items, none false, against 2 before); still open: whether dictionary segmentation (jieba, or a Japanese morphological analyser) with a domain lexicon extracts better product-name phrases from CJK posts than bigram runs, on labelled product mentions)",
+          "knowledge": "BENCHMARK_CANDIDATE(query mentions in unspaced CJK text are native without a dictionary (domain/commerce/src/social.rs: character bigrams plus a verbatim run check; research/commerce/cjk-mention-benchmark.json: 86 of 86 verbatim mentions found in 324 Japanese feed items, none false, against 2 before); phrase candidates from CJK text come from bracketed spans (\u300c\u300d\u300e\u300f\u3010\u3011, in 181 of 324 Japanese feed titles: research/commerce/bracket-span-census.json) recurring in two posts by two authors, and spaced phrases never join a CJK run; still open: whether dictionary segmentation (jieba, or a Japanese morphological analyser) with a domain lexicon finds product names that are not bracketed, measured on labelled product mentions)",
           "knowledge_status": "BENCHMARK_CANDIDATE",
           "open": true
         },
