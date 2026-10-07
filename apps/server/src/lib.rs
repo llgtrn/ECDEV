@@ -971,6 +971,16 @@ mod research_tests {
                     .is_file()
             );
         }
+        assert_eq!(m["list_persistence"]["state"], "NEW_ON_LIST");
+        // A day later the tag is still listed: its identity and every rank carry over.
+        let later = engine.call("ecdev.trend.feeds", json!({"fixture_now":today + day,"sources":[{"platform":"MASTODON_TRENDS","fixture_raw":json!([{"name":"MatchaLatte","history":[]}]).to_string()}]})).unwrap();
+        let p = &later["feeds"][0]["entries"][0]["list_persistence"];
+        assert_eq!(p["state"], "SUSTAINED");
+        assert_eq!(
+            (p["first_seen"].clone(), p["captures_on_list"].clone()),
+            (json!(today + 60), json!(2))
+        );
+        assert_eq!(later["feeds"][0]["prior_captures_of_this_feed"], 1);
         // Mixed fixture and live sources, posts platforms and a live clock override are refused.
         assert!(engine.call("ecdev.trend.feeds", json!({"sources":[{"platform":"MASTODON_TRENDS","fixture_raw":"[]"},{"platform":"BLUESKY_TRENDS"}]})).is_err());
         assert!(

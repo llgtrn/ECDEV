@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "1fb8f72939a7493f8467a82ec976b2af6201202e",
+  "assessed_parent_commit": "eeaca64b8e73058ace5bd9a37285cfd7e4ce9ea1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 244,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 35,
+    "study_candidates": 34,
     "benchmark_candidates": 26,
     "algorithm_candidates": 5,
     "reference_only": 52,
-    "study_complete_capabilities": 101,
+    "study_complete_capabilities": 102,
     "not_relevant_after_review": 25,
-    "research_questions_open": 66,
-    "knowledge_coverage_ratio": 0.729508
+    "research_questions_open": 65,
+    "knowledge_coverage_ratio": 0.733607
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1231,7 +1231,6 @@
       "open": [
         "social.trendradar.calculate_news_weight STUDY_CANDIDATE(clean-room weighting of sustained top-rank presence in ranked lists (e.g. bestseller or trend ranks), specified from behaviour, never from GPL code)",
         "social.trendradar.hot-list-sources STUDY_CANDIDATE(public hot-list sources as trend inputs for Asian markets, each within its platform terms)",
-        "social.trendradar.crawl-persistence STUDY_CANDIDATE(a cross-day item identity for ranked lists (normalised URL, title fingerprint or both) with per-crawl ranks, so first-seen, dwell time and re-entry survive day boundaries and missing crawls are not read as off-list)",
         "social.trendradar.trend-analytics BENCHMARK_CANDIDATE(do rank-trajectory metrics (velocity, peak, time to peak, dwell above a threshold, re-entries) predict product-demand spikes better than daily title-count trend, lifecycle and viral heuristics with fixed thresholds)",
         "social.trendradar.ai-interest-filter STUDY_CANDIDATE(model-extracted interest tags with per-item relevance as product-category tagging: precision and cost, with model, prompt and version provenance on every stored score)"
       ],
@@ -1241,6 +1240,7 @@
         "social.trendradar.fetch_feed STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded public transport)",
         "social.trendradar.notifications REFERENCE_ONLY(multi-channel notification fan-out)",
         "social.trendradar.ui-and-reports NO_RESEARCH_VALUE[FRONTEND](HTML report templates and UI of the donor product)",
+        "social.trendradar.crawl-persistence STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/feeds.rs rank_persistence, specified from the reviewed behaviour (research/commerce/trendradar-semantic-review.json) and written clean-room: a trending-list entry keeps one identity (Mastodon tag, Bluesky topic id) across captures and days, where the donor resets first-seen and crawl counts per daily database; every capture's rank is kept, repeats included, where the donor keeps distinct ranks; first seen, captures on list, current streak in captures and seconds, re-entries and best rank are reported, NEW_ON_LIST, SUSTAINED or RE_ENTERED; an entry missing from a successful capture is OFF_TOP_N_IN_CAPTURE and a failed read is no capture, never an absence)",
         "social.trendradar.ai-trend-briefing STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a model-written intelligence briefing shown without a model label or source links; ECDEV keeps model text labelled and apart from measured metrics)",
         "social.trendradar.runtime-config REFERENCE_ONLY(per-period collect, analyse and push timeline configuration)",
         "social.trendradar.deployment-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](CLI diagnostics, container manager and start scripts)"

@@ -6,7 +6,7 @@ use crate::{Engine, provider::AcquireRequest, service::timestamp};
 use rusqlite::params;
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::fs;
+use std::{collections::BTreeMap, fs};
 use uuid::Uuid;
 
 pub const FEED_PLATFORMS: [&str; 2] = ["MASTODON_TRENDS", "BLUESKY_TRENDS"];
@@ -20,9 +20,65 @@ pub fn tool_definition() -> Value {
     json!({"name":"ecdev.trend.feeds","description":"Read public trending lists (Mastodon trending tags, Bluesky trends) as discovery leads with suggested queries and next trend.discover actions; zero paid, raw captures hashed and kept, no posters kept; leads are never mentions or demand","inputSchema":{"type":"object","properties":{"sources":{"type":"array","items":source,"minItems":1,"maxItems":3},"request_budget":{"type":"integer","minimum":0,"maximum":6},"fixture_now":{"type":"integer","minimum":0}},"required":["sources"],"additionalProperties":false}})
 }
 
+fn ranks_of(feed: &Value) -> BTreeMap<String, u64> {
+    feed["entries"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|e| Some((entry_key(e)?, e["rank"].as_u64()?)))
+        .collect()
+}
+
 pub fn initialize(db: &rusqlite::Connection) -> Result<(), String> {
     db.execute_batch("CREATE TABLE IF NOT EXISTS trend_feeds(id TEXT PRIMARY KEY,mode TEXT NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL);")
         .map_err(err)
+}
+
+/// The identity of a trending-list entry across captures: the Mastodon tag, or the Bluesky
+/// topic id (its display label when the source gives none).
+fn entry_key(entry: &Value) -> Option<String> {
+    entry["tag"]
+        .as_str()
+        .or(entry["topic"].as_str())
+        .or(entry["label"].as_str())
+        .map(str::to_lowercase)
+}
+
+/// Rank history of every entry in the latest capture of one feed, across that feed's earlier
+/// successful captures (oldest first, the latest last). Only successful captures count: a failed
+/// read is no capture, never an absence. A list shows its top N only, so an entry missing from a
+/// capture is OFF_TOP_N_IN_CAPTURE, not gone. Every rank is kept, repeats included, and identity
+/// does not reset at day boundaries.
+pub fn rank_persistence(captures: &[(u64, BTreeMap<String, u64>)]) -> BTreeMap<String, Value> {
+    let Some((latest_at, latest)) = captures.last() else {
+        return BTreeMap::new();
+    };
+    let mut out = BTreeMap::new();
+    for key in latest.keys() {
+        let first = captures
+            .iter()
+            .position(|(_, ranks)| ranks.contains_key(key))
+            .unwrap_or(captures.len() - 1);
+        let span = &captures[first..];
+        let ranks: Vec<Value> = span
+            .iter()
+            .map(|(at, r)| json!({"captured_at":at,"rank":r.get(key)}))
+            .collect();
+        let present: Vec<bool> = span.iter().map(|(_, r)| r.contains_key(key)).collect();
+        let re_entries = present.windows(2).filter(|w| !w[0] && w[1]).count();
+        let streak = present.iter().rev().take_while(|p| **p).count();
+        let streak_start = span[span.len() - streak].0;
+        let best = span.iter().filter_map(|(_, r)| r.get(key)).min();
+        let state = if span.len() == 1 {
+            "NEW_ON_LIST"
+        } else if re_entries > 0 && streak == 1 {
+            "RE_ENTERED"
+        } else {
+            "SUSTAINED"
+        };
+        out.insert(key.clone(), json!({"state":state,"first_seen":span[0].0,"last_seen":latest_at,"captures_since_first_seen":span.len(),"captures_on_list":present.iter().filter(|p| **p).count(),"current_streak_captures":streak,"current_streak_seconds":latest_at - streak_start,"re_entries":re_entries,"best_rank":best,"rank_history":ranks,"absence_meaning":"OFF_TOP_N_IN_CAPTURE","failed_reads":"NOT_CAPTURES_NEVER_ABSENCE"}));
+    }
+    out
 }
 
 impl Engine {
@@ -117,6 +173,35 @@ impl Engine {
                 entry["state"] = json!("DISCOVERY_LEAD_UNVERIFIED");
                 entry["next_action"] = json!({"tool":"ecdev.trend.discover","input_template":{"query":entry["suggested_query"],"sources":follow},"paid":false});
             }
+            // Cross-run identity: this feed's earlier successful captures in the same mode.
+            let scope = feed["source_url"].clone();
+            let mut captures: Vec<(u64, BTreeMap<String, u64>)> = vec![];
+            {
+                let db = self.db.lock().map_err(err)?;
+                let mut stmt = db
+                    .prepare("SELECT payload FROM (SELECT payload,captured,rowid AS r FROM trend_feeds WHERE mode=?1 AND captured<=?2 ORDER BY captured DESC,rowid DESC LIMIT 500) ORDER BY captured,r")
+                    .map_err(err)?;
+                for row in stmt
+                    .query_map(params![mode, now], |r| r.get::<_, String>(0))
+                    .map_err(err)?
+                {
+                    let past: Value = serde_json::from_str(&row.map_err(err)?).map_err(err)?;
+                    for f in past["feeds"].as_array().into_iter().flatten() {
+                        if f["source_url"] == scope {
+                            captures.push((f["captured_at"].as_u64().unwrap_or(0), ranks_of(f)));
+                        }
+                    }
+                }
+            }
+            captures.push((now, ranks_of(&feed)));
+            let history = rank_persistence(&captures);
+            for entry in feed["entries"].as_array_mut().into_iter().flatten() {
+                if let Some(h) = entry_key(entry).and_then(|k| history.get(&k)) {
+                    entry["key"] = json!(entry_key(entry));
+                    entry["list_persistence"] = h.clone();
+                }
+            }
+            feed["prior_captures_of_this_feed"] = json!(captures.len() - 1);
             feeds.push(feed);
         }
         let id = Uuid::new_v4().to_string();
@@ -132,5 +217,65 @@ impl Engine {
             )
             .map_err(err)?;
         Ok(out)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn capture(at: u64, keys: &[&str]) -> (u64, BTreeMap<String, u64>) {
+        (
+            at,
+            keys.iter()
+                .enumerate()
+                .map(|(i, k)| (k.to_string(), i as u64 + 1))
+                .collect(),
+        )
+    }
+
+    #[test]
+    fn list_presence_survives_days_and_absence_is_only_off_top_n() {
+        let day = 86_400;
+        let caps = vec![
+            capture(0, &["matcha", "ogre"]),
+            capture(day, &["ogre", "matcha"]),
+            capture(2 * day, &["ogre"]),
+            capture(3 * day, &["hojicha", "matcha", "ogre"]),
+        ];
+        let h = rank_persistence(&caps);
+        let m = &h["matcha"];
+        assert_eq!(m["state"], "RE_ENTERED");
+        assert_eq!(
+            (
+                m["first_seen"].clone(),
+                m["captures_since_first_seen"].clone(),
+                m["captures_on_list"].clone()
+            ),
+            (json!(0), json!(4), json!(3))
+        );
+        assert_eq!(m["re_entries"], 1);
+        assert_eq!(m["best_rank"], 1);
+        assert_eq!(
+            m["rank_history"][2]["rank"],
+            Value::Null,
+            "off the top N in that capture"
+        );
+        let o = &h["ogre"];
+        assert_eq!(o["state"], "SUSTAINED");
+        assert_eq!(
+            (
+                o["current_streak_captures"].clone(),
+                o["current_streak_seconds"].clone()
+            ),
+            (json!(4), json!(3 * day))
+        );
+        assert_eq!(
+            o["rank_history"].as_array().unwrap().len(),
+            4,
+            "repeated ranks are kept"
+        );
+        assert_eq!(h["hojicha"]["state"], "NEW_ON_LIST");
+        assert!(rank_persistence(&[]).is_empty());
     }
 }
