@@ -725,6 +725,51 @@ mod research_tests {
         std::fs::remove_dir_all(root).unwrap();
     }
     #[test]
+    fn social_sources_walk_their_own_cursors_with_a_stall_guard() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-pages-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let hn = |page: u64, ids: &[&str]| {
+            json!({"page":page,"nbPages":3,"hits":ids.iter().enumerate().map(|(i,id)|json!({"objectID":id,"title":"matcha glass","created_at_i":9000+i as u64})).collect::<Vec<_>>()}).to_string()
+        };
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":10000,"sources":[{"platform":"HACKER_NEWS","max_pages":5,"fixture_raw":hn(0,&["1","2"]),"fixture_pages":[hn(1,&["3"]),hn(2,&["4","5"])]}]})).unwrap();
+        assert_eq!(run["mention_count"], 5);
+        assert_eq!(run["pagination"][0]["pages"], 3);
+        assert_eq!(run["pagination"][0]["stop"], "END_OF_RESULTS");
+        // Each page is its own verified capture.
+        let hashes: std::collections::BTreeSet<String> = run["captured_posts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|p| p["raw_hash"].as_str().unwrap().to_string())
+            .collect();
+        assert_eq!(hashes.len(), 3);
+        // Default: one page, as before.
+        let one = engine.trend_discover(json!({"query":"matcha","fixture_now":10000,"sources":[{"platform":"HACKER_NEWS","fixture_raw":hn(0,&["1","2"])}]})).unwrap();
+        assert_eq!(
+            (
+                one["pagination"][0]["pages"].clone(),
+                one["pagination"][0]["stop"].clone()
+            ),
+            (json!(1), json!("PAGE_LIMIT"))
+        );
+        // A source that hands back a cursor it already gave stops instead of looping.
+        let sky = |rkey: &str, cursor: &str| {
+            json!({"cursor":cursor,"posts":[{"uri":format!("at://did:plc:a/app.bsky.feed.post/{rkey}"),"author":{"did":"did:plc:a","handle":"a.bsky.social"},"record":{"text":"matcha glass","createdAt":"1970-01-01T02:30:00Z"}}]}).to_string()
+        };
+        let stalled = engine.trend_discover(json!({"query":"matcha","fixture_now":10000,"sources":[{"platform":"BLUESKY","max_pages":5,"fixture_raw":sky("a","c1"),"fixture_pages":[sky("b","c2"),sky("c","c1"),sky("d","c3")]}]})).unwrap();
+        assert_eq!(stalled["pagination"][0]["stop"], "REPEATED_CURSOR");
+        assert_eq!(stalled["pagination"][0]["pages"], 3);
+        assert_eq!(stalled["mention_count"], 3);
+    }
+    #[test]
     fn public_amazon_blocked_route_preserves_provider_identity_and_public_fallback() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-public-amazon-{}",

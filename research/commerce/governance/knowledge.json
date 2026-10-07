@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e072e9015f810d0a85bda35db47c39a2c25e9eee",
+  "assessed_parent_commit": "872f93a4c10f344c5a24c376b2e0f2900dd19c2a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 38,
     "benchmark_candidates": 28,
-    "algorithm_candidates": 10,
+    "algorithm_candidates": 9,
     "reference_only": 52,
-    "study_complete_capabilities": 89,
+    "study_complete_capabilities": 90,
     "not_relevant_after_review": 25,
-    "research_questions_open": 76,
-    "knowledge_coverage_ratio": 0.68595
+    "research_questions_open": 75,
+    "knowledge_coverage_ratio": 0.690083
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1117,7 +1117,6 @@
         "native_reimplementation": "CLEAN_ROOM_ONLY"
       },
       "open": [
-        "social.mediacrawler.comment-tree-pagination ALGORITHM_CANDIDATE(one paginator over opaque cursors, sentinel ends, max_id and offset paging with a repeated-cursor stall guard, plus date-sliced windows with per-day quotas for time-uniform samples)",
         "social.mediacrawler.data-models STUDY_CANDIDATE(a canonical post, comment-tree and creator schema (root, reply, quoted target, reaction counts, region) for review mining across marketplaces and social platforms, with keyword provenance on every stored item)",
         "social.mediacrawler.privacy-pseudonymisation ALGORITHM_CANDIDATE(salted creator pseudonyms and masked display names; the donor hash is unsalted and linkable)",
         "social.mediacrawler.text-mining BENCHMARK_CANDIDATE(jieba segmentation with a domain lexicon as the baseline for product-term extraction from CJK comments)"
@@ -1134,6 +1133,7 @@
         "social.mediacrawler.update_xhs_note_comment REFERENCE_ONLY(comment counter mapping; donor zero defaults would fabricate values)",
         "social.mediacrawler.save_creator REFERENCE_ONLY(creator persistence stub)",
         "social.mediacrawler.platform-orchestrators REFERENCE_ONLY(per-platform search, detail and creator crawl modes under one semaphore with fixed sleeps)",
+        "social.mediacrawler.comment-tree-pagination STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/pagination.rs::PageWalk walks a source's own opaque cursors (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url on the feed origin) one acquisition and one verified raw capture per page, opt-in up to five pages, stopping on END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT or REQUEST_BUDGET with two requests kept for every source still to come; snapshots report pages and the stop reason per source. Date-sliced windows with per-day quotas are not implemented; comment trees are not read)",
         "social.mediacrawler.response-extractors REFERENCE_ONLY(embedded-state and GraphQL response mapping with offline HTML fixtures for parser regression)",
         "social.mediacrawler.storage-backends REFERENCE_ONLY(one store interface over file and database sinks)",
         "social.mediacrawler.runtime-utils STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/displayed.rs::displayed_count and displayed_age keep the unit and display resolution of abbreviated counts (1.2万, 10w+, 3.05亿, 1.5k) and N-unit-前 ages, and report the interval a truncated or rounded display allows; months, years and unquantified words are refused, never guessed; the donor drops the unit and returns a point value)",

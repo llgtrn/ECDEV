@@ -1,6 +1,7 @@
 //! Evidence-first social contracts. Capture mode and evidence state are orthogonal.
 pub mod displayed;
 pub mod growth;
+pub mod pagination;
 pub mod runtime;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};

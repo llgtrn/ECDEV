@@ -71,7 +71,7 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
-    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304}},"required":["platform"],"additionalProperties":false});
+    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"}},"required":["platform"],"additionalProperties":false});
     let discover = json!({"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":500},"sources":{"type":"array","items":source,"minItems":1,"maxItems":5},"window_seconds":{"type":"integer","minimum":60,"maximum":2592000},"request_budget":{"type":"integer","minimum":0,"maximum":20},"cache_only":{"type":"boolean"},"fixture_now":{"type":"integer","minimum":0}},"required":["query","sources"],"additionalProperties":false});
     let inspect = json!({"type":"object","properties":{"snapshot_id":{"type":"string"}},"additionalProperties":false});
     vec![
@@ -276,6 +276,7 @@ impl Engine {
         let mut hits = 0u64;
         let mut checked = BTreeMap::new();
         let run_id = Uuid::new_v4().to_string();
+        let mut paginations = vec![];
         for (i, source) in sources.iter().enumerate() {
             if !selected.contains(format!("source-{i}").as_str()) {
                 continue;
@@ -333,65 +334,110 @@ impl Engine {
                 failures.push(json!({"platform":source["platform"],"state":"SOURCE_BLOCKED","reason":"PAID_OR_UNKNOWN_PROVIDER_COST_DENIED_BEFORE_IO"}));
                 continue;
             }
-            let mut payload = source.clone();
-            payload["query"] = json!(query);
-            payload["captured_at"] = json!(now);
-            let acquired = provider.acquire(&AcquireRequest {
-                run_id: run_id.clone(),
-                capability: "social.query".into(),
-                market: "PUBLIC_SOCIAL".into(),
-                query: payload,
-            });
-            match acquired {
-                Ok(acquired) => {
-                    let count = acquired.provider_cost["request_count"].as_u64();
-                    requests = requests.saturating_add(count.unwrap_or(0));
-                    if (fixture && count != Some(0)) || (!fixture && count.is_none_or(|n| n == 0)) {
-                        failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH","request_count":count}));
-                        continue;
-                    }
-                    let posts: Vec<SocialPost> =
-                        serde_json::from_value(acquired.result["posts"].clone()).map_err(err)?;
-                    for p in &posts {
-                        p.validate()?;
-                        if p.capture_mode != mode {
-                            return Err("PROVIDER_CAPTURE_MODE_MISMATCH".into());
+            // Pages are walked one acquisition each, so every page keeps its own raw capture.
+            let mut walk =
+                super::pagination::PageWalk::new(source["max_pages"].as_u64().unwrap_or(1));
+            let mut cursor: Option<String> = None;
+            let mut source_posts: Vec<SocialPost> = vec![];
+            let stop: &str = loop {
+                let mut payload = source.clone();
+                if let Some(o) = payload.as_object_mut() {
+                    o.remove("max_pages");
+                    o.remove("fixture_pages");
+                }
+                payload["query"] = json!(query);
+                payload["captured_at"] = json!(now);
+                if let Some(c) = &cursor {
+                    payload["page_cursor"] = json!(c);
+                    if fixture {
+                        match source["fixture_pages"]
+                            .get(walk.pages().saturating_sub(1) as usize)
+                            .and_then(Value::as_str)
+                        {
+                            Some(raw) => payload["fixture_raw"] = json!(raw),
+                            None => break "FIXTURE_PAGE_MISSING",
                         }
                     }
-                    let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
-                    if posts.iter().any(|p| p.raw_hash != raw_hash) {
-                        return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
+                }
+                let acquired = provider.acquire(&AcquireRequest {
+                    run_id: run_id.clone(),
+                    capability: "social.query".into(),
+                    market: "PUBLIC_SOCIAL".into(),
+                    query: payload,
+                });
+                match acquired {
+                    Ok(acquired) => {
+                        let count = acquired.provider_cost["request_count"].as_u64();
+                        requests = requests.saturating_add(count.unwrap_or(0));
+                        if (fixture && count != Some(0))
+                            || (!fixture && count.is_none_or(|n| n == 0))
+                        {
+                            failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH","request_count":count}));
+                            break "PAGE_FAILED";
+                        }
+                        let posts: Vec<SocialPost> =
+                            serde_json::from_value(acquired.result["posts"].clone())
+                                .map_err(err)?;
+                        for p in &posts {
+                            p.validate()?;
+                            if p.capture_mode != mode {
+                                return Err("PROVIDER_CAPTURE_MODE_MISMATCH".into());
+                            }
+                        }
+                        let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
+                        if posts.iter().any(|p| p.raw_hash != raw_hash) {
+                            return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
+                        }
+                        let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
+                        fs::create_dir_all(&rawdir).map_err(err)?;
+                        fs::write(
+                            rawdir.join(format!("{raw_hash}.raw")),
+                            &acquired.raw_payload,
+                        )
+                        .map_err(err)?;
+                        let next = acquired.result["pagination"]["next_cursor"].as_str();
+                        let n = posts.len();
+                        source_posts.extend(posts);
+                        match walk.after_page(n, next) {
+                            Ok(c) => {
+                                // Every selected source still to come keeps its two requests.
+                                let reserved = (i + 1..sources.len())
+                                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
+                                    .count() as u64
+                                    * 2;
+                                if !fixture && requests + 2 + reserved > request_budget as u64 {
+                                    break "REQUEST_BUDGET";
+                                }
+                                cursor = Some(c);
+                            }
+                            Err(reason) => break reason,
+                        }
                     }
-                    let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
-                    fs::create_dir_all(&rawdir).map_err(err)?;
-                    fs::write(
-                        rawdir.join(format!("{raw_hash}.raw")),
-                        &acquired.raw_payload,
+                    Err(e) => {
+                        requests = requests.saturating_add(e.request_count.unwrap_or(0));
+                        let state = match e.http_status {
+                            Some(401) => "AUTH_REQUIRED",
+                            Some(429) => "RATE_LIMITED",
+                            Some(403) => "SOURCE_BLOCKED",
+                            _ => "SOURCE_UNAVAILABLE",
+                        };
+                        failures.push(json!({"platform":source["platform"],"state":state,"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count,"retry_not_before_ms":e.retry_not_before_ms,"page":walk.pages() + 1}));
+                        break "PAGE_FAILED";
+                    }
+                }
+            };
+            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":walk.pages(),"stop":stop,"posts":source_posts.len()}));
+            if !fixture && !source_posts.is_empty() {
+                self.db
+                    .lock()
+                    .map_err(err)?
+                    .execute(
+                        "INSERT OR REPLACE INTO social_cache VALUES(?1,?2,?3)",
+                        params![key, now, serde_json::to_string(&source_posts).map_err(err)?],
                     )
                     .map_err(err)?;
-                    if !fixture {
-                        self.db
-                            .lock()
-                            .map_err(err)?
-                            .execute(
-                                "INSERT OR REPLACE INTO social_cache VALUES(?1,?2,?3)",
-                                params![key, now, serde_json::to_string(&posts).map_err(err)?],
-                            )
-                            .map_err(err)?;
-                    }
-                    captured.extend(posts);
-                }
-                Err(e) => {
-                    requests = requests.saturating_add(e.request_count.unwrap_or(0));
-                    let state = match e.http_status {
-                        Some(401) => "AUTH_REQUIRED",
-                        Some(429) => "RATE_LIMITED",
-                        Some(403) => "SOURCE_BLOCKED",
-                        _ => "SOURCE_UNAVAILABLE",
-                    };
-                    failures.push(json!({"platform":source["platform"],"state":state,"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count,"retry_not_before_ms":e.retry_not_before_ms}));
-                }
             }
+            captured.extend(source_posts);
         }
         // LIVE snapshots describe the completed acquisition, rather than its start time.
         let now = if mode == "LIVE" { timestamp() } else { now };
@@ -442,6 +488,7 @@ impl Engine {
         snap["raw_capture_verification"] = json!("VERIFIED_LOCAL_SHA256_NO_NETWORK");
         snap["acquisition_provenance"] = json!({"requested_mode":mode,"new_observation_count":if mode=="CACHED"{0}else{captured.len()},"new_live_observation_count":if mode=="LIVE" && requests>0{captured.len()}else{0},"live_acquisition_established":mode=="LIVE" && requests>0 && !captured.is_empty(),"historical_projection":"VALIDATED_RAW_CAPTURE_ONLY","cache_projection_is_new_live_acquisition":false});
         snap["provider_failures"] = json!(failures);
+        snap["pagination"] = json!(paginations);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
         let acquisition_mode = if mode != "LIVE" || requests > 0 {
             mode
