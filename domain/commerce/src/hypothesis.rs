@@ -49,6 +49,13 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         ));
     }
     let signal = snapshot["state"].as_str().unwrap_or("UNKNOWN");
+    // How complete the population behind the signal is: a separate dimension, never a weight on
+    // the mention metrics. Snapshots from before coverage was recorded say so.
+    let evidence_completeness = if snapshot["population_evidence"].is_object() {
+        json!({"grade":snapshot["population_evidence"]["grade"],"sources":snapshot["population_evidence"]["sources"],"min_temporal_span_coverage":snapshot["population_evidence"]["min_temporal_span_coverage"],"items_observed":snapshot["population_evidence"]["items_observed"]})
+    } else {
+        json!({"grade":"NOT_RECORDED_FOR_THIS_SNAPSHOT"})
+    };
     let mut hypotheses = Vec::new();
     for (cluster_terms, evidence, platforms) in groups {
         let refinements: Vec<String> = cluster_terms.difference(&topic).take(5).cloned().collect();
@@ -100,9 +107,9 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
                     .unwrap_or(0),
             )
         });
-        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions}));
+        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone()}));
     }
-    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist"],"network_calls":0})
+    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts"],"network_calls":0})
 }
 
 #[cfg(test)]

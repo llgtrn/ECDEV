@@ -101,12 +101,88 @@ pub fn population_coverage(start: u64, end: u64, sliced: bool, slices: &[Value])
     })
 }
 
+/// What a trend snapshot rests on, across its sources: how it was acquired and how complete the
+/// sources say it is. It qualifies the snapshot's signals and never changes them: mention counts,
+/// velocity and the score are computed from the posts alone.
+pub fn population_evidence(paginations: &[Value], mode: &str) -> Value {
+    let sources: Vec<Value> = paginations
+        .iter()
+        .map(|p| {
+            let c = &p["population_coverage"];
+            let slices = p["slices"].as_array().map_or(0, Vec::len);
+            let basis = if c["sliced"] == true {
+                "TIME_SLICED"
+            } else if p["pages"].as_u64().unwrap_or(0) > 1 {
+                "MULTI_PAGE"
+            } else {
+                "FIRST_PAGE_ONLY"
+            };
+            json!({"platform":p["platform"],"source_group":p["source_group"],"basis":basis,"slices":slices,"pages":p["pages"],"items_observed":c["items_observed"],"state":c["state"],"temporal_span_coverage":c["temporal_span_coverage"],"comment_tree_state":c["comment_tree_state"],"total_state":c["total_state"]})
+        })
+        .collect();
+    let states: Vec<&str> = sources.iter().filter_map(|s| s["state"].as_str()).collect();
+    let grade = if mode == "CACHED" || sources.is_empty() {
+        "UNKNOWN_NOT_ACQUIRED_IN_THIS_RUN"
+    } else if states.iter().all(|s| *s == "COMPLETE_BY_SOURCE") {
+        "COMPLETE_BY_SOURCE"
+    } else if states.contains(&"NETWORK_INTERRUPTED") {
+        "INTERRUPTED"
+    } else {
+        "PARTIAL"
+    };
+    let spans: Vec<f64> = sources
+        .iter()
+        .filter_map(|s| s["temporal_span_coverage"].as_f64())
+        .collect();
+    json!({
+        "grade": grade,
+        "sources": sources,
+        "min_temporal_span_coverage": spans.iter().copied().reduce(f64::min),
+        "items_observed": paginations.iter().filter_map(|p| p["population_coverage"]["items_observed"].as_u64()).sum::<u64>(),
+        "role": "QUALIFIES_SIGNALS_NEVER_CHANGES_THEM",
+        "total_state": "SOURCE_TOTALS_NEVER_USED_AS_DENOMINATORS_UNLESS_EXACT",
+    })
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     fn slice(since: u64, until: u64, stop: &str, posts: u64) -> Value {
         json!({"since":since,"until":until,"acquired":stop != "NOT_ACQUIRED_REQUEST_BUDGET","stop":stop,"pages":1,"posts":posts,"earliest":since + 1,"latest":until,"source_total":{"value":posts * 10,"exactness":"APPROXIMATE"}})
+    }
+
+    #[test]
+    fn evidence_grades_say_what_a_snapshot_rests_on() {
+        let p = |pages: u64, sliced: bool, state: &str| json!({"platform":"HACKER_NEWS","pages":pages,"slices":[{}],"population_coverage":{"sliced":sliced,"state":state,"items_observed":50,"temporal_span_coverage":0.25}});
+        let first = population_evidence(&[p(1, false, "PARTIAL_PAGE_LIMIT")], "LIVE");
+        assert_eq!(
+            (first["grade"].clone(), first["sources"][0]["basis"].clone()),
+            (json!("PARTIAL"), json!("FIRST_PAGE_ONLY"))
+        );
+        assert_eq!(
+            population_evidence(&[p(4, false, "COMPLETE_BY_SOURCE")], "LIVE")["sources"][0]["basis"],
+            "MULTI_PAGE"
+        );
+        assert_eq!(
+            population_evidence(&[p(7, true, "COMPLETE_BY_SOURCE")], "LIVE")["grade"],
+            "COMPLETE_BY_SOURCE"
+        );
+        assert_eq!(
+            population_evidence(
+                &[
+                    p(1, false, "NETWORK_INTERRUPTED"),
+                    p(1, true, "COMPLETE_BY_SOURCE")
+                ],
+                "LIVE"
+            )["grade"],
+            "INTERRUPTED"
+        );
+        assert_eq!(
+            population_evidence(&[], "CACHED")["grade"],
+            "UNKNOWN_NOT_ACQUIRED_IN_THIS_RUN"
+        );
+        assert_eq!(first["min_temporal_span_coverage"], 0.25);
     }
 
     #[test]

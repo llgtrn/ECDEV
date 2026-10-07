@@ -818,6 +818,37 @@ mod research_tests {
         assert!(c["coverage_ratio"].is_null());
         assert_eq!(c["total_state"], "SOURCE_TOTAL_UNKNOWN");
         assert_eq!(run["mention_count"], 4);
+        assert_eq!(run["population_evidence"]["grade"], "COMPLETE_BY_SOURCE");
+        assert_eq!(
+            run["population_evidence"]["sources"][0]["basis"],
+            "TIME_SLICED"
+        );
+        // Hypotheses carry what their snapshot rests on, beside (not inside) the signal.
+        let h = engine
+            .trend_hypothesize(json!({"snapshot_id":run["snapshot_id"]}))
+            .unwrap();
+        let first = &h["hypotheses"][0];
+        assert_eq!(
+            first["evidence_completeness"]["grade"],
+            "COMPLETE_BY_SOURCE"
+        );
+        assert_eq!(first["evidence_completeness"]["items_observed"], 4);
+        assert_eq!(first["shortlist_eligible"], false);
+        // One first page over the same posts: same mention count, weaker evidence.
+        let one = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":3 * day,"sources":[{"platform":"HACKER_NEWS","fixture_raw":hn(0, 2, &[("101", now - 100), ("102", now - 200), ("103", now - 300), ("104", now - day - 50)])}]})).unwrap();
+        assert_eq!(one["mention_count"], run["mention_count"]);
+        assert_eq!(one["population_evidence"]["grade"], "PARTIAL");
+        assert_eq!(
+            one["population_evidence"]["sources"][0]["basis"],
+            "FIRST_PAGE_ONLY"
+        );
+        let h1 = engine
+            .trend_hypothesize(json!({"snapshot_id":one["snapshot_id"]}))
+            .unwrap();
+        assert_eq!(
+            h1["hypotheses"][0]["evidence_completeness"]["grade"],
+            "PARTIAL"
+        );
         // A slice the page limit cut short is partial, and its span is not counted as covered.
         let cut = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":2 * day,"sources":[{"platform":"HACKER_NEWS","max_pages":1,"slice_seconds":day,"fixture_slices":[[hn(0, 2, &[("101", now - 100)])],[hn(0, 1, &[("104", now - day - 50)])]]}]})).unwrap();
         let c = &cut["pagination"][0]["population_coverage"];

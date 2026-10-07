@@ -671,6 +671,7 @@ impl Engine {
         snap["acquisition_provenance"] = json!({"requested_mode":mode,"new_observation_count":if mode=="CACHED"{0}else{captured.len()},"new_live_observation_count":if mode=="LIVE" && requests>0{captured.len()}else{0},"live_acquisition_established":mode=="LIVE" && requests>0 && !captured.is_empty(),"historical_projection":"VALIDATED_RAW_CAPTURE_ONLY","cache_projection_is_new_live_acquisition":false});
         snap["provider_failures"] = json!(failures);
         snap["pagination"] = json!(paginations);
+        snap["population_evidence"] = super::coverage::population_evidence(&paginations, mode);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
         let acquisition_mode = if mode != "LIVE" || requests > 0 {
             mode
