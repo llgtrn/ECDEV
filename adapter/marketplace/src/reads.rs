@@ -578,6 +578,7 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
     let ctx = &op["request_context"];
     let mut fields = Vec::new();
     let mut ignored = 0usize;
+    let mut next_actions: Vec<Value> = Vec::new();
     match operation {
         "listings_item" => {
             if body["sku"] != ctx["sku"] {
@@ -888,6 +889,14 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
                     .map(|(raw, _)| raw)
                     .collect();
                 answered.extend(matched.iter().map(|m| m.to_string()));
+                if !matched.is_empty() {
+                    // A confirmed code-to-ASIN link: its official offers and estimated fees next.
+                    let market = match marketplace {
+                        "A1VC38T7YXB528" => "AMAZON_JP",
+                        _ => "AMAZON_US",
+                    };
+                    next_actions.push(json!({"tool":"ecdev.product.analyze","input_template":{"asin":asin,"market":market,"evidence_layer":"OFFICIAL_SP_API","include":["CATALOG","OFFERS","FEE_ESTIMATE"]},"because":{"identifiers_listed":matched},"fills":["NO_PRICE_EVIDENCE","NO_ECONOMICS"],"paid":false,"requires":"SP-API credentials and the operator gate"}));
+                }
                 fields.push(field(
                     format!("items[{asin}].requested_identifiers_listed"),
                     &json!(matched),
@@ -1023,7 +1032,7 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
         _ => return Err("UNSUPPORTED_OFFICIAL_OPERATION".into()),
     }
     Ok(
-        json!({"fields":fields,"ignored_other_marketplace_entries":ignored,"sales":null,"demand":null}),
+        json!({"fields":fields,"ignored_other_marketplace_entries":ignored,"next_actions":next_actions,"sales":null,"demand":null}),
     )
 }
 
@@ -1207,6 +1216,10 @@ pub(crate) mod tests {
                         field(record, "pagination")["value"],
                         "MORE_PAGES_NOT_FOLLOWED"
                     );
+                    let next = &record["normalized"]["next_actions"];
+                    assert_eq!(next.as_array().unwrap().len(), 1);
+                    assert_eq!(next[0]["input_template"]["asin"], "B07N4M94X4");
+                    assert_eq!(next[0]["input_template"]["market"], "AMAZON_US");
                 }
                 "product_type_search" => {
                     assert_eq!(
