@@ -49,10 +49,18 @@ pub fn assess(candidates: &mut [Value], policy: &Policy, budget_exhausted: bool)
             .as_array()
             .cloned()
             .unwrap_or_else(|| vec![c.clone()]);
-        let origins: BTreeSet<_> = rows
+        let urls: Vec<url::Url> = rows
             .iter()
             .filter_map(|r| url::Url::parse(r["source"].as_str()?).ok())
+            .collect();
+        let origins: BTreeSet<_> = urls
+            .iter()
             .map(|u| u.origin().ascii_serialization())
+            .collect();
+        // Origins of one registrable domain are one site: a second listing needs a second site.
+        let sites: BTreeSet<_> = urls
+            .iter()
+            .filter_map(crate::public_suffix::site_of)
             .collect();
         let mut missing = vec![];
         if policy.max_weight_g.is_some()
@@ -72,7 +80,7 @@ pub fn assess(candidates: &mut [Value], policy: &Policy, budget_exhausted: bool)
         {
             missing.push("CROSS_SOURCE_PRODUCT_IDENTIFIER");
         }
-        if origins.len() < 2 {
+        if sites.len() < 2 {
             missing.push("SECOND_LISTING_ORIGIN");
         }
         if p["price_minor"].as_i64().is_none_or(|v| v <= 0)
@@ -129,7 +137,7 @@ pub fn assess(candidates: &mut [Value], policy: &Policy, budget_exhausted: bool)
             "VALIDATING"
         });
         c["rejection_reasons"] = json!(rejected);
-        c["decision"] = json!({"policy":"PUBLIC_RESEARCH_SHORTLIST_V1","purpose":"FURTHER_RESEARCH","criteria":{"cross_source_identifier":"CHECKSUM_VALID_GTIN_OR_ASIN_WITH_VARIANT","minimum_listing_origins":2,"consistent_positive_price":true,"available_offer":true,"currency":policy.currency,"max_weight_g":policy.max_weight_g,"excluded_categories":policy.excluded_categories},"listing_origins":origins,"publisher_independence":"UNVERIFIED","missing_selection_evidence":missing,"budget_exhausted":budget_exhausted,"commercial_validation":"INCOMPLETE_WHILE_SUPPLIER_DEMAND_LOGISTICS_AND_RISK_REMAIN_UNKNOWN","profit_forecast":null,"reason":if shortlisted {"Matched source identifier, consistent price and available offer across captured origins; prioritize further commercial validation"} else if !rejected.is_empty() {"Failed explicit evidence constraints"} else {"Selection evidence incomplete"}});
+        c["decision"] = json!({"policy":"PUBLIC_RESEARCH_SHORTLIST_V1","purpose":"FURTHER_RESEARCH","criteria":{"cross_source_identifier":"CHECKSUM_VALID_GTIN_OR_ASIN_WITH_VARIANT","minimum_listing_origins":2,"listing_origin_unit":"REGISTRABLE_DOMAIN","consistent_positive_price":true,"available_offer":true,"currency":policy.currency,"max_weight_g":policy.max_weight_g,"excluded_categories":policy.excluded_categories},"listing_origins":origins,"listing_sites":sites,"site_basis":format!("REGISTRABLE_DOMAIN_PUBLIC_SUFFIX_LIST_{}",crate::public_suffix::list_version()),"publisher_independence":"UNVERIFIED","missing_selection_evidence":missing,"budget_exhausted":budget_exhausted,"commercial_validation":"INCOMPLETE_WHILE_SUPPLIER_DEMAND_LOGISTICS_AND_RISK_REMAIN_UNKNOWN","profit_forecast":null,"reason":if shortlisted {"Matched source identifier, consistent price and available offer across captured origins; prioritize further commercial validation"} else if !rejected.is_empty() {"Failed explicit evidence constraints"} else {"Selection evidence incomplete"}});
         c["survival_reason"] = c["decision"]["reason"].clone();
     }
 }
@@ -158,5 +166,34 @@ mod tests {
         );
         assert_eq!(c["state"], "REJECTED");
         assert_eq!(c["rejection_reasons"][0], "EXCLUDED_OBSERVED_CATEGORY");
+    }
+
+    #[test]
+    fn two_origins_of_one_site_are_not_a_second_listing() {
+        let listing = |a: &str, b: &str| json!({"product":{"currency":"JPY","price_minor":1980,"fields":{"price_minor":{"status":"OBSERVED"}}},"resolution":{"basis":"CHECKSUM_VALID_GTIN_AND_VARIANT","observations":[{"source":a,"product":{"title":"Cup","observed_offers":[{"availability":"InStock"}]}},{"source":b,"product":{"title":"Cup"}}]},"evidence_ids":["one","two"],"rejection_reasons":[],"economics_uncertainty":{"profit_expected":null}});
+        for (a, b) in [
+            ("https://www.shop.co.uk/p", "https://sale.shop.co.uk/p"),
+            ("http://shop.example/p", "https://shop.example/p"),
+        ] {
+            let mut c = listing(a, b);
+            assess(std::slice::from_mut(&mut c), &Policy::default(), true);
+            assert_eq!(c["state"], "INSUFFICIENT_EVIDENCE", "{a} {b}");
+            assert_eq!(
+                c["decision"]["listing_origins"].as_array().unwrap().len(),
+                2
+            );
+            assert_eq!(c["decision"]["listing_sites"].as_array().unwrap().len(), 1);
+            assert!(
+                c["decision"]["missing_selection_evidence"]
+                    .as_array()
+                    .unwrap()
+                    .contains(&json!("SECOND_LISTING_ORIGIN"))
+            );
+        }
+        // Two stores on a shared platform suffix are two sites; independence stays unverified.
+        let mut c = listing("https://a.myshopify.com/p", "https://b.myshopify.com/p");
+        assess(std::slice::from_mut(&mut c), &Policy::default(), true);
+        assert_eq!(c["state"], "SHORTLISTED");
+        assert_eq!(c["decision"]["publisher_independence"], "UNVERIFIED");
     }
 }

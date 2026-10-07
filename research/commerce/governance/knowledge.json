@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "eeaca64b8e73058ace5bd9a37285cfd7e4ce9ea1",
+  "assessed_parent_commit": "f094273d1ad3419740c84be2b5039d5a8d788a13",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,23 +20,23 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 34,
     "benchmark_candidates": 26,
-    "algorithm_candidates": 5,
+    "algorithm_candidates": 4,
     "reference_only": 52,
-    "study_complete_capabilities": 102,
+    "study_complete_capabilities": 103,
     "not_relevant_after_review": 25,
-    "research_questions_open": 65,
-    "knowledge_coverage_ratio": 0.733607
+    "research_questions_open": 64,
+    "knowledge_coverage_ratio": 0.737705
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
     "donors_structural_census": 0,
     "donors_semantic_census": 2,
-    "donors_active_study": 14,
-    "donors_study_complete": 2,
+    "donors_active_study": 13,
+    "donors_study_complete": 3,
     "donors_structurally_censused": 18,
     "donors_semantically_censused": 14,
-    "donors_with_open_candidates": 14,
-    "donors_with_open_research": 66
+    "donors_with_open_candidates": 13,
+    "donors_with_open_research": 65
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -439,9 +439,9 @@
     },
     {
       "donor": "seomoz--reppy",
-      "runtime": "CUTOVER",
-      "effective": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -449,9 +449,7 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [
-        "reppy.url-library-remainder ALGORITHM_CANDIDATE(public-suffix registrable-domain computation (url-cpp psl) for grouping independent origins and publishers)"
-      ],
+      "open": [],
       "resolved": [
         "reppy.allow-decision STUDY_COMPLETE[DERIVED_NATIVE](allow decisions proven on 1620 frozen cases, reproduced by MSVC and g++)",
         "reppy.crawl-delay STUDY_COMPLETE[DERIVED_NATIVE](crawl-delay proven on the same 1620 cases)",
@@ -459,6 +457,7 @@
         "reppy.sitemaps STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/sitemap-discovery-benchmark.json: on four retailers declaring sitemaps, six sitemap requests listed 97 to 4954 product URLs against 0 to 20 home-page product links, and held 43 of 45 home-page products (seasonal bundles lag); adapter/web/src/robots.rs::sitemaps and adapter/web/src/sitemap.rs::parse read declared sitemaps and bounded urlset/index entries natively; research crawls enqueue the sitemaps a seed origin declares and follow their entries through the same lease, robots, depth and URL budget)",
         "reppy.fetch-status-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](reppy allows all on most 4xx; ECDEV denies every status but 200 and 404)",
         "reppy.ttl-and-cache STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/robots.rs::RobotsCache keeps a 200 or 404 robots.txt outcome per robots URL for its header-derived freshness lifetime (research::freshness_lifetime: no-store and no-cache never kept, default 1 h, at most 24 h per RFC 9309), bounded at 256 origins with soonest-expiry eviction; 429, 5xx and other statuses are refetched every time; acquisitions record robots_cache_hits beside request_count)",
+        "reppy.url-library-remainder STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/public-suffix-review.json: domain/commerce/src/public_suffix.rs computes registrable domains natively over the vendored, unmodified Public Suffix List (ICANN and PRIVATE sections, version and hash recorded) and passes the list project's own test vectors; the shortlist gate now needs two registrable domains rather than two URL origins, so subdomains and http/https of one site no longer count twice, while stores on shared platform suffixes stay separate; publisher independence remains unverified)",
         "reppy.packaging-and-tooling NO_RESEARCH_VALUE[RELEASE_TOOLING](Cython bindings, packaging, benchmarks and CI scripts)"
       ]
     },

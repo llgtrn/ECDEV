@@ -1,0 +1,32 @@
+{
+  "subject": "Registrable-domain grouping of listing origins",
+  "problem": "The shortlist gate counted URL origins, so www.example.com and shop.example.com, or http and https of one host, satisfied 'two listing origins' from one site.",
+  "native_implementation": "domain/commerce/src/public_suffix.rs (exception rule, else longest normal or wildcard rule, else '*'; ASCII/punycode hosts; IP addresses and public suffixes have no registrable domain)",
+  "data": {
+    "file": "domain/commerce/data/public_suffix_list.dat",
+    "source": "https://publicsuffix.org/list/public_suffix_list.dat",
+    "version": "2026-10-06_07-09-37_UTC",
+    "commit": "f7f7b5f404fbfbc463a1d802baa2a5e5da4f9e81",
+    "sha256": "737075296d578aabae00a5871219abc6af1153b0eb3182bad04e533942b44cce",
+    "license": "MPL-2.0, vendored unmodified with its license header; data, not code",
+    "sections_used": ["ICANN", "PRIVATE"],
+    "why_private_section": "Stores on shared platform suffixes (a.myshopify.com, b.myshopify.com) are different sites"
+  },
+  "oracle": {
+    "file": "domain/commerce/tests/fixtures/public-suffix-tests.txt",
+    "source": "https://raw.githubusercontent.com/publicsuffix/list/main/tests/tests.txt",
+    "license": "CC0-1.0",
+    "sha256": "61a3a502cf471d1a919d5e43c10e910023b0c4230e1db506f8e2ff0b47d2234e",
+    "result": "all vectors pass (domain/commerce/tests/public_suffix.rs); expected values compared in punycode"
+  },
+  "consumers": [
+    "domain/commerce/src/decision.rs: SECOND_LISTING_ORIGIN needs two registrable domains; listing_sites and site_basis reported beside listing_origins",
+    "domain/commerce/src/service.rs: captured zero-paid shortlist needs two sites"
+  ],
+  "limits": [
+    "Different registrable domains are still not proven independent publishers; publisher_independence stays UNVERIFIED",
+    "The vendored list ages; refreshing it is a reviewed data update with a new version, commit and hash here"
+  ],
+  "donor_relation": "reppy.url-library-remainder (url-cpp psl) studied; no donor code used",
+  "runtime_dependency_added": false
+}

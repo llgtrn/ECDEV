@@ -793,6 +793,7 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
         };
         let mut hashes = Vec::new();
         let mut origins = std::collections::BTreeSet::new();
+        let mut sites = std::collections::BTreeSet::new();
         for id in ids {
             let Some(observation) = observations
                 .iter()
@@ -838,11 +839,14 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
                 continue;
             }
             origins.insert(source.origin().ascii_serialization());
+            sites.extend(crate::public_suffix::site_of(&source));
             hashes.push(json!({"evidence_id":id,"raw_capture_sha256":hash}));
         }
-        if origins.len() >= 2 {
+        // Two origins of one registrable domain (www and shop subdomains, http and https) are
+        // one site, not a second listing.
+        if sites.len() >= 2 {
             return Some(
-                json!({"status":"CAPTURED_ZERO_PAID_RESEARCH_SHORTLIST","scope":"HISTORICAL_PERSISTED_CAPTURE_NOT_CURRENT_MARKET_VALIDATION","run_id":run["run_id"],"run_status":run["status"],"captured_at":run["created_at"],"candidate_id":candidate["id"],"verified_capture_hashes":hashes,"listing_origins":origins,"publisher_independence":"UNVERIFIED","paid_provider_calls":0,"paid_cost_minor":0,"network_calls":0,"commercial_validation":"INCOMPLETE","goal_complete":false}),
+                json!({"listing_sites":sites,"site_basis":format!("REGISTRABLE_DOMAIN_PUBLIC_SUFFIX_LIST_{}",crate::public_suffix::list_version()),"status":"CAPTURED_ZERO_PAID_RESEARCH_SHORTLIST","scope":"HISTORICAL_PERSISTED_CAPTURE_NOT_CURRENT_MARKET_VALIDATION","run_id":run["run_id"],"run_status":run["status"],"captured_at":run["created_at"],"candidate_id":candidate["id"],"verified_capture_hashes":hashes,"listing_origins":origins,"publisher_independence":"UNVERIFIED","paid_provider_calls":0,"paid_cost_minor":0,"network_calls":0,"commercial_validation":"INCOMPLETE","goal_complete":false}),
             );
         }
     }

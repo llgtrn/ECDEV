@@ -12,6 +12,7 @@ pub mod memory;
 pub mod monitor;
 pub mod planner;
 pub mod provider;
+pub mod public_suffix;
 pub mod research;
 pub mod resolution;
 pub mod service;

@@ -1,20 +1,21 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "eeaca64b8e73058ace5bd9a37285cfd7e4ce9ea1",
+  "assessed_parent_commit": "f094273d1ad3419740c84be2b5039d5a8d788a13",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
   "donor_count": 68,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
-    "CUTOVER": 4,
+    "CUTOVER": 3,
     "DISCOVERED": 13,
-    "EXTINCT": 1,
+    "EXTINCT": 2,
     "PARITY_PROVEN": 1,
     "REGISTERED": 45
   },
   "extinct": [
-    "scrapinghub--price-parser"
+    "scrapinghub--price-parser",
+    "seomoz--reppy"
   ],
   "donors": [
     {
@@ -2497,11 +2498,11 @@
     {
       "donor": "seomoz--reppy",
       "claimed": "CUTOVER",
-      "effective": "CUTOVER",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
-      "runtime": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "stopped_by": "",
+      "runtime": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -2556,9 +2557,9 @@
         {
           "key": "reppy.url-library-remainder",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(public-suffix registrable-domain computation (url-cpp psl) for grouping independent origins and publishers)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/public-suffix-review.json: domain/commerce/src/public_suffix.rs computes registrable domains natively over the vendored, unmodified Public Suffix List (ICANN and PRIVATE sections, version and hash recorded) and passes the list project's own test vectors; the shortlist gate now needs two registrable domains rather than two URL origins, so subdomains and http/https of one site no longer count twice, while stores on shared platform suffixes stay separate; publisher independence remains unverified)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "reppy.packaging-and-tooling",
@@ -2631,8 +2632,8 @@
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "1 of 8 declared capabilities still have open research: reppy.url-library-remainder (ALGORITHM_CANDIDATE)"
+          "pass": true,
+          "detail": "all 8 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -5704,7 +5705,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "19 imports: url in adapter/web/src/amazon.rs; url in adapter/web/src/commerce.rs; url in adapter/web/src/lib.rs"
+          "detail": "21 imports: url in adapter/web/src/amazon.rs; url in adapter/web/src/commerce.rs; url in adapter/web/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
