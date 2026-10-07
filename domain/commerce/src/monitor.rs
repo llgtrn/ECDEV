@@ -401,7 +401,7 @@ fn snapshot(run: &Value, request: &Value) -> Value {
             // Pages that state no products are watched by their visible text instead.
             let text = &page["page_text"];
             let text = if products.is_empty() && text["sha256"].is_string() {
-                json!({"sha256":text["sha256"],"lines":text["lines"],"truncated":text["truncated"]})
+                json!({"sha256":text["sha256"],"lines":text["lines"],"truncated":text["truncated"],"main_sha256":text["main_sha256"],"main_line_count":text["main_line_count"],"main_scope":text["main_scope"]})
             } else {
                 Value::Null
             };
@@ -837,7 +837,14 @@ fn text_change(url: &str, before: &Value, after: &Value, raw: &Value) -> Value {
         "added":added.iter().take(TEXT_DIFF_LINES).collect::<Vec<_>>(),"removed":removed.iter().take(TEXT_DIFF_LINES).collect::<Vec<_>>(),
         "before_sha256":before["sha256"],"after_sha256":after["sha256"],
         "lines_compared":if before["truncated"] == true || after["truncated"] == true {"FIRST_LINES_ONLY_TEXT_TRUNCATED"} else {"ALL_VISIBLE_LINES"},
-        "raw_capture_sha256":raw,"basis":"VISIBLE_TEXT_NOT_RAW_BYTES"})
+        "raw_capture_sha256":raw,"basis":"VISIBLE_TEXT_NOT_RAW_BYTES",
+        // Every text change is reported; this only says where it was. Captures from before the
+        // main-content fingerprint existed say so.
+        "region":match (before["main_sha256"].as_str(), after["main_sha256"].as_str()) {
+            (Some(x), Some(y)) if x == y => "PAGE_CHROME_ONLY_MAIN_CONTENT_UNCHANGED",
+            (Some(_), Some(_)) => "MAIN_CONTENT",
+            _ => "UNKNOWN_NO_MAIN_CONTENT_FINGERPRINT",
+        },"main_scope":after["main_scope"]})
 }
 
 /// One stored fact window, as `price_statistics` reads it.
@@ -1086,6 +1093,23 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn text_changes_say_whether_main_content_changed_and_are_never_dropped() {
+        let t = |sha: &str, main: Option<&str>| json!({"sha256":sha,"lines":[sha],"truncated":false,"main_sha256":main,"main_scope":"MAIN_LANDMARK"});
+        let raw = json!("r");
+        let chrome = text_change("u", &t("a", Some("m")), &t("b", Some("m")), &raw);
+        assert_eq!(chrome["kind"], "PAGE_TEXT_CHANGED");
+        assert_eq!(chrome["region"], "PAGE_CHROME_ONLY_MAIN_CONTENT_UNCHANGED");
+        assert_eq!(
+            text_change("u", &t("a", Some("m")), &t("b", Some("n")), &raw)["region"],
+            "MAIN_CONTENT"
+        );
+        assert_eq!(
+            text_change("u", &t("a", None), &t("b", Some("n")), &raw)["region"],
+            "UNKNOWN_NO_MAIN_CONTENT_FINGERPRINT"
+        );
+    }
     #[test]
     fn exports_replay_identically_and_reveal_tampering() {
         let root = std::env::temp_dir().join(format!("ecdev-export-{}", Uuid::new_v4()));
