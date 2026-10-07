@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "43d55d41d98a4721abee428cada43c453f48a0dd",
+  "assessed_parent_commit": "65a3bd40a0dbda5ffc147c56b45a0771dfefb965",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,13 +19,13 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 32,
-    "benchmark_candidates": 26,
+    "benchmark_candidates": 25,
     "algorithm_candidates": 3,
     "reference_only": 52,
-    "study_complete_capabilities": 106,
+    "study_complete_capabilities": 107,
     "not_relevant_after_review": 25,
-    "research_questions_open": 61,
-    "knowledge_coverage_ratio": 0.75
+    "research_questions_open": 60,
+    "knowledge_coverage_ratio": 0.754098
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1041,7 +1041,6 @@
         "native_reimplementation": "CLEAN_ROOM_ONLY"
       },
       "open": [
-        "social.bettafish.deduplicate BENCHMARK_CANDIDATE(URL or text-prefix near-duplicate detection versus ECDEV's stable-ID dedup with CONFLICT; duplicate recall on cross-posted content)",
         "social.bettafish.cluster-and-sample BENCHMARK_CANDIDATE(the lexical baseline is measured (research/commerce/cluster-rule-benchmark.json: against Hacker News story membership on 781 live posts, informative-term Jaccard 0.15 with three shared terms reaches precision 0.973 and recall 0.055, adopted as the default over 0.945 and 0.015); still open: whether sentence-embedding KMeans with diversity and hotness sampling raises recall at that precision, at what cost and with what inspectability)",
         "social.bettafish.sentiment-models BENCHMARK_CANDIDATE(fine-tuned multilingual sentiment models versus ECDEV's lexicon rule: accuracy, calibration, language coverage, cost)",
         "social.bettafish.corpus-search STUDY_CANDIDATE(keyword-optimisation and query expansion over a multi-source corpus for broader recall of product mentions)",
@@ -1053,6 +1052,7 @@
         "social.bettafish.report-ir-schema STUDY_CANDIDATE(a report schema requiring evidence references (observation ids and capture times) on every paragraph, figure, chart dataset and SWOT or PEST item; the donor schema has footnotes and cross-references it never renders)"
       ],
       "resolved": [
+        "social.bettafish.deduplicate STUDY_COMPLETE[INDEPENDENT_NATIVE](copied text is grouped natively by normalised character 5-gram Jaccard 0.8 or containment 0.9 with links removed (domain/commerce/src/social/copies.rs); live, 19 of 261 Bluesky matcha posts sat in 6 copy groups, and 8 clusters made by one account or one pasted headline no longer become hypotheses (research/commerce/ecdev-live-runtime-validation.json); duplicate recall against labelled cross-posts is not measured)",
         "social.bettafish.logged-in-crawling REFERENCE_ONLY(logged-in crawling and anti-bot evasion are prohibited by ECDEV policy; platform data structures only)",
         "social.bettafish.llm-agents-and-reports REFERENCE_ONLY(multi-agent search, debate and report structure as a presentation layer over evidence)",
         "social.bettafish.sentiment-aggregation STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social.rs::sentiment_summary reports each label share with its count, labelled denominator (UNKNOWN counted apart) and a 95 % Wilson interval, and calls a change against the prior snapshot only when intervals do not overlap; social::snapshot carries it as sentiment_summary)",

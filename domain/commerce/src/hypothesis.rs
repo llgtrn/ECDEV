@@ -37,8 +37,22 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     // are the cluster's salient terms (shared by two or more of its posts, informative), most
     // shared first; snapshots from before salient terms existed fall back to their terms.
     let mut groups: Vec<Group> = Vec::new();
+    // One account repeating itself, or one text pasted by several, is no pattern either: such
+    // clusters are reported as excluded, with why. Snapshots from before these counts pass.
+    let mut excluded: Vec<Value> = Vec::new();
     for c in snapshot["clusters"].as_array().into_iter().flatten() {
         if c["evidence_ids"].as_array().is_none_or(|e| e.len() < 2) {
+            continue;
+        }
+        let reason = if c["distinct_authors"].as_u64() == Some(1) {
+            Some("ONE_ACCOUNT_REPEATING")
+        } else if c["distinct_texts"].as_u64() == Some(1) {
+            Some("ONE_TEXT_COPIED_ACROSS_ACCOUNTS")
+        } else {
+            None
+        };
+        if let Some(reason) = reason {
+            excluded.push(json!({"cluster_id":c["id"],"posts":c["evidence_ids"].as_array().map_or(0, Vec::len),"distinct_authors":c["distinct_authors"],"distinct_texts":c["distinct_texts"],"reason":reason,"evidence_ids":c["evidence_ids"]}));
             continue;
         }
         let t: BTreeSet<String> = c["terms"]
@@ -214,7 +228,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         };
         hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"phrase_queries":phrase_queries,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone(),"attention_counters":attention,"basis":basis}));
     }
-    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts","an attention counter is attention, never a mention, a sale or demand"],"network_calls":0})
+    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"excluded_clusters":excluded,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts","an attention counter is attention, never a mention, a sale or demand","one account repeating itself, or one text copied, is one voice, not a pattern"],"network_calls":0})
 }
 
 #[cfg(test)]
@@ -313,6 +327,29 @@ mod tests {
         assert_eq!(
             h["research_actions"][0]["input_template"]["query"],
             "matcha oat milk"
+        );
+    }
+
+    #[test]
+    fn one_account_or_one_copied_text_is_no_pattern() {
+        let cluster = |id: &str, authors: u64, texts: u64| json!({"id":id,"terms":["matcha","nottingham","vibe"],"salient_terms":[{"term":"nottingham"},{"term":"vibe"}],"evidence_ids":["e1","e2","e3"],"platforms":["BLUESKY"],"distinct_authors":authors,"distinct_texts":texts});
+        let snap = json!({"query":"matcha","mention_count":9,"evidence_ids":["e1","e2","e3"],"platforms":["BLUESKY"],
+            "clusters":[cluster("bot", 1, 2), cluster("pasted", 3, 1), cluster("real", 3, 3)]});
+        let out = hypothesize(&snap, &[]);
+        // The topic, then only the cluster with several voices and texts.
+        assert_eq!(out["hypotheses"].as_array().unwrap().len(), 2);
+        let ex = out["excluded_clusters"].as_array().unwrap();
+        assert_eq!(
+            ex.iter()
+                .map(|e| (
+                    e["cluster_id"].as_str().unwrap(),
+                    e["reason"].as_str().unwrap()
+                ))
+                .collect::<Vec<_>>(),
+            [
+                ("bot", "ONE_ACCOUNT_REPEATING"),
+                ("pasted", "ONE_TEXT_COPIED_ACROSS_ACCOUNTS")
+            ]
         );
     }
 
