@@ -725,7 +725,39 @@ fn salient_terms(posts: &[&SocialPost]) -> Vec<Value> {
         .collect()
 }
 
+/// How posts are joined into clusters. The default was chosen against Hacker News story
+/// membership on 781 live posts (research/commerce/cluster-rule-benchmark.json): informative
+/// terms, Jaccard at least 0.15 and three shared terms kept precision (0.973 against 0.945)
+/// while recall rose from 0.015 to 0.055 over the earlier rule (all terms, 0.25, two).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ClusterRule {
+    /// Minimum similarity between a post's terms and the cluster's.
+    pub min_similarity: f64,
+    /// Minimum number of shared terms.
+    pub min_shared: usize,
+    /// Overlap coefficient (shared over the smaller set) instead of Jaccard.
+    pub overlap: bool,
+    /// Match on informative terms only.
+    pub informative_only: bool,
+}
+
+impl Default for ClusterRule {
+    fn default() -> Self {
+        Self {
+            min_similarity: 0.15,
+            min_shared: 3,
+            overlap: false,
+            informative_only: true,
+        }
+    }
+}
+
 pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
+    clusters_with(posts, &ClusterRule::default())
+}
+
+/// Clusters under an explicit rule, for evaluating rules against labelled structure.
+pub fn clusters_with(posts: &[SocialPost], rule: &ClusterRule) -> Vec<Value> {
     let mut groups: Vec<(BTreeSet<String>, Vec<&SocialPost>)> = vec![];
     for p in posts {
         let mut t = content_terms(&p.text);
@@ -735,14 +767,24 @@ pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
                 t.insert(s.to_lowercase());
             }
         }
+        if rule.informative_only {
+            t.retain(|x| informative(x));
+        }
         let index = groups.iter().position(|(g, ps)| {
             let intersection = t.intersection(g).count();
-            let union = t.union(g).count();
+            let denominator = if rule.overlap {
+                t.len().min(g.len())
+            } else {
+                t.union(g).count()
+            };
             let temporal = p
                 .published_at
                 .zip(ps[0].published_at)
                 .is_some_and(|(a, b)| a.abs_diff(b) <= 604800);
-            temporal && intersection >= 2 && union > 0 && intersection as f64 / union as f64 >= 0.25
+            temporal
+                && intersection >= rule.min_shared
+                && denominator > 0
+                && intersection as f64 / denominator as f64 >= rule.min_similarity
         });
         if let Some(i) = index {
             groups[i].0.extend(t);
@@ -751,7 +793,7 @@ pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
             groups.push((t, vec![p]));
         }
     }
-    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"salient_terms":salient_terms(&ps),"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
+    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"salient_terms":salient_terms(&ps),"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":format!("LEXICAL_{}_{}_MIN_{}_SHARED_{}_TERMS_7_DAY_COOCCURRENCE",if rule.overlap {"OVERLAP"} else {"JACCARD"},rule.min_similarity,rule.min_shared,if rule.informative_only {"INFORMATIVE"} else {"ALL"}),"state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
 }
 
 pub fn snapshot(
