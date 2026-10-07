@@ -89,6 +89,13 @@ if p1:
     p2 = json.loads(b3) if s3 == 200 else []
     tl["next_page"] = {"status": s3, "returned": len(p2), "overlap_with_first": len({x["id"] for x in p1} & {x["id"] for x in p2}),
                        "strictly_older_ids": all(int(x["id"]) < int(p1[-1]["id"]) for x in p2)}
+    root = max(p1, key=lambda x: x.get("replies_count") or 0)
+    s4, b4 = get(f"https://mastodon.social/api/v1/statuses/{root['id']}/context")
+    c = json.loads(b4) if s4 == 200 else {}
+    ids = {root["id"]} | {x["id"] for x in c.get("descendants", [])}
+    tl["context"] = {"status": s4, "root_replies_count": root.get("replies_count"), "descendants": len(c.get("descendants", [])),
+                     "every_parent_in_response": all(x.get("in_reply_to_id") in ids for x in c.get("descendants", [])),
+                     "unauthenticated_limits_from_source": "descendants 60, depth 20 (mastodon app/controllers/api/v1/statuses/contexts_controller.rb, main, read 2026-10-07)"}
 out["mastodon_tag_timeline"] = tl
 
 # Instance-wide trending lists read by ecdev.trend.feeds.

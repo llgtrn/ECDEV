@@ -558,22 +558,49 @@ impl Engine {
                         .then(a.native_id.cmp(&b.native_id))
                 });
                 let max_threads = source["max_threads"].as_u64().unwrap_or(3).clamp(1, 10) as usize;
-                let roots: Vec<(String, Option<u64>)> = roots
+                let roots: Vec<(String, Option<u64>, String, String)> = roots
                     .into_iter()
                     .take(max_threads)
-                    .map(|p| (p.native_id.clone(), p.engagement.comments))
+                    .map(|p| {
+                        (
+                            p.native_id.clone(),
+                            p.engagement.comments,
+                            p.raw_hash.clone(),
+                            p.raw_locator.clone(),
+                        )
+                    })
                     .collect();
                 let reserved = (i + 1..sources.len())
                     .filter(|j| selected.contains(format!("source-{j}").as_str()))
                     .count() as u64
                     * 2;
                 let mut thread_posts = vec![];
-                for (root, reported) in roots {
+                for (root, reported, root_hash, root_locator) in roots {
                     if !fixture && requests + 2 + reserved > request_budget as u64 {
                         threads.push(json!({"root":root,"reported_comments":reported,"state":"NOT_ACQUIRED_REQUEST_BUDGET"}));
                         continue;
                     }
                     let mut payload = json!({"platform":source["platform"],"url":source["url"],"query":query,"captured_at":now,"thread_of":root});
+                    if source["platform"] == "MASTODON" {
+                        // Context takes the instance-local id, read from the root's own capture.
+                        let local = fs::read(
+                            self.root
+                                .join(".ecdev-data/runtime/social-captures")
+                                .join(format!("{root_hash}.raw")),
+                        )
+                        .ok()
+                        .and_then(|raw| serde_json::from_slice::<Value>(&raw).ok())
+                        .and_then(|v| v.pointer(&root_locator)?["id"].as_str().map(str::to_string));
+                        let Some(local) = local else {
+                            threads.push(json!({"root":root,"reported_comments":reported,"state":"THREAD_FAILED","reason":"ROOT_LOCAL_ID_NOT_IN_CAPTURE"}));
+                            continue;
+                        };
+                        payload["thread_of"] = json!(local);
+                        payload["thread_root_uri"] = json!(root);
+                        if let Some(i) = source.get("instance") {
+                            payload["instance"] = i.clone();
+                        }
+                    }
                     if fixture {
                         match source["fixture_threads"][root.as_str()].as_str() {
                             Some(raw) => payload["fixture_raw"] = json!(raw),

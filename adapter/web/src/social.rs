@@ -197,6 +197,91 @@ pub fn normalize_tree(
     ))
 }
 
+/// Replies Mastodon serves to an unauthenticated context request at most, and the depth it
+/// stops at (app/controllers/api/v1/statuses/contexts_controller.rb, main, read 2026-10-07).
+pub const MASTODON_CONTEXT_DESCENDANTS: usize = 60;
+pub const MASTODON_CONTEXT_DEPTH: u32 = 20;
+
+/// A Mastodon status context as a reply tree. Descendants come flat with in_reply_to_id
+/// (instance-local ids); depth is the chain back to the root, and each reply's parent is the
+/// parent's global uri. A reply whose parent is not in the response is counted as not found. A
+/// response at the unauthenticated limit, or reaching its depth limit, may be cut and is
+/// PARTIAL_COMMENT_TREE, never complete.
+pub fn mastodon_tree(
+    data: &Value,
+    root_local: &str,
+    root_uri: &str,
+    source: &str,
+    raw: &[u8],
+    captured: u64,
+    mode: &str,
+) -> Result<(Vec<SocialPost>, Value), String> {
+    let hash = format!("{:x}", Sha256::digest(raw));
+    let rows = data["descendants"]
+        .as_array()
+        .ok_or("MASTODON_CONTEXT_DESCENDANTS_REQUIRED")?;
+    if rows.len() > 4 * MAX_THREAD_POSTS {
+        return Err("SOCIAL_THREAD_LIMIT_EXCEEDED".into());
+    }
+    let mut uri_of: std::collections::BTreeMap<String, String> =
+        [(root_local.to_string(), root_uri.to_string())].into();
+    let mut parent_of = std::collections::BTreeMap::new();
+    for r in rows {
+        let id = text(&r["id"]).ok_or("MASTODON_STATUS_ID_REQUIRED")?;
+        uri_of.insert(id.clone(), text(&r["uri"]).ok_or("MASTODON_URI_REQUIRED")?);
+        parent_of.insert(id, text(&r["in_reply_to_id"]));
+    }
+    let depth_of = |id: &str| -> Option<u32> {
+        let mut d = 0;
+        let mut at = id.to_string();
+        while at != root_local {
+            at = parent_of.get(&at)?.clone()?;
+            d += 1;
+            if d as usize > rows.len() + 1 {
+                return None;
+            }
+        }
+        Some(d)
+    };
+    let (mut posts, mut not_found, mut max_depth) = (vec![], 0u64, 0u32);
+    for (i, r) in rows.iter().enumerate() {
+        let id = text(&r["id"]).unwrap_or_default();
+        let Some(depth) = depth_of(&id) else {
+            not_found += 1;
+            continue;
+        };
+        max_depth = max_depth.max(depth);
+        if posts.len() >= MAX_THREAD_POSTS {
+            continue;
+        }
+        let mut post = normalize_item(
+            data,
+            r,
+            "MASTODON",
+            source,
+            &hash,
+            captured,
+            mode,
+            format!("/descendants/{i}"),
+        )?;
+        let parent = parent_of[&id].as_ref().and_then(|p| uri_of.get(p)).cloned();
+        post.parent_id = parent;
+        post.thread_id = Some(root_uri.to_string());
+        post.depth = Some(depth);
+        post.propagation = "REPLY".into();
+        post.validate()?;
+        posts.push(post);
+    }
+    let at_limit = rows.len() >= MASTODON_CONTEXT_DESCENDANTS;
+    let depth_cut = u64::from(max_depth >= MASTODON_CONTEXT_DEPTH);
+    let truncated = posts.len() + (not_found as usize) < rows.len();
+    let complete = !at_limit && depth_cut == 0 && not_found == 0 && !truncated;
+    Ok((
+        posts,
+        json!({"root":root_uri,"nodes":rows.len() + 1,"posts":rows.len(),"deleted":0,"not_found":not_found,"blocked":0,"max_depth":max_depth,"depth_cut_nodes":depth_cut,"post_limit_reached":truncated,"unauthenticated_limit_reached":at_limit,"limits":{"descendants":MASTODON_CONTEXT_DESCENDANTS,"depth":MASTODON_CONTEXT_DEPTH},"state":if complete {"COMPLETE_BY_SOURCE"} else {"PARTIAL_COMMENT_TREE"}}),
+    ))
+}
+
 /// UTC RFC 3339 text for Unix seconds (civil-from-days), as Bluesky's since/until expect.
 pub fn utc_rfc3339(secs: u64) -> String {
     let days = (secs / 86_400) as i64;
@@ -372,7 +457,18 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                 Ok(u)
             }
             "JSON_FEED" | "XML_FEED" | "MASTODON_TAG" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
-            "MASTODON" => Err("REPLY_TREE_NOT_READ_FOR_SOURCE".into()),
+            "MASTODON"
+                if !root.is_empty()
+                    && root.len() <= 20
+                    && root.bytes().all(|c| c.is_ascii_digit()) =>
+            {
+                // The instance-local status id; context lists the replies the instance holds.
+                let instance = mastodon_instance(q)?;
+                Ok(Url::parse(&format!(
+                    "https://{instance}/api/v1/statuses/{root}/context"
+                ))
+                .unwrap())
+            }
             _ => Err("INVALID_THREAD_ROOT".into()),
         };
     }
@@ -765,6 +861,13 @@ impl Provider for Social {
             usage["capture_mode"] = json!(mode);
             usage["captured_at"] = json!(captured);
             (vec![], Value::Null)
+        } else if r.query.get("thread_of").is_some() && platform == "MASTODON" {
+            let root_uri = r.query["thread_root_uri"]
+                .as_str()
+                .ok_or_else(|| failure("THREAD_ROOT_URI_REQUIRED", None, requests))?;
+            let local = r.query["thread_of"].as_str().unwrap_or("");
+            mastodon_tree(&data, local, root_uri, u.as_str(), &raw, captured, mode)
+                .map_err(|e| failure(e, None, requests))?
         } else if r.query.get("thread_of").is_some() {
             let (posts, tree) = normalize_tree(&data, platform, u.as_str(), &raw, captured, mode)
                 .map_err(|e| failure(e, None, requests))?;
@@ -859,7 +962,11 @@ pub fn normalize(
             &hash,
             captured,
             mode,
-            format!("/{key}/{index}"),
+            if key.is_empty() {
+                format!("/{index}")
+            } else {
+                format!("/{key}/{index}")
+            },
         )?);
     }
     Ok(posts)
@@ -1563,8 +1670,10 @@ mod tests {
             "INVALID_MASTODON_INSTANCE"
         );
         assert_eq!(
-            endpoint(&json!({"platform":"MASTODON","query":"m","thread_of":"1"})).unwrap_err(),
-            "REPLY_TREE_NOT_READ_FOR_SOURCE"
+            endpoint(&json!({"platform":"MASTODON","query":"m","thread_of":"1"}))
+                .unwrap()
+                .path(),
+            "/api/v1/statuses/1/context"
         );
         let status = |id: u64, extra: Value| {
             let mut s = json!({"id":id.to_string(),"uri":format!("https://a.example/users/u/statuses/{id}"),"url":format!("https://a.example/@u/{id}"),
@@ -1617,5 +1726,39 @@ mod tests {
             Some("961")
         );
         assert_eq!(next_cursor(&data, "MASTODON"), None);
+    }
+
+    #[test]
+    fn mastodon_context_orphans_are_not_found_and_endpoints_are_local() {
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON","query":"m","thread_of":"117398578301185214","instance":"fosstodon.org"}))
+                .unwrap()
+                .as_str(),
+            "https://fosstodon.org/api/v1/statuses/117398578301185214/context"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON","query":"m","thread_of":"https://a/x"}))
+                .unwrap_err(),
+            "INVALID_THREAD_ROOT"
+        );
+        let st = |id: &str, parent: &str| json!({"id":id,"uri":format!("https://a.example/s/{id}"),"url":format!("https://a.example/@u/{id}"),"created_at":"2026-10-07T00:00:00Z","content":"<p>x</p>","account":{"acct":"u"},"in_reply_to_id":parent,"reblog":null,"quote":null,"media_attachments":[]});
+        let data = json!({"ancestors":[],"descendants":[st("2","1"), st("9","8")]});
+        let (posts, tree) = mastodon_tree(
+            &data,
+            "1",
+            "https://a.example/s/1",
+            "src",
+            b"raw",
+            1,
+            "FIXTURE",
+        )
+        .unwrap();
+        assert_eq!(posts.len(), 1);
+        assert_eq!(posts[0].raw_locator, "/descendants/0");
+        assert_eq!(
+            (tree["not_found"].clone(), tree["state"].clone()),
+            (json!(1), json!("PARTIAL_COMMENT_TREE"))
+        );
+        assert!(mastodon_tree(&json!({}), "1", "u", "s", b"r", 1, "FIXTURE").is_err());
     }
 }

@@ -1229,6 +1229,61 @@ mod research_tests {
     }
 
     #[test]
+    fn mastodon_reply_trees_come_from_the_status_context() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-mastodon-tree-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let now = 20_000 * 86_400u64;
+        let iso = ecdev_web::social::utc_rfc3339(now - 300);
+        let status = |id: &str, parent: Option<&str>, replies: u64| json!({"id":id,"uri":format!("https://a.example/statuses/{id}"),"url":format!("https://a.example/@u/{id}"),"created_at":iso,"content":"<p>matcha whisk</p>","account":{"acct":format!("u{id}@a.example")},"language":"en","replies_count":replies,"reblogs_count":0,"favourites_count":0,"in_reply_to_id":parent,"reblog":null,"quote":null,"media_attachments":[]});
+        let page = json!([status("100", None, 3), status("200", None, 70)]).to_string();
+        // 100: two replies and one nested reply; 200: the unauthenticated limit of 60.
+        let small = json!({"ancestors":[],"descendants":[status("101", Some("100"), 0), status("102", Some("100"), 0), status("103", Some("101"), 0)]}).to_string();
+        let big = json!({"ancestors":[],"descendants":(0..60).map(|i| status(&format!("3{i:02}"), Some("200"), 0)).collect::<Vec<_>>()}).to_string();
+        let threads =
+            json!({"https://a.example/statuses/100": small, "https://a.example/statuses/200": big});
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"sources":[{"platform":"MASTODON","fixture_raw":page,"reply_trees":true,"fixture_threads":threads}]})).unwrap();
+        let t = run["pagination"][0]["threads"].as_array().unwrap();
+        let by_root = |r: &str| t.iter().find(|x| x["root"] == r).unwrap().clone();
+        let small_tree = by_root("https://a.example/statuses/100");
+        assert_eq!(
+            (
+                small_tree["state"].clone(),
+                small_tree["comments_observed"].clone(),
+                small_tree["max_depth"].clone()
+            ),
+            (json!("COMPLETE_BY_SOURCE"), json!(3), json!(2))
+        );
+        let big_tree = by_root("https://a.example/statuses/200");
+        assert_eq!(
+            big_tree["state"], "PARTIAL_COMMENT_TREE",
+            "at the unauthenticated limit"
+        );
+        assert_eq!(
+            run["pagination"][0]["population_coverage"]["comment_tree_state"],
+            "PARTIAL_COMMENT_TREE"
+        );
+        let posts = run["captured_posts"].as_array().unwrap();
+        let nested = posts
+            .iter()
+            .find(|p| p["native_id"] == "https://a.example/statuses/103")
+            .unwrap();
+        assert_eq!(
+            (nested["parent_id"].clone(), nested["depth"].clone()),
+            (json!("https://a.example/statuses/101"), json!(2))
+        );
+        assert_eq!(nested["thread_id"], "https://a.example/statuses/100");
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",
