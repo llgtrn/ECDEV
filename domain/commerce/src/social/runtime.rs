@@ -152,10 +152,27 @@ impl Engine {
             .ok_or("snapshot_id is required")?;
         let snapshot = self.trend_inspect(json!({"snapshot_id": id}))?;
         let candidates = self.candidates()?;
-        let mut out = crate::hypothesis::hypothesize(
-            &snapshot,
-            candidates.as_array().map(Vec::as_slice).unwrap_or(&[]),
-        );
+        let candidates = candidates.as_array().map(Vec::as_slice).unwrap_or(&[]);
+        let mut out = crate::hypothesis::hypothesize(&snapshot, candidates);
+        // Recurrence against the previous snapshot of the same query and capture mode: the
+        // same lead again, and how many of its posts that snapshot had not captured. Posts
+        // captured before are the same evidence seen twice, not continued attention.
+        let prior: Option<Value> = {
+            let db = self.db.lock().map_err(err)?;
+            db.query_row(
+                "SELECT payload FROM trend_snapshots WHERE query=?1 AND mode=?2 AND captured<?3 AND id<>?4 ORDER BY captured DESC LIMIT 1",
+                rusqlite::params![
+                    snapshot["query"].as_str().unwrap_or_default(),
+                    snapshot["capture_mode"].as_str().unwrap_or_default(),
+                    snapshot["captured_at"].as_u64().unwrap_or(0) as i64,
+                    id
+                ],
+                |r| r.get::<_, String>(0),
+            )
+            .ok()
+            .and_then(|p| serde_json::from_str(&p).ok())
+        };
+        crate::hypothesis::mark_recurrence(&mut out, &snapshot, prior.as_ref(), candidates);
         let run = self.persist(json!({"mode":"PLAN_ONLY","run_kind":"TREND_HYPOTHESIS","snapshot_id":id,"capture_mode":snapshot["capture_mode"],"hypotheses":out["hypotheses"],"observations":[],"cost_minor":0,"network_calls":0}))?;
         out["run_id"] = run["run_id"].clone();
         Ok(out)

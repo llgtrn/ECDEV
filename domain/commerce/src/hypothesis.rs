@@ -87,6 +87,68 @@ fn merge_same_lead(hypotheses: Vec<Value>) -> Vec<Value> {
     out
 }
 
+fn post_keys(snapshot: &Value, evidence: &Value) -> BTreeSet<String> {
+    let by_evidence: std::collections::BTreeMap<&str, &str> = snapshot["evidence_ids"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .zip(snapshot["post_keys"].as_array().into_iter().flatten())
+        .filter_map(|(e, k)| Some((e.as_str()?, k.as_str()?)))
+        .collect();
+    evidence
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|e| by_evidence.get(e.as_str()?).map(|k| k.to_string()))
+        .collect()
+}
+
+/// Each hypothesis against the previous snapshot of its query: whether the same lead (the same
+/// id) was there, and how many of its posts that snapshot had not captured. Only those are new
+/// evidence; posts captured before are the same evidence seen again.
+pub fn mark_recurrence(
+    out: &mut Value,
+    snapshot: &Value,
+    prior: Option<&Value>,
+    candidates: &[Value],
+) {
+    let Some(prior) = prior else {
+        for h in out["hypotheses"].as_array_mut().into_iter().flatten() {
+            h["recurrence"] = json!({"state":"NO_PRIOR_SNAPSHOT"});
+        }
+        return;
+    };
+    let before = hypothesize(prior, candidates);
+    let prior_ids: BTreeSet<&str> = before["hypotheses"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(|h| h["hypothesis_id"].as_str())
+        .collect();
+    let prior_posts: BTreeSet<&str> = prior["post_keys"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(Value::as_str)
+        .collect();
+    for h in out["hypotheses"].as_array_mut().into_iter().flatten() {
+        let keys = post_keys(snapshot, &h["evidence_ids"]);
+        let new = keys
+            .iter()
+            .filter(|k| !prior_posts.contains(k.as_str()))
+            .count();
+        let seen = h["hypothesis_id"]
+            .as_str()
+            .is_some_and(|i| prior_ids.contains(i));
+        let state = match (seen, new) {
+            (false, _) => "NEW_LEAD_SINCE_PRIOR_SNAPSHOT",
+            (true, 0) => "RECURRING_SAME_POSTS_ONLY",
+            (true, _) => "RECURRING_WITH_POSTS_NOT_IN_PRIOR_SNAPSHOT",
+        };
+        h["recurrence"] = json!({"state":state,"prior_snapshot_id":prior["snapshot_id"],"prior_captured_at":prior["captured_at"],"posts":keys.len(),"posts_not_in_prior_snapshot":new,"basis":"SAME_LEAD_QUERY_ID_AND_POST_KEYS","note":"a post the prior snapshot did not capture may be newly published or newly reached"});
+    }
+}
+
 pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     let query = snapshot["query"].as_str().unwrap_or("");
     let topic = terms(query);
@@ -453,6 +515,34 @@ mod tests {
         assert_eq!(
             later["hypotheses"][0]["hypothesis_id"],
             h[0]["hypothesis_id"]
+        );
+    }
+
+    #[test]
+    fn recurrence_counts_only_posts_the_prior_snapshot_lacked() {
+        let cluster = |ids: Value| json!({"id":"c","terms":["matcha","latte"],"salient_terms":[{"term":"latte"},{"term":"oat"}],"evidence_ids":ids,"platforms":["BLUESKY"]});
+        let prior = json!({"snapshot_id":"s1","captured_at":100,"query":"matcha","mention_count":2,"evidence_ids":["a1","a2"],"post_keys":["B:1","B:2"],"platforms":["BLUESKY"],"clusters":[cluster(json!(["a1","a2"]))]});
+        let now = json!({"snapshot_id":"s2","captured_at":200,"query":"matcha","mention_count":3,"evidence_ids":["b1","b2","b3"],"post_keys":["B:1","B:2","B:3"],"platforms":["BLUESKY"],"clusters":[cluster(json!(["b1","b2","b3"]))]});
+        let mut out = hypothesize(&now, &[]);
+        mark_recurrence(&mut out, &now, Some(&prior), &[]);
+        let r = &out["hypotheses"][1]["recurrence"];
+        assert_eq!(r["state"], "RECURRING_WITH_POSTS_NOT_IN_PRIOR_SNAPSHOT");
+        assert_eq!(
+            (r["posts"].clone(), r["posts_not_in_prior_snapshot"].clone()),
+            (json!(3), json!(1))
+        );
+        // The same capture again is the same evidence, not continued attention.
+        let mut again = hypothesize(&prior, &[]);
+        mark_recurrence(&mut again, &prior, Some(&prior), &[]);
+        assert_eq!(
+            again["hypotheses"][1]["recurrence"]["state"],
+            "RECURRING_SAME_POSTS_ONLY"
+        );
+        let mut first = hypothesize(&prior, &[]);
+        mark_recurrence(&mut first, &prior, None, &[]);
+        assert_eq!(
+            first["hypotheses"][0]["recurrence"]["state"],
+            "NO_PRIOR_SNAPSHOT"
         );
     }
 
