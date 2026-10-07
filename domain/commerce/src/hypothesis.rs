@@ -30,6 +30,63 @@ fn title_terms(candidate: &Value) -> BTreeSet<String> {
 /// One hypothesis source: its terms, evidence ids, platforms, candidate phrases and refinements.
 type Group = (BTreeSet<String>, Value, Value, Value, Vec<String>);
 
+fn union(into: &mut Value, from: &Value, same: impl Fn(&Value, &Value) -> bool) {
+    let Some(into) = into.as_array_mut() else {
+        return;
+    };
+    for v in from.as_array().into_iter().flatten() {
+        if !into.iter().any(|x| same(x, v)) {
+            into.push(v.clone());
+        }
+    }
+}
+
+/// Lexical clusters split one product across several clusters (recall is low by design, see
+/// research/commerce/cluster-rule-benchmark.json): hypotheses that lead with the same product
+/// query are one hypothesis, with their evidence, phrases and refinements joined. Live, four
+/// clusters each led with "matcha latte".
+fn merge_same_lead(hypotheses: Vec<Value>) -> Vec<Value> {
+    let mut out: Vec<Value> = Vec::new();
+    for h in hypotheses {
+        let lead = h["product_queries"][0].clone();
+        let refines = lead.as_str() != h["topic"].as_str().map(str::trim);
+        match out
+            .iter_mut()
+            .find(|o| refines && o["product_queries"][0] == lead)
+        {
+            Some(o) => {
+                union(&mut o["evidence_ids"], &h["evidence_ids"], |a, b| a == b);
+                union(&mut o["platforms"], &h["platforms"], |a, b| a == b);
+                union(
+                    &mut o["refinement_terms"],
+                    &h["refinement_terms"],
+                    |a, b| a == b,
+                );
+                union(&mut o["product_queries"], &h["product_queries"], |a, b| {
+                    a == b
+                });
+                union(&mut o["phrase_queries"], &h["phrase_queries"], |a, b| {
+                    a["phrase"] == b["phrase"]
+                });
+                union(
+                    &mut o["linked_candidates"],
+                    &h["linked_candidates"],
+                    |a, b| a["candidate_id"] == b["candidate_id"],
+                );
+                let queries = o["product_queries"].clone();
+                for a in o["research_actions"].as_array_mut().into_iter().flatten() {
+                    if a.get("alternative_queries").is_some() {
+                        a["alternative_queries"] = queries.clone();
+                    }
+                }
+                o["merged_clusters"] = json!(o["merged_clusters"].as_u64().unwrap_or(1) + 1);
+            }
+            None => out.push(h),
+        }
+    }
+    out
+}
+
 pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     let query = snapshot["query"].as_str().unwrap_or("");
     let topic = terms(query);
@@ -174,11 +231,16 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
                 queries.push(q);
             }
         }
+        // Identity follows the hypothesis's own lead query, not this run's refinement terms, so
+        // the same lead found again in a later snapshot is the same hypothesis.
+        let lead = queries.first().map(String::as_str).unwrap_or_default();
         let id = format!(
             "hyp-{}",
             &format!(
                 "{:x}",
-                Sha256::digest(format!("{query}|{}", refinements.join(",")).as_bytes())
+                Sha256::digest(
+                    format!("{query}|{}", if lead == query.trim() { "" } else { lead }).as_bytes()
+                )
             )[..16]
         );
         let linked: Vec<Value> = candidates
@@ -229,6 +291,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         };
         hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"phrase_queries":phrase_queries,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone(),"attention_counters":attention,"basis":basis}));
     }
+    let hypotheses = merge_same_lead(hypotheses);
     json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"excluded_clusters":excluded,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts","an attention counter is attention, never a mention, a sale or demand","one account repeating itself, or one text copied, is one voice, not a pattern"],"network_calls":0})
 }
 
@@ -351,6 +414,45 @@ mod tests {
                 ("bot", "ONE_ACCOUNT_REPEATING"),
                 ("pasted", "ONE_TEXT_COPIED_ACROSS_ACCOUNTS")
             ]
+        );
+    }
+
+    #[test]
+    fn clusters_leading_with_one_product_are_one_hypothesis_with_a_stable_id() {
+        let phrase = |p: &str, ids: Value| json!({"phrase":p,"posts":2,"distinct_authors":2,"evidence_ids":ids});
+        let cluster = |id: &str, ids: Value, salient: &[&str]| {
+            json!({"id":id,"terms":["matcha","latte"],"salient_terms":salient.iter().map(|t| json!({"term":t})).collect::<Vec<_>>(),"evidence_ids":ids.clone(),"platforms":["BLUESKY"],
+            "candidate_phrases":[phrase("matcha latte", ids)]})
+        };
+        let snap = |clusters: Value| json!({"query":"matcha","mention_count":6,"evidence_ids":["e1","e2","e3","e4","e5","e6"],"platforms":["BLUESKY"],"clusters":clusters});
+        let two = hypothesize(
+            &snap(json!([
+                cluster("a", json!(["e1", "e2"]), &["latte", "oat"]),
+                cluster("b", json!(["e3", "e4"]), &["latte", "banana"])
+            ])),
+            &[],
+        );
+        let h = two["hypotheses"].as_array().unwrap();
+        assert_eq!(h.len(), 2, "the topic and one matcha latte hypothesis");
+        assert_eq!(h[1]["merged_clusters"], 2);
+        assert_eq!(h[1]["evidence_ids"], json!(["e1", "e2", "e3", "e4"]));
+        assert_eq!(h[1]["refinement_terms"], json!(["latte", "oat", "banana"]));
+        // Another snapshot with other refinements finds the same lead: the same identity.
+        let later = hypothesize(
+            &snap(json!([cluster(
+                "c",
+                json!(["e5", "e6"]),
+                &["latte", "maple"]
+            )])),
+            &[],
+        );
+        assert_eq!(
+            later["hypotheses"][1]["hypothesis_id"],
+            h[1]["hypothesis_id"]
+        );
+        assert_eq!(
+            later["hypotheses"][0]["hypothesis_id"],
+            h[0]["hypothesis_id"]
         );
     }
 
