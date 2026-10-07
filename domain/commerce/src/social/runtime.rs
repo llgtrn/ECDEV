@@ -173,6 +173,21 @@ impl Engine {
             .and_then(|p| serde_json::from_str(&p).ok())
         };
         crate::hypothesis::mark_recurrence(&mut out, &snapshot, prior.as_ref(), candidates);
+        let price_runs: Vec<Value> = {
+            let db = self.db.lock().map_err(err)?;
+            let mut stmt = db
+                .prepare("SELECT payload FROM price_observation_runs WHERE mode=?1 ORDER BY captured DESC LIMIT 200")
+                .map_err(err)?;
+            stmt.query_map(
+                [snapshot["capture_mode"].as_str().unwrap_or_default()],
+                |r| r.get::<_, String>(0),
+            )
+            .map_err(err)?
+            .filter_map(Result::ok)
+            .filter_map(|p| serde_json::from_str(&p).ok())
+            .collect()
+        };
+        crate::hypothesis::attach_store_prices(&mut out, &price_runs);
         let run = self.persist(json!({"mode":"PLAN_ONLY","run_kind":"TREND_HYPOTHESIS","snapshot_id":id,"capture_mode":snapshot["capture_mode"],"hypotheses":out["hypotheses"],"observations":[],"cost_minor":0,"network_calls":0}))?;
         out["run_id"] = run["run_id"].clone();
         Ok(out)

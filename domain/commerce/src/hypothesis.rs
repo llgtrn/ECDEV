@@ -149,6 +149,41 @@ pub fn mark_recurrence(
     }
 }
 
+/// The newest stored Open Prices run (same capture mode, newest first) whose query is one of a
+/// hypothesis's product queries, attached as reference store prices. Shelf prices seen in
+/// physical stores lift no blocker: they are not marketplace prices or demand.
+pub fn attach_store_prices(out: &mut Value, runs_newest_first: &[Value]) {
+    let norm = |v: &Value| v.as_str().map(|s| s.trim().to_lowercase());
+    for h in out["hypotheses"].as_array_mut().into_iter().flatten() {
+        let queries: BTreeSet<String> = h["product_queries"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(norm)
+            .collect();
+        let mut seen = BTreeSet::new();
+        let attached: Vec<Value> = runs_newest_first
+            .iter()
+            .filter(|r| norm(&r["query"]).is_some_and(|q| queries.contains(&q) && seen.insert(q)))
+            .map(|r| json!({"run_id":r["run_id"],"query":r["query"],"captured_at":r["captured_at"],"capture_mode":r["capture_mode"],"state":r["state"],"evidence_class":"CROWDSOURCED_STORE_SHELF_PRICE_NOT_ONLINE_LISTING","licence":r["licence"]["data"],
+                "products":r["products"].as_array().into_iter().flatten().map(|p| json!({"code":p["code"],"name":p["name"],"brands":p["brands"],"summary":p["summary"]})).collect::<Vec<_>>()}))
+            .collect();
+        if !attached.is_empty() {
+            for a in h["research_actions"].as_array_mut().into_iter().flatten() {
+                if a["kind"] == "PUBLIC_STORE_PRICES" {
+                    a["observed_runs"] = json!(
+                        attached
+                            .iter()
+                            .map(|r| r["run_id"].clone())
+                            .collect::<Vec<_>>()
+                    );
+                }
+            }
+        }
+        h["reference_store_prices"] = json!(attached);
+    }
+}
+
 pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     let query = snapshot["query"].as_str().unwrap_or("");
     let topic = terms(query);
@@ -544,6 +579,33 @@ mod tests {
             first["hypotheses"][0]["recurrence"]["state"],
             "NO_PRIOR_SNAPSHOT"
         );
+    }
+
+    #[test]
+    fn stored_store_prices_attach_to_the_hypothesis_they_answer_and_lift_nothing() {
+        let snap = json!({"query":"matcha","mention_count":2,"evidence_ids":["e1","e2"],"platforms":["BLUESKY"],
+            "clusters":[{"id":"c","terms":["matcha","latte"],"salient_terms":[{"term":"latte"}],"evidence_ids":["e1","e2"],"platforms":["BLUESKY"]}]});
+        let mut out = hypothesize(&snap, &[]);
+        let run = |id: &str, q: &str| json!({"run_id":id,"query":q,"captured_at":5,"capture_mode":"LIVE","state":"OBSERVED_STORE_PRICES","licence":{"data":"ODbL-1.0"},"products":[{"code":"4901305410982","name":"MATCHA LATTE","summary":[{"currency":"JPY","median":418.0}]}]});
+        attach_store_prices(
+            &mut out,
+            &[
+                run("new", "Matcha Latte "),
+                run("old", "matcha latte"),
+                run("other", "oat milk"),
+            ],
+        );
+        let h = &out["hypotheses"][1];
+        let r = h["reference_store_prices"].as_array().unwrap();
+        assert_eq!(r.len(), 1, "newest run per query only");
+        assert_eq!(r[0]["run_id"], "new");
+        assert!(
+            h["blocked_by"]
+                .as_array()
+                .unwrap()
+                .contains(&json!("NO_PRICE_EVIDENCE"))
+        );
+        assert_eq!(out["hypotheses"][0]["reference_store_prices"], json!([]));
     }
 
     #[test]
