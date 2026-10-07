@@ -928,6 +928,71 @@ mod research_tests {
     }
 
     #[test]
+    fn trending_lists_become_research_leads_with_next_actions() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-feeds-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let day = 86_400u64;
+        let today = 20_000 * day;
+        let history: Vec<Value> = (0..7)
+            .map(|d| {
+                let n = if (1..=3).contains(&d) { 80 } else { 5 };
+                json!({"day":(today - d * day).to_string(),"uses":n.to_string(),"accounts":n.to_string()})
+            })
+            .collect();
+        let mastodon = json!([{"name":"MatchaLatte","url":"https://mastodon.social/tags/matchalatte","history":history}]).to_string();
+        let bluesky = json!({"trends":[{"topic":"t","displayName":"Matcha Whisk","postCount":900,"status":"hot","category":"food","actors":[{"handle":"someone.bsky.social"}]}]}).to_string();
+        let out = engine.call("ecdev.trend.feeds", json!({"fixture_now":today + 60,"sources":[{"platform":"MASTODON_TRENDS","fixture_raw":mastodon},{"platform":"BLUESKY_TRENDS","fixture_raw":bluesky}]})).unwrap();
+        assert_eq!(out["capture_mode"], "FIXTURE");
+        let m = &out["feeds"][0]["entries"][0];
+        assert_eq!(m["state"], "DISCOVERY_LEAD_UNVERIFIED");
+        assert_eq!(m["growth"]["state"], "RISING");
+        assert_eq!(m["next_action"]["tool"], "ecdev.trend.discover");
+        assert_eq!(m["next_action"]["input_template"]["query"], "matcha latte");
+        assert_eq!(
+            m["next_action"]["input_template"]["sources"][0]["platform"],
+            "MASTODON_TAG"
+        );
+        let b = &out["feeds"][1]["entries"][0];
+        assert_eq!(b["source_post_count"], 900);
+        assert!(!out.to_string().contains("someone.bsky.social"));
+        // The raw captures are kept by hash.
+        for f in out["feeds"].as_array().unwrap() {
+            assert!(
+                root.join(".ecdev-data/runtime/social-captures")
+                    .join(format!("{}.raw", f["raw_hash"].as_str().unwrap()))
+                    .is_file()
+            );
+        }
+        // Mixed fixture and live sources, posts platforms and a live clock override are refused.
+        assert!(engine.call("ecdev.trend.feeds", json!({"sources":[{"platform":"MASTODON_TRENDS","fixture_raw":"[]"},{"platform":"BLUESKY_TRENDS"}]})).is_err());
+        assert!(
+            engine
+                .call(
+                    "ecdev.trend.feeds",
+                    json!({"fixture_now":1,"sources":[{"platform":"BLUESKY_TRENDS"}]})
+                )
+                .is_err()
+        );
+        let wrong = engine.call(
+            "ecdev.trend.feeds",
+            json!({"sources":[{"platform":"HACKER_NEWS","fixture_raw":"{}"}]}),
+        );
+        assert!(
+            wrong.is_err()
+                || wrong.unwrap()["provider_failures"][0]["reason"] == "NOT_A_TREND_FEED"
+        );
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",

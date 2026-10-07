@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "b88ab3fc2b7532fe5993aaf8eb14df880669a454",
+  "assessed_parent_commit": "1fb8f72939a7493f8467a82ec976b2af6201202e",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,18 +14,18 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 243,
-    "semantic_censused_capabilities": 243,
+    "known_donor_capabilities": 244,
+    "semantic_censused_capabilities": 244,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 35,
     "benchmark_candidates": 26,
     "algorithm_candidates": 5,
     "reference_only": 52,
-    "study_complete_capabilities": 100,
+    "study_complete_capabilities": 101,
     "not_relevant_after_review": 25,
     "research_questions_open": 66,
-    "knowledge_coverage_ratio": 0.728395
+    "knowledge_coverage_ratio": 0.729508
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1163,7 +1163,7 @@
         "social.viral-trend-agent.verdict BENCHMARK_CANDIDATE(does a composite virality verdict predict trend persistence in ECDEV snapshots better than ECDEV's components? never a demand forecast)",
         "social.viral-trend-agent.trend-persistence BENCHMARK_CANDIDATE(the donor never re-reads a stored post, so its velocities are membership churn: does per-item engagement re-polled over time predict trend persistence 24 to 72 hours ahead better than cluster-sum deltas?)",
         "social.viral-trend-agent.source-mixing BENCHMARK_CANDIDATE(per-source percentile or z-score normalisation versus raw sums of mixed engagement units and fixed proxy values)",
-        "social.viral-trend-agent.trend-feeds STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); instance-wide trending lists (Mastodon trends/tags, Bluesky trending topics) as discovery feeds rather than per-query counters)",
+        "social.viral-trend-agent.google-trends-rss STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand; terms of service review comes before any read)",
         "social.viral-trend-agent.cross-source-story-matching BENCHMARK_CANDIDATE(which sentence-embedding cosine threshold separates same story or product from same topic across sources: precision and recall from 0.75 to 0.92 on labelled pairs)",
         "social.viral-trend-agent.topic-clustering-and-continuity STUDY_CANDIDATE(trend identity continuity across runs by centroid cosine 0.75 with 6 hour expiry: identity churn against a labelled trend timeline)",
         "social.viral-trend-agent.emotion-detection BENCHMARK_CANDIDATE(does the dominant emotion of posts about a product correlate with sales-rank lift in held-out data, before any score uses emotion?)",
@@ -1175,6 +1175,7 @@
         "social.viral-trend-agent.get_cross_platform_bonus STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a platform-count bonus conflates platforms with independent publishers)",
         "social.viral-trend-agent.get_recency_score STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV applies explicit half-life time decay)",
         "social.viral-trend-agent.public-trend-sources STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/mastodon-tag-contract-probe.json: the public tag record (/api/v1/tags/{tag}, robots-allowed on the probed instances) reports seven UTC days of uses and distinct accounts, newest first, the newest day still open, and an unknown tag reads as zeros; ECDEV's MASTODON_TAG source (adapter/web/src/social.rs) maps the query to a tag, reads it from an operator-named public instance, keeps the raw capture hash and reports the series as an ATTENTION_SIGNAL_NOT_DEMAND counter, never as posts; growth (domain/commerce/src/social/growth.rs) compares the last three complete days with the three before by an exact Poisson rate test on account-days and uses, the open day excluded)",
+        "social.viral-trend-agent.trend-feeds STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/mastodon-tag-contract-probe.json: Mastodon trends/tags (ten tags with seven-day history) and Bluesky's unspecced getTrends (topic, displayName, postCount, status, category, actors) are public and robots-allowed; ecdev.trend.feeds (domain/commerce/src/social/feeds.rs) reads them whole as DISCOVERY_LEAD_UNVERIFIED entries with a suggested query, the tag's complete-day growth and a next ecdev.trend.discover action, keeps the raw capture by hash and drops the posters; on the probe day all twenty entries were news, memes and culture rather than products, so a lead's commerce relevance is never assumed)",
         "social.viral-trend-agent.circumventing-sources STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor reads Reddit through mirrors chosen to avoid OAuth and YouTube through yt-dlp; ECDEV keeps to official APIs)",
         "social.viral-trend-agent.geo-market-filter STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](market targeting by a deny-list of nationality and language keywords; ECDEV scopes markets positively by marketplace and locale)",
         "social.viral-trend-agent.text-normalisation REFERENCE_ONLY(cleaning steps, bot-post phrases and title-weighted embedding text)",

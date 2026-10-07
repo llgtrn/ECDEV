@@ -274,6 +274,23 @@ pub fn published(value: &Value) -> Option<u64> {
     u64::try_from(day * 86400 + h * 3600 + min * 60 + sec - offset).ok()
 }
 fn endpoint(q: &Value) -> Result<Url, String> {
+    // Instance-wide trending lists take no query: they are discovery feeds, read whole.
+    match q["platform"].as_str().unwrap_or("") {
+        "MASTODON_TRENDS" => {
+            let instance = mastodon_instance(q)?;
+            return Ok(Url::parse(&format!(
+                "https://{instance}/api/v1/trends/tags?limit={FEED_LIMIT}"
+            ))
+            .unwrap());
+        }
+        "BLUESKY_TRENDS" => {
+            return Ok(Url::parse(&format!(
+                "https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit={FEED_LIMIT}"
+            ))
+            .unwrap());
+        }
+        _ => {}
+    }
     let query = q["query"].as_str().ok_or("query required")?;
     if query.len() > 500 {
         return Err("QUERY_TOO_LONG".into());
@@ -420,6 +437,62 @@ fn mastodon_instance(q: &Value) -> Result<String, String> {
     } else {
         Err("INVALID_MASTODON_INSTANCE".into())
     }
+}
+
+pub const FEED_LIMIT: usize = 10;
+
+/// "NoodlesAnything" -> "noodles anything": a camel-case tag split into a searchable query.
+fn tag_words(tag: &str) -> String {
+    let mut out = String::new();
+    let mut prev: Option<char> = None;
+    for c in tag.chars() {
+        if c == '_' {
+            out.push(' ');
+        } else {
+            if c.is_uppercase() && prev.is_some_and(|p| p.is_lowercase() || p.is_ascii_digit()) {
+                out.push(' ');
+            }
+            out.extend(c.to_lowercase());
+        }
+        prev = Some(c);
+    }
+    out.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
+/// The entries of an instance-wide trending list, as the source ranks them. Each is a discovery
+/// lead with a suggested query, never a mention, a measurement of a product, or demand. Who
+/// posted is not kept.
+pub fn trend_feed(data: &Value, platform: &str, captured: u64) -> Result<Vec<Value>, String> {
+    let rows = match platform {
+        "MASTODON_TRENDS" => data.as_array(),
+        "BLUESKY_TRENDS" => data["trends"].as_array(),
+        _ => return Err("UNSUPPORTED_TREND_FEED".into()),
+    }
+    .ok_or("TREND_FEED_ARRAY_REQUIRED")?;
+    if rows.len() > 100 {
+        return Err("TREND_FEED_TOO_LONG".into());
+    }
+    let mut out = vec![];
+    for (rank, row) in rows.iter().take(FEED_LIMIT).enumerate() {
+        let entry = match platform {
+            "MASTODON_TRENDS" => {
+                let name = row["name"].as_str().ok_or("TREND_ENTRY_NAME_REQUIRED")?;
+                let tag = mastodon_tag(name).ok_or("TREND_ENTRY_NAME_REQUIRED")?;
+                let usage = mastodon_tag_usage(row, &tag, captured)?;
+                json!({"rank":rank + 1,"label":name,"suggested_query":tag_words(name),"tag":tag,"series":usage["series"],"scope":"INSTANCE_FEDERATED_VIEW","ranking":"INSTANCE_TRENDING_ALGORITHM_UNDISCLOSED"})
+            }
+            _ => {
+                let label = row["displayName"]
+                    .as_str()
+                    .filter(|l| !l.trim().is_empty() && l.len() <= 300)
+                    .ok_or("TREND_ENTRY_NAME_REQUIRED")?;
+                let started = published(&row["startedAt"]);
+                json!({"rank":rank + 1,"label":label,"suggested_query":label.to_lowercase(),"topic":row["topic"],"category":row["category"],"source_status":row["status"],"source_post_count":row["postCount"].as_u64(),"post_count_meaning":"SOURCE_REPORTED_UNVERIFIED","started_at":started,"source_description":row["description"].as_str().map(|d| d.chars().take(500).collect::<String>()),"description_origin":"SOURCE_SUPPLIED_UNVERIFIED","api_stability":"UNSPECCED","ranking":"SOURCE_TRENDING_ALGORITHM_UNDISCLOSED"})
+            }
+        };
+        out.push(entry);
+    }
+    Ok(out)
 }
 
 /// The tag a query is read as: its letters and digits, lowercased, spaces and punctuation
@@ -574,7 +647,13 @@ impl Provider for Social {
         u.set_fragment(None);
         let platform = r.query["platform"].as_str().unwrap_or("");
         let mut usage = Value::Null;
-        let (posts, tree) = if platform == "MASTODON_TAG" {
+        let mut feed = Value::Null;
+        let (posts, tree) = if matches!(platform, "MASTODON_TRENDS" | "BLUESKY_TRENDS") {
+            let entries =
+                trend_feed(&data, platform, captured).map_err(|e| failure(e, None, requests))?;
+            feed = json!({"platform":platform,"entries":entries,"raw_hash":format!("{:x}", Sha256::digest(&raw)),"source_url":u.as_str(),"capture_mode":mode,"captured_at":captured,"evidence_class":"DISCOVERY_LEAD_NOT_DEMAND","actors_kept":false});
+            (vec![], Value::Null)
+        } else if platform == "MASTODON_TAG" {
             let query = r.query["query"].as_str().unwrap_or("");
             let tag = mastodon_tag(query).unwrap_or_default();
             usage = mastodon_tag_usage(&data, &tag, captured)
@@ -597,7 +676,7 @@ impl Provider for Social {
         };
         Ok(AcquireResult {
             observations: vec![],
-            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"reply_tree":tree,"tag_usage":usage,"population_complete":false}),
+            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"reply_tree":tree,"tag_usage":usage,"trend_feed":feed,"population_complete":false}),
             raw_payload: raw,
             provider_cost: json!({"cost_minor":0,"request_count":requests,"paid":false}),
         })
@@ -1254,5 +1333,48 @@ mod tests {
             format!("{:x}", Sha256::digest(raw.as_bytes()))
         );
         assert_eq!(out.provider_cost["request_count"], 0);
+    }
+
+    #[test]
+    fn trending_lists_are_leads_without_posters() {
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TRENDS","instance":"fosstodon.org"}))
+                .unwrap()
+                .as_str(),
+            "https://fosstodon.org/api/v1/trends/tags?limit=10"
+        );
+        assert!(endpoint(&json!({"platform":"MASTODON_TRENDS","instance":"10.0.0.1"})).is_err());
+        assert!(
+            endpoint(&json!({"platform":"BLUESKY_TRENDS"}))
+                .unwrap()
+                .as_str()
+                .starts_with("https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends")
+        );
+        let day = 20_000 * 86_400u64;
+        let m = json!([{"name":"NoodlesAnything","url":"https://mastodon.social/tags/noodlesanything","history":[{"day":day.to_string(),"uses":"406","accounts":"95"},{"day":(day-86_400).to_string(),"uses":"0","accounts":"0"}]}]);
+        let e = trend_feed(&m, "MASTODON_TRENDS", day + 60).unwrap();
+        assert_eq!(e[0]["suggested_query"], "noodles anything");
+        assert_eq!(e[0]["tag"], "noodlesanything");
+        assert_eq!(e[0]["series"][1]["complete"], false);
+        assert_eq!(tag_words("Inktober2026Day6"), "inktober2026 day6");
+        let b = json!({"trends":[{"topic":"x1","displayName":"Matcha Latte Art","description":"People post latte art.","startedAt":"2026-10-01T12:14:21.738740+00:00","postCount":26026,"status":"hot","category":"food","actors":[{"did":"did:plc:a","handle":"someone.bsky.social"}]}]});
+        let e = trend_feed(&b, "BLUESKY_TRENDS", day).unwrap();
+        assert_eq!(e[0]["suggested_query"], "matcha latte art");
+        assert_eq!(e[0]["source_post_count"], 26026);
+        assert_eq!(e[0]["post_count_meaning"], "SOURCE_REPORTED_UNVERIFIED");
+        assert!(e[0]["started_at"].as_u64().is_some());
+        assert!(
+            !e[0].to_string().contains("someone.bsky.social"),
+            "posters are not kept"
+        );
+        assert!(
+            trend_feed(
+                &json!({"trends":[{"displayName":" "}]}),
+                "BLUESKY_TRENDS",
+                day
+            )
+            .is_err()
+        );
+        assert!(trend_feed(&json!({}), "MASTODON_TRENDS", day).is_err());
     }
 }

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "b88ab3fc2b7532fe5993aaf8eb14df880669a454",
+  "assessed_parent_commit": "1fb8f72939a7493f8467a82ec976b2af6201202e",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -3139,7 +3139,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "17 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
+          "detail": "18 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5134,7 +5134,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "7 imports: rusqlite in domain/commerce/src/frontier.rs; rusqlite in domain/commerce/src/monitor.rs; rusqlite in domain/commerce/src/research.rs"
+          "detail": "8 imports: rusqlite in domain/commerce/src/frontier.rs; rusqlite in domain/commerce/src/monitor.rs; rusqlite in domain/commerce/src/research.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "53 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "54 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6084,7 +6084,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "14 imports: uuid in adapter/keepa/src/client.rs; uuid in adapter/marketplace/src/lib.rs; uuid in adapter/web/src/lib.rs"
+          "detail": "15 imports: uuid in adapter/keepa/src/client.rs; uuid in adapter/marketplace/src/lib.rs; uuid in adapter/web/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -7066,7 +7066,14 @@
         {
           "key": "social.viral-trend-agent.trend-feeds",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); instance-wide trending lists (Mastodon trends/tags, Bluesky trending topics) as discovery feeds rather than per-query counters)",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/mastodon-tag-contract-probe.json: Mastodon trends/tags (ten tags with seven-day history) and Bluesky's unspecced getTrends (topic, displayName, postCount, status, category, actors) are public and robots-allowed; ecdev.trend.feeds (domain/commerce/src/social/feeds.rs) reads them whole as DISCOVERY_LEAD_UNVERIFIED entries with a suggested query, the tag's complete-day growth and a next ecdev.trend.discover action, keeps the raw capture by hash and drops the posters; on the probe day all twenty entries were news, memes and culture rather than products, so a lead's commerce relevance is never assumed)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.google-trends-rss",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand; terms of service review comes before any read)",
           "knowledge_status": "STUDY_CANDIDATE",
           "open": true
         },
@@ -7207,12 +7214,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 20 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 21 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "8 of 20 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-feeds (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
+          "detail": "8 of 21 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.google-trends-rss (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

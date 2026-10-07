@@ -1,6 +1,7 @@
 //! Evidence-first social contracts. Capture mode and evidence state are orthogonal.
 pub mod coverage;
 pub mod displayed;
+pub mod feeds;
 pub mod growth;
 pub mod pagination;
 pub mod runtime;

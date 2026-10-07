@@ -1,6 +1,6 @@
 {
  "probe_class": "API_CONTRACT_PROBE_NOT_ECDEV_RUNTIME_CAPTURE",
- "probed_at": 1791352783,
+ "probed_at": 1791354595,
  "instances": {
   "mastodon.social": {
    "robots_status": 200,
@@ -84,7 +84,7 @@
       25,
       37,
       44,
-      6
+      8
      ],
      "accounts_series_oldest_first": [
       36,
@@ -93,7 +93,7 @@
       19,
       29,
       30,
-      6
+      7
      ]
     }
    }
@@ -104,6 +104,60 @@
   "history_len": 7,
   "all_zero": true,
   "meaning": "AN_UNUSED_TAG_AND_AN_UNKNOWN_TAG_ARE_INDISTINGUISHABLE_ZEROS_ARE_INSTANCE_OBSERVED_ZERO_NOT_ABSENCE_ELSEWHERE"
+ },
+ "mastodon_trends": {
+  "status": 200,
+  "entries": 10,
+  "all_have_name_and_7_day_history": true,
+  "names": [
+   "NoodlesAnything",
+   "TuneTuesday",
+   "whyandbecausesongs",
+   "AutumnProblemsASong",
+   "TextureTuesday",
+   "ogre",
+   "ThickTrunkTuesday",
+   "hanning",
+   "sachsenanhalt",
+   "icecube"
+  ]
+ },
+ "bluesky_public_appview_robots": {
+  "status": 200,
+  "allows_xrpc": true
+ },
+ "bluesky_trends": {
+  "status": 200,
+  "entries": 10,
+  "fields": [
+   "actors",
+   "category",
+   "description",
+   "displayName",
+   "link",
+   "postCount",
+   "startedAt",
+   "status",
+   "topic"
+  ],
+  "entries_carry_actor_handles": true,
+  "statuses": [
+   "cooling",
+   "stale"
+  ],
+  "labels": [
+   "Plague death reported in Siberia",
+   "Trump says Iran could hit Los Angeles",
+   "\"How I arrived here\" meme",
+   "Green Party Zionism motion vote",
+   "Banned Books Week",
+   "Inktober 2026 day 6: ogre",
+   "Trump refuses international election monitors",
+   "Collins-Jackson Maine debate",
+   "Star Wars: Galactic Racer launches",
+   "Border Patrol fells grandmother tree"
+  ],
+  "api_namespace": "app.bsky.unspecced (no stability guarantee)"
  },
  "requests": [
   {
@@ -142,7 +196,7 @@
    "url": "https://fosstodon.org/api/v1/tags/rust",
    "status": 200,
    "bytes": 420,
-   "sha256": "527b36688783384b76c8ce165741d34c67dba0920688bb7f9c0170270497c20c",
+   "sha256": "261341909f551212e9e56e411823ee8fdfc358459581242a078b09edb29abafa",
    "content_type": "application/json; charset=utf-8",
    "ratelimit_limit": "300"
   },
@@ -153,6 +207,30 @@
    "sha256": "eec66c9ae88632fed18bc85e63b5289e64b55135cc705039a6430962cb7717db",
    "content_type": "application/json; charset=utf-8",
    "ratelimit_limit": "300"
+  },
+  {
+   "url": "https://mastodon.social/api/v1/trends/tags?limit=10",
+   "status": 200,
+   "bytes": 4347,
+   "sha256": "a547d96fe965ed7f9df1a6382324832ee9627749b68144f2cf925f99a4246432",
+   "content_type": "application/json; charset=utf-8",
+   "ratelimit_limit": "300"
+  },
+  {
+   "url": "https://public.api.bsky.app/robots.txt",
+   "status": 200,
+   "bytes": 203,
+   "sha256": "58cace3abee06932c5d80a0d4decf546d9c3dfa12e12eeb1880507ea83a16443",
+   "content_type": "text/plain; charset=utf-8",
+   "ratelimit_limit": null
+  },
+  {
+   "url": "https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit=10",
+   "status": 200,
+   "bytes": 39782,
+   "sha256": "c60e9bc1b413cfd016ceab8f58be6ea11adba23d27f89ce11da9eda81442fe80",
+   "content_type": "application/json; charset=utf-8",
+   "ratelimit_limit": null
   }
  ]
 }

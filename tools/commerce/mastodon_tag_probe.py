@@ -6,7 +6,8 @@ An API-contract probe through the session's egress proxy, NOT an ECDEV runtime c
 it reads is stored as evidence or labelled LIVE. It checks the assumptions the native parser
 makes (robots allows the path; history is at most 31 UTC-midnight days with string counts and
 accounts <= uses; the newest day is the open one; the name echoes the requested tag; and what an
-unknown tag returns). ECDEV user agent, 1.5 s between requests; bodies are hashed, never kept.
+unknown tag returns), and the two
+trending lists ecdev.trend.feeds reads (Mastodon trends/tags, Bluesky unspecced getTrends). ECDEV user agent, 1.5 s between requests; bodies are hashed, never kept.
 """
 import hashlib, json, time, urllib.request
 
@@ -67,5 +68,17 @@ s, b = get("https://mastodon.social/api/v1/tags/ecdevnonexistenttag0000")
 u = json.loads(b) if s == 200 else {}
 out["unknown_tag"] = {"status": s, "history_len": len(u.get("history", [])), "all_zero": all(x["uses"] == "0" for x in u.get("history", [])),
                       "meaning": "AN_UNUSED_TAG_AND_AN_UNKNOWN_TAG_ARE_INDISTINGUISHABLE_ZEROS_ARE_INSTANCE_OBSERVED_ZERO_NOT_ABSENCE_ELSEWHERE"}
+# Instance-wide trending lists read whole by ecdev.trend.feeds.
+s, b = get("https://mastodon.social/api/v1/trends/tags?limit=10")
+t = json.loads(b) if s == 200 else []
+out["mastodon_trends"] = {"status": s, "entries": len(t), "all_have_name_and_7_day_history": all("name" in x and len(x.get("history", [])) == 7 for x in t),
+                          "names": [x.get("name") for x in t]}
+s, b = get("https://public.api.bsky.app/robots.txt")
+out["bluesky_public_appview_robots"] = {"status": s, "allows_xrpc": robots_allows(b.decode("utf-8", "replace"), "/xrpc/app.bsky.unspecced.getTrends") if s == 200 else None}
+s, b = get("https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit=10")
+t = (json.loads(b) if s == 200 else {}).get("trends", [])
+out["bluesky_trends"] = {"status": s, "entries": len(t), "fields": sorted({k for x in t for k in x}),
+                         "entries_carry_actor_handles": any(x.get("actors") for x in t), "statuses": sorted({x.get("status") for x in t if x.get("status")}),
+                         "labels": [x.get("displayName") for x in t], "api_namespace": "app.bsky.unspecced (no stability guarantee)"}
 out["requests"] = log
 print(json.dumps(out, indent=1))
