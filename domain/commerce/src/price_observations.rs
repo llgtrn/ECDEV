@@ -72,6 +72,11 @@ fn words(text: &str) -> Vec<String> {
 /// The source matches names by substring ("oat milk" finds "Goat Milk"): a product is taken
 /// only when its name holds the query's words as words, in order.
 pub fn name_holds_query(name: &str, query: &str) -> bool {
+    // Unspaced CJK has no word boundaries to respect: the query must appear as written.
+    if query.chars().any(crate::social::is_cjk) {
+        let compact = |t: &str| t.split_whitespace().collect::<String>().to_lowercase();
+        return !query.trim().is_empty() && compact(name).contains(&compact(query));
+    }
     let (n, q) = (words(name), words(query));
     !q.is_empty() && n.windows(q.len()).any(|w| w == q.as_slice())
 }
@@ -287,6 +292,14 @@ mod tests {
         assert!(!name_holds_query("Goat Milk", "oat milk"));
         assert!(!name_holds_query("Milk Oat", "oat milk"));
         assert!(name_holds_query("MATCHA-LATTE mix", "matcha latte"));
+        assert!(name_holds_query(
+            "明治 エッセルスーパーカップ 抹茶",
+            "スーパーカップ 抹茶"
+        ));
+        assert!(!name_holds_query(
+            "明治 エッセルスーパーカップ バニラ",
+            "抹茶"
+        ));
         let kind = |c: &str| catalog_action(c)["input_template"]["identifiers_type"].clone();
         assert_eq!(kind("0892859002898"), "UPC");
         assert_eq!(
