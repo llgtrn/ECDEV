@@ -865,7 +865,13 @@ fn recurring_phrases_become_unverified_product_queries() {
     let cluster_phrases = &snap["clusters"][0]["candidate_phrases"];
     assert_eq!(cluster_phrases[0]["phrase"], "bamboo matcha whisk");
     let h = ecdev_core::hypothesis::hypothesize(&snap, &[]);
-    let hyp = &h["hypotheses"][0];
+    // The topic hypothesis comes first; the cluster's carries its phrases.
+    let hyp = h["hypotheses"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|x| !x["phrase_queries"].as_array().unwrap().is_empty())
+        .unwrap();
     assert_eq!(hyp["phrase_queries"][0]["query"], "bamboo matcha whisk");
     assert!(
         hyp["product_queries"]

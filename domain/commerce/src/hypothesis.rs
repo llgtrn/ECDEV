@@ -27,11 +27,20 @@ fn title_terms(candidate: &Value) -> BTreeSet<String> {
 /// The hypotheses one frozen trend snapshot supports, with links to captured candidates whose
 /// titles contain every topic term (unverified) and research actions ordered by how many open
 /// blockers each could resolve.
+/// One hypothesis source: its terms, evidence ids, platforms, candidate phrases and refinements.
+type Group = (BTreeSet<String>, Value, Value, Value, Vec<String>);
+
 pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     let query = snapshot["query"].as_str().unwrap_or("");
     let topic = terms(query);
-    let mut groups: Vec<(BTreeSet<String>, Value, Value, Value)> = Vec::new();
+    // One hypothesis per cluster of two or more posts; a single post is no pattern. Refinements
+    // are the cluster's salient terms (shared by two or more of its posts, informative), most
+    // shared first; snapshots from before salient terms existed fall back to their terms.
+    let mut groups: Vec<Group> = Vec::new();
     for c in snapshot["clusters"].as_array().into_iter().flatten() {
+        if c["evidence_ids"].as_array().is_none_or(|e| e.len() < 2) {
+            continue;
+        }
         let t: BTreeSet<String> = c["terms"]
             .as_array()
             .into_iter()
@@ -39,20 +48,45 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
             .filter_map(Value::as_str)
             .map(str::to_lowercase)
             .collect();
+        let salient: Vec<String> = match c["salient_terms"].as_array() {
+            Some(rows) => rows
+                .iter()
+                .filter_map(|r| r["term"].as_str())
+                .filter(|term| !topic.contains(*term))
+                .take(5)
+                .map(str::to_string)
+                .collect(),
+            None => t.difference(&topic).take(5).cloned().collect(),
+        };
+        // A cluster that refines nothing (no salient term, no phrase) repeats the topic.
+        if salient.is_empty()
+            && c["candidate_phrases"]
+                .as_array()
+                .is_none_or(|p| p.is_empty())
+        {
+            continue;
+        }
         groups.push((
             t,
             c["evidence_ids"].clone(),
             c["platforms"].clone(),
             c["candidate_phrases"].clone(),
+            salient,
         ));
     }
-    if groups.is_empty() && snapshot["mention_count"].as_u64().unwrap_or(0) > 0 {
-        groups.push((
-            topic.clone(),
-            snapshot["evidence_ids"].clone(),
-            snapshot["platforms"].clone(),
-            Value::Null,
-        ));
+    // The topic itself is always a hypothesis over every mention, first; clusters refine it.
+    // Without it, mentions outside multi-post clusters would be represented by nothing.
+    if snapshot["mention_count"].as_u64().unwrap_or(0) > 0 {
+        groups.insert(
+            0,
+            (
+                topic.clone(),
+                snapshot["evidence_ids"].clone(),
+                snapshot["platforms"].clone(),
+                Value::Null,
+                vec![],
+            ),
+        );
     }
     // Source-reported attention counters (a Mastodon tag's daily uses): kept beside the post
     // signal, never added to its mentions. A rising counter alone is a reason to research.
@@ -64,7 +98,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         .collect();
     let attention_rising = attention.iter().any(|a| a["growth_state"] == "RISING");
     if groups.is_empty() && attention_rising {
-        groups.push((topic.clone(), json!([]), json!([]), Value::Null));
+        groups.push((topic.clone(), json!([]), json!([]), Value::Null, vec![]));
     }
     let signal = snapshot["state"].as_str().unwrap_or("UNKNOWN");
     // How complete the population behind the signal is: a separate dimension, never a weight on
@@ -75,8 +109,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         json!({"grade":"NOT_RECORDED_FOR_THIS_SNAPSHOT"})
     };
     let mut hypotheses = Vec::new();
-    for (cluster_terms, evidence, platforms, phrases) in groups {
-        let refinements: Vec<String> = cluster_terms.difference(&topic).take(5).cloned().collect();
+    for (cluster_terms, evidence, platforms, phrases, refinements) in groups {
         let mut queries = vec![query.trim().to_string()];
         queries.extend(refinements.iter().map(|r| format!("{} {r}", query.trim())));
         // Recurring phrases are product-name candidates: a phrase holding every topic term is
@@ -171,7 +204,11 @@ mod tests {
         ];
         let out = hypothesize(&snapshot(), &candidates);
         let h = out["hypotheses"].as_array().unwrap();
+        // The topic over every mention first, then the two-post cluster; the one-post cluster
+        // (e3) is no pattern and yields no hypothesis of its own.
         assert_eq!(h.len(), 2);
+        assert_eq!(h[0]["evidence_ids"], json!(["e1", "e2", "e3"]));
+        assert_eq!(h[0]["refinement_terms"], json!([]));
         for x in h {
             assert_eq!(x["state"], "HYPOTHESIS");
             assert_eq!(x["shortlist_eligible"], false);
@@ -183,7 +220,7 @@ mod tests {
             );
             assert!(!x["research_actions"].as_array().unwrap().is_empty());
         }
-        let first = &h[0];
+        let first = &h[1];
         assert_eq!(first["refinement_terms"], json!(["bamboo", "chasen"]));
         assert_eq!(first["product_queries"][1], "matcha whisk bamboo");
         // Only the candidate containing every topic term links, and only as unverified.
@@ -266,5 +303,26 @@ mod tests {
         let h = &hypothesize(&both, &[])["hypotheses"][0];
         assert_eq!(h["basis"], "SOCIAL_POSTS");
         assert_eq!(h["attention_counters"].as_array().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn refinements_are_shared_informative_terms_not_alphabetical_noise() {
+        // As a live run produced them: link hashes, image sizes and function words in a
+        // cluster's terms, with the informative ones shared by several posts.
+        let snap = json!({"query":"matcha","mention_count":3,"evidence_ids":["a","b","c"],"clusters":[
+            {"terms":["0a1b2c3d4e","1920x1080","answer","matcha","whisk","bamboo"],"evidence_ids":["a","b","c"],
+             "salient_terms":[{"term":"whisk","posts":3},{"term":"bamboo","posts":2}]},
+            {"terms":["matcha","solo"],"evidence_ids":["d"]}]});
+        let h = hypothesize(&snap, &[]);
+        let h = h["hypotheses"].as_array().unwrap();
+        assert_eq!(h.len(), 2);
+        assert_eq!(h[1]["refinement_terms"], json!(["whisk", "bamboo"]));
+        assert_ne!(h[0]["hypothesis_id"], h[1]["hypothesis_id"]);
+        // Every cluster a single post: one topic-level hypothesis, not one per post.
+        let lone = json!({"query":"matcha","mention_count":2,"evidence_ids":["a","b"],"platforms":["BLUESKY"],"clusters":[
+            {"terms":["matcha","x"],"evidence_ids":["a"]},{"terms":["matcha","y"],"evidence_ids":["b"]}]});
+        let h = hypothesize(&lone, &[]);
+        assert_eq!(h["hypotheses"].as_array().unwrap().len(), 1);
+        assert_eq!(h["hypotheses"][0]["evidence_ids"], json!(["a", "b"]));
     }
 }

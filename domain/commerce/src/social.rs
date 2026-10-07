@@ -667,10 +667,62 @@ pub fn representatives(posts: &[&SocialPost]) -> Vec<Value> {
         .collect()
 }
 
+/// Text without its links: URL slugs and image hashes are not what a post is about.
+fn without_urls(text: &str) -> String {
+    text.split_whitespace()
+        .filter(|w| !w.contains("://") && !w.starts_with("www."))
+        .collect::<Vec<_>>()
+        .join(" ")
+}
+
+/// Terms describing a post's content (links removed), for clusters and refinements. Mention
+/// matching keeps `terms` over the whole text, so mention counts stay comparable over time.
+pub fn content_terms(text: &str) -> BTreeSet<String> {
+    terms(&without_urls(text))
+}
+
+/// Whether a term can refine a product query: not a number, hash or image size, not a stop
+/// word, and not a run of kana alone (CJK bigrams of particles say nothing).
+pub fn informative(term: &str) -> bool {
+    let digits = term.chars().filter(char::is_ascii_digit).count();
+    let hexlike = term.len() >= 6 && term.chars().all(|c| c.is_ascii_hexdigit()) && digits > 0;
+    let size = term.split_once('x').is_some_and(|(a, b)| {
+        !a.is_empty() && !b.is_empty() && (a.to_string() + b).chars().all(|c| c.is_ascii_digit())
+    });
+    let kana = term.chars().all(|c| ('\u{3040}'..='\u{309f}').contains(&c));
+    digits != term.chars().count()
+        && !hexlike
+        && !size
+        && !kana
+        && !PHRASE_STOP_WORDS.contains(&term)
+}
+
+/// Content terms shared by at least two of a cluster's posts, most shared first.
+fn salient_terms(posts: &[&SocialPost]) -> Vec<Value> {
+    let mut support: BTreeMap<String, usize> = BTreeMap::new();
+    for p in posts {
+        let mut t = content_terms(&p.text);
+        t.extend(p.hashtags.iter().map(|s| s.to_lowercase()));
+        for term in t {
+            *support.entry(term).or_default() += 1;
+        }
+    }
+    let mut ranked: Vec<(String, usize)> = support
+        .into_iter()
+        .filter(|(t, n)| *n >= 2 && informative(t))
+        .collect();
+    ranked.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
+    ranked
+        .into_iter()
+        .take(20)
+        .map(|(term, posts)| json!({"term":term,"posts":posts}))
+        .collect()
+}
+
 pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
     let mut groups: Vec<(BTreeSet<String>, Vec<&SocialPost>)> = vec![];
     for p in posts {
-        let mut t = terms(&p.text);
+        let mut t = content_terms(&p.text);
         t.extend(p.hashtags.iter().map(|s| s.to_lowercase()));
         for e in &p.entities {
             if let Some(s) = e["value"].as_str() {
@@ -693,7 +745,7 @@ pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
             groups.push((t, vec![p]));
         }
     }
-    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
+    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"salient_terms":salient_terms(&ps),"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
 }
 
 pub fn snapshot(
@@ -876,6 +928,31 @@ pub fn snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn content_terms_drop_links_and_refinements_drop_noise() {
+        let t =
+            content_terms("matcha whisk https://cdn.example/93cde4d763b7006532dfc4ad6db291a4.jpg");
+        assert!(t.contains("whisk") && !t.iter().any(|x| x.contains("93cde4d7")));
+        assert!(
+            terms("see https://shop.example/matcha").contains("matcha"),
+            "mentions still see links"
+        );
+        for noise in [
+            "93cde4d763b7",
+            "1920x1080",
+            "2026",
+            "いた",
+            "から",
+            "the",
+            "with",
+        ] {
+            assert!(!informative(noise), "{noise}");
+        }
+        for useful in ["whisk", "rtx5090", "抹茶", "ラテ", "茶ラ"] {
+            assert!(informative(useful), "{useful}");
+        }
+    }
 
     #[test]
     fn japanese_queries_match_unspaced_text() {

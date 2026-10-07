@@ -406,6 +406,52 @@
     "evidence_completeness_bps": 10000
    },
    "price_cross_check": "each extracted price equals the page's own JSON-LD offer price (4 EUR -> 400, 19.99 EUR -> 1999 minor units), checked separately"
+  },
+  {
+   "run": "ecdev.trend.hypothesize on live snapshots, before and after (2026-10-07)",
+   "before": {
+    "jp_限定": {
+     "hypotheses": 9,
+     "example_refinements": [
+      "173052",
+      "1920x1080",
+      "2c75",
+      "536",
+      "93cde4d763b7006532dfc4ad6db291a4"
+     ]
+    },
+    "en_matcha": {
+     "hypotheses": 45,
+     "mentions": 47,
+     "example_refinements": [
+      "answer",
+      "anyway",
+      "asked",
+      "asking",
+      "bad"
+     ]
+    }
+   },
+   "after": {
+    "jp_限定": [
+     {
+      "refinements": [],
+      "evidence": 4
+     }
+    ],
+    "en_matcha": [
+     {
+      "refinements": [],
+      "evidence": 46
+     },
+     {
+      "refinements": [
+       "latte"
+      ],
+      "evidence": 2
+     }
+    ]
+   }
   }
  ],
  "findings": [
@@ -416,6 +462,8 @@
   "Every feed source (Google Trends JP, Mastodon trending tags, Bluesky trends, PR Times RDF, NHK RSS, a Mastodon tag record) ran live through ECDEV's runtime with no failures",
   "Feeds were cut to 50 items while coverage claimed COMPLETE_BY_SOURCE: PR Times serves 200 items. Feeds are now read whole (up to 1000) and paged sources refuse a page larger than requested; the same live run then read 200 and 86 items and found 10 mentions instead of 1",
   "A live call carried an unknown field that ECDEV accepted: tool arguments are now checked against each tool's declared input schema before it runs",
-  "Public product research ran live through ECDEV: robots consulted, both pages captured and hashed, prices extracted exactly, and both candidates held at INSUFFICIENT_EVIDENCE for lacking a cross-source identifier and a second site; PARTIAL reflects 50% field observability (no GTIN or weight on these pages)"
+  "Public product research ran live through ECDEV: robots consulted, both pages captured and hashed, prices extracted exactly, and both candidates held at INSUFFICIENT_EVIDENCE for lacking a cross-source identifier and a second site; PARTIAL reflects 50% field observability (no GTIN or weight on these pages)",
+  "Hypotheses from live snapshots were noise: refinements were a cluster's first five terms alphabetically (link hashes, image sizes, function words, kana particles) and every one-post cluster became a hypothesis (45 for 47 mentions). Content terms now drop links, refinements are terms shared by at least two of a cluster's posts and informative, only clusters of two or more posts that refine something become hypotheses, and the topic over every mention always comes first",
+  "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess"
  ]
 }
