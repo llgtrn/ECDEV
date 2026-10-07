@@ -369,11 +369,32 @@ impl Engine {
             }
             // A requested window may be split into time slices the source bounds itself; each
             // slice walks its own pages, one acquisition and one raw capture per page.
+            // Live slices cost two requests each; when the requested width needs more slices than
+            // this source may afford, they are widened so the whole window is still sampled.
+            let affordable = if fixture {
+                super::coverage::MAX_SLICES as u64
+            } else {
+                let reserved = (i + 1..sources.len())
+                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
+                    .count() as u64
+                    * 2;
+                (request_budget as u64).saturating_sub(requests + reserved) / 2
+            };
+            let mut slice_plan = Value::Null;
             let planned: Vec<Option<(u64, u64)>> = match source["slice_seconds"].as_u64() {
-                Some(width) => super::coverage::plan_slices(now.saturating_sub(window), now, width)
-                    .into_iter()
-                    .map(Some)
-                    .collect(),
+                Some(width) => {
+                    let used = super::coverage::fit_width(
+                        now.saturating_sub(window),
+                        now,
+                        width,
+                        affordable,
+                    );
+                    slice_plan = json!({"requested_seconds":width,"used_seconds":used,"widened":used > width.max(super::coverage::MIN_SLICE_SECONDS),"reason":if used > width.max(super::coverage::MIN_SLICE_SECONDS) {"WIDENED_TO_COVER_THE_WINDOW_WITHIN_REQUEST_BUDGET_OR_SLICE_CAP"} else {"AS_REQUESTED"}});
+                    super::coverage::plan_slices(now.saturating_sub(window), now, used)
+                        .into_iter()
+                        .map(Some)
+                        .collect()
+                }
                 None => vec![None],
             };
             let sliced = planned.iter().any(Option::is_some);
@@ -701,7 +722,7 @@ impl Engine {
                 coverage["comment_tree_state"] = json!("NOT_REQUESTED");
             }
             let pages: u64 = slices.iter().filter_map(|s| s["pages"].as_u64()).sum();
-            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"threads":threads,"page_quota_per_slice":page_quota,"sampling":if sliced {"TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE"} else {"SINGLE_WINDOW"},"population_coverage":coverage}));
+            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"threads":threads,"page_quota_per_slice":page_quota,"sampling":if sliced {"TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE"} else {"SINGLE_WINDOW"},"slice_plan":slice_plan,"population_coverage":coverage}));
             if !fixture && !source_posts.is_empty() {
                 self.db
                     .lock()

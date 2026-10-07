@@ -31,6 +31,15 @@ pub fn plan_slices(start: u64, end: u64, width: u64) -> Vec<(u64, u64)> {
     out
 }
 
+/// The narrowest slice width, at least the requested one, whose slices cover (start, end] in at
+/// most `affordable` slices (and at most MAX_SLICES): a budget too tight for the requested width
+/// samples the whole window more coarsely instead of leaving its oldest part unread.
+pub fn fit_width(start: u64, end: u64, width: u64, affordable: u64) -> u64 {
+    let span = end.saturating_sub(start);
+    let slots = affordable.clamp(1, MAX_SLICES as u64);
+    width.max(MIN_SLICE_SECONDS).max(span.div_ceil(slots))
+}
+
 pub fn population_coverage(start: u64, end: u64, sliced: bool, slices: &[Value]) -> Value {
     let span = end.saturating_sub(start).max(1) as f64;
     let acquired: Vec<&Value> = slices.iter().filter(|s| s["acquired"] == true).collect();
@@ -147,6 +156,25 @@ pub fn population_evidence(paginations: &[Value], mode: &str) -> Value {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn slices_widen_to_cover_the_window_within_the_budget() {
+        let day = 86_400;
+        // 3 days in 6-hour slices need 12; 10 affordable widen them to 7.2 hours, all covered.
+        let w = fit_width(0, 3 * day, 6 * 3600, 10);
+        assert_eq!(w, 25_920);
+        assert_eq!(plan_slices(0, 3 * day, w).len(), 10);
+        // Enough budget keeps the requested width; the 31-slice cap applies too.
+        assert_eq!(fit_width(0, 3 * day, 6 * 3600, 20), 6 * 3600);
+        assert!(plan_slices(0, 30 * day, fit_width(0, 30 * day, 3600, 100)).len() <= MAX_SLICES);
+        assert_eq!(
+            plan_slices(0, 30 * day, fit_width(0, 30 * day, 3600, 100))
+                .last()
+                .unwrap()
+                .0,
+            0
+        );
+    }
 
     fn slice(since: u64, until: u64, stop: &str, posts: u64) -> Value {
         json!({"since":since,"until":until,"acquired":stop != "NOT_ACQUIRED_REQUEST_BUDGET","stop":stop,"pages":1,"posts":posts,"earliest":since + 1,"latest":until,"source_total":{"value":posts * 10,"exactness":"APPROXIMATE"}})

@@ -524,6 +524,74 @@
      "posts": 0
     }
    ]
+  },
+  {
+   "run": "Bluesky 'matcha' over 3 days, 6-hour slices requested, budget 20, slices fitted to the budget (2026-10-07)",
+   "request_count": 20,
+   "posts": 394,
+   "mentions": 343,
+   "slice_plan": {
+    "reason": "WIDENED_TO_COVER_THE_WINDOW_WITHIN_REQUEST_BUDGET_OR_SLICE_CAP",
+    "requested_seconds": 21600,
+    "used_seconds": 25920,
+    "widened": true
+   },
+   "coverage": {
+    "state": "PARTIAL_PAGE_LIMIT",
+    "temporal_span_coverage": 0.7
+   },
+   "slices": [
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 32
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 36
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 41
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 50
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 26
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 41
+    },
+    {
+     "stop": "PAGE_LIMIT",
+     "pages": 1,
+     "posts": 50
+    },
+    {
+     "stop": "PAGE_LIMIT",
+     "pages": 1,
+     "posts": 43
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 28
+    },
+    {
+     "stop": "PAGE_LIMIT",
+     "pages": 1,
+     "posts": 47
+    }
+   ]
   }
  ],
  "findings": [
@@ -537,6 +605,7 @@
   "Public product research ran live through ECDEV: robots consulted, both pages captured and hashed, prices extracted exactly, and both candidates held at INSUFFICIENT_EVIDENCE for lacking a cross-source identifier and a second site; PARTIAL reflects 50% field observability (no GTIN or weight on these pages)",
   "Hypotheses from live snapshots were noise: refinements were a cluster's first five terms alphabetically (link hashes, image sizes, function words, kana particles) and every one-post cluster became a hypothesis (45 for 47 mentions). Content terms now drop links, refinements are terms shared by at least two of a cluster's posts and informative, only clusters of two or more posts that refine something become hypotheses, and the topic over every mention always comes first",
   "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess",
-  "Bluesky refuses its next cursor, so one window read 50 posts and covered about 15% of 3 days; 6-hour slices, each served its first page, read 347 posts and covered 67% within 20 requests (10 of 12 slices; 8 ended below 50 posts, i.e. read completely)"
+  "Bluesky refuses its next cursor, so one window read 50 posts and covered about 15% of 3 days; 6-hour slices, each served its first page, read 347 posts and covered 67% within 20 requests (10 of 12 slices; 8 ended below 50 posts, i.e. read completely)",
+  "With 12 requested slices and 10 affordable, the two oldest went unread; slices are now widened to fit the request budget (and the 31-slice cap), so the same 20 requests sampled every part of the window: 10 slices of 7.2 hours, 394 posts, 7 slices read completely and 3 reported partial at the page limit"
  ]
 }
