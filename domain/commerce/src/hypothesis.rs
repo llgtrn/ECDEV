@@ -54,6 +54,18 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
             Value::Null,
         ));
     }
+    // Source-reported attention counters (a Mastodon tag's daily uses): kept beside the post
+    // signal, never added to its mentions. A rising counter alone is a reason to research.
+    let attention: Vec<Value> = snapshot["source_counters"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|c| json!({"platform":c["platform"],"tag":c["tag"],"scope":c["scope"],"growth_state":c["growth"]["state"],"account_days":{"before":c["growth"]["account_days"]["before"],"after":c["growth"]["account_days"]["after"]},"raw_hash":c["raw_hash"],"evidence_class":"ATTENTION_SIGNAL_NOT_DEMAND"}))
+        .collect();
+    let attention_rising = attention.iter().any(|a| a["growth_state"] == "RISING");
+    if groups.is_empty() && attention_rising {
+        groups.push((topic.clone(), json!([]), json!([]), Value::Null));
+    }
     let signal = snapshot["state"].as_str().unwrap_or("UNKNOWN");
     // How complete the population behind the signal is: a separate dimension, never a weight on
     // the mention metrics. Snapshots from before coverage was recorded say so.
@@ -131,9 +143,14 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
                     .unwrap_or(0),
             )
         });
-        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"phrase_queries":phrase_queries,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone()}));
+        let basis = if evidence.as_array().is_some_and(|e| !e.is_empty()) {
+            "SOCIAL_POSTS"
+        } else {
+            "ATTENTION_COUNTER_ONLY"
+        };
+        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"phrase_queries":phrase_queries,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone(),"attention_counters":attention,"basis":basis}));
     }
-    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts"],"network_calls":0})
+    json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts","an attention counter is attention, never a mention, a sale or demand"],"network_calls":0})
 }
 
 #[cfg(test)]
@@ -207,5 +224,46 @@ mod tests {
                 .unwrap()
                 .is_empty()
         );
+    }
+
+    #[test]
+    fn a_rising_attention_counter_is_a_reason_to_research_not_a_mention() {
+        let counter = |state: &str| json!({"query":"matcha whisk","mention_count":0,"clusters":[],"source_counters":[{"platform":"MASTODON_TAG","tag":"matchawhisk","scope":"INSTANCE_FEDERATED_VIEW","raw_hash":"ab","growth":{"state":state,"account_days":{"before":3,"after":40}}}]});
+        let out = hypothesize(&counter("RISING"), &[]);
+        let h = &out["hypotheses"][0];
+        assert_eq!(h["basis"], "ATTENTION_COUNTER_ONLY");
+        assert_eq!(h["evidence_ids"], json!([]));
+        assert_eq!(
+            h["attention_counters"][0]["evidence_class"],
+            "ATTENTION_SIGNAL_NOT_DEMAND"
+        );
+        assert_eq!(h["attention_counters"][0]["account_days"]["after"], 40);
+        assert_eq!(h["shortlist_eligible"], false);
+        assert!(
+            h["blocked_by"]
+                .as_array()
+                .unwrap()
+                .contains(&json!("SOCIAL_SIGNAL_IS_NOT_DEMAND"))
+        );
+        // A flat or unknown counter alone is no reason.
+        for state in [
+            "NO_DETECTABLE_CHANGE",
+            "INSUFFICIENT_COMPLETE_DAYS",
+            "FALLING",
+        ] {
+            assert!(
+                hypothesize(&counter(state), &[])["hypotheses"]
+                    .as_array()
+                    .unwrap()
+                    .is_empty(),
+                "{state}"
+            );
+        }
+        // Beside posts, the counter qualifies and the posts stay the basis.
+        let mut both = snapshot();
+        both["source_counters"] = counter("RISING")["source_counters"].clone();
+        let h = &hypothesize(&both, &[])["hypotheses"][0];
+        assert_eq!(h["basis"], "SOCIAL_POSTS");
+        assert_eq!(h["attention_counters"].as_array().unwrap().len(), 1);
     }
 }

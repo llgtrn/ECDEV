@@ -905,6 +905,12 @@ mod research_tests {
         let id = run["snapshot_id"].as_str().unwrap();
         let inspected = engine.trend_inspect(json!({"snapshot_id":id})).unwrap();
         assert_eq!(inspected["source_counters"][0]["raw_hash"], c["raw_hash"]);
+        // A rising counter with no posts is a research reason, never a shortlist.
+        let hyp = engine.trend_hypothesize(json!({"snapshot_id":id})).unwrap();
+        let h = &hyp["hypotheses"][0];
+        assert_eq!(h["basis"], "ATTENTION_COUNTER_ONLY");
+        assert_eq!(h["shortlist_eligible"], false);
+        assert_eq!(h["attention_counters"][0]["growth_state"], "RISING");
         std::fs::remove_file(
             root.join(".ecdev-data/runtime/social-captures")
                 .join(format!("{}.raw", c["raw_hash"].as_str().unwrap())),
