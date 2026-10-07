@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "f63bc5ccb8d255255f1a6db24416fb7346bad8a2",
+  "assessed_parent_commit": "4ae6f16663f9274ffc1354ed768f4282ee7290e6",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 244,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 34,
+    "study_candidates": 33,
     "benchmark_candidates": 26,
     "algorithm_candidates": 4,
     "reference_only": 52,
-    "study_complete_capabilities": 103,
+    "study_complete_capabilities": 104,
     "not_relevant_after_review": 25,
-    "research_questions_open": 64,
-    "knowledge_coverage_ratio": 0.737705
+    "research_questions_open": 63,
+    "knowledge_coverage_ratio": 0.741803
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1197,13 +1197,13 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "social.harken.rss-feeds STUDY_CANDIDATE(bounded XML RSS/Atom reading for zero-paid public sources such as supplier and retail news feeds)",
         "social.harken.other-sources STUDY_CANDIDATE(public Mastodon timelines and Reddit/Stack Overflow public APIs as additional trend sources within their terms)",
         "social.harken.sentiment-and-themes BENCHMARK_CANDIDATE(VADER-style lexicon with negation, intensifiers and contrast versus ECDEV's minimal rule on labelled commerce posts; TF theme extraction versus term clusters)"
       ],
       "resolved": [
         "social.harken.hn-bluesky-normalization STUDY_COMPLETE[DERIVED_NATIVE](526 donor mentions match; deliberate differences pinned)",
         "social.harken.evaluate_thresholds STUDY_COMPLETE[DERIVED_NATIVE](threshold rule proven on 320 frozen cases)",
+        "social.harken.rss-feeds STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/xml-feed-benchmark.json: adapter/web/src/xml_feed.rs reads RSS 2.0, RSS 1.0 (RDF) and Atom 1.0 without an XML library (UTF-8 only, DTD and entity declarations refused so nothing expands, matched end tags, depth and node limits) into the JSON Feed item shape; the XML_FEED social source keeps the raw capture hash, feed-scoped ids and NATIVE_XML_FEED_V1 provenance; on 14 public retail, business and press-release feeds (500 items, Japanese and English) it agrees with Python's standard XML parser on every id, link, title and publication instant)",
         "social.harken.alert_metrics STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV snapshots disclose actual capture and publication windows)",
         "social.harken.track STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV acquisition runs keep partial source failures visible)",
         "social.harken.llm REFERENCE_ONLY(LLM theme relabelling as presentation only, never evidence)",

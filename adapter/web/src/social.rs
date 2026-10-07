@@ -316,7 +316,7 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                     .append_pair("parentHeight", "0");
                 Ok(u)
             }
-            "JSON_FEED" | "MASTODON_TAG" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
+            "JSON_FEED" | "XML_FEED" | "MASTODON_TAG" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
             _ => Err("INVALID_THREAD_ROOT".into()),
         };
     }
@@ -358,7 +358,7 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             }
             Ok(u)
         }
-        "JSON_FEED" => {
+        "JSON_FEED" | "XML_FEED" => {
             let feed = Url::parse(&normalize_url(
                 q["url"].as_str().ok_or("JSON feed URL required")?,
             )?)
@@ -555,7 +555,7 @@ impl Provider for Social {
         "native-social"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"UNSUPPORTED_EXPLICITLY_NOT_JSON_FEED","donor_runtime":false})
+        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED","XML_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE","XML_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"XML_FEED_RSS_2_0_RSS_1_0_ATOM_1_0_UTF8_ONLY_DTD_REFUSED_NO_PAGING","donor_runtime":false})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         endpoint(q)?;
@@ -627,7 +627,12 @@ impl Provider for Social {
                 return Err(e);
             }
             let content = headers["content_type"].as_str().unwrap_or("");
-            if !content.contains("json") {
+            let expected = if r.query["platform"] == "XML_FEED" {
+                "xml"
+            } else {
+                "json"
+            };
+            if !content.contains(expected) {
                 return Err(failure(
                     "SOURCE_UNAVAILABLE_UNSUPPORTED_CONTENT_TYPE_EXPECTED_JSON",
                     Some(status),
@@ -636,8 +641,14 @@ impl Provider for Social {
             }
             body
         };
-        let data: Value = serde_json::from_slice(&raw)
-            .map_err(|_| failure("MALFORMED_SOCIAL_JSON", None, requests))?;
+        let data: Value = if r.query["platform"] == "XML_FEED" {
+            crate::xml_feed::parse(&raw)
+                .and_then(|root| crate::xml_feed::to_feed_items(&root))
+                .map_err(|e| failure(e, None, requests))?
+        } else {
+            serde_json::from_slice(&raw)
+                .map_err(|_| failure("MALFORMED_SOCIAL_JSON", None, requests))?
+        };
         let mode = if fixture.is_some() { "FIXTURE" } else { "LIVE" };
         let captured = if fixture.is_some() {
             r.query["captured_at"].as_u64().unwrap_or(timestamp())
@@ -726,7 +737,7 @@ pub fn normalize(
     let key = match platform {
         "HACKER_NEWS" => "hits",
         "BLUESKY" => "posts",
-        "JSON_FEED" => "items",
+        "JSON_FEED" | "XML_FEED" => "items",
         _ => return Err("UNSUPPORTED_SOCIAL_PLATFORM".into()),
     };
     if platform == "JSON_FEED"
@@ -931,7 +942,7 @@ fn normalize_item(
         platform: platform.to_owned(),
         provider: "native-social".into(),
         source_url: normalize_url(&url)?,
-        native_id: if platform == "JSON_FEED" {
+        native_id: if platform == "JSON_FEED" || platform == "XML_FEED" {
             format!("{source}#{native}")
         } else {
             native
@@ -956,7 +967,11 @@ fn normalize_item(
         engagement,
         raw_hash: hash.to_string(),
         raw_locator: locator,
-        extraction_method: format!("NATIVE_{platform}_JSON_V1"),
+        extraction_method: if platform == "XML_FEED" {
+            "NATIVE_XML_FEED_V1".to_string()
+        } else {
+            format!("NATIVE_{platform}_JSON_V1")
+        },
         state: EvidenceState::Observed,
         capture_mode: mode.to_owned(),
         freshness_seconds: None,

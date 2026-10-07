@@ -11,6 +11,7 @@ pub mod sitemap;
 pub mod social;
 pub mod supplier;
 pub mod supplier_terms;
+pub mod xml_feed;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},

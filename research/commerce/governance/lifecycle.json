@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "f63bc5ccb8d255255f1a6db24416fb7346bad8a2",
+  "assessed_parent_commit": "4ae6f16663f9274ffc1354ed768f4282ee7290e6",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -5515,7 +5515,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "54 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "55 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -7268,9 +7268,9 @@
         {
           "key": "social.harken.rss-feeds",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(bounded XML RSS/Atom reading for zero-paid public sources such as supplier and retail news feeds)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/xml-feed-benchmark.json: adapter/web/src/xml_feed.rs reads RSS 2.0, RSS 1.0 (RDF) and Atom 1.0 without an XML library (UTF-8 only, DTD and entity declarations refused so nothing expands, matched end tags, depth and node limits) into the JSON Feed item shape; the XML_FEED social source keeps the raw capture hash, feed-scoped ids and NATIVE_XML_FEED_V1 provenance; on 14 public retail, business and press-release feeds (500 items, Japanese and English) it agrees with Python's standard XML parser on every id, link, title and publication instant)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.harken.other-sources",
@@ -7414,7 +7414,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "3 of 14 declared capabilities still have open research: social.harken.rss-feeds (STUDY_CANDIDATE), social.harken.other-sources (STUDY_CANDIDATE), social.harken.sentiment-and-themes (BENCHMARK_CANDIDATE)"
+          "detail": "2 of 14 declared capabilities still have open research: social.harken.other-sources (STUDY_CANDIDATE), social.harken.sentiment-and-themes (BENCHMARK_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

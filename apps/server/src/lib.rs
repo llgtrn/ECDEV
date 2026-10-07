@@ -1003,6 +1003,49 @@ mod research_tests {
     }
 
     #[test]
+    fn rss_and_atom_feeds_are_read_as_feed_posts() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-xml-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let rss = r#"<?xml version="1.0" encoding="utf-8"?><rss version="2.0"><channel><title>Supplier news</title>
+<item><guid>s-1</guid><title>Matcha whisk wholesale</title><link>https://supplier.example/n/1</link><pubDate>Mon, 05 Oct 2026 10:00:00 GMT</pubDate><description>Bamboo matcha whisk lots</description></item>
+<item><guid>s-2</guid><title>Matcha bowl</title><link>https://supplier.example/n/2</link><pubDate>Tue, 06 Oct 2026 10:00:00 GMT</pubDate></item></channel></rss>"#;
+        let now = 1_791_331_200 + 86_400;
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":7 * 86_400,"sources":[{"platform":"XML_FEED","url":"https://supplier.example/feed.xml","fixture_raw":rss}]})).unwrap();
+        assert!(
+            run["provider_failures"].as_array().unwrap().is_empty(),
+            "{}",
+            run["provider_failures"]
+        );
+        assert_eq!(run["pagination"][0]["posts"], 2);
+        let posts = run["captured_posts"].as_array().unwrap();
+        assert!(
+            posts
+                .iter()
+                .all(|p| p["platform"] == "XML_FEED"
+                    && p["extraction_method"] == "NATIVE_XML_FEED_V1")
+        );
+        assert!(
+            posts
+                .iter()
+                .any(|p| p["native_id"] == "https://supplier.example/feed.xml#s-1")
+        );
+        assert!(posts.iter().any(|p| p["published_at"] == 1_791_194_400u64));
+        // A DTD is refused, never expanded; time slices are refused like any feed.
+        let dtd = r#"<!DOCTYPE r [<!ENTITY x "matcha">]><rss version="2.0"><channel><item><title>&x;</title></item></channel></rss>"#;
+        let refused = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"sources":[{"platform":"XML_FEED","url":"https://supplier.example/feed.xml","fixture_raw":dtd}]})).unwrap();
+        assert_eq!(refused["provider_failures"][0]["reason"], "XML_DTD_REFUSED");
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",
