@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e59c9170983f8d48e8f4c5cb27b0e63915e7d4e3",
+  "assessed_parent_commit": "2a0043e19a42f4e2f5a5200d150aae1a626f42dd",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -1117,7 +1117,7 @@
       },
       "open": [
         "social.mediacrawler.data-models STUDY_CANDIDATE(a canonical post, comment-tree and creator schema (root, reply, quoted target, reaction counts, region) for review mining across marketplaces and social platforms, with keyword provenance on every stored item)",
-        "social.mediacrawler.text-mining BENCHMARK_CANDIDATE(query mentions in unspaced CJK text are native without a dictionary (domain/commerce/src/social.rs: character bigrams plus a verbatim run check; research/commerce/cjk-mention-benchmark.json: 86 of 86 verbatim mentions found in 324 Japanese feed items, none false, against 2 before); phrase candidates from CJK text come from bracketed spans (「」『』【】, in 181 of 324 Japanese feed titles: research/commerce/bracket-span-census.json) recurring in two posts by two authors, and spaced phrases never join a CJK run; still open: whether dictionary segmentation (jieba, or a Japanese morphological analyser) with a domain lexicon finds product names that are not bracketed, measured on labelled product mentions)"
+        "social.mediacrawler.text-mining BENCHMARK_CANDIDATE(query mentions in unspaced CJK text are native without a dictionary (domain/commerce/src/social.rs: character bigrams plus a verbatim run check; research/commerce/cjk-mention-benchmark.json: 125 of 125 verbatim mentions found in 380 Japanese feed items from sources that do not refuse AI agents, none false, against 2 before); phrase candidates from CJK text come from bracketed spans (「」『』【】, in 301 of 380 Japanese feed titles: research/commerce/bracket-span-census.json) recurring in two posts by two authors, and spaced phrases never join a CJK run; still open: whether dictionary segmentation (jieba, or a Japanese morphological analyser) with a domain lexicon finds product names that are not bracketed, measured on labelled product mentions)"
       ],
       "resolved": [
         "social.mediacrawler.store_content REFERENCE_ONLY(post record schema of the crawled platforms)",
@@ -1203,7 +1203,7 @@
       "resolved": [
         "social.harken.hn-bluesky-normalization STUDY_COMPLETE[DERIVED_NATIVE](526 donor mentions match; deliberate differences pinned)",
         "social.harken.evaluate_thresholds STUDY_COMPLETE[DERIVED_NATIVE](threshold rule proven on 320 frozen cases)",
-        "social.harken.rss-feeds STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/xml-feed-benchmark.json: adapter/web/src/xml_feed.rs reads RSS 2.0, RSS 1.0 (RDF) and Atom 1.0 without an XML library (UTF-8 only, DTD and entity declarations refused so nothing expands, matched end tags, depth and node limits) into the JSON Feed item shape; the XML_FEED social source keeps the raw capture hash, feed-scoped ids and NATIVE_XML_FEED_V1 provenance; on 14 public retail, business and press-release feeds (500 items, Japanese and English) it agrees with Python's standard XML parser on every id, link, title and publication instant)",
+        "social.harken.rss-feeds STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/xml-feed-benchmark.json: adapter/web/src/xml_feed.rs reads RSS 2.0, RSS 1.0 (RDF) and Atom 1.0 without an XML library (UTF-8 only, DTD and entity declarations refused so nothing expands, matched end tags, depth and node limits) into the JSON Feed item shape; the XML_FEED social source keeps the raw capture hash, feed-scoped ids and NATIVE_XML_FEED_V1 provenance; on 13 public retail, business, technology and press-release feeds whose sites do not refuse AI agents (516 items, Japanese and English) it agrees with Python's standard XML parser on every id, link, title and publication instant)",
         "social.harken.alert_metrics STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV snapshots disclose actual capture and publication windows)",
         "social.harken.track STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV acquisition runs keep partial source failures visible)",
         "social.harken.llm REFERENCE_ONLY(LLM theme relabelling as presentation only, never evidence)",

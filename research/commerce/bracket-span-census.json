@@ -2,37 +2,53 @@
  "class": "BENCHMARK_MEASUREMENT_NOT_ECDEV_RUNTIME_CAPTURE",
  "captures": [
   {
-   "capture_sha256": "048e656e6a6b5805c396bee27d463249188caf0a31f41d0bf4c62c525c15cf38",
-   "japanese_titles": 86
+   "capture_sha256": "604bf777b1442ffdc9b585037fc014771125a8455ef19ebc4bc81c23774b3f09",
+   "japanese_titles": 100
   },
   {
-   "capture_sha256": "5a26eed73d084e2d6e8c5718250ef2928cd6d35b349122683a35cb57dddd9936",
-   "japanese_titles": 30
-  },
-  {
-   "capture_sha256": "8cca317b14b8eebe9211eab91df74ebead68209721e5fc6919925210f9dc38cf",
+   "capture_sha256": "8ffd478265cf0522c453114581728c11018efe93a8899a8708260e5c8f668499",
    "japanese_titles": 200
   },
   {
-   "capture_sha256": "ca0ef74177197db39f2cbe807047dd32e35817f745699baf3fccc72e46636898",
-   "japanese_titles": 8
+   "capture_sha256": "90be3309a97dbed6d63ca3fa07bd5b3e087c621ece25356ec907fcad39d68ba3",
+   "japanese_titles": 20
+  },
+  {
+   "capture_sha256": "963170b121dbb0410f01ff0e1dabfbb34e711380c005ae4d20f734d3b14ecf29",
+   "japanese_titles": 30
+  },
+  {
+   "capture_sha256": "e2de7a167fd076b2ca0d014ab17bb8ae6c50d9622ee65a9cb21db8c7c2cb18bb",
+   "japanese_titles": 30
   }
  ],
- "japanese_titles": 324,
- "titles_with_bracketed_span": 181,
- "distinct_spans": 250,
+ "japanese_titles": 380,
+ "titles_with_bracketed_span": 301,
+ "distinct_spans": 397,
  "spans_in_two_or_more_titles": [
-  "AI経営実装コンサルティング",
-  "FreeiD",
-  "OPTiM Geo Scan",
-  "インフラ点検機能",
-  "リーフガーデン浦安"
+  "ASUENE AIP",
+  "AXコンサルティング",
+  "GALLERIA",
+  "GrassHopper",
+  "Nano Banana 2.1",
+  "Photonica Metalens Engine",
+  "Swama",
+  "みんかぶ（投資信託）",
+  "アミュレット",
+  "ドラゴンクエスト",
+  "ファイティングゴルフ",
+  "プロセカ",
+  "予約送金",
+  "新発売",
+  "第3回 VERYベストアウター大賞2026",
+  "経済学"
  ],
  "precision": "NOT_MEASURED_NO_LABELLED_PRODUCT_NAMES",
  "reading": "Spans mix product and service names with quotations and slogans; ECDEV keeps only spans recurring in two posts by two authors, labelled CANDIDATE_PRODUCT_PHRASE_UNVERIFIED",
- "ai_agent_policy_note": {
-  "date": "2026-10-07",
-  "finding": "Four sites read in this record refuse AI agents in robots.txt (www3.nhk.or.jp, news.yahoo.co.jp, techcrunch.com, www.theverge.com: Claude-User, ChatGPT-User, Perplexity-User, ClaudeBot and/or anthropic-ai disallowed for /). They were read before ECDEV honoured such refusals; robots allowed the ECDEV agent itself. Only counts and hashes are kept here, no content. ECDEV now refuses those fetches (ROBOTS_REFUSES_AI_AGENTS) and the tools no longer read them.",
-  "enforcement": "adapter/web/src/robots.rs ai_agent_refusal, applied in research and social fetches"
- }
+ "superseded_run": {
+  "japanese_titles": 324,
+  "titles_with_bracketed_span": 181,
+  "distinct_spans": 250
+ },
+ "rerun_note": "Re-run 2026-10-07 on sources whose robots.txt does not refuse AI agents; the earlier run included four sites that do (NHK, Yahoo! News Japan, TechCrunch, The Verge) and is summarized under superseded_run"
 }

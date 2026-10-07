@@ -23,7 +23,10 @@ FEEDS = [
     "https://github.blog/feed/",
     "https://hnrss.org/frontpage",
     "https://www.nasa.gov/feed/",
-    "https://www.itmedia.co.jp/rss/2.0/news_bursts.xml",
+    "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",
+    "https://www.watch.impress.co.jp/data/rss/1.0/ipw/feed.rdf",
+    "https://ascii.jp/rss.xml",
+    "https://www.4gamer.net/rss/index.xml",
     "https://gigazine.net/news/rss_2.0/",
     "https://www.shopify.com/news/feed",
 ]
@@ -102,8 +105,9 @@ for url in FEEDS:
     open(rpath, "wb").write(rb)
     allowed = True
     if rs == 200:
-        verdict = json.loads(subprocess.run([side, "robots", rpath, url], capture_output=True, text=True).stdout)
-        allowed = verdict["allowed"]
+        out = subprocess.run([side, "robots", rpath, url], capture_output=True, text=True).stdout
+        # An unreadable robots file (not UTF-8) is no permission: ECDEV refuses it too.
+        allowed = bool(out.strip()) and json.loads(out)["allowed"]
     row = {"feed": url, "robots_status": rs, "robots_allowed": allowed}
     if not allowed:
         row["result"] = "SKIPPED_ROBOTS"
