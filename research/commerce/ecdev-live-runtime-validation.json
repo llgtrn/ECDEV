@@ -452,6 +452,78 @@
      }
     ]
    }
+  },
+  {
+   "run": "Bluesky 'matcha' over 3 days in 6-hour slices, budget 20 (2026-10-07)",
+   "request_count": 20,
+   "posts": 347,
+   "mentions": 299,
+   "coverage": {
+    "state": "PARTIAL_REQUEST_BUDGET",
+    "temporal_span_coverage": 0.6666666666666666
+   },
+   "slices": [
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 27
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 24
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 40
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 41
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 34
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 23
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 33
+    },
+    {
+     "stop": "PAGE_LIMIT",
+     "pages": 1,
+     "posts": 50
+    },
+    {
+     "stop": "PAGE_LIMIT",
+     "pages": 1,
+     "posts": 46
+    },
+    {
+     "stop": "END_OF_RESULTS",
+     "pages": 1,
+     "posts": 29
+    },
+    {
+     "stop": "NOT_ACQUIRED_REQUEST_BUDGET",
+     "pages": 0,
+     "posts": 0
+    },
+    {
+     "stop": "NOT_ACQUIRED_REQUEST_BUDGET",
+     "pages": 0,
+     "posts": 0
+    }
+   ]
   }
  ],
  "findings": [
@@ -464,6 +536,7 @@
   "A live call carried an unknown field that ECDEV accepted: tool arguments are now checked against each tool's declared input schema before it runs",
   "Public product research ran live through ECDEV: robots consulted, both pages captured and hashed, prices extracted exactly, and both candidates held at INSUFFICIENT_EVIDENCE for lacking a cross-source identifier and a second site; PARTIAL reflects 50% field observability (no GTIN or weight on these pages)",
   "Hypotheses from live snapshots were noise: refinements were a cluster's first five terms alphabetically (link hashes, image sizes, function words, kana particles) and every one-post cluster became a hypothesis (45 for 47 mentions). Content terms now drop links, refinements are terms shared by at least two of a cluster's posts and informative, only clusters of two or more posts that refine something become hypotheses, and the topic over every mention always comes first",
-  "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess"
+  "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess",
+  "Bluesky refuses its next cursor, so one window read 50 posts and covered about 15% of 3 days; 6-hour slices, each served its first page, read 347 posts and covered 67% within 20 requests (10 of 12 slices; 8 ended below 50 posts, i.e. read completely)"
  ]
 }
