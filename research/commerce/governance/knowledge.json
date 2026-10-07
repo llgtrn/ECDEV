@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "38d320366e4e9d13df3fff39a8c44395adc3f7d2",
+  "assessed_parent_commit": "2fc6dd9cd46d78371376f89d38f1101392a7d318",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -1259,7 +1259,7 @@
       "open": [
         "social.trend-finder.score_clusters BENCHMARK_CANDIDATE(score/comment/upvote-ratio cluster scoring within one platform versus ECDEV's component scores, never summing across platforms)",
         "social.trend-finder.weekly-trend-pipeline STUDY_CANDIDATE(per-week re-clustering with no cross-week cluster identity (and week numbers without a year) against a rolling window with tracked clusters for rising product-demand signals)",
-        "social.trend-finder.cluster-context-features ALGORITHM_CANDIDATE(cluster-level PRODUCT and ORG entity frequency with title n-grams as candidate product names, measured for precision on product clusters)",
+        "social.trend-finder.cluster-context-features ALGORITHM_CANDIDATE(still to prove: the precision of cluster phrases as product names on labelled product clusters, and whether PRODUCT/ORG entity frequency adds to them. Native so far: social::candidate_phrases (contiguous 2-3-grams broken by stop words, recurring in two posts by two authors, deterministic ranking) feeding hypothesis phrase_queries as unverified candidates; the donor CountVectorizer joined words across removed stop words, counted one author's repeats and returned dictionary order)",
         "social.trend-finder.clustering-comparison BENCHMARK_CANDIDATE(on product-review or listing embeddings, does HDBSCAN beat KMeans or GMM once DBCV and noise-aware coverage are measured, rather than silhouette with noise excluded)",
         "social.trend-finder.hdbscan-param-search STUDY_CANDIDATE(does selection by a min-max composite of silhouette, Calinski-Harabasz and Davies-Bouldin pick the same configuration as DBCV with a coverage floor and stability across seeds)",
         "social.trend-finder.gmm-bic-outliers ALGORITHM_CANDIDATE(BIC-selected Gaussian mixtures with lowest-likelihood outliers as a flag for emerging niche products, against HDBSCAN noise)"

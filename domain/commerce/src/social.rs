@@ -359,6 +359,74 @@ pub fn deduplicate(posts: &[SocialPost]) -> (Vec<SocialPost>, Vec<Value>) {
 }
 
 /// Deterministic lexical similarity is a topic link, never verified product identity.
+pub const PHRASES_PER_CLUSTER: usize = 5;
+/// Posts, authors and evidence ids a phrase was seen with.
+type PhraseSupport = (BTreeSet<String>, BTreeSet<String>, Vec<String>);
+const PHRASE_STOP_WORDS: &[&str] = &[
+    "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i",
+    "in", "is", "it", "its", "my", "of", "on", "or", "our", "so", "that", "the", "their", "this",
+    "to", "was", "we", "were", "with", "you", "your", "just", "very", "really", "about", "what",
+    "when", "how", "why", "not", "no", "do", "does", "did", "can", "will", "would", "should",
+    "could", "http", "https", "www", "com",
+];
+
+/// Recurring 2- and 3-word phrases of a cluster as unverified product-name candidates. A phrase
+/// is a contiguous run of words in one post's text; a stop word or punctuation breaks it, so no
+/// phrase joins words the text kept apart. It must recur in at least two posts by at least two
+/// distinct authors (or sources when the author is unknown). Ranked by posts, then length, then
+/// text; a phrase inside a longer kept phrase with the same posts is dropped.
+pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
+    let mut seen: BTreeMap<String, PhraseSupport> = BTreeMap::new();
+    for p in posts {
+        let mut in_post = BTreeSet::new();
+        for run in p
+            .text
+            .to_lowercase()
+            .split(|c: char| !(c.is_alphanumeric() || c == '\'' || c == '-'))
+            .collect::<Vec<_>>()
+            .split(|w| w.is_empty() || PHRASE_STOP_WORDS.contains(w) || w.chars().count() < 2)
+        {
+            for n in 2..=3 {
+                for w in run.windows(n) {
+                    in_post.insert(w.join(" "));
+                }
+            }
+        }
+        let who = p.author_id.clone().unwrap_or_else(|| p.source_url.clone());
+        for phrase in in_post {
+            let e = seen.entry(phrase).or_default();
+            e.0.insert(p.key());
+            e.1.insert(who.clone());
+            e.2.push(p.evidence_id.clone());
+        }
+    }
+    let mut ranked: Vec<(String, usize, usize, Vec<String>)> = seen
+        .into_iter()
+        .filter(|(_, (posts, authors, _))| posts.len() >= 2 && authors.len() >= 2)
+        .map(|(phrase, (posts, authors, ids))| (phrase, posts.len(), authors.len(), ids))
+        .collect();
+    ranked.sort_by(|a, b| {
+        b.1.cmp(&a.1)
+            .then(b.0.split(' ').count().cmp(&a.0.split(' ').count()))
+            .then(a.0.cmp(&b.0))
+    });
+    let mut kept: Vec<(String, usize, usize, Vec<String>)> = vec![];
+    for r in ranked {
+        let covered = kept
+            .iter()
+            .any(|k| k.1 == r.1 && format!(" {} ", k.0).contains(&format!(" {} ", r.0)));
+        if !covered {
+            kept.push(r);
+        }
+        if kept.len() == PHRASES_PER_CLUSTER {
+            break;
+        }
+    }
+    kept.into_iter()
+        .map(|(phrase, posts, authors, ids)| json!({"phrase":phrase,"posts":posts,"distinct_authors":authors,"evidence_ids":ids,"state":"CANDIDATE_PRODUCT_PHRASE_UNVERIFIED","method":"CONTIGUOUS_2_3_GRAM_STOPWORD_BREAKS_MIN_2_POSTS_2_AUTHORS"}))
+        .collect()
+}
+
 pub const REPRESENTATIVES_PER_CLUSTER: usize = 3;
 
 fn post_terms(p: &SocialPost) -> BTreeSet<String> {
@@ -452,7 +520,7 @@ pub fn clusters(posts: &[SocialPost]) -> Vec<Value> {
             groups.push((t, vec![p]));
         }
     }
-    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"representatives":representatives(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
+    groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":"LEXICAL_JACCARD_0.25_MIN_2_SHARED_TERMS_7_DAY_COOCCURRENCE","state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
 }
 
 pub fn snapshot(

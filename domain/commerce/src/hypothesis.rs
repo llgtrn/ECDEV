@@ -30,7 +30,7 @@ fn title_terms(candidate: &Value) -> BTreeSet<String> {
 pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     let query = snapshot["query"].as_str().unwrap_or("");
     let topic = terms(query);
-    let mut groups: Vec<(BTreeSet<String>, Value, Value)> = Vec::new();
+    let mut groups: Vec<(BTreeSet<String>, Value, Value, Value)> = Vec::new();
     for c in snapshot["clusters"].as_array().into_iter().flatten() {
         let t: BTreeSet<String> = c["terms"]
             .as_array()
@@ -39,13 +39,19 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
             .filter_map(Value::as_str)
             .map(str::to_lowercase)
             .collect();
-        groups.push((t, c["evidence_ids"].clone(), c["platforms"].clone()));
+        groups.push((
+            t,
+            c["evidence_ids"].clone(),
+            c["platforms"].clone(),
+            c["candidate_phrases"].clone(),
+        ));
     }
     if groups.is_empty() && snapshot["mention_count"].as_u64().unwrap_or(0) > 0 {
         groups.push((
             topic.clone(),
             snapshot["evidence_ids"].clone(),
             snapshot["platforms"].clone(),
+            Value::Null,
         ));
     }
     let signal = snapshot["state"].as_str().unwrap_or("UNKNOWN");
@@ -57,10 +63,28 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         json!({"grade":"NOT_RECORDED_FOR_THIS_SNAPSHOT"})
     };
     let mut hypotheses = Vec::new();
-    for (cluster_terms, evidence, platforms) in groups {
+    for (cluster_terms, evidence, platforms, phrases) in groups {
         let refinements: Vec<String> = cluster_terms.difference(&topic).take(5).cloned().collect();
         let mut queries = vec![query.trim().to_string()];
         queries.extend(refinements.iter().map(|r| format!("{} {r}", query.trim())));
+        // Recurring phrases are product-name candidates: a phrase holding every topic term is
+        // a query by itself, any other is appended to the topic. Unverified until listings match.
+        let phrase_queries: Vec<Value> = phrases
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(|p| {
+                let phrase = p["phrase"].as_str()?;
+                let q = if topic.is_subset(&terms(phrase)) { phrase.to_string() } else { format!("{} {phrase}", query.trim()) };
+                Some(json!({"query":q,"phrase":phrase,"posts":p["posts"],"distinct_authors":p["distinct_authors"],"evidence_ids":p["evidence_ids"],"state":"CANDIDATE_PRODUCT_PHRASE_UNVERIFIED"}))
+            })
+            .collect();
+        for q in &phrase_queries {
+            let q = q["query"].as_str().unwrap_or_default().to_string();
+            if !queries.contains(&q) {
+                queries.push(q);
+            }
+        }
         let id = format!(
             "hyp-{}",
             &format!(
@@ -107,7 +131,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
                     .unwrap_or(0),
             )
         });
-        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone()}));
+        hypotheses.push(json!({"hypothesis_id":id,"topic":query,"topic_terms":topic,"refinement_terms":refinements,"product_queries":queries,"state":"HYPOTHESIS","social_signal_state":signal,"evidence_ids":evidence,"platforms":platforms,"linked_candidates":linked,"phrase_queries":phrase_queries,"shortlist_eligible":false,"blocked_by":blockers,"research_actions":actions,"evidence_completeness":evidence_completeness.clone()}));
     }
     json!({"snapshot_query":query,"capture_mode":snapshot["capture_mode"],"hypotheses":hypotheses,"invariants":["trend != demand","mention count != sales","cross-platform mention != independent market validation","a hypothesis is a reason to research, never a shortlist","population completeness qualifies a signal and never raises its mention counts"],"network_calls":0})
 }

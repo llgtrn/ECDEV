@@ -826,3 +826,53 @@ fn a_tight_budget_samples_every_slice_instead_of_the_newest_one() {
     drop(engine);
     std::fs::remove_dir_all(path).unwrap();
 }
+#[test]
+fn recurring_phrases_become_unverified_product_queries() {
+    let mk = |id: &str, author: &str, text: &str| {
+        let mut p = post(id, "BLUESKY", 9000);
+        p.author_id = Some(author.into());
+        p.text = text.into();
+        p
+    };
+    let posts = [
+        mk("1", "ann", "Bought a bamboo matcha whisk today, love it"),
+        mk("2", "bob", "the bamboo matcha whisk is great for matcha"),
+        mk("3", "cy", "my bamboo matcha whisk broke"),
+        // One author repeating a phrase is not recurrence.
+        mk("4", "dee", "ceramic tea bowl"),
+        mk("5", "dee", "ceramic tea bowl again"),
+        // A stop word breaks a phrase: "whisk and bowl" never becomes "whisk bowl".
+        mk("6", "eve", "whisk and bowl set"),
+        mk("7", "fay", "whisk and bowl set too"),
+    ];
+    let refs: Vec<&SocialPost> = posts.iter().collect();
+    let phrases = candidate_phrases(&refs);
+    let texts: Vec<&str> = phrases
+        .iter()
+        .map(|p| p["phrase"].as_str().unwrap())
+        .collect();
+    assert_eq!(texts[0], "bamboo matcha whisk");
+    // Its sub-phrases with the same support are dropped.
+    assert!(!texts.contains(&"bamboo matcha") && !texts.contains(&"matcha whisk"));
+    assert!(!texts.contains(&"ceramic tea bowl"));
+    assert!(!texts.contains(&"whisk bowl"));
+    assert!(texts.contains(&"bowl set"));
+    assert_eq!(phrases[0]["posts"], 3);
+    assert_eq!(phrases[0]["distinct_authors"], 3);
+    assert_eq!(phrases[0]["state"], "CANDIDATE_PRODUCT_PHRASE_UNVERIFIED");
+    // A cluster carries them, and a hypothesis turns them into product queries.
+    let snap = snapshot(&posts[..3], &[], "matcha", 10000, 86400, "FIXTURE");
+    let cluster_phrases = &snap["clusters"][0]["candidate_phrases"];
+    assert_eq!(cluster_phrases[0]["phrase"], "bamboo matcha whisk");
+    let h = ecdev_core::hypothesis::hypothesize(&snap, &[]);
+    let hyp = &h["hypotheses"][0];
+    assert_eq!(hyp["phrase_queries"][0]["query"], "bamboo matcha whisk");
+    assert!(
+        hyp["product_queries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|q| q == "bamboo matcha whisk")
+    );
+    assert_eq!(hyp["shortlist_eligible"], false);
+}
