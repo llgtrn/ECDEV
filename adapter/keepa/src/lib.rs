@@ -2,6 +2,7 @@
 //! No donor runtime, network requests, currency inference or live observations.
 use serde_json::Value;
 pub mod client;
+pub mod history;
 
 fn non_negative(value: Option<&Value>) -> Option<i64> {
     value.and_then(Value::as_i64).filter(|v| *v >= 0)

@@ -1,0 +1,23 @@
+{
+ "capabilities": ["keepa.get_price_history", "keepa.get_sales_rank_history"],
+ "donor": "purahmanian--keepa-mcp",
+ "commit_sha": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+ "license": "MIT",
+ "studied": ["src/constants.ts (KEEPA_TIME_OFFSET, PRICE_TYPES, csvStride, MAX_HISTORY_POINTS)", "src/services/keepa-client.ts (keepaTimeToDate, decodeHistory, decodeSeries, downsample)"],
+ "contract": {
+  "time_base": "Keepa minutes since 2011-01-01T00:00Z = Unix minutes - 21564000",
+  "series": "csv[slot] alternates (keepa minutes, value); slot 18 (buy box) uses (minutes, price, shipping) triples",
+  "unavailable": "a negative value (-1, -2) marks a span with no offer from that moment"
+ },
+ "oracle": {"file": "adapter/keepa/tests/fixtures/keepa-history-oracle.json", "generator": "tools/commerce/keepa_history_oracle.mjs", "method": "the donor's two modules transpiled with ECDEV's TypeScript compiler and run unmodified; 12 decodeHistory cases (pairs, -1/-2, buy-box triples, trailing incomplete sample, date range, random series of 10 to 400 points) and 5 keepaTimeToDate cases"},
+ "parity": "ECDEV's available points equal the donor's (same instants to the day, same values) wherever the donor did not downsample; where it did, every donor point is one of ECDEV's",
+ "divergence": [
+  {"donor": "drops -1/-2 samples", "ecdev": "keeps them as unavailable spans", "why": "dropping them stretches the previous price across stock-outs, inflating availability and hiding stock-out discounts"},
+  {"donor": "downsamples to 60 evenly spaced points", "ecdev": "keeps every point", "why": "evenly spaced indices drop short promotions and bias time-weighted statistics"},
+  {"donor": "truncates times to the date", "ecdev": "keeps minutes", "why": "several changes per day collapse into one date"}
+ ],
+ "native": ["adapter/keepa/src/history.rs::decode", "domain/commerce/src/external_history.rs::price_history_metrics", "domain/commerce/src/external_history.rs::rank_history_metrics", "adapter/keepa/src/client.rs::external_history (wired into normalize, the KEEPA layer of product.analyze)"],
+ "evidence_typing": {"price": "EXTERNAL_HISTORY: provider claims beside ECDEV's own watch facts, never merged into them", "sales_rank": "EXTERNAL_HISTORY + DEMAND_PROXY, meaning SALES_RANK_NOT_SALES; no sales estimate"},
+ "credentials": "none needed for fixtures and the oracle; live Keepa acquisition stays opt-in, paid and disabled by the default budget",
+ "not_done": ["seller-count, offer-count and rating history slots", "use of these metrics in shortlist decisions: they are reported beside the product, not scored"]
+}

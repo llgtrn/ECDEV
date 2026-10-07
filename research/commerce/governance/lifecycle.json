@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "a1464a66427737f09eae677b64ab36b9151bfc47",
+  "assessed_parent_commit": "966864f61bd9347d975b83c9b709acf7d02a332b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -145,17 +145,17 @@
         },
         {
           "key": "keepa.get_price_history",
-          "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(decode Keepa csv price history (keepaTimeToDate, decodeSeries) into dated ESTIMATED price series for price-stability and demand-validation evidence before ECDEV's own watch history exists)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](adapter/keepa/src/history.rs decodes csv slots (Keepa minutes, pairs, buy-box triples) and agrees with 12 frozen donor decodeHistory cases and 5 keepaTimeToDate cases wherever ECDEV does not diverge; it keeps -1 as unavailable spans, keeps every point and keeps minutes where the donor drops, downsamples and truncates to dates; metrics in domain/commerce/src/external_history.rs)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "keepa.get_sales_rank_history",
-          "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(decode sales-rank history into rank-velocity series as a labelled demand proxy (never sales) for demand validation)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DERIVED_NATIVE](slot 3 decoded with the oracle-checked decoder; domain/commerce/src/external_history.rs::rank_history_metrics samples the step series daily into log-rank velocity, volatility and direction, skipping rank 0 and unavailable spans; no sales estimate is derived)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "keepa.search_products",
@@ -227,27 +227,27 @@
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
           "pass": true,
-          "detail": "all 2 required capabilities have a valid native replacement"
+          "detail": "all 4 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
           "pass": true,
-          "detail": "all 2 required capabilities have fresh passing parity proofs"
+          "detail": "all 4 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
           "pass": true,
-          "detail": "all 2 required capabilities have fresh passing regression proofs"
+          "detail": "all 4 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
           "pass": true,
-          "detail": "all 2 required capabilities have an existing canonical replacement node"
+          "detail": "all 4 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
           "pass": true,
-          "detail": "all 2 required capabilities map to a capability or technology of the canonical graph"
+          "detail": "all 4 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
@@ -257,7 +257,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "5 of 9 declared capabilities still have open research: keepa.get_price_history (ALGORITHM_CANDIDATE), keepa.get_sales_rank_history (ALGORITHM_CANDIDATE), keepa.search_products (BENCHMARK_CANDIDATE), keepa.get_best_sellers (BENCHMARK_CANDIDATE), keepa.get_deals (STUDY_CANDIDATE)"
+          "detail": "3 of 9 declared capabilities still have open research: keepa.search_products (BENCHMARK_CANDIDATE), keepa.get_best_sellers (BENCHMARK_CANDIDATE), keepa.get_deals (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "49 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "51 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

@@ -22,6 +22,23 @@ fn response_failure(receipt: &AcquireError, reason: impl Into<String>) -> Acquir
     error.reason = reason.into();
     error
 }
+/// Keepa's own price and sales-rank history as EXTERNAL_HISTORY metrics, as of Keepa's last
+/// update of the product: provider claims, never ECDEV observations; rank is a demand proxy.
+fn external_history(product: &Value, currency: &str) -> Value {
+    use crate::history::{BUY_BOX_SLOT, decode, keepa_minutes_to_unix};
+    use ecdev_core::external_history::{price_history_metrics, rank_history_metrics};
+    let Some(as_of) = product["lastUpdate"].as_i64().map(keepa_minutes_to_unix) else {
+        return json!({"state":"EXTERNAL_HISTORY","status":"NO_LAST_UPDATE_NO_AS_OF"});
+    };
+    let csv = &product["csv"];
+    json!({"state":"EXTERNAL_HISTORY","provider":"keepa","as_of":as_of,"currency":currency,
+        "amazon_price":price_history_metrics(&decode(&csv[0], 0), as_of, currency),
+        "new_price":price_history_metrics(&decode(&csv[1], 1), as_of, currency),
+        "buy_box_price":price_history_metrics(&decode(&csv[BUY_BOX_SLOT], BUY_BOX_SLOT), as_of, currency),
+        "sales_rank":rank_history_metrics(&decode(&csv[3], 3), as_of, 30),
+        "contract":"research/commerce/keepa-history-review.json"})
+}
+
 impl Keepa {
     pub fn from_env() -> Self {
         Self {
@@ -50,6 +67,7 @@ impl Keepa {
           "price_minor":resolve_current(product,0,None),"new_price_minor":resolve_current(product,1,None),"buy_box_price_minor":resolve_current(product,18,None),
           "sales_rank":resolve_current(product,3,None).filter(|rank|*rank>0),"rating_tenths":resolve_current(product,16,product.get("reviews").and_then(|r|r.get("rating"))),"review_count":resolve_current(product,17,product.get("reviews").and_then(|r|r.get("reviewCount"))),
           "weight_g":product["packageWeight"],"dimensions_mm":{"length":product["packageLength"],"width":product["packageWidth"],"height":product["packageHeight"]},
+          "external_history":external_history(product, currency),
           "source_last_update_keepa_minutes":product["lastUpdate"],"note":"Rank is an observation, not a sales estimate; rank 0 is not a rank and stays UNKNOWN. No supplier, fees or demand inferred."}),
         )
     }
@@ -199,6 +217,43 @@ mod tests {
         let failure = p.acquire(&r).err().unwrap();
         assert_eq!(failure.request_count, Some(0));
         assert!(failure.reason.contains("KEEPA_UNAVAILABLE"));
+    }
+    #[test]
+    fn product_history_is_external_and_rank_is_a_demand_proxy() {
+        let r = AcquireRequest {
+            run_id: "t".into(),
+            capability: "product.analyze".into(),
+            market: "AMAZON_JP".into(),
+            query: json!({"asin":"B000000001"}),
+        };
+        let mut csv = vec![Value::Null; 19];
+        // 3000 JPY, unavailable, then 2700; rank improving from 900 to 300 over 30 days.
+        csv[0] = json!([7000000, 3000, 7014400, -1, 7028800, 2700]);
+        csv[3] = json!(
+            (0..=30)
+                .flat_map(|d| [7000000 + d * 1440, 900 - 20 * d])
+                .collect::<Vec<_>>()
+        );
+        let product =
+            json!({"asin":"B000000001","title":"Cup","lastUpdate":7000000 + 31 * 1440,"csv":csv});
+        let v = Keepa::normalize(&r, &json!({"products":[product]})).unwrap();
+        let h = &v["external_history"];
+        assert_eq!(
+            (h["state"].clone(), h["currency"].clone()),
+            (json!("EXTERNAL_HISTORY"), json!("JPY"))
+        );
+        assert_eq!(h["amazon_price"]["discount_events"], 1);
+        assert!(h["amazon_price"]["unavailable_share"].as_f64().unwrap() > 0.3);
+        assert_eq!(h["sales_rank"]["evidence_class"], "DEMAND_PROXY");
+        assert_eq!(h["sales_rank"]["meaning"], "SALES_RANK_NOT_SALES");
+        assert_eq!(h["sales_rank"]["direction"], "IMPROVING");
+        assert_eq!(h["new_price"]["status"], "NO_HISTORY");
+        let no_update =
+            Keepa::normalize(&r, &json!({"products":[{"asin":"B000000001","csv":[]}]})).unwrap();
+        assert_eq!(
+            no_update["external_history"]["status"],
+            "NO_LAST_UPDATE_NO_AS_OF"
+        );
     }
     #[test]
     fn donor_product_summary_oracle() {

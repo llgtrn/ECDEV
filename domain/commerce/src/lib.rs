@@ -3,6 +3,7 @@ mod capture;
 pub mod decision;
 pub mod domain;
 pub mod economics;
+pub mod external_history;
 pub mod frontier;
 pub mod hypothesis;
 pub mod intelligence;

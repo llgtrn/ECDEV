@@ -1,14 +1,14 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "a1464a66427737f09eae677b64ab36b9151bfc47",
+  "assessed_parent_commit": "966864f61bd9347d975b83c9b709acf7d02a332b",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 27,
-    "production_capabilities_native": 27,
-    "production_capabilities_proven": 27,
+    "production_capabilities_required": 29,
+    "production_capabilities_native": 29,
+    "production_capabilities_proven": 29,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 35,
     "benchmark_candidates": 27,
-    "algorithm_candidates": 7,
+    "algorithm_candidates": 5,
     "reference_only": 52,
-    "study_complete_capabilities": 96,
+    "study_complete_capabilities": 98,
     "not_relevant_after_review": 25,
-    "research_questions_open": 69,
-    "knowledge_coverage_ratio": 0.714876
+    "research_questions_open": 67,
+    "knowledge_coverage_ratio": 0.72314
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -72,8 +72,6 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [
-        "keepa.get_price_history ALGORITHM_CANDIDATE(decode Keepa csv price history (keepaTimeToDate, decodeSeries) into dated ESTIMATED price series for price-stability and demand-validation evidence before ECDEV's own watch history exists)",
-        "keepa.get_sales_rank_history ALGORITHM_CANDIDATE(decode sales-rank history into rank-velocity series as a labelled demand proxy (never sales) for demand validation)",
         "keepa.search_products BENCHMARK_CANDIDATE(does Keepa's paid product finder surface candidates that zero-paid public discovery misses, at what cost per useful candidate?)",
         "keepa.get_best_sellers BENCHMARK_CANDIDATE(do bestseller lists improve market discovery coverage over public research seeds, per category and marketplace?)",
         "keepa.get_deals STUDY_CANDIDATE(price-drop deal feeds as signals of competitor discounting and promotion dynamics)"
@@ -81,6 +79,8 @@
       "resolved": [
         "keepa.resolve-current STUDY_COMPLETE[DERIVED_NATIVE](current-value resolution proven on 508 frozen donor cases)",
         "keepa.get_product STUDY_COMPLETE[DERIVED_NATIVE](product-summary slot mapping proven on 304 frozen donor cases)",
+        "keepa.get_price_history STUDY_COMPLETE[DERIVED_NATIVE](adapter/keepa/src/history.rs decodes csv slots (Keepa minutes, pairs, buy-box triples) and agrees with 12 frozen donor decodeHistory cases and 5 keepaTimeToDate cases wherever ECDEV does not diverge; it keeps -1 as unavailable spans, keeps every point and keeps minutes where the donor drops, downsamples and truncates to dates; metrics in domain/commerce/src/external_history.rs)",
+        "keepa.get_sales_rank_history STUDY_COMPLETE[DERIVED_NATIVE](slot 3 decoded with the oracle-checked decoder; domain/commerce/src/external_history.rs::rank_history_metrics samples the step series daily into log-rank velocity, volatility and direction, skipping rank 0 and unavailable spans; no sales estimate is derived)",
         "keepa.text-formatting STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](formats every domain as USD; ECDEV keeps typed minor units in the market currency)",
         "keepa.server-and-transport STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded Keepa transport with receipts and secret boundaries)"
       ]
