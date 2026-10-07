@@ -556,6 +556,26 @@ impl Engine {
         )
     }
     pub fn call(&self, name: &str, args: Value) -> Result<Value, String> {
+        // Arguments are checked against the tool's declared input schema before anything runs.
+        static SCHEMAS: std::sync::OnceLock<std::collections::BTreeMap<String, Value>> =
+            std::sync::OnceLock::new();
+        let schemas = SCHEMAS.get_or_init(|| {
+            tool_definitions()
+                .into_iter()
+                .filter_map(|t| Some((t["name"].as_str()?.to_string(), t["inputSchema"].clone())))
+                .collect()
+        });
+        let args = if args.is_null() { json!({}) } else { args };
+        if let Some(schema) = schemas.get(name)
+            && let Err(violation) = crate::schema::validate(schema, &args, "arguments")
+        {
+            // A tool's own policy reason (restricted domain, wrong evidence layer) says more
+            // than a schema violation; both refuse before any IO.
+            if name == "ecdev.seller.read" {
+                crate::marketplace::runtime::seller_read_policy(&args)?;
+            }
+            return Err(violation);
+        }
         match name {
             "ecdev.trend.discover" => self.trend_discover(args),
             "ecdev.trend.feeds" => self.trend_feeds(args),

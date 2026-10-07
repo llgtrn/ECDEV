@@ -994,9 +994,15 @@ pub fn normalize(
     if rows.len() > 1000 {
         return Err("SOCIAL_ITEM_LIMIT_EXCEEDED".into());
     }
+    // A feed is one document and is read whole; paged sources were asked for at most 50, and a
+    // larger page is a contract break, never silently cut (cutting would misreport coverage).
+    let feed = matches!(platform, "JSON_FEED" | "XML_FEED");
+    if !feed && rows.len() > 50 {
+        return Err("SOCIAL_PAGE_LARGER_THAN_REQUESTED".into());
+    }
     let hash = format!("{:x}", Sha256::digest(raw));
     let mut posts = vec![];
-    for (index, item) in rows.iter().take(50).enumerate() {
+    for (index, item) in rows.iter().enumerate() {
         posts.push(normalize_item(
             data,
             item,
@@ -1811,5 +1817,38 @@ mod tests {
         let q: std::collections::BTreeMap<String, String> = u.query_pairs().into_owned().collect();
         assert_eq!(q["typoTolerance"], "false");
         assert_eq!(q["queryType"], "prefixNone");
+    }
+
+    #[test]
+    fn feeds_are_read_whole_and_oversized_pages_are_refused() {
+        let items: Vec<Value> = (0..120)
+            .map(|i| json!({"id":format!("i{i}"),"url":format!("https://f.example/{i}"),"title":"t","date_published":"2026-10-07T00:00:00Z"}))
+            .collect();
+        let feed = json!({"version":"https://jsonfeed.org/version/1.1","items":items});
+        let posts = normalize(
+            &feed,
+            "JSON_FEED",
+            "https://f.example/feed.json",
+            b"r",
+            1,
+            "FIXTURE",
+        )
+        .unwrap();
+        assert_eq!(posts.len(), 120, "every item of the document");
+        let hits: Vec<Value> = (0..51)
+            .map(|i| json!({"objectID":i.to_string(),"title":"t"}))
+            .collect();
+        assert_eq!(
+            normalize(
+                &json!({"hits":hits}),
+                "HACKER_NEWS",
+                "s",
+                b"r",
+                1,
+                "FIXTURE"
+            )
+            .unwrap_err(),
+            "SOCIAL_PAGE_LARGER_THAN_REQUESTED"
+        );
     }
 }

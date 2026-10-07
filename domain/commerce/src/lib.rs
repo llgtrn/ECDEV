@@ -16,6 +16,7 @@ pub mod provider;
 pub mod public_suffix;
 pub mod research;
 pub mod resolution;
+pub mod schema;
 pub mod service;
 pub mod simulation;
 pub mod social;

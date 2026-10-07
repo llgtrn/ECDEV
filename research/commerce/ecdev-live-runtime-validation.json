@@ -257,12 +257,118 @@
     }
    ],
    "mention_count": 47
+  },
+  {
+   "run": "ecdev.trend.feeds live (2026-10-07)",
+   "capture_mode": "LIVE",
+   "egress": {
+    "address_check": "LOCAL_DNS_PUBLIC_ONLY_PROXY_RESOLVES_BY_NAME",
+    "mode": "OPERATOR_PROXY",
+    "operator_ca_bundle_sha256": "c7a7a97cf628725e5c4a6232f19e2a953b5544b2a840132456fd9fa69f59ef6a",
+    "proxy": "http://127.0.0.1:34629",
+    "tls_reterminated_by_proxy": "POSSIBLE_DISCLOSED",
+    "tls_trust": "WEBPKI_ROOTS_PLUS_OPERATOR_CA_BUNDLE"
+   },
+   "request_count": 6,
+   "provider_failures": [],
+   "feeds": [
+    {
+     "platform": "GOOGLE_TRENDS_RSS",
+     "entries": 10,
+     "raw_sha256": "1aba284e4bc87b44d6bff63585a062f9a539c448c0c78807e56a10f3e4195634"
+    },
+    {
+     "platform": "MASTODON_TRENDS",
+     "entries": 10,
+     "raw_sha256": "93ff6f25c142f5d54fa9f4a87fab4826cca03cc2a97f9e1887080f885d8e74ea"
+    },
+    {
+     "platform": "BLUESKY_TRENDS",
+     "entries": 10,
+     "raw_sha256": "b0edb0937f2aa2ffd7834b76b3119606da10cbb4a770ed609352d3a2f0d7527d"
+    }
+   ]
+  },
+  {
+   "run": "XML feeds and Mastodon tag, before reading feeds whole (2026-10-07)",
+   "snapshot_id": "3e77b415-2fb2-43ad-aafc-07873ec6f01e",
+   "capture_mode": "LIVE",
+   "live_io_established": true,
+   "egress": "OPERATOR_PROXY",
+   "request_count": 6,
+   "provider_failures": [],
+   "mention_count": 1,
+   "sources": [
+    {
+     "source_group": "XML_FEED:https://prtimes.jp/index.rdf",
+     "posts": 50,
+     "stop": "END_OF_RESULTS",
+     "coverage": "COMPLETE_BY_SOURCE"
+    },
+    {
+     "source_group": "XML_FEED:https://www3.nhk.or.jp/rss/news/cat5.xml",
+     "posts": 50,
+     "stop": "END_OF_RESULTS",
+     "coverage": "COMPLETE_BY_SOURCE"
+    },
+    {
+     "source_group": "MASTODON_TAG",
+     "posts": 0,
+     "stop": "EMPTY_PAGE",
+     "coverage": "COMPLETE_BY_SOURCE"
+    }
+   ],
+   "counters": [
+    {
+     "tag": "限定",
+     "growth": "NO_DETECTABLE_CHANGE"
+    }
+   ]
+  },
+  {
+   "run": "XML feeds and Mastodon tag, feeds read whole (2026-10-07)",
+   "snapshot_id": "b247c98b-c35a-40e8-a7a4-507cee443a7b",
+   "capture_mode": "LIVE",
+   "live_io_established": true,
+   "egress": "OPERATOR_PROXY",
+   "request_count": 6,
+   "provider_failures": [],
+   "mention_count": 10,
+   "sources": [
+    {
+     "source_group": "XML_FEED:https://prtimes.jp/index.rdf",
+     "posts": 200,
+     "stop": "END_OF_RESULTS",
+     "coverage": "COMPLETE_BY_SOURCE"
+    },
+    {
+     "source_group": "XML_FEED:https://www3.nhk.or.jp/rss/news/cat5.xml",
+     "posts": 86,
+     "stop": "END_OF_RESULTS",
+     "coverage": "COMPLETE_BY_SOURCE"
+    },
+    {
+     "source_group": "MASTODON_TAG",
+     "posts": 0,
+     "stop": "EMPTY_PAGE",
+     "coverage": "COMPLETE_BY_SOURCE"
+    }
+   ],
+   "counters": [
+    {
+     "tag": "限定",
+     "growth": "NO_DETECTABLE_CHANGE"
+    }
+   ]
   }
  ],
  "findings": [
   "Algolia's default typo tolerance and prefix matching made 210 of 212 Hacker News hits for 'matcha' words like match, matches and matching (research/commerce/hn-exact-match-probe.json); ECDEV's mention rule already excluded them from counts, but they spent 6 of the run's requests",
   "With exact matching, Hacker News returns 2 genuine posts in 3 pages and exact per-slice totals",
   "Bluesky's unauthenticated search serves its first page and refuses the next cursor (403): SOURCE_REFUSED_FURTHER_PAGES, temporal coverage about 0.15 of the window, as the earlier contract probe predicted",
-  "Mastodon tag timelines slice by status id and returned complete coverage; one reply tree was read complete"
+  "Mastodon tag timelines slice by status id and returned complete coverage; one reply tree was read complete",
+  "Every feed source (Google Trends JP, Mastodon trending tags, Bluesky trends, PR Times RDF, NHK RSS, a Mastodon tag record) ran live through ECDEV's runtime with no failures",
+  "Feeds were cut to 50 items while coverage claimed COMPLETE_BY_SOURCE: PR Times serves 200 items. Feeds are now read whole (up to 1000) and paged sources refuse a page larger than requested; the same live run then read 200 and 86 items and found 10 mentions instead of 1",
+  "A live call carried an unknown field that ECDEV accepted: tool arguments are now checked against each tool's declared input schema before it runs"
  ]
 }

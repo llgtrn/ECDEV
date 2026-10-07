@@ -88,38 +88,15 @@ impl Engine {
         args: Value,
         budget: &crate::provider::BudgetPolicy,
     ) -> Result<Value, String> {
+        seller_read_policy(&args)?;
         let Value::Object(mut query) = args else {
             return Err("INVALID_SELLER_READ_INTENT".into());
         };
         let market = query
             .remove("market")
             .and_then(|m| m.as_str().map(str::to_string))
-            .filter(|m| matches!(m.as_str(), "AMAZON_JP" | "AMAZON_US"))
             .ok_or("INVALID_SELLER_READ_MARKET")?;
-        if query
-            .remove("evidence_layer")
-            .is_some_and(|l| l != "OFFICIAL_SP_API")
-        {
-            return Err("SELLER_READ_IS_OFFICIAL_SP_API_ONLY".into());
-        }
-        match query.get("operation").and_then(Value::as_str) {
-            Some(
-                "LISTINGS_ITEM"
-                | "INVENTORY_SUMMARIES"
-                | "MARKETPLACE_PARTICIPATIONS"
-                | "CATALOG_SEARCH_BY_IDENTIFIER"
-                | "PRODUCT_TYPE_SEARCH"
-                | "PRODUCT_TYPE_DEFINITION",
-            ) => {}
-            Some(other)
-                if other.contains("ORDER")
-                    || other.contains("RDT")
-                    || other.contains("RESTRICTED") =>
-            {
-                return Err("RESTRICTED_DOMAIN_DISABLED".into());
-            }
-            _ => return Err("UNSUPPORTED_SELLER_READ_OPERATION".into()),
-        }
+        query.remove("evidence_layer");
         let fixture = query.get("fixture_responses").is_some_and(|f| !f.is_null());
         self.official_acquire(
             "seller.read.official",
@@ -183,6 +160,42 @@ impl Engine {
             Err(failure) => self.persist(json!({"acquisition_run_id":id,"mode":if fixture{"FIXTURE"}else if failure.request_count==Some(0){"PLAN_ONLY"}else{"INFERRED"},"run_kind":run_kind,"source_layer":"OFFICIAL_SP_API","status":"UNAVAILABLE","observations":[],"errors":[failure.reason],"acquisition_failure":failure,"network_calls":if fixture{json!(0)}else{json!(failure.request_count)},"cost_minor":if fixture || failure.request_count==Some(0){json!(0)}else{Value::Null},"new_live_acquisition":false,"fallback_providers":[]})),
         }
     }
+}
+
+/// The seller-read refusals that need no IO, in the order they are reported: intent shape,
+/// market, evidence layer, then the restricted, write and unsupported operations.
+pub(crate) fn seller_read_policy(args: &Value) -> Result<(), String> {
+    let Value::Object(query) = args else {
+        return Err("INVALID_SELLER_READ_INTENT".into());
+    };
+    query
+        .get("market")
+        .and_then(|m| m.as_str().map(str::to_string))
+        .filter(|m| matches!(m.as_str(), "AMAZON_JP" | "AMAZON_US"))
+        .ok_or("INVALID_SELLER_READ_MARKET")?;
+    if query
+        .get("evidence_layer")
+        .is_some_and(|l| l != "OFFICIAL_SP_API")
+    {
+        return Err("SELLER_READ_IS_OFFICIAL_SP_API_ONLY".into());
+    }
+    match query.get("operation").and_then(Value::as_str) {
+        Some(
+            "LISTINGS_ITEM"
+            | "INVENTORY_SUMMARIES"
+            | "MARKETPLACE_PARTICIPATIONS"
+            | "CATALOG_SEARCH_BY_IDENTIFIER"
+            | "PRODUCT_TYPE_SEARCH"
+            | "PRODUCT_TYPE_DEFINITION",
+        ) => {}
+        Some(other)
+            if other.contains("ORDER") || other.contains("RDT") || other.contains("RESTRICTED") =>
+        {
+            return Err("RESTRICTED_DOMAIN_DISABLED".into());
+        }
+        _ => return Err("UNSUPPORTED_SELLER_READ_OPERATION".into()),
+    }
+    Ok(())
 }
 
 #[cfg(test)]
