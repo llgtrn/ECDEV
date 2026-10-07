@@ -508,6 +508,115 @@ const PHRASE_STOP_WORDS: &[&str] = &[
     "could", "http", "https", "www", "com",
 ];
 
+/// Very frequent general English words: pronouns and common verbs, adverbs and evaluative words.
+/// Chosen from ordinary usage, not from any snapshot, and holding no product-like word (free,
+/// iced, black, sugar, cream stay). They neither refine a query nor join a phrase.
+const GENERAL_WORDS: &[&str] = &[
+    "about",
+    "after",
+    "again",
+    "ago",
+    "all",
+    "also",
+    "any",
+    "anyone",
+    "anything",
+    "back",
+    "because",
+    "been",
+    "before",
+    "being",
+    "come",
+    "day",
+    "dont",
+    "even",
+    "ever",
+    "every",
+    "everyone",
+    "everything",
+    "feel",
+    "get",
+    "getting",
+    "give",
+    "go",
+    "going",
+    "good",
+    "got",
+    "great",
+    "had",
+    "he",
+    "her",
+    "here",
+    "heres",
+    "him",
+    "his",
+    "if",
+    "im",
+    "into",
+    "know",
+    "let",
+    "like",
+    "literally",
+    "lol",
+    "look",
+    "made",
+    "make",
+    "many",
+    "more",
+    "most",
+    "much",
+    "need",
+    "never",
+    "new",
+    "now",
+    "one",
+    "only",
+    "other",
+    "out",
+    "over",
+    "own",
+    "people",
+    "said",
+    "same",
+    "say",
+    "see",
+    "she",
+    "some",
+    "someone",
+    "something",
+    "still",
+    "take",
+    "than",
+    "thank",
+    "thanks",
+    "them",
+    "then",
+    "there",
+    "these",
+    "they",
+    "thing",
+    "things",
+    "think",
+    "those",
+    "time",
+    "today",
+    "too",
+    "try",
+    "tried",
+    "up",
+    "us",
+    "use",
+    "used",
+    "via",
+    "want",
+    "way",
+    "well",
+    "which",
+    "who",
+    "yeah",
+    "yes",
+];
+
 /// Recurring 2- and 3-word phrases of a cluster as unverified product-name candidates. A phrase
 /// is a contiguous run of words in one post's text; a stop word or punctuation breaks it, so no
 /// phrase joins words the text kept apart. It must recur in at least two posts by at least two
@@ -549,6 +658,7 @@ pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
             .split(|w| {
                 w.is_empty()
                     || PHRASE_STOP_WORDS.contains(w)
+                    || GENERAL_WORDS.contains(w)
                     || w.chars().count() < 2
                     || w.chars().any(is_cjk)
             })
@@ -701,6 +811,7 @@ pub fn informative(term: &str) -> bool {
         && !size
         && !kana
         && !PHRASE_STOP_WORDS.contains(&term)
+        && !GENERAL_WORDS.contains(&term)
 }
 
 /// Content terms shared by at least two of a cluster's posts, most shared first.

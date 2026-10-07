@@ -9,7 +9,6 @@ story can digress and different stories can share a topic. No model labels are u
 run through ECDEV's own social::clusters_with (helper mode clusterrules); pairwise precision and
 recall are reported. BENCHMARK_MEASUREMENT on captures kept outside the repository.
 """
-S = sys.argv[1]
 import json, collections, itertools, subprocess, sys
 S = sys.argv[1]
 posts, labels, seen = [], {}, set()
