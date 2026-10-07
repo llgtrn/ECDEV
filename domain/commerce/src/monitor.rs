@@ -188,7 +188,12 @@ impl Engine {
         let Some(lease) = self.claim_watch(now)? else {
             return Ok(false);
         };
-        let result = self.research(lease["request"].clone());
+        // Conditions belong to the watch, not to the research request it repeats.
+        let mut request = lease["request"].clone();
+        if let Some(o) = request.as_object_mut() {
+            o.remove("conditions");
+        }
+        let result = self.research(request);
         self.finish_watch(&lease, crate::service::timestamp(), result)?;
         Ok(true)
     }
@@ -1158,6 +1163,31 @@ mod tests {
                 .clone();
         assert_eq!(verify_export(&forged).unwrap_err(), "EXPORT_ROOT_MISMATCH");
         assert_eq!(e.monitor_export("missing").unwrap_err(), "WATCH_NOT_FOUND");
+    }
+
+    #[test]
+    fn a_watch_with_conditions_reaches_research_through_the_scheduler() {
+        // Found live: the stored conditions were handed to research, which refused every tick
+        // with "unknown field conditions".
+        let root = std::env::temp_dir().join(format!("ecdev-cond-tick-{}", Uuid::new_v4()));
+        let e = Engine::open(&root).unwrap();
+        let w = e.monitor_create(json!({"market":"PUBLIC_WEB","query":"q","targets":["https://shop.example/p"],"interval_seconds":60,"conditions":[{"id":"c","field":"price_minor","op":"lt","value":1,"currency":"JPY"}]})).unwrap();
+        let id = w["watch_id"].as_str().unwrap().to_string();
+        e.db.lock()
+            .unwrap()
+            .execute("UPDATE watches SET next_due=0", [])
+            .unwrap();
+        assert!(e.monitor_tick(crate::service::timestamp()).unwrap());
+        let status = e.monitor_status(Some(&id)).unwrap();
+        assert!(
+            !status["last_error"]
+                .as_str()
+                .unwrap_or("")
+                .contains("unknown field"),
+            "{}",
+            status["last_error"]
+        );
+        let _ = std::fs::remove_dir_all(root);
     }
 
     #[test]
