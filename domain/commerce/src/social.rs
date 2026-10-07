@@ -211,13 +211,62 @@ impl ForecastScenario {
     }
 }
 
+/// Han, kana and Hangul: scripts written without spaces between words.
+pub fn is_cjk(c: char) -> bool {
+    matches!(c as u32,
+        0x3005 | 0x3007 | 0x3040..=0x30FF | 0x31F0..=0x31FF | 0x3400..=0x4DBF | 0x4E00..=0x9FFF
+        | 0xF900..=0xFAFF | 0xFF66..=0xFF9F | 0x1100..=0x11FF | 0x3130..=0x318F | 0xAC00..=0xD7AF
+        | 0x20000..=0x2FFFF)
+}
+
+/// Lowercased text with full-width ASCII folded to ASCII ("Ｍａｔｃｈａ" reads "matcha").
+fn folded(text: &str) -> String {
+    text.chars()
+        .map(|c| match c as u32 {
+            0xFF01..=0xFF5E => char::from_u32(c as u32 - 0xFEE0).unwrap_or(c),
+            0x3000 => ' ',
+            _ => c,
+        })
+        .flat_map(char::to_lowercase)
+        .collect()
+}
+
+/// Alphanumeric runs split where CJK meets other scripts, with whether each is CJK.
+fn runs(text: &str) -> Vec<(String, bool)> {
+    let mut out: Vec<(String, bool)> = vec![];
+    for word in folded(text).split(|c: char| !c.is_alphanumeric()) {
+        let mut current: Option<(String, bool)> = None;
+        for c in word.chars() {
+            let cjk = is_cjk(c);
+            match &mut current {
+                Some((run, k)) if *k == cjk => run.push(c),
+                _ => out.extend(current.replace((c.to_string(), cjk))),
+            }
+        }
+        out.extend(current);
+    }
+    out
+}
+
+/// Index terms: Latin and other spaced words of three or more characters minus a few stop
+/// words; runs of CJK, which has no spaces, as overlapping character bigrams (a lone character
+/// as itself), the usual way to search unsegmented text without a dictionary.
 pub fn terms(text: &str) -> BTreeSet<String> {
-    text.to_lowercase()
-        .split(|c: char| !c.is_alphanumeric())
-        .filter(|s| s.chars().count() > 2)
-        .filter(|s| {
-            !matches!(
-                *s,
+    let mut out = BTreeSet::new();
+    for (run, cjk) in runs(text) {
+        if out.len() >= 512 {
+            break;
+        }
+        if cjk {
+            let chars: Vec<char> = run.chars().collect();
+            if chars.len() == 1 {
+                out.insert(run);
+            } else {
+                out.extend(chars.windows(2).map(|w| w.iter().collect::<String>()));
+            }
+        } else if run.chars().count() > 2
+            && !matches!(
+                run.as_str(),
                 "the"
                     | "and"
                     | "for"
@@ -229,11 +278,33 @@ pub fn terms(text: &str) -> BTreeSet<String> {
                     | "http"
                     | "com"
             )
-        })
-        .take(256)
-        .map(str::to_owned)
-        .collect()
+        {
+            out.insert(run);
+        }
+    }
+    out
 }
+
+/// Whether a text mentions a query: every query term is a term of the text, and every CJK run
+/// of the query appears in the text as written (bigrams alone could be scattered).
+pub fn mentions(query: &str, text: &str) -> bool {
+    let q = terms(query);
+    // A lone CJK character is checked as written below; text holds it only inside bigrams.
+    let indexed: BTreeSet<String> = q
+        .iter()
+        .filter(|t| !(t.chars().count() == 1 && t.chars().all(is_cjk)))
+        .cloned()
+        .collect();
+    if q.is_empty() || !indexed.is_subset(&terms(text)) {
+        return false;
+    }
+    let body = folded(text);
+    runs(query)
+        .into_iter()
+        .filter(|(_, cjk)| *cjk)
+        .all(|(run, _)| body.contains(&run))
+}
+
 pub fn sentiment(post: &SocialPost) -> Value {
     let tokens = terms(&post.text);
     let english = post
@@ -538,13 +609,12 @@ pub fn snapshot(
         .cloned()
         .collect();
     let (dedup, conflicts) = deduplicate(&selected);
-    let q = terms(query);
     let eligible: Vec<_> = dedup
         .iter()
         .filter(|p| {
             p.published_at
                 .is_some_and(|t| t > now.saturating_sub(window) && t <= now)
-                && q.is_subset(&terms(&p.text))
+                && mentions(query, &p.text)
         })
         .cloned()
         .collect();
@@ -656,7 +726,7 @@ pub fn snapshot(
         .filter(|p| {
             p.published_at
                 .is_some_and(|t| t > prior_start && t <= prior_end)
-                && q.is_subset(&terms(&p.text))
+                && mentions(query, &p.text)
         })
         .count() as u64;
     let comparison = (covered == window && window > 0)
@@ -705,6 +775,31 @@ pub fn snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn japanese_queries_match_unspaced_text() {
+        let t = terms("抹茶ラテが人気、matcha latte");
+        for want in ["抹茶", "茶ラ", "ラテ", "人気", "matcha", "latte"] {
+            assert!(t.contains(want), "{want} in {t:?}");
+        }
+        // A two-character query is valid and matches inside a sentence.
+        assert_eq!(terms("抹茶"), BTreeSet::from(["抹茶".to_string()]));
+        assert!(mentions("抹茶", "新作の抹茶ラテが人気"));
+        assert!(mentions("抹茶 ラテ", "新作の抹茶ラテが人気"));
+        // Scattered bigrams are not a mention of the run.
+        assert!(!mentions("抹茶ラテ", "抹茶と茶ラッテとラテ"));
+        assert!(!mentions("ほうじ茶", "新作の抹茶ラテ"));
+        // Full-width Latin folds; a lone kanji is its own term; Latin keeps its rules.
+        assert!(mentions("matcha", "ＭＡＴＣＨＡ　ラテ"));
+        assert!(terms("茶").contains("茶"));
+        assert!(mentions("茶", "新作の抹茶ラテ") && !mentions("茶", "コーヒー"));
+        assert!(terms("a an the matcha").iter().eq(["matcha"].iter()));
+        // Script boundaries split runs: "iPhone17ケース" is iphone17 + ケース bigrams.
+        let mixed = terms("iPhone17ケース");
+        assert!(mixed.contains("iphone17") && mixed.contains("ケー") && mixed.contains("ース"));
+        // Korean and Chinese are unspaced runs too.
+        assert!(mentions("말차", "말차라떼 인기") && mentions("抹茶", "抹茶拿铁很受欢迎"));
+    }
     #[test]
     fn independent_social_donor_oracles() {
         let fixture: Value = serde_json::from_str(include_str!(

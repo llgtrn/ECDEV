@@ -1038,6 +1038,12 @@ mod research_tests {
                 .any(|p| p["native_id"] == "https://supplier.example/feed.xml#s-1")
         );
         assert!(posts.iter().any(|p| p["published_at"] == 1_791_194_400u64));
+        // Japanese has no spaces: a two-character query is valid and matches inside titles.
+        let jp = r#"<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"><channel><title>新商品</title>
+<item><guid>j-1</guid><title>新作の抹茶ラテを限定発売</title><link>https://supplier.example/j/1</link><pubDate>Mon, 05 Oct 2026 10:00:00 +0900</pubDate></item>
+<item><guid>j-2</guid><title>ほうじ茶ラテが人気</title><link>https://supplier.example/j/2</link><pubDate>Mon, 05 Oct 2026 11:00:00 +0900</pubDate></item></channel></rss>"#;
+        let ja = engine.trend_discover(json!({"query":"抹茶","fixture_now":now,"window_seconds":7 * 86_400,"sources":[{"platform":"XML_FEED","url":"https://supplier.example/jp.xml","fixture_raw":jp}]})).unwrap();
+        assert_eq!(ja["mention_count"], 1, "{}", ja["mention_count"]);
         // A DTD is refused, never expanded; time slices are refused like any feed.
         let dtd = r#"<!DOCTYPE r [<!ENTITY x "matcha">]><rss version="2.0"><channel><item><title>&x;</title></item></channel></rss>"#;
         let refused = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"sources":[{"platform":"XML_FEED","url":"https://supplier.example/feed.xml","fixture_raw":dtd}]})).unwrap();
