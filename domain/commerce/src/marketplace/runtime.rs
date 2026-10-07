@@ -107,6 +107,7 @@ impl Engine {
                 "LISTINGS_ITEM"
                 | "INVENTORY_SUMMARIES"
                 | "MARKETPLACE_PARTICIPATIONS"
+                | "CATALOG_SEARCH_BY_IDENTIFIER"
                 | "PRODUCT_TYPE_SEARCH"
                 | "PRODUCT_TYPE_DEFINITION",
             ) => {}

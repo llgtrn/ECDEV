@@ -1198,6 +1198,14 @@ mod research_tests {
         );
         assert_eq!(out["by_product"]["listings_without_valid_jan"], 1);
         assert_eq!(
+            p["next_action"]["input_template"]["identifiers"],
+            json!(["4901234567894"])
+        );
+        assert_eq!(
+            p["next_action"]["input_template"]["operation"],
+            "CATALOG_SEARCH_BY_IDENTIFIER"
+        );
+        assert_eq!(
             out["by_product"]["seller_scope"],
             "SELLERS_WITHIN_ONE_MARKETPLACE_NOT_INDEPENDENT_SITES"
         );

@@ -41,8 +41,8 @@
    "sha256": "3cd09ae7f218c83f32536a894cb8c42f2191c94b9c27f6bcf0a164442089b061"
   }
  },
- "generator_sha256": "c40d40f37c52a7e9c5beab575cc43f9b3232d6088a80264d8209e71b98a6ebd7",
- "generator_source": "\"\"\"Frozen request contracts of the SP-API operations ECDEV knows, from the pinned official models.\n\npython sp_api_contracts.py <selling-partner-api-models clone with the model files at 3677bb9d> <out.json>\nFor each operation: method, path template and every declared parameter (in, required, type,\nenum, array item enum, collection format) resolved through local $refs; for body parameters the\nschema's required top-level properties. Nothing is executed; the models are read as data.\n\"\"\"\nimport hashlib, json, pathlib, subprocess, sys\n\nrepo = pathlib.Path(sys.argv[1]).resolve(); out = pathlib.Path(sys.argv[2])\nCOMMIT = \"3677bb9d96f4450e6843f1f8207005e925d5c867\"\nOPS = {\n    \"models/catalog-items-api-model/catalogItems_2022-04-01.json\": [\"getCatalogItem\"],\n    \"models/product-pricing-api-model/productPricingV0.json\": [\"getItemOffers\"],\n    \"models/product-fees-api-model/productFeesV0.json\": [\"getMyFeesEstimateForASIN\"],\n    \"models/listings-items-api-model/listingsItems_2021-08-01.json\": [\"getListingsItem\", \"putListingsItem\", \"patchListingsItem\", \"deleteListingsItem\"],\n    \"models/fba-inventory-api-model/fbaInventory.json\": [\"getInventorySummaries\"],\n    \"models/sellers-api-model/sellers.json\": [\"getMarketplaceParticipations\"],\n    \"models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json\": [\"searchDefinitionsProductTypes\", \"getDefinitionsProductType\"],\n    \"models/orders-api-model/ordersV0.json\": [\"getOrders\", \"getOrder\", \"getOrderBuyerInfo\", \"getOrderAddress\", \"getOrderItems\", \"getOrderItemsBuyerInfo\", \"updateShipmentStatus\", \"confirmShipment\", \"updateVerificationStatus\"],\n    \"models/tokens-api-model/tokens_2021-03-01.json\": [\"createRestrictedDataToken\"],\n}\n\ndef resolve(doc, node):\n    while isinstance(node, dict) and \"$ref\" in node:\n        ref = node[\"$ref\"]; assert ref.startswith(\"#/\")\n        target = doc\n        for part in ref[2:].split(\"/\"): target = target[part]\n        node = target\n    return node\n\ncontracts = []; sources = {}\nfor path, wanted in OPS.items():\n    raw = subprocess.check_output([\"git\", \"-C\", str(repo), \"show\", f\"{COMMIT}:{path}\"])\n    sources[path] = {\"blob_hash\": subprocess.check_output([\"git\", \"-C\", str(repo), \"rev-parse\", f\"{COMMIT}:{path}\"], text=True).strip(), \"sha256\": hashlib.sha256(raw).hexdigest()}\n    doc = json.loads(raw)\n    found = set()\n    for template, item in doc[\"paths\"].items():\n        shared = item.get(\"parameters\", [])\n        for method, op in item.items():\n            if method not in (\"get\", \"put\", \"post\", \"patch\", \"delete\") or op.get(\"operationId\") not in wanted: continue\n            params = []\n            for p in shared + op.get(\"parameters\", []):\n                p = resolve(doc, p)\n                entry = {\"name\": p[\"name\"], \"in\": p[\"in\"], \"required\": bool(p.get(\"required\", False))}\n                for k in (\"type\", \"enum\", \"collectionFormat\", \"maxItems\"):\n                    if k in p: entry[k] = p[k]\n                if \"items\" in p:\n                    items = resolve(doc, p[\"items\"])\n                    entry[\"items\"] = {k: items[k] for k in (\"type\", \"enum\") if k in items}\n                if p[\"in\"] == \"body\":\n                    schema = resolve(doc, p[\"schema\"])\n                    entry[\"body_required\"] = schema.get(\"required\", [])\n                params.append(entry)\n            contracts.append({\"operation_id\": op[\"operationId\"], \"method\": method.upper(), \"path\": template, \"model_path\": path, \"parameters\": params})\n            found.add(op[\"operationId\"])\n    assert found == set(wanted), (path, set(wanted) - found)\ngenerator = pathlib.Path(__file__).read_bytes()\nout.write_text(json.dumps({\"donor_id\": \"amzn--selling-partner-api-models\", \"commit_sha\": COMMIT, \"license\": \"Apache-2.0\",\n    \"oracle\": \"PINNED_OFFICIAL_MODELS_READ_AS_DATA\", \"source_models\": sources,\n    \"generator_sha256\": hashlib.sha256(generator).hexdigest(), \"generator_source\": generator.decode(),\n    \"contracts\": sorted(contracts, key=lambda c: c[\"operation_id\"])}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(len(contracts), \"operation contracts\")\n",
+ "generator_sha256": "c340e7b3cdd51350b86582d7d0aaa0bba0fa7f79e0c2d2b3dfd4ba4a80f90004",
+ "generator_source": "\"\"\"Frozen request contracts of the SP-API operations ECDEV knows, from the pinned official models.\n\npython sp_api_contracts.py <dir of model files at 3677bb9d> <out.json>\nThe directory holds each model as <model path with \"/\" replaced by \"__\">, fetched from\nraw.githubusercontent.com/amzn/selling-partner-api-models/<COMMIT>/<model path>; every file must\nmatch its git blob hash and SHA-256 at the pinned commit, which this script records. For each\noperation: method, path template and every declared parameter (in, required, type, enum, array\nitem enum, collection format, maxItems) resolved through local $refs; for body parameters the\nschema's required top-level properties. Nothing is executed; the models are read as data.\n\"\"\"\nimport hashlib, json, pathlib, sys\n\nsrc = pathlib.Path(sys.argv[1]).resolve(); out = pathlib.Path(sys.argv[2])\nCOMMIT = \"3677bb9d96f4450e6843f1f8207005e925d5c867\"\nOPS = {\n    \"models/catalog-items-api-model/catalogItems_2022-04-01.json\": [\"getCatalogItem\", \"searchCatalogItems\"],\n    \"models/product-pricing-api-model/productPricingV0.json\": [\"getItemOffers\"],\n    \"models/product-fees-api-model/productFeesV0.json\": [\"getMyFeesEstimateForASIN\"],\n    \"models/listings-items-api-model/listingsItems_2021-08-01.json\": [\"getListingsItem\", \"putListingsItem\", \"patchListingsItem\", \"deleteListingsItem\"],\n    \"models/fba-inventory-api-model/fbaInventory.json\": [\"getInventorySummaries\"],\n    \"models/sellers-api-model/sellers.json\": [\"getMarketplaceParticipations\"],\n    \"models/product-type-definitions-api-model/definitionsProductTypes_2020-09-01.json\": [\"searchDefinitionsProductTypes\", \"getDefinitionsProductType\"],\n    \"models/orders-api-model/ordersV0.json\": [\"getOrders\", \"getOrder\", \"getOrderBuyerInfo\", \"getOrderAddress\", \"getOrderItems\", \"getOrderItemsBuyerInfo\", \"updateShipmentStatus\", \"confirmShipment\", \"updateVerificationStatus\"],\n    \"models/tokens-api-model/tokens_2021-03-01.json\": [\"createRestrictedDataToken\"],\n}\n\ndef resolve(doc, node):\n    while isinstance(node, dict) and \"$ref\" in node:\n        ref = node[\"$ref\"]; assert ref.startswith(\"#/\")\n        target = doc\n        for part in ref[2:].split(\"/\"): target = target[part]\n        node = target\n    return node\n\ncontracts = []; sources = {}\nfor path, wanted in OPS.items():\n    raw = (src / path.replace(\"/\", \"__\")).read_bytes()\n    sources[path] = {\"blob_hash\": hashlib.sha1(b\"blob %d\\0\" % len(raw) + raw).hexdigest(), \"sha256\": hashlib.sha256(raw).hexdigest()}\n    doc = json.loads(raw)\n    found = set()\n    for template, item in doc[\"paths\"].items():\n        shared = item.get(\"parameters\", [])\n        for method, op in item.items():\n            if method not in (\"get\", \"put\", \"post\", \"patch\", \"delete\") or op.get(\"operationId\") not in wanted: continue\n            params = []\n            for p in shared + op.get(\"parameters\", []):\n                p = resolve(doc, p)\n                entry = {\"name\": p[\"name\"], \"in\": p[\"in\"], \"required\": bool(p.get(\"required\", False))}\n                for k in (\"type\", \"enum\", \"collectionFormat\", \"maxItems\"):\n                    if k in p: entry[k] = p[k]\n                if \"items\" in p:\n                    items = resolve(doc, p[\"items\"])\n                    entry[\"items\"] = {k: items[k] for k in (\"type\", \"enum\") if k in items}\n                if p[\"in\"] == \"body\":\n                    schema = resolve(doc, p[\"schema\"])\n                    entry[\"body_required\"] = schema.get(\"required\", [])\n                params.append(entry)\n            contracts.append({\"operation_id\": op[\"operationId\"], \"method\": method.upper(), \"path\": template, \"model_path\": path, \"parameters\": params})\n            found.add(op[\"operationId\"])\n    assert found == set(wanted), (path, set(wanted) - found)\ngenerator = pathlib.Path(__file__).read_bytes()\nout.write_text(json.dumps({\"donor_id\": \"amzn--selling-partner-api-models\", \"commit_sha\": COMMIT, \"license\": \"Apache-2.0\",\n    \"oracle\": \"PINNED_OFFICIAL_MODELS_READ_AS_DATA\", \"source_models\": sources,\n    \"generator_sha256\": hashlib.sha256(generator).hexdigest(), \"generator_source\": generator.decode(),\n    \"contracts\": sorted(contracts, key=lambda c: c[\"operation_id\"])}, indent=1, ensure_ascii=False) + \"\\n\")\nprint(len(contracts), \"operation contracts\")\n",
  "contracts": [
   {
    "operation_id": "confirmShipment",
@@ -858,6 +858,135 @@
       "productType",
       "attributes"
      ]
+    }
+   ]
+  },
+  {
+   "operation_id": "searchCatalogItems",
+   "method": "GET",
+   "path": "/catalog/2022-04-01/items",
+   "model_path": "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+   "parameters": [
+    {
+     "name": "identifiers",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "maxItems": 20,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "identifiersType",
+     "in": "query",
+     "required": false,
+     "type": "string",
+     "enum": [
+      "ASIN",
+      "EAN",
+      "GTIN",
+      "ISBN",
+      "JAN",
+      "MINSAN",
+      "SKU",
+      "UPC"
+     ]
+    },
+    {
+     "name": "marketplaceIds",
+     "in": "query",
+     "required": true,
+     "type": "array",
+     "collectionFormat": "csv",
+     "maxItems": 1,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "includedData",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string",
+      "enum": [
+       "attributes",
+       "classifications",
+       "dimensions",
+       "identifiers",
+       "images",
+       "productTypes",
+       "relationships",
+       "salesRanks",
+       "summaries",
+       "vendorDetails"
+      ]
+     }
+    },
+    {
+     "name": "locale",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "sellerId",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "keywords",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "maxItems": 20,
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "brandNames",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "classificationIds",
+     "in": "query",
+     "required": false,
+     "type": "array",
+     "collectionFormat": "csv",
+     "items": {
+      "type": "string"
+     }
+    },
+    {
+     "name": "pageSize",
+     "in": "query",
+     "required": false,
+     "type": "integer"
+    },
+    {
+     "name": "pageToken",
+     "in": "query",
+     "required": false,
+     "type": "string"
+    },
+    {
+     "name": "keywordsLocale",
+     "in": "query",
+     "required": false,
+     "type": "string"
     }
    ]
   },

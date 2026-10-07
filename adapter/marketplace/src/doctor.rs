@@ -284,7 +284,7 @@ mod tests {
             ])
         );
         let operations = report["operations"].as_array().unwrap();
-        assert_eq!(operations.len(), 8);
+        assert_eq!(operations.len(), 9);
         for op in operations {
             assert_eq!(op["live_state"], "BLOCKED");
             assert_eq!(op["fixture_state"], "AVAILABLE");

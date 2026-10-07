@@ -25,7 +25,7 @@ const PRODUCT: &str = "product.analyze.official";
 const LOCKED_EXAMPLE: &str = "LOCKED_MODEL_EXAMPLE_SHA256_MATCHES_CENSUS";
 
 /// Every live-capable operation. Order is stable and reported by `doctor`.
-pub const OPERATIONS: [OperationSpec; 8] = [
+pub const OPERATIONS: [OperationSpec; 9] = [
     OperationSpec {
         key: "catalog",
         operation_id: "getCatalogItem",
@@ -33,6 +33,20 @@ pub const OPERATIONS: [OperationSpec; 8] = [
         capability: PRODUCT,
         method: "GET",
         path: "/catalog/2022-04-01/items/{asin}",
+        model_path: "models/catalog-items-api-model/catalogItems_2022-04-01.json",
+        model_sha256: "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2",
+        default_rate_per_second: 2.0,
+        default_burst: 2,
+        min_interval_ms: 500,
+        fixture_provenance: LOCKED_EXAMPLE,
+    },
+    OperationSpec {
+        key: "catalog_search",
+        operation_id: "searchCatalogItems",
+        api: "catalogItems_2022-04-01",
+        capability: READ_CAPABILITY,
+        method: "GET",
+        path: "/catalog/2022-04-01/items",
         model_path: "models/catalog-items-api-model/catalogItems_2022-04-01.json",
         model_sha256: "1a029b01df1d847d3057740a6e877f89f2ab78104b5b4d8f4b839f8d00f600c2",
         default_rate_per_second: 2.0,
@@ -298,6 +312,7 @@ pub fn protocol(request: &AcquireRequest) -> Result<Value, String> {
         "LISTINGS_ITEM" => &["seller_id", "sku", "included_data", "issue_locale"],
         "INVENTORY_SUMMARIES" => &["seller_skus", "details", "next_token"],
         "MARKETPLACE_PARTICIPATIONS" => &[],
+        "CATALOG_SEARCH_BY_IDENTIFIER" => &["identifiers", "identifiers_type", "page_size"],
         "PRODUCT_TYPE_SEARCH" => &["keywords", "item_name", "locale", "search_locale"],
         "PRODUCT_TYPE_DEFINITION" => &[
             "product_type",
@@ -397,6 +412,41 @@ pub fn protocol(request: &AcquireRequest) -> Result<Value, String> {
                 "/fba/inventory/v1/summaries".to_string(),
                 params,
                 json!({"seller_skus":skus,"details":details}),
+            )
+        }
+        "CATALOG_SEARCH_BY_IDENTIFIER" => {
+            // Product codes to catalog items: JAN, EAN, GTIN and UPC must pass their checksum,
+            // ASINs their shape. SKU (seller-scoped) and keyword search are not offered here.
+            let kind = query["identifiers_type"]
+                .as_str()
+                .filter(|k| matches!(*k, "JAN" | "EAN" | "GTIN" | "UPC" | "ASIN"))
+                .ok_or("INVALID_CATALOG_IDENTIFIERS_TYPE")?;
+            let ids = string_list(&query["identifiers"], 20, 14)?;
+            for id in &ids {
+                let ok = if kind == "ASIN" {
+                    id.len() == 10
+                        && id
+                            .bytes()
+                            .all(|c| c.is_ascii_uppercase() || c.is_ascii_digit())
+                } else {
+                    ecdev_core::resolution::gtin(&json!(id)).is_some()
+                };
+                if !ok {
+                    return Err("INVALID_CATALOG_IDENTIFIER".into());
+                }
+            }
+            let page_size = match &query["page_size"] {
+                Value::Null => 20,
+                v => v
+                    .as_u64()
+                    .filter(|n| (1..=20).contains(n))
+                    .ok_or("INVALID_CATALOG_PAGE_SIZE")?,
+            };
+            (
+                "catalog_search",
+                "/catalog/2022-04-01/items".to_string(),
+                json!({"marketplaceIds":marketplace,"identifiers":ids.join(","),"identifiersType":kind,"includedData":"identifiers,summaries","pageSize":page_size}),
+                json!({"identifiers":ids,"identifiers_type":kind}),
             )
         }
         "MARKETPLACE_PARTICIPATIONS" => (
@@ -786,6 +836,90 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
                 "MARKETPLACE_NOT_LISTED_IN_RESPONSE",
             ));
         }
+        "catalog_search" => {
+            // An item answers a requested code only when its own identifiers in this marketplace
+            // list that code (compared as GTIN-14, or as the ASIN itself).
+            let items = body["items"]
+                .as_array()
+                .filter(|_| body["numberOfResults"].is_u64())
+                .ok_or("INVALID_CATALOG_SEARCH_RESULTS")?;
+            fields.push(field(
+                "numberOfResults".into(),
+                &body["numberOfResults"],
+                "NOT_RETURNED",
+            ));
+            let kind = ctx["identifiers_type"].as_str().unwrap_or("");
+            let norm = |s: &str| -> String {
+                if kind == "ASIN" {
+                    s.to_string()
+                } else {
+                    ecdev_core::resolution::gtin(&json!(s)).unwrap_or_default()
+                }
+            };
+            let wanted: Vec<(String, String)> = ctx["identifiers"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(Value::as_str)
+                .map(|s| (s.to_string(), norm(s)))
+                .collect();
+            let mut answered = std::collections::BTreeSet::new();
+            for item in items {
+                let asin = item["asin"]
+                    .as_str()
+                    .filter(|a| a.len() == 10)
+                    .ok_or("INVALID_CATALOG_ITEM_ASIN")?;
+                let groups = objects(&item["identifiers"], "INVALID_CATALOG_ITEM_IDENTIFIERS")?;
+                ignored += groups
+                    .iter()
+                    .filter(|g| g["marketplaceId"] != marketplace)
+                    .count();
+                let own: std::collections::BTreeSet<String> = groups
+                    .iter()
+                    .filter(|g| g["marketplaceId"] == marketplace)
+                    .flat_map(|g| g["identifiers"].as_array().cloned().unwrap_or_default())
+                    .filter_map(|i| i["identifier"].as_str().map(&norm))
+                    .chain((kind == "ASIN").then(|| asin.to_string()))
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                let matched: Vec<&String> = wanted
+                    .iter()
+                    .filter(|(_, n)| own.contains(n))
+                    .map(|(raw, _)| raw)
+                    .collect();
+                answered.extend(matched.iter().map(|m| m.to_string()));
+                fields.push(field(
+                    format!("items[{asin}].requested_identifiers_listed"),
+                    &json!(matched),
+                    "NOT_RETURNED",
+                ));
+                let summary = item["summaries"]
+                    .as_array()
+                    .and_then(|a| a.iter().find(|x| x["marketplaceId"] == marketplace))
+                    .cloned()
+                    .unwrap_or(Value::Null);
+                for key in ["itemName", "brand"] {
+                    fields.push(field(
+                        format!("items[{asin}].{key}"),
+                        &summary[key],
+                        "NOT_RETURNED",
+                    ));
+                }
+            }
+            let unanswered: Vec<&String> = wanted
+                .iter()
+                .map(|(raw, _)| raw)
+                .filter(|r| !answered.contains(*r))
+                .collect();
+            fields.push(field(
+                "identifiers_without_listed_item".into(),
+                &json!(unanswered),
+                "NOT_RETURNED",
+            ));
+            if body["pagination"]["nextToken"].is_string() {
+                fields.push(json!({"field":"pagination","value":"MORE_PAGES_NOT_FOLLOWED","evidence_state":"OBSERVED"}));
+            }
+        }
         "product_type_search" => {
             let types = body["productTypes"]
                 .as_array()
@@ -1057,6 +1191,23 @@ pub(crate) mod tests {
                         true
                     );
                 }
+                "catalog_search" => {
+                    // One requested code is listed by the returned item; the other by none.
+                    assert_eq!(field(record, "numberOfResults")["value"], 1);
+                    assert_eq!(
+                        field(record, "items[B07N4M94X4].requested_identifiers_listed")["value"],
+                        json!(["0887276302195"])
+                    );
+                    assert_eq!(
+                        field(record, "identifiers_without_listed_item")["value"],
+                        json!(["4901234567894"])
+                    );
+                    assert_eq!(field(record, "items[B07N4M94X4].brand")["value"], "SAMSUNG");
+                    assert_eq!(
+                        field(record, "pagination")["value"],
+                        "MORE_PAGES_NOT_FOLLOWED"
+                    );
+                }
                 "product_type_search" => {
                     assert_eq!(
                         field(record, "productTypes[LUGGAGE].displayName")["value"],
@@ -1081,6 +1232,34 @@ pub(crate) mod tests {
     }
     #[test]
     fn read_builders_encode_paths_and_refuse_restricted_writes_and_unknowns() {
+        let jan = crate::plan(&read_request(
+            "AMAZON_JP",
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":["4901234567894"]}),
+        ))
+        .unwrap();
+        let op = &jan["operations"][0];
+        assert_eq!(op["operation_id"], "searchCatalogItems");
+        assert_eq!(
+            (
+                op["query"]["identifiersType"].clone(),
+                op["query"]["identifiers"].clone()
+            ),
+            (json!("JAN"), json!("4901234567894"))
+        );
+        assert_eq!(op["query"]["marketplaceIds"], "A1VC38T7YXB528");
+        for bad in [
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":["4901234567890"]}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"SKU","identifiers":["X"]}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"ASIN","identifiers":["b07n4m94x4"]}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":[]}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":["4901234567894"],"keywords":["x"]}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":["4901234567894"],"page_size":21}),
+        ] {
+            assert!(
+                crate::plan(&read_request("AMAZON_JP", bad.clone())).is_err(),
+                "{bad}"
+            );
+        }
         let r = read_request(
             "AMAZON_US",
             json!({"operation":"LISTINGS_ITEM","seller_id":"A1EXAMPLESELLER","sku":"A/B C%"}),

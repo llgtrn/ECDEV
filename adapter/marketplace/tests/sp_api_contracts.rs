@@ -101,6 +101,7 @@ fn every_planned_request_satisfies_the_pinned_model_contract() {
             json!({"operation":"LISTINGS_ITEM","seller_id":"A1EXAMPLESELLER","sku":"SKU-1"}),
             json!({"operation":"INVENTORY_SUMMARIES","seller_skus":["S1","S2"],"details":true}),
             json!({"operation":"MARKETPLACE_PARTICIPATIONS"}),
+            json!({"operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":["4901234567894","4549980123454"]}),
             json!({"operation":"PRODUCT_TYPE_SEARCH","keywords":["luggage"]}),
             json!({"operation":"PRODUCT_TYPE_DEFINITION","product_type":"LUGGAGE"}),
         ];

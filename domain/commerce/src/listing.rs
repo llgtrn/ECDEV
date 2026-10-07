@@ -48,7 +48,12 @@ pub fn by_product(listings: &[Value]) -> Value {
                 .filter(|r| r["in_stock"] == true)
                 .filter_map(|r| r["price_minor"].as_i64())
                 .collect();
-            json!({"gtin14":gtin,"listings":rows.len(),"distinct_sellers":sellers.len(),"in_stock_priced_offers":prices.len(),
+            // The same code on Amazon Japan, through the official catalog: an item answers only when
+            // its own identifiers list the JAN.
+            // The code as the listing states it (JAN-13 or short JAN-8), checksum already valid.
+            let jan = rows.iter().find_map(|r| r["jan"].as_str()).unwrap_or(&gtin);
+            let next = json!({"tool":"ecdev.seller.read","input_template":{"market":"AMAZON_JP","operation":"CATALOG_SEARCH_BY_IDENTIFIER","identifiers_type":"JAN","identifiers":[jan]},"fills":["CROSS_SOURCE_PRODUCT_IDENTIFIER","SECOND_LISTING_ORIGIN"],"requires":"SP-API credentials and the operator gate","paid":false});
+            json!({"next_action":next,"gtin14":gtin,"listings":rows.len(),"distinct_sellers":sellers.len(),"in_stock_priced_offers":prices.len(),
                 "price_min_minor":prices.iter().min(),"price_median_minor":median(&mut prices),"price_max_minor":prices.iter().max(),"currency":"JPY",
                 "titles":rows.iter().filter_map(|r| r["title"].as_str()).take(3).collect::<Vec<_>>()})
         })
