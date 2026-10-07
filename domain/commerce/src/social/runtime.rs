@@ -72,7 +72,7 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
-    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED","XML_FEED","MASTODON_TAG"]},"url":{"type":"string","maxLength":4096,"description":"JSON_FEED and XML_FEED (RSS 2.0, RSS 1.0, Atom 1.0; UTF-8, no DTD): the public feed URL"},"instance":{"type":"string","maxLength":253,"description":"MASTODON_TAG only: the public instance whose tag record is read (default mastodon.social); its counts are that instance's federated view, attention not demand"},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"reply_trees":{"type":"boolean","description":"Also read the reply trees of the roots with the most reported comments (Hacker News items, Bluesky getPostThread); JSON Feed exposes none"},"max_threads":{"type":"integer","minimum":1,"maximum":10,"default":3},"fixture_threads":{"type":"object","additionalProperties":{"type":"string","maxLength":4194304},"description":"Fixture thread bodies keyed by root native id"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
+    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","MASTODON","JSON_FEED","XML_FEED","MASTODON_TAG"]},"url":{"type":"string","maxLength":4096,"description":"JSON_FEED and XML_FEED (RSS 2.0, RSS 1.0, Atom 1.0; UTF-8, no DTD): the public feed URL"},"instance":{"type":"string","maxLength":253,"description":"MASTODON and MASTODON_TAG: the public instance whose tag timeline or tag record is read (default mastodon.social); what it holds is that instance's federated view"},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky, Mastodon), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"reply_trees":{"type":"boolean","description":"Also read the reply trees of the roots with the most reported comments (Hacker News items, Bluesky getPostThread); JSON Feed exposes none"},"max_threads":{"type":"integer","minimum":1,"maximum":10,"default":3},"fixture_threads":{"type":"object","additionalProperties":{"type":"string","maxLength":4194304},"description":"Fixture thread bodies keyed by root native id"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
     let discover = json!({"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":500},"sources":{"type":"array","items":source,"minItems":1,"maxItems":5},"window_seconds":{"type":"integer","minimum":60,"maximum":2592000},"request_budget":{"type":"integer","minimum":0,"maximum":20},"cache_only":{"type":"boolean"},"fixture_now":{"type":"integer","minimum":0}},"required":["query","sources"],"additionalProperties":false});
     let inspect = json!({"type":"object","properties":{"snapshot_id":{"type":"string"}},"additionalProperties":false});
     vec![
@@ -226,7 +226,7 @@ impl Engine {
             valid
         }).collect();
         Ok(
-            json!({"snapshots":snapshots,"unavailable_snapshots":unavailable,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK","watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","JSON_FEED","XML_FEED","MASTODON_TAG"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
+            json!({"snapshots":snapshots,"unavailable_snapshots":unavailable,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK","watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","MASTODON","JSON_FEED","XML_FEED","MASTODON_TAG"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
         )
     }
     pub fn trend_compare(&self, args: Value) -> Result<Value, String> {
@@ -308,7 +308,14 @@ impl Engine {
             }
             if !matches!(
                 source["platform"].as_str(),
-                Some("HACKER_NEWS" | "BLUESKY" | "JSON_FEED" | "XML_FEED" | "MASTODON_TAG")
+                Some(
+                    "HACKER_NEWS"
+                        | "BLUESKY"
+                        | "MASTODON"
+                        | "JSON_FEED"
+                        | "XML_FEED"
+                        | "MASTODON_TAG"
+                )
             ) {
                 failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"No native allowed connector; donor platform availability is not permission"}));
                 continue;

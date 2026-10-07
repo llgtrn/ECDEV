@@ -68,7 +68,30 @@ s, b = get("https://mastodon.social/api/v1/tags/ecdevnonexistenttag0000")
 u = json.loads(b) if s == 200 else {}
 out["unknown_tag"] = {"status": s, "history_len": len(u.get("history", [])), "all_zero": all(x["uses"] == "0" for x in u.get("history", [])),
                       "meaning": "AN_UNUSED_TAG_AND_AN_UNKNOWN_TAG_ARE_INDISTINGUISHABLE_ZEROS_ARE_INSTANCE_OBSERVED_ZERO_NOT_ABSENCE_ELSEWHERE"}
-# Instance-wide trending lists read whole by ecdev.trend.feeds.
+# The tag timeline read by the MASTODON post source: page size, id-encoded receipt time, id-range
+# slices and max_id paging. Only counts and booleans are kept, never posts.
+import datetime
+def created(x):
+    return int(datetime.datetime.fromisoformat(x["created_at"].replace("Z", "+00:00")).timestamp())
+s, b = get("https://mastodon.social/api/v1/timelines/tag/coffee?limit=40")
+p1 = json.loads(b) if s == 200 else []
+tl = {"status": s, "page_size": len(p1)}
+if p1:
+    skew = [abs(((int(x["id"]) >> 16) // 1000) - created(x)) for x in p1]
+    tl["id_time_minus_created_at_max_abs_seconds"] = max(skew)
+    tl["has_global_uri"] = all(x.get("uri") for x in p1)
+    until = created(p1[0]) - 3 * 3600
+    since = until - 3600
+    s2, b2 = get(f"https://mastodon.social/api/v1/timelines/tag/coffee?limit=40&max_id={((until + 1) * 1000) << 16}&since_id={((since + 1) * 1000) << 16}")
+    sl = json.loads(b2) if s2 == 200 else []
+    tl["slice"] = {"status": s2, "returned": len(sl), "all_received_within": all(since < (int(x["id"]) >> 16) // 1000 <= until for x in sl)}
+    s3, b3 = get(f"https://mastodon.social/api/v1/timelines/tag/coffee?limit=40&max_id={p1[-1]['id']}")
+    p2 = json.loads(b3) if s3 == 200 else []
+    tl["next_page"] = {"status": s3, "returned": len(p2), "overlap_with_first": len({x["id"] for x in p1} & {x["id"] for x in p2}),
+                       "strictly_older_ids": all(int(x["id"]) < int(p1[-1]["id"]) for x in p2)}
+out["mastodon_tag_timeline"] = tl
+
+# Instance-wide trending lists read by ecdev.trend.feeds.
 s, b = get("https://mastodon.social/api/v1/trends/tags?limit=10")
 t = json.loads(b) if s == 200 else []
 out["mastodon_trends"] = {"status": s, "entries": len(t), "all_have_name_and_7_day_history": all("name" in x and len(x.get("history", [])) == 7 for x in t),

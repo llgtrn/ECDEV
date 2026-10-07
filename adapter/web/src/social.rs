@@ -34,6 +34,61 @@ fn plain(s: &str) -> String {
         .collect::<Vec<_>>()
         .join(" ")
 }
+/// Visible text of an HTML fragment: block elements and line breaks separate text, inline
+/// elements (links, emphasis, spans) do not, so "#<span>matcha</span>" stays "#matcha". Used for
+/// Mastodon; the older sources keep `plain` so stored texts stay comparable across captures.
+fn html_text(s: &str) -> String {
+    const BLOCK: &[&str] = &[
+        "p",
+        "br",
+        "div",
+        "li",
+        "ul",
+        "ol",
+        "tr",
+        "td",
+        "th",
+        "h1",
+        "h2",
+        "h3",
+        "h4",
+        "h5",
+        "h6",
+        "blockquote",
+        "pre",
+        "hr",
+        "section",
+        "article",
+        "header",
+        "footer",
+        "table",
+        "dd",
+        "dt",
+    ];
+    fn walk(e: scraper::ElementRef, out: &mut String, depth: usize) {
+        let name = e.value().name();
+        if depth > 256 || matches!(name, "script" | "style") {
+            return;
+        }
+        let block = BLOCK.contains(&name);
+        if block {
+            out.push(' ');
+        }
+        for child in e.children() {
+            if let Some(el) = scraper::ElementRef::wrap(child) {
+                walk(el, out, depth + 1);
+            } else if let Some(t) = child.value().as_text() {
+                out.push_str(t);
+            }
+        }
+        if block {
+            out.push(' ');
+        }
+    }
+    let mut out = String::new();
+    walk(Html::parse_fragment(s).root_element(), &mut out, 0);
+    out.split_whitespace().collect::<Vec<_>>().join(" ")
+}
 /// Explicit-zone RFC3339 normalized to UTC seconds; missing/unknown zones stay absent.
 /// Reply depth requested from Bluesky threads; deeper replies are reported as a cut-off.
 pub const THREAD_DEPTH: u32 = 10;
@@ -317,6 +372,7 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                 Ok(u)
             }
             "JSON_FEED" | "XML_FEED" | "MASTODON_TAG" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
+            "MASTODON" => Err("REPLY_TREE_NOT_READ_FOR_SOURCE".into()),
             _ => Err("INVALID_THREAD_ROOT".into()),
         };
     }
@@ -389,6 +445,38 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             }
             Ok(u)
         }
+        "MASTODON" => {
+            // The instance's public tag timeline, newest first, 40 per page. Status ids encode the
+            // time the instance received the status (milliseconds << 16), so a time slice is an
+            // id range and the next page is the last id of this one.
+            let instance = mastodon_instance(q)?;
+            let tag = mastodon_tag(query).ok_or("QUERY_HAS_NO_TAG_CHARACTERS")?;
+            let mut u = Url::parse(&format!("https://{instance}/api/v1/timelines/tag/")).unwrap();
+            u.path_segments_mut()
+                .map_err(|_| "INVALID_MASTODON_INSTANCE")?
+                .pop_if_empty()
+                .push(&tag);
+            u.query_pairs_mut()
+                .append_pair("limit", &MASTODON_PAGE.to_string());
+            let bounds = time_bounds(q)?;
+            let max_id = match q["page_cursor"].as_str() {
+                Some(c) => {
+                    if c.is_empty() || c.len() > 20 || !c.bytes().all(|b| b.is_ascii_digit()) {
+                        return Err("INVALID_PAGE_CURSOR".into());
+                    }
+                    Some(c.to_string())
+                }
+                None => bounds.map(|(_, until)| (((until + 1) * 1000) << 16).to_string()),
+            };
+            if let Some(m) = max_id {
+                u.query_pairs_mut().append_pair("max_id", &m);
+            }
+            if let Some((since, _)) = bounds {
+                u.query_pairs_mut()
+                    .append_pair("since_id", &(((since + 1) * 1000) << 16).to_string());
+            }
+            Ok(u)
+        }
         "MASTODON_TAG" => {
             // The instance's public tag record: seven days of uses and accounts as that instance
             // sees them. It has no pages and no time bounds of its own.
@@ -440,6 +528,7 @@ fn mastodon_instance(q: &Value) -> Result<String, String> {
 }
 
 pub const FEED_LIMIT: usize = 10;
+pub const MASTODON_PAGE: usize = 40;
 
 /// "NoodlesAnything" -> "noodles anything": a camel-case tag split into a searchable query.
 fn tag_words(tag: &str) -> String {
@@ -555,7 +644,7 @@ impl Provider for Social {
         "native-social"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED","XML_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE","XML_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"XML_FEED_RSS_2_0_RSS_1_0_ATOM_1_0_UTF8_ONLY_DTD_REFUSED_NO_PAGING","donor_runtime":false})
+        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","MASTODON","JSON_FEED","XML_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","MASTODON":"status id range (instance receipt time)","JSON_FEED":"UNSUPPORTED_BY_SOURCE","XML_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"XML_FEED_RSS_2_0_RSS_1_0_ATOM_1_0_UTF8_ONLY_DTD_REFUSED_NO_PAGING","donor_runtime":false})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         endpoint(q)?;
@@ -722,6 +811,11 @@ pub fn next_cursor(data: &Value, platform: &str) -> Option<String> {
         }
         "BLUESKY" => data["cursor"].as_str().map(str::to_string),
         "JSON_FEED" => data["next_url"].as_str().map(str::to_string),
+        "MASTODON" => data
+            .as_array()
+            .filter(|rows| rows.len() >= MASTODON_PAGE)
+            .and_then(|rows| rows.last())
+            .and_then(|last| text(&last["id"])),
         _ => None,
     }
 }
@@ -738,6 +832,7 @@ pub fn normalize(
         "HACKER_NEWS" => "hits",
         "BLUESKY" => "posts",
         "JSON_FEED" | "XML_FEED" => "items",
+        "MASTODON" => "",
         _ => return Err("UNSUPPORTED_SOCIAL_PLATFORM".into()),
     };
     if platform == "JSON_FEED"
@@ -747,7 +842,9 @@ pub fn normalize(
     {
         return Err("JSON_FEED_VERSION_REQUIRED_XML_RSS_UNSUPPORTED".into());
     }
-    let rows = data[key].as_array().ok_or("SOCIAL_ITEMS_ARRAY_REQUIRED")?;
+    let rows = if key.is_empty() { data } else { &data[key] }
+        .as_array()
+        .ok_or("SOCIAL_ITEMS_ARRAY_REQUIRED")?;
     if rows.len() > 1000 {
         return Err("SOCIAL_ITEM_LIMIT_EXCEEDED".into());
     }
@@ -881,6 +978,48 @@ fn normalize_item(
                         .flatten()
                         .flat_map(|image| [text(&image["fullsize"]), text(&image["thumb"])])
                         .flatten()
+                        .filter_map(|u| normalize_url(&u).ok())
+                        .collect(),
+                )
+            }
+            "MASTODON" => {
+                // The ActivityPub uri is global, so one status read through two instances is one post.
+                let uri = text(&item["uri"]).ok_or("MASTODON_URI_REQUIRED")?;
+                let url = text(&item["url"]).unwrap_or_else(|| uri.clone());
+                engagement.likes = item["favourites_count"].as_u64();
+                engagement.comments = item["replies_count"].as_u64();
+                engagement.reposts = item["reblogs_count"].as_u64();
+                let propagation = if !item["reblog"].is_null() {
+                    "REPOST"
+                } else if !item["quote"].is_null() {
+                    "QUOTE"
+                } else if !item["in_reply_to_id"].is_null() {
+                    "REPLY"
+                } else {
+                    "ORIGINAL"
+                };
+                let body = format!(
+                    "{} {}",
+                    item["spoiler_text"].as_str().unwrap_or(""),
+                    html_text(item["content"].as_str().unwrap_or(""))
+                );
+                (
+                    uri,
+                    url,
+                    body.trim().to_string(),
+                    text(&item["account"]["acct"]),
+                    published(&item["created_at"]),
+                    text(&item["language"]),
+                    // The parent is an instance-local id, not comparable to post uris.
+                    None,
+                    propagation.to_owned(),
+                    // Hashtags come from the text; tags are not identities.
+                    vec![],
+                    item["media_attachments"]
+                        .as_array()
+                        .into_iter()
+                        .flatten()
+                        .filter_map(|m| text(&m["url"]))
                         .filter_map(|u| normalize_url(&u).ok())
                         .collect(),
                 )
@@ -1391,5 +1530,92 @@ mod tests {
             .is_err()
         );
         assert!(trend_feed(&json!({}), "MASTODON_TRENDS", day).is_err());
+    }
+
+    #[test]
+    fn mastodon_tag_timelines_page_and_slice_by_status_id() {
+        let u = endpoint(&json!({"platform":"MASTODON","query":"Matcha"})).unwrap();
+        assert_eq!(
+            u.as_str(),
+            "https://mastodon.social/api/v1/timelines/tag/matcha?limit=40"
+        );
+        // A slice (since, until] is the id range of the seconds it covers.
+        let u =
+            endpoint(&json!({"platform":"MASTODON","query":"matcha","since":1000,"until":2000}))
+                .unwrap();
+        let q: std::collections::BTreeMap<String, String> = u.query_pairs().into_owned().collect();
+        assert_eq!(q["max_id"], ((2001u64 * 1000) << 16).to_string());
+        assert_eq!(q["since_id"], ((1001u64 * 1000) << 16).to_string());
+        // The next page keeps the slice floor and moves the ceiling to the cursor.
+        let u = endpoint(&json!({"platform":"MASTODON","query":"matcha","since":1000,"until":2000,"page_cursor":"99"})).unwrap();
+        let q: std::collections::BTreeMap<String, String> = u.query_pairs().into_owned().collect();
+        assert_eq!(
+            (q["max_id"].as_str(), q.contains_key("since_id")),
+            ("99", true)
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON","query":"m","page_cursor":"9a"})).unwrap_err(),
+            "INVALID_PAGE_CURSOR"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON","query":"m","instance":"localhost"}))
+                .unwrap_err(),
+            "INVALID_MASTODON_INSTANCE"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON","query":"m","thread_of":"1"})).unwrap_err(),
+            "REPLY_TREE_NOT_READ_FOR_SOURCE"
+        );
+        let status = |id: u64, extra: Value| {
+            let mut s = json!({"id":id.to_string(),"uri":format!("https://a.example/users/u/statuses/{id}"),"url":format!("https://a.example/@u/{id}"),
+                "created_at":"2026-10-07T08:44:12.000Z","content":"<p>New <a href=\"https://m.example/tags/matcha\">#<span>matcha</span></a> whisk</p>","spoiler_text":"",
+                "account":{"acct":"u@a.example"},"language":"en","replies_count":2,"reblogs_count":3,"favourites_count":5,
+                "in_reply_to_id":null,"reblog":null,"quote":null,"media_attachments":[{"url":"https://a.example/m.jpg"}],"tags":[{"name":"matcha"}]});
+            if let (Some(o), Some(e)) = (s.as_object_mut(), extra.as_object()) {
+                for (k, v) in e {
+                    o.insert(k.clone(), v.clone());
+                }
+            }
+            s
+        };
+        let data = json!([
+            status(10, json!({})),
+            status(9, json!({"in_reply_to_id":"3"}))
+        ]);
+        let posts = normalize(
+            &data,
+            "MASTODON",
+            "https://mastodon.social/api/v1/timelines/tag/matcha",
+            data.to_string().as_bytes(),
+            100,
+            "FIXTURE",
+        )
+        .unwrap();
+        assert_eq!(posts.len(), 2);
+        let p = &posts[0];
+        assert_eq!(
+            p.native_id, "https://a.example/users/u/statuses/10",
+            "the global uri"
+        );
+        assert_eq!(
+            (
+                p.engagement.likes,
+                p.engagement.comments,
+                p.engagement.reposts
+            ),
+            (Some(5), Some(2), Some(3))
+        );
+        assert_eq!(p.text, "New #matcha whisk");
+        assert!(p.hashtags.contains(&"matcha".to_string()));
+        assert_eq!(p.propagation, "ORIGINAL");
+        assert_eq!(posts[1].propagation, "REPLY");
+        assert!(p.published_at.is_some() && p.media.len() == 1);
+        // A full page has a next cursor (its last id); a short page ends.
+        let full: Vec<Value> = (0..40).map(|i| status(1000 - i, json!({}))).collect();
+        assert_eq!(
+            next_cursor(&json!(full), "MASTODON").as_deref(),
+            Some("961")
+        );
+        assert_eq!(next_cursor(&data, "MASTODON"), None);
     }
 }

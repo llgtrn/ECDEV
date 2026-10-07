@@ -1,6 +1,6 @@
 {
  "probe_class": "API_CONTRACT_PROBE_NOT_ECDEV_RUNTIME_CAPTURE",
- "probed_at": 1791354595,
+ "probed_at": 1791363078,
  "instances": {
   "mastodon.social": {
    "robots_status": 200,
@@ -84,7 +84,7 @@
       25,
       37,
       44,
-      8
+      14
      ],
      "accounts_series_oldest_first": [
       36,
@@ -93,7 +93,7 @@
       19,
       29,
       30,
-      7
+      13
      ]
     }
    }
@@ -104,6 +104,23 @@
   "history_len": 7,
   "all_zero": true,
   "meaning": "AN_UNUSED_TAG_AND_AN_UNKNOWN_TAG_ARE_INDISTINGUISHABLE_ZEROS_ARE_INSTANCE_OBSERVED_ZERO_NOT_ABSENCE_ELSEWHERE"
+ },
+ "mastodon_tag_timeline": {
+  "status": 200,
+  "page_size": 40,
+  "id_time_minus_created_at_max_abs_seconds": 14414,
+  "has_global_uri": true,
+  "slice": {
+   "status": 200,
+   "returned": 1,
+   "all_received_within": true
+  },
+  "next_page": {
+   "status": 200,
+   "returned": 40,
+   "overlap_with_first": 0,
+   "strictly_older_ids": true
+  }
  },
  "mastodon_trends": {
   "status": 200,
@@ -118,8 +135,8 @@
    "ogre",
    "ThickTrunkTuesday",
    "hanning",
-   "sachsenanhalt",
-   "icecube"
+   "MeerMittwoch",
+   "sachsenanhalt"
   ]
  },
  "bluesky_public_appview_robots": {
@@ -143,19 +160,20 @@
   "entries_carry_actor_handles": true,
   "statuses": [
    "cooling",
+   "saturating",
    "stale"
   ],
   "labels": [
-   "Plague death reported in Siberia",
+   "Queen Elizabeth's final diary entry",
    "Trump says Iran could hit Los Angeles",
-   "\"How I arrived here\" meme",
-   "Green Party Zionism motion vote",
-   "Banned Books Week",
+   "French student protests",
    "Inktober 2026 day 6: ogre",
-   "Trump refuses international election monitors",
-   "Collins-Jackson Maine debate",
-   "Star Wars: Galactic Racer launches",
-   "Border Patrol fells grandmother tree"
+   "Banned Books Week",
+   "Dungeons & Dragons union drive",
+   "Green Party Zionism motion vote",
+   "Russia strikes Kyiv's Northern Bridge",
+   "BirdOfTheDay blue water theme",
+   "Badenoch promises tax cuts in speech"
   ],
   "api_namespace": "app.bsky.unspecced (no stability guarantee)"
  },
@@ -195,8 +213,8 @@
   {
    "url": "https://fosstodon.org/api/v1/tags/rust",
    "status": 200,
-   "bytes": 420,
-   "sha256": "261341909f551212e9e56e411823ee8fdfc358459581242a078b09edb29abafa",
+   "bytes": 422,
+   "sha256": "030ac5920b09081a3c0f312051f1642787ab747d7484afcc8508ee3c9eecbf92",
    "content_type": "application/json; charset=utf-8",
    "ratelimit_limit": "300"
   },
@@ -209,10 +227,34 @@
    "ratelimit_limit": "300"
   },
   {
+   "url": "https://mastodon.social/api/v1/timelines/tag/coffee?limit=40",
+   "status": 200,
+   "bytes": 200591,
+   "sha256": "179da3b194b553e202b39ca52f09ee9117ad3912cbdbb74a200bff926eef0e00",
+   "content_type": "application/json; charset=utf-8",
+   "ratelimit_limit": "300"
+  },
+  {
+   "url": "https://mastodon.social/api/v1/timelines/tag/coffee?limit=40&max_id=117398035038208000&since_id=117397799108608000",
+   "status": 200,
+   "bytes": 6036,
+   "sha256": "7001730bb7ff060917970df2841228e937dc799399c845b86ccf4d05ef1c4298",
+   "content_type": "application/json; charset=utf-8",
+   "ratelimit_limit": "300"
+  },
+  {
+   "url": "https://mastodon.social/api/v1/timelines/tag/coffee?limit=40&max_id=117393459471533652",
+   "status": 200,
+   "bytes": 181376,
+   "sha256": "5eb4789b8f3dbe7514e8fe9500b63dd94b9b3cbdf3b91f7dfca7552fb7387fbe",
+   "content_type": "application/json; charset=utf-8",
+   "ratelimit_limit": "300"
+  },
+  {
    "url": "https://mastodon.social/api/v1/trends/tags?limit=10",
    "status": 200,
-   "bytes": 4347,
-   "sha256": "a547d96fe965ed7f9df1a6382324832ee9627749b68144f2cf925f99a4246432",
+   "bytes": 4360,
+   "sha256": "8fc42e27ccd845e1b78b982594041e3ab8729985a422870ecd490f90bb21a9b8",
    "content_type": "application/json; charset=utf-8",
    "ratelimit_limit": "300"
   },
@@ -227,8 +269,8 @@
   {
    "url": "https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit=10",
    "status": 200,
-   "bytes": 39782,
-   "sha256": "c60e9bc1b413cfd016ceab8f58be6ea11adba23d27f89ce11da9eda81442fe80",
+   "bytes": 31421,
+   "sha256": "99f09b86710346ff84a3896fbc40c1b2c768c34da8d60ba20fc2c6025675b753",
    "content_type": "application/json; charset=utf-8",
    "ratelimit_limit": null
   }

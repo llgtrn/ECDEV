@@ -1106,6 +1106,54 @@ mod research_tests {
     }
 
     #[test]
+    fn mastodon_tag_timelines_are_sliced_and_paged_posts() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-mastodon-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let day = 86_400u64;
+        let now = 20_000 * day;
+        let iso = |t: u64| ecdev_web::social::utc_rfc3339(t);
+        let status = |t: u64, n: u64, who: &str| json!({"id":(((t * 1000) << 16) + n).to_string(),"uri":format!("https://a.example/users/{who}/statuses/{t}{n}"),"url":format!("https://a.example/@{who}/{t}{n}"),"created_at":iso(t),"content":"<p>bamboo <a href=\"https://a.example/tags/matcha\">#<span>matcha</span></a> whisk</p>","account":{"acct":format!("{who}@a.example")},"language":"en","replies_count":0,"reblogs_count":1,"favourites_count":2,"in_reply_to_id":null,"reblog":null,"quote":null,"media_attachments":[]});
+        // Newest slice: one full page of 40 then a short page; older slice: one short page.
+        let full: Vec<Value> = (0..40).map(|n| status(now - 100 - n, n, "ann")).collect();
+        let slices = json!([
+            [
+                json!(full).to_string(),
+                json!([status(now - 500, 1, "bob")]).to_string()
+            ],
+            [json!([status(now - day - 50, 2, "cy")]).to_string()]
+        ]);
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":2 * day,"sources":[{"platform":"MASTODON","max_pages":3,"slice_seconds":day,"fixture_slices":slices}]})).unwrap();
+        assert!(
+            run["provider_failures"].as_array().unwrap().is_empty(),
+            "{}",
+            run["provider_failures"]
+        );
+        let p = &run["pagination"][0];
+        assert_eq!(p["slices"][0]["pages"], 2);
+        assert_eq!(p["slices"][0]["stop"], "END_OF_RESULTS");
+        assert_eq!(p["posts"], 42);
+        assert_eq!(p["population_coverage"]["temporal_span_coverage"], 1.0);
+        let posts = run["captured_posts"].as_array().unwrap();
+        assert!(posts.iter().all(|p| p["platform"] == "MASTODON"
+            && p["author_id"].as_str().unwrap().starts_with("anon1:")));
+        assert!(
+            posts
+                .iter()
+                .all(|p| p["hashtags"].as_array().unwrap().contains(&json!("matcha")))
+        );
+        assert_eq!(run["mention_count"], 42);
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",
