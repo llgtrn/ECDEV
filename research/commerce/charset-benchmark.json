@@ -1,0 +1,1360 @@
+{
+ "benchmark": "httpx.content-decoding: how often does ECDEV's strict decoder (BOM, HTTP charset, 1024-byte meta prescan, else strict UTF-8; no statistical guessing) refuse real pages that httpx-style detection would read?",
+ "captured_on": "2026-10-07",
+ "sites": "25 Japanese retailers (the market where legacy encodings persist); home page plus up to four pages from each robots-declared sitemap; every URL decided by ECDEV's own robots evaluator; ECDEV user agent; 1.5 s between requests",
+ "instrument": "ECDEV's adapter/web document::decode for every body (helper below); charset_normalizer 3.5.2, the detector httpx uses, only for comparison",
+ "evidence_state": "BENCHMARK_MEASUREMENT of document encodings at one time; not evidence about any product or market",
+ "harness_sources": {
+  "tools/commerce/charset_benchmark.py": "6f6c7272e39db699c1a10ed1df6c6d226c09d4b7677dd2916656c0be744e57e2",
+  "helper (fetch-mode harness ecdev_side, decode mode)": "//! ECDEV side of the fetch-mode benchmark, using ECDEV's own code paths.\n//!   robots <robots.txt file or -> <url>   -> prints {\"allowed\":bool,\"crawl_delay\":f64|null}\n//!   extract <html file> <content-type> <url> -> prints the products ECDEV extracts\nuse serde_json::{Value, json};\nfn main() {\n    let a: Vec<String> = std::env::args().collect();\n    match a[1].as_str() {\n        \"robots\" => {\n            let text = if a[2] == \"-\" { String::new() } else { std::fs::read_to_string(&a[2]).unwrap() };\n            let d = ecdev_web::robots::evaluate(&text, &a[3], \"ECDEV\");\n            println!(\"{}\", json!({\"allowed\": d.allowed, \"crawl_delay\": d.crawl_delay_seconds, \"evidence\": d.evidence}));\n        }\n        \"extract\" => {\n            let bytes = std::fs::read(&a[2]).unwrap();\n            let out = match ecdev_web::document::extract(&bytes, &a[3], &a[4]) {\n                Ok(v) => {\n                    let products: Vec<Value> = v[\"products\"].as_array().into_iter().flatten().map(|p| json!({\n                        \"title\": p[\"title\"], \"sku\": p[\"sku\"], \"price_minor\": p[\"price_minor\"], \"currency\": p[\"currency\"],\n                        \"availability\": p[\"availability\"], \"price_source\": p[\"price\"][\"source\"].clone(), \"relation\": p[\"page_relation\"][\"relation\"].clone(),\n                    })).collect();\n                    json!({\"ok\": true, \"products\": products, \"page_role\": v[\"page_role\"]})\n                }\n                Err(e) => json!({\"ok\": false, \"error\": e}),\n            };\n            println!(\"{out}\");\n        }\n        \"decode\" => {\n            let bytes = std::fs::read(&a[2]).unwrap();\n            let out = match ecdev_web::document::decode(&bytes, &a[3]) {\n                Ok((_, recipe)) => json!({\"ok\": true, \"recipe\": recipe}),\n                Err(e) => json!({\"ok\": false, \"error\": e}),\n            };\n            println!(\"{out}\");\n        }\n        _ => panic!(\"mode\"),\n    }\n}\n"
+ },
+ "summary": {
+  "pages_decoded_or_refused": 48,
+  "sites": 19,
+  "decoded": 44,
+  "refused": 4,
+  "by_basis": {
+   "HTTP_CONTENT_TYPE:UTF-8": 28,
+   "HTML_META:Shift_JIS": 2,
+   "HTML_META:UTF-8": 3,
+   "HTTP_CONTENT_TYPE:Shift_JIS": 10,
+   "INVALID_DOCUMENT_ENCODING:None": 4,
+   "VALID_UTF8_DEFAULT:UTF-8": 1
+  },
+  "shift_jis_pages_decoded": 12,
+  "detector_disagreed_with_a_declared_charset": 1,
+  "request_count": 100
+ },
+ "results": [
+  {
+   "site": "https://www.nitori-net.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.nitori-net.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.nitori-net.jp/ec/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.nitori-net.jp/ec/brands/decohome/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.nitori-net.jp/ec/brands/nplus/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.nitori-net.jp/ec/brands/business/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.monotaro.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.monotaro.com/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.askul.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.askul.co.jp/",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://kakaku.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://kakaku.com/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTML_META",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.loft.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.loft.co.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.loft.co.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.loft.co.jp/news/",
+     "status": 200,
+     "content_type": "text/html; charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.loft.co.jp/shop_list/",
+     "status": 200,
+     "content_type": "text/html; charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.loft.co.jp/contact/contact_question.html",
+     "status": 200,
+     "content_type": "text/html; charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.edion.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.edion.com/",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.bookoff.co.jp",
+   "robots_status": 404,
+   "pages": [
+    {
+     "url": "https://www.bookoff.co.jp/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTML_META",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.cainz.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.cainz.com/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.kojima.net",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.kojima.net/",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=36767&CPN_PUBLISH_KBN=E",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=36771&CPN_PUBLISH_KBN=E",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=41836&CPN_PUBLISH_KBN=E",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=45698&CPN_PUBLISH_KBN=E",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": null
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.sofmap.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.sofmap.com/",
+     "status": 200,
+     "content_type": "text/html; charset=shift_jis",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.sofmap.com/contents/?id=2959&sid=1",
+     "status": 200,
+     "content_type": "text/html; charset=shift_jis",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.sofmap.com/contents/?id=4892&sid=0",
+     "status": 200,
+     "content_type": "text/html; charset=shift_jis",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.sofmap.com/contents/?id=apple&sid=0_res",
+     "status": 200,
+     "content_type": "text/html; charset=shift_jis",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.sofmap.com/contents/?id=gaming-monitor-ps5&sid=0",
+     "status": 200,
+     "content_type": "text/html; charset=shift_jis",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://joshinweb.jp",
+   "robots_status": 403,
+   "pages": [],
+   "state": "ROBOTS_UNKNOWN"
+  },
+  {
+   "site": "https://www.dospara.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.dospara.co.jp/",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.dospara.co.jp/TC143/MC15968.html",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.dospara.co.jp/TC143/MC19336.html",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.dospara.co.jp/TC30/MC20842.html",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.dospara.co.jp/TC143/MC23173.html",
+     "status": 200,
+     "content_type": "text/html;charset=UTF-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.tsukumo.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.tsukumo.co.jp/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": false,
+     "ecdev_error": "INVALID_DOCUMENT_ENCODING",
+     "ecdev_encoding": null,
+     "ecdev_source": null,
+     "valid_utf8": false,
+     "detector_guess": "cp932"
+    },
+    {
+     "url": "https://www.tsukumo.co.jp/bto/pc/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTML_META",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM3J-A201T.html",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": false,
+     "ecdev_error": "INVALID_DOCUMENT_ENCODING",
+     "ecdev_encoding": null,
+     "ecdev_source": null,
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM5J-B201T.html",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": false,
+     "ecdev_error": "INVALID_DOCUMENT_ENCODING",
+     "ecdev_encoding": null,
+     "ecdev_source": null,
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM5J-C201T.html",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": false,
+     "ecdev_error": "INVALID_DOCUMENT_ENCODING",
+     "ecdev_encoding": null,
+     "ecdev_source": null,
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.1101.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.1101.com/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTML_META",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.rakuten.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.rakuten.co.jp/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "VALID_UTF8_DEFAULT",
+     "valid_utf8": true,
+     "detector_guess": "ascii"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.amazon.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.amazon.co.jp/",
+     "status": 200,
+     "content_type": "text/html",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTML_META",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.mercari.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.mercari.com/jp/",
+     "status": 403,
+     "state": "NOT_200"
+    },
+    {
+     "url": "https://www.mercari.com/us/brand/0039-italy-11024/",
+     "status": 403,
+     "state": "NOT_200"
+    },
+    {
+     "url": "https://www.mercari.com/us/brand/01-the-one-19046/",
+     "status": 403,
+     "state": "NOT_200"
+    },
+    {
+     "url": "https://www.mercari.com/us/brand/032c-27914/",
+     "status": 403,
+     "state": "NOT_200"
+    },
+    {
+     "url": "https://www.mercari.com/us/brand/08sircus-25817/",
+     "status": 403,
+     "state": "NOT_200"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.biccamera.co.jp",
+   "robots_status": null,
+   "pages": [],
+   "state": "ROBOTS_UNKNOWN"
+  },
+  {
+   "site": "https://www.yodobashi.com",
+   "robots_status": null,
+   "pages": [],
+   "state": "ROBOTS_UNKNOWN"
+  },
+  {
+   "site": "https://www.oisix.com",
+   "robots_status": null,
+   "pages": [],
+   "state": "ROBOTS_UNKNOWN"
+  },
+  {
+   "site": "https://www.unico-fan.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.unico-fan.co.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    },
+    {
+     "url": "https://www.unico-fan.co.jp/agents.md",
+     "status": 200,
+     "content_type": "text/markdown; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.francfranc.com",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.francfranc.com/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.lohaco.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.lohaco.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=utf-8",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "UTF-8",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": true,
+     "detector_guess": "utf_8"
+    }
+   ],
+   "state": "SAMPLED"
+  },
+  {
+   "site": "https://www.tower.jp",
+   "robots_status": null,
+   "pages": [],
+   "state": "ROBOTS_UNKNOWN"
+  },
+  {
+   "site": "https://www.hmv.co.jp",
+   "robots_status": 200,
+   "pages": [
+    {
+     "url": "https://www.hmv.co.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=Shift_JIS",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": null
+    },
+    {
+     "url": "https://www.hmv.co.jp/",
+     "status": 200,
+     "content_type": "text/html; charset=Shift_JIS",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": null
+    },
+    {
+     "url": "https://www.hmv.co.jp/1_700/",
+     "status": 200,
+     "content_type": "text/html; charset=Shift_JIS",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "cp1256"
+    },
+    {
+     "url": "https://www.hmv.co.jp/anime/",
+     "status": 200,
+     "content_type": "text/html; charset=Shift_JIS",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    },
+    {
+     "url": "https://www.hmv.co.jp/artist_%CE%A3vol_000000001028507/item_%E3%83%A1%E3%83%A1%E3%83%B3%E3%83%88%E3%82%A2%E3%83%A2%E3%83%AA%E3%82%B9_16891222",
+     "status": 200,
+     "content_type": "text/html; charset=Shift_JIS",
+     "ecdev_ok": true,
+     "ecdev_error": null,
+     "ecdev_encoding": "Shift_JIS",
+     "ecdev_source": "HTTP_CONTENT_TYPE",
+     "valid_utf8": false,
+     "detector_guess": "shift_jis"
+    }
+   ],
+   "state": "SAMPLED"
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://www.nitori-net.jp/robots.txt",
+   "status": 200,
+   "bytes": 393,
+   "sha256": "6e358d28b57a2bc65d31c79c17f70bc226356dc3c6805bf953fdd9c1731a08d4"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ecstatic/sitemap/sitemap.xml",
+   "status": 200,
+   "bytes": 1482,
+   "sha256": "6334e92c3d702fcbf730527e9e3a38f65bfc938554482a326b26b34d36518849"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ecstatic/sitemap/sitemap_top_1.xml",
+   "status": 200,
+   "bytes": 402,
+   "sha256": "158206a04b0fa08a257f8bfa9abd384bb1a130fd8d62eef8ac189992ba032c66"
+  },
+  {
+   "url": "https://www.nitori-net.jp/",
+   "status": 200,
+   "bytes": 368261,
+   "sha256": "15d4c59d0087b7908221e299fcc321072a80e68080399b306b36a0353ebc3524"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ec/",
+   "status": 200,
+   "bytes": 363900,
+   "sha256": "87d3392c2152d8fe17577d19891b2d41bd72be70b18c9537ad76a39b75de9970"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ec/brands/decohome/",
+   "status": 200,
+   "bytes": 277901,
+   "sha256": "636a505019ddbd3c934ba237e6587204ddb3b5ad36b9d641913ef829cff5fdab"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ec/brands/nplus/",
+   "status": 200,
+   "bytes": 275335,
+   "sha256": "02a2bed45df3ce6bc45a3cad7bcbc5838c913a94c33f00c0bb9b6f77d5544a20"
+  },
+  {
+   "url": "https://www.nitori-net.jp/ec/brands/business/",
+   "status": 200,
+   "bytes": 247326,
+   "sha256": "9d92acc667688611675829bc0f0c8b3b90233ca297c11b74e3dc67aab2d67bc6"
+  },
+  {
+   "url": "https://www.monotaro.com/robots.txt",
+   "status": 200,
+   "bytes": 2184,
+   "sha256": "ff833a462a1fecd392b0ad521c21af5ea62f49ed954f86d3cb232e646a7bf460"
+  },
+  {
+   "url": "https://www.monotaro.com/",
+   "status": 200,
+   "bytes": 483822,
+   "sha256": "6bd6636fea838574fcc334593d559a0885838ce40497b715934aa6e83e6621b9"
+  },
+  {
+   "url": "https://www.askul.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 645,
+   "sha256": "983ee50496a9c001cdf48fdefa4658727edcda176c22010ff756ac5107e80af0"
+  },
+  {
+   "url": "https://www.askul.co.jp/",
+   "status": 200,
+   "bytes": 114494,
+   "sha256": "da27a0e97e6c2d68f7c41723384371ef4e87142f236aa5a0e1926c1aa6b1d3d0"
+  },
+  {
+   "url": "https://kakaku.com/robots.txt",
+   "status": 200,
+   "bytes": 1637,
+   "sha256": "7373e2a7c5c2162ac8bd8ab359181b8e87ac599910571882c9acfa06f630e9c6"
+  },
+  {
+   "url": "https://kakaku.com/",
+   "status": 200,
+   "bytes": 111165,
+   "sha256": "3aef815772c3ee11f5894857a085b9fd46c07d661c4d140bd06a8e346e5f8fc4"
+  },
+  {
+   "url": "https://www.loft.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 326,
+   "sha256": "6d60f7484c91d2689edb52087d812047af1751984a8fd57fc2fc3b45c3e8ca19"
+  },
+  {
+   "url": "https://www.loft.co.jp/sitemap.xml",
+   "status": 200,
+   "bytes": 127949,
+   "sha256": "48c44022c6f4e5185209dcad53b12bb4740c783a1a1c5619693963b6c4819093"
+  },
+  {
+   "url": "https://www.loft.co.jp/",
+   "status": 200,
+   "bytes": 40872,
+   "sha256": "d6ffea8074d753413d230ef4f4d45b458b3cb590ae5df3a6aa16587826f2876d"
+  },
+  {
+   "url": "https://www.loft.co.jp/",
+   "status": 200,
+   "bytes": 40871,
+   "sha256": "169ee92254cfbeeb3fd25905473ff058cf6e95d1d223296af30a071f1c05a4bd"
+  },
+  {
+   "url": "https://www.loft.co.jp/news/",
+   "status": 200,
+   "bytes": 31678,
+   "sha256": "5669f5bcfc2b9d6873974553f867830f39e8bba3f9e3684e076d27746bb7a1e6"
+  },
+  {
+   "url": "https://www.loft.co.jp/shop_list/",
+   "status": 200,
+   "bytes": 301503,
+   "sha256": "63ff078aaecebe8f1479bec8e59df6a38520d1885d118d73dac229afcded143b"
+  },
+  {
+   "url": "https://www.loft.co.jp/contact/contact_question.html",
+   "status": 200,
+   "bytes": 48956,
+   "sha256": "c6ff2651b542ce27b7b4f047487aa1d391a0c5ad05b51d8aa434a9aa6a3c561e"
+  },
+  {
+   "url": "https://www.edion.com/robots.txt",
+   "status": 200,
+   "bytes": 157,
+   "sha256": "e9cd037c2d53f386259d81bae05f5c5f7b3d96a5b1330bb8854226b5f4bc256a"
+  },
+  {
+   "url": "https://www.edion.com/",
+   "status": 200,
+   "bytes": 222790,
+   "sha256": "9ecf2781c892e2e5d2e1f548205d0761da17735e196141fe6b4187beab2eabc3"
+  },
+  {
+   "url": "https://www.bookoff.co.jp/robots.txt",
+   "status": 404,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.bookoff.co.jp/",
+   "status": 200,
+   "bytes": 33010,
+   "sha256": "e868e2c955dd5f49dd728214eb06cc679ef74c575214955697f2c22e06b07f2d"
+  },
+  {
+   "url": "https://www.cainz.com/robots.txt",
+   "status": 200,
+   "bytes": 6060,
+   "sha256": "e14de95b0f16fceca305b656a926e682a5dc3b88eeb0743c9b46410ea31edb07"
+  },
+  {
+   "url": "https://www.cainz.com/",
+   "status": 200,
+   "bytes": 780153,
+   "sha256": "63470ba753f17a68c45cc028ee6342bf6a72b8390bdd5151ee0d81ed41f83cfa"
+  },
+  {
+   "url": "https://www.kojima.net/robots.txt",
+   "status": 200,
+   "bytes": 1715,
+   "sha256": "a31bf68c06aa2f3911ce20ff230e98b2d2a874dda77e6de7ba5b66411e3dea23"
+  },
+  {
+   "url": "https://www.kojima.net/shop/sitemap/sitemap_index.xml",
+   "status": 200,
+   "bytes": 2533,
+   "sha256": "a579023a2a8ea8368b5b067c061d69554cfacfaaadc0207d3708ca6dfe874a8b"
+  },
+  {
+   "url": "https://www.kojima.net/shop/sitemap/sitemap_camp01.xml",
+   "status": 200,
+   "bytes": 22397,
+   "sha256": "c4f76228230c60eecb3999895f42a35b7550a2a12f931933b04df08121c7ff18"
+  },
+  {
+   "url": "https://www.kojima.net/",
+   "status": 200,
+   "bytes": 335848,
+   "sha256": "a16b4b0a80b47dc46bb6090d724ae4b09982229f8aa99f24896cfaa2750d6b29"
+  },
+  {
+   "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=36767&CPN_PUBLISH_KBN=E",
+   "status": 200,
+   "bytes": 113255,
+   "sha256": "1495f137c2db8f3ae609030cee10917780e596397ff51fb13afafbd9aab463ae"
+  },
+  {
+   "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=36771&CPN_PUBLISH_KBN=E",
+   "status": 200,
+   "bytes": 113261,
+   "sha256": "e166892851c2ab2646336a64a069b75e6f96d09e45529cb0d387fb850d3be780"
+  },
+  {
+   "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=41836&CPN_PUBLISH_KBN=E",
+   "status": 200,
+   "bytes": 113160,
+   "sha256": "fa53f272b136d6699cd15000667c847ae07a940e0e97894e8e1198e65a5649b2"
+  },
+  {
+   "url": "https://www.kojima.net/ec/campaign_detail.html?CMPN_PLAN_CD=45698&CPN_PUBLISH_KBN=E",
+   "status": 200,
+   "bytes": 238271,
+   "sha256": "4920290d83e04675b0afe50df405efcc2dc358579494d8030418229c0c9c5e48"
+  },
+  {
+   "url": "https://www.sofmap.com/robots.txt",
+   "status": 200,
+   "bytes": 474,
+   "sha256": "9457ab1dd2965d7fa5d6dbaf8f2d2860c7ec202b5384c8e1cd6dadd4be5aa327"
+  },
+  {
+   "url": "https://www.sofmap.com/ec/sitemap/com/sitemap_index.xml",
+   "status": 200,
+   "bytes": 485,
+   "sha256": "351b00d1b76fbd30daa865bd73c17df6b99fd304899f9f5f25b9d8c5fce1b49f"
+  },
+  {
+   "url": "https://www.sofmap.com/ec/sitemap/com/contents_sitemap.xml",
+   "status": 200,
+   "bytes": 37535,
+   "sha256": "0abb2b223628184c50c1305ad21c64567c725852972a1c321e1867d2ccf10727"
+  },
+  {
+   "url": "https://www.sofmap.com/",
+   "status": 200,
+   "bytes": 157228,
+   "sha256": "bd047f04c8454551fb8df9f1e9412467087a142e2ac058ea629bd9f4cd2e931e"
+  },
+  {
+   "url": "https://www.sofmap.com/contents/?id=2959&sid=1",
+   "status": 200,
+   "bytes": 106287,
+   "sha256": "973f04953cdc822fbf11bdffcfa2a8f1993c582a8fe669bdc09476decf00052c"
+  },
+  {
+   "url": "https://www.sofmap.com/contents/?id=4892&sid=0",
+   "status": 200,
+   "bytes": 90685,
+   "sha256": "ee1fd40caca77ef07ba4f0ad20f34108508691f247bdb64aa9b376cfa630ccf9"
+  },
+  {
+   "url": "https://www.sofmap.com/contents/?id=apple&sid=0_res",
+   "status": 200,
+   "bytes": 74077,
+   "sha256": "4d0465e6d5794154dcb3d6f0f78129bb8b0df837a16c1857e757e6a5cad73ef8"
+  },
+  {
+   "url": "https://www.sofmap.com/contents/?id=gaming-monitor-ps5&sid=0",
+   "status": 200,
+   "bytes": 116702,
+   "sha256": "4bc17d7b944f454525d128168320e4e075c17a1c7958fa51695b6a8c5fdcb08f"
+  },
+  {
+   "url": "https://joshinweb.jp/robots.txt",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.dospara.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 330,
+   "sha256": "1ce27854fd7907a8abac67361227d47a8e5dbcb61b1642a777262225bb22c109"
+  },
+  {
+   "url": "https://www.dospara.co.jp/sitemap_0.xml",
+   "status": 200,
+   "bytes": 1065385,
+   "sha256": "74dc693f2831a668632aafa1cb4e0f5534e1eccfff29ca9bd7fe1cc108e82c99"
+  },
+  {
+   "url": "https://www.dospara.co.jp/",
+   "status": 200,
+   "bytes": 634942,
+   "sha256": "afc281eec606b0ec9b8defa2dafdebe49284a603b705c0adc90ad678f1b78583"
+  },
+  {
+   "url": "https://www.dospara.co.jp/TC143/MC15968.html",
+   "status": 200,
+   "bytes": 1018294,
+   "sha256": "64d74761a624cfd947cdc7c52e3ee23786f37a032f8844d95f0dfff55ceece00"
+  },
+  {
+   "url": "https://www.dospara.co.jp/TC143/MC19336.html",
+   "status": 200,
+   "bytes": 999850,
+   "sha256": "53223831b3a96ce7428f47aa736ede8d2e3b7fcd7779fb4eb419572355a7d262"
+  },
+  {
+   "url": "https://www.dospara.co.jp/TC30/MC20842.html",
+   "status": 200,
+   "bytes": 1221502,
+   "sha256": "52f506afab9d287fd8a91261556e84fc2f65052977b4e3f00539a61ce14b7840"
+  },
+  {
+   "url": "https://www.dospara.co.jp/TC143/MC23173.html",
+   "status": 200,
+   "bytes": 976239,
+   "sha256": "ae18793ff7d5ee494331d00b93e50a7c29bb2f36cf239e72518f1492b71eb258"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 252,
+   "sha256": "041b23829f2a7f8c39d984e2cf69668c8d7b1a00d7b02556024dbc24a9d7c11c"
+  },
+  {
+   "url": "http://www.tsukumo.co.jp/bto/pc/sitemap_index.xml",
+   "status": 200,
+   "bytes": 40769,
+   "sha256": "96d3f07921432ed627487813f4b48379137f9312041356fe7ee2354554409df6"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/",
+   "status": 200,
+   "bytes": 355,
+   "sha256": "35328813dbc6e09dac99c26c1d39aeb611fccf2c3535a221a07dd1954aaf5e5b"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/bto/pc/",
+   "status": 200,
+   "bytes": 75852,
+   "sha256": "b0f6a261232b8d18e0a2e8918cff33a11838eb29121a7881b51e1839901c2d6c"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM3J-A201T.html",
+   "status": 200,
+   "bytes": 54439,
+   "sha256": "3423cf6c512023a992de5057331279eacf5ef53ac928410589790aaecde625e0"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM5J-B201T.html",
+   "status": 200,
+   "bytes": 54383,
+   "sha256": "7cb5f6fe3edd037895c966938df41250d32bfadabc3dc69c82fd0316089e8ed7"
+  },
+  {
+   "url": "https://www.tsukumo.co.jp/bto/pc/aerostream/2020/RM5J-C201T.html",
+   "status": 200,
+   "bytes": 52373,
+   "sha256": "632405b139b3d8eabfcfb6beeb004e4faa4f1b4bbf528f1233b41f567490b27c"
+  },
+  {
+   "url": "https://www.1101.com/robots.txt",
+   "status": 200,
+   "bytes": 532,
+   "sha256": "8c55697a6a0c72cf32e5728bf96c00ba22124a302fe72ca01bdc2ea99ec6113f"
+  },
+  {
+   "url": "https://www.1101.com/",
+   "status": 200,
+   "bytes": 103447,
+   "sha256": "6bd83946174a0f3229a21fe885ca086f6355568f5ae4a47c85e0f028643a1450"
+  },
+  {
+   "url": "https://www.rakuten.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 51,
+   "sha256": "fb49f40a02d0aa559bdc492efcd6bf54ba83b8a6099a1f1ac4084508549a0104"
+  },
+  {
+   "url": "https://www.rakuten.co.jp/",
+   "status": 200,
+   "bytes": 43,
+   "sha256": "00a8285bb028fb5d2d93a04dd3562bc30d41a3bfe0e2c7353f63867fbb902edb"
+  },
+  {
+   "url": "https://www.amazon.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 10174,
+   "sha256": "81e1db815061b2b2616a43021615888d17cc5594a91786527a4ea74e61b35356"
+  },
+  {
+   "url": "https://www.amazon.co.jp/",
+   "status": 200,
+   "bytes": 3869,
+   "sha256": "31fb9c0d5e43553fdf89e8a4595f65bb581d83335f49b718008a7a5bb186c166"
+  },
+  {
+   "url": "https://www.mercari.com/robots.txt",
+   "status": 200,
+   "bytes": 1935,
+   "sha256": "77930e8eab1ff978e0d8fcdfe6bdd5a970eb6cc62f5554d0e6f623eec3031b84"
+  },
+  {
+   "url": "https://www.mercari.com/us-sitemap-index.xml",
+   "status": 200,
+   "bytes": 2474,
+   "sha256": "f7f71f7b43f12381315cab13b369d9f73881718a0fdb2092901af3897d4585eb"
+  },
+  {
+   "url": "https://www.mercari.com/us/us-sitemap-brands-0001.xml",
+   "status": 200,
+   "bytes": 4194305,
+   "sha256": "5695ae8806f39962e83155c528366ea01e2d1e4735ea30773773d734647be4a1"
+  },
+  {
+   "url": "https://www.mercari.com/jp/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.mercari.com/us/brand/0039-italy-11024/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.mercari.com/us/brand/01-the-one-19046/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.mercari.com/us/brand/032c-27914/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.mercari.com/us/brand/08sircus-25817/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.biccamera.co.jp/robots.txt",
+   "error": "TimeoutError"
+  },
+  {
+   "url": "https://www.biccamera.co.jp/robots.txt",
+   "status": null,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.yodobashi.com/robots.txt",
+   "error": "TimeoutError"
+  },
+  {
+   "url": "https://www.yodobashi.com/robots.txt",
+   "status": null,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.oisix.com/robots.txt",
+   "error": "TimeoutError"
+  },
+  {
+   "url": "https://www.oisix.com/robots.txt",
+   "status": null,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.unico-fan.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 5780,
+   "sha256": "4400c9d3fe42d462c5376c832455fc9b763ba249771f04896afc8ed309b3ce94"
+  },
+  {
+   "url": "https://www.unico-fan.co.jp/sitemap.xml",
+   "status": 200,
+   "bytes": 1919,
+   "sha256": "afa10a230014eabd1671428d65c118fa71f59e105234345321accff75842d382"
+  },
+  {
+   "url": "https://www.unico-fan.co.jp/sitemap_agentic_discovery.xml",
+   "status": 200,
+   "bytes": 216,
+   "sha256": "32958eabdc9f99e0a6a13b5fad143fd889f17f4c44bd59ae47a7a3bb5af6bc7a"
+  },
+  {
+   "url": "https://www.unico-fan.co.jp/",
+   "status": 200,
+   "bytes": 4194305,
+   "sha256": "51bbfc3343c735121f76261f34d0230844c3cc972a26d90115908a075ceee168"
+  },
+  {
+   "url": "https://www.unico-fan.co.jp/agents.md",
+   "status": 200,
+   "bytes": 4483,
+   "sha256": "da17399bef173c008ccaa73983ccd4ec41bbeb4fcf7ebdd1693786d04a92d182"
+  },
+  {
+   "url": "https://www.francfranc.com/robots.txt",
+   "status": 200,
+   "bytes": 8102,
+   "sha256": "ac0e9e01c05673d8b59a7e2a8401d1ba6af46ed206bce3f93d10e535256e39f7"
+  },
+  {
+   "url": "https://francfranc.com/sitemap.xml",
+   "status": 200,
+   "bytes": 12342,
+   "sha256": "3d1655bec4c11aa08e50e7efeed926442810db73a6105015ec150c39897bf0a0"
+  },
+  {
+   "url": "https://francfranc.com/sitemap_agentic_discovery.xml",
+   "status": 200,
+   "bytes": 211,
+   "sha256": "addefa8421f00eb5e91001b04e4f7bb2b38fcdd3dbea47ca30725c0d18944342"
+  },
+  {
+   "url": "https://francfranc.com/sitemap.xml",
+   "status": 200,
+   "bytes": 12342,
+   "sha256": "3d1655bec4c11aa08e50e7efeed926442810db73a6105015ec150c39897bf0a0"
+  },
+  {
+   "url": "https://www.francfranc.com/",
+   "status": 200,
+   "bytes": 4194305,
+   "sha256": "985cfae37db9ec4d4826a3b531e475c55a6ca70c82535885f75fcca42b8cc170"
+  },
+  {
+   "url": "https://www.lohaco.jp/robots.txt",
+   "status": 200,
+   "bytes": 335841,
+   "sha256": "1b2d931a44d33f76dc70ab3496213832e4a6012879a5684f22ddd4f073d94d4a"
+  },
+  {
+   "url": "https://www.lohaco.jp/",
+   "status": 200,
+   "bytes": 335841,
+   "sha256": "551bf5a789f941b468ac5bf2b76282fe3f7ceb9002cb32a262bc466b71e2423b"
+  },
+  {
+   "url": "https://www.tower.jp/robots.txt",
+   "error": "URLError"
+  },
+  {
+   "url": "https://www.tower.jp/robots.txt",
+   "status": null,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.hmv.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 1767,
+   "sha256": "cea8ff7a4449dec223fc82eee51e6062837df0f3e3ab1f2720f42872c0046476"
+  },
+  {
+   "url": "https://www.hmv.co.jp/sitemap_index.xml",
+   "status": 200,
+   "bytes": 11648,
+   "sha256": "3cbdc18b8c79cfd428d534657c2493daa4605fbd7add27a1aec9d36e7a154d1b"
+  },
+  {
+   "url": "https://www.hmv.co.jp/sitemap.xml",
+   "status": 200,
+   "bytes": 4194305,
+   "sha256": "76c4bdf0020e621638f0d8e10197023b6b0f6e25e28da2009c58f178ec2abf6c"
+  },
+  {
+   "url": "https://www.hmv.co.jp/",
+   "status": 200,
+   "bytes": 352010,
+   "sha256": "ead91c58b15c8715a07ef1e696ad2669687d0f56294f5a37c96df6afa0988edb"
+  },
+  {
+   "url": "https://www.hmv.co.jp/",
+   "status": 200,
+   "bytes": 352010,
+   "sha256": "ead91c58b15c8715a07ef1e696ad2669687d0f56294f5a37c96df6afa0988edb"
+  },
+  {
+   "url": "https://www.hmv.co.jp/1_700/",
+   "status": 200,
+   "bytes": 574920,
+   "sha256": "260640b023432197ee521fae7f506f9790a4fc40c30cff9c01497a8bf9886fdd"
+  },
+  {
+   "url": "https://www.hmv.co.jp/anime/",
+   "status": 200,
+   "bytes": 321846,
+   "sha256": "6262ab3b90ff5b4b31a81466d352bead7e49e291f0bb07d9a01806e4ea001545"
+  },
+  {
+   "url": "https://www.hmv.co.jp/artist_%CE%A3vol_000000001028507/item_%E3%83%A1%E3%83%A1%E3%83%B3%E3%83%88%E3%82%A2%E3%83%A2%E3%83%AA%E3%82%B9_16891222",
+   "status": 200,
+   "bytes": 21874,
+   "sha256": "48ab0c6c9e0b948e63dcc4062bbb89beb6a809f3c7957d29474df1c8a64c3ff2"
+  }
+ ],
+ "findings": [
+  "44 of 48 pages on 19 sites decode under a declared encoding or valid UTF-8; all 12 Shift_JIS pages (sofmap.com, hmv.co.jp, kakaku.com, tsukumo.co.jp) declare it, 10 in the HTTP header and 2 in a meta tag within the prescan.",
+  "The 4 refused pages are the same 355-byte tsukumo.co.jp 'It moved!!' meta-refresh stub in undeclared Shift_JIS (header text/html without charset, no meta charset); refusing it loses no product evidence.",
+  "The statistical detector guessed cp1256 (Arabic) for one hmv.co.jp page that declares Shift_JIS and gave no answer for two others: guessing would have mislabelled pages the declared charset reads correctly.",
+  "Several large retailers (yodobashi.com, biccamera.co.jp, oisix.com, tower.jp) did not answer this environment and zozo.jp, hands.net and joshinweb.jp answered robots.txt with 403; they are unsampled, not evidence."
+ ],
+ "decision": {
+  "knowledge": "DELIBERATE_SEMANTIC_DIVERGENCE",
+  "runtime": "ECDEV keeps declared-or-strict-UTF-8 decoding with no statistical guessing; an undeclared non-UTF-8 page is refused as INVALID_DOCUMENT_ENCODING",
+  "revisit_when": "a targeted source serves product pages in an undeclared legacy encoding"
+ },
+ "limits": "48 pages on 19 reachable sites, Japanese retail only, one capture time; meta refresh is not followed, so moved pages are measured as the stub they serve",
+ "content_encoding": "ECDEV's web client is built without compression features and sends no Accept-Encoding, so servers answer with identity bodies; httpx's gzip, deflate and brotli decoders have no counterpart to need. Compressed sitemaps are refused explicitly (SITEMAP_COMPRESSED_UNSUPPORTED)."
+}

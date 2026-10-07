@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "c584449d9e5556a110ac4d1eab60c53597a27a12",
+  "assessed_parent_commit": "e072e9015f810d0a85bda35db47c39a2c25e9eee",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,25 +18,25 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 39,
+    "study_candidates": 38,
     "benchmark_candidates": 28,
     "algorithm_candidates": 10,
     "reference_only": 52,
-    "study_complete_capabilities": 88,
+    "study_complete_capabilities": 89,
     "not_relevant_after_review": 25,
-    "research_questions_open": 77,
-    "knowledge_coverage_ratio": 0.681818
+    "research_questions_open": 76,
+    "knowledge_coverage_ratio": 0.68595
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 49,
+    "donors_knowledge_unreviewed": 50,
     "donors_structural_census": 0,
-    "donors_semantic_census": 1,
-    "donors_active_study": 15,
+    "donors_semantic_census": 2,
+    "donors_active_study": 14,
     "donors_study_complete": 2,
     "donors_structurally_censused": 18,
     "donors_semantically_censused": 14,
-    "donors_with_open_candidates": 15,
-    "donors_with_open_research": 65
+    "donors_with_open_candidates": 14,
+    "donors_with_open_research": 66
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -481,7 +481,7 @@
       "donor": "encode--httpx",
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
       "effective": "CAPABILITY_RELEVANCE_RESOLVED",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -489,12 +489,11 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [
-        "httpx.content-decoding STUDY_CANDIDATE(content-encoding and charset fallback (httpx decoders and autodetect) versus ECDEV's document decoder on pages without a declared charset)"
-      ],
+      "open": [],
       "resolved": [
         "fetch.redirect STUDY_COMPLETE[DERIVED_NATIVE](redirect statuses and target resolution proven on 2000 frozen httpx cases; policy and ambiguity refusals pinned)",
         "httpx.redirect-request-rewriting STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](cache validators go only to the URL whose response produced them (adapter/web/src/lib.rs::validators_for) and a 304 nothing was asked for is refused; httpx keeps validators across redirects and strips only Authorization)",
+        "httpx.content-decoding STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately no statistical charset guessing: research/commerce/charset-benchmark.json decoded 44 of 48 pages on 19 Japanese retailers under a declared charset or valid UTF-8, including all 12 Shift_JIS pages (declared in header or meta); the 4 refusals were one undeclared Shift_JIS redirect stub with no product data, and the httpx detector guessed cp1256 for a page that declares Shift_JIS)",
         "httpx.transport-and-pooling REFERENCE_ONLY(httpcore pooling, HTTP/2 and proxy routing as a reference for a higher-throughput crawler)",
         "httpx.auth-and-cookies STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV public research is credentialless and cookieless by design)",
         "httpx.command-line NO_RESEARCH_VALUE[RELEASE_TOOLING](interactive command-line HTTP client)"
@@ -797,6 +796,21 @@
       "knowledge": "UNREVIEWED",
       "licence_policy": {
         "licence": "BSD-3-Clause",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
+      },
+      "open": [],
+      "resolved": []
+    },
+    {
+      "donor": "dependency--github-com-jawah-charset_normalizer",
+      "runtime": "REGISTERED",
+      "effective": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
         "family": "PERMISSIVE",
         "code_adoption": "ADOPT_WITH_NOTICE",
         "knowledge_study": "STUDY_AND_DERIVE",

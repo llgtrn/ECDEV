@@ -1,17 +1,17 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "c584449d9e5556a110ac4d1eab60c53597a27a12",
+  "assessed_parent_commit": "e072e9015f810d0a85bda35db47c39a2c25e9eee",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
-  "donor_count": 67,
+  "donor_count": 68,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
     "CUTOVER": 4,
     "DISCOVERED": 13,
     "EXTINCT": 1,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 44
+    "REGISTERED": 45
   },
   "extinct": [
     "scrapinghub--price-parser"
@@ -2748,7 +2748,7 @@
       "exception": "",
       "stopped_by": "CUTOVER: no cutover declared",
       "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
-      "knowledge": "ACTIVE_STUDY",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -2775,9 +2775,9 @@
         {
           "key": "httpx.content-decoding",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(content-encoding and charset fallback (httpx decoders and autodetect) versus ECDEV's document decoder on pages without a declared charset)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](deliberately no statistical charset guessing: research/commerce/charset-benchmark.json decoded 44 of 48 pages on 19 Japanese retailers under a declared charset or valid UTF-8, including all 12 Shift_JIS pages (declared in header or meta); the 4 refusals were one undeclared Shift_JIS redirect stub with no product data, and the httpx detector guessed cp1256 for a page that declares Shift_JIS)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "httpx.transport-and-pooling",
@@ -2865,7 +2865,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "1 of 6 declared capabilities still have open research: httpx.content-decoding (STUDY_CANDIDATE)"
+          "detail": "every declared capability is resolved, but the whole-source semantic review is PENDING: capabilities may remain unextracted"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -4740,6 +4740,101 @@
           "gate": "BUILD_EDGES_ZERO",
           "pass": false,
           "detail": "2 observed: IMPORT PYTHON tinycss2 in tools/commerce/census.py; MANIFEST PYTHON tinycss2 in tools/commerce/requirements.txt"
+        },
+        {
+          "gate": "LINKED_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "TEST_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "SOURCE_IMPORTS_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "RESIDENT_SOURCE_ZERO",
+          "pass": true,
+          "detail": "no donor source tracked"
+        },
+        {
+          "gate": "CAPABILITY_COVERAGE_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "PARITY_PROOFS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "REGRESSION_TESTS_PASS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CANONICAL_REPLACEMENT_EXISTS",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "TECHNOLOGY_MAPPING_FULL",
+          "pass": false,
+          "detail": "no required capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "CAPABILITY_RELEVANCE_RESOLVED",
+          "pass": false,
+          "detail": "no capability declared: the donor is not decomposed"
+        },
+        {
+          "gate": "KNOWLEDGE_RESOLVED",
+          "pass": false,
+          "detail": "no capability extracted: nothing is known about what the donor teaches"
+        },
+        {
+          "gate": "CUTOVER_COMPLETED",
+          "pass": false,
+          "detail": "no cutover declared"
+        },
+        {
+          "gate": "ROLLBACK_INDEPENDENT",
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
+        }
+      ]
+    },
+    {
+      "donor": "dependency--github-com-jawah-charset_normalizer",
+      "claimed": "REGISTERED",
+      "effective": "REGISTERED",
+      "exception": "",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "UNREVIEWED",
+      "licence_policy": {
+        "licence": "MIT",
+        "family": "PERMISSIVE",
+        "code_adoption": "ADOPT_WITH_NOTICE",
+        "knowledge_study": "STUDY_AND_DERIVE",
+        "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
+        "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
+      },
+      "capabilities": [],
+      "gates": [
+        {
+          "gate": "RUNTIME_EDGES_ZERO",
+          "pass": true,
+          "detail": "none observed"
+        },
+        {
+          "gate": "BUILD_EDGES_ZERO",
+          "pass": false,
+          "detail": "2 observed: IMPORT PYTHON charset-normalizer in tools/commerce/charset_benchmark.py; MANIFEST PYTHON charset-normalizer in tools/commerce/requirements.txt"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
