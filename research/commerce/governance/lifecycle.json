@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "bc23427e19d05d3571176b27f7ec9dda6446a5af",
+  "assessed_parent_commit": "ec606f6a47df32592924fd691aaeaa7d57b4fcf1",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -6809,7 +6809,7 @@
         {
           "key": "social.mediacrawler.comment-tree-pagination",
           "required": false,
-          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/pagination.rs::PageWalk walks a source's own opaque cursors (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url on the feed origin) one acquisition and one verified raw capture per page, opt-in up to five pages, stopping on END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT or REQUEST_BUDGET with two requests kept for every source still to come; snapshots report pages and the stop reason per source. Date-sliced windows with per-day quotas are not implemented; comment trees are not read)",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Per-day quotas for time-uniform samples are not implemented; research/commerce/social-api-contract-probe.json records the source contracts)",
           "knowledge_status": "STUDY_COMPLETE",
           "open": false
         },

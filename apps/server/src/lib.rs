@@ -834,6 +834,100 @@ mod research_tests {
         );
     }
     #[test]
+    fn reply_trees_come_from_the_source_with_their_structure() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-trees-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let now = 10_000u64;
+        let search = json!({"page":0,"nbPages":1,"hits":[
+            {"objectID":"101","title":"matcha glass review","created_at_i":now - 500,"num_comments":3,"points":9,"_tags":["story"]},
+            {"objectID":"102","title":"matcha whisk","created_at_i":now - 400,"num_comments":0,"_tags":["story"]}]}).to_string();
+        let tree = json!({"id":101,"type":"story","author":"a","title":"matcha glass review","text":null,"created_at_i":now - 500,"parent_id":null,"points":9,"children":[
+            {"id":201,"type":"comment","author":"b","text":"matcha glass cracked","created_at_i":now - 450,"parent_id":101,"children":[
+                {"id":202,"type":"comment","author":"c","text":"mine too, matcha glass","created_at_i":now - 440,"parent_id":201,"children":[]}]},
+            {"id":203,"type":"comment","author":null,"text":null,"created_at_i":now - 430,"parent_id":101,"children":[]}]}).to_string();
+        let run = engine.trend_discover(json!({"query":"matcha glass","fixture_now":now,"sources":[{"platform":"HACKER_NEWS","fixture_raw":search,"reply_trees":true,"fixture_threads":{"101":tree}}]})).unwrap();
+        let p = &run["pagination"][0];
+        assert_eq!(p["threads"].as_array().unwrap().len(), 1);
+        let t = &p["threads"][0];
+        assert_eq!(
+            (
+                t["root"].clone(),
+                t["reported_comments"].clone(),
+                t["comments_observed"].clone(),
+                t["deleted"].clone(),
+                t["state"].clone()
+            ),
+            (
+                json!("101"),
+                json!(3),
+                json!(2),
+                json!(1),
+                json!("COMPLETE_BY_SOURCE")
+            )
+        );
+        let c = &p["population_coverage"];
+        assert_eq!(
+            (
+                c["comments_observed"].clone(),
+                c["comment_tree_state"].clone(),
+                c["comment_tree_complete"].clone()
+            ),
+            (json!(2), json!("COMPLETE_BY_SOURCE"), json!(true))
+        );
+        let replies: Vec<&Value> = run["captured_posts"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|p| p["propagation"] == "REPLY")
+            .collect();
+        let deep = replies.iter().find(|p| p["native_id"] == "202").unwrap();
+        assert_eq!(
+            (
+                deep["parent_id"].clone(),
+                deep["thread_id"].clone(),
+                deep["depth"].clone(),
+                deep["raw_locator"].clone()
+            ),
+            (
+                json!("201"),
+                json!("101"),
+                json!(2),
+                json!("/children/0/children/0")
+            )
+        );
+        // Replies have their own raw capture, distinct from the search page.
+        assert_ne!(
+            deep["raw_hash"],
+            run["captured_posts"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|p| p["native_id"] == "101")
+                .unwrap()["raw_hash"]
+        );
+        // Two replies mention the query and so count as mentions; the root's search hit as well.
+        assert_eq!(run["mention_count"], 3);
+        // A feed exposes no tree, and says so.
+        let feed = json!({"version":"https://jsonfeed.org/version/1.1","items":[{"id":"1","url":"https://f.example/1","content_text":"matcha glass","date_published":"1970-01-01T02:40:00Z"}]}).to_string();
+        let f = engine.trend_discover(json!({"query":"matcha glass","fixture_now":now,"sources":[{"platform":"JSON_FEED","url":"https://f.example/feed.json","fixture_raw":feed,"reply_trees":true}]})).unwrap();
+        assert_eq!(
+            f["pagination"][0]["population_coverage"]["comment_tree_state"],
+            "SOURCE_DOES_NOT_EXPOSE_TREE"
+        );
+        assert_eq!(
+            f["pagination"][0]["population_coverage"]["comment_tree_complete"],
+            false
+        );
+    }
+    #[test]
     fn public_amazon_blocked_route_preserves_provider_identity_and_public_fallback() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-public-amazon-{}",

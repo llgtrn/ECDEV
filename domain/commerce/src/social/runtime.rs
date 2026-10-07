@@ -71,7 +71,7 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
-    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
+    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"reply_trees":{"type":"boolean","description":"Also read the reply trees of the roots with the most reported comments (Hacker News items, Bluesky getPostThread); JSON Feed exposes none"},"max_threads":{"type":"integer","minimum":1,"maximum":10,"default":3},"fixture_threads":{"type":"object","additionalProperties":{"type":"string","maxLength":4194304},"description":"Fixture thread bodies keyed by root native id"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
     let discover = json!({"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":500},"sources":{"type":"array","items":source,"minItems":1,"maxItems":5},"window_seconds":{"type":"integer","minimum":60,"maximum":2592000},"request_budget":{"type":"integer","minimum":0,"maximum":20},"cache_only":{"type":"boolean"},"fixture_now":{"type":"integer","minimum":0}},"required":["query","sources"],"additionalProperties":false});
     let inspect = json!({"type":"object","properties":{"snapshot_id":{"type":"string"}},"additionalProperties":false});
     vec![
@@ -383,6 +383,9 @@ impl Engine {
                             "fixture_pages",
                             "fixture_slices",
                             "slice_seconds",
+                            "reply_trees",
+                            "max_threads",
+                            "fixture_threads",
                         ] {
                             o.remove(k);
                         }
@@ -477,14 +480,135 @@ impl Engine {
                 slices.push(json!({"since":bounds.map(|b|b.0),"until":bounds.map(|b|b.1),"acquired":walk.pages() > 0,"stop":stop,"pages":walk.pages(),"posts":slice_posts.len(),"earliest":times.iter().min(),"latest":times.iter().max(),"source_total":total}));
                 source_posts.extend(slice_posts);
             }
+            // Reply trees of the roots with the most reported comments, one acquisition and one
+            // raw capture per thread, inside the same budget.
+            let mut threads = vec![];
+            if source["reply_trees"] == true {
+                let mut roots: Vec<&SocialPost> = source_posts
+                    .iter()
+                    .filter(|p| {
+                        p.parent_id.is_none() && p.engagement.comments.is_some_and(|n| n > 0)
+                    })
+                    .collect();
+                roots.sort_by(|a, b| {
+                    b.engagement
+                        .comments
+                        .cmp(&a.engagement.comments)
+                        .then(a.native_id.cmp(&b.native_id))
+                });
+                let max_threads = source["max_threads"].as_u64().unwrap_or(3).clamp(1, 10) as usize;
+                let roots: Vec<(String, Option<u64>)> = roots
+                    .into_iter()
+                    .take(max_threads)
+                    .map(|p| (p.native_id.clone(), p.engagement.comments))
+                    .collect();
+                let reserved = (i + 1..sources.len())
+                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
+                    .count() as u64
+                    * 2;
+                let mut thread_posts = vec![];
+                for (root, reported) in roots {
+                    if !fixture && requests + 2 + reserved > request_budget as u64 {
+                        threads.push(json!({"root":root,"reported_comments":reported,"state":"NOT_ACQUIRED_REQUEST_BUDGET"}));
+                        continue;
+                    }
+                    let mut payload = json!({"platform":source["platform"],"url":source["url"],"query":query,"captured_at":now,"thread_of":root});
+                    if fixture {
+                        match source["fixture_threads"][root.as_str()].as_str() {
+                            Some(raw) => payload["fixture_raw"] = json!(raw),
+                            None => {
+                                threads.push(json!({"root":root,"reported_comments":reported,"state":"FIXTURE_THREAD_MISSING"}));
+                                continue;
+                            }
+                        }
+                    }
+                    match provider.acquire(&AcquireRequest {
+                        run_id: run_id.clone(),
+                        capability: "social.query".into(),
+                        market: "PUBLIC_SOCIAL".into(),
+                        query: payload,
+                    }) {
+                        Ok(acquired) => {
+                            let count = acquired.provider_cost["request_count"].as_u64();
+                            requests = requests.saturating_add(count.unwrap_or(0));
+                            if (fixture && count != Some(0))
+                                || (!fixture && count.is_none_or(|n| n == 0))
+                            {
+                                threads.push(json!({"root":root,"state":"THREAD_FAILED","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH"}));
+                                continue;
+                            }
+                            let posts: Vec<SocialPost> =
+                                serde_json::from_value(acquired.result["posts"].clone())
+                                    .map_err(err)?;
+                            let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
+                            for p in &posts {
+                                p.validate()?;
+                                if p.capture_mode != mode || p.raw_hash != raw_hash {
+                                    return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
+                                }
+                            }
+                            let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
+                            fs::create_dir_all(&rawdir).map_err(err)?;
+                            fs::write(
+                                rawdir.join(format!("{raw_hash}.raw")),
+                                &acquired.raw_payload,
+                            )
+                            .map_err(err)?;
+                            let tree = &acquired.result["reply_tree"];
+                            let comments = posts
+                                .iter()
+                                .filter(|p| p.depth.is_some_and(|d| d > 0))
+                                .count();
+                            threads.push(json!({"root":root,"reported_comments":reported,"comments_observed":comments,"nodes":tree["nodes"],"deleted":tree["deleted"],"not_found":tree["not_found"],"blocked":tree["blocked"],"max_depth":tree["max_depth"],"depth_cut_nodes":tree["depth_cut_nodes"],"state":tree["state"],"raw_hash":raw_hash}));
+                            thread_posts.extend(
+                                posts.into_iter().filter(|p| p.depth.is_some_and(|d| d > 0)),
+                            );
+                        }
+                        Err(e) => {
+                            requests = requests.saturating_add(e.request_count.unwrap_or(0));
+                            threads.push(json!({"root":root,"reported_comments":reported,"state":if e.reason == "SOURCE_DOES_NOT_EXPOSE_TREE" {"SOURCE_DOES_NOT_EXPOSE_TREE"} else {"THREAD_FAILED"},"reason":e.reason,"http_status":e.http_status}));
+                        }
+                    }
+                }
+                source_posts.extend(thread_posts);
+            }
             let coverage = super::coverage::population_coverage(
                 now.saturating_sub(window),
                 now,
                 sliced,
                 &slices,
             );
+            let mut coverage = coverage;
+            if source["reply_trees"] == true {
+                let states: Vec<&str> =
+                    threads.iter().filter_map(|t| t["state"].as_str()).collect();
+                let tree_state = if source["platform"] == "JSON_FEED" {
+                    "SOURCE_DOES_NOT_EXPOSE_TREE"
+                } else if states.is_empty() {
+                    "NO_ROOTS_WITH_REPORTED_COMMENTS"
+                } else if states.iter().all(|s| *s == "COMPLETE_BY_SOURCE") {
+                    "COMPLETE_BY_SOURCE"
+                } else {
+                    "PARTIAL_COMMENT_TREE"
+                };
+                coverage["comments_observed"] = json!(
+                    threads
+                        .iter()
+                        .filter_map(|t| t["comments_observed"].as_u64())
+                        .sum::<u64>()
+                );
+                coverage["threads_requested"] = json!(threads.len());
+                coverage["comment_tree_state"] = json!(tree_state);
+                coverage["comment_tree_complete"] = json!(tree_state == "COMPLETE_BY_SOURCE");
+                if coverage["state"] == "COMPLETE_BY_SOURCE" && tree_state == "PARTIAL_COMMENT_TREE"
+                {
+                    coverage["state"] = json!("PARTIAL_COMMENT_TREE");
+                }
+            } else {
+                coverage["comment_tree_state"] = json!("NOT_REQUESTED");
+            }
             let pages: u64 = slices.iter().filter_map(|s| s["pages"].as_u64()).sum();
-            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"population_coverage":coverage}));
+            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"threads":threads,"population_coverage":coverage}));
             if !fixture && !source_posts.is_empty() {
                 self.db
                     .lock()

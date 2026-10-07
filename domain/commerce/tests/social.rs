@@ -38,6 +38,7 @@ fn post(id: &str, platform: &str, at: u64) -> SocialPost {
         evidence_id: format!("evidence-{platform}-{id}"),
         freshness_seconds: 10000_u64.checked_sub(at),
         origin_evidence_id: None,
+        depth: None,
     }
 }
 fn root() -> std::path::PathBuf {

@@ -116,6 +116,9 @@ pub struct SocialPost {
     pub evidence_id: String,
     pub freshness_seconds: Option<u64>,
     pub origin_evidence_id: Option<String>,
+    /// Depth below the thread root for posts read from a reply tree; absent elsewhere.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub depth: Option<u32>,
 }
 impl SocialPost {
     pub fn key(&self) -> String {
@@ -135,6 +138,7 @@ impl SocialPost {
             || !matches!(
                 self.propagation.as_str(),
                 "ORIGINAL"
+                    | "REPLY"
                     | "REPOST"
                     | "QUOTE"
                     | "SYNDICATION"

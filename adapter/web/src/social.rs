@@ -35,6 +35,113 @@ fn plain(s: &str) -> String {
         .join(" ")
 }
 /// Explicit-zone RFC3339 normalized to UTC seconds; missing/unknown zones stay absent.
+/// Reply depth requested from Bluesky threads; deeper replies are reported as a cut-off.
+pub const THREAD_DEPTH: u32 = 10;
+/// Posts kept from one thread response.
+pub const MAX_THREAD_POSTS: usize = 500;
+
+/// A reply tree as posts: every node keeps its JSON pointer into the raw response, its parent,
+/// its thread root and its depth. Deleted, missing and blocked nodes are counted, never turned
+/// into posts. Hacker News items/{id} returns the whole tree; a Bluesky thread may stop at
+/// THREAD_DEPTH, which is reported as a cut-off rather than as the end of the conversation.
+pub fn normalize_tree(
+    data: &Value,
+    platform: &str,
+    source: &str,
+    raw: &[u8],
+    captured: u64,
+    mode: &str,
+) -> Result<(Vec<SocialPost>, Value), String> {
+    let hash = format!("{:x}", Sha256::digest(raw));
+    let mut posts = vec![];
+    let (mut nodes, mut deleted, mut not_found, mut blocked, mut max_depth, mut cut) =
+        (0u64, 0u64, 0u64, 0u64, 0u32, 0u64);
+    let mut stack: Vec<(&Value, String, u32)> = vec![];
+    let root_id;
+    match platform {
+        "HACKER_NEWS" => {
+            root_id = data["id"]
+                .as_u64()
+                .ok_or("HN_TREE_ROOT_REQUIRED")?
+                .to_string();
+            stack.push((data, String::new(), 0));
+        }
+        "BLUESKY" => {
+            let root = &data["thread"];
+            root_id = text(&root["post"]["uri"]).ok_or("BLUESKY_THREAD_ROOT_REQUIRED")?;
+            stack.push((root, "/thread".into(), 0));
+        }
+        _ => return Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
+    }
+    while let Some((node, pointer, depth)) = stack.pop() {
+        nodes += 1;
+        if nodes as usize > 4 * MAX_THREAD_POSTS {
+            return Err("SOCIAL_THREAD_LIMIT_EXCEEDED".into());
+        }
+        max_depth = max_depth.max(depth);
+        let (item, children_key) = match platform {
+            "HACKER_NEWS" => {
+                let item = if node["author"].is_null() && node["text"].is_null() && depth > 0 {
+                    deleted += 1;
+                    None
+                } else {
+                    Some(
+                        json!({"objectID":node["id"].as_u64().map(|i| i.to_string()),"title":node["title"],"comment_text":node["text"],"created_at_i":node["created_at_i"],"parent_id":node["parent_id"],"author":node["author"],"points":node["points"],"url":node["url"]}),
+                    )
+                };
+                (item, "children")
+            }
+            _ => {
+                let kind = node["$type"].as_str().unwrap_or("");
+                if kind.ends_with("notFoundPost") {
+                    not_found += 1;
+                    (None, "replies")
+                } else if kind.ends_with("blockedPost") {
+                    blocked += 1;
+                    (None, "replies")
+                } else {
+                    if depth + 1 > THREAD_DEPTH
+                        || (node["post"]["replyCount"].as_u64().is_some_and(|n| n > 0)
+                            && node["replies"].as_array().is_none_or(|r| r.is_empty()))
+                    {
+                        cut += 1;
+                    }
+                    (Some(node["post"].clone()), "replies")
+                }
+            }
+        };
+        if let Some(item) = item
+            && posts.len() < MAX_THREAD_POSTS
+        {
+            let locator = if platform == "BLUESKY" {
+                format!("{pointer}/post")
+            } else {
+                pointer.clone()
+            };
+            let mut post = normalize_item(
+                data, &item, platform, source, &hash, captured, mode, locator,
+            )?;
+            post.thread_id = Some(root_id.clone());
+            post.depth = Some(depth);
+            if depth > 0 {
+                post.propagation = "REPLY".into();
+            }
+            post.validate()?;
+            posts.push(post);
+        }
+        let children: &[Value] = node[children_key].as_array().map_or(&[], Vec::as_slice);
+        for (i, child) in children.iter().enumerate().rev() {
+            stack.push((child, format!("{pointer}/{children_key}/{i}"), depth + 1));
+        }
+    }
+    let truncated = (nodes - deleted - not_found - blocked) as usize > posts.len();
+    let complete = !truncated && not_found == 0 && blocked == 0 && cut == 0;
+    Ok((
+        posts,
+        json!({"root":root_id,"nodes":nodes,"posts":nodes - deleted - not_found - blocked,"deleted":deleted,"not_found":not_found,"blocked":blocked,"max_depth":max_depth,"depth_cut_nodes":cut,"post_limit_reached":truncated,"state":if complete {"COMPLETE_BY_SOURCE"} else {"PARTIAL_COMMENT_TREE"}}),
+    ))
+}
+
 /// UTC RFC 3339 text for Unix seconds (civil-from-days), as Bluesky's since/until expect.
 pub fn utc_rfc3339(secs: u64) -> String {
     let days = (secs / 86_400) as i64;
@@ -170,6 +277,31 @@ fn endpoint(q: &Value) -> Result<Url, String> {
     let query = q["query"].as_str().ok_or("query required")?;
     if query.len() > 500 {
         return Err("QUERY_TOO_LONG".into());
+    }
+    if let Some(root) = q.get("thread_of") {
+        let root = root.as_str().ok_or("INVALID_THREAD_ROOT")?;
+        return match q["platform"].as_str().unwrap_or("") {
+            "HACKER_NEWS"
+                if !root.is_empty()
+                    && root.len() <= 20
+                    && root.bytes().all(|c| c.is_ascii_digit()) =>
+            {
+                Ok(Url::parse(&format!("https://hn.algolia.com/api/v1/items/{root}")).unwrap())
+            }
+            "BLUESKY" if root.starts_with("at://") && root.len() <= 512 => {
+                // Search lives on api.bsky.app; threads on the public AppView.
+                let mut u =
+                    Url::parse("https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread")
+                        .unwrap();
+                u.query_pairs_mut()
+                    .append_pair("uri", root)
+                    .append_pair("depth", &THREAD_DEPTH.to_string())
+                    .append_pair("parentHeight", "0");
+                Ok(u)
+            }
+            "JSON_FEED" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
+            _ => Err("INVALID_THREAD_ROOT".into()),
+        };
     }
     match q["platform"].as_str().unwrap_or("") {
         "HACKER_NEWS" => {
@@ -338,18 +470,19 @@ impl Provider for Social {
             timestamp()
         };
         u.set_fragment(None);
-        let posts = normalize(
-            &data,
-            r.query["platform"].as_str().unwrap_or(""),
-            u.as_str(),
-            &raw,
-            captured,
-            mode,
-        )
-        .map_err(|e| failure(e, None, requests))?;
+        let platform = r.query["platform"].as_str().unwrap_or("");
+        let (posts, tree) = if r.query.get("thread_of").is_some() {
+            let (posts, tree) = normalize_tree(&data, platform, u.as_str(), &raw, captured, mode)
+                .map_err(|e| failure(e, None, requests))?;
+            (posts, tree)
+        } else {
+            let posts = normalize(&data, platform, u.as_str(), &raw, captured, mode)
+                .map_err(|e| failure(e, None, requests))?;
+            (posts, Value::Null)
+        };
         Ok(AcquireResult {
             observations: vec![],
-            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"population_complete":false}),
+            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"reply_tree":tree,"population_complete":false}),
             raw_payload: raw,
             provider_cost: json!({"cost_minor":0,"request_count":requests,"paid":false}),
         })
@@ -416,29 +549,45 @@ pub fn normalize(
     let hash = format!("{:x}", Sha256::digest(raw));
     let mut posts = vec![];
     for (index, item) in rows.iter().take(50).enumerate() {
-        if !item.is_object() {
-            return Err("MALFORMED_SOCIAL_ITEM".into());
-        }
-        let mut engagement = SocialEngagement {
-            views: None,
-            likes: None,
-            comments: None,
-            reposts: None,
-            favorites: None,
-            followers: None,
-        };
-        let (
-            native,
-            url,
-            body,
-            author,
-            published_at,
-            language,
-            parent,
-            propagation,
-            entities,
-            media,
-        ) = match platform {
+        posts.push(normalize_item(
+            data,
+            item,
+            platform,
+            source,
+            &hash,
+            captured,
+            mode,
+            format!("/{key}/{index}"),
+        )?);
+    }
+    Ok(posts)
+}
+
+/// One source item as a post, with `locator` its JSON pointer inside the raw response.
+#[allow(clippy::too_many_arguments)]
+fn normalize_item(
+    data: &Value,
+    item: &Value,
+    platform: &str,
+    source: &str,
+    hash: &str,
+    captured: u64,
+    mode: &str,
+    locator: String,
+) -> Result<SocialPost, String> {
+    if !item.is_object() {
+        return Err("MALFORMED_SOCIAL_ITEM".into());
+    }
+    let mut engagement = SocialEngagement {
+        views: None,
+        likes: None,
+        comments: None,
+        reposts: None,
+        favorites: None,
+        followers: None,
+    };
+    let (native, url, body, author, published_at, language, parent, propagation, entities, media) =
+        match platform {
             "HACKER_NEWS" => {
                 let id = text(&item["objectID"]).ok_or("HN_NATIVE_ID_REQUIRED")?;
                 if !id.bytes().all(|c| c.is_ascii_digit()) {
@@ -495,6 +644,8 @@ pub fn normalize(
                     "REPOST"
                 } else if item["embed"]["record"]["uri"].is_string() {
                     "QUOTE"
+                } else if record["reply"]["parent"]["uri"].is_string() {
+                    "REPLY"
                 } else {
                     "ORIGINAL"
                 };
@@ -564,71 +715,160 @@ pub fn normalize(
                 )
             }
         };
-        let words = body.split_whitespace();
-        let hashtags = words
-            .clone()
-            .filter_map(|w| {
-                w.strip_prefix('#')
-                    .filter(|s| !s.is_empty())
-                    .map(str::to_owned)
-            })
-            .take(100)
-            .collect();
-        let mentions = words
-            .filter_map(|w| {
-                w.strip_prefix('@')
-                    .filter(|s| !s.is_empty())
-                    .map(str::to_owned)
-            })
-            .take(100)
-            .collect();
-        let post = SocialPost {
-            platform: platform.to_owned(),
-            provider: "native-social".into(),
-            source_url: normalize_url(&url)?,
-            native_id: if platform == "JSON_FEED" {
-                format!("{source}#{native}")
-            } else {
-                native
-            },
-            thread_id: if platform == "BLUESKY" {
-                text(&item["record"]["reply"]["root"]["uri"]).or(parent.clone())
-            } else {
-                parent.clone()
-            },
-            author_id: author,
-            publisher: None,
-            published_at,
-            captured_at: captured,
-            text: body,
-            language,
-            media,
-            hashtags,
-            mentions,
-            entities,
-            propagation,
-            parent_id: parent,
-            engagement,
-            raw_hash: hash.clone(),
-            raw_locator: format!("/{key}/{index}"),
-            extraction_method: format!("NATIVE_{platform}_JSON_V1"),
-            state: EvidenceState::Observed,
-            capture_mode: mode.to_owned(),
-            freshness_seconds: None,
-            origin_evidence_id: None,
-            evidence_id: Uuid::new_v4().to_string(),
-        };
-        let mut post = post;
-        post.freshness_seconds = post.published_at.and_then(|t| captured.checked_sub(t));
-        post.validate()?;
-        posts.push(post);
-    }
-    Ok(posts)
+    let words = body.split_whitespace();
+    let hashtags = words
+        .clone()
+        .filter_map(|w| {
+            w.strip_prefix('#')
+                .filter(|s| !s.is_empty())
+                .map(str::to_owned)
+        })
+        .take(100)
+        .collect();
+    let mentions = words
+        .filter_map(|w| {
+            w.strip_prefix('@')
+                .filter(|s| !s.is_empty())
+                .map(str::to_owned)
+        })
+        .take(100)
+        .collect();
+    let post = SocialPost {
+        platform: platform.to_owned(),
+        provider: "native-social".into(),
+        source_url: normalize_url(&url)?,
+        native_id: if platform == "JSON_FEED" {
+            format!("{source}#{native}")
+        } else {
+            native
+        },
+        thread_id: if platform == "BLUESKY" {
+            text(&item["record"]["reply"]["root"]["uri"]).or(parent.clone())
+        } else {
+            parent.clone()
+        },
+        author_id: author,
+        publisher: None,
+        published_at,
+        captured_at: captured,
+        text: body,
+        language,
+        media,
+        hashtags,
+        mentions,
+        entities,
+        propagation,
+        parent_id: parent,
+        engagement,
+        raw_hash: hash.to_string(),
+        raw_locator: locator,
+        extraction_method: format!("NATIVE_{platform}_JSON_V1"),
+        state: EvidenceState::Observed,
+        capture_mode: mode.to_owned(),
+        freshness_seconds: None,
+        origin_evidence_id: None,
+        depth: None,
+        evidence_id: Uuid::new_v4().to_string(),
+    };
+    let mut post = post;
+    post.freshness_seconds = post.published_at.and_then(|t| captured.checked_sub(t));
+    post.validate()?;
+    Ok(post)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn reply_trees_keep_parent_root_depth_and_pointer() {
+        let hn = json!({"id":1,"type":"story","author":"a","title":"matcha glass","text":null,"created_at_i":100,"parent_id":null,"points":5,"children":[
+            {"id":2,"type":"comment","author":"b","text":"<p>nice matcha</p>","created_at_i":110,"parent_id":1,"children":[
+                {"id":3,"type":"comment","author":"c","text":"agree","created_at_i":120,"parent_id":2,"children":[]}]},
+            {"id":4,"type":"comment","author":null,"text":null,"created_at_i":130,"parent_id":1,"children":[
+                {"id":5,"type":"comment","author":"d","text":"reply under a deleted one","created_at_i":140,"parent_id":4,"children":[]}]}]});
+        let raw = hn.to_string();
+        let (posts, tree) = normalize_tree(
+            &hn,
+            "HACKER_NEWS",
+            "https://hn.algolia.com/api/v1/items/1",
+            raw.as_bytes(),
+            200,
+            "FIXTURE",
+        )
+        .unwrap();
+        let ids: Vec<_> = posts.iter().map(|p| p.native_id.as_str()).collect();
+        assert_eq!(ids, ["1", "2", "3", "5"]);
+        let three = &posts[2];
+        assert_eq!(
+            (
+                three.parent_id.as_deref(),
+                three.thread_id.as_deref(),
+                three.depth,
+                three.raw_locator.as_str()
+            ),
+            (Some("2"), Some("1"), Some(2), "/children/0/children/0")
+        );
+        assert_eq!(three.propagation, "REPLY");
+        assert_eq!(posts[0].depth, Some(0));
+        assert_eq!(
+            (
+                tree["deleted"].clone(),
+                tree["posts"].clone(),
+                tree["state"].clone()
+            ),
+            (json!(1), json!(4), json!("COMPLETE_BY_SOURCE"))
+        );
+        // Bluesky: a missing reply and a depth cut-off make the tree partial.
+        let post = |rkey: &str, replies: u64, parent: Option<&str>| {
+            let mut record = json!({"text":"matcha","createdAt":"1970-01-01T00:01:40Z"});
+            if let Some(p) = parent {
+                record["reply"] = json!({"parent":{"uri":p},"root":{"uri":"at://did:plc:a/app.bsky.feed.post/r"}});
+            }
+            json!({"uri":format!("at://did:plc:a/app.bsky.feed.post/{rkey}"),"author":{"did":"did:plc:a","handle":"a.bsky.social"},"record":record,"replyCount":replies})
+        };
+        let sky = json!({"thread":{"$type":"app.bsky.feed.defs#threadViewPost","post":post("r",3,None),"replies":[
+            {"$type":"app.bsky.feed.defs#threadViewPost","post":post("x",2,Some("at://did:plc:a/app.bsky.feed.post/r")),"replies":[]},
+            {"$type":"app.bsky.feed.defs#notFoundPost","uri":"at://did:plc:a/app.bsky.feed.post/gone","notFound":true}]}});
+        let raw = sky.to_string();
+        let (posts, tree) = normalize_tree(
+            &sky,
+            "BLUESKY",
+            "https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread",
+            raw.as_bytes(),
+            200,
+            "FIXTURE",
+        )
+        .unwrap();
+        assert_eq!(posts.len(), 2);
+        assert_eq!(posts[1].raw_locator, "/thread/replies/0/post");
+        assert_eq!(
+            posts[1].thread_id.as_deref(),
+            Some("at://did:plc:a/app.bsky.feed.post/r")
+        );
+        assert_eq!(
+            (
+                tree["not_found"].clone(),
+                tree["depth_cut_nodes"].clone(),
+                tree["state"].clone()
+            ),
+            (json!(1), json!(1), json!("PARTIAL_COMMENT_TREE"))
+        );
+        // Thread endpoints, and a source without trees.
+        assert_eq!(
+            endpoint(&json!({"platform":"HACKER_NEWS","query":"m","thread_of":"15392159"}))
+                .unwrap()
+                .as_str(),
+            "https://hn.algolia.com/api/v1/items/15392159"
+        );
+        assert!(endpoint(&json!({"platform":"BLUESKY","query":"m","thread_of":"at://did:plc:a/app.bsky.feed.post/r"})).unwrap().as_str().starts_with("https://public.api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=at"));
+        assert_eq!(endpoint(&json!({"platform":"JSON_FEED","query":"m","url":"https://f.example/f.json","thread_of":"x"})).unwrap_err(), "SOURCE_DOES_NOT_EXPOSE_TREE");
+        assert_eq!(
+            endpoint(&json!({"platform":"HACKER_NEWS","query":"m","thread_of":"../x"}))
+                .unwrap_err(),
+            "INVALID_THREAD_ROOT"
+        );
+    }
+
     #[test]
     fn time_slices_reach_the_source_as_its_own_bounds() {
         assert_eq!(utc_rfc3339(0), "1970-01-01T00:00:00Z");
