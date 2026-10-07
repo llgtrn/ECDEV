@@ -287,7 +287,66 @@ pub fn terms(text: &str) -> BTreeSet<String> {
 
 /// Whether a text mentions a query: every query term is a term of the text, and every CJK run
 /// of the query appears in the text as written (bigrams alone could be scattered).
+/// Two-letter Latin words a query may name ("AI", "5G", "TV"): too short to index from text,
+/// so they are matched as whole words. Common function words are not query words.
+fn short_words(query: &str) -> BTreeSet<String> {
+    runs(query)
+        .into_iter()
+        .filter(|(w, cjk)| !cjk && w.chars().count() == 2)
+        .map(|(w, _)| w)
+        .filter(|w| {
+            !matches!(
+                w.as_str(),
+                "an" | "as"
+                    | "at"
+                    | "be"
+                    | "by"
+                    | "do"
+                    | "go"
+                    | "he"
+                    | "if"
+                    | "in"
+                    | "is"
+                    | "it"
+                    | "me"
+                    | "my"
+                    | "no"
+                    | "of"
+                    | "on"
+                    | "or"
+                    | "so"
+                    | "to"
+                    | "up"
+                    | "us"
+                    | "we"
+            )
+        })
+        .collect()
+}
+
+/// Whether a query names anything ECDEV can look for in text.
+pub fn searchable(query: &str) -> bool {
+    !terms(query).is_empty() || !short_words(query).is_empty()
+}
+
 pub fn mentions(query: &str, text: &str) -> bool {
+    let short = short_words(query);
+    if !short.is_empty() {
+        let words: BTreeSet<String> = runs(text)
+            .into_iter()
+            .filter(|(_, cjk)| !cjk)
+            .map(|(w, _)| w)
+            .collect();
+        if !short.is_subset(&words) {
+            return false;
+        }
+        if terms(query).is_empty() {
+            return runs(query)
+                .into_iter()
+                .filter(|(_, cjk)| *cjk)
+                .all(|(run, _)| folded(text).contains(&run));
+        }
+    }
     let q = terms(query);
     // A lone CJK character is checked as written below; text holds it only inside bigrams.
     let indexed: BTreeSet<String> = q
@@ -799,6 +858,11 @@ mod tests {
         assert!(mixed.contains("iphone17") && mixed.contains("ケー") && mixed.contains("ース"));
         // Korean and Chinese are unspaced runs too.
         assert!(mentions("말차", "말차라떼 인기") && mentions("抹茶", "抹茶拿铁很受欢迎"));
+        // Two-letter Latin query words match whole words only; function words name nothing.
+        assert!(searchable("AI") && mentions("AI", "New AI kettle") && !mentions("AI", "Thai tea"));
+        assert!(mentions("5G router", "A 5G Router launch") && !mentions("5G router", "router"));
+        assert!(mentions("AI 家電", "AI搭載の家電") && !mentions("AI 家電", "家電の新作"));
+        assert!(!searchable("of an") && !searchable("a"));
     }
     #[test]
     fn independent_social_donor_oracles() {

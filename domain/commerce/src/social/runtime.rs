@@ -250,7 +250,7 @@ impl Engine {
     }
     pub fn trend_discover(&self, args: Value) -> Result<Value, String> {
         let query = required(&args, "query")?.trim().to_owned();
-        if query.len() > 500 || terms(&query).is_empty() {
+        if query.len() > 500 || !super::searchable(&query) {
             return Err("INVALID_SOCIAL_QUERY".into());
         }
         let sources = args["sources"].as_array().ok_or("sources array required")?;
@@ -822,7 +822,7 @@ impl Engine {
             return Ok(self.trend_inspect(json!({}))?["watches"].clone());
         }
         let query = required(&args, "query")?;
-        if query.len() > 500 || terms(query).is_empty() {
+        if query.len() > 500 || !super::searchable(query) {
             return Err("INVALID_WATCH_QUERY".into());
         }
         let interval = args["interval_seconds"].as_u64().unwrap_or(3600);
