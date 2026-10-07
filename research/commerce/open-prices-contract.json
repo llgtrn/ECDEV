@@ -1,0 +1,326 @@
+{
+ "api": "Open Prices REST API v1 (read endpoints, no account)",
+ "endpoint": "https://prices.openfoodfacts.org/api/v1/",
+ "documentation": [
+  "https://prices.openfoodfacts.org/api/schema (OpenAPI 3.0.3, read 2026-10-07)",
+  "https://github.com/openfoodfacts/open-prices/blob/main/docs/guides/data.md"
+ ],
+ "request": {
+  "products": "products?product_name__like=<name>&price_count__gte=1&order_by=-price_count&size<=50",
+  "prices": "prices?product_code=<code>&duplicate_of__isnull=true&order_by=-date&size<=50"
+ },
+ "terms": {
+  "data_licence": "ODbL-1.0 (docs/guides/data.md: mention the source; avoid combining with non-free data that cannot be released as open data)",
+  "server_code_licence": "AGPL-3.0, not used: ECDEV only calls the public API",
+  "legal_assessment": "NOT_MADE"
+ },
+ "robots": {
+  "prices.openfoodfacts.org": "no robots.txt rules (the single-page app is served at /robots.txt); consulted on every request",
+  "world.openfoodfacts.org": "User-agent: * Disallow: /api, so the Open Food Facts product API is not read",
+  "search.openfoodfacts.org": "User-agent: * Disallow: /, not read"
+ },
+ "semantics": [
+  "prices are contributed by people in physical stores with a price-tag or receipt photo proof; they are store shelf prices, not online listings or marketplace offers",
+  "name search is a substring match: 'oat milk' finds 'Goat Milk'; ECDEV keeps only names holding the query as words",
+  "each price row names its contributor account; ECDEV stores only a keyed pseudonym, and several prices from one contributor are one witness",
+  "price_per distinguishes item from per-kilogram prices; they are summarised apart",
+  "a 13-digit code with a leading zero is a UPC-A"
+ ],
+ "live_validation": {
+  "date": "2026-10-07",
+  "runtime": "ECDEV ecdev.price.observations through the operator egress proxy",
+  "runs": [
+   {
+    "query": "matcha latte",
+    "state": "OBSERVED_STORE_PRICES",
+    "capture_mode": "LIVE",
+    "request_count": 8,
+    "source_total": 15,
+    "excluded_substring_only_matches": 0,
+    "products": [
+     {
+      "code": "0892859002898",
+      "name": "Matcha Latte",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "USD",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 3,
+        "median": 14.99,
+        "earliest_date": "2026-06-07",
+        "latest_date": "2026-07-03",
+        "distinct_stores": 3,
+        "distinct_contributors": 1
+       }
+      ]
+     },
+     {
+      "code": "0853371006436",
+      "name": "Matcha Latte",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "USD",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 2,
+        "median": 9.99,
+        "earliest_date": "2025-10-30",
+        "latest_date": "2026-10-03",
+        "distinct_stores": 2,
+        "distinct_contributors": 1
+       }
+      ]
+     },
+     {
+      "code": "4002971197709",
+      "name": "Creamy Pudding Typ Matcha Latte",
+      "catalog_identifier": "EAN",
+      "summary": [
+       {
+        "currency": "EUR",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 1,
+        "median": 0.49,
+        "earliest_date": "2026-06-15",
+        "latest_date": "2026-06-15",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       }
+      ]
+     }
+    ],
+    "captures": [
+     {
+      "endpoint": "PRODUCTS",
+      "raw_hash": "48bf8a1dadeaa24d6c30f81fdc329161a71aaf36322214f8f1c8e23bb9214a90"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "4cdf46edc2c6b12395d347f9ec59af217e29637357f40ca24bb1b5b2dc70f58d"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "d249d67777bc9853bcd6e664534014f2f05079bfcbda56941cd722f8e4b8a053"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "402e448d8ebee75d6f08f4832e32161a1314e605685966063a07a15c12188226"
+     }
+    ]
+   },
+   {
+    "query": "oat milk",
+    "state": "OBSERVED_STORE_PRICES",
+    "capture_mode": "LIVE",
+    "request_count": 8,
+    "source_total": 29,
+    "excluded_substring_only_matches": 7,
+    "products": [
+     {
+      "code": "0190646640026",
+      "name": "Oat Milk",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "USD",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 5,
+        "median": 4.99,
+        "earliest_date": "2025-10-06",
+        "latest_date": "2026-09-26",
+        "distinct_stores": 5,
+        "distinct_contributors": 2
+       }
+      ]
+     },
+     {
+      "code": "0850033354720",
+      "name": "Oat Milk Chocolate Classic",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "USD",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 3,
+        "median": 4.49,
+        "earliest_date": "2025-10-03",
+        "latest_date": "2026-04-12",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       }
+      ]
+     },
+     {
+      "code": "0850033354751",
+      "name": "Oat Milk Chocolate Quinoa Crunch",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "USD",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 3,
+        "median": 4.49,
+        "earliest_date": "2025-10-03",
+        "latest_date": "2026-04-12",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       }
+      ]
+     }
+    ],
+    "captures": [
+     {
+      "endpoint": "PRODUCTS",
+      "raw_hash": "7d523fcef00fc6a0f2adfe94c2f0d6ae61f6eb05d1a7de9e06ebf6bb3fc88fc4"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "eefbf52a66f341dcc3b1f0c03a72a2ff1a0c60809f28a5f6312b3621089f8344"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "68f745b97c09cb28f140f8fb7ae7b6dbf645d572dc9dbc9611de571e404ca61f"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "104aa76671868a6742b282ea15db553e43bdce5ab2e54a10ef64e3040de3a6ad"
+     }
+    ]
+   },
+   {
+    "query": "matcha",
+    "state": "OBSERVED_STORE_PRICES",
+    "capture_mode": "LIVE",
+    "request_count": 8,
+    "source_total": 108,
+    "excluded_substring_only_matches": 0,
+    "products": [
+     {
+      "code": "7394376623769",
+      "name": "Matcha Oat Drink",
+      "catalog_identifier": "EAN",
+      "summary": [
+       {
+        "currency": "EUR",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 6,
+        "median": 3.45,
+        "earliest_date": "2026-01-23",
+        "latest_date": "2026-10-03",
+        "distinct_stores": 6,
+        "distinct_contributors": 4
+       },
+       {
+        "currency": "NOK",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 4,
+        "median": 39.9,
+        "earliest_date": "2026-08-13",
+        "latest_date": "2026-08-22",
+        "distinct_stores": 3,
+        "distinct_contributors": 1
+       },
+       {
+        "currency": "PLN",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 1,
+        "median": 12.69,
+        "earliest_date": "2026-09-25",
+        "latest_date": "2026-09-25",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       },
+       {
+        "currency": "SEK",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 3,
+        "median": 28.29,
+        "earliest_date": "2026-03-12",
+        "latest_date": "2026-09-06",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       }
+      ]
+     },
+     {
+      "code": "0871561004390",
+      "name": "The vert matcha",
+      "catalog_identifier": "UPC",
+      "summary": [
+       {
+        "currency": "EUR",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 6,
+        "median": 8.92,
+        "earliest_date": "2025-05-21",
+        "latest_date": "2026-09-07",
+        "distinct_stores": 4,
+        "distinct_contributors": 4
+       }
+      ]
+     },
+     {
+      "code": "5411188142522",
+      "name": "Matcha Coconut",
+      "catalog_identifier": "EAN",
+      "summary": [
+       {
+        "currency": "EUR",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 1,
+        "median": 2.89,
+        "earliest_date": "2026-05-29",
+        "latest_date": "2026-05-29",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       },
+       {
+        "currency": "PLN",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 1,
+        "median": 12.99,
+        "earliest_date": "2026-09-25",
+        "latest_date": "2026-09-25",
+        "distinct_stores": 1,
+        "distinct_contributors": 1
+       },
+       {
+        "currency": "SEK",
+        "price_unit": "ITEM_OR_UNSTATED",
+        "prices": 4,
+        "median": 22.61,
+        "earliest_date": "2026-05-09",
+        "latest_date": "2026-06-27",
+        "distinct_stores": 2,
+        "distinct_contributors": 1
+       }
+      ]
+     }
+    ],
+    "captures": [
+     {
+      "endpoint": "PRODUCTS",
+      "raw_hash": "71912b49d5d2d8cca095f51f9a14fb1e828d6a04e0a3e6b61569b87c7946ab30"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "fd77009fbb6f08207a886439954eba3a3da8abf804df193f0e643bda6711a445"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "1f8ebe05a895760fbfae47f2de93e1600a539af708412248709d7cfea27bb035"
+     },
+     {
+      "endpoint": "PRICES",
+      "raw_hash": "a5e865cb9a67765fde487a1f5b28b01af10e2673e9dd393a0034a7c7a8388dcd"
+     }
+    ]
+   }
+  ]
+ },
+ "limits": [
+  "coverage is whatever volunteers photographed: mostly packaged food and grocery, uneven by country; no denominator exists, so no coverage ratio is computed",
+  "a store price is a reference retail price, never demand or an online selling price"
+ ]
+}

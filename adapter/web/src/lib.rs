@@ -3,6 +3,7 @@ pub mod amazon;
 pub mod commerce;
 pub mod document;
 pub mod microdata;
+pub mod open_prices;
 pub mod page_product;
 pub mod page_text;
 pub mod price;

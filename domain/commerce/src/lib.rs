@@ -12,6 +12,7 @@ pub mod marketplace;
 pub mod memory;
 pub mod monitor;
 pub mod planner;
+pub mod price_observations;
 pub mod provider;
 pub mod public_suffix;
 pub mod research;

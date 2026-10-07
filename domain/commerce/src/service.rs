@@ -50,6 +50,7 @@ impl Engine {
         crate::social::runtime::initialize(&db)?;
         crate::social::feeds::initialize(&db)?;
         crate::listing::initialize(&db)?;
+        crate::price_observations::initialize(&db)?;
         crate::simulation::initialize(&db)?;
         Ok(Self {
             root: root.to_path_buf(),
@@ -580,6 +581,7 @@ impl Engine {
             "ecdev.trend.discover" => self.trend_discover(args),
             "ecdev.trend.feeds" => self.trend_feeds(args),
             "ecdev.listing.search" => self.listing_search(args),
+            "ecdev.price.observations" => self.price_observations(args),
             "ecdev.trend.inspect" | "ecdev.trend.explain" => self.trend_inspect(args),
             "ecdev.trend.compare" => self.trend_compare(args),
             "ecdev.trend.hypothesize" => self.trend_hypothesize(args),
@@ -686,6 +688,7 @@ pub fn tool_definitions() -> Vec<Value> {
     out.extend(crate::social::runtime::tool_definitions());
     out.push(crate::social::feeds::tool_definition());
     out.push(crate::listing::tool_definition());
+    out.push(crate::price_observations::tool_definition());
     out.push(json!({"name":"ecdev.product.discover","description":"Discover real product candidates through bounded native research; paid providers optional; supplied fixtures explicitly labeled","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.product.inspect","description":"Inspect one persisted candidate with field provenance, conflicts and economics uncertainty; zero network","inputSchema":{"type":"object","properties":{"candidate_id":{"type":"string"}},"required":["candidate_id"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.product.compare","description":"Compare 2 to 20 captured candidates without network acquisition or invented market ranking","inputSchema":{"type":"object","properties":{"candidate_ids":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":20}},"required":["candidate_ids"],"additionalProperties":false}}));

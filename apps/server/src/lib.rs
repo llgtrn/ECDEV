@@ -389,6 +389,9 @@ fn configured_engine() -> Result<Engine, String> {
         .with_provider(std::sync::Arc::new(ecdev_web::Web::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_web::social::Social::from_env()))
         .with_provider(std::sync::Arc::new(
+            ecdev_web::open_prices::OpenPrices::from_env(),
+        ))
+        .with_provider(std::sync::Arc::new(
             ecdev_web::yahoo_shopping::YahooShopping::from_env(),
         ))
         .with_provider(std::sync::Arc::new(
@@ -492,6 +495,109 @@ mod doctor_tests {
 #[cfg(test)]
 mod research_tests {
     use super::*;
+    #[test]
+    fn store_prices_are_reference_observations_with_pseudonymous_witnesses() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-open-prices-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::open_prices::OpenPrices::default()));
+        let products = json!({"items":[
+            {"code":"4901305410982","product_name":"MATCHA LATTE","brands":"Tsujiri","price_count":3},
+            {"code":"4901305410983","product_name":"bad checksum","price_count":9},
+            {"code":"0892859002898","product_name":"Matcha Latte","price_count":2}],"total":3}).to_string();
+        let price = |id: u64, amount: f64, per: Value, owner: &str, store: u64, date: &str| json!({"id":id,"product_code":"4901305410982","date":date,"price":amount,"currency":"JPY","price_per":per,"price_is_discounted":false,"owner":owner,"location":{"type":"OSM","osm_type":"NODE","osm_id":store,"osm_name":"Store","osm_address_country_code":"JP"},"proof":{"type":"PRICE_TAG"}});
+        let prices = json!({"items":[
+            price(1, 398.0, Value::Null, "volunteer-a", 10, "2026-09-01"),
+            price(2, 430.0, Value::Null, "volunteer-a", 11, "2026-09-20"),
+            price(3, 418.0, Value::Null, "volunteer-a", 12, "2026-08-02"),
+            price(4, 4200.0, json!("KILOGRAM"), "volunteer-b", 10, "2026-09-03")],"total":4})
+        .to_string();
+        let out = engine
+            .call(
+                "ecdev.price.observations",
+                json!({"query":"matcha latte","max_products":3,"fixture_now":20_000,"fixture_products":products,"fixture_prices":{"4901305410982":prices}}),
+            )
+            .unwrap();
+        assert_eq!(out["capture_mode"], "FIXTURE");
+        assert_eq!(out["request_count"], 0);
+        // The invalid barcode is never chosen; the code without a fixture is a failure, not data.
+        assert_eq!(out["state"], "PARTIAL_SOURCE_FAILURES");
+        assert_eq!(
+            out["failures"][0]["reason"],
+            "FIXTURE_PRICES_MISSING_FOR_CODE"
+        );
+        assert_eq!(out["failures"][0]["code"], "0892859002898");
+        let p = &out["products"][0];
+        assert_eq!(p["code"], "4901305410982");
+        // Item prices and per-kilogram prices are summarised apart; one person is one witness.
+        let s = p["summary"].as_array().unwrap();
+        assert_eq!(s.len(), 2);
+        let item = s
+            .iter()
+            .find(|g| g["price_unit"] == "ITEM_OR_UNSTATED")
+            .unwrap();
+        assert_eq!(
+            (
+                item["prices"].clone(),
+                item["median"].clone(),
+                item["distinct_stores"].clone(),
+                item["distinct_contributors"].clone()
+            ),
+            (json!(3), json!(418.0), json!(3), json!(1))
+        );
+        assert_eq!(
+            (item["earliest_date"].clone(), item["latest_date"].clone()),
+            (json!("2026-08-02"), json!("2026-09-20"))
+        );
+        assert_eq!(
+            p["next_action"]["input_template"]["identifiers_type"],
+            "JAN"
+        );
+        assert_eq!(
+            p["prices"][0]["evidence_class"],
+            "CROWDSOURCED_STORE_SHELF_PRICE_NOT_ONLINE_LISTING"
+        );
+        let text = out.to_string();
+        assert!(!text.contains("volunteer-a") && !text.contains("contributor_handle"));
+        assert!(
+            p["prices"][0]["contributor"]
+                .as_str()
+                .unwrap()
+                .starts_with("anon1:")
+        );
+        assert_eq!(out["licence"]["data"], "ODbL-1.0");
+        // A live call cannot set the clock, and a fixture run needs its product page.
+        assert!(
+            engine
+                .call(
+                    "ecdev.price.observations",
+                    json!({"query":"x","fixture_now":1})
+                )
+                .is_err()
+        );
+        assert!(
+            engine
+                .call(
+                    "ecdev.price.observations",
+                    json!({"query":"x","fixture_prices":{}})
+                )
+                .is_err()
+        );
+        assert!(
+            engine
+                .call(
+                    "ecdev.price.observations",
+                    json!({"code":"4901305410983","fixture_prices":{}})
+                )
+                .is_err()
+        );
+    }
     #[test]
     fn social_snapshot_mcp_projection_and_scenario_isolation() {
         use ecdev_core::social::{EvidenceState, ForecastScenario, SimulatedActor, SimulatedPost};
