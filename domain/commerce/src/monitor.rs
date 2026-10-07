@@ -131,7 +131,7 @@ impl Engine {
                     .map_err(err)?;
                 let rows = s
                     .query_map([&id], |r| {
-                        Ok(json!({"url":r.get::<_,String>(0)?,"product":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?,"state":"OBSERVED"}))
+                        Ok(json!({"url":r.get::<_,String>(0)?,"product":shown(&r.get::<_,String>(1)?),"product_key":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?,"state":"OBSERVED"}))
                     })
                     .map_err(err)?;
                 rows.collect::<Result<Vec<_>, _>>().map_err(err)?
@@ -156,7 +156,15 @@ impl Engine {
                 rows.collect::<Result<Vec<_>, _>>().map_err(err)?
             };
             let price_statistics = price_statistics(&price_windows);
-            watches.push(json!({"watch_id":id,"facts":facts,"price_statistics":price_statistics,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":history("watch_changes")?,"notifications":"NONE"}));
+            // Change triggers keep their stored key; the product is shown decoded beside it.
+            let mut changes = history("watch_changes")?;
+            for c in &mut changes {
+                if let Some(k) = c["trigger"]["product"].as_str().map(str::to_string) {
+                    c["trigger"]["product_key"] = json!(k);
+                    c["trigger"]["product"] = shown(&k);
+                }
+            }
+            watches.push(json!({"watch_id":id,"facts":facts,"price_statistics":price_statistics,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":changes,"notifications":"NONE"}));
         }
         if id.is_some() {
             watches.into_iter().next().ok_or("WATCH_NOT_FOUND".into())
@@ -426,10 +434,12 @@ impl Engine {
     ) -> Result<Value, String> {
         let db = self.db.lock().map_err(err)?;
         let mut s = db
-            .prepare("SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product=?3 AND field=?4 ORDER BY id")
+            .prepare("SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product IN (?3,?5) AND field=?4 ORDER BY id")
             .map_err(err)?;
+        // The product as shown (EUR) or as stored (its JSON text) names the same facts.
+        let stored = json!(product).to_string();
         let windows = s
-            .query_map(params![watch_id, url, product, field], |r| {
+            .query_map(params![watch_id, url, product, field, stored], |r| {
                 Ok(FactWindow {
                     url: r.get(0)?,
                     product: r.get(1)?,
@@ -848,6 +858,15 @@ pub struct FactWindow {
 /// attributed. Low, quartiles, median and high are observed prices (no arithmetic on money).
 /// Overlapping windows with different prices, or more than one currency, give a CONFLICT with
 /// no statistics; no observed duration gives INSUFFICIENT_DURATION.
+/// A stored product key or value shown as people read it: keys and values are kept as JSON text
+/// so types round-trip ("\"EUR\"" is the text EUR), and decoded only for display.
+pub fn shown(stored: &str) -> Value {
+    serde_json::from_str::<Value>(stored)
+        .ok()
+        .filter(Value::is_string)
+        .unwrap_or_else(|| json!(stored))
+}
+
 pub fn price_statistics(windows: &[FactWindow]) -> Vec<Value> {
     let mut by_product: BTreeMap<(String, String), Vec<&FactWindow>> = BTreeMap::new();
     for w in windows {
@@ -876,7 +895,7 @@ pub fn price_statistics(windows: &[FactWindow]) -> Vec<Value> {
             continue;
         }
         prices.sort_by_key(|(_, start, _)| *start);
-        let base = json!({"url":url,"product":product,"method":"TIME_WEIGHTED_OBSERVED_SPANS","windows":prices.len(),"currency":if currencies.len()==1 {json!(currencies.iter().next())} else {Value::Null}});
+        let base = json!({"url":url,"product":shown(&product),"product_key":product,"method":"TIME_WEIGHTED_OBSERVED_SPANS","windows":prices.len(),"currency":if currencies.len()==1 {currencies.iter().next().map_or(Value::Null, |c| shown(c))} else {Value::Null}});
         let overlap = prices
             .windows(2)
             .any(|p| p[1].1 < p[0].2 && p[0].0 != p[1].0);
@@ -1558,7 +1577,7 @@ mod tests {
             (s["p25_minor"].as_i64(), s["p75_minor"].as_i64()),
             (Some(1000), Some(1000))
         );
-        assert_eq!(s["currency"], "\"USD\"");
+        assert_eq!(s["currency"], "USD", "decoded for display");
         // 31 of 32 observed days were below the latest 1200.
         assert_eq!(
             s["share_of_observed_time_below_latest_bps"].as_u64(),
