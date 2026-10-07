@@ -501,6 +501,17 @@ pub fn deduplicate(posts: &[SocialPost]) -> (Vec<SocialPost>, Vec<Value>) {
 pub const PHRASES_PER_CLUSTER: usize = 5;
 /// Posts, authors and evidence ids a phrase was seen with.
 type PhraseSupport = (BTreeSet<String>, BTreeSet<String>, Vec<String>);
+/// Articles, prepositions and conjunctions of the other languages seen in live captures
+/// (Spanish, Portuguese, French, German, Dutch, Italian), without those that are also English
+/// words ("die", "den", "pour"): live, "el matcha", "de mate" and "como con está" were
+/// refinements.
+const FOREIGN_FUNCTION_WORDS: &[&str] = &[
+    "de", "del", "el", "la", "las", "los", "lo", "y", "en", "un", "una", "por", "para", "es", "le",
+    "les", "des", "du", "et", "une", "au", "aux", "est", "sur", "der", "das", "und", "mit", "von",
+    "zu", "ist", "ein", "eine", "het", "een", "van", "voor", "op", "il", "di", "che", "per", "em",
+    "os", "uma", "dos", "nas", "nos", "como", "está", "esta", "todo", "muy", "pero", "más", "que",
+    "qué", "se", "su", "al", "mi", "son", "hay", "ya", "con", "não", "mas", "muito",
+];
 const PHRASE_STOP_WORDS: &[&str] = &[
     "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i",
     "in", "is", "it", "its", "my", "of", "on", "or", "our", "so", "that", "the", "their", "this",
@@ -651,14 +662,14 @@ pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
     let mut bracketed: BTreeSet<String> = BTreeSet::new();
     for p in posts {
         let mut in_post = BTreeSet::new();
-        for run in p
-            .text
+        for run in without_urls(&p.text)
             .to_lowercase()
             .split(|c: char| !(c.is_alphanumeric() || c == '\'' || c == '-'))
             .collect::<Vec<_>>()
             .split(|w| {
                 w.is_empty()
                     || PHRASE_STOP_WORDS.contains(w)
+                    || FOREIGN_FUNCTION_WORDS.contains(w)
                     || GENERAL_WORDS.contains(w)
                     || w.chars().count() < 2
                     || w.chars().any(is_cjk)
@@ -785,9 +796,11 @@ pub fn representatives(posts: &[&SocialPost]) -> Vec<Value> {
 }
 
 /// Text without its links: URL slugs and image hashes are not what a post is about.
+/// Text without links or @handles: "@name.bsky.social" says who was addressed, not what about
+/// (live, it made "bsky social" a matcha refinement).
 fn without_urls(text: &str) -> String {
     text.split_whitespace()
-        .filter(|w| !w.contains("://") && !w.starts_with("www."))
+        .filter(|w| !w.contains("://") && !w.starts_with("www.") && !w.starts_with('@'))
         .collect::<Vec<_>>()
         .join(" ")
 }
@@ -812,6 +825,7 @@ pub fn informative(term: &str) -> bool {
         && !size
         && !kana
         && !PHRASE_STOP_WORDS.contains(&term)
+        && !FOREIGN_FUNCTION_WORDS.contains(&term)
         && !GENERAL_WORDS.contains(&term)
 }
 
@@ -1125,12 +1139,22 @@ mod tests {
             "から",
             "the",
             "with",
+            "el",
+            "de",
+            "und",
         ] {
             assert!(!informative(noise), "{noise}");
         }
-        for useful in ["whisk", "rtx5090", "抹茶", "ラテ", "茶ラ"] {
+        for useful in ["whisk", "rtx5090", "抹茶", "ラテ", "茶ラ", "pour", "gratis"] {
             assert!(informative(useful), "{useful}");
         }
+    }
+
+    #[test]
+    fn handles_and_links_are_not_content() {
+        let t = content_terms("@tea.bsky.social try the matcha latte https://shop.example/x");
+        assert!(t.contains("latte") && t.contains("matcha"));
+        assert!(!t.contains("bsky") && !t.contains("social") && !t.contains("shop"));
     }
 
     #[test]
