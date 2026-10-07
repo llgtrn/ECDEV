@@ -510,3 +510,109 @@ mod tests {
         );
     }
 }
+
+/// Agents a site may name to refuse AI fetching on a person's behalf, which is what an
+/// agent-driven ECDEV run is, and the operator model family's own agents.
+pub const AI_AGENT_NAMES: [&str; 5] = [
+    "Claude-User",
+    "ChatGPT-User",
+    "Perplexity-User",
+    "ClaudeBot",
+    "anthropic-ai",
+];
+/// Training crawlers: a refusal to them is recorded, not applied; ECDEV does not train models.
+pub const AI_TRAINING_NAMES: [&str; 7] = [
+    "GPTBot",
+    "CCBot",
+    "Google-Extended",
+    "Applebot-Extended",
+    "Bytespider",
+    "cohere-ai",
+    "Meta-ExternalAgent",
+];
+
+fn names_agent(text: &str, agent: &str) -> bool {
+    text.lines().any(|l| {
+        let l = l.split('#').next().unwrap_or("").trim();
+        l.split_once(':').is_some_and(|(k, v)| {
+            k.trim().eq_ignore_ascii_case("user-agent") && v.trim().eq_ignore_ascii_case(agent)
+        })
+    })
+}
+
+/// A site's stated refusal of AI use for this URL, beside the ECDEV allow decision (which the
+/// Reppy oracle proves and this does not change): a robots group naming an AI agent that
+/// disallows the path, or a Content-Signal with ai-input=no. None when no refusal applies.
+/// Refusals addressed only to training crawlers are returned under "training_only" by
+/// `ai_policy_evidence` and never block.
+pub fn ai_agent_refusal(text: &str, url: &str) -> Option<Value> {
+    if text.lines().any(|l| {
+        let l = l.split('#').next().unwrap_or("").trim();
+        l.split_once(':').is_some_and(|(k, v)| {
+            k.trim().eq_ignore_ascii_case("content-signal")
+                && v.to_ascii_lowercase()
+                    .replace(' ', "")
+                    .contains("ai-input=no")
+        })
+    }) {
+        return Some(json!({"reason":"CONTENT_SIGNAL_AI_INPUT_NO"}));
+    }
+    let refused: Vec<&str> = AI_AGENT_NAMES
+        .iter()
+        .copied()
+        .filter(|a| names_agent(text, a) && !evaluate(text, url, a).allowed)
+        .collect();
+    (!refused.is_empty()).then(|| json!({"reason":"ROBOTS_DISALLOWS_AI_AGENTS","agents":refused}))
+}
+
+/// What a robots file says to AI agents, for evidence: the applied refusal, and the training
+/// crawlers it refuses (recorded only).
+pub fn ai_policy_evidence(text: &str, url: &str) -> Value {
+    let training: Vec<&str> = AI_TRAINING_NAMES
+        .iter()
+        .copied()
+        .filter(|a| names_agent(text, a) && !evaluate(text, url, a).allowed)
+        .collect();
+    json!({"refusal":ai_agent_refusal(text, url),"training_only_refusals":training,"applied_agents":AI_AGENT_NAMES})
+}
+
+#[cfg(test)]
+mod ai_policy_tests {
+    use super::*;
+
+    #[test]
+    fn ai_agent_refusals_apply_and_training_only_refusals_are_recorded() {
+        // NHK's form: AI agents refused everything, everyone else nearly everything allowed.
+        let nhk = "User-agent: GPTBot\nUser-agent: ChatGPT-User\nUser-agent: ClaudeBot\nUser-agent: anthropic-ai\nDisallow: /\n\nUser-agent: *\nDisallow: /*/r/\n";
+        let u = "https://www3.nhk.or.jp/rss/news/cat5.xml";
+        assert!(
+            evaluate(nhk, u, "ECDEV").allowed,
+            "the proven ECDEV decision is unchanged"
+        );
+        let r = ai_agent_refusal(nhk, u).unwrap();
+        assert_eq!(r["reason"], "ROBOTS_DISALLOWS_AI_AGENTS");
+        assert_eq!(
+            r["agents"],
+            json!(["ChatGPT-User", "ClaudeBot", "anthropic-ai"])
+        );
+        // Only training crawlers refused: recorded, not applied.
+        let training =
+            "User-agent: GPTBot\nUser-agent: CCBot\nDisallow: /\n\nUser-agent: *\nDisallow:\n";
+        assert!(ai_agent_refusal(training, u).is_none());
+        assert_eq!(
+            ai_policy_evidence(training, u)["training_only_refusals"],
+            json!(["GPTBot", "CCBot"])
+        );
+        // A content signal refusing AI input applies.
+        let signal =
+            "User-agent: *\nAllow: /\nContent-Signal: ai-input=no, ai-train=no, search=yes\n";
+        assert_eq!(
+            ai_agent_refusal(signal, u).unwrap()["reason"],
+            "CONTENT_SIGNAL_AI_INPUT_NO"
+        );
+        // A path an AI-agent group allows is not refused; no AI group, no refusal.
+        let partial = "User-agent: ClaudeBot\nDisallow: /private/\n";
+        assert!(ai_agent_refusal(partial, u).is_none());
+        assert!(ai_agent_refusal("User-agent: *\nDisallow: /x\n", u).is_none());
+    }
+}

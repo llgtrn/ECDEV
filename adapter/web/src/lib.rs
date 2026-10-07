@@ -712,6 +712,10 @@ impl Provider for Web {
                 if rs != 404 && (rs != 200 || !decision.allowed) {
                     return Err("ROBOTS_DENIED_OR_UNKNOWN".into());
                 }
+                // A site refusing AI agents (or AI input) for this path is honoured too.
+                if rs == 200 && robots::ai_agent_refusal(policy, url.as_str()).is_some() {
+                    return Err("ROBOTS_REFUSES_AI_AGENTS".into());
+                }
                 let delay = if rs == 404 {
                     0.0
                 } else {

@@ -29,5 +29,10 @@
   "リーフガーデン浦安"
  ],
  "precision": "NOT_MEASURED_NO_LABELLED_PRODUCT_NAMES",
- "reading": "Spans mix product and service names with quotations and slogans; ECDEV keeps only spans recurring in two posts by two authors, labelled CANDIDATE_PRODUCT_PHRASE_UNVERIFIED"
+ "reading": "Spans mix product and service names with quotations and slogans; ECDEV keeps only spans recurring in two posts by two authors, labelled CANDIDATE_PRODUCT_PHRASE_UNVERIFIED",
+ "ai_agent_policy_note": {
+  "date": "2026-10-07",
+  "finding": "Four sites read in this record refuse AI agents in robots.txt (www3.nhk.or.jp, news.yahoo.co.jp, techcrunch.com, www.theverge.com: Claude-User, ChatGPT-User, Perplexity-User, ClaudeBot and/or anthropic-ai disallowed for /). They were read before ECDEV honoured such refusals; robots allowed the ECDEV agent itself. Only counts and hashes are kept here, no content. ECDEV now refuses those fetches (ROBOTS_REFUSES_AI_AGENTS) and the tools no longer read them.",
+  "enforcement": "adapter/web/src/robots.rs ai_agent_refusal, applied in research and social fetches"
+ }
 }

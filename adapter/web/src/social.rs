@@ -804,6 +804,11 @@ impl Provider for Social {
                 })?;
             requests += 1;
             let robot = robots::evaluate(&String::from_utf8_lossy(&body), u.as_str(), "ECDEV");
+            if status == 200
+                && robots::ai_agent_refusal(&String::from_utf8_lossy(&body), u.as_str()).is_some()
+            {
+                return Err(failure("ROBOTS_REFUSES_AI_AGENTS", Some(status), requests));
+            }
             if status != 404 && (status != 200 || !robot.allowed) {
                 return Err(failure(
                     "SOURCE_BLOCKED_ROBOTS_OR_POLICY",

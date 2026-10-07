@@ -607,5 +607,10 @@
   "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess",
   "Bluesky refuses its next cursor, so one window read 50 posts and covered about 15% of 3 days; 6-hour slices, each served its first page, read 347 posts and covered 67% within 20 requests (10 of 12 slices; 8 ended below 50 posts, i.e. read completely)",
   "With 12 requested slices and 10 affordable, the two oldest went unread; slices are now widened to fit the request budget (and the 31-slice cap), so the same 20 requests sampled every part of the window: 10 slices of 7.2 hours, 394 posts, 7 slices read completely and 3 reported partial at the page limit"
- ]
+ ],
+ "ai_agent_policy_note": {
+  "date": "2026-10-07",
+  "finding": "Four sites read in this record refuse AI agents in robots.txt (www3.nhk.or.jp, news.yahoo.co.jp, techcrunch.com, www.theverge.com: Claude-User, ChatGPT-User, Perplexity-User, ClaudeBot and/or anthropic-ai disallowed for /). They were read before ECDEV honoured such refusals; robots allowed the ECDEV agent itself. Only counts and hashes are kept here, no content. ECDEV now refuses those fetches (ROBOTS_REFUSES_AI_AGENTS) and the tools no longer read them.",
+  "enforcement": "adapter/web/src/robots.rs ai_agent_refusal, applied in research and social fetches"
+ }
 }

@@ -12,15 +12,13 @@ capture: nothing here is stored as evidence or labelled LIVE.
 import datetime, email.utils, hashlib, json, os, subprocess, sys, time, urllib.parse, urllib.request
 import xml.etree.ElementTree as ET
 
+# Feeds whose sites refuse AI agents in robots.txt (NHK, Yahoo! News Japan, TechCrunch, The
+# Verge) were removed after 2026-10-07; the gate below skips any that start refusing.
 FEEDS = [
     "https://prtimes.jp/index.rdf",
-    "https://www3.nhk.or.jp/rss/news/cat5.xml",
-    "https://news.yahoo.co.jp/rss/topics/business.xml",
     "https://feeds.bbci.co.uk/news/business/rss.xml",
     "https://www.retaildive.com/feeds/news/",
     "https://www.modernretail.co/feed/",
-    "https://techcrunch.com/feed/",
-    "https://www.theverge.com/rss/index.xml",
     "https://blog.rust-lang.org/feed.xml",
     "https://github.blog/feed/",
     "https://hnrss.org/frontpage",
@@ -111,6 +109,14 @@ for url in FEEDS:
         row["result"] = "SKIPPED_ROBOTS"
         results.append(row)
         continue
+    # Sites refusing AI agents (or AI input) are not read, as ECDEV's fetchers now enforce.
+    if rs == 200:
+        policy = json.loads(subprocess.run([side, "aipolicy", rpath, url], capture_output=True, text=True).stdout)
+        if policy["refusal"]:
+            row["result"] = "SKIPPED_AI_AGENT_REFUSAL"
+            row["ai_agent_refusal"] = policy["refusal"]
+            results.append(row)
+            continue
     status, body, ctype = get(url)
     row.update({"status": status, "content_type": ctype, "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest()})
     if status != 200:

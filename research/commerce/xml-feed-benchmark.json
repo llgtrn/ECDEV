@@ -327,5 +327,10 @@
   }
  ],
  "caveat": "The oracle's item rules (guid, then rdf:about, then link as id; Atom published, then updated) were written independently but follow the same feed specifications, so agreement shows ECDEV's tokenizer, entities, CDATA, namespaces and dates match a standard XML parser; it does not test a different choice of rules.",
- "ecdev_reader": "adapter/web/src/xml_feed.rs (UTF-8 only, DTD refused, five predefined entities and character references, depth 64, 200000 nodes, 1000 items)"
+ "ecdev_reader": "adapter/web/src/xml_feed.rs (UTF-8 only, DTD refused, five predefined entities and character references, depth 64, 200000 nodes, 1000 items)",
+ "ai_agent_policy_note": {
+  "date": "2026-10-07",
+  "finding": "Four sites read in this record refuse AI agents in robots.txt (www3.nhk.or.jp, news.yahoo.co.jp, techcrunch.com, www.theverge.com: Claude-User, ChatGPT-User, Perplexity-User, ClaudeBot and/or anthropic-ai disallowed for /). They were read before ECDEV honoured such refusals; robots allowed the ECDEV agent itself. Only counts and hashes are kept here, no content. ECDEV now refuses those fetches (ROBOTS_REFUSES_AI_AGENTS) and the tools no longer read them.",
+  "enforcement": "adapter/web/src/robots.rs ai_agent_refusal, applied in research and social fetches"
+ }
 }
