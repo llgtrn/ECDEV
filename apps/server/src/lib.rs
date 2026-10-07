@@ -770,6 +770,70 @@ mod research_tests {
         assert_eq!(stalled["mention_count"], 3);
     }
     #[test]
+    fn sliced_social_windows_report_their_temporal_coverage() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-slices-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let day = 86_400u64;
+        let now = 10 * day;
+        let hn = |page: u64, pages: u64, at: &[(&str, u64)]| {
+            json!({"page":page,"nbPages":pages,"nbHits":at.len(),"exhaustive":{"nbHits":false},"hits":at.iter().map(|(id,t)|json!({"objectID":id,"title":"matcha glass","created_at_i":t})).collect::<Vec<_>>()}).to_string()
+        };
+        // Three daily slices, newest first: two pages, one page, then an empty slice.
+        let slices = json!([
+            [
+                hn(0, 2, &[("101", now - 100), ("102", now - 200)]),
+                hn(1, 2, &[("103", now - 300)])
+            ],
+            [hn(0, 1, &[("104", now - day - 50)])],
+            [hn(0, 0, &[])]
+        ]);
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":3 * day,"sources":[{"platform":"HACKER_NEWS","max_pages":5,"slice_seconds":day,"fixture_slices":slices}]})).unwrap();
+        let p = &run["pagination"][0];
+        assert_eq!(p["slices"].as_array().unwrap().len(), 3);
+        assert_eq!(
+            (
+                p["slices"][0]["since"].clone(),
+                p["slices"][0]["until"].clone()
+            ),
+            (json!(now - day), json!(now))
+        );
+        assert_eq!(p["slices"][0]["stop"], "END_OF_RESULTS");
+        assert_eq!(p["slices"][2]["stop"], "EMPTY_PAGE");
+        let c = &p["population_coverage"];
+        assert_eq!(c["state"], "COMPLETE_BY_SOURCE");
+        assert_eq!(c["temporal_span_coverage"], 1.0);
+        assert_eq!(
+            (c["observed_earliest"].clone(), c["observed_latest"].clone()),
+            (json!(now - day - 50), json!(now - 100))
+        );
+        assert_eq!(c["items_observed"], 4);
+        assert!(c["coverage_ratio"].is_null());
+        assert_eq!(c["total_state"], "SOURCE_TOTAL_UNKNOWN");
+        assert_eq!(run["mention_count"], 4);
+        // A slice the page limit cut short is partial, and its span is not counted as covered.
+        let cut = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":2 * day,"sources":[{"platform":"HACKER_NEWS","max_pages":1,"slice_seconds":day,"fixture_slices":[[hn(0, 2, &[("101", now - 100)])],[hn(0, 1, &[("104", now - day - 50)])]]}]})).unwrap();
+        let c = &cut["pagination"][0]["population_coverage"];
+        assert_eq!(
+            (c["state"].clone(), c["temporal_span_coverage"].clone()),
+            (json!("PARTIAL_PAGE_LIMIT"), json!(0.5))
+        );
+        assert_eq!(c["gaps"][0]["reason"], "PAGE_LIMIT");
+        // Sources that cannot bound time refuse slicing rather than pretend.
+        let feed = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":day,"sources":[{"platform":"JSON_FEED","url":"https://f.example/feed.json","slice_seconds":day,"fixture_slices":[["{}"]]}]})).unwrap();
+        assert_eq!(
+            feed["provider_failures"][0]["reason"],
+            "TIME_BOUND_UNSUPPORTED_BY_SOURCE"
+        );
+    }
+    #[test]
     fn public_amazon_blocked_route_preserves_provider_identity_and_public_fallback() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-public-amazon-{}",

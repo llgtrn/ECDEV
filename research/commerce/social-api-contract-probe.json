@@ -1,0 +1,189 @@
+{
+ "probe": "Public social API contracts ECDEV's social acquisition relies on",
+ "evidence_state": "API_CONTRACT_PROBE through the session egress proxy; not an ECDEV runtime capture, not LIVE evidence, nothing stored as observations",
+ "why_not_ecdev_runtime": "ECDEV's fetcher pins the public IPs it resolves and bypasses proxies (SSRF protection); this sandbox only allows egress through its proxy, so the runtime cannot reach these hosts here. The runtime paths remain fixture-proven.",
+ "captured_at": 1791340058,
+ "harness_sources": {
+  "tools/commerce/social_contract_probe.py": "016e3fe6c7a7adb9ed2361c68adc7aa219a035c62b48ea53064db74cba62433a"
+ },
+ "results": {
+  "hn_paging": {
+   "page0": {
+    "page": 0,
+    "nbPages": 20,
+    "nbHits": 318608,
+    "hitsPerPage": 50
+   },
+   "page1": {
+    "page": 1,
+    "nbPages": 20,
+    "nbHits": 311531
+   },
+   "overlap_ids": 0,
+   "page0_time_range": [
+    1791287359,
+    1791337194
+   ],
+   "page1_time_range": [
+    1791220747,
+    1791286671
+   ],
+   "max_reachable_hits": 1000
+  },
+  "hn_time_slice": {
+   "requested": [
+    1791253658,
+    1791340058
+   ],
+   "nbHits": 72,
+   "nbPages": 2,
+   "returned": 50,
+   "all_within": true,
+   "exhaustive_flag": {
+    "nbHits": false,
+    "typo": false
+   }
+  },
+  "hn_tree": {
+   "story_id": "15392159",
+   "story_num_comments": 125,
+   "tree_nodes": 126,
+   "max_depth": 11,
+   "nodes_without_author": 0,
+   "nodes_with_parent_id": 125,
+   "node_fields": [
+    "author",
+    "children",
+    "created_at",
+    "created_at_i",
+    "id",
+    "options",
+    "parent_id",
+    "points",
+    "story_id",
+    "text",
+    "title",
+    "type",
+    "url"
+   ]
+  },
+  "bluesky_search": {
+   "status": 200,
+   "posts": 25,
+   "cursor": "eyJzIjpbMTc5MTMyNzU2NTAwMCwiZGlkOnBsYzpneHRuaWxpZWpwdGh6a2U3cnByZGxleG8iLCIzbXhhanRuNzZvYzJ3Il19",
+   "hitsTotal": 10000,
+   "page1": {
+    "status": 403,
+    "posts": 0,
+    "overlap": 0,
+    "cursor": null
+   }
+  },
+  "bluesky_time_slice": {
+   "status": 200,
+   "requested": [
+    "2026-10-06T02:27:38Z",
+    "2026-10-07T02:27:38Z"
+   ],
+   "posts": 25,
+   "earliest": "2026-10-06T22:59:25.157Z",
+   "latest": "2026-10-07T02:21:12.896Z",
+   "all_within": true
+  },
+  "bluesky_thread": {
+   "status": 200,
+   "root_replyCount": 1,
+   "nodes": 7,
+   "max_depth": 4,
+   "node_types": [
+    "app.bsky.feed.defs#threadViewPost"
+   ],
+   "not_found": 0,
+   "blocked": 0
+  },
+  "json_feed": {
+   "status": 200,
+   "version": "https://jsonfeed.org/version/1",
+   "items": 2,
+   "next_url": null
+  }
+ },
+ "requests": [
+  {
+   "url": "https://hn.algolia.com/api/v1/search_by_date?query=matcha&tags=%28story%2Ccomment%29&hitsPerPage=50",
+   "status": 200,
+   "bytes": 132593,
+   "sha256": "c1925e7bfcba2fa5350fa86ce7ac91b85f42eab52a6ec256bdd877368a43b3c2"
+  },
+  {
+   "url": "https://hn.algolia.com/api/v1/search_by_date?query=matcha&tags=%28story%2Ccomment%29&hitsPerPage=50&page=1",
+   "status": 200,
+   "bytes": 117128,
+   "sha256": "764ae4eeeefc2dc8f58a8cc71c221541e645efb6b71aee56579440bc66080de3"
+  },
+  {
+   "url": "https://hn.algolia.com/api/v1/search_by_date?query=matcha&tags=%28story%2Ccomment%29&hitsPerPage=50&numericFilters=created_at_i%3E1791253658%2Ccreated_at_i%3C%3D1791340058",
+   "status": 200,
+   "bytes": 132642,
+   "sha256": "b22ab1545f67df187800e29f01f94490f6cf33a1b26e41c32b823c01429393c4"
+  },
+  {
+   "url": "https://hn.algolia.com/api/v1/search?query=matcha&tags=story&numericFilters=num_comments%3E3&hitsPerPage=1",
+   "status": 200,
+   "bytes": 1380,
+   "sha256": "06f7b4f0695849aca6936fdbc01f402c6e0319e6edc187c678e1ba36d46744b2"
+  },
+  {
+   "url": "https://hn.algolia.com/api/v1/items/15392159",
+   "status": 200,
+   "bytes": 69657,
+   "sha256": "0b6bf39f0b1f39926bd363574db9274282563284f9c3564e246e274051d89b71"
+  },
+  {
+   "url": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=matcha&sort=latest&limit=25",
+   "status": 200,
+   "bytes": 44675,
+   "sha256": "33810371a20838ed0c3e081df52cf41f8e8992081131f39d5049b0578c57f182"
+  },
+  {
+   "url": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=matcha&sort=latest&limit=25&cursor=eyJzIjpbMTc5MTMyNzU2NTAwMCwiZGlkOnBsYzpneHRuaWxpZWpwdGh6a2U3cnByZGxleG8iLCIzbXhhanRuNzZvYzJ3Il19",
+   "status": 403,
+   "bytes": 94,
+   "sha256": "9221cfedfc5e03790f46c7890bca21fcc47c5788d89dab0aa0799c492b6ae78a"
+  },
+  {
+   "url": "https://api.bsky.app/xrpc/app.bsky.feed.searchPosts?q=matcha&sort=latest&limit=25&since=2026-10-06T02%3A27%3A38Z&until=2026-10-07T02%3A27%3A38Z",
+   "status": 200,
+   "bytes": 44673,
+   "sha256": "3c7e955b5d828f3689670852ae37002a5edf1a520d3fb8caf9c57e8c9eab0c7a"
+  },
+  {
+   "url": "https://api.bsky.app/xrpc/app.bsky.feed.getPostThread?uri=at%3A%2F%2Fdid%3Aplc%3Anvpxvmbksqxcfmrwlw7zvh27%2Fapp.bsky.feed.post%2F3mxasl4wim227&depth=6&parentHeight=0",
+   "status": 200,
+   "bytes": 11404,
+   "sha256": "dce26a2660333499825ccf93f4a368417ce66fd784f501ae1df38e8d0e9e02d0"
+  },
+  {
+   "url": "https://www.jsonfeed.org/feed.json",
+   "status": 200,
+   "bytes": 3383,
+   "sha256": "b86e3a25dab5fbf488f00388872c815db1fb3e9844bf782dd2a53d148caf6551"
+  }
+ ],
+ "findings": [
+  "Hacker News (Algolia): page/nbPages chain without overlap, newest first; paging is capped at nbPages 20 x 50 = 1000 hits while nbHits reported 318608, so page walking alone can never reach a busy query's population.",
+  "Hacker News: nbHits is approximate (it moved 318608 -> 311531 between two consecutive requests; exhaustive.nbHits false) and must never serve as a coverage denominator.",
+  "Hacker News: numericFilters created_at_i bounds are honoured (a 24 h slice returned 72 hits on 2 pages, all inside the bounds), so date slicing keeps each slice under the 1000-hit cap.",
+  "Hacker News: items/{id} returns the whole reply tree in one response (126 nodes for num_comments 125, depth 11, parent_id on every reply, author on every node).",
+  "Bluesky: api.bsky.app searchPosts answers the first page unauthenticated but refuses the cursor of the next page with 403 'Request forbidden by administrative rules' (openresty), with no proxy relay failure recorded; public.api.bsky.app refuses search outright. Unauthenticated cursor walking stops after one page.",
+  "Bluesky: since/until bounds are honoured (25 posts, all inside a 24 h window), so time slices, not cursors, are the legitimate way to reach further back; hitsTotal 10000 is a cap, not a count.",
+  "Bluesky: app.bsky.feed.getPostThread on public.api.bsky.app returns reply trees (threadViewPost nodes; notFoundPost and blockedPost are typed node states).",
+  "JSON Feed (jsonfeed.org): version 1, no next_url; pagination ends after one page."
+ ],
+ "consequences": [
+  "Bluesky cursor pages beyond the first are reported as a source refusal, not a network failure, and earlier pages are kept",
+  "date-sliced acquisition for Hacker News and Bluesky",
+  "reply trees from HN items/{id} and Bluesky getPostThread",
+  "source-reported totals carried as APPROXIMATE or CAPPED, never as denominators"
+ ]
+}

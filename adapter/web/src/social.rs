@@ -35,6 +35,45 @@ fn plain(s: &str) -> String {
         .join(" ")
 }
 /// Explicit-zone RFC3339 normalized to UTC seconds; missing/unknown zones stay absent.
+/// UTC RFC 3339 text for Unix seconds (civil-from-days), as Bluesky's since/until expect.
+pub fn utc_rfc3339(secs: u64) -> String {
+    let days = (secs / 86_400) as i64;
+    let rem = secs % 86_400;
+    let z = days + 719_468;
+    let era = z.div_euclid(146_097);
+    let doe = z - era * 146_097;
+    let yoe = (doe - doe / 1_460 + doe / 36_524 - doe / 146_096) / 365;
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+    let mp = (5 * doy + 2) / 153;
+    let day = doy - (153 * mp + 2) / 5 + 1;
+    let month = if mp < 10 { mp + 3 } else { mp - 9 };
+    let year = yoe + era * 400 + i64::from(month <= 2);
+    format!(
+        "{year:04}-{month:02}-{day:02}T{:02}:{:02}:{:02}Z",
+        rem / 3_600,
+        rem % 3_600 / 60,
+        rem % 60
+    )
+}
+
+/// Time bounds of a slice, (since, until] in Unix seconds, when the query carries them.
+fn time_bounds(q: &Value) -> Result<Option<(u64, u64)>, String> {
+    match (q.get("since"), q.get("until")) {
+        (None, None) => Ok(None),
+        (Some(a), Some(b)) => {
+            let (a, b) = (
+                a.as_u64().ok_or("INVALID_TIME_BOUND")?,
+                b.as_u64().ok_or("INVALID_TIME_BOUND")?,
+            );
+            if a >= b {
+                return Err("INVALID_TIME_BOUND".into());
+            }
+            Ok(Some((a, b)))
+        }
+        _ => Err("INVALID_TIME_BOUND".into()),
+    }
+}
+
 pub fn published(value: &Value) -> Option<u64> {
     if let Some(n) = value.as_u64() {
         return (n > 0).then_some(n);
@@ -143,6 +182,12 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                 let page: u32 = page.parse().map_err(|_| "INVALID_PAGE_CURSOR")?;
                 u.query_pairs_mut().append_pair("page", &page.to_string());
             }
+            if let Some((since, until)) = time_bounds(q)? {
+                u.query_pairs_mut().append_pair(
+                    "numericFilters",
+                    &format!("created_at_i>{since},created_at_i<={until}"),
+                );
+            }
             Ok(u)
         }
         "BLUESKY" => {
@@ -157,6 +202,11 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                 }
                 u.query_pairs_mut().append_pair("cursor", cursor);
             }
+            if let Some((since, until)) = time_bounds(q)? {
+                u.query_pairs_mut()
+                    .append_pair("since", &utc_rfc3339(since))
+                    .append_pair("until", &utc_rfc3339(until));
+            }
             Ok(u)
         }
         "JSON_FEED" => {
@@ -165,6 +215,9 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             )?)
             .map_err(|e| e.to_string())?;
             // A next page is the feed's own next_url, and only on the feed's origin.
+            if time_bounds(q)?.is_some() {
+                return Err("TIME_BOUND_UNSUPPORTED_BY_SOURCE".into());
+            }
             let u = match q["page_cursor"].as_str() {
                 Some(next) => {
                     let next = Url::parse(&normalize_url(next)?).map_err(|e| e.to_string())?;
@@ -195,7 +248,7 @@ impl Provider for Social {
         "native-social"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED_INCOMPLETE_POPULATION","rss_xml":"UNSUPPORTED_EXPLICITLY_NOT_JSON_FEED","donor_runtime":false})
+        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE"},"population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"UNSUPPORTED_EXPLICITLY_NOT_JSON_FEED","donor_runtime":false})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         endpoint(q)?;
@@ -296,10 +349,29 @@ impl Provider for Social {
         .map_err(|e| failure(e, None, requests))?;
         Ok(AcquireResult {
             observations: vec![],
-            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"population_complete":false}),
+            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"population_complete":false}),
             raw_payload: raw,
             provider_cost: json!({"cost_minor":0,"request_count":requests,"paid":false}),
         })
+    }
+}
+
+/// The total a source reports for the query, with how far it can be trusted. Algolia's nbHits
+/// is approximate unless it says otherwise; Bluesky's hitsTotal is a cap. Neither is a
+/// denominator for coverage.
+pub fn source_total(data: &Value, platform: &str) -> Value {
+    match platform {
+        "HACKER_NEWS" => match data["nbHits"].as_u64() {
+            Some(n) => {
+                json!({"value":n,"exactness":if data["exhaustive"]["nbHits"] == true || data["exhaustiveNbHits"] == true {"EXACT_BY_SOURCE"} else {"APPROXIMATE"}})
+            }
+            None => json!({"value":null,"exactness":"NOT_REPORTED"}),
+        },
+        "BLUESKY" => match data["hitsTotal"].as_u64() {
+            Some(n) => json!({"value":n,"exactness":"CAPPED_OR_ESTIMATED"}),
+            None => json!({"value":null,"exactness":"NOT_REPORTED"}),
+        },
+        _ => json!({"value":null,"exactness":"NOT_REPORTED"}),
     }
 }
 
@@ -557,6 +629,52 @@ pub fn normalize(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn time_slices_reach_the_source_as_its_own_bounds() {
+        assert_eq!(utc_rfc3339(0), "1970-01-01T00:00:00Z");
+        assert_eq!(utc_rfc3339(1_791_340_058), "2026-10-07T02:27:38Z");
+        assert_eq!(
+            published(&json!(utc_rfc3339(951_782_400))),
+            Some(951_782_400)
+        ); // 2000-02-29
+        let hn =
+            endpoint(&json!({"platform":"HACKER_NEWS","query":"matcha","since":100,"until":200}))
+                .unwrap();
+        assert!(
+            hn.query_pairs()
+                .any(|(k, v)| k == "numericFilters" && v == "created_at_i>100,created_at_i<=200")
+        );
+        let sky = endpoint(&json!({"platform":"BLUESKY","query":"matcha","since":0,"until":86400}))
+            .unwrap();
+        assert!(
+            sky.query_pairs()
+                .any(|(k, v)| k == "until" && v == "1970-01-02T00:00:00Z")
+        );
+        assert_eq!(endpoint(&json!({"platform":"JSON_FEED","query":"m","url":"https://f.example/f.json","since":1,"until":2})).unwrap_err(), "TIME_BOUND_UNSUPPORTED_BY_SOURCE");
+        for bad in [
+            json!({"since":5,"until":5}),
+            json!({"since":1}),
+            json!({"since":"1","until":2}),
+        ] {
+            let mut q = json!({"platform":"HACKER_NEWS","query":"m"});
+            q.as_object_mut()
+                .unwrap()
+                .extend(bad.as_object().unwrap().clone());
+            assert_eq!(endpoint(&q).unwrap_err(), "INVALID_TIME_BOUND");
+        }
+        assert_eq!(
+            source_total(
+                &json!({"nbHits":72,"exhaustive":{"nbHits":false}}),
+                "HACKER_NEWS"
+            )["exactness"],
+            "APPROXIMATE"
+        );
+        assert_eq!(
+            source_total(&json!({"hitsTotal":10000}), "BLUESKY")["exactness"],
+            "CAPPED_OR_ESTIMATED"
+        );
+    }
+
     #[test]
     fn page_cursors_come_from_the_source_and_stay_on_its_origin() {
         assert_eq!(

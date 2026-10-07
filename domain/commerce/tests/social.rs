@@ -711,3 +711,60 @@ fn cluster_representatives_rank_centrality_then_same_platform_engagement() {
             .is_some_and(|r| !r.is_empty())
     );
 }
+#[test]
+fn a_source_refusing_its_own_next_cursor_limits_coverage_without_an_outage() {
+    use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
+    use sha2::{Digest, Sha256};
+    use std::sync::Arc;
+    // Like Bluesky's unauthenticated search: page one is served, its cursor is refused with 403.
+    struct Refuses;
+    impl Provider for Refuses {
+        fn id(&self) -> &str {
+            "native-social"
+        }
+        fn metadata(&self) -> Value {
+            json!({"class":"PUBLIC","cost_minor":0})
+        }
+        fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+            if r.query.get("page_cursor").is_some() {
+                let mut e = AcquireError::from("PUBLIC_SOCIAL_HTTP_FAILURE");
+                e.http_status = Some(403);
+                e.request_count = Some(2);
+                return Err(e);
+            }
+            let raw = b"first page";
+            let mut p = post("first", "BLUESKY", ecdev_core::service::timestamp() - 60);
+            p.capture_mode = "LIVE".into();
+            p.raw_hash = format!("{:x}", Sha256::digest(raw));
+            Ok(AcquireResult {
+                observations: vec![],
+                result: json!({"posts":[p],"pagination":{"next_cursor":"c1"},"source_total":{"value":10000,"exactness":"CAPPED_OR_ESTIMATED"}}),
+                raw_payload: raw.to_vec(),
+                provider_cost: json!({"request_count":2,"cost_minor":0}),
+            })
+        }
+    }
+    let path = root();
+    let engine = Engine::open(&path)
+        .unwrap()
+        .with_provider(Arc::new(Refuses));
+    let result = engine
+        .trend_discover(json!({"query":"matcha","sources":[{"platform":"BLUESKY","max_pages":3}]}))
+        .unwrap();
+    let p = &result["pagination"][0];
+    assert_eq!(p["stop"], "SOURCE_REFUSED_FURTHER_PAGES");
+    assert_eq!(
+        p["population_coverage"]["state"],
+        "PARTIAL_SOURCE_REFUSED_PAGES"
+    );
+    assert_eq!(
+        p["population_coverage"]["total_state"],
+        "SOURCE_TOTAL_UNKNOWN"
+    );
+    assert!(p["population_coverage"]["coverage_ratio"].is_null());
+    // The first page is kept and nothing is reported as an outage.
+    assert_eq!(result["mention_count"], 1);
+    assert_eq!(result["provider_failures"], json!([]));
+    drop(engine);
+    std::fs::remove_dir_all(path).unwrap();
+}

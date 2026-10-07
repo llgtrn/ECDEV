@@ -71,7 +71,7 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
-    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"}},"required":["platform"],"additionalProperties":false});
+    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
     let discover = json!({"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":500},"sources":{"type":"array","items":source,"minItems":1,"maxItems":5},"window_seconds":{"type":"integer","minimum":60,"maximum":2592000},"request_budget":{"type":"integer","minimum":0,"maximum":20},"cache_only":{"type":"boolean"},"fixture_now":{"type":"integer","minimum":0}},"required":["query","sources"],"additionalProperties":false});
     let inspect = json!({"type":"object","properties":{"snapshot_id":{"type":"string"}},"additionalProperties":false});
     vec![
@@ -242,8 +242,10 @@ impl Engine {
         if !(60..=2592000).contains(&window) {
             return Err("INVALID_SOCIAL_WINDOW".into());
         }
-        let fixture = sources.iter().any(|s| s.get("fixture_raw").is_some());
-        if fixture && sources.iter().any(|s| s.get("fixture_raw").is_none()) {
+        let is_fixture =
+            |s: &Value| s.get("fixture_raw").is_some() || s.get("fixture_slices").is_some();
+        let fixture = sources.iter().any(is_fixture);
+        if fixture && !sources.iter().all(is_fixture) {
             return Err("MIXED_FIXTURE_LIVE_SOURCES_DENIED".into());
         }
         if !fixture && args.get("fixture_now").is_some() {
@@ -334,99 +336,155 @@ impl Engine {
                 failures.push(json!({"platform":source["platform"],"state":"SOURCE_BLOCKED","reason":"PAID_OR_UNKNOWN_PROVIDER_COST_DENIED_BEFORE_IO"}));
                 continue;
             }
-            // Pages are walked one acquisition each, so every page keeps its own raw capture.
-            let mut walk =
-                super::pagination::PageWalk::new(source["max_pages"].as_u64().unwrap_or(1));
-            let mut cursor: Option<String> = None;
+            // A requested window may be split into time slices the source bounds itself; each
+            // slice walks its own pages, one acquisition and one raw capture per page.
+            let planned: Vec<Option<(u64, u64)>> = match source["slice_seconds"].as_u64() {
+                Some(width) => super::coverage::plan_slices(now.saturating_sub(window), now, width)
+                    .into_iter()
+                    .map(Some)
+                    .collect(),
+                None => vec![None],
+            };
+            let sliced = planned.iter().any(Option::is_some);
             let mut source_posts: Vec<SocialPost> = vec![];
-            let stop: &str = loop {
-                let mut payload = source.clone();
-                if let Some(o) = payload.as_object_mut() {
-                    o.remove("max_pages");
-                    o.remove("fixture_pages");
+            let mut slices = vec![];
+            for (slice_index, bounds) in planned.iter().enumerate() {
+                let reserved = (i + 1..sources.len())
+                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
+                    .count() as u64
+                    * 2;
+                if slice_index > 0 && !fixture && requests + 2 + reserved > request_budget as u64 {
+                    slices.push(json!({"since":bounds.map(|b|b.0),"until":bounds.map(|b|b.1),"acquired":false,"stop":"NOT_ACQUIRED_REQUEST_BUDGET","pages":0,"posts":0}));
+                    continue;
                 }
-                payload["query"] = json!(query);
-                payload["captured_at"] = json!(now);
-                if let Some(c) = &cursor {
-                    payload["page_cursor"] = json!(c);
+                let fixture_body = |page: usize| -> Option<String> {
+                    if sliced {
+                        source["fixture_slices"][slice_index][page]
+                            .as_str()
+                            .map(str::to_string)
+                    } else if page == 0 {
+                        source["fixture_raw"].as_str().map(str::to_string)
+                    } else {
+                        source["fixture_pages"][page - 1]
+                            .as_str()
+                            .map(str::to_string)
+                    }
+                };
+                let mut walk =
+                    super::pagination::PageWalk::new(source["max_pages"].as_u64().unwrap_or(1));
+                let mut cursor: Option<String> = None;
+                let mut slice_posts: Vec<SocialPost> = vec![];
+                let mut total = Value::Null;
+                let stop: &str = loop {
+                    let mut payload = source.clone();
+                    if let Some(o) = payload.as_object_mut() {
+                        for k in [
+                            "max_pages",
+                            "fixture_pages",
+                            "fixture_slices",
+                            "slice_seconds",
+                        ] {
+                            o.remove(k);
+                        }
+                    }
+                    payload["query"] = json!(query);
+                    payload["captured_at"] = json!(now);
+                    if let Some((since, until)) = bounds {
+                        payload["since"] = json!(since);
+                        payload["until"] = json!(until);
+                    }
+                    if let Some(c) = &cursor {
+                        payload["page_cursor"] = json!(c);
+                    }
                     if fixture {
-                        match source["fixture_pages"]
-                            .get(walk.pages().saturating_sub(1) as usize)
-                            .and_then(Value::as_str)
-                        {
+                        match fixture_body(walk.pages() as usize) {
                             Some(raw) => payload["fixture_raw"] = json!(raw),
                             None => break "FIXTURE_PAGE_MISSING",
                         }
                     }
-                }
-                let acquired = provider.acquire(&AcquireRequest {
-                    run_id: run_id.clone(),
-                    capability: "social.query".into(),
-                    market: "PUBLIC_SOCIAL".into(),
-                    query: payload,
-                });
-                match acquired {
-                    Ok(acquired) => {
-                        let count = acquired.provider_cost["request_count"].as_u64();
-                        requests = requests.saturating_add(count.unwrap_or(0));
-                        if (fixture && count != Some(0))
-                            || (!fixture && count.is_none_or(|n| n == 0))
-                        {
-                            failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH","request_count":count}));
+                    let acquired = provider.acquire(&AcquireRequest {
+                        run_id: run_id.clone(),
+                        capability: "social.query".into(),
+                        market: "PUBLIC_SOCIAL".into(),
+                        query: payload,
+                    });
+                    match acquired {
+                        Ok(acquired) => {
+                            let count = acquired.provider_cost["request_count"].as_u64();
+                            requests = requests.saturating_add(count.unwrap_or(0));
+                            if (fixture && count != Some(0))
+                                || (!fixture && count.is_none_or(|n| n == 0))
+                            {
+                                failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"SOCIAL_CAPTURE_HTTP_WITNESS_MISSING_OR_MODE_MISMATCH","request_count":count}));
+                                break "PAGE_FAILED";
+                            }
+                            let posts: Vec<SocialPost> =
+                                serde_json::from_value(acquired.result["posts"].clone())
+                                    .map_err(err)?;
+                            for p in &posts {
+                                p.validate()?;
+                                if p.capture_mode != mode {
+                                    return Err("PROVIDER_CAPTURE_MODE_MISMATCH".into());
+                                }
+                            }
+                            let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
+                            if posts.iter().any(|p| p.raw_hash != raw_hash) {
+                                return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
+                            }
+                            let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
+                            fs::create_dir_all(&rawdir).map_err(err)?;
+                            fs::write(
+                                rawdir.join(format!("{raw_hash}.raw")),
+                                &acquired.raw_payload,
+                            )
+                            .map_err(err)?;
+                            if total.is_null() {
+                                total = acquired.result["source_total"].clone();
+                            }
+                            let next = acquired.result["pagination"]["next_cursor"].as_str();
+                            let n = posts.len();
+                            slice_posts.extend(posts);
+                            match walk.after_page(n, next) {
+                                Ok(c) => {
+                                    // Every selected source still to come keeps its two requests.
+                                    if !fixture && requests + 2 + reserved > request_budget as u64 {
+                                        break "REQUEST_BUDGET";
+                                    }
+                                    cursor = Some(c);
+                                }
+                                Err(reason) => break reason,
+                            }
+                        }
+                        Err(e) => {
+                            requests = requests.saturating_add(e.request_count.unwrap_or(0));
+                            // A source that serves a first page but refuses its own next cursor
+                            // (Bluesky unauthenticated search) limits coverage; it is not an outage.
+                            if walk.pages() >= 1 && e.http_status == Some(403) {
+                                break "SOURCE_REFUSED_FURTHER_PAGES";
+                            }
+                            let state = match e.http_status {
+                                Some(401) => "AUTH_REQUIRED",
+                                Some(429) => "RATE_LIMITED",
+                                Some(403) => "SOURCE_BLOCKED",
+                                _ => "SOURCE_UNAVAILABLE",
+                            };
+                            failures.push(json!({"platform":source["platform"],"state":state,"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count,"retry_not_before_ms":e.retry_not_before_ms,"page":walk.pages() + 1,"slice":{"since":bounds.map(|b|b.0),"until":bounds.map(|b|b.1)}}));
                             break "PAGE_FAILED";
                         }
-                        let posts: Vec<SocialPost> =
-                            serde_json::from_value(acquired.result["posts"].clone())
-                                .map_err(err)?;
-                        for p in &posts {
-                            p.validate()?;
-                            if p.capture_mode != mode {
-                                return Err("PROVIDER_CAPTURE_MODE_MISMATCH".into());
-                            }
-                        }
-                        let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
-                        if posts.iter().any(|p| p.raw_hash != raw_hash) {
-                            return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
-                        }
-                        let rawdir = self.root.join(".ecdev-data/runtime/social-captures");
-                        fs::create_dir_all(&rawdir).map_err(err)?;
-                        fs::write(
-                            rawdir.join(format!("{raw_hash}.raw")),
-                            &acquired.raw_payload,
-                        )
-                        .map_err(err)?;
-                        let next = acquired.result["pagination"]["next_cursor"].as_str();
-                        let n = posts.len();
-                        source_posts.extend(posts);
-                        match walk.after_page(n, next) {
-                            Ok(c) => {
-                                // Every selected source still to come keeps its two requests.
-                                let reserved = (i + 1..sources.len())
-                                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
-                                    .count() as u64
-                                    * 2;
-                                if !fixture && requests + 2 + reserved > request_budget as u64 {
-                                    break "REQUEST_BUDGET";
-                                }
-                                cursor = Some(c);
-                            }
-                            Err(reason) => break reason,
-                        }
                     }
-                    Err(e) => {
-                        requests = requests.saturating_add(e.request_count.unwrap_or(0));
-                        let state = match e.http_status {
-                            Some(401) => "AUTH_REQUIRED",
-                            Some(429) => "RATE_LIMITED",
-                            Some(403) => "SOURCE_BLOCKED",
-                            _ => "SOURCE_UNAVAILABLE",
-                        };
-                        failures.push(json!({"platform":source["platform"],"state":state,"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count,"retry_not_before_ms":e.retry_not_before_ms,"page":walk.pages() + 1}));
-                        break "PAGE_FAILED";
-                    }
-                }
-            };
-            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":walk.pages(),"stop":stop,"posts":source_posts.len()}));
+                };
+                let times: Vec<u64> = slice_posts.iter().filter_map(|p| p.published_at).collect();
+                slices.push(json!({"since":bounds.map(|b|b.0),"until":bounds.map(|b|b.1),"acquired":walk.pages() > 0,"stop":stop,"pages":walk.pages(),"posts":slice_posts.len(),"earliest":times.iter().min(),"latest":times.iter().max(),"source_total":total}));
+                source_posts.extend(slice_posts);
+            }
+            let coverage = super::coverage::population_coverage(
+                now.saturating_sub(window),
+                now,
+                sliced,
+                &slices,
+            );
+            let pages: u64 = slices.iter().filter_map(|s| s["pages"].as_u64()).sum();
+            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"population_coverage":coverage}));
             if !fixture && !source_posts.is_empty() {
                 self.db
                     .lock()
