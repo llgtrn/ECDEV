@@ -48,6 +48,7 @@ impl Engine {
    PRAGMA user_version=1;").map_err(error)?;
         crate::monitor::initialize(&db)?;
         crate::social::runtime::initialize(&db)?;
+        crate::simulation::initialize(&db)?;
         Ok(Self {
             root: root.to_path_buf(),
             db: Arc::new(Mutex::new(db)),
@@ -363,6 +364,24 @@ impl Engine {
         self.persist(json!({"intent":intent,"plan":plan,"mode":"PLAN_ONLY","status":"UNAVAILABLE","observations":[],"errors":[{"code":"PROVIDERS_UNAVAILABLE","message":"No live acquisition performed"}],"result":null,"cost_minor":0}))
     }
     pub(crate) fn persist(&self, mut payload: Value) -> Result<Value, String> {
+        // Simulated records live only in simulation_runs; the observed stores refuse them.
+        // Candidates may carry assumption-based economics labelled SIMULATED; the candidate
+        // and its product must not be.
+        let simulated_candidate = payload["candidates"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .any(|c| {
+                crate::simulation::carries_simulated(&c["product"])
+                    || ["state", "evidence_class", "mode"].iter().any(|k| {
+                        c[*k]
+                            .as_str()
+                            .is_some_and(|s| s.starts_with(crate::simulation::SIMULATED))
+                    })
+            });
+        if crate::simulation::carries_simulated(&payload["observations"]) || simulated_candidate {
+            return Err("SIMULATED_RECORD_REFUSED_BY_OBSERVED_STORE".into());
+        }
         crate::capture::verify_payload(&self.root, &payload)?;
         let id = if payload["acquisition_run_id"].is_string() && payload["mode"] != "REPLAY" {
             payload["acquisition_run_id"]
@@ -614,6 +633,7 @@ impl Engine {
             "ecdev.runs.inspect" => self.run(required_str(&args, "run_id")?),
             "ecdev.runs.replay" => self.replay(required_str(&args, "run_id")?),
             "ecdev.opportunity.search" => self.submit(serde_json::from_value(args).map_err(error)?),
+            "ecdev.simulation.compare" => self.simulation_compare(args),
             "ecdev.economics.simulate" => {
                 let s: Scenario = serde_json::from_value(args).map_err(error)?;
                 self.persist(json!({"mode":"SIMULATED","status":"COMPLETE","scenario":s,"result":economics::simulate(&s)?,"observations":[],"cost_minor":0}))
@@ -674,6 +694,7 @@ pub fn tool_definitions() -> Vec<Value> {
     for name in ["ecdev.research.status", "ecdev.evidence.inspect"] {
         out.push(json!({"name":name,"description":"Persisted research run or evidence","inputSchema":run}));
     }
+    out.push(json!({"name":"ecdev.simulation.compare","description":"Deterministic commerce simulation (SIMULATED, never observed, never demand): a scenario of typed buyer agents, or a baseline against a variant paired on common random numbers, over seeded replicates with dispersion; every declared parameter must be consumed; kept apart from observed stores; no network, no LLM","inputSchema":{"type":"object","properties":{"baseline":{"type":"object","description":"SimulationScenario: name, horizon_steps (1-365), step_seconds, population {buyers, budget_minor, price_sensitivity, brand_loyalty, category_interest as {low,high}}, market {currency, our_price_minor, competitor_price_minor, reference_price_minor}, shocks [{kind: OurPriceChange|CompetitorPriceChange, at_step, bps}], termination {rule: Horizon|Quiescence, window, max_units_per_step}, review_probability, return_base_probability"},"variant":{"type":"object","description":"Optional SimulationScenario compared against the baseline"},"seed":{"type":"integer","minimum":0},"replicates":{"type":"integer","minimum":1,"maximum":50,"default":10}},"required":["baseline","seed"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.reextract","description":"Re-derive typed product series (price, currency, availability) from the stored, hash-verified raw captures of up to 50 research runs with the current extractor, and report where it disagrees with what was recorded; missing or altered captures contribute nothing; no network","inputSchema":{"type":"object","properties":{"run_ids":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":50}},"required":["run_ids"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.monitor.compare","description":"Compare captured product fields between two persisted research snapshots","inputSchema":{"type":"object","properties":{"before_run_id":{"type":"string"},"after_run_id":{"type":"string"}},"required":["before_run_id","after_run_id"],"additionalProperties":false}}));

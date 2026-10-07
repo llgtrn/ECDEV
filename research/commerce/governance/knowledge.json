@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "c80d5a547b637866b8fdfc0747d2f9c25c387de3",
+  "assessed_parent_commit": "a1464a66427737f09eae677b64ab36b9151bfc47",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,14 +18,14 @@
     "semantic_censused_capabilities": 242,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 38,
-    "benchmark_candidates": 28,
-    "algorithm_candidates": 9,
+    "study_candidates": 35,
+    "benchmark_candidates": 27,
+    "algorithm_candidates": 7,
     "reference_only": 52,
-    "study_complete_capabilities": 90,
+    "study_complete_capabilities": 96,
     "not_relevant_after_review": 25,
-    "research_questions_open": 75,
-    "knowledge_coverage_ratio": 0.690083
+    "research_questions_open": 69,
+    "knowledge_coverage_ratio": 0.714876
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1079,13 +1079,7 @@
       },
       "open": [
         "social.mirofish.simulation-lifecycle STUDY_CANDIDATE(explicit per-scenario-run state machine with one finalisation path, for SIMULATED commerce scenarios)",
-        "social.mirofish.scenario-initialization STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)",
-        "social.mirofish.population-construction STUDY_CANDIDATE(buyer and competitor populations sampled from declared distributions instead of one agent per entity)",
-        "social.mirofish.agent-and-environment-state ALGORITHM_CANDIDATE(typed agent state with a dead-parameter audit harness and a fresh per-run market store)",
         "social.mirofish.event-loop-and-activation STUDY_CANDIDATE(capped random versus Poisson-rate activation against observed purchase-time histograms)",
-        "social.mirofish.action-selection STUDY_CANDIDATE(closed, validated commerce action set (buy, wait, switch, review, return))",
-        "social.mirofish.termination ALGORITHM_CANDIDATE(convergence-based versus fixed-horizon termination, recording the rule that fired)",
-        "social.mirofish.replication-and-dispersion BENCHMARK_CANDIDATE(absent in the donor: seeded sub-streams, N replicates, dispersion and common random numbers for scenario lift)",
         "social.mirofish.network-and-diffusion STUDY_CANDIDATE(injected referral graph and recommender weights; cascade size and sales concentration sensitivity against a Bass baseline)",
         "social.mirofish.persona-construction STUDY_CANDIDATE(versioned, hashed segment personas; effect of persona text versus numeric parameters on simulated choices)",
         "social.mirofish.interview-probes STUDY_CANDIDATE(post-run survey probes as SIMULATED stated preference versus revealed actions)",
@@ -1094,6 +1088,12 @@
         "social.mirofish.ontology-induction STUDY_CANDIDATE(LLM-proposed market ontology (specific actor types plus fallback catch-alls) and equidistant representative chunk sampling for schema induction, kept as a candidate schema with model and prompt provenance, never as evidence)"
       ],
       "resolved": [
+        "social.mirofish.scenario-initialization STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Shock: scripted price changes tied to a typed actor (our offer or the competitor) at a step, validated inside the horizon and recorded as consumed parameters when applied)",
+        "social.mirofish.population-construction STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Population: buyers sampled from declared ranges on their own seeded substream, never one agent per extracted entity; V0 uses uniform ranges)",
+        "social.mirofish.agent-and-environment-state STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs: typed buyer state (budget, price sensitivity, brand loyalty, category interest, last seller) and a fresh market state per replicate; a dead-parameter audit refuses any run whose declared parameters are not all consumed, unknown parameters never parse, and a test proves each numeric parameter changes the outcome)",
+        "social.mirofish.action-selection STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Action: the closed set BUY, WAIT, SWITCH, REVIEW, RETURN, chosen by a logit over affordable offers and waiting and counted per step; the counts add up to active buyers and units)",
+        "social.mirofish.termination STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Termination: fixed horizon or quiescence (our units per step at or below a bound for a window of steps), each replicate recording which rule fired and at which step)",
+        "social.mirofish.replication-and-dispersion STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs: every draw comes from SHA-256-derived SplitMix64 substreams named population, activation and choice per seed and replicate; results are N replicates with mean, median, sd, p10 and p90; compare() pairs baseline and variant replicates on common random numbers, and a test shows paired differences vary less than unpaired ones)",
         "social.mirofish.output-provenance STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](the donor writes simulated activity into observed graph memory with only a metadata label; ECDEV requires a provenance firewall between SIMULATED and OBSERVED)",
         "social.mirofish.graph-memory-and-reports REFERENCE_ONLY(Zep graph memory and LLM report agents)",
         "social.mirofish.web-application NO_RESEARCH_VALUE[FRONTEND](Flask routes, Vue frontend, locales and polling endpoints)",

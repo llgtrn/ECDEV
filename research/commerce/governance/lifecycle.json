@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "c80d5a547b637866b8fdfc0747d2f9c25c387de3",
+  "assessed_parent_commit": "a1464a66427737f09eae677b64ab36b9151bfc47",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -3139,7 +3139,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "15 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
+          "detail": "16 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5134,7 +5134,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "6 imports: rusqlite in domain/commerce/src/frontier.rs; rusqlite in domain/commerce/src/monitor.rs; rusqlite in domain/commerce/src/research.rs"
+          "detail": "7 imports: rusqlite in domain/commerce/src/frontier.rs; rusqlite in domain/commerce/src/monitor.rs; rusqlite in domain/commerce/src/research.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "48 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
+          "detail": "49 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/lib.rs; serde_json in adapter/marketplace/src/doctor.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5609,7 +5609,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "15 imports: serde in domain/commerce/src/decision.rs; serde in domain/commerce/src/domain.rs; serde in domain/commerce/src/economics.rs"
+          "detail": "16 imports: serde in domain/commerce/src/decision.rs; serde in domain/commerce/src/domain.rs; serde in domain/commerce/src/economics.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6084,7 +6084,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "13 imports: uuid in adapter/keepa/src/client.rs; uuid in adapter/marketplace/src/lib.rs; uuid in adapter/web/src/lib.rs"
+          "detail": "14 imports: uuid in adapter/keepa/src/client.rs; uuid in adapter/marketplace/src/lib.rs; uuid in adapter/web/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6489,23 +6489,23 @@
         {
           "key": "social.mirofish.scenario-initialization",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(scripted round-0 shocks (launch, price cut, competitor ad) bound to typed actors)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Shock: scripted price changes tied to a typed actor (our offer or the competitor) at a step, validated inside the horizon and recorded as consumed parameters when applied)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.population-construction",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(buyer and competitor populations sampled from declared distributions instead of one agent per entity)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Population: buyers sampled from declared ranges on their own seeded substream, never one agent per extracted entity; V0 uses uniform ranges)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.agent-and-environment-state",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(typed agent state with a dead-parameter audit harness and a fresh per-run market store)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs: typed buyer state (budget, price sensitivity, brand loyalty, category interest, last seller) and a fresh market state per replicate; a dead-parameter audit refuses any run whose declared parameters are not all consumed, unknown parameters never parse, and a test proves each numeric parameter changes the outcome)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.event-loop-and-activation",
@@ -6517,23 +6517,23 @@
         {
           "key": "social.mirofish.action-selection",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(closed, validated commerce action set (buy, wait, switch, review, return))",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Action: the closed set BUY, WAIT, SWITCH, REVIEW, RETURN, chosen by a logit over affordable offers and waiting and counted per step; the counts add up to active buyers and units)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.termination",
           "required": false,
-          "knowledge": "ALGORITHM_CANDIDATE(convergence-based versus fixed-horizon termination, recording the rule that fired)",
-          "knowledge_status": "ALGORITHM_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs::Termination: fixed horizon or quiescence (our units per step at or below a bound for a window of steps), each replicate recording which rule fired and at which step)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.replication-and-dispersion",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(absent in the donor: seeded sub-streams, N replicates, dispersion and common random numbers for scenario lift)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/simulation.rs: every draw comes from SHA-256-derived SplitMix64 substreams named population, activation and choice per seed and replicate; results are N replicates with mean, median, sd, p10 and p90; compare() pairs baseline and variant replicates on common random numbers, and a test shows paired differences vary less than unpaired ones)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "social.mirofish.network-and-diffusion",
@@ -6698,7 +6698,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "14 of 22 declared capabilities still have open research: social.mirofish.simulation-lifecycle (STUDY_CANDIDATE), social.mirofish.scenario-initialization (STUDY_CANDIDATE), social.mirofish.population-construction (STUDY_CANDIDATE), social.mirofish.agent-and-environment-state (ALGORITHM_CANDIDATE), social.mirofish.event-loop-and-activation (STUDY_CANDIDATE), social.mirofish.action-selection (STUDY_CANDIDATE), social.mirofish.termination (ALGORITHM_CANDIDATE), social.mirofish.replication-and-dispersion (BENCHMARK_CANDIDATE), social.mirofish.network-and-diffusion (STUDY_CANDIDATE), social.mirofish.persona-construction (STUDY_CANDIDATE), social.mirofish.interview-probes (STUDY_CANDIDATE), social.mirofish.config-generation (BENCHMARK_CANDIDATE), social.mirofish.cost-and-time-model (BENCHMARK_CANDIDATE), social.mirofish.ontology-induction (STUDY_CANDIDATE)"
+          "detail": "8 of 22 declared capabilities still have open research: social.mirofish.simulation-lifecycle (STUDY_CANDIDATE), social.mirofish.event-loop-and-activation (STUDY_CANDIDATE), social.mirofish.network-and-diffusion (STUDY_CANDIDATE), social.mirofish.persona-construction (STUDY_CANDIDATE), social.mirofish.interview-probes (STUDY_CANDIDATE), social.mirofish.config-generation (BENCHMARK_CANDIDATE), social.mirofish.cost-and-time-model (BENCHMARK_CANDIDATE), social.mirofish.ontology-induction (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

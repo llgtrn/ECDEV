@@ -7,7 +7,7 @@ const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
 await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
 try {
- const tools=await client.listTools();assert.equal(tools.tools.length,44);
+ const tools=await client.listTools();assert.equal(tools.tools.length,45);
  const officialFixtures=JSON.parse(await readFile(new URL('../../adapter/marketplace/tests/fixtures/official-responses.json',import.meta.url),'utf8'));
  const officialCase=officialFixtures.cases.find(c=>c.operation==='offers');
  const official=await client.callTool({name:'ecdev.product.analyze',arguments:{market:'AMAZON_US',asin:officialCase.asin,evidence_layer:'OFFICIAL_SP_API',include:['OFFERS'],fixture_responses:{offers:officialCase.response}}});
@@ -38,6 +38,7 @@ try {
  const resource=await client.readResource({uri:'ecdev://run/'+value.run_id});assert.equal(JSON.parse(resource.contents[0].text).run_id,value.run_id);
  const replay=await client.callTool({name:'ecdev.runs.replay',arguments:{run_id:value.run_id}});assert.equal(replay.structuredContent.mode,'REPLAY');assert.equal(replay.structuredContent.network_calls,0);
  const scenario={currency:'JPY',fulfillment:'FBA',selling_price:4000,product_cost:800,freight:200,fulfillment_fee:500,referral_bps:1500,ppc:400,units:100,fixed_launch_cost:10000};
+ const simScenario={name:'baseline',horizon_steps:5,step_seconds:86400,population:{buyers:50,budget_minor:{low:2000,high:9000},price_sensitivity:{low:0.2,high:0.8},brand_loyalty:{low:0.3,high:0.7},category_interest:{low:0.05,high:0.2}},market:{currency:'JPY',our_price_minor:3000,competitor_price_minor:3000,reference_price_minor:3000},review_probability:0.1,return_base_probability:0.05};const simulated=await client.callTool({name:'ecdev.simulation.compare',arguments:{baseline:simScenario,variant:{...simScenario,name:'promotion',shocks:[{kind:'OurPriceChange',at_step:0,bps:-1000}]},seed:7,replicates:3}});assert.equal(simulated.isError,false);assert.equal(simulated.structuredContent.state,'SIMULATED');assert.equal(simulated.structuredContent.pairing,'COMMON_RANDOM_NUMBERS_PER_REPLICATE');assert.equal(simulated.structuredContent.difference_variant_minus_baseline.units_ours.n,3);
  const economics=await client.callTool({name:'ecdev.economics.simulate',arguments:scenario});assert.equal(economics.structuredContent.mode,'SIMULATED');assert.equal(economics.structuredContent.result.expected_profit,140000);
  const invalid=await client.callTool({name:'ecdev.economics.simulate',arguments:{...scenario,referral_bps:10001}});assert.equal(invalid.isError,true);
  const fixture=await (await fetch(base+'/api/research/example')).json();

@@ -14,6 +14,7 @@ pub mod provider;
 pub mod research;
 pub mod resolution;
 pub mod service;
+pub mod simulation;
 pub mod social;
 pub mod uncertainty;
 pub use service::Engine;
