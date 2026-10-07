@@ -423,6 +423,15 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             ))
             .unwrap());
         }
+        "GOOGLE_TRENDS_RSS" => {
+            let geo = q["geo"]
+                .as_str()
+                .filter(|g| g.len() == 2 && g.bytes().all(|b| b.is_ascii_uppercase()))
+                .ok_or("INVALID_GEO_TWO_LETTER_COUNTRY")?;
+            return Ok(
+                Url::parse(&format!("https://trends.google.com/trending/rss?geo={geo}")).unwrap(),
+            );
+        }
         "BLUESKY_TRENDS" => {
             return Ok(Url::parse(&format!(
                 "https://public.api.bsky.app/xrpc/app.bsky.unspecced.getTrends?limit={FEED_LIMIT}"
@@ -651,6 +660,7 @@ pub fn trend_feed(data: &Value, platform: &str, captured: u64) -> Result<Vec<Val
     let rows = match platform {
         "MASTODON_TRENDS" => data.as_array(),
         "BLUESKY_TRENDS" => data["trends"].as_array(),
+        "GOOGLE_TRENDS_RSS" => data["items"].as_array(),
         _ => return Err("UNSUPPORTED_TREND_FEED".into()),
     }
     .ok_or("TREND_FEED_ARRAY_REQUIRED")?;
@@ -665,6 +675,16 @@ pub fn trend_feed(data: &Value, platform: &str, captured: u64) -> Result<Vec<Val
                 let tag = mastodon_tag(name).ok_or("TREND_ENTRY_NAME_REQUIRED")?;
                 let usage = mastodon_tag_usage(row, &tag, captured)?;
                 json!({"rank":rank + 1,"label":name,"suggested_query":tag_words(name),"tag":tag,"series":usage["series"],"scope":"INSTANCE_FEDERATED_VIEW","ranking":"INSTANCE_TRENDING_ALGORITHM_UNDISCLOSED"})
+            }
+            "GOOGLE_TRENDS_RSS" => {
+                let label = row["title"]
+                    .as_str()
+                    .filter(|l| !l.trim().is_empty() && l.len() <= 300)
+                    .ok_or("TREND_ENTRY_NAME_REQUIRED")?;
+                let band = row["approx_traffic"]
+                    .as_str()
+                    .and_then(ecdev_core::social::displayed::displayed_count);
+                json!({"rank":rank + 1,"label":label,"suggested_query":label.to_lowercase(),"search_interest_band":band,"search_interest_display":row["approx_traffic"],"started_at":published(&row["published"]),"related_news":row["news"],"evidence_class":"SEARCH_INTEREST_BAND_NOT_DEMAND","ranking":"SOURCE_ORDER_UNDISCLOSED"})
             }
             _ => {
                 let label = row["displayName"]
@@ -812,7 +832,10 @@ impl Provider for Social {
                 return Err(e);
             }
             let content = headers["content_type"].as_str().unwrap_or("");
-            let expected = if r.query["platform"] == "XML_FEED" {
+            let expected = if matches!(
+                r.query["platform"].as_str(),
+                Some("XML_FEED" | "GOOGLE_TRENDS_RSS")
+            ) {
                 "xml"
             } else {
                 "json"
@@ -826,7 +849,11 @@ impl Provider for Social {
             }
             body
         };
-        let data: Value = if r.query["platform"] == "XML_FEED" {
+        let data: Value = if r.query["platform"] == "GOOGLE_TRENDS_RSS" {
+            crate::xml_feed::parse(&raw)
+                .and_then(|root| crate::xml_feed::google_trends_items(&root))
+                .map_err(|e| failure(e, None, requests))?
+        } else if r.query["platform"] == "XML_FEED" {
             crate::xml_feed::parse(&raw)
                 .and_then(|root| crate::xml_feed::to_feed_items(&root))
                 .map_err(|e| failure(e, None, requests))?
@@ -844,7 +871,10 @@ impl Provider for Social {
         let platform = r.query["platform"].as_str().unwrap_or("");
         let mut usage = Value::Null;
         let mut feed = Value::Null;
-        let (posts, tree) = if matches!(platform, "MASTODON_TRENDS" | "BLUESKY_TRENDS") {
+        let (posts, tree) = if matches!(
+            platform,
+            "MASTODON_TRENDS" | "BLUESKY_TRENDS" | "GOOGLE_TRENDS_RSS"
+        ) {
             let entries =
                 trend_feed(&data, platform, captured).map_err(|e| failure(e, None, requests))?;
             feed = json!({"platform":platform,"entries":entries,"raw_hash":format!("{:x}", Sha256::digest(&raw)),"source_url":u.as_str(),"capture_mode":mode,"captured_at":captured,"evidence_class":"DISCOVERY_LEAD_NOT_DEMAND","actors_kept":false});

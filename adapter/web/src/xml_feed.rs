@@ -287,6 +287,32 @@ pub fn rfc822_to_rfc3339(s: &str) -> Option<String> {
     ))
 }
 
+/// Google Trends' daily-trends RSS (trends.google.com/trending/rss?geo=..): each item is a search
+/// term with an approximate traffic band ("1000+"), a start time and related news. Its <link> is
+/// the feed itself and it has no guid, so items are not posts; they are read as trend entries.
+pub fn google_trends_items(root: &Node) -> Result<Value, String> {
+    if root.local() != "rss" {
+        return Err("XML_FEED_ROOT_UNSUPPORTED".into());
+    }
+    let channel = root
+        .children_named("channel")
+        .next()
+        .ok_or("RSS_CHANNEL_REQUIRED")?;
+    let items: Vec<Value> = channel
+        .children_named("item")
+        .take(MAX_ITEMS)
+        .map(|e| {
+            let news: Vec<Value> = e
+                .children_named("news_item")
+                .take(3)
+                .map(|n| json!({"title":n.text_of("ht:news_item_title"),"url":n.text_of("ht:news_item_url"),"source":n.text_of("ht:news_item_source")}))
+                .collect();
+            json!({"title":e.text_of("title"),"approx_traffic":e.text_of("ht:approx_traffic"),"published":e.text_of("pubDate").and_then(|d| rfc822_to_rfc3339(&d)),"news":news})
+        })
+        .collect();
+    Ok(json!({"items":items}))
+}
+
 /// A feed document as the JSON Feed item shape ECDEV already normalizes: id, url, title,
 /// content_html, date_published (RFC 3339) and authors. The source's own form is kept in
 /// `xml_kind`; dates that are neither RFC 822 nor RFC 3339 are left unknown and counted.

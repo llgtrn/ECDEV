@@ -9,15 +9,15 @@ use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fs};
 use uuid::Uuid;
 
-pub const FEED_PLATFORMS: [&str; 2] = ["MASTODON_TRENDS", "BLUESKY_TRENDS"];
+pub const FEED_PLATFORMS: [&str; 3] = ["MASTODON_TRENDS", "BLUESKY_TRENDS", "GOOGLE_TRENDS_RSS"];
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
 
 pub fn tool_definition() -> Value {
-    let source = json!({"type":"object","properties":{"platform":{"enum":FEED_PLATFORMS},"instance":{"type":"string","maxLength":253,"description":"MASTODON_TRENDS only: public instance (default mastodon.social)"},"fixture_raw":{"type":"string","maxLength":4194304}},"required":["platform"],"additionalProperties":false});
-    json!({"name":"ecdev.trend.feeds","description":"Read public trending lists (Mastodon trending tags, Bluesky trends) as discovery leads with suggested queries and next trend.discover actions; zero paid, raw captures hashed and kept, no posters kept; leads are never mentions or demand","inputSchema":{"type":"object","properties":{"sources":{"type":"array","items":source,"minItems":1,"maxItems":3},"request_budget":{"type":"integer","minimum":0,"maximum":6},"fixture_now":{"type":"integer","minimum":0}},"required":["sources"],"additionalProperties":false}})
+    let source = json!({"type":"object","properties":{"platform":{"enum":FEED_PLATFORMS},"instance":{"type":"string","maxLength":253,"description":"MASTODON_TRENDS only: public instance (default mastodon.social)"},"geo":{"type":"string","pattern":"^[A-Z]{2}$","description":"GOOGLE_TRENDS_RSS only: country of the daily search trends (JP, US...); entries carry an approximate search traffic band, search interest not demand"},"fixture_raw":{"type":"string","maxLength":4194304}},"required":["platform"],"additionalProperties":false});
+    json!({"name":"ecdev.trend.feeds","description":"Read public trending lists (Mastodon trending tags, Bluesky trends, Google daily search trends by country) as discovery leads with suggested queries and next trend.discover actions; zero paid, raw captures hashed and kept, no posters kept; leads are never mentions or demand","inputSchema":{"type":"object","properties":{"sources":{"type":"array","items":source,"minItems":1,"maxItems":3},"request_budget":{"type":"integer","minimum":0,"maximum":6},"fixture_now":{"type":"integer","minimum":0}},"required":["sources"],"additionalProperties":false}})
 }
 
 fn ranks_of(feed: &Value) -> BTreeMap<String, u64> {
@@ -171,6 +171,9 @@ impl Engine {
                     follow.insert(0, tag);
                 }
                 entry["state"] = json!("DISCOVERY_LEAD_UNVERIFIED");
+                if platform == "GOOGLE_TRENDS_RSS" && source["geo"] == "JP" {
+                    entry["listing_action"] = json!({"tool":"ecdev.listing.search","input_template":{"market":"YAHOO_SHOPPING_JP","query":entry["suggested_query"]},"requires":"YAHOO_SHOPPING_APP_ID","paid":false});
+                }
                 entry["next_action"] = json!({"tool":"ecdev.trend.discover","input_template":{"query":entry["suggested_query"],"sources":follow},"paid":false});
             }
             // Cross-run identity: this feed's earlier successful captures in the same mode.

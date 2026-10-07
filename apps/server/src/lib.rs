@@ -1292,6 +1292,63 @@ mod research_tests {
     }
 
     #[test]
+    fn google_daily_search_trends_are_bands_not_demand() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-google-trends-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        // The feed's shape: no guid, every <link> is the feed itself, ht: namespace fields.
+        let rss = r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ht="https://trends.google.com/trending/rss" version="2.0"><channel>
+<title>Daily Search Trends</title><link>https://trends.google.com/trending/rss?geo=JP</link>
+<item><title>抹茶ラテ</title><ht:approx_traffic>2000+</ht:approx_traffic><description/><link>https://trends.google.com/trending/rss?geo=JP</link><pubDate>Wed, 7 Oct 2026 03:30:00 -0700</pubDate>
+<ht:picture>https://example.invalid/p.jpg</ht:picture><ht:news_item><ht:news_item_title>Synthetic headline</ht:news_item_title><ht:news_item_url>https://news.example/a</ht:news_item_url><ht:news_item_source>Example News</ht:news_item_source></ht:news_item></item>
+<item><title>台風</title><ht:approx_traffic>100+</ht:approx_traffic><link>https://trends.google.com/trending/rss?geo=JP</link><pubDate>Wed, 7 Oct 2026 02:00:00 -0700</pubDate></item>
+</channel></rss>"#;
+        let now = 1_791_400_000u64;
+        let out = engine.call("ecdev.trend.feeds", json!({"fixture_now":now,"sources":[{"platform":"GOOGLE_TRENDS_RSS","geo":"JP","fixture_raw":rss}]})).unwrap();
+        assert!(
+            out["provider_failures"].as_array().unwrap().is_empty(),
+            "{}",
+            out["provider_failures"]
+        );
+        let e = out["feeds"][0]["entries"].as_array().unwrap();
+        assert_eq!(
+            e.len(),
+            2,
+            "two entries, not one deduplicated by the shared link"
+        );
+        assert_eq!(e[0]["label"], "抹茶ラテ");
+        assert_eq!(
+            (
+                e[0]["search_interest_band"]["lower"].clone(),
+                e[0]["search_interest_band"]["upper"].clone()
+            ),
+            (json!(2000), Value::Null)
+        );
+        assert_eq!(e[0]["evidence_class"], "SEARCH_INTEREST_BAND_NOT_DEMAND");
+        assert_eq!(e[0]["started_at"], 1_791_369_000u64);
+        assert_eq!(e[0]["related_news"][0]["source"], "Example News");
+        assert_eq!(
+            e[0]["listing_action"]["input_template"]["query"],
+            "抹茶ラテ"
+        );
+        assert_eq!(e[0]["list_persistence"]["state"], "NEW_ON_LIST");
+        assert!(
+            !out.to_string().contains("example.invalid/p.jpg"),
+            "pictures are not kept"
+        );
+        assert!(engine.call("ecdev.trend.feeds", json!({"fixture_now":now,"sources":[{"platform":"GOOGLE_TRENDS_RSS","geo":"jp","fixture_raw":rss}]})).is_err() || engine.call("ecdev.trend.feeds", json!({"fixture_now":now,"sources":[{"platform":"GOOGLE_TRENDS_RSS","geo":"jp","fixture_raw":rss}]})).unwrap()["provider_failures"][0]["reason"] == "INVALID_GEO_TWO_LETTER_COUNTRY");
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",
