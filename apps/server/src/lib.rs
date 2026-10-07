@@ -536,6 +536,14 @@ mod research_tests {
             third["velocity"]["count_comparability"],
             "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
         );
+        assert_eq!(
+            third["score"]["velocity_count_comparability"],
+            "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
+        );
+        assert_eq!(
+            third["acceleration"]["count_comparability"],
+            "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
+        );
         assert_eq!(third["arrivals_since_prior_snapshot"]["posts"], 1);
         assert_eq!(
             third["arrivals_since_prior_snapshot"]["bound"],

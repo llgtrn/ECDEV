@@ -831,11 +831,15 @@ impl Engine {
         if let Some(prior) = history.last() {
             let complete = |s: &Value| s["population_evidence"]["grade"] == "COMPLETE_BY_SOURCE";
             let comparable = complete(&snap) && complete(prior);
-            snap["velocity"]["count_comparability"] = json!(if comparable {
+            let comparability = json!(if comparable {
                 "COMPARABLE_BOTH_COMPLETE_BY_SOURCE"
             } else {
                 "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
             });
+            // Acceleration is built from velocities, and the score from both: each says so.
+            snap["velocity"]["count_comparability"] = comparability.clone();
+            snap["acceleration"]["count_comparability"] = comparability.clone();
+            snap["score"]["velocity_count_comparability"] = comparability;
             let prior_at = prior["captured_at"].as_u64().unwrap_or(now);
             let prior_keys: BTreeSet<&str> = prior["post_keys"]
                 .as_array()
