@@ -360,6 +360,52 @@
      "growth": "NO_DETECTABLE_CHANGE"
     }
    ]
+  },
+  {
+   "run": "ecdev.research.run live on two public product pages (2026-10-07)",
+   "status": "PARTIAL",
+   "mode": "LIVE",
+   "network_calls": 3,
+   "provider_calls": [
+    {
+     "provider": "native-web",
+     "status": "COMPLETE",
+     "request_count": 2,
+     "cache_hit": false
+    },
+    {
+     "provider": "native-web",
+     "status": "COMPLETE",
+     "request_count": 1,
+     "cache_hit": false
+    }
+   ],
+   "candidates": [
+    {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "price_minor": 400,
+     "currency": "EUR",
+     "missing_selection_evidence": [
+      "CROSS_SOURCE_PRODUCT_IDENTIFIER",
+      "SECOND_LISTING_ORIGIN"
+     ]
+    },
+    {
+     "state": "INSUFFICIENT_EVIDENCE",
+     "price_minor": 1999,
+     "currency": "EUR",
+     "missing_selection_evidence": [
+      "CROSS_SOURCE_PRODUCT_IDENTIFIER",
+      "SECOND_LISTING_ORIGIN"
+     ]
+    }
+   ],
+   "completeness": {
+    "evidence_mode": "LIVE_NETWORK",
+    "candidate_field_observability_bps": 5000,
+    "evidence_completeness_bps": 10000
+   },
+   "price_cross_check": "each extracted price equals the page's own JSON-LD offer price (4 EUR -> 400, 19.99 EUR -> 1999 minor units), checked separately"
   }
  ],
  "findings": [
@@ -369,6 +415,7 @@
   "Mastodon tag timelines slice by status id and returned complete coverage; one reply tree was read complete",
   "Every feed source (Google Trends JP, Mastodon trending tags, Bluesky trends, PR Times RDF, NHK RSS, a Mastodon tag record) ran live through ECDEV's runtime with no failures",
   "Feeds were cut to 50 items while coverage claimed COMPLETE_BY_SOURCE: PR Times serves 200 items. Feeds are now read whole (up to 1000) and paged sources refuse a page larger than requested; the same live run then read 200 and 86 items and found 10 mentions instead of 1",
-  "A live call carried an unknown field that ECDEV accepted: tool arguments are now checked against each tool's declared input schema before it runs"
+  "A live call carried an unknown field that ECDEV accepted: tool arguments are now checked against each tool's declared input schema before it runs",
+  "Public product research ran live through ECDEV: robots consulted, both pages captured and hashed, prices extracted exactly, and both candidates held at INSUFFICIENT_EVIDENCE for lacking a cross-source identifier and a second site; PARTIAL reflects 50% field observability (no GTIN or weight on these pages)"
  ]
 }
