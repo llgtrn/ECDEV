@@ -212,6 +212,12 @@ impl ForecastScenario {
     }
 }
 
+/// Whether an acquisition failure is the site's own policy (robots denial, AI-agent refusal,
+/// crawl delay beyond budget) rather than an outage: such sources are blocked, not unavailable.
+pub fn policy_refusal(reason: &str) -> bool {
+    reason.starts_with("ROBOTS_") || reason.starts_with("SOURCE_BLOCKED")
+}
+
 /// Han, kana and Hangul: scripts written without spaces between words.
 pub fn is_cjk(c: char) -> bool {
     matches!(c as u32,
@@ -928,6 +934,24 @@ pub fn snapshot(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_sites_own_policy_is_a_block_not_an_outage() {
+        for r in [
+            "ROBOTS_REFUSES_AI_AGENTS",
+            "ROBOTS_DELAY_EXCEEDS_BUDGET",
+            "SOURCE_BLOCKED_ROBOTS_OR_POLICY",
+        ] {
+            assert!(policy_refusal(r), "{r}");
+        }
+        for r in [
+            "PUBLIC_SOCIAL_HTTP_FAILURE",
+            "MALFORMED_SOCIAL_JSON",
+            "FETCH_NETWORK_ERROR",
+        ] {
+            assert!(!policy_refusal(r), "{r}");
+        }
+    }
 
     #[test]
     fn content_terms_drop_links_and_refinements_drop_noise() {

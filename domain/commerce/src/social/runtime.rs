@@ -551,6 +551,8 @@ impl Engine {
                                 Some(401) => "AUTH_REQUIRED",
                                 Some(429) => "RATE_LIMITED",
                                 Some(403) => "SOURCE_BLOCKED",
+                                // The site's own policy (robots, AI-agent refusal, crawl delay).
+                                _ if super::policy_refusal(&e.reason) => "SOURCE_BLOCKED",
                                 _ => "SOURCE_UNAVAILABLE",
                             };
                             failures.push(json!({"platform":source["platform"],"state":state,"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count,"retry_not_before_ms":e.retry_not_before_ms,"page":walk.pages() + 1,"slice":{"since":bounds.map(|b|b.0),"until":bounds.map(|b|b.1)}}));

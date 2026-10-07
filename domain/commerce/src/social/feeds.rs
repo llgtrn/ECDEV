@@ -132,7 +132,7 @@ impl Engine {
                 Ok(a) => a,
                 Err(e) => {
                     requests = requests.saturating_add(e.request_count.unwrap_or(0));
-                    failures.push(json!({"platform":platform,"state":match e.http_status {Some(429) => "RATE_LIMITED", Some(403) => "SOURCE_BLOCKED", _ => "SOURCE_UNAVAILABLE"},"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count}));
+                    failures.push(json!({"platform":platform,"state":match e.http_status {Some(429) => "RATE_LIMITED", Some(403) => "SOURCE_BLOCKED", _ if super::policy_refusal(&e.reason) => "SOURCE_BLOCKED", _ => "SOURCE_UNAVAILABLE"},"reason":e.reason,"http_status":e.http_status,"request_count":e.request_count}));
                     continue;
                 }
             };
