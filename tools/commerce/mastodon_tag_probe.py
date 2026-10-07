@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+"""Bounded probe of the public Mastodon tag record that ECDEV's MASTODON_TAG source reads.
+
+Usage: mastodon_tag_probe.py > result.json
+An API-contract probe through the session's egress proxy, NOT an ECDEV runtime capture: nothing
+it reads is stored as evidence or labelled LIVE. It checks the assumptions the native parser
+makes (robots allows the path; history is at most 31 UTC-midnight days with string counts and
+accounts <= uses; the newest day is the open one; the name echoes the requested tag; and what an
+unknown tag returns). ECDEV user agent, 1.5 s between requests; bodies are hashed, never kept.
+"""
+import hashlib, json, time, urllib.request
+
+UA = "ECDEV"
+last = [0.0]
+log = []
+
+def get(url):
+    wait = 1.5 - (time.time() - last[0])
+    if wait > 0:
+        time.sleep(wait)
+    last[0] = time.time()
+    try:
+        with urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=25) as r:
+            body, status, headers = r.read(), r.status, {k.lower(): v for k, v in r.headers.items()}
+    except urllib.error.HTTPError as e:
+        body, status, headers = e.read(), e.code, {k.lower(): v for k, v in e.headers.items()}
+    log.append({"url": url, "status": status, "bytes": len(body), "sha256": hashlib.sha256(body).hexdigest(),
+                "content_type": headers.get("content-type"), "ratelimit_limit": headers.get("x-ratelimit-limit")})
+    return status, body
+
+def robots_allows(text, path):
+    # Longest-match over the '*' group, enough for the paths probed here.
+    group, rules = False, []
+    for line in text.splitlines():
+        k, _, v = line.partition(":")
+        k, v = k.strip().lower(), v.split("#")[0].strip()
+        if k == "user-agent":
+            group = v == "*"
+        elif group and k in ("allow", "disallow") and v:
+            rules.append((len(v), k == "allow", v))
+    hits = [r for r in rules if path.startswith(r[2])]
+    return max(hits)[1] if hits else True
+
+out = {"probe_class": "API_CONTRACT_PROBE_NOT_ECDEV_RUNTIME_CAPTURE", "probed_at": int(time.time()), "instances": {}}
+now = int(time.time())
+for instance, tags in (("mastodon.social", ["matcha", "matchalatte"]), ("fosstodon.org", ["rust"])):
+    rs, rb = get(f"https://{instance}/robots.txt")
+    entry = {"robots_status": rs, "robots_allows_tags_api": robots_allows(rb.decode("utf-8", "replace"), "/api/v1/tags/x") if rs == 200 else None, "tags": {}}
+    for tag in tags:
+        s, b = get(f"https://{instance}/api/v1/tags/{tag}")
+        d = json.loads(b) if s == 200 else None
+        if d is None:
+            entry["tags"][tag] = {"status": s}
+            continue
+        h = d.get("history", [])
+        days = [int(x["day"]) for x in h]
+        entry["tags"][tag] = {
+            "status": s, "name_echo_lowercase_matches": d.get("name", "").lower() == tag,
+            "history_len": len(h), "counts_are_strings": all(isinstance(x["uses"], str) and isinstance(x["accounts"], str) for x in h),
+            "days_midnight_utc": all(x % 86400 == 0 for x in days), "newest_first": days == sorted(days, reverse=True),
+            "newest_day_is_open": bool(days) and days[0] <= now < days[0] + 86400,
+            "accounts_le_uses": all(int(x["accounts"]) <= int(x["uses"]) for x in h),
+            "uses_series_oldest_first": [int(x["uses"]) for x in reversed(h)], "accounts_series_oldest_first": [int(x["accounts"]) for x in reversed(h)],
+        }
+    out["instances"][instance] = entry
+s, b = get("https://mastodon.social/api/v1/tags/ecdevnonexistenttag0000")
+u = json.loads(b) if s == 200 else {}
+out["unknown_tag"] = {"status": s, "history_len": len(u.get("history", [])), "all_zero": all(x["uses"] == "0" for x in u.get("history", [])),
+                      "meaning": "AN_UNUSED_TAG_AND_AN_UNKNOWN_TAG_ARE_INDISTINGUISHABLE_ZEROS_ARE_INSTANCE_OBSERVED_ZERO_NOT_ABSENCE_ELSEWHERE"}
+out["requests"] = log
+print(json.dumps(out, indent=1))

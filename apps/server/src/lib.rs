@@ -865,6 +865,63 @@ mod research_tests {
         );
     }
     #[test]
+    fn mastodon_tag_usage_is_an_attention_counter_with_its_capture() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-tag-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let day = 86_400u64;
+        let today = 20_000 * day;
+        // Seven days, newest first as the instance reports them; today is still open.
+        let history: Vec<Value> = (0..7)
+            .map(|d| {
+                let (uses, accounts) = if (1..=3).contains(&d) { (60, 25) } else { (6, 3) };
+                json!({"day":(today - d * day).to_string(),"uses":uses.to_string(),"accounts":accounts.to_string()})
+            })
+            .collect();
+        let raw =
+            json!({"name":"matcha","url":"https://mastodon.social/tags/matcha","history":history})
+                .to_string();
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":today + 3_600,"sources":[{"platform":"MASTODON_TAG","fixture_raw":raw}]})).unwrap();
+        let c = &run["source_counters"][0];
+        assert_eq!(c["evidence_class"], "ATTENTION_SIGNAL_NOT_DEMAND");
+        assert_eq!(c["scope"], "INSTANCE_FEDERATED_VIEW");
+        assert_eq!(c["series"].as_array().unwrap().len(), 7);
+        assert_eq!(c["growth"]["state"], "RISING");
+        assert_eq!(
+            c["growth"]["after"]["until"], today,
+            "the open day is not compared"
+        );
+        assert_eq!(c["capture_mode"], "FIXTURE");
+        // Tag usage is no post and no demand: nothing enters the post population.
+        assert_eq!(run["pagination"][0]["posts"], 0);
+        // Inspection re-verifies the counter's raw capture.
+        let id = run["snapshot_id"].as_str().unwrap();
+        let inspected = engine.trend_inspect(json!({"snapshot_id":id})).unwrap();
+        assert_eq!(inspected["source_counters"][0]["raw_hash"], c["raw_hash"]);
+        std::fs::remove_file(
+            root.join(".ecdev-data/runtime/social-captures")
+                .join(format!("{}.raw", c["raw_hash"].as_str().unwrap())),
+        )
+        .unwrap();
+        assert!(engine.trend_inspect(json!({"snapshot_id":id})).is_err());
+        // Time slices and reply trees are refused for a tag record.
+        let sliced = engine.trend_discover(json!({"query":"matcha","fixture_now":today,"window_seconds":2 * day,"sources":[{"platform":"MASTODON_TAG","slice_seconds":day,"fixture_slices":[[raw],[raw]]}]})).unwrap();
+        assert_eq!(
+            sliced["provider_failures"][0]["reason"],
+            "TIME_BOUND_UNSUPPORTED_BY_SOURCE"
+        );
+        assert!(sliced["source_counters"].as_array().unwrap().is_empty());
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",

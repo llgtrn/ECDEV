@@ -92,6 +92,44 @@ pub fn rate_comparison(
     })
 }
 
+/// Growth of a source-reported daily attention series (a Mastodon tag's uses and accounts per
+/// UTC day): the last three complete days against the three before them. The day still open at
+/// capture is never compared. Statuses cluster, so the Poisson test is optimistic; distinct
+/// accounts per day (account-days) is the steadier of the two and is reported first.
+pub fn daily_attention_growth(usage: &serde_json::Value) -> serde_json::Value {
+    use serde_json::json;
+    let days: Vec<(u64, u64, u64)> = usage["series"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|d| d["complete"] == true)
+        .filter_map(|d| {
+            Some((
+                d["day"].as_u64()?,
+                d["uses"].as_u64()?,
+                d["accounts"].as_u64()?,
+            ))
+        })
+        .collect();
+    const WINDOW: usize = 3;
+    let consecutive = days.windows(2).all(|w| w[1].0 == w[0].0 + 86_400);
+    if days.len() < 2 * WINDOW || !consecutive {
+        return json!({"state":"INSUFFICIENT_COMPLETE_DAYS","complete_days":days.len(),"required":2 * WINDOW,"consecutive":consecutive,"evidence_class":"ATTENTION_SIGNAL_NOT_DEMAND"});
+    }
+    let recent = &days[days.len() - 2 * WINDOW..];
+    let (before, after) = recent.split_at(WINDOW);
+    let sum =
+        |rows: &[(u64, u64, u64)], f: fn(&(u64, u64, u64)) -> u64| rows.iter().map(f).sum::<u64>();
+    let seconds = WINDOW as u64 * 86_400;
+    let accounts = rate_comparison(sum(before, |d| d.2), seconds, sum(after, |d| d.2), seconds);
+    let uses = rate_comparison(sum(before, |d| d.1), seconds, sum(after, |d| d.1), seconds);
+    json!({"state":accounts.as_ref().map(|a| a.state),"account_days":accounts,"uses":uses,
+        "before":{"from":before[0].0,"until":before[WINDOW - 1].0 + 86_400},
+        "after":{"from":after[0].0,"until":after[WINDOW - 1].0 + 86_400},
+        "basis":"LAST_3_COMPLETE_UTC_DAYS_VS_PRIOR_3_OPEN_DAY_EXCLUDED","dispersion":"POISSON_ASSUMED_STATUS_CLUSTERING_UNMODELLED",
+        "evidence_class":"ATTENTION_SIGNAL_NOT_DEMAND"})
+}
+
 /// Seconds of (start, end] covered by the union of (s, e] intervals.
 pub fn covered_seconds(start: u64, end: u64, intervals: &[(u64, u64)]) -> u64 {
     let mut clipped: Vec<(u64, u64)> = intervals
@@ -151,6 +189,34 @@ mod tests {
         );
         let big = rate_comparison(2000, 3600, 2100, 3600).unwrap();
         assert!(big.p_rise.is_finite() && big.p_fall.is_finite());
+    }
+
+    #[test]
+    fn daily_attention_compares_complete_days_only() {
+        use serde_json::json;
+        let day = |d: u64, uses: u64, accounts: u64, complete: bool| json!({"day":d * 86_400,"uses":uses,"accounts":accounts,"complete":complete});
+        let mut series: Vec<_> = (0..3).map(|d| day(d, 4, 2, true)).collect();
+        series.extend((3..6).map(|d| day(d, 40, 12, true)));
+        series.push(day(6, 0, 0, false));
+        let g = daily_attention_growth(&json!({"series":series}));
+        assert_eq!(g["state"], "RISING");
+        assert_eq!(
+            (
+                g["account_days"]["before"].clone(),
+                g["account_days"]["after"].clone()
+            ),
+            (json!(6), json!(36))
+        );
+        assert_eq!(g["after"]["until"], 6 * 86_400, "the open day is excluded");
+        assert_eq!(g["evidence_class"], "ATTENTION_SIGNAL_NOT_DEMAND");
+        // Fewer than six complete days, or a gap, is not compared.
+        let short = daily_attention_growth(&json!({"series":&series[1..]}));
+        assert_eq!(short["state"], "INSUFFICIENT_COMPLETE_DAYS");
+        let gap: Vec<_> = (0..3).chain(4..8).map(|d| day(d, 9, 3, true)).collect();
+        assert_eq!(
+            daily_attention_growth(&json!({"series":gap}))["state"],
+            "INSUFFICIENT_COMPLETE_DAYS"
+        );
     }
 
     #[test]

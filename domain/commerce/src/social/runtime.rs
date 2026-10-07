@@ -71,7 +71,7 @@ const TRIGGERS: &[&str] = &[
     "SENTIMENT_DROP",
 ];
 pub fn tool_definitions() -> Vec<Value> {
-    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED"]},"url":{"type":"string","maxLength":4096},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"reply_trees":{"type":"boolean","description":"Also read the reply trees of the roots with the most reported comments (Hacker News items, Bluesky getPostThread); JSON Feed exposes none"},"max_threads":{"type":"integer","minimum":1,"maximum":10,"default":3},"fixture_threads":{"type":"object","additionalProperties":{"type":"string","maxLength":4194304},"description":"Fixture thread bodies keyed by root native id"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
+    let source = json!({"type":"object","properties":{"platform":{"enum":["HACKER_NEWS","BLUESKY","JSON_FEED","MASTODON_TAG"]},"url":{"type":"string","maxLength":4096},"instance":{"type":"string","maxLength":253,"description":"MASTODON_TAG only: the public instance whose tag record is read (default mastodon.social); its counts are that instance's federated view, attention not demand"},"fixture_raw":{"type":"string","maxLength":4194304},"max_pages":{"type":"integer","minimum":1,"maximum":5,"default":1,"description":"Pages walked by the source's own cursor; each page is its own capture and costs two requests; stops at the end, an empty page, a repeated cursor, the limit or the request budget"},"fixture_pages":{"type":"array","items":{"type":"string","maxLength":4194304},"maxItems":4,"description":"Fixture bodies for pages after the first"},"slice_seconds":{"type":"integer","minimum":3600,"description":"Split the requested window into time slices the source bounds itself (Hacker News, Bluesky), newest first, at most 31; each slice walks its own pages. Sources without time bounds (JSON Feed) are refused"},"reply_trees":{"type":"boolean","description":"Also read the reply trees of the roots with the most reported comments (Hacker News items, Bluesky getPostThread); JSON Feed exposes none"},"max_threads":{"type":"integer","minimum":1,"maximum":10,"default":3},"fixture_threads":{"type":"object","additionalProperties":{"type":"string","maxLength":4194304},"description":"Fixture thread bodies keyed by root native id"},"fixture_slices":{"type":"array","maxItems":31,"items":{"type":"array","maxItems":5,"items":{"type":"string","maxLength":4194304}},"description":"Fixture bodies per slice and page"}},"required":["platform"],"additionalProperties":false});
     let discover = json!({"type":"object","properties":{"query":{"type":"string","minLength":1,"maxLength":500},"sources":{"type":"array","items":source,"minItems":1,"maxItems":5},"window_seconds":{"type":"integer","minimum":60,"maximum":2592000},"request_budget":{"type":"integer","minimum":0,"maximum":20},"cache_only":{"type":"boolean"},"fixture_now":{"type":"integer","minimum":0}},"required":["query","sources"],"additionalProperties":false});
     let inspect = json!({"type":"object","properties":{"snapshot_id":{"type":"string"}},"additionalProperties":false});
     vec![
@@ -108,12 +108,30 @@ impl Engine {
         value: &Value,
         checked: &mut BTreeMap<String, bool>,
     ) -> bool {
-        value["captured_posts"].as_array().is_some_and(|posts| {
-            posts.iter().all(|p| {
-                serde_json::from_value::<SocialPost>(p.clone())
-                    .is_ok_and(|p| self.verified_social_capture(&p, checked))
+        let counters = value["source_counters"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .all(|c| {
+                c["raw_hash"].as_str().is_some_and(|hash| {
+                    *checked.entry(hash.to_string()).or_insert_with(|| {
+                        let path = self
+                            .root
+                            .join(".ecdev-data/runtime/social-captures")
+                            .join(format!("{hash}.raw"));
+                        fs::metadata(&path).is_ok_and(|m| m.is_file() && m.len() <= 4194304)
+                            && fs::read(path)
+                                .is_ok_and(|raw| format!("{:x}", Sha256::digest(raw)) == hash)
+                    })
+                })
+            });
+        counters
+            && value["captured_posts"].as_array().is_some_and(|posts| {
+                posts.iter().all(|p| {
+                    serde_json::from_value::<SocialPost>(p.clone())
+                        .is_ok_and(|p| self.verified_social_capture(&p, checked))
+                })
             })
-        })
     }
     fn social_rows(&self, mode: &str) -> Result<Vec<SocialPost>, String> {
         let db = self.db.lock().map_err(err)?;
@@ -207,7 +225,7 @@ impl Engine {
             valid
         }).collect();
         Ok(
-            json!({"snapshots":snapshots,"unavailable_snapshots":unavailable,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK","watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","JSON_FEED"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
+            json!({"snapshots":snapshots,"unavailable_snapshots":unavailable,"raw_capture_verification":"VERIFIED_LOCAL_SHA256_NO_NETWORK","watches":watches?,"simulation":{"state":"SIMULATED","execution":"UNAVAILABLE_NO_SIMULATION_RUNTIME","observed_contribution":0},"platforms_declared":["HACKER_NEWS","BLUESKY","JSON_FEED","MASTODON_TAG"],"donor_provenance":"research/commerce/social-capability-graph.json","license_review":"research/commerce/social-license-review.json"}),
         )
     }
     pub fn trend_compare(&self, args: Value) -> Result<Value, String> {
@@ -279,13 +297,16 @@ impl Engine {
         let mut checked = BTreeMap::new();
         let run_id = Uuid::new_v4().to_string();
         let mut paginations = vec![];
+        // Source-reported counters that are not posts (a Mastodon tag's daily uses), each tied
+        // to its raw capture.
+        let mut counters = vec![];
         for (i, source) in sources.iter().enumerate() {
             if !selected.contains(format!("source-{i}").as_str()) {
                 continue;
             }
             if !matches!(
                 source["platform"].as_str(),
-                Some("HACKER_NEWS" | "BLUESKY" | "JSON_FEED")
+                Some("HACKER_NEWS" | "BLUESKY" | "JSON_FEED" | "MASTODON_TAG")
             ) {
                 failures.push(json!({"platform":source["platform"],"state":"SOURCE_UNAVAILABLE","reason":"No native allowed connector; donor platform availability is not permission"}));
                 continue;
@@ -456,6 +477,19 @@ impl Engine {
                             .map_err(err)?;
                             if total.is_null() {
                                 total = acquired.result["source_total"].clone();
+                            }
+                            let usage = &acquired.result["tag_usage"];
+                            if !usage.is_null() {
+                                if usage["raw_hash"] != json!(raw_hash)
+                                    || usage["capture_mode"] != json!(mode)
+                                {
+                                    return Err("SOCIAL_CAPTURE_HASH_MISMATCH".into());
+                                }
+                                let mut counter = usage.clone();
+                                counter["platform"] = source["platform"].clone();
+                                counter["source_group"] = json!(source_key(source));
+                                counter["growth"] = super::growth::daily_attention_growth(usage);
+                                counters.push(counter);
                             }
                             let next = acquired.result["pagination"]["next_cursor"].as_str();
                             let n = posts.len();
@@ -685,6 +719,7 @@ impl Engine {
         snap["provider_failures"] = json!(failures);
         snap["pagination"] = json!(paginations);
         snap["population_evidence"] = super::coverage::population_evidence(&paginations, mode);
+        snap["source_counters"] = json!(counters);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
         let acquisition_mode = if mode != "LIVE" || requests > 0 {
             mode

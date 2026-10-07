@@ -299,7 +299,7 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                     .append_pair("parentHeight", "0");
                 Ok(u)
             }
-            "JSON_FEED" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
+            "JSON_FEED" | "MASTODON_TAG" => Err("SOURCE_DOES_NOT_EXPOSE_TREE".into()),
             _ => Err("INVALID_THREAD_ROOT".into()),
         };
     }
@@ -372,15 +372,117 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             }
             Ok(u)
         }
+        "MASTODON_TAG" => {
+            // The instance's public tag record: seven days of uses and accounts as that instance
+            // sees them. It has no pages and no time bounds of its own.
+            if time_bounds(q)?.is_some() {
+                return Err("TIME_BOUND_UNSUPPORTED_BY_SOURCE".into());
+            }
+            if q.get("page_cursor").is_some() {
+                return Err("INVALID_PAGE_CURSOR".into());
+            }
+            let instance = mastodon_instance(q)?;
+            let tag = mastodon_tag(query).ok_or("QUERY_HAS_NO_TAG_CHARACTERS")?;
+            let mut u = Url::parse(&format!("https://{instance}/api/v1/tags/")).unwrap();
+            u.path_segments_mut()
+                .map_err(|_| "INVALID_MASTODON_INSTANCE")?
+                .pop_if_empty()
+                .push(&tag);
+            Ok(u)
+        }
         _ => Err("SOURCE_UNAVAILABLE_NO_NATIVE_CONNECTOR".into()),
     }
+}
+
+/// The public instance a Mastodon tag is read from: a lowercase DNS name, never an address.
+fn mastodon_instance(q: &Value) -> Result<String, String> {
+    let host = match q.get("instance") {
+        None => return Ok("mastodon.social".into()),
+        Some(h) => h.as_str().ok_or("INVALID_MASTODON_INSTANCE")?,
+    };
+    let labels: Vec<&str> = host.split('.').collect();
+    let ok = host.len() <= 253
+        && labels.len() >= 2
+        && labels.iter().all(|l| {
+            !l.is_empty()
+                && l.len() <= 63
+                && !l.starts_with('-')
+                && !l.ends_with('-')
+                && l.bytes()
+                    .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-')
+        })
+        && !labels
+            .last()
+            .is_some_and(|l| l.bytes().all(|b| b.is_ascii_digit()))
+        && !matches!(labels.last(), Some(&("localhost" | "local" | "internal")));
+    if ok {
+        Ok(host.into())
+    } else {
+        Err("INVALID_MASTODON_INSTANCE".into())
+    }
+}
+
+/// The tag a query is read as: its letters and digits, lowercased, spaces and punctuation
+/// removed ("Matcha Latte" -> "matchalatte"). The mapping is reported with the result.
+pub fn mastodon_tag(query: &str) -> Option<String> {
+    let tag: String = query
+        .chars()
+        .filter(|c| c.is_alphanumeric() || *c == '_')
+        .flat_map(char::to_lowercase)
+        .collect();
+    (!tag.is_empty() && tag.chars().count() <= 100).then_some(tag)
+}
+
+/// Daily usage of a Mastodon tag as the instance reports it, oldest first. Each day starts at
+/// UTC midnight; the day containing `captured` is still open and is marked partial.
+pub fn mastodon_tag_usage(data: &Value, tag: &str, captured: u64) -> Result<Value, String> {
+    if !data["name"]
+        .as_str()
+        .is_some_and(|n| n.to_lowercase() == tag)
+    {
+        return Err("MASTODON_TAG_NAME_MISMATCH".into());
+    }
+    let rows = data["history"]
+        .as_array()
+        .ok_or("MASTODON_TAG_HISTORY_REQUIRED")?;
+    if rows.len() > 31 {
+        return Err("MASTODON_TAG_HISTORY_TOO_LONG".into());
+    }
+    let number = |v: &Value| -> Option<u64> {
+        v.as_u64()
+            .or_else(|| v.as_str().and_then(|s| s.parse().ok()))
+    };
+    let mut days = vec![];
+    for row in rows {
+        let day = number(&row["day"]).ok_or("MASTODON_TAG_DAY_INVALID")?;
+        if day % 86_400 != 0 || day > captured {
+            return Err("MASTODON_TAG_DAY_INVALID".into());
+        }
+        let uses = number(&row["uses"]).ok_or("MASTODON_TAG_COUNT_INVALID")?;
+        let accounts = number(&row["accounts"]).ok_or("MASTODON_TAG_COUNT_INVALID")?;
+        if accounts > uses {
+            return Err("MASTODON_TAG_ACCOUNTS_EXCEED_USES".into());
+        }
+        days.push((day, uses, accounts));
+    }
+    days.sort();
+    if days.windows(2).any(|w| w[0].0 == w[1].0) {
+        return Err("MASTODON_TAG_DUPLICATE_DAY".into());
+    }
+    let series: Vec<Value> = days
+        .iter()
+        .map(|(day, uses, accounts)| json!({"day":day,"uses":uses,"accounts":accounts,"complete":day + 86_400 <= captured}))
+        .collect();
+    Ok(
+        json!({"tag":tag,"series":series,"unit":"STATUSES_AND_DISTINCT_ACCOUNTS_PER_UTC_DAY","scope":"INSTANCE_FEDERATED_VIEW","zero_meaning":"NO_USE_SEEN_BY_THIS_INSTANCE_UNKNOWN_TAGS_ALSO_READ_ZERO","evidence_class":"ATTENTION_SIGNAL_NOT_DEMAND"}),
+    )
 }
 impl Provider for Social {
     fn id(&self) -> &str {
         "native-social"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE"},"population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"UNSUPPORTED_EXPLICITLY_NOT_JSON_FEED","donor_runtime":false})
+        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","JSON_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","JSON_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"UNSUPPORTED_EXPLICITLY_NOT_JSON_FEED","donor_runtime":false})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         endpoint(q)?;
@@ -471,7 +573,20 @@ impl Provider for Social {
         };
         u.set_fragment(None);
         let platform = r.query["platform"].as_str().unwrap_or("");
-        let (posts, tree) = if r.query.get("thread_of").is_some() {
+        let mut usage = Value::Null;
+        let (posts, tree) = if platform == "MASTODON_TAG" {
+            let query = r.query["query"].as_str().unwrap_or("");
+            let tag = mastodon_tag(query).unwrap_or_default();
+            usage = mastodon_tag_usage(&data, &tag, captured)
+                .map_err(|e| failure(e, None, requests))?;
+            usage["query"] = json!(query);
+            usage["mapping"] = json!("LOWERCASE_LETTERS_AND_DIGITS_OTHERS_REMOVED");
+            usage["raw_hash"] = json!(format!("{:x}", Sha256::digest(&raw)));
+            usage["source_url"] = json!(u.as_str());
+            usage["capture_mode"] = json!(mode);
+            usage["captured_at"] = json!(captured);
+            (vec![], Value::Null)
+        } else if r.query.get("thread_of").is_some() {
             let (posts, tree) = normalize_tree(&data, platform, u.as_str(), &raw, captured, mode)
                 .map_err(|e| failure(e, None, requests))?;
             (posts, tree)
@@ -482,7 +597,7 @@ impl Provider for Social {
         };
         Ok(AcquireResult {
             observations: vec![],
-            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"reply_tree":tree,"population_complete":false}),
+            result: json!({"posts":posts,"source_url":u.as_str(),"pagination":{"cursor":r.query["page_cursor"],"next_cursor":next_cursor(&data, r.query["platform"].as_str().unwrap_or(""))},"source_total":source_total(&data, r.query["platform"].as_str().unwrap_or("")),"time_bounds":{"since":r.query["since"],"until":r.query["until"]},"reply_tree":tree,"tag_usage":usage,"population_complete":false}),
             raw_payload: raw,
             provider_cost: json!({"cost_minor":0,"request_count":requests,"paid":false}),
         })
@@ -1041,5 +1156,103 @@ mod tests {
         );
         assert!(endpoint(&json!({"platform":"JSON_FEED","query":"matcha","url":"http://user:password@example.com"})).is_err());
         assert!(endpoint(&json!({"platform":"JSON_FEED","query":"matcha","url":"https://example.com?token=secret"})).is_err());
+    }
+
+    #[test]
+    fn mastodon_tags_are_daily_attention_series_from_a_public_instance() {
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TAG","query":"Matcha Latte!"}))
+                .unwrap()
+                .as_str(),
+            "https://mastodon.social/api/v1/tags/matchalatte"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TAG","query":"抹茶","instance":"fosstodon.org"}))
+                .unwrap()
+                .as_str(),
+            "https://fosstodon.org/api/v1/tags/%E6%8A%B9%E8%8C%B6"
+        );
+        for instance in [
+            "localhost",
+            "127.0.0.1",
+            "a.local",
+            "Mastodon.Social",
+            "x.y/z",
+            "-a.example",
+            "a..example",
+            "user@a.example",
+        ] {
+            assert_eq!(
+                endpoint(&json!({"platform":"MASTODON_TAG","query":"m","instance":instance}))
+                    .unwrap_err(),
+                "INVALID_MASTODON_INSTANCE",
+                "{instance}"
+            );
+        }
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TAG","query":"!!"})).unwrap_err(),
+            "QUERY_HAS_NO_TAG_CHARACTERS"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TAG","query":"m","since":1,"until":2}))
+                .unwrap_err(),
+            "TIME_BOUND_UNSUPPORTED_BY_SOURCE"
+        );
+        assert_eq!(
+            endpoint(&json!({"platform":"MASTODON_TAG","query":"m","thread_of":"1"})).unwrap_err(),
+            "SOURCE_DOES_NOT_EXPOSE_TREE"
+        );
+        // The instance reports newest first, as strings; today's day is still open.
+        let today = 20_000 * 86_400;
+        let data = json!({"name":"matcha","url":"https://mastodon.social/tags/matcha","history":[
+            {"day":today.to_string(),"uses":"2","accounts":"2"},
+            {"day":(today-86_400).to_string(),"uses":"9","accounts":"4"},
+            {"day":(today-2*86_400).to_string(),"uses":"3","accounts":"3"}]});
+        let usage = mastodon_tag_usage(&data, "matcha", today + 3_600).unwrap();
+        let series = usage["series"].as_array().unwrap();
+        assert_eq!(series[0]["day"], today - 2 * 86_400);
+        assert_eq!(
+            series
+                .iter()
+                .map(|d| d["complete"].as_bool().unwrap())
+                .collect::<Vec<_>>(),
+            [true, true, false]
+        );
+        assert_eq!(usage["evidence_class"], "ATTENTION_SIGNAL_NOT_DEMAND");
+        // Malformed or inconsistent records are refused, never repaired.
+        let mut bad = data.clone();
+        bad["history"][0]["accounts"] = json!("5");
+        assert_eq!(
+            mastodon_tag_usage(&bad, "matcha", today + 1).unwrap_err(),
+            "MASTODON_TAG_ACCOUNTS_EXCEED_USES"
+        );
+        bad = data.clone();
+        bad["history"][0]["day"] = json!("12345");
+        assert_eq!(
+            mastodon_tag_usage(&bad, "matcha", today + 1).unwrap_err(),
+            "MASTODON_TAG_DAY_INVALID"
+        );
+        assert_eq!(
+            mastodon_tag_usage(&data, "hojicha", today + 1).unwrap_err(),
+            "MASTODON_TAG_NAME_MISMATCH"
+        );
+        // A fixture acquisition carries the series, its capture hash and no posts.
+        let raw = data.to_string();
+        let out = Social::default()
+            .acquire(&AcquireRequest {
+                run_id: "r".into(),
+                capability: "social.query".into(),
+                market: "PUBLIC_SOCIAL".into(),
+                query: json!({"platform":"MASTODON_TAG","query":"Matcha","fixture_raw":raw,"captured_at":today + 3_600}),
+            })
+            .unwrap();
+        assert_eq!(out.result["posts"], json!([]));
+        assert_eq!(out.result["tag_usage"]["query"], "Matcha");
+        assert_eq!(out.result["tag_usage"]["capture_mode"], "FIXTURE");
+        assert_eq!(
+            out.result["tag_usage"]["raw_hash"],
+            format!("{:x}", Sha256::digest(raw.as_bytes()))
+        );
+        assert_eq!(out.provider_cost["request_count"], 0);
     }
 }

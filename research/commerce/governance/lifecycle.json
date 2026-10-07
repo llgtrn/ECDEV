@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "24b788440290655095a2ab167559bece84ada59d",
+  "assessed_parent_commit": "64df8de8878c2075fca5760223efe0c224ba508f",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "52 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "53 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -7059,7 +7059,14 @@
         {
           "key": "social.viral-trend-agent.public-trend-sources",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); Mastodon and Bluesky trending endpoints as zero-paid public sources)",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/mastodon-tag-contract-probe.json: the public tag record (/api/v1/tags/{tag}, robots-allowed on the probed instances) reports seven UTC days of uses and distinct accounts, newest first, the newest day still open, and an unknown tag reads as zeros; ECDEV's MASTODON_TAG source (adapter/web/src/social.rs) maps the query to a tag, reads it from an operator-named public instance, keeps the raw capture hash and reports the series as an ATTENTION_SIGNAL_NOT_DEMAND counter, never as posts; growth (domain/commerce/src/social/growth.rs) compares the last three complete days with the three before by an exact Poisson rate test on account-days and uses, the open day excluded)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "social.viral-trend-agent.trend-feeds",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(Google Trends RSS traffic bands per country as a leading indicator of marketplace keyword demand (terms review first); instance-wide trending lists (Mastodon trends/tags, Bluesky trending topics) as discovery feeds rather than per-query counters)",
           "knowledge_status": "STUDY_CANDIDATE",
           "open": true
         },
@@ -7200,12 +7207,12 @@
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
           "pass": true,
-          "detail": "all 19 declared capabilities are relied on or justified not relevant to ECDEV"
+          "detail": "all 20 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "8 of 19 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.public-trend-sources (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
+          "detail": "8 of 20 declared capabilities still have open research: social.viral-trend-agent.verdict (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-persistence (BENCHMARK_CANDIDATE), social.viral-trend-agent.source-mixing (BENCHMARK_CANDIDATE), social.viral-trend-agent.trend-feeds (STUDY_CANDIDATE), social.viral-trend-agent.cross-source-story-matching (BENCHMARK_CANDIDATE), social.viral-trend-agent.topic-clustering-and-continuity (STUDY_CANDIDATE), social.viral-trend-agent.emotion-detection (BENCHMARK_CANDIDATE), social.viral-trend-agent.linguistic-markers (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
