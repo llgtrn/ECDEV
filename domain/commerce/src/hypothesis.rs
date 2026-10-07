@@ -119,6 +119,7 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
         let gain = |fills: &[&str]| fills.iter().filter(|f| blockers.contains(f)).count();
         let mut actions = vec![
             json!({"kind":"PUBLIC_LISTING_SEARCH","tool":"ecdev.research.run","input_template":{"query":queries[0],"market":"PUBLIC_WEB","seed_urls":"OPERATOR_SUPPLIED_PUBLIC_CATALOG_OR_SEARCH_URLS_REQUIRED"},"alternative_queries":queries,"fills":["NO_LISTING_EVIDENCE","NO_PRICE_EVIDENCE","NO_SECOND_LISTING_ORIGIN"],"paid":false}),
+            json!({"kind":"OFFICIAL_LISTING_SEARCH","tool":"ecdev.listing.search","input_template":{"market":"YAHOO_SHOPPING_JP","query":queries[0]},"alternative_queries":queries,"fills":["NO_LISTING_EVIDENCE","NO_PRICE_EVIDENCE"],"paid":false,"requires":"YAHOO_SHOPPING_APP_ID (operator Client ID); Japan market; provider-reported listings, sellers are not independent sites"}),
             json!({"kind":"SUPPLIER_SEARCH","tool":"ecdev.research.run","input_template":{"query":format!("{} wholesale supplier",queries[0]),"market":"PUBLIC_WEB","seed_urls":"OPERATOR_SUPPLIED_SUPPLIER_DIRECTORY_URLS_REQUIRED"},"fills":["NO_SUPPLIER_EVIDENCE"],"paid":false}),
             json!({"kind":"TREND_PERSISTENCE_WATCH","tool":"ecdev.trend.watch","input_template":{"query":query,"interval_seconds":86400},"fills":[],"improves":["persistence","velocity","acceleration"],"paid":false}),
         ];

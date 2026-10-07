@@ -18,7 +18,8 @@ fn brand(p: &Value) -> String {
         &p["brand"]
     })
 }
-fn gtin(v: &Value) -> Option<String> {
+/// A checksum-valid GTIN-8/12/13/14 as GTIN-14; None otherwise.
+pub fn gtin(v: &Value) -> Option<String> {
     let s = v.as_str()?;
     if ![8, 12, 13, 14].contains(&s.len()) || !s.bytes().all(|b| b.is_ascii_digit()) {
         return None;

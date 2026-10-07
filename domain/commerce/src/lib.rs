@@ -7,6 +7,7 @@ pub mod external_history;
 pub mod frontier;
 pub mod hypothesis;
 pub mod intelligence;
+pub mod listing;
 pub mod marketplace;
 pub mod memory;
 pub mod monitor;

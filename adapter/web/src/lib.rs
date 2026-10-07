@@ -12,6 +12,7 @@ pub mod social;
 pub mod supplier;
 pub mod supplier_terms;
 pub mod xml_feed;
+pub mod yahoo_shopping;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},

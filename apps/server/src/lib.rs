@@ -389,6 +389,9 @@ fn configured_engine() -> Result<Engine, String> {
         .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
         .with_provider(std::sync::Arc::new(ecdev_web::social::Social::default()))
         .with_provider(std::sync::Arc::new(
+            ecdev_web::yahoo_shopping::YahooShopping::from_env(),
+        ))
+        .with_provider(std::sync::Arc::new(
             ecdev_web::amazon::PublicAmazon::default(),
         )))
 }
@@ -1150,6 +1153,78 @@ mod research_tests {
                 .all(|p| p["hashtags"].as_array().unwrap().contains(&json!("matcha")))
         );
         assert_eq!(run["mention_count"], 42);
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
+    fn official_listings_group_by_jan_and_never_count_sellers_as_sites() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-listing-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::yahoo_shopping::YahooShopping::default()));
+        let raw =
+            include_str!("../../../adapter/web/tests/fixtures/yahoo-itemsearch-synthetic.json");
+        let out = engine
+            .call(
+                "ecdev.listing.search",
+                json!({"query":"抹茶 茶筅","fixture_raw":raw,"fixture_now":1000}),
+            )
+            .unwrap();
+        assert_eq!(out["state"], "PROVIDER_REPORTED_LISTINGS");
+        assert_eq!(out["capture_mode"], "FIXTURE");
+        let p = &out["by_product"]["products"][0];
+        assert_eq!(
+            (
+                p["gtin14"].clone(),
+                p["listings"].clone(),
+                p["distinct_sellers"].clone()
+            ),
+            (json!("04901234567894"), json!(3), json!(3))
+        );
+        // The out-of-stock offer is not in the price range.
+        assert_eq!(
+            (
+                p["price_min_minor"].clone(),
+                p["price_max_minor"].clone(),
+                p["in_stock_priced_offers"].clone()
+            ),
+            (json!(2480), json!(2980), json!(2))
+        );
+        assert_eq!(out["by_product"]["listings_without_valid_jan"], 1);
+        assert_eq!(
+            out["by_product"]["seller_scope"],
+            "SELLERS_WITHIN_ONE_MARKETPLACE_NOT_INDEPENDENT_SITES"
+        );
+        assert!(
+            out["attribution"]
+                .as_str()
+                .unwrap()
+                .contains("Yahoo! JAPAN")
+        );
+        assert!(
+            root.join(".ecdev-data/runtime/listing-captures")
+                .join(format!("{}.raw", out["raw_hash"].as_str().unwrap()))
+                .is_file()
+        );
+        // Without a Client ID a live search is AUTH_REQUIRED with no request.
+        let live = engine
+            .call("ecdev.listing.search", json!({"query":"抹茶"}))
+            .unwrap();
+        assert_eq!(
+            (live["state"].clone(), live["request_count"].clone()),
+            (json!("AUTH_REQUIRED"), json!(0))
+        );
+        assert!(
+            engine
+                .call("ecdev.listing.search", json!({"query":"x","fixture_now":1}))
+                .is_err()
+        );
         let _ = std::fs::remove_dir_all(root);
     }
 
