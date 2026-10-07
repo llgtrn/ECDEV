@@ -208,7 +208,7 @@ impl Engine {
             feeds.push(feed);
         }
         let id = Uuid::new_v4().to_string();
-        let out = json!({"feed_id":id,"capture_mode":mode,"captured_at":now,"feeds":feeds,"provider_failures":failures,
+        let out = json!({"feed_id":id,"capture_mode":mode,"captured_at":now,"egress":provider.metadata()["egress"],"feeds":feeds,"provider_failures":failures,
             "budget_usage":{"cost_minor":0,"request_count":requests,"request_budget":budget},
             "invariants":["a trending entry is a lead to research, never a mention, a product signal or demand","source rankings are undisclosed algorithms","who posted is not kept"]});
         self.db

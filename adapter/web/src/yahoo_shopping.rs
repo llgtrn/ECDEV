@@ -41,7 +41,7 @@ fn failure(reason: impl Into<String>, status: Option<u16>, requests: u64) -> Acq
 impl YahooShopping {
     pub fn from_env() -> Self {
         Self {
-            web: Web::default(),
+            web: Web::from_env(),
             app_id: std::env::var("YAHOO_SHOPPING_APP_ID")
                 .ok()
                 .filter(|k| !k.trim().is_empty()),
@@ -129,7 +129,7 @@ impl Provider for YahooShopping {
         "yahoo-shopping-jp"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"class":"OFFICIAL","source_layer":"OFFICIAL_MARKETPLACE_API","status":if self.app_id.is_some() {"AVAILABLE"} else {"UNAVAILABLE"},"auth_state":if self.app_id.is_some() {"CLIENT_ID_PRESENT"} else {"AUTH_REQUIRED_YAHOO_SHOPPING_APP_ID"},"capabilities":["listing.search"],"markets":["YAHOO_SHOPPING_JP"],"cost_minor":0,"rate_limit":{"minimum_interval_ms":1000,"basis":"documented 1 query per second"},"fixture_supported":true,"attribution":ATTRIBUTION,"terms":"research/commerce/yahoo-shopping-contract.json"})
+        json!({"id":self.id(),"class":"OFFICIAL","source_layer":"OFFICIAL_MARKETPLACE_API","status":if self.app_id.is_some() {"AVAILABLE"} else {"UNAVAILABLE"},"auth_state":if self.app_id.is_some() {"CLIENT_ID_PRESENT"} else {"AUTH_REQUIRED_YAHOO_SHOPPING_APP_ID"},"capabilities":["listing.search"],"markets":["YAHOO_SHOPPING_JP"],"cost_minor":0,"rate_limit":{"minimum_interval_ms":1000,"basis":"documented 1 query per second"},"fixture_supported":true,"attribution":ATTRIBUTION,"terms":"research/commerce/yahoo-shopping-contract.json","egress":self.web.egress_disclosure()})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         request_url(q)?;

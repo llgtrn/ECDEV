@@ -386,8 +386,8 @@ fn configured_engine() -> Result<Engine, String> {
     Ok(Engine::open(&root())?
         .with_provider(std::sync::Arc::new(ecdev_marketplace::Amazon::from_env()))
         .with_provider(std::sync::Arc::new(ecdev_keepa::client::Keepa::from_env()))
-        .with_provider(std::sync::Arc::new(ecdev_web::Web::default()))
-        .with_provider(std::sync::Arc::new(ecdev_web::social::Social::default()))
+        .with_provider(std::sync::Arc::new(ecdev_web::Web::from_env()))
+        .with_provider(std::sync::Arc::new(ecdev_web::social::Social::from_env()))
         .with_provider(std::sync::Arc::new(
             ecdev_web::yahoo_shopping::YahooShopping::from_env(),
         ))

@@ -15,6 +15,14 @@ use uuid::Uuid;
 pub struct Social {
     web: Web,
 }
+impl Social {
+    /// The fetcher as the operator configured egress (see `Web::from_env`).
+    pub fn from_env() -> Self {
+        Self {
+            web: Web::from_env(),
+        }
+    }
+}
 fn failure(reason: impl Into<String>, status: Option<u16>, requests: u64) -> AcquireError {
     AcquireError {
         reason: reason.into(),
@@ -487,7 +495,12 @@ fn endpoint(q: &Value) -> Result<Url, String> {
             u.query_pairs_mut()
                 .append_pair("query", query)
                 .append_pair("tags", "(story,comment)")
-                .append_pair("hitsPerPage", "50");
+                .append_pair("hitsPerPage", "50")
+                // Algolia's default typo tolerance and prefix matching turn "matcha" into "match",
+                // "matches" and "matching": in a live ECDEV run 210 of 212 hits were such words.
+                // Exact words only (research/commerce/hn-exact-match-probe.json).
+                .append_pair("typoTolerance", "false")
+                .append_pair("queryType", "prefixNone");
             if let Some(page) = q["page_cursor"].as_str() {
                 let page: u32 = page.parse().map_err(|_| "INVALID_PAGE_CURSOR")?;
                 u.query_pairs_mut().append_pair("page", &page.to_string());
@@ -760,7 +773,7 @@ impl Provider for Social {
         "native-social"
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","MASTODON","JSON_FEED","XML_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","MASTODON":"status id range (instance receipt time)","JSON_FEED":"UNSUPPORTED_BY_SOURCE","XML_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"XML_FEED_RSS_2_0_RSS_1_0_ATOM_1_0_UTF8_ONLY_DTD_REFUSED_NO_PAGING","donor_runtime":false})
+        json!({"id":self.id(),"status":"AVAILABLE","class":"PUBLIC","markets":["PUBLIC_SOCIAL"],"capabilities":["social.query"],"platforms":["HACKER_NEWS","BLUESKY","MASTODON","JSON_FEED","XML_FEED","MASTODON_TAG"],"cost_minor":0,"auth":"NONE","pagination":"CURSOR_WALK_50_PER_PAGE_MAX_5_PAGES_STALL_GUARDED","time_slicing":{"HACKER_NEWS":"created_at_i numericFilters","BLUESKY":"since/until","MASTODON":"status id range (instance receipt time)","JSON_FEED":"UNSUPPORTED_BY_SOURCE","XML_FEED":"UNSUPPORTED_BY_SOURCE","MASTODON_TAG":"UNSUPPORTED_BY_SOURCE_SEVEN_DAY_TAG_HISTORY"},"tag_usage":"MASTODON_TAG_DAILY_USES_AND_ACCOUNTS_ATTENTION_NOT_DEMAND","population":"COVERAGE_REPORTED_PER_SOURCE_NEVER_ASSUMED_COMPLETE","rss_xml":"XML_FEED_RSS_2_0_RSS_1_0_ATOM_1_0_UTF8_ONLY_DTD_REFUSED_NO_PAGING","egress":self.web.egress_disclosure(),"donor_runtime":false})
     }
     fn normalize_query(&self, q: &Value) -> Result<Value, String> {
         endpoint(q)?;
@@ -1790,5 +1803,13 @@ mod tests {
             (json!(1), json!("PARTIAL_COMMENT_TREE"))
         );
         assert!(mastodon_tree(&json!({}), "1", "u", "s", b"r", 1, "FIXTURE").is_err());
+    }
+
+    #[test]
+    fn hacker_news_search_matches_exact_words_only() {
+        let u = endpoint(&json!({"platform":"HACKER_NEWS","query":"matcha"})).unwrap();
+        let q: std::collections::BTreeMap<String, String> = u.query_pairs().into_owned().collect();
+        assert_eq!(q["typoTolerance"], "false");
+        assert_eq!(q["queryType"], "prefixNone");
     }
 }

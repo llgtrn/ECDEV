@@ -781,6 +781,11 @@ impl Engine {
         snap["acquisition_provenance"]["actual_run_mode"] = json!(acquisition_mode);
         snap["acquisition_provenance"]["live_io_established"] =
             json!(mode == "LIVE" && requests > 0);
+        snap["acquisition_provenance"]["egress"] = self
+            .providers
+            .iter()
+            .find(|p| p.id() == "native-social")
+            .map_or(Value::Null, |p| p.metadata()["egress"].clone());
         snap["acquisition_provenance"]["capture_mode_scope"] =
             json!("REQUESTED_SOURCE_COHORT_HISTORICAL_POSTS_KEEP_ORIGINAL_CAPTURE_MODE");
         snap["source_complete"] = json!(

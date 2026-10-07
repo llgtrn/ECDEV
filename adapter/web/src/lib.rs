@@ -33,12 +33,91 @@ use uuid::Uuid;
 pub struct Web {
     gate: Mutex<Option<Instant>>,
     robots: Mutex<robots::RobotsCache>,
+    egress: Result<Option<Egress>, String>,
 }
 impl Default for Web {
     fn default() -> Self {
         Self {
             gate: Mutex::new(None),
             robots: Mutex::new(robots::RobotsCache::default()),
+            egress: Ok(None),
+        }
+    }
+}
+
+/// An operator-configured egress proxy (ECDEV_EGRESS_PROXY with ECDEV_EGRESS_CA_BUNDLE), for
+/// hosts whose only way out is an intercepting proxy. Targets are still resolved locally and
+/// refused when any address is private, but the proxy resolves and connects by name, so address
+/// pinning no longer covers the last hop, and TLS is trusted through the operator's CA bundle.
+/// Both are disclosed with every capture; nothing about the direct mode changes.
+pub struct Egress {
+    proxy: Url,
+    roots: Vec<reqwest::Certificate>,
+    bundle_sha256: String,
+}
+
+impl Egress {
+    pub fn from_values(proxy: &str, bundle: &[u8]) -> Result<Self, String> {
+        let proxy = Url::parse(proxy).map_err(|_| "EGRESS_PROXY_URL_INVALID")?;
+        if !matches!(proxy.scheme(), "http" | "https") || proxy.host_str().is_none() {
+            return Err("EGRESS_PROXY_URL_INVALID".into());
+        }
+        if bundle.is_empty() || bundle.len() > 2 * 1024 * 1024 {
+            return Err("EGRESS_CA_BUNDLE_INVALID".into());
+        }
+        let roots = reqwest::Certificate::from_pem_bundle(bundle)
+            .map_err(|_| "EGRESS_CA_BUNDLE_INVALID")?;
+        if roots.is_empty() {
+            return Err("EGRESS_CA_BUNDLE_INVALID".into());
+        }
+        Ok(Self {
+            proxy,
+            roots,
+            bundle_sha256: format!("{:x}", Sha256::digest(bundle)),
+        })
+    }
+}
+
+impl Web {
+    /// Direct pinned mode unless both egress variables are set; one without the other refuses
+    /// every request rather than silently choosing a mode.
+    pub fn from_env() -> Self {
+        let proxy = std::env::var("ECDEV_EGRESS_PROXY")
+            .ok()
+            .filter(|v| !v.is_empty());
+        let bundle = std::env::var("ECDEV_EGRESS_CA_BUNDLE")
+            .ok()
+            .filter(|v| !v.is_empty());
+        let egress = match (proxy, bundle) {
+            (None, None) => Ok(None),
+            (Some(p), Some(b)) => std::fs::read(&b)
+                .map_err(|_| "EGRESS_CA_BUNDLE_UNREADABLE".to_string())
+                .and_then(|bytes| Egress::from_values(&p, &bytes))
+                .map(Some),
+            _ => Err("EGRESS_MISCONFIGURED_SET_BOTH_OR_NEITHER".into()),
+        };
+        Self {
+            egress,
+            ..Self::default()
+        }
+    }
+    pub fn with_egress(egress: Egress) -> Self {
+        Self {
+            egress: Ok(Some(egress)),
+            ..Self::default()
+        }
+    }
+    /// How requests leave this host, as recorded with captures. The proxy is named without
+    /// credentials.
+    pub fn egress_disclosure(&self) -> Value {
+        match &self.egress {
+            Ok(None) => {
+                json!({"mode":"DIRECT_PINNED","address_check":"LOCAL_DNS_PUBLIC_ONLY_AND_PINNED","tls_trust":"WEBPKI_ROOTS"})
+            }
+            Ok(Some(e)) => {
+                json!({"mode":"OPERATOR_PROXY","proxy":format!("{}://{}:{}",e.proxy.scheme(),e.proxy.host_str().unwrap_or(""),e.proxy.port_or_known_default().unwrap_or(0)),"address_check":"LOCAL_DNS_PUBLIC_ONLY_PROXY_RESOLVES_BY_NAME","tls_trust":"WEBPKI_ROOTS_PLUS_OPERATOR_CA_BUNDLE","operator_ca_bundle_sha256":e.bundle_sha256,"tls_reterminated_by_proxy":"POSSIBLE_DISCLOSED"})
+            }
+            Err(e) => json!({"mode":"REFUSED","reason":e}),
         }
     }
 }
@@ -458,6 +537,7 @@ impl Web {
         if addresses.is_empty() || addresses.iter().any(|a| !public_ip(a.ip())) {
             return Err("PRIVATE_OR_SPECIAL_ADDRESS_DENIED".into());
         }
+        let egress = self.egress.as_ref().map_err(|e| e.clone())?;
         let mut gate = self.gate.lock().map_err(|_| "FETCH_GATE_FAILED")?;
         if let Some(last) = *gate {
             let elapsed = last.elapsed();
@@ -466,13 +546,23 @@ impl Web {
             }
         }
         *gate = Some(Instant::now());
-        let client = reqwest::blocking::Client::builder()
-            .no_proxy()
-            .resolve_to_addrs(host, &addresses)
+        let builder = reqwest::blocking::Client::builder()
             .timeout(Duration::from_secs(20))
-            .redirect(reqwest::redirect::Policy::none())
-            .build()
-            .map_err(|_| "HTTP_CLIENT_ERROR")?;
+            .redirect(reqwest::redirect::Policy::none());
+        let builder = match egress {
+            None => builder.no_proxy().resolve_to_addrs(host, &addresses),
+            Some(e) => {
+                let mut b = builder.proxy(
+                    reqwest::Proxy::all(e.proxy.as_str())
+                        .map_err(|_| "EGRESS_PROXY_URL_INVALID")?,
+                );
+                for root in &e.roots {
+                    b = b.add_root_certificate(root.clone());
+                }
+                b
+            }
+        };
+        let client = builder.build().map_err(|_| "HTTP_CLIENT_ERROR")?;
         let mut request = client
             .get(u.clone())
             .header("User-Agent", "ECDEV/0.1 (+read-only research)");
@@ -511,7 +601,7 @@ impl Provider for Web {
         Ok(json!({"url":normalize_url(query["url"].as_str().ok_or("URL_REQUIRED")?)?}))
     }
     fn metadata(&self) -> Value {
-        json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","auth_state":"NOT_REQUIRED","capabilities":["fetch.http","extract.product","research.market"],"markets":["AMAZON_JP","AMAZON_US","PUBLIC_WEB"],"quota_remaining":null,"rate_limit":{"concurrency":1,"minimum_interval_ms":750},"estimated_cost_minor":0,"latency_estimate_ms":null,"freshness":null,"confidence_characteristics":"Source assertions, not verified commercial truth","cacheable":true,"cache_ttl_seconds":3600,"failure_state":null,"fallback_providers":[],"adapter_state":"RUST_IMPLEMENTED","reason":"Public HTTP and supplied fixtures; private addresses denied; robots enforced; no browser/CAPTCHA bypass"})
+        json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","auth_state":"NOT_REQUIRED","capabilities":["fetch.http","extract.product","research.market"],"markets":["AMAZON_JP","AMAZON_US","PUBLIC_WEB"],"quota_remaining":null,"rate_limit":{"concurrency":1,"minimum_interval_ms":750},"estimated_cost_minor":0,"latency_estimate_ms":null,"freshness":null,"confidence_characteristics":"Source assertions, not verified commercial truth","cacheable":true,"cache_ttl_seconds":3600,"failure_state":null,"fallback_providers":[],"adapter_state":"RUST_IMPLEMENTED","egress":self.egress_disclosure(),"reason":"Public HTTP and supplied fixtures; private addresses denied; robots enforced; no browser/CAPTCHA bypass"})
     }
     fn reextract(
         &self,
@@ -729,6 +819,41 @@ impl Provider for Web {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn egress_is_direct_by_default_and_refuses_half_configuration() {
+        assert_eq!(Web::default().egress_disclosure()["mode"], "DIRECT_PINNED");
+        assert_eq!(
+            Egress::from_values("ftp://proxy.example:1", b"x")
+                .err()
+                .as_deref(),
+            Some("EGRESS_PROXY_URL_INVALID")
+        );
+        assert_eq!(
+            Egress::from_values("http://127.0.0.1:3128", b"not a certificate")
+                .err()
+                .as_deref(),
+            Some("EGRESS_CA_BUNDLE_INVALID")
+        );
+        let half = Web {
+            egress: Err("EGRESS_MISCONFIGURED_SET_BOTH_OR_NEITHER".into()),
+            ..Web::default()
+        };
+        assert_eq!(half.egress_disclosure()["mode"], "REFUSED");
+        let u = Url::parse("https://example.com/").unwrap();
+        assert_eq!(
+            half.request(&u, &Value::Null, Duration::ZERO).unwrap_err(),
+            "EGRESS_MISCONFIGURED_SET_BOTH_OR_NEITHER"
+        );
+        // Private targets stay refused whatever the egress mode.
+        let local = Url::parse("http://127.0.0.1/").unwrap();
+        assert_eq!(
+            Web::default()
+                .request(&local, &Value::Null, Duration::ZERO)
+                .unwrap_err(),
+            "PRIVATE_OR_SPECIAL_ADDRESS_DENIED"
+        );
+    }
     #[test]
     fn products_state_their_relation_to_the_page() {
         // Shapes seen on real retail pages: a product group identified by a fragment with

@@ -125,6 +125,7 @@ impl Engine {
         out["market"] = json!("YAHOO_SHOPPING_JP");
         out["state"] = json!("PROVIDER_REPORTED_LISTINGS");
         out["request_count"] = json!(count);
+        out["egress"] = provider.metadata()["egress"].clone();
         out["invariants"] = json!([
             "provider-reported listings are not ECDEV page observations",
             "sellers inside one marketplace are not independent sites",
