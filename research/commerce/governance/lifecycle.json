@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "966864f61bd9347d975b83c9b709acf7d02a332b",
+  "assessed_parent_commit": "38d320366e4e9d13df3fff39a8c44395adc3f7d2",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -6809,7 +6809,7 @@
         {
           "key": "social.mediacrawler.comment-tree-pagination",
           "required": false,
-          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Per-day quotas for time-uniform samples are not implemented; research/commerce/social-api-contract-probe.json records the source contracts)",
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Each slice gets an equal page quota from the budget (TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE), so a tight budget samples every day; research/commerce/social-api-contract-probe.json records the source contracts)",
           "knowledge_status": "STUDY_COMPLETE",
           "open": false
         },

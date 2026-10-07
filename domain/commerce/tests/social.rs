@@ -769,3 +769,60 @@ fn a_source_refusing_its_own_next_cursor_limits_coverage_without_an_outage() {
     drop(engine);
     std::fs::remove_dir_all(path).unwrap();
 }
+#[test]
+fn a_tight_budget_samples_every_slice_instead_of_the_newest_one() {
+    use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
+    use sha2::{Digest, Sha256};
+    use std::sync::Arc;
+    // Every slice has many pages; each page costs two requests.
+    struct Deep;
+    impl Provider for Deep {
+        fn id(&self) -> &str {
+            "native-social"
+        }
+        fn metadata(&self) -> Value {
+            json!({"class":"PUBLIC","cost_minor":0})
+        }
+        fn acquire(&self, r: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+            let until = r.query["until"].as_u64().unwrap();
+            let page = r.query["page_cursor"].as_str().unwrap_or("0").to_string();
+            let raw = format!("slice {until} page {page}");
+            let mut p = post(&format!("{until}{page}"), "HACKER_NEWS", until - 10);
+            p.capture_mode = "LIVE".into();
+            p.raw_hash = format!("{:x}", Sha256::digest(raw.as_bytes()));
+            let next = (page.parse::<u64>().unwrap() + 1).to_string();
+            Ok(AcquireResult {
+                observations: vec![],
+                result: json!({"posts":[p],"pagination":{"next_cursor":next}}),
+                raw_payload: raw.into_bytes(),
+                provider_cost: json!({"request_count":2,"cost_minor":0}),
+            })
+        }
+    }
+    let path = root();
+    let engine = Engine::open(&path).unwrap().with_provider(Arc::new(Deep));
+    // 3 daily slices, up to 5 pages each, 12 requests: 6 pages, so 2 per slice.
+    let result = engine
+        .trend_discover(json!({"query":"matcha","window_seconds":3 * 86400,"request_budget":12,"sources":[{"platform":"HACKER_NEWS","max_pages":5,"slice_seconds":86400}]}))
+        .unwrap();
+    let p = &result["pagination"][0];
+    assert_eq!(p["page_quota_per_slice"], 2);
+    assert_eq!(p["sampling"], "TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE");
+    let pages: Vec<u64> = p["slices"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|s| s["pages"].as_u64().unwrap())
+        .collect();
+    assert_eq!(pages, [2, 2, 2]);
+    assert!(
+        p["slices"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|s| s["acquired"] == true && s["stop"] == "PAGE_LIMIT")
+    );
+    assert_eq!(p["population_coverage"]["state"], "PARTIAL_PAGE_LIMIT");
+    drop(engine);
+    std::fs::remove_dir_all(path).unwrap();
+}

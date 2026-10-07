@@ -346,6 +346,20 @@ impl Engine {
                 None => vec![None],
             };
             let sliced = planned.iter().any(Option::is_some);
+            // Time-uniform sampling: every slice gets the same page quota out of the requests
+            // this source may spend, so a tight budget samples every day instead of letting the
+            // newest slice take it all. Fixtures cost no requests and keep max_pages.
+            let max_pages = source["max_pages"].as_u64().unwrap_or(1);
+            let page_quota = if sliced && !fixture {
+                let reserved = (i + 1..sources.len())
+                    .filter(|j| selected.contains(format!("source-{j}").as_str()))
+                    .count() as u64
+                    * 2;
+                let pages = (request_budget as u64).saturating_sub(requests + reserved) / 2;
+                (pages / planned.len() as u64).clamp(1, max_pages.max(1))
+            } else {
+                max_pages
+            };
             let mut source_posts: Vec<SocialPost> = vec![];
             let mut slices = vec![];
             for (slice_index, bounds) in planned.iter().enumerate() {
@@ -370,8 +384,7 @@ impl Engine {
                             .map(str::to_string)
                     }
                 };
-                let mut walk =
-                    super::pagination::PageWalk::new(source["max_pages"].as_u64().unwrap_or(1));
+                let mut walk = super::pagination::PageWalk::new(page_quota);
                 let mut cursor: Option<String> = None;
                 let mut slice_posts: Vec<SocialPost> = vec![];
                 let mut total = Value::Null;
@@ -608,7 +621,7 @@ impl Engine {
                 coverage["comment_tree_state"] = json!("NOT_REQUESTED");
             }
             let pages: u64 = slices.iter().filter_map(|s| s["pages"].as_u64()).sum();
-            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"threads":threads,"population_coverage":coverage}));
+            paginations.push(json!({"platform":source["platform"],"source_group":source_key(source),"pages":pages,"stop":if slices.len() == 1 {slices[0]["stop"].clone()} else {json!("SLICED")},"posts":source_posts.len(),"slices":slices,"threads":threads,"page_quota_per_slice":page_quota,"sampling":if sliced {"TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE"} else {"SINGLE_WINDOW"},"population_coverage":coverage}));
             if !fixture && !source_posts.is_empty() {
                 self.db
                     .lock()

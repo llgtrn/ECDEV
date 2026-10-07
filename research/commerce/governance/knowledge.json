@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "966864f61bd9347d975b83c9b709acf7d02a332b",
+  "assessed_parent_commit": "38d320366e4e9d13df3fff39a8c44395adc3f7d2",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -1133,7 +1133,7 @@
         "social.mediacrawler.update_xhs_note_comment REFERENCE_ONLY(comment counter mapping; donor zero defaults would fabricate values)",
         "social.mediacrawler.save_creator REFERENCE_ONLY(creator persistence stub)",
         "social.mediacrawler.platform-orchestrators REFERENCE_ONLY(per-platform search, detail and creator crawl modes under one semaphore with fixed sleeps)",
-        "social.mediacrawler.comment-tree-pagination STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Per-day quotas for time-uniform samples are not implemented; research/commerce/social-api-contract-probe.json records the source contracts)",
+        "social.mediacrawler.comment-tree-pagination STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Each slice gets an equal page quota from the budget (TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE), so a tight budget samples every day; research/commerce/social-api-contract-probe.json records the source contracts)",
         "social.mediacrawler.response-extractors REFERENCE_ONLY(embedded-state and GraphQL response mapping with offline HTML fixtures for parser regression)",
         "social.mediacrawler.storage-backends REFERENCE_ONLY(one store interface over file and database sinks)",
         "social.mediacrawler.runtime-utils STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/displayed.rs::displayed_count and displayed_age keep the unit and display resolution of abbreviated counts (1.2万, 10w+, 3.05亿, 1.5k) and N-unit-前 ages, and report the interval a truncated or rounded display allows; months, years and unquantified words are refused, never guessed; the donor drops the unit and returns a point value)",
