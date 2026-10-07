@@ -574,9 +574,20 @@ impl Web {
                 request = request.header(header, v)
             }
         }
-        let response = request.send().map_err(|_| "FETCH_NETWORK_ERROR")?;
+        // A connection that failed before it was established (an egress tunnel reset during
+        // the handshake) delivered no request to the source: one retry, never more. Live, 5 of
+        // 60 requests to api.bsky.app through the operator proxy failed so (2026-10-07).
+        let retry = request.try_clone();
+        let (response, connect_retries) = match request.send() {
+            Ok(r) => (r, 0),
+            Err(e) if e.is_connect() => {
+                let again = retry.ok_or("FETCH_NETWORK_ERROR")?;
+                (again.send().map_err(|_| "FETCH_NETWORK_ERROR")?, 1)
+            }
+            Err(_) => return Err("FETCH_NETWORK_ERROR".into()),
+        };
         let status = response.status().as_u16();
-        let headers = json!({"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"content_length":response.headers().get("content-length").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
+        let headers = json!({"connect_retries":connect_retries,"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"content_length":response.headers().get("content-length").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
         if status != 200 {
             // Error, redirect and validator responses are control evidence; an unused
             // body read must not discard their status or Retry-After header.

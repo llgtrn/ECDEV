@@ -873,12 +873,11 @@ fn recurring_phrases_become_unverified_product_queries() {
         .find(|x| !x["phrase_queries"].as_array().unwrap().is_empty())
         .unwrap();
     assert_eq!(hyp["phrase_queries"][0]["query"], "bamboo matcha whisk");
-    assert!(
-        hyp["product_queries"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .any(|q| q == "bamboo matcha whisk")
+    // The phrase leads, so research starts from it rather than from the bare topic.
+    assert_eq!(hyp["product_queries"][0], "bamboo matcha whisk");
+    assert_eq!(
+        hyp["research_actions"][0]["input_template"]["query"],
+        "bamboo matcha whisk"
     );
     assert_eq!(hyp["shortlist_eligible"], false);
 }

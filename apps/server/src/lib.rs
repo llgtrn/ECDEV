@@ -852,14 +852,19 @@ mod research_tests {
             h1["hypotheses"][0]["evidence_completeness"]["grade"],
             "PARTIAL"
         );
-        // A slice the page limit cut short is partial, and its span is not counted as covered.
+        // A slice the page limit cut short is partial: read newest first, it covers only back
+        // to its oldest item (100 s here) and the rest of its span is a gap.
         let cut = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":2 * day,"sources":[{"platform":"HACKER_NEWS","max_pages":1,"slice_seconds":day,"fixture_slices":[[hn(0, 2, &[("101", now - 100)])],[hn(0, 1, &[("104", now - day - 50)])]]}]})).unwrap();
         let c = &cut["pagination"][0]["population_coverage"];
         assert_eq!(
             (c["state"].clone(), c["temporal_span_coverage"].clone()),
-            (json!("PARTIAL_PAGE_LIMIT"), json!(0.5))
+            (
+                json!("PARTIAL_PAGE_LIMIT"),
+                json!((day + 100) as f64 / (2 * day) as f64)
+            )
         );
         assert_eq!(c["gaps"][0]["reason"], "PAGE_LIMIT");
+        assert_eq!(c["gaps"][0]["until"], now - 100);
         // Sources that cannot bound time refuse slicing rather than pretend.
         let feed = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":day,"sources":[{"platform":"JSON_FEED","url":"https://f.example/feed.json","slice_seconds":day,"fixture_slices":[["{}"]]}]})).unwrap();
         assert_eq!(

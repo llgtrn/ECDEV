@@ -110,8 +110,6 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
     };
     let mut hypotheses = Vec::new();
     for (cluster_terms, evidence, platforms, phrases, refinements) in groups {
-        let mut queries = vec![query.trim().to_string()];
-        queries.extend(refinements.iter().map(|r| format!("{} {r}", query.trim())));
         // Recurring phrases are product-name candidates: a phrase holding every topic term is
         // a query by itself, any other is appended to the topic. Unverified until listings match.
         let phrase_queries: Vec<Value> = phrases
@@ -124,8 +122,40 @@ pub fn hypothesize(snapshot: &Value, candidates: &[Value]) -> Value {
                 Some(json!({"query":q,"phrase":phrase,"posts":p["posts"],"distinct_authors":p["distinct_authors"],"evidence_ids":p["evidence_ids"],"state":"CANDIDATE_PRODUCT_PHRASE_UNVERIFIED"}))
             })
             .collect();
-        for q in &phrase_queries {
-            let q = q["query"].as_str().unwrap_or_default().to_string();
+        // Most specific first, so an action's own query is the hypothesis's, not the topic's:
+        // recurring phrases, then refinements no phrase already holds, then the topic alone.
+        // More authors, then more posts, then a phrase naming the topic itself leads: among
+        // equals, "matcha latte" says more about matcha than "ingrown nail" from the same posts.
+        let count = |p: &Value, k: &str| std::cmp::Reverse(p[k].as_u64().unwrap_or(0));
+        let names_topic = |p: &Value| {
+            p["phrase"]
+                .as_str()
+                .is_some_and(|x| !topic.is_disjoint(&terms(x)))
+        };
+        let mut phrase_queries = phrase_queries;
+        phrase_queries.sort_by_key(|p| {
+            (
+                count(p, "distinct_authors"),
+                count(p, "posts"),
+                !names_topic(p),
+            )
+        });
+        let phrase_terms: BTreeSet<String> = phrase_queries
+            .iter()
+            .filter_map(|p| p["phrase"].as_str())
+            .flat_map(terms)
+            .collect();
+        let mut queries: Vec<String> = vec![];
+        let refined = refinements
+            .iter()
+            .filter(|r| !phrase_terms.contains(r.as_str()))
+            .map(|r| format!("{} {r}", query.trim()));
+        for q in phrase_queries
+            .iter()
+            .filter_map(|p| p["query"].as_str().map(str::to_string))
+            .chain(refined)
+            .chain([query.trim().to_string()])
+        {
             if !queries.contains(&q) {
                 queries.push(q);
             }
@@ -222,7 +252,14 @@ mod tests {
         }
         let first = &h[1];
         assert_eq!(first["refinement_terms"], json!(["bamboo", "chasen"]));
-        assert_eq!(first["product_queries"][1], "matcha whisk bamboo");
+        assert_eq!(
+            first["product_queries"],
+            json!(["matcha whisk bamboo", "matcha whisk chasen", "matcha whisk"])
+        );
+        assert_eq!(
+            first["research_actions"][0]["input_template"]["query"],
+            "matcha whisk bamboo"
+        );
         // Only the candidate containing every topic term links, and only as unverified.
         let linked = first["linked_candidates"].as_array().unwrap();
         assert_eq!(linked.len(), 1);
@@ -251,6 +288,32 @@ mod tests {
             .collect();
         assert!(gains.windows(2).all(|w| w[0] >= w[1]), "{gains:?}");
         assert_eq!(out["network_calls"], 0);
+    }
+
+    #[test]
+    fn the_most_supported_phrase_leads_and_ties_go_to_the_one_naming_the_topic() {
+        let phrase = |p: &str, posts: u64, authors: u64| json!({"phrase":p,"posts":posts,"distinct_authors":authors,"evidence_ids":["e1","e2"]});
+        let snap = json!({"query":"matcha","mention_count":2,"evidence_ids":["e1","e2"],"platforms":["BLUESKY"],
+            "clusters":[{"terms":["matcha","latte","ingrown","nail"],"evidence_ids":["e1","e2"],"platforms":["BLUESKY"],
+                "candidate_phrases":[phrase("ingrown nail",2,2),phrase("matcha latte",2,2),phrase("oat milk",3,3)]}]});
+        let out = hypothesize(&snap, &[]);
+        let h = out["hypotheses"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|x| !x["phrase_queries"].as_array().unwrap().is_empty())
+            .unwrap();
+        let order: Vec<&str> = h["phrase_queries"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .map(|p| p["phrase"].as_str().unwrap())
+            .collect();
+        assert_eq!(order, ["oat milk", "matcha latte", "ingrown nail"]);
+        assert_eq!(
+            h["research_actions"][0]["input_template"]["query"],
+            "matcha oat milk"
+        );
     }
 
     #[test]

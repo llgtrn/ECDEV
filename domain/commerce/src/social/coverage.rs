@@ -47,17 +47,25 @@ pub fn population_coverage(start: u64, end: u64, sliced: bool, slices: &[Value])
     let earliest = acquired.iter().filter_map(|s| s["earliest"].as_u64()).min();
     let latest = acquired.iter().filter_map(|s| s["latest"].as_u64()).max();
     let covered_seconds: f64 = if sliced {
+        // Each slice is read newest first: one cut short (page limit, refused cursor) still
+        // covers its span back to its oldest item, as an unsliced query does.
         acquired
             .iter()
-            .filter(|s| ended(s))
             .map(|s| {
                 let (a, b) = (
                     s["since"].as_u64().unwrap_or(start).max(start),
                     s["until"].as_u64().unwrap_or(end).min(end),
                 );
+                let a = if ended(s) {
+                    a
+                } else {
+                    s["earliest"].as_u64().map_or(b, |e| e.clamp(a, b))
+                };
                 b.saturating_sub(a) as f64
             })
-            .sum()
+            .sum::<f64>()
+            // An empty float sum is -0.0; reported coverage is never negative zero.
+            + 0.
     } else if acquired.iter().all(|s| ended(s)) && !acquired.is_empty() {
         span
     } else {
@@ -68,7 +76,14 @@ pub fn population_coverage(start: u64, end: u64, sliced: bool, slices: &[Value])
     let gaps: Vec<Value> = slices
         .iter()
         .filter(|s| !(s["acquired"] == true && ended(s)))
-        .map(|s| json!({"since":s["since"],"until":s["until"],"reason":s["stop"]}))
+        .map(|s| {
+            // A slice read newest first and cut short is a gap only below its oldest item.
+            let until = match (s["acquired"] == true && sliced, s["earliest"].as_u64()) {
+                (true, Some(e)) => json!(e),
+                _ => s["until"].clone(),
+            };
+            json!({"since":s["since"],"until":until,"reason":s["stop"]})
+        })
         .collect();
     let totals: Vec<&Value> = acquired
         .iter()
@@ -266,23 +281,37 @@ mod tests {
         );
         assert_eq!(cut["gaps"][0]["reason"], "NOT_ACQUIRED_REQUEST_BUDGET");
         assert_eq!(cut["slices_acquired"], 1);
-        // A slice cut by the page limit covers none of its span for certain.
+        // A slice cut by the page limit, read newest first, covers its span back to its
+        // oldest item; the rest of it is a gap.
+        let mut cut_short = slice(100, 200, "PAGE_LIMIT", 250);
+        cut_short["earliest"] = json!(160);
         let paged = population_coverage(
             0,
             200,
             true,
-            &[
-                slice(100, 200, "PAGE_LIMIT", 250),
-                slice(0, 100, "END_OF_RESULTS", 3),
-            ],
+            &[cut_short, slice(0, 100, "END_OF_RESULTS", 3)],
         );
         assert_eq!(
             (
                 paged["state"].clone(),
                 paged["temporal_span_coverage"].clone()
             ),
-            (json!("PARTIAL_PAGE_LIMIT"), json!(0.5))
+            (json!("PARTIAL_PAGE_LIMIT"), json!(0.7))
         );
+        assert_eq!(
+            paged["gaps"],
+            json!([{"since":100,"until":160,"reason":"PAGE_LIMIT"}])
+        );
+        // A slice that failed before any item covers nothing, and nothing is never -0.0.
+        let failed = json!({"since":0,"until":200,"acquired":false,"stop":"PAGE_FAILED","pages":0,"posts":0});
+        let f = population_coverage(0, 200, true, &[failed]);
+        assert!(
+            f["temporal_span_coverage"]
+                .as_f64()
+                .unwrap()
+                .is_sign_positive()
+        );
+        assert_eq!(f["state"], "NETWORK_INTERRUPTED");
     }
 
     #[test]
