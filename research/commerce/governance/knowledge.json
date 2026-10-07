@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e9d5d9653c6fdfdb0f69c541595b4d6ee35e5a52",
+  "assessed_parent_commit": "0e31b1ddecff251bea88f4b77986a892bedf0d7c",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -20,12 +20,12 @@
     "capabilities_withdrawn": 0,
     "study_candidates": 33,
     "benchmark_candidates": 26,
-    "algorithm_candidates": 4,
+    "algorithm_candidates": 3,
     "reference_only": 52,
-    "study_complete_capabilities": 104,
+    "study_complete_capabilities": 105,
     "not_relevant_after_review": 25,
-    "research_questions_open": 63,
-    "knowledge_coverage_ratio": 0.741803
+    "research_questions_open": 62,
+    "knowledge_coverage_ratio": 0.745902
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 50,
@@ -1117,7 +1117,6 @@
       },
       "open": [
         "social.mediacrawler.data-models STUDY_CANDIDATE(a canonical post, comment-tree and creator schema (root, reply, quoted target, reaction counts, region) for review mining across marketplaces and social platforms, with keyword provenance on every stored item)",
-        "social.mediacrawler.privacy-pseudonymisation ALGORITHM_CANDIDATE(salted creator pseudonyms and masked display names; the donor hash is unsalted and linkable)",
         "social.mediacrawler.text-mining BENCHMARK_CANDIDATE(query mentions in unspaced CJK text are native without a dictionary (domain/commerce/src/social.rs: character bigrams plus a verbatim run check; research/commerce/cjk-mention-benchmark.json: 86 of 86 verbatim mentions found in 324 Japanese feed items, none false, against 2 before); phrase candidates from CJK text come from bracketed spans (「」『』【】, in 181 of 324 Japanese feed titles: research/commerce/bracket-span-census.json) recurring in two posts by two authors, and spaced phrases never join a CJK run; still open: whether dictionary segmentation (jieba, or a Japanese morphological analyser) with a domain lexicon finds product names that are not bracketed, measured on labelled product mentions)"
       ],
       "resolved": [
@@ -1135,6 +1134,7 @@
         "social.mediacrawler.comment-tree-pagination STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social: PageWalk follows each source's own cursor (Hacker News page/nbPages, Bluesky cursor, JSON Feed next_url) with END_OF_RESULTS, EMPTY_PAGE, REPEATED_CURSOR, PAGE_LIMIT, REQUEST_BUDGET and SOURCE_REFUSED_FURTHER_PAGES stops; coverage::plan_slices tiles a window into source-bounded time slices (Algolia created_at_i, Bluesky since/until); adapter social::normalize_tree reads reply trees (HN items, Bluesky getPostThread) keeping parent, root, depth and JSON pointer, counting deleted, missing and blocked nodes; every page and thread is its own raw capture; population_coverage reports time-denominated coverage and comment-tree state. Each slice gets an equal page quota from the budget (TIME_UNIFORM_EQUAL_PAGE_QUOTA_PER_SLICE), so a tight budget samples every day; research/commerce/social-api-contract-probe.json records the source contracts)",
         "social.mediacrawler.response-extractors REFERENCE_ONLY(embedded-state and GraphQL response mapping with offline HTML fixtures for parser regression)",
         "social.mediacrawler.storage-backends REFERENCE_ONLY(one store interface over file and database sinks)",
+        "social.mediacrawler.privacy-pseudonymisation STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/pseudonym.rs: derived social records carry anon1: + 16 hex of HMAC-SHA256 under a random per-installation key (owner-only file in .ecdev-data, never logged or exported; HMAC checked against RFC 4231) for the author and each @mention, per platform and case-insensitive, so distinct-author counts survive while a pseudonym cannot be recomputed from a public handle, unlike the donor's unsalted, linkable hash; captured, cached and previously stored rows are pseudonymised, idempotently; raw captures keep the source bytes as hashed evidence and post text stays verbatim, so a handle written inside a text is not masked)",
         "social.mediacrawler.runtime-utils STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/social/displayed.rs::displayed_count and displayed_age keep the unit and display resolution of abbreviated counts (1.2万, 10w+, 3.05亿, 1.5k) and N-unit-前 ages, and report the interval a truncated or rounded display allows; months, years and unquantified words are refused, never guessed; the donor drops the unit and returns a point value)",
         "social.mediacrawler.proxy-pool STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](proxy rotation used to avoid IP bans; only the lease-with-expiry pattern is a reference)",
         "social.mediacrawler.task-api REFERENCE_ONLY(single-flight crawl job state machine with streamed logs)",

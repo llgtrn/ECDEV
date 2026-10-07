@@ -296,6 +296,7 @@ impl Engine {
         let mut requests = 0u64;
         let mut hits = 0u64;
         let mut checked = BTreeMap::new();
+        let author_key = super::pseudonym::installation_key(&self.root)?;
         let run_id = Uuid::new_v4().to_string();
         let mut paginations = vec![];
         // Source-reported counters that are not posts (a Mastodon tag's daily uses), each tied
@@ -339,6 +340,7 @@ impl Engine {
                         continue;
                     }
                     for p in &mut posts {
+                        super::pseudonym::pseudonymise(p, &author_key);
                         p.capture_mode = "CACHED".into();
                         p.origin_evidence_id = Some(p.evidence_id.clone());
                         p.evidence_id = Uuid::new_v4().to_string();
@@ -459,6 +461,10 @@ impl Engine {
                             let posts: Vec<SocialPost> =
                                 serde_json::from_value(acquired.result["posts"].clone())
                                     .map_err(err)?;
+                            let mut posts = posts;
+                            for p in &mut posts {
+                                super::pseudonym::pseudonymise(p, &author_key);
+                            }
                             for p in &posts {
                                 p.validate()?;
                                 if p.capture_mode != mode {
@@ -588,6 +594,10 @@ impl Engine {
                             let posts: Vec<SocialPost> =
                                 serde_json::from_value(acquired.result["posts"].clone())
                                     .map_err(err)?;
+                            let mut posts = posts;
+                            for p in &mut posts {
+                                super::pseudonym::pseudonymise(p, &author_key);
+                            }
                             let raw_hash = format!("{:x}", Sha256::digest(&acquired.raw_payload));
                             for p in &posts {
                                 p.validate()?;
@@ -675,6 +685,10 @@ impl Engine {
         let selected_scope: BTreeSet<String> = sources.iter().map(source_key).collect();
         let source_scope = json!(selected_scope);
         let mut posts = self.social_rows(mode)?;
+        // Rows stored before pseudonyms existed are pseudonymised on read; idempotent.
+        for p in &mut posts {
+            super::pseudonym::pseudonymise(p, &author_key);
+        }
         posts.extend(captured.clone());
         posts.retain(|post| selected_scope.contains(&post_source_key(post)));
         let mut invalid = BTreeSet::new();

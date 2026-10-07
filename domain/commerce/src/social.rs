@@ -4,6 +4,7 @@ pub mod displayed;
 pub mod feeds;
 pub mod growth;
 pub mod pagination;
+pub mod pseudonym;
 pub mod runtime;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};

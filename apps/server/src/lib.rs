@@ -1052,6 +1052,60 @@ mod research_tests {
     }
 
     #[test]
+    fn authors_are_keyed_pseudonyms_outside_the_raw_capture() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-social-anon-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let now = 10 * 86_400u64;
+        let raw = json!({"page":0,"nbPages":1,"hits":[
+            {"objectID":"1","title":"matcha whisk","author":"alice_handle","created_at_i":now - 100},
+            {"objectID":"2","title":"matcha whisk @bob_handle","author":"carol_handle","created_at_i":now - 200}]}).to_string();
+        let run = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}]})).unwrap();
+        let posts = run["captured_posts"].as_array().unwrap();
+        assert_eq!(posts.len(), 2);
+        let authors: std::collections::BTreeSet<&str> = posts
+            .iter()
+            .map(|p| p["author_id"].as_str().unwrap())
+            .collect();
+        assert_eq!(authors.len(), 2, "authors stay distinct");
+        assert!(authors.iter().all(|a| a.starts_with("anon1:")));
+        let derived = run.to_string();
+        assert!(!derived.contains("alice_handle") && !derived.contains("carol_handle"));
+        assert!(posts.iter().all(|p| {
+            p["mentions"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|m| m.as_str().unwrap().starts_with("anon1:"))
+        }));
+        // The raw capture is evidence and keeps the source bytes.
+        let hash = posts[0]["raw_hash"].as_str().unwrap();
+        let kept = std::fs::read_to_string(
+            root.join(".ecdev-data/runtime/social-captures")
+                .join(format!("{hash}.raw")),
+        )
+        .unwrap();
+        assert!(kept.contains("alice_handle"));
+        // The same author keeps the same pseudonym across runs of this installation.
+        let again = engine.trend_discover(json!({"query":"matcha","fixture_now":now,"sources":[{"platform":"HACKER_NEWS","fixture_raw":raw}]})).unwrap();
+        assert!(
+            again["captured_posts"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .any(|p| authors.contains(p["author_id"].as_str().unwrap()))
+        );
+        let _ = std::fs::remove_dir_all(root);
+    }
+
+    #[test]
     fn reply_trees_come_from_the_source_with_their_structure() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-social-trees-{}",
