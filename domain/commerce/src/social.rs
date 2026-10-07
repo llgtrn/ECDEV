@@ -512,6 +512,12 @@ const FOREIGN_FUNCTION_WORDS: &[&str] = &[
     "os", "uma", "dos", "nas", "nos", "como", "está", "esta", "todo", "muy", "pero", "más", "que",
     "qué", "se", "su", "al", "mi", "son", "hay", "ya", "con", "não", "mas", "muito",
 ];
+/// Everyday Japanese words that read as kanji or katakana runs but name no product: live, 今日,
+/// 昨日 and 美味 were 抹茶 refinements.
+const JAPANESE_GENERAL_WORDS: &[&str] = &[
+    "今日", "昨日", "明日", "今年", "去年", "最近", "今回", "前回", "本当", "自分", "感じ", "美味",
+    "時間", "毎日", "一番", "全部", "大好", "普通", "結構", "今度",
+];
 const PHRASE_STOP_WORDS: &[&str] = &[
     "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i",
     "in", "is", "it", "its", "my", "of", "on", "or", "our", "so", "that", "the", "their", "this",
@@ -798,17 +804,97 @@ pub fn representatives(posts: &[&SocialPost]) -> Vec<Value> {
 /// Text without its links: URL slugs and image hashes are not what a post is about.
 /// Text without links or @handles: "@name.bsky.social" says who was addressed, not what about
 /// (live, it made "bsky social" a matcha refinement).
+/// A bare domain or path ("news.example.co.jp/a"): ASCII labels joined by dots, ending in an
+/// alphabetic label of 2 to 6 letters. "e.g." and "3.5" are not.
+fn domain_like(word: &str) -> bool {
+    let host = word
+        .split('/')
+        .next()
+        .unwrap_or("")
+        .trim_end_matches([',', ')', ']', '」', '、', '。']);
+    let labels: Vec<&str> = host.split('.').collect();
+    labels.len() >= 2
+        && labels
+            .iter()
+            .all(|l| !l.is_empty() && l.chars().all(|c| c.is_ascii_alphanumeric() || c == '-'))
+        && labels.last().is_some_and(|t| {
+            (2..=6).contains(&t.len()) && t.chars().all(|c| c.is_ascii_alphabetic())
+        })
+}
+
 fn without_urls(text: &str) -> String {
     text.split_whitespace()
-        .filter(|w| !w.contains("://") && !w.starts_with("www.") && !w.starts_with('@'))
+        .filter(|w| {
+            !w.contains("://") && !w.starts_with("www.") && !w.starts_with('@') && !domain_like(w)
+        })
         .collect::<Vec<_>>()
         .join(" ")
 }
 
-/// Terms describing a post's content (links removed), for clusters and refinements. Mention
-/// matching keeps `terms` over the whole text, so mention counts stay comparable over time.
+#[derive(PartialEq, Clone, Copy)]
+enum Script {
+    Katakana,
+    Kanji,
+    Hiragana,
+    Other,
+}
+
+fn script(c: char) -> Script {
+    match c as u32 {
+        0x30A0..=0x30FF | 0x31F0..=0x31FF | 0xFF66..=0xFF9F => Script::Katakana,
+        0x3005
+        | 0x3007
+        | 0x3400..=0x4DBF
+        | 0x4E00..=0x9FFF
+        | 0xF900..=0xFAFF
+        | 0x20000..=0x2FFFF => Script::Kanji,
+        0x3040..=0x309F => Script::Hiragana,
+        _ => Script::Other,
+    }
+}
+
+/// Words of an unspaced CJK run without a dictionary: maximal runs of one script. Katakana runs
+/// are mostly loanwords and product names (スーパーカップ, チョコチップ), kanji runs content
+/// words; hiragana runs are mostly particles and endings and are dropped, as are single
+/// characters. Live, character bigrams as refinements read "カッ", "スー", "ップ" for
+/// スーパーカップ. Mention matching keeps bigrams (`terms`).
+pub fn script_words(run: &str) -> Vec<String> {
+    let mut out: Vec<String> = vec![];
+    let mut current = String::new();
+    let mut kind = Script::Other;
+    for c in run.chars() {
+        let k = script(c);
+        if k != kind && !current.is_empty() {
+            if kind != Script::Hiragana && current.chars().count() >= 2 {
+                out.push(std::mem::take(&mut current));
+            }
+            current.clear();
+        }
+        kind = k;
+        current.push(c);
+    }
+    if kind != Script::Hiragana && current.chars().count() >= 2 {
+        out.push(current);
+    }
+    out
+}
+
+/// Terms describing a post's content (links removed), for clusters and refinements: Latin
+/// words as `terms` reads them, CJK text as script words. Mention matching keeps `terms` over
+/// the whole text, so mention counts stay comparable over time.
 pub fn content_terms(text: &str) -> BTreeSet<String> {
-    terms(&without_urls(text))
+    let mut out = BTreeSet::new();
+    for (run, cjk) in runs(&without_urls(text)) {
+        if out.len() >= 512 {
+            break;
+        }
+        if cjk {
+            out.extend(script_words(&run));
+        } else {
+            out.extend(terms(&run));
+        }
+    }
+    out
 }
 
 /// Whether a term can refine a product query: not a number, hash or image size, not a stop
@@ -827,6 +913,7 @@ pub fn informative(term: &str) -> bool {
         && !PHRASE_STOP_WORDS.contains(&term)
         && !FOREIGN_FUNCTION_WORDS.contains(&term)
         && !GENERAL_WORDS.contains(&term)
+        && !JAPANESE_GENERAL_WORDS.contains(&term)
 }
 
 /// Content terms shared by at least two of a cluster's posts, most shared first.
@@ -1151,7 +1238,21 @@ mod tests {
     }
 
     #[test]
+    fn unspaced_japanese_reads_as_script_words_for_content() {
+        let t = content_terms("今日は抹茶のスーパーカップを食べた、チョコチップも美味しい");
+        for want in ["抹茶", "スーパーカップ", "チョコチップ"] {
+            assert!(t.contains(want), "{want}: {t:?}");
+        }
+        assert!(!t.contains("スー") && !t.contains("は") && !t.contains("今日は"));
+        assert!(t.contains("今日") && !informative("今日") && informative("スーパーカップ"));
+        // Mentions still match by bigram over the whole text.
+        assert!(terms("抹茶のスーパーカップ").contains("ーカ"));
+    }
+
+    #[test]
     fn handles_and_links_are_not_content() {
+        assert!(domain_like("news.example.co.jp/a/b") && domain_like("amazon.com/dp/B0X"));
+        assert!(!domain_like("e.g.") && !domain_like("3.5") && !domain_like("latte."));
         let t = content_terms("@tea.bsky.social try the matcha latte https://shop.example/x");
         assert!(t.contains("latte") && t.contains("matcha"));
         assert!(!t.contains("bsky") && !t.contains("social") && !t.contains("shop"));
