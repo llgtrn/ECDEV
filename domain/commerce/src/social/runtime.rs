@@ -824,6 +824,38 @@ impl Engine {
         snap["provider_failures"] = json!(failures);
         snap["pagination"] = json!(paginations);
         snap["population_evidence"] = super::coverage::population_evidence(&paginations, mode);
+        // Mention counts of capped or partial acquisitions move with the cap and the window,
+        // not with volume: velocity between them is a sampling difference. Posts published
+        // since the prior capture and absent from it are an arrival count, exact only when
+        // both acquisitions read their sources to the end, a lower bound otherwise.
+        if let Some(prior) = history.last() {
+            let complete = |s: &Value| s["population_evidence"]["grade"] == "COMPLETE_BY_SOURCE";
+            let comparable = complete(&snap) && complete(prior);
+            snap["velocity"]["count_comparability"] = json!(if comparable {
+                "COMPARABLE_BOTH_COMPLETE_BY_SOURCE"
+            } else {
+                "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
+            });
+            let prior_at = prior["captured_at"].as_u64().unwrap_or(now);
+            let prior_keys: BTreeSet<&str> = prior["post_keys"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter_map(Value::as_str)
+                .collect();
+            let arrived = posts
+                .iter()
+                .filter(|p| p.published_at.is_some_and(|t| t > prior_at && t <= now))
+                .filter(|p| !prior_keys.contains(p.key().as_str()))
+                .map(|p| p.key())
+                .collect::<BTreeSet<_>>()
+                .len();
+            let hours = now.saturating_sub(prior_at) as f64 / 3600.;
+            snap["arrivals_since_prior_snapshot"] = json!({"prior_snapshot_id":prior["snapshot_id"],"prior_captured_at":prior_at,"posts":arrived,
+                "per_hour":(hours > 0.).then(|| arrived as f64 / hours),
+                "bound":if comparable {"EXACT_BY_SOURCE"} else {"LOWER_BOUND_CAPPED_OR_PARTIAL"},
+                "basis":"POSTS_PUBLISHED_AFTER_PRIOR_CAPTURE_AND_ABSENT_FROM_IT"});
+        }
         snap["source_counters"] = json!(counters);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
         let acquisition_mode = if mode != "LIVE" || requests > 0 {

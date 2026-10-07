@@ -496,6 +496,53 @@ mod doctor_tests {
 mod research_tests {
     use super::*;
     #[test]
+    fn velocity_between_capped_counts_is_flagged_and_arrivals_are_bounded() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-arrivals-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let hn = |pages: u64, at: &[(&str, u64)]| {
+            json!({"page":0,"nbPages":pages,"hits":at.iter().map(|(id,t)|json!({"objectID":id,"title":"matcha glass","created_at_i":t})).collect::<Vec<_>>()}).to_string()
+        };
+        let run = |now: u64, pages: u64, at: &[(&str, u64)]| {
+            engine.trend_discover(json!({"query":"matcha","fixture_now":now,"window_seconds":86_400,"sources":[{"platform":"HACKER_NEWS","fixture_raw":hn(pages, at)}]})).unwrap()
+        };
+        let first = run(100_000, 1, &[("1", 99_000), ("2", 98_000)]);
+        assert!(first["arrivals_since_prior_snapshot"].is_null());
+        // One hour later, read to the end: one post published since, exact.
+        let second = run(103_600, 1, &[("3", 101_000), ("1", 99_000), ("2", 98_000)]);
+        assert_eq!(
+            second["velocity"]["count_comparability"],
+            "COMPARABLE_BOTH_COMPLETE_BY_SOURCE"
+        );
+        let a = &second["arrivals_since_prior_snapshot"];
+        assert_eq!(
+            (
+                a["posts"].clone(),
+                a["per_hour"].clone(),
+                a["bound"].clone()
+            ),
+            (json!(1), json!(1.0), json!("EXACT_BY_SOURCE"))
+        );
+        // A first page of several: counts are capped, arrivals only a lower bound.
+        let third = run(107_200, 3, &[("4", 105_000), ("3", 101_000)]);
+        assert_eq!(
+            third["velocity"]["count_comparability"],
+            "NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"
+        );
+        assert_eq!(third["arrivals_since_prior_snapshot"]["posts"], 1);
+        assert_eq!(
+            third["arrivals_since_prior_snapshot"]["bound"],
+            "LOWER_BOUND_CAPPED_OR_PARTIAL"
+        );
+    }
+    #[test]
     fn store_prices_are_reference_observations_with_pseudonymous_witnesses() {
         let root = std::env::temp_dir().join(format!(
             "ecdev-open-prices-{}",
