@@ -592,6 +592,58 @@
      "posts": 47
     }
    ]
+  },
+  {
+   "run": "visible-text watch, github.blog changelog, two live ticks (2026-10-07)",
+   "last_error": null,
+   "captures": [
+    {
+     "https://github.blog/changelog/": {
+      "status": "AVAILABLE",
+      "raw_sha256": "8a4705d6fa730c4ebd17cfc145ebb4b2095eb586953c8e93632d88eee352538c",
+      "text_sha256": "4f4ae821ebb99753e26ab601fc8ae47c90fcab1a31a093a054aafd33ab61d809"
+     }
+    },
+    {
+     "https://github.blog/changelog/": {
+      "status": "AVAILABLE",
+      "raw_sha256": "8a4705d6fa730c4ebd17cfc145ebb4b2095eb586953c8e93632d88eee352538c",
+      "text_sha256": "4f4ae821ebb99753e26ab601fc8ae47c90fcab1a31a093a054aafd33ab61d809"
+     }
+    }
+   ],
+   "changes": []
+  },
+  {
+   "run": "visible-text watch, two store pages without product data, two live ticks (2026-10-07)",
+   "last_error": null,
+   "captures": [
+    {
+     "https://rothys.com/pages/about": {
+      "status": "AVAILABLE",
+      "raw_sha256": "95b9f75bc49752337126c08056ad56700ff27692a2c86e004600cc9e60013f6b",
+      "text_sha256": "6f96e6a632fb9b1a54c8af105ca8ae3f1b419a186b9938902afdd3ec688f3076"
+     },
+     "https://www.decathlon.com/pages/contact-us": {
+      "status": "AVAILABLE",
+      "raw_sha256": "da22b2f2c2fa89aaf2fcb25fb286c283754ad304f150d2f4a2ce9f22cac28c8f",
+      "text_sha256": "c9077c815425556a465cec61a388b8d331e05bec46beeed9300c58f63fcc942d"
+     }
+    },
+    {
+     "https://rothys.com/pages/about": {
+      "status": "AVAILABLE",
+      "raw_sha256": "6d923b82bc9a657a991b6b5ba944c7403569fdfd0477ab51d177387755646454",
+      "text_sha256": "6f96e6a632fb9b1a54c8af105ca8ae3f1b419a186b9938902afdd3ec688f3076"
+     },
+     "https://www.decathlon.com/pages/contact-us": {
+      "status": "AVAILABLE",
+      "raw_sha256": "96d53bff1ce16086fbc6748497ade15ebf280c7ce8360d4caab4a0a8693b3bf2",
+      "text_sha256": "c9077c815425556a465cec61a388b8d331e05bec46beeed9300c58f63fcc942d"
+     }
+    }
+   ],
+   "changes": []
   }
  ],
  "findings": [
@@ -606,7 +658,8 @@
   "Hypotheses from live snapshots were noise: refinements were a cluster's first five terms alphabetically (link hashes, image sizes, function words, kana particles) and every one-post cluster became a hypothesis (45 for 47 mentions). Content terms now drop links, refinements are terms shared by at least two of a cluster's posts and informative, only clusters of two or more posts that refine something become hypotheses, and the topic over every mention always comes first",
   "Open: lexical clustering grouped 46 live posts into 45 clusters; the Jaccard 0.25 with two shared terms rule rarely joins real posts, which a labelled sample should tune rather than a guess",
   "Bluesky refuses its next cursor, so one window read 50 posts and covered about 15% of 3 days; 6-hour slices, each served its first page, read 347 posts and covered 67% within 20 requests (10 of 12 slices; 8 ended below 50 posts, i.e. read completely)",
-  "With 12 requested slices and 10 affordable, the two oldest went unread; slices are now widened to fit the request budget (and the 31-slice cap), so the same 20 requests sampled every part of the window: 10 slices of 7.2 hours, 394 posts, 7 slices read completely and 3 reported partial at the page limit"
+  "With 12 requested slices and 10 affordable, the two oldest went unread; slices are now widened to fit the request budget (and the 31-slice cap), so the same 20 requests sampled every part of the window: 10 slices of 7.2 hours, 394 posts, 7 slices read completely and 3 reported partial at the page limit",
+  "Visible-text watching works live through ECDEV's monitor: on two store pages the raw bytes differed between captures while the visible-text fingerprint stayed identical, and no change was reported; raw-byte comparison would have raised a false change on every tick. A site whose robots crawl delay exceeds the fetch budget (Hacker News, 30 s) is refused with ROBOTS_DELAY_EXCEEDS_FETCH_BUDGET and recorded UNKNOWN, never as a change"
  ],
  "ai_agent_policy_note": {
   "date": "2026-10-07",
