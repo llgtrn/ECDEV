@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "2fc6dd9cd46d78371376f89d38f1101392a7d318",
+  "assessed_parent_commit": "24b788440290655095a2ab167559bece84ada59d",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -1576,9 +1576,9 @@
         {
           "key": "changedetection.text-diff",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(generic page-text diff as a fallback monitor for pages without structured product data: false-positive rate versus typed field monitoring)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](research/commerce/text-diff-benchmark.json: over 21 HTML pages captured twice 180 s apart, raw bytes changed on every one and ECDEV's visible text on none; adapter/web/src/page_text.rs extracts visible lines and a fingerprint for every capture, and watches of pages that state no products report PAGE_TEXT_CHANGED with the lines added and removed (multisets, so moved lines are no change); raw-byte comparison is rejected)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
         },
         {
           "key": "changedetection.image-diff",
@@ -1792,7 +1792,7 @@
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "8 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.text-diff (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
+          "detail": "7 of 25 declared capabilities still have open research: changedetection.change-thresholds (BENCHMARK_CANDIDATE), changedetection.scheduling (STUDY_CANDIDATE), changedetection.api (STUDY_CANDIDATE), changedetection.selector-authoring (STUDY_CANDIDATE), changedetection.llm-extraction (BENCHMARK_CANDIDATE), changedetection.content-filter-dsl (STUDY_CANDIDATE), changedetection.browser-automation (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -3139,7 +3139,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "16 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
+          "detail": "17 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -3424,7 +3424,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "9 imports: scraper in adapter/web/src/amazon.rs; scraper in adapter/web/src/commerce.rs; scraper in adapter/web/src/document.rs"
+          "detail": "10 imports: scraper in adapter/web/src/amazon.rs; scraper in adapter/web/src/commerce.rs; scraper in adapter/web/src/document.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5514,7 +5514,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "51 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "52 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

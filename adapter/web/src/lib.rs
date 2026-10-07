@@ -4,6 +4,7 @@ pub mod commerce;
 pub mod document;
 pub mod microdata;
 pub mod page_product;
+pub mod page_text;
 pub mod price;
 pub mod robots;
 pub mod sitemap;
@@ -436,7 +437,7 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
         hash,
     ));
     Ok(
-        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":hash}),
+        json!({"supplier_leads":supplier_leads,"page_metadata":page_metadata,"structured_data":structured_data,"microdata":microdata,"source":source,"title":title,"products":found,"page_text":page_text::summary(html),"links":links,"extraction_errors":errors,"parser":"HTML5_DOM_COMMERCE_V3","content_hash":hash}),
     )
 }
 impl Web {

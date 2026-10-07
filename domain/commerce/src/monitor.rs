@@ -385,7 +385,14 @@ fn snapshot(run: &Value, request: &Value) -> Value {
                 .collect();
                 products.insert(key, Value::Object(fields));
             }
-            sources.insert(url.into(),json!({"status":"AVAILABLE","products":products,"raw_capture_sha256":page["content_hash"]}));
+            // Pages that state no products are watched by their visible text instead.
+            let text = &page["page_text"];
+            let text = if products.is_empty() && text["sha256"].is_string() {
+                json!({"sha256":text["sha256"],"lines":text["lines"],"truncated":text["truncated"]})
+            } else {
+                Value::Null
+            };
+            sources.insert(url.into(),json!({"status":"AVAILABLE","products":products,"page_text":text,"raw_capture_sha256":page["content_hash"]}));
         } else {
             let gone = run["errors"].as_array().into_iter().flatten().any(|e| {
                 e["source"] == url
@@ -781,6 +788,43 @@ fn conditions_met(conditions: &[Condition], old: &Value, new: &Value) -> Vec<Val
     out
 }
 
+/// Lines kept in a PAGE_TEXT_CHANGED event, per direction.
+const TEXT_DIFF_LINES: usize = 20;
+
+/// Lines that appeared and disappeared between two visible-text captures, counted as multisets
+/// so a moved line is not a change. Raw bytes are never compared: they change on every capture.
+fn text_change(url: &str, before: &Value, after: &Value, raw: &Value) -> Value {
+    let lines = |v: &Value| -> BTreeMap<String, i64> {
+        let mut m = BTreeMap::new();
+        for l in v["lines"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .filter_map(Value::as_str)
+        {
+            *m.entry(l.to_string()).or_insert(0) += 1;
+        }
+        m
+    };
+    let (a, b) = (lines(before), lines(after));
+    let diff = |x: &BTreeMap<String, i64>, y: &BTreeMap<String, i64>| -> Vec<String> {
+        x.iter()
+            .flat_map(|(l, n)| {
+                std::iter::repeat_n(
+                    l.clone(),
+                    (n - y.get(l).copied().unwrap_or(0)).max(0) as usize,
+                )
+            })
+            .collect()
+    };
+    let (added, removed) = (diff(&b, &a), diff(&a, &b));
+    json!({"kind":"PAGE_TEXT_CHANGED","url":url,"lines_added":added.len(),"lines_removed":removed.len(),
+        "added":added.iter().take(TEXT_DIFF_LINES).collect::<Vec<_>>(),"removed":removed.iter().take(TEXT_DIFF_LINES).collect::<Vec<_>>(),
+        "before_sha256":before["sha256"],"after_sha256":after["sha256"],
+        "lines_compared":if before["truncated"] == true || after["truncated"] == true {"FIRST_LINES_ONLY_TEXT_TRUNCATED"} else {"ALL_VISIBLE_LINES"},
+        "raw_capture_sha256":raw,"basis":"VISIBLE_TEXT_NOT_RAW_BYTES"})
+}
+
 /// One stored fact window, as `price_statistics` reads it.
 #[derive(Clone, Debug)]
 pub struct FactWindow {
@@ -961,6 +1005,18 @@ fn changes(old: &Value, new: &Value) -> Vec<Value> {
         }
         if after["status"] != "AVAILABLE" {
             continue;
+        }
+        if let (Some(old), Some(new)) = (
+            before["page_text"]["sha256"].as_str(),
+            after["page_text"]["sha256"].as_str(),
+        ) && old != new
+        {
+            out.push(text_change(
+                url,
+                &before["page_text"],
+                &after["page_text"],
+                &after["raw_capture_sha256"],
+            ));
         }
         if observed_view(&before["products"]) != after["products"] {
             out.push(json!({"kind":"PRODUCT_DATA_CHANGED","url":url,"before":observed_view(&before["products"]),"after":after["products"]}));
@@ -1268,6 +1324,41 @@ mod tests {
         let a = fact_as_of(&[w("1"), w("2")], 10);
         assert_eq!(a["state"], "CONFLICT");
         assert!(a["value"].is_null());
+    }
+
+    #[test]
+    fn pages_without_products_are_watched_by_visible_text() {
+        let request = json!({"sources":[{"url":"https://supplier.example/terms"}]});
+        let page = |sha: &str, lines: Value| json!({"snapshots":[{"source":"https://supplier.example/terms","content_hash":format!("raw-{sha}"),"products":[],"page_text":{"sha256":sha,"lines":lines,"truncated":false}}]});
+        let a = snapshot(
+            &page("t1", json!(["Terms", "MOQ 100 units", "Lead time 14 days"])),
+            &request,
+        );
+        // Raw bytes differ on every capture; the same visible text is no change.
+        let same = snapshot(
+            &page("t1", json!(["Terms", "MOQ 100 units", "Lead time 14 days"])),
+            &request,
+        );
+        assert!(changes(&a, &same).is_empty());
+        // A changed term is reported line by line; a moved line is not a change.
+        let b = snapshot(
+            &page("t2", json!(["Lead time 14 days", "Terms", "MOQ 200 units"])),
+            &request,
+        );
+        let c = changes(&a, &b);
+        assert_eq!(c.len(), 1);
+        assert_eq!(c[0]["kind"], "PAGE_TEXT_CHANGED");
+        assert_eq!(
+            (c[0]["added"].clone(), c[0]["removed"].clone()),
+            (json!(["MOQ 200 units"]), json!(["MOQ 100 units"]))
+        );
+        assert_eq!(c[0]["basis"], "VISIBLE_TEXT_NOT_RAW_BYTES");
+        // Pages that state products are watched by their products, not their text.
+        let with_product = json!({"snapshots":[{"source":"https://supplier.example/terms","content_hash":"r","products":[{"sku":"x","title":"x","price_minor":1}],"page_text":{"sha256":"t9","lines":[],"truncated":false}}]});
+        assert!(
+            snapshot(&with_product, &request)["https://supplier.example/terms"]["page_text"]
+                .is_null()
+        );
     }
 
     #[test]

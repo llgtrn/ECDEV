@@ -1,0 +1,692 @@
+{
+ "benchmark": "changedetection.text-diff: is a generic page-text diff a usable change monitor for pages that state no structured product data, and what is its false-positive rate against raw-byte comparison?",
+ "captured_on": "2026-10-07",
+ "gap_seconds": 180,
+ "sites": "10 retailers; pages from each site's own robots-declared sitemaps (pages sitemaps first, products and collections excluded); ECDEV's robots evaluator for every URL; two passes over the same URLs 180 s apart; ECDEV user agent; 1.5 s between requests",
+ "instrument": "ECDEV's adapter/web/src/page_text.rs::visible_lines via the benchmark helper; raw bytes hashed",
+ "evidence_state": "BENCHMARK_MEASUREMENT of change detection on unchanged pages at one time; not evidence about any product or market",
+ "harness_sources": {
+  "tools/commerce/text_diff_benchmark.py": "d24c46d06325ee4840884f0c71afd33778f641cda133cd657fab5068554f33e3"
+ },
+ "summary": {
+  "html_pages_compared": 21,
+  "of_which_product_pages": 3,
+  "raw_bytes_changed": 21,
+  "visible_text_changed": 0,
+  "pages_not_html_200": 3,
+  "request_count": 75
+ },
+ "results": [
+  {
+   "site": "https://www.allbirds.com",
+   "url": "https://www.allbirds.com/pages/careers",
+   "lines": 408,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.allbirds.com",
+   "url": "https://www.allbirds.com/pages/truth-about-allbirds-coupons",
+   "lines": 410,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.allbirds.com",
+   "url": "https://www.allbirds.com/pages/golden-ticket",
+   "lines": 409,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.gymshark.com",
+   "url": "https://www.gymshark.com/",
+   "lines": 595,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.gymshark.com",
+   "url": "https://www.gymshark.com/pages/1",
+   "lines": 494,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.gymshark.com",
+   "url": "https://www.gymshark.com/pages/shop-men",
+   "lines": 507,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.glossier.com",
+   "url": "https://www.glossier.com/pages/style-guide",
+   "lines": 449,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.glossier.com",
+   "url": "https://www.glossier.com/pages/about",
+   "lines": 257,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.glossier.com",
+   "url": "https://www.glossier.com/pages/bestsellers",
+   "lines": 250,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.rothys.com",
+   "url": "https://rothys.com/pages/about",
+   "lines": 353,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.rothys.com",
+   "url": "https://rothys.com/pages/contact",
+   "lines": 351,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.rothys.com",
+   "url": "https://rothys.com/pages/accessibility",
+   "lines": 356,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.decathlon.com",
+   "url": "https://www.decathlon.com/pages/contact-us",
+   "lines": 251,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.decathlon.com",
+   "url": "https://www.decathlon.com/pages/privacy-policy",
+   "lines": 441,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.decathlon.com",
+   "url": "https://www.decathlon.com/pages/terms-of-use",
+   "lines": 409,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.ikea.com",
+   "url": "https://www.ikea.com/ee/et/p/zebrasaev-laelamp-valge-plast-10522481/",
+   "lines": 148,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.ikea.com",
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-valge-70620011/",
+   "lines": 146,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.ikea.com",
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-must-90632555/",
+   "lines": 146,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.uniqlo.com",
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings/full-length",
+   "state": "NOT_HTML_200_IN_BOTH"
+  },
+  {
+   "site": "https://www.uniqlo.com",
+   "url": "https://www.uniqlo.com/au/en/",
+   "state": "NOT_HTML_200_IN_BOTH"
+  },
+  {
+   "site": "https://www.uniqlo.com",
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings",
+   "state": "NOT_HTML_200_IN_BOTH"
+  },
+  {
+   "site": "https://www.loft.co.jp",
+   "url": "https://www.loft.co.jp/",
+   "lines": 91,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.loft.co.jp",
+   "url": "https://www.loft.co.jp/news/",
+   "lines": 125,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  },
+  {
+   "site": "https://www.loft.co.jp",
+   "url": "https://www.loft.co.jp/shop_list/",
+   "lines": 1445,
+   "raw_changed": true,
+   "text_changed": false,
+   "changed_lines": 0,
+   "diff_sample": []
+  }
+ ],
+ "requests": [
+  {
+   "url": "https://www.allbirds.com/robots.txt",
+   "status": 200,
+   "bytes": 5495,
+   "sha256": "c9733b5b6b448f7056fe3a3d8140cee3784e8b9ef075a9c5002f41b73c9d9bca"
+  },
+  {
+   "url": "https://www.allbirds.com/sitemap.xml",
+   "status": 200,
+   "bytes": 969,
+   "sha256": "f832372f3b2d0d244c8b8c6a086363840e4c404f88b11ab7d330ef54f7682ea3"
+  },
+  {
+   "url": "https://www.allbirds.com/sitemap_pages_1.xml?from=154421575&to=94891114576",
+   "status": 200,
+   "bytes": 30163,
+   "sha256": "de991c3f30adc7382b1b78d5fe4a6a5469ad6fb25b2fa108685349d7fb60fffd"
+  },
+  {
+   "url": "https://www.gymshark.com/robots.txt",
+   "status": 200,
+   "bytes": 3123,
+   "sha256": "8b1027003bcdd5e1bb392d057f6cb818939c109df42b6270ca03a9384c29fe82"
+  },
+  {
+   "url": "https://www.gymshark.com/sitemap.xml",
+   "status": 200,
+   "bytes": 1070,
+   "sha256": "01e79e09a156704aa6c2a0e085b417297d22206ac385064dd1f8d2c00a03459f"
+  },
+  {
+   "url": "https://www.gymshark.com/sitemap_pages_1.xml",
+   "status": 200,
+   "bytes": 34387,
+   "sha256": "e9b0c04a5d9aba05c169c1573e891dd30cdb780383559f9f758ef78eaa65df22"
+  },
+  {
+   "url": "https://www.glossier.com/robots.txt",
+   "status": 200,
+   "bytes": 3632,
+   "sha256": "67b4c9096d11f8314174dadee8b921e01219edf056f3d51d1fa9c7340aa27002"
+  },
+  {
+   "url": "https://www.glossier.com/sitemap.xml",
+   "status": 200,
+   "bytes": 26829,
+   "sha256": "d5ade130d42bf5ec9cfad236c35a3197f06730c4f0382aa6c743c8dd1cf50305"
+  },
+  {
+   "url": "https://www.glossier.com/sitemap_pages_1.xml?from=94974345461&to=163549511925",
+   "status": 200,
+   "bytes": 14965,
+   "sha256": "9ae35c253a573b8d2e42efeec2f59b7c4fdb1579683d55d9727519b50efd2372"
+  },
+  {
+   "url": "https://www.rothys.com/robots.txt",
+   "status": 200,
+   "bytes": 5643,
+   "sha256": "8e83e25b4ce166b44a6f9c5fe1efb99b91902757f931f234b79f00bf42d36b6a"
+  },
+  {
+   "url": "https://rothys.com/sitemap.xml",
+   "status": 200,
+   "bytes": 20575,
+   "sha256": "2d6554934c95e19be6ce7d37d6056bbdf2b9bff6a782578e40c68e3fb2e97ed6"
+  },
+  {
+   "url": "https://rothys.com/sitemap_pages_1.xml?from=51213926494&to=161679573086",
+   "status": 200,
+   "bytes": 13627,
+   "sha256": "60ffb13cba2072301734802e6025c88ebcaaf3b030440a200bc44a4b108e6fb1"
+  },
+  {
+   "url": "https://www.decathlon.com/robots.txt",
+   "status": 200,
+   "bytes": 3630,
+   "sha256": "00b3e67425ef2502f29fdd03c2d948e2142cab150aa61bedc6614cc3e37e4d36"
+  },
+  {
+   "url": "https://www.decathlon.com/sitemap.xml",
+   "status": 200,
+   "bytes": 876,
+   "sha256": "0aa6315c929615c391873722e097d3607b5f27be5ccf5b72c9efe3e6bfd98243"
+  },
+  {
+   "url": "https://www.decathlon.com/sitemap_pages_1.xml?from=164369857&to=166199525438",
+   "status": 200,
+   "bytes": 12938,
+   "sha256": "0725427defa2df0bfca556f655a64839886cdf66cad62f63b2b8e6e901c877fa"
+  },
+  {
+   "url": "https://www.ikea.com/robots.txt",
+   "status": 200,
+   "bytes": 4054,
+   "sha256": "53df86f20aea5f91125e8ed0d4ae2c69aaf94fd671a276b41354a5a62b4a9338"
+  },
+  {
+   "url": "https://www.ikea.com/sitemaps/sitemap.xml",
+   "status": 200,
+   "bytes": 172429,
+   "sha256": "d0d472eb657bd8d7f6d03f9ecfdd0139f7fd6f239760add19850e7b79842b252"
+  },
+  {
+   "url": "https://www.ikea.com/sitemaps/prod-et-EE_1.xml",
+   "status": 200,
+   "bytes": 4194305,
+   "sha256": "140bc31f8b6c40ca2bbfd9e6ffce35d3aa11d649b68c24bfe7d038bcbce22f92"
+  },
+  {
+   "url": "https://www.zappos.com/robots.txt",
+   "status": 200,
+   "bytes": 1230,
+   "sha256": "07e08a1e8691b1004f0971f81761a2cae42b742000b79f44affceea5530ac16b"
+  },
+  {
+   "url": "https://www.zappos.com/VideoSitemap/file/video_sitemap-index.xml",
+   "status": 200,
+   "bytes": 1547,
+   "sha256": "2a6e76d2c61ed6b3005e8fe62206a95d3f47a1c82bfbbef3deced0b5bf8ed66f"
+  },
+  {
+   "url": "https://zappos.com/VideoSitemap/file/video_sitemap-1.xml",
+   "status": 200,
+   "bytes": 205,
+   "sha256": "00cf7cd2221adc5b6c38d443baa7635e217fb808759643f2d8e66b08bba72091"
+  },
+  {
+   "url": "https://www.uniqlo.com/robots.txt",
+   "status": 200,
+   "bytes": 14095,
+   "sha256": "a6b8ac18ee34dcb69c9d4616e8730f3521f0922398a5413f00eb614e9bae2d37"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/sitemap_AU_pdp.xml",
+   "status": 200,
+   "bytes": 77152,
+   "sha256": "205d08fac499fa34557764b212eacdc57d6b0a793c7d12418eaf4ded90de96b9"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/sitemap_AU_PLP.xml",
+   "status": 200,
+   "bytes": 201954,
+   "sha256": "bc05deb42323adb65991089ce4435583d8105aa7d731595003b94c81d2931313"
+  },
+  {
+   "url": "https://www.monotaro.com/robots.txt",
+   "status": 200,
+   "bytes": 2184,
+   "sha256": "ff833a462a1fecd392b0ad521c21af5ea62f49ed954f86d3cb232e646a7bf460"
+  },
+  {
+   "url": "https://www.loft.co.jp/robots.txt",
+   "status": 200,
+   "bytes": 326,
+   "sha256": "6d60f7484c91d2689edb52087d812047af1751984a8fd57fc2fc3b45c3e8ca19"
+  },
+  {
+   "url": "https://www.loft.co.jp/sitemap.xml",
+   "status": 200,
+   "bytes": 127949,
+   "sha256": "48c44022c6f4e5185209dcad53b12bb4740c783a1a1c5619693963b6c4819093"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/careers",
+   "status": 200,
+   "bytes": 427658,
+   "sha256": "01950c4e82678fe561d0c27e6a8ba1aadc14a3c1b11c1a826f1bd6b720d43da7"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/truth-about-allbirds-coupons",
+   "status": 200,
+   "bytes": 429937,
+   "sha256": "0b52fd2d781ea14129b21e1ecebbf17fe9174842903a89b31fd41afc6996a33f"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/golden-ticket",
+   "status": 200,
+   "bytes": 428374,
+   "sha256": "2795f0786d7466588c08151fa4d547e0bc546974354c210cf22adeac6a134c81"
+  },
+  {
+   "url": "https://www.gymshark.com/",
+   "status": 200,
+   "bytes": 1792712,
+   "sha256": "f93e49d1732ce489740665f274dffc41077f30c5a8ff00a719f42433fe288b18"
+  },
+  {
+   "url": "https://www.gymshark.com/pages/1",
+   "status": 200,
+   "bytes": 1681789,
+   "sha256": "111187663993290a92aeaafa8e8ba5aa4d4fe1eafff853993fde264a5d8f590d"
+  },
+  {
+   "url": "https://www.gymshark.com/pages/shop-men",
+   "status": 200,
+   "bytes": 1292169,
+   "sha256": "ad6b82e0955783d100f7759ab5b50d9b27a036e931ffebebc4cb996a5595cf7c"
+  },
+  {
+   "url": "https://www.glossier.com/pages/style-guide",
+   "status": 200,
+   "bytes": 302029,
+   "sha256": "3068be23794613e7957e9d282345c45e527771b83fa0cd3558ed9d9f4e14cfa3"
+  },
+  {
+   "url": "https://www.glossier.com/pages/about",
+   "status": 200,
+   "bytes": 260874,
+   "sha256": "0f165b9008e8561e323e29f8aab2c677a79141a7163a29ca388d7863831e9735"
+  },
+  {
+   "url": "https://www.glossier.com/pages/bestsellers",
+   "status": 200,
+   "bytes": 252450,
+   "sha256": "3458c7dc7601b588639cf596d6dd566524256f72ae70d5297f5dd2f4d9652529"
+  },
+  {
+   "url": "https://rothys.com/pages/about",
+   "status": 200,
+   "bytes": 1067013,
+   "sha256": "2749bbfb0930d1edb305aa50f00b094f439b2edcb7987e4b8dc1b4bbf18013ca"
+  },
+  {
+   "url": "https://rothys.com/pages/contact",
+   "status": 200,
+   "bytes": 1084960,
+   "sha256": "dfa367c4ee5ec65c00ccd2724214de0dc574e09852a240d7c5a82dbe1cc6c371"
+  },
+  {
+   "url": "https://rothys.com/pages/accessibility",
+   "status": 200,
+   "bytes": 1026838,
+   "sha256": "b3527f57855ae0ad9d84242f66c5b870353aba02296638c2c63468bc0e05e6c0"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/contact-us",
+   "status": 200,
+   "bytes": 498482,
+   "sha256": "24419bba55b72c9df864e12ffb5f780dec4f9d2e7dc2268877b339d9661f3024"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/privacy-policy",
+   "status": 200,
+   "bytes": 554376,
+   "sha256": "7865c0e0f97a21df04f8eaa4415e9ee4f33073e6846a5289f3ad900c37d156b2"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/terms-of-use",
+   "status": 200,
+   "bytes": 533993,
+   "sha256": "56b2d656770be14aec98164af2c628ef44a519685ef82fd45b5156f4f5d4da4c"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/zebrasaev-laelamp-valge-plast-10522481/",
+   "status": 200,
+   "bytes": 1027653,
+   "sha256": "fea0d2f341d86d461a1a862a33f5569db145c5edf7885a3e99fd0599e4d1b878"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-valge-70620011/",
+   "status": 200,
+   "bytes": 996155,
+   "sha256": "092d40ec718e0d70a0ecc9a585668e3969fbe238baa5e900c7f9f72572e936fd"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-must-90632555/",
+   "status": 200,
+   "bytes": 996394,
+   "sha256": "d23a06d86561b034511aae56c2a418d2a53d6fcf9f03b8f399a63830f8803241"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings/full-length",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.loft.co.jp/",
+   "status": 200,
+   "bytes": 40835,
+   "sha256": "120278be09d1c44cae6e6014035a6354020fbc89b7e03141bcb543d7ea822220"
+  },
+  {
+   "url": "https://www.loft.co.jp/news/",
+   "status": 200,
+   "bytes": 32347,
+   "sha256": "d4e377c74609c4e2dd462876dc506673bd397f244dececbc54af9f3b07347e96"
+  },
+  {
+   "url": "https://www.loft.co.jp/shop_list/",
+   "status": 200,
+   "bytes": 301503,
+   "sha256": "50eecc95406d5a9089af3bc04b05c935b88963278c62dce4dc6e79158fc9549a"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/careers",
+   "status": 200,
+   "bytes": 427658,
+   "sha256": "1f1145b71b532d8fbcde773931b797c5db52c1bc746d478acebae500c5484725"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/truth-about-allbirds-coupons",
+   "status": 200,
+   "bytes": 429937,
+   "sha256": "29a1247f664bdf2b6770010252921e683ada0d405bd1fb8d571f6a9df1a7dc98"
+  },
+  {
+   "url": "https://www.allbirds.com/pages/golden-ticket",
+   "status": 200,
+   "bytes": 428374,
+   "sha256": "0d6ba4b517ade1f80257eddb755d50b36a1ffeaa3d80fb0b01b2c71bcce8121b"
+  },
+  {
+   "url": "https://www.gymshark.com/",
+   "status": 200,
+   "bytes": 1792700,
+   "sha256": "8042533e657de122f5b015f646e38563585e06ab43065fe56d3ec2dbc776aaf2"
+  },
+  {
+   "url": "https://www.gymshark.com/pages/1",
+   "status": 200,
+   "bytes": 1681789,
+   "sha256": "60593e80091aa278ff07beae4d98bef5d4e5e6e3957a30782a8b5bdfcaaaf93e"
+  },
+  {
+   "url": "https://www.gymshark.com/pages/shop-men",
+   "status": 200,
+   "bytes": 1292169,
+   "sha256": "2792e9aa6d3cc64eb3692d7f6f03ccbe33b58b278a7330b6085fe404ef558f7a"
+  },
+  {
+   "url": "https://www.glossier.com/pages/style-guide",
+   "status": 200,
+   "bytes": 302029,
+   "sha256": "9f413dae723b60c870672a8e25a5cddaaf2ddf2f97f078035ea646435d17732d"
+  },
+  {
+   "url": "https://www.glossier.com/pages/about",
+   "status": 200,
+   "bytes": 260874,
+   "sha256": "bbbf658122eee8a7f22623038d69a4bbeb8d06f8aadb729e7bb58ba19b773b23"
+  },
+  {
+   "url": "https://www.glossier.com/pages/bestsellers",
+   "status": 200,
+   "bytes": 251277,
+   "sha256": "e8e0130da35d5490d548ce59aa62cbed78f85fb5b6732c70cb148f33a607f985"
+  },
+  {
+   "url": "https://rothys.com/pages/about",
+   "status": 200,
+   "bytes": 1067013,
+   "sha256": "24525ce112d3fe94d3b26e1a50f534bf8057c8d2ef1459846123a6cb7abc4ae5"
+  },
+  {
+   "url": "https://rothys.com/pages/contact",
+   "status": 200,
+   "bytes": 1084960,
+   "sha256": "3cc56dcfeb395c2a16f9f6315d5aa1bef289693e51f5e74248e2ab0bdd47273d"
+  },
+  {
+   "url": "https://rothys.com/pages/accessibility",
+   "status": 200,
+   "bytes": 1026838,
+   "sha256": "943f807bcf8db63c94a70dc723ba558d65627d4492a745b118d89787770b3fcb"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/contact-us",
+   "status": 200,
+   "bytes": 498482,
+   "sha256": "1072883bdb5668580b7a0e95794cbb2a034b23a7920985c5018ff69892637f83"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/privacy-policy",
+   "status": 200,
+   "bytes": 554376,
+   "sha256": "b3648476d45197c23bb128a0ae2a0272beb9df98a0680419accbea0ca725cf21"
+  },
+  {
+   "url": "https://www.decathlon.com/pages/terms-of-use",
+   "status": 200,
+   "bytes": 533993,
+   "sha256": "115c3c6db16d3f2157a1482e01457b6232055e3f8f0d961021ca12ee76a0eab8"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/zebrasaev-laelamp-valge-plast-10522481/",
+   "status": 200,
+   "bytes": 1027656,
+   "sha256": "5aff29437f90b73fd90eed9b4307d165a05a47749d16a61b65e5a4885c016a3a"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-valge-70620011/",
+   "status": 200,
+   "bytes": 996158,
+   "sha256": "655969eab935cd204746329985a7bfdd50741c3253f5db65367bfc510ab6b7b2"
+  },
+  {
+   "url": "https://www.ikea.com/ee/et/p/yxstaby-vitriinkarp-maengupuldile-must-90632555/",
+   "status": 200,
+   "bytes": 996391,
+   "sha256": "cccbe57028226eb3fbf3e67da9ce1fcb6b762294cdebc6fee13acc96cfeef025"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings/full-length",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.uniqlo.com/au/en/baby/newborn/leggings",
+   "status": 403,
+   "bytes": 0,
+   "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+   "url": "https://www.loft.co.jp/",
+   "status": 200,
+   "bytes": 40835,
+   "sha256": "1afd868b2884de25de33fe559f61a5ad40279f5787f50b43ac1048cdb8aa5e65"
+  },
+  {
+   "url": "https://www.loft.co.jp/news/",
+   "status": 200,
+   "bytes": 32348,
+   "sha256": "fdee423e960a5544363df6fc62cbd8d1b13c1025f69f1ce04c82369d3d934de7"
+  },
+  {
+   "url": "https://www.loft.co.jp/shop_list/",
+   "status": 200,
+   "bytes": 301502,
+   "sha256": "2539bb3bc08bfe96c40731f4a310bb0dd32ebcbd7f7303aa5cb9c86707efc185"
+  }
+ ],
+ "findings": [
+  "Over 21 HTML pages captured twice 180 s apart, the raw bytes differed on 21 (per-response tokens, nonces and build identifiers), so a raw-byte monitor alerts on every check.",
+  "ECDEV's visible text differed on 0 of them: on these pages a visible-text fingerprint has no false positive at this interval.",
+  "The three ikea.com URLs came from a sitemap that lists product pages under /p/; they are counted and labelled, and behave the same.",
+  "uniqlo.com answered 403 to all six page requests in this run (it served product pages to the same agent earlier the same day) and is excluded."
+ ],
+ "decision": {
+  "knowledge": "INDEPENDENT_NATIVE",
+  "native": [
+   "adapter/web/src/page_text.rs (visible_lines, summary)",
+   "domain/commerce/src/monitor.rs (page_text in watch snapshots for pages without products; PAGE_TEXT_CHANGED with added and removed lines as multisets)"
+  ],
+  "rejected": "raw-byte change detection"
+ },
+ "limits": "21 pages, one 180 s interval, one capture time; genuine text changes (edited terms) were not observed live and are covered by tests; longer intervals may show rotating banners or dates as text changes"
+}
