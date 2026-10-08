@@ -44,6 +44,18 @@ struct Input {
     #[serde(default = "run_deadline")]
     deadline_seconds: u32,
     crawl_run_id: Option<String>,
+    /// Operator-stated crawl scope: only discovered URLs whose path starts with one of these are
+    /// admitted to the frontier (seeds and robots-declared sitemaps always are). Empty: the whole
+    /// host, as before. Never inferred: on 7 measured catalogues no structural rule found the right
+    /// prefix, and a wrong one lost every product (research/commerce/frontier-trace-benchmark.json).
+    #[serde(default)]
+    include_path_prefixes: Vec<String>,
+}
+/// Whether a canonical URL's path starts with one of the operator's prefixes.
+fn path_in_scope(canonical_url: &str, prefixes: &[String]) -> bool {
+    url::Url::parse(canonical_url)
+        .map(|u| prefixes.iter().any(|p| u.path().starts_with(p.as_str())))
+        .unwrap_or(false)
 }
 fn depth_limit() -> u32 {
     3
@@ -503,6 +515,10 @@ impl Engine {
             || input.max_depth > 10
             || input.max_urls < input.max_pages as u32
             || input.max_urls > 100_000
+            || input.include_path_prefixes.len() > 10
+            || input.include_path_prefixes.iter().any(|p| {
+                !p.starts_with('/') || p.len() > 512 || p.contains("..") || p.contains(['?', '#'])
+            })
             || !(1..=3600).contains(&input.deadline_seconds)
             || input.min_price_minor.is_some_and(|v| v < 0)
             || input.max_price_minor.is_some_and(|v| v < 0)
@@ -587,6 +603,8 @@ impl Engine {
         let mut candidates = vec![];
         let mut calls = vec![];
         let mut failures = vec![];
+        let mut out_of_scope: u64 = 0;
+        let mut out_of_scope_examples: Vec<String> = vec![];
         let mut snapshots = vec![];
         loop {
             let (source, depth, checkpoint, lease) = if let Some(saved) = recovered.pop_front() {
@@ -915,6 +933,15 @@ impl Engine {
                         } else {
                             0
                         };
+                        if !input.include_path_prefixes.is_empty()
+                            && !path_in_scope(&identity.canonical_url, &input.include_path_prefixes)
+                        {
+                            out_of_scope += 1;
+                            if out_of_scope_examples.len() < 5 {
+                                out_of_scope_examples.push(identity.canonical_url.clone());
+                            }
+                            continue;
+                        }
                         frontier.enqueue(&crawl_id, &identity, depth + 1, priority)?;
                     }
                 }
@@ -1020,7 +1047,7 @@ impl Engine {
             !observations.is_empty() && calls.iter().all(|c| c["cache_hit"] == true),
         );
         let cache_metrics = crate::intelligence::cache_metrics(&calls, accounting_mode);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"access_diagnostics":access_diagnostics(&calls),"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"scope":if input.include_path_prefixes.is_empty(){json!({"basis":"WHOLE_HOST","include_path_prefixes":[]})}else{json!({"basis":"OPERATOR_EXPLICIT","include_path_prefixes":input.include_path_prefixes,"out_of_scope_links_skipped":out_of_scope,"out_of_scope_examples":out_of_scope_examples,"coverage":"LIMITED_TO_OPERATOR_SCOPE: a drained frontier means the scope was read, not the host; skipped links are unobserved, not irrelevant"})},"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"access_diagnostics":access_diagnostics(&calls),"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {
@@ -1298,6 +1325,112 @@ mod budget_storage_tests {
         assert_eq!(d[2]["reason"], "PUBLIC_AMAZON_CAPTCHA_FORM");
         assert_eq!(d[3]["http_status"], 403);
         assert!(d[7]["http_status"].is_null() && d[8]["http_status"].is_null());
+    }
+    #[test]
+    fn an_operator_scope_admits_only_matching_paths_and_reports_what_it_skipped() {
+        use crate::provider::{AcquireError, AcquireResult, Provider};
+        struct Site;
+        impl Provider for Site {
+            fn id(&self) -> &str {
+                "native-web"
+            }
+            fn metadata(&self) -> Value {
+                json!({"id":self.id(),"class":"PUBLIC","status":"AVAILABLE","capabilities":["fetch.http"],"markets":["PUBLIC_WEB"]})
+            }
+            fn acquire(&self, request: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                let url = request.query["url"]
+                    .as_str()
+                    .unwrap_or("https://shop.example/shop/")
+                    .to_string();
+                let links = if url.ends_with("/shop/") {
+                    json!([
+                        "https://shop.example/shop/a",
+                        "https://shop.example/docs/x",
+                        "https://shop.example/shop/b",
+                        "https://shop.example/forums/y"
+                    ])
+                } else {
+                    json!([])
+                };
+                let raw = format!("synthetic page {url}").into_bytes();
+                let result = json!({"products":[],"links":links,"source":url});
+                let observation = Evidence {
+                    id: Uuid::new_v4().to_string(),
+                    mode: crate::domain::ObservationMode::Live,
+                    source_type: "PUBLIC_HTML".into(),
+                    provider: "native-web".into(),
+                    external_source: url.clone(),
+                    market: "PUBLIC_WEB".into(),
+                    query: request.query.clone(),
+                    timestamp: "1000".into(),
+                    retrieved_at: "1000".into(),
+                    raw_hash: format!("{:x}", Sha256::digest(&raw)),
+                    normalized_value: result.clone(),
+                    unit: "MOCK_NOT_LIVE_PROOF".into(),
+                    currency: None,
+                    confidence: None,
+                    freshness_seconds: None,
+                    cost_minor: Some(0),
+                    run_id: request.run_id.clone(),
+                };
+                Ok(AcquireResult {
+                    observations: vec![observation],
+                    result,
+                    raw_payload: raw,
+                    provider_cost: json!({"request_count":1}),
+                })
+            }
+        }
+        let run = |prefixes: Value| {
+            let root = std::env::temp_dir().join(format!("ecdev-scope-{}", Uuid::new_v4()));
+            let e = Engine::open(&root)
+                .unwrap()
+                .with_provider(std::sync::Arc::new(Site));
+            let r = e.research(json!({"market":"PUBLIC_WEB","query":"Synthetic scope, not live proof","sources":[{"url":"https://shop.example/shop/"}],"max_pages":10,"max_depth":2,"include_path_prefixes":prefixes})).unwrap();
+            drop(e);
+            let _ = std::fs::remove_dir_all(root);
+            r
+        };
+        let whole = run(json!([]));
+        assert_eq!(whole["scope"]["basis"], "WHOLE_HOST");
+        assert_eq!(whole["frontier"]["origins"][0]["url_count"], 5);
+        let scoped = run(json!(["/shop/"]));
+        assert_eq!(scoped["scope"]["basis"], "OPERATOR_EXPLICIT");
+        assert_eq!(scoped["frontier"]["origins"][0]["url_count"], 3);
+        assert_eq!(scoped["scope"]["out_of_scope_links_skipped"], 2);
+        assert_eq!(
+            scoped["scope"]["out_of_scope_examples"],
+            json!([
+                "https://shop.example/docs/x",
+                "https://shop.example/forums/y"
+            ])
+        );
+        assert!(
+            scoped["scope"]["coverage"]
+                .as_str()
+                .unwrap()
+                .starts_with("LIMITED_TO_OPERATOR_SCOPE")
+        );
+        // The seed is always admitted, even when it is outside the stated prefix.
+        let outside = run(json!(["/nothing/"]));
+        assert_eq!(outside["frontier"]["origins"][0]["url_count"], 1);
+        assert_eq!(outside["scope"]["out_of_scope_links_skipped"], 4);
+        // Malformed prefixes are refused before any work.
+        let root = std::env::temp_dir().join(format!("ecdev-scope-bad-{}", Uuid::new_v4()));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(std::sync::Arc::new(Site));
+        for bad in [
+            json!(["shop"]),
+            json!(["/a/../b"]),
+            json!(["/a?x=1"]),
+            json!(["/a#f"]),
+        ] {
+            let err = e.research(json!({"market":"PUBLIC_WEB","query":"x","sources":[{"url":"https://shop.example/shop/"}],"include_path_prefixes":bad})).unwrap_err();
+            assert!(!err.is_empty());
+        }
+        drop(e);
+        let _ = std::fs::remove_dir_all(root);
     }
     #[test]
     fn reextraction_reports_where_the_current_extractor_disagrees_with_the_record() {

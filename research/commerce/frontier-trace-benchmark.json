@@ -1,0 +1,1439 @@
+{
+ "benchmark": "frontier-learning: can ECDEV stop a crawl early on low marginal yield, or narrow crawl scope from URL/path evidence, without losing observed commerce evidence?",
+ "captured_on": "2026-10-08",
+ "method": "8 catalogues crawled live through ecdev.research.run under ECDEV robots, AI-agent, DNS/IP, redirect, body and pacing policy (max_pages 80, depth 3, max_urls 400, no login, no browser); each fetched page re-extracted offline from its stored raw capture with ECDEV's own extractor; policies replayed offline on the per-page traces. The bounded 80-page trace is the baseline, not the catalogue.",
+ "catalogues": [
+  {
+   "host": "books.toscrape.com",
+   "outcome": "TRACED"
+  },
+  {
+   "host": "webscraper.io",
+   "outcome": "TRACED"
+  },
+  {
+   "host": "scrapeme.live",
+   "outcome": "TRACED (also traced earlier at depth 2)"
+  },
+  {
+   "host": "www.allbirds.com",
+   "outcome": "NOT_TRACED",
+   "why": "collection page refused by the 4 MiB body bound (BODY_LIMIT_EXCEEDED); a refusal is not a failed experiment"
+  },
+  {
+   "host": "ruggable.com",
+   "outcome": "TRACED"
+  },
+  {
+   "host": "www.fashionnova.com",
+   "outcome": "TRACED"
+  },
+  {
+   "host": "us.puma.com",
+   "outcome": "TRACED"
+  },
+  {
+   "host": "www.otto.de",
+   "outcome": "TRACED"
+  }
+ ],
+ "topology": {
+  "books.toscrape.com": {
+   "seed": "/ (home)",
+   "structure": "scraping-practice catalogue: category pages, numbered pagination, semantic-slug product pages with an id suffix, no structured product data",
+   "crawl": "HANDLED 80, 320 pending; ECDEV extracts 0 products (prices only in unstructured HTML)"
+  },
+  "webscraper.io": {
+   "seed": "/test-sites/e-commerce/static",
+   "structure": "a vendor site that hosts a practice shop under /test-sites: documentation, solutions and blog pages dominate the host; catalogue is numeric-id products in nested categories",
+   "crawl": "HANDLED 79"
+  },
+  "scrapeme.live": {
+   "seed": "/shop/",
+   "structure": "WooCommerce practice shop: semantic-slug product pages under /shop/, plus forums, property and WordPress pages on the same host; add-to-cart URLs robots-denied",
+   "crawl": "HANDLED 76"
+  },
+  "ruggable.com": {
+   "seed": "/",
+   "structure": "Shopify store: /collections/* navigation, products at /products/*, a sibling prefix",
+   "crawl": "HANDLED 79"
+  },
+  "www.fashionnova.com": {
+   "seed": "/",
+   "structure": "Shopify store with HTML sitemap pages, collection listings carrying many JSON-LD items, products at /products/*",
+   "crawl": "HANDLED 78, 1 body over 4 MiB, 1 network error"
+  },
+  "us.puma.com": {
+   "seed": "/us/en",
+   "structure": "site with category listings and an HTML sitemap section of hundreds of pages",
+   "crawl": "HANDLED 80"
+  },
+  "www.otto.de": {
+   "seed": "/",
+   "structure": "German multi-department retailer: deep department paths, listing pages with many items, filter query parameters",
+   "crawl": "HANDLED 79, 1 HTTP 400"
+  }
+ },
+ "yield_definition": {
+  "components": [
+   "new_identities (page-subject products, key: GTIN, else brand+MPN, else host+SKU, else canonical URL)",
+   "new_listing_identities (products shown on a listing page, not the page subject)",
+   "new_fields_on_known (a known identity gaining a field)",
+   "new_assertions (identity, field, value) triples never seen before",
+   "new_conflicts (a field with a second distinct value)",
+   "children_admitted (frontier expansion, reported but not counted as yield)"
+  ],
+  "low_yield_page": "no new identity, listing identity or field",
+  "note": "identifier-bearing identities, enrichment fields and conflicts were 0 on every trace: no catalogue re-observed a product on a second page, no product carried a GTIN/MPN in ECDEV's extraction, and no value ever disagreed. Those components cannot discriminate between policies on this sample."
+ },
+ "early_stopping": {
+  "grid": {
+   "policies": 24,
+   "families": [
+    "consecutive_low N=3..30",
+    "rolling_identity_window W=10..40",
+    "region_consecutive_low N=2..12",
+    "region_subtree_adaptive k=2..12",
+    "identity_and_enrichment_low"
+   ]
+  },
+  "per_site": {
+   "books": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 0,
+     "listing_identities": 0,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 0,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 24,
+    "policies": 24,
+    "best_no_loss": {
+     "policy": "consecutive_low",
+     "params": {
+      "N": 3
+     },
+     "saved_frac": 0.9625
+    }
+   },
+   "fashionnova": {
+    "trace": {
+     "fetched_pages": 79,
+     "identities": 10,
+     "listing_identities": 1490,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 60,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 11,
+    "policies": 24,
+    "best_no_loss": {
+     "policy": "region_consecutive_low",
+     "params": {
+      "N": 5
+     },
+     "saved_frac": 0.2025
+    }
+   },
+   "otto": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 0,
+     "listing_identities": 1027,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 0,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 23,
+    "policies": 24,
+    "best_no_loss": null
+   },
+   "puma": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 0,
+     "listing_identities": 257,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 0,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 10,
+    "policies": 24,
+    "best_no_loss": {
+     "policy": "region_consecutive_low",
+     "params": {
+      "N": 2
+     },
+     "saved_frac": 0.5
+    }
+   },
+   "ruggable": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 9,
+     "listing_identities": 0,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 53,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 0,
+    "policies": 24,
+    "best_no_loss": null
+   },
+   "scrapeme": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 16,
+     "listing_identities": 0,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 96,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 19,
+    "policies": 24,
+    "best_no_loss": {
+     "policy": "region_consecutive_low",
+     "params": {
+      "N": 2
+     },
+     "saved_frac": 0.65
+    }
+   },
+   "webscraper": {
+    "trace": {
+     "fetched_pages": 80,
+     "identities": 12,
+     "listing_identities": 0,
+     "identifier_bearing": 0,
+     "enrichment_fields": 0,
+     "assertions": 45,
+     "conflicts": 0
+    },
+    "policies_with_no_loss": 15,
+    "policies": 24,
+    "best_no_loss": {
+     "policy": "region_consecutive_low",
+     "params": {
+      "N": 2
+     },
+     "saved_frac": 0.6
+    }
+   }
+  },
+  "zero_yield_gaps_before_more_yield": {
+   "ruggable": 68,
+   "puma": 45,
+   "webscraper": 25,
+   "fashionnova": 23,
+   "scrapeme": 17,
+   "otto": 3
+  },
+  "first_yield_at_fetch": {
+   "scrapeme": 34,
+   "puma": 46,
+   "webscraper": 1,
+   "ruggable": 2,
+   "fashionnova": 2,
+   "otto": 2
+  },
+  "late_quarter_share_of_yield": {
+   "ruggable": 0.778,
+   "puma": 0.502,
+   "otto": 0.292,
+   "fashionnova": 0.254,
+   "scrapeme": 0.0,
+   "webscraper": 0.0
+  },
+  "leave_one_catalogue_out": {
+   "epsilon_max_missed_fraction_on_every_training_site": 0.02,
+   "results": [
+    {
+     "held_out": "books",
+     "train_sites": [
+      "fashionnova",
+      "otto",
+      "puma",
+      "ruggable",
+      "scrapeme",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    },
+    {
+     "held_out": "fashionnova",
+     "train_sites": [
+      "otto",
+      "puma",
+      "ruggable",
+      "scrapeme",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    },
+    {
+     "held_out": "otto",
+     "train_sites": [
+      "fashionnova",
+      "puma",
+      "ruggable",
+      "scrapeme",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    },
+    {
+     "held_out": "puma",
+     "train_sites": [
+      "fashionnova",
+      "otto",
+      "ruggable",
+      "scrapeme",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    },
+    {
+     "held_out": "ruggable",
+     "train_sites": [
+      "fashionnova",
+      "otto",
+      "puma",
+      "scrapeme",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": {
+      "policy": "region_consecutive_low",
+      "params": {
+       "N": 5
+      },
+      "train_mean_saved": 0.2805,
+      "train_worst_missed": 0
+     },
+     "held_out_result": {
+      "policy": "region_consecutive_low",
+      "params": {
+       "N": 5
+      },
+      "pages": 80,
+      "pages_kept": 15,
+      "saved_pages": 65,
+      "saved_frac": 0.8125,
+      "identities_full": 9,
+      "identities_kept": 2,
+      "identities_missed_frac": 0.7778,
+      "listing_identities_full": 0,
+      "listing_identities_kept": 0,
+      "listing_identities_missed_frac": null,
+      "identifier_bearing_full": 0,
+      "identifier_bearing_kept": 0,
+      "identifier_bearing_missed_frac": null,
+      "enrichment_fields_full": 0,
+      "enrichment_fields_kept": 0,
+      "enrichment_fields_missed_frac": null,
+      "assertions_full": 53,
+      "assertions_kept": 11,
+      "assertions_missed_frac": 0.7925,
+      "conflicts_full": 0,
+      "conflicts_kept": 0,
+      "conflicts_missed_frac": null,
+      "late_identities_full": 7,
+      "late_identities_lost": 7
+     }
+    },
+    {
+     "held_out": "scrapeme",
+     "train_sites": [
+      "fashionnova",
+      "otto",
+      "puma",
+      "ruggable",
+      "webscraper"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    },
+    {
+     "held_out": "webscraper",
+     "train_sites": [
+      "fashionnova",
+      "otto",
+      "puma",
+      "ruggable",
+      "scrapeme"
+     ],
+     "eps_max_missed_identity_fraction": 0.02,
+     "chosen": null,
+     "note": "no policy kept missed identities within EPS on every training site"
+    }
+   ]
+  },
+  "finding": "No robust operating point. A rule that loses nothing on one catalogue loses 78% to 100% of the observed identities on another: ruggable.com went 68 consecutive fetches without yield before its products appeared, puma.com 45, and puma.com and scrapeme.live found their first yield only at fetch 46 and 34, so consecutive-low rules with N up to 30 stop before them. In leave-one-catalogue-out a rule met the 2% bound on every training site for only 1 of 7 held-out catalogues, and on that one (ruggable.com) it lost 78% of the identities. Region-local rules that spare navigation with productive descendants lose nothing and save 50-65% on webscraper.io, scrapeme.live and puma.com, have no safe setting at all on ruggable.com (0 of 24 policies), and when constrained to no loss save at most 20% on fashionnova.com and 0% on otto.de.",
+  "decision": "DELIBERATE_NO_CHANGE: early stopping stays unimplemented."
+ },
+ "path_scope": {
+  "per_site": {
+   "books": {
+    "fetched": 80,
+    "total_yield": 0,
+    "groups": [
+     {
+      "shape": "/catalogue/*/*/~id/*",
+      "fetched": 49,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 318,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 55,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/catalogue/~id/*",
+      "fetched": 25,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 25,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 73,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/catalogue/*/*/*/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 8,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/catalogue/*/~id/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/catalogue/~id",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/index.html",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/catalogue/*/*/~id/~id",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "fashionnova": {
+    "fetched": 79,
+    "total_yield": 1500,
+    "groups": [
+     {
+      "shape": "/collections/*",
+      "fetched": 33,
+      "product_pages": 0,
+      "listing_pages": 31,
+      "own_new_identities": 0,
+      "new_listing_identities": 1089,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 1089,
+      "subtree_yield": 1089,
+      "subtree_pages": 33,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemap/*/*",
+      "fetched": 21,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 316,
+      "page_yield": 0,
+      "subtree_yield": 350,
+      "subtree_pages": 37,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/collections/*?division",
+      "fetched": 19,
+      "product_pages": 0,
+      "listing_pages": 19,
+      "own_new_identities": 0,
+      "new_listing_identities": 298,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 298,
+      "subtree_yield": 298,
+      "subtree_pages": 19,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/collections/~id",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 2,
+      "own_new_identities": 0,
+      "new_listing_identities": 103,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 103,
+      "subtree_yield": 103,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 61,
+      "page_yield": 0,
+      "subtree_yield": 1500,
+      "subtree_pages": 79,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/products/*",
+      "fetched": 1,
+      "product_pages": 1,
+      "listing_pages": 0,
+      "own_new_identities": 10,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 10,
+      "subtree_yield": 10,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 22,
+      "page_yield": 0,
+      "subtree_yield": 350,
+      "subtree_pages": 39,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemap/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 1,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "otto": {
+    "fetched": 80,
+    "total_yield": 1027,
+    "groups": [
+     {
+      "shape": "/damen/*/*/*",
+      "fetched": 14,
+      "product_pages": 0,
+      "listing_pages": 14,
+      "own_new_identities": 0,
+      "new_listing_identities": 188,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 188,
+      "subtree_yield": 188,
+      "subtree_pages": 14,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/damen/*/*",
+      "fetched": 13,
+      "product_pages": 0,
+      "listing_pages": 12,
+      "own_new_identities": 0,
+      "new_listing_identities": 187,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 187,
+      "subtree_yield": 187,
+      "subtree_pages": 13,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/baumarkt/*/*",
+      "fetched": 9,
+      "product_pages": 0,
+      "listing_pages": 9,
+      "own_new_identities": 0,
+      "new_listing_identities": 114,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 114,
+      "subtree_yield": 114,
+      "subtree_pages": 9,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/baumarkt/*",
+      "fetched": 7,
+      "product_pages": 0,
+      "listing_pages": 7,
+      "own_new_identities": 0,
+      "new_listing_identities": 122,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 122,
+      "subtree_yield": 122,
+      "subtree_pages": 7,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/baumarkt/*/*/*",
+      "fetched": 6,
+      "product_pages": 0,
+      "listing_pages": 6,
+      "own_new_identities": 0,
+      "new_listing_identities": 85,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 85,
+      "subtree_yield": 85,
+      "subtree_pages": 6,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/damen/*/*?material",
+      "fetched": 5,
+      "product_pages": 0,
+      "listing_pages": 5,
+      "own_new_identities": 0,
+      "new_listing_identities": 77,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 77,
+      "subtree_yield": 77,
+      "subtree_pages": 5,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/damen/*?marke",
+      "fetched": 3,
+      "product_pages": 0,
+      "listing_pages": 3,
+      "own_new_identities": 0,
+      "new_listing_identities": 49,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 49,
+      "subtree_yield": 49,
+      "subtree_pages": 3,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/accessoires/*",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 2,
+      "own_new_identities": 0,
+      "new_listing_identities": 34,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 34,
+      "subtree_yield": 34,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/damen/*",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/damen/*/*?jahreszeit",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 2,
+      "own_new_identities": 0,
+      "new_listing_identities": 19,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 19,
+      "subtree_yield": 19,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 399,
+      "page_yield": 0,
+      "subtree_yield": 1027,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/auto/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 1,
+      "own_new_identities": 0,
+      "new_listing_identities": 18,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 18,
+      "subtree_yield": 18,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "puma": {
+    "fetched": 80,
+    "total_yield": 257,
+    "groups": [
+     {
+      "shape": "/sitemaps/*/*/~id",
+      "fetched": 42,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 125,
+      "page_yield": 0,
+      "subtree_yield": 24,
+      "subtree_pages": 46,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*/*/*",
+      "fetched": 16,
+      "product_pages": 0,
+      "listing_pages": 16,
+      "own_new_identities": 0,
+      "new_listing_identities": 139,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 139,
+      "subtree_yield": 139,
+      "subtree_pages": 16,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*",
+      "fetched": 10,
+      "product_pages": 0,
+      "listing_pages": 8,
+      "own_new_identities": 0,
+      "new_listing_identities": 63,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 63,
+      "subtree_yield": 63,
+      "subtree_pages": 10,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*/*/*?filter_gender",
+      "fetched": 5,
+      "product_pages": 0,
+      "listing_pages": 5,
+      "own_new_identities": 0,
+      "new_listing_identities": 23,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 23,
+      "subtree_yield": 23,
+      "subtree_pages": 5,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemaps/*/*/*",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 42,
+      "page_yield": 0,
+      "subtree_yield": 24,
+      "subtree_pages": 48,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*/*",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 2,
+      "own_new_identities": 0,
+      "new_listing_identities": 15,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 15,
+      "subtree_yield": 15,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 232,
+      "page_yield": 0,
+      "subtree_yield": 257,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*/*/*?filter_age_group",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 1,
+      "own_new_identities": 0,
+      "new_listing_identities": 6,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 6,
+      "subtree_yield": 6,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/us/*/*/*/*/*",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 1,
+      "own_new_identities": 0,
+      "new_listing_identities": 11,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 11,
+      "subtree_yield": 11,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "ruggable": {
+    "fetched": 80,
+    "total_yield": 9,
+    "groups": [
+     {
+      "shape": "/collections/*",
+      "fetched": 64,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 70,
+      "page_yield": 0,
+      "subtree_yield": 7,
+      "subtree_pages": 65,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/collections/~id",
+      "fetched": 10,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 37,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 17,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/products/*",
+      "fetched": 3,
+      "product_pages": 3,
+      "listing_pages": 0,
+      "own_new_identities": 9,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 2,
+      "page_yield": 9,
+      "subtree_yield": 9,
+      "subtree_pages": 3,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 92,
+      "page_yield": 0,
+      "subtree_yield": 9,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 1,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/collections/*?size",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "scrapeme": {
+    "fetched": 80,
+    "total_yield": 16,
+    "groups": [
+     {
+      "shape": "/shop/*",
+      "fetched": 16,
+      "product_pages": 16,
+      "listing_pages": 0,
+      "own_new_identities": 16,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 16,
+      "subtree_yield": 16,
+      "subtree_pages": 16,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/~id",
+      "fetched": 12,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 344,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 52,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/property/~id",
+      "fetched": 11,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 11,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/forums/*/*",
+      "fetched": 11,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 11,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/shop/*/#",
+      "fetched": 6,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 6,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/forums/*/*/*/*",
+      "fetched": 5,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 5,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/forums/*/*/*",
+      "fetched": 4,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 4,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/forums/*/*/*/*/*",
+      "fetched": 4,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 4,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/?p&post_type",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 2,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/forums/*/#",
+      "fetched": 2,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/shop",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 43,
+      "page_yield": 0,
+      "subtree_yield": 16,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/wp-sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 12,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 53,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   },
+   "webscraper": {
+    "fetched": 80,
+    "total_yield": 12,
+    "groups": [
+     {
+      "shape": "/documentation/*/*",
+      "fetched": 33,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 33,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/documentation/*",
+      "fetched": 12,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 12,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/solutions/*",
+      "fetched": 9,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 9,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/test-sites/*/*/*/#",
+      "fetched": 3,
+      "product_pages": 3,
+      "listing_pages": 0,
+      "own_new_identities": 3,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 3,
+      "subtree_yield": 3,
+      "subtree_pages": 3,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/test-sites/*/*/*",
+      "fetched": 2,
+      "product_pages": 2,
+      "listing_pages": 0,
+      "own_new_identities": 6,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 6,
+      "subtree_yield": 6,
+      "subtree_pages": 2,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/test-sites/*/*",
+      "fetched": 1,
+      "product_pages": 1,
+      "listing_pages": 0,
+      "own_new_identities": 3,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 29,
+      "page_yield": 3,
+      "subtree_yield": 12,
+      "subtree_pages": 80,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 3,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 51,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/pages_sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 112,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 48,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/blog_sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 126,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/marketplace_sitemap.xml",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 129,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     },
+     {
+      "shape": "/about-us",
+      "fetched": 1,
+      "product_pages": 0,
+      "listing_pages": 0,
+      "own_new_identities": 0,
+      "new_listing_identities": 0,
+      "errors": 0,
+      "children_admitted": 0,
+      "page_yield": 0,
+      "subtree_yield": 0,
+      "subtree_pages": 1,
+      "policy_refused_children_seen": 0
+     }
+    ]
+   }
+  },
+  "explicit_prefix_counterfactuals": [
+   {
+    "site": "webscraper.io",
+    "prefix": "/test-sites/e-commerce/static",
+    "pages_saved": "92.5%",
+    "yield_lost": "0 of 12"
+   },
+   {
+    "site": "scrapeme.live",
+    "prefix": "/shop/",
+    "pages_saved": "71.3%",
+    "yield_lost": "0 of 16"
+   },
+   {
+    "site": "scrapeme.live",
+    "prefix": "/product-category/",
+    "pages_saved": "98.8%",
+    "yield_lost": "16 of 16"
+   },
+   {
+    "site": "ruggable.com",
+    "prefix": "/collections/",
+    "pages_saved": "5.0%",
+    "yield_lost": "9 of 9"
+   },
+   {
+    "site": "www.fashionnova.com",
+    "prefix": "/collections/",
+    "pages_saved": "50.6%",
+    "yield_lost": "360 of 1500"
+   },
+   {
+    "site": "www.otto.de",
+    "prefix": "/damen/",
+    "pages_saved": "45.0%",
+    "yield_lost": "458 of 1027"
+   },
+   {
+    "site": "us.puma.com",
+    "prefix": "/us/en/",
+    "pages_saved": "60.0%",
+    "yield_lost": "24 of 257"
+   }
+  ],
+  "finding": "Host-wide crawling wastes most of the budget when a catalogue lives in a subdirectory of a larger site (webscraper.io: 54 of 80 fetches were documentation and marketing pages; scrapeme.live: 47 of 80 forums, property and WordPress pages; puma.com: 42 of 80 HTML sitemap pages). The right prefix cannot be read from structure: a prefix that is the seed's own subtree saved 71-93% with no loss, while the wrong sibling prefix lost every product (scrapeme /product-category/, ruggable /collections/ because products sit under /products/). Page yield also misleads: navigation shapes with zero page yield (ruggable /collections/*: 64 pages, 0 yield) held the only path to the products (subtree yield 7).",
+  "decision": "IMPLEMENT only the explicit mechanism: ecdev.research.run include_path_prefixes (operator-stated, default whole host, seeds and robots-declared sitemaps always admitted, skipped links counted and exemplified in the run record, coverage labelled LIMITED_TO_OPERATOR_SCOPE). No learned or default scope: DELIBERATE_NO_CHANGE."
+ },
+ "other_findings": [
+  "allbirds.com collection page and one fashionnova.com page declare a body over the 4 MiB bound: 2 refusals in 640 attempted fetches. The bound is a safety limit; whether real catalogue pages need more is open (2 observations).",
+  "No page in these traces was policy-permitted, structurally empty and product-bearing after script execution that the benchmarks could identify; the dynamic-page conclusion is unchanged.",
+  "puma.com and otto.de returned listing items but no page-subject product within 80 pages: a crawl that stops at listings has shelf-price observations only."
+ ],
+ "limits": [
+  "8 catalogues attempted, 7 traced, 5 with any ECDEV-extractable products; two practice sites, five real stores",
+  "one crawl per site, 80 fetched pages each, one capture time; the baseline is a bounded trace, never the catalogue",
+  "identifier-bearing, enrichment and conflict components were zero everywhere, so they could not discriminate policies",
+  "replay skips a stopped region's later pages and their recorded descendants; a real policy would also re-prioritise the frontier, which replay cannot show",
+  "leave-one-out used a 2% bound chosen before looking at held-out results; the policy grid was fixed before any held-out evaluation"
+ ],
+ "harness_sources": {
+  "build_trace.py": "\"\"\"Build a replayable per-page yield trace from one stored ECDEV crawl run.\npython -I build_trace.py <engine root> <helper binary> <site> <out.json>\nReads the crawl database (fetch order, parent, depth, state) and each fetched page's stored raw capture,\nre-extracts it with ECDEV's own extractor (helper `trace`) and records, per fetched page, the components of\ninformation yield. Nothing is requested from the site.\"\"\"\nimport json, sqlite3, subprocess, sys, urllib.parse, re, collections\nroot, helper, site, out = sys.argv[1:5]\ndb = sqlite3.connect(f\"{root}/.ecdev-data/runtime/ecdev.sqlite\")\nurls = {r[0]: r for r in db.execute(\"select canonical_url,source_page,depth,state,payload,last_error,identity_hash from crawl_urls\")}\nby_hash = {r[6]: r[0] for r in urls.values()}\n# fetch order: terminal events in event order\norder = []\nseen = set()\nfor _id, h, state, reason in db.execute(\"select id,identity_hash,state,reason from crawl_events order by id\"):\n    if state in (\"HANDLED\", \"FAILED\") and h not in seen:\n        seen.add(h); order.append((h, state, reason))\nchildren = collections.defaultdict(list)\nfor u, r in urls.items():\n    if r[1]: children[r[1]].append(u)\nSCALAR_SKIP = {\"kind\", \"canonical_url\", \"price_status\", \"sales_status\", \"page_relation\", \"relation\", \"provenance\", \"price_source\", \"title_source\", \"variants\"}\nIDK = [\"gtin14\", \"gtin13\", \"gtin12\", \"gtin8\", \"gtin\", \"ean\", \"upc\", \"jan\", \"isbn\"]\ndef ident(p, page):\n    for k in IDK:\n        if p.get(k): return \"gtin:\" + str(p[k])\n    if p.get(\"mpn\"): return \"mpn:\" + str(p.get(\"brand\") or \"\") + \":\" + str(p[\"mpn\"])\n    host = urllib.parse.urlsplit(page).netloc\n    if p.get(\"sku\"): return \"sku:\" + host + \":\" + str(p[\"sku\"])\n    if p.get(\"canonical_url\"): return \"url:\" + p[\"canonical_url\"]\n    return \"title:\" + host + \":\" + str(p.get(\"title\"))\ndef shape(u):\n    s = urllib.parse.urlsplit(u)\n    segs = [x for x in s.path.split(\"/\") if x]\n    g = []\n    for x in segs:\n        if re.fullmatch(r\"\\d+\", x): g.append(\"#\")\n        elif re.fullmatch(r\"[0-9a-fA-F-]{8,}\", x): g.append(\"#\")\n        elif re.search(r\"\\d\", x) and len(x) > 6: g.append(\"~id\")\n        else: g.append(x if len(g) < 1 else \"*\")\n    q = sorted({k for k, _ in urllib.parse.parse_qsl(s.query)})\n    return \"/\" + \"/\".join(g) + (\"?\" + \"&\".join(q) if q else \"\")\nrows = []\ncum_ident = {}; cum_list = {}; cum_fields = set(); cum_assert = set(); vals = collections.defaultdict(set); conflicts = set()\nfor ordinal, (h, state, reason) in enumerate(order, 1):\n    u = by_hash[h]; r = urls[u]\n    row = {\"ordinal\": ordinal, \"url\": u, \"parent\": r[1], \"depth\": r[2], \"shape\": shape(u), \"state\": state, \"reason\": reason}\n    kids = children.get(u, [])\n    row[\"children_admitted\"] = len(kids)\n    row[\"children_refused_by_policy\"] = sum(1 for k in kids if (urls[k][5] or \"\").startswith(\"ROBOTS\"))\n    if state != \"HANDLED\":\n        row[\"fetched\"] = reason not in (\"ROBOTS_DENIED_OR_UNKNOWN\", \"ROBOTS_REFUSES_AI_AGENTS\")\n        rows.append(row); continue\n    row[\"fetched\"] = True\n    pl = json.loads(r[4]); cap = pl[\"capture\"]\n    ch = cap[\"result\"].get(\"content_hash\") or next((o.get(\"raw_hash\") for o in cap.get(\"observations\", []) if o.get(\"raw_hash\")), None)\n    import os\n    if not ch or not os.path.exists(f\"{root}/.ecdev-data/raw/{ch}.html\"):\n        row[\"role\"] = \"NO_RAW_CAPTURE\"; row[\"result_keys\"] = sorted(cap[\"result\"])[:8]; rows.append(row); continue\n    t = json.loads(subprocess.check_output([helper, \"trace\", f\"{root}/.ecdev-data/raw/{ch}.html\", \"text/html\", u]))\n    row[\"raw_capture_sha256\"] = ch\n    prods = t.get(\"products\", []) if t.get(\"ok\") else []\n    links = t.get(\"links\", []) if t.get(\"ok\") else []\n    own = [p for p in prods if (p.get(\"page_relation\") or {}).get(\"relation\", p.get(\"relation\")) in (\"PAGE_SUBJECT\", \"PAGE_SUBJECT_VARIANT\", \"NOT_STATED\", None)]\n    row[\"links_out\"] = len(set(links)); row[\"products_extracted\"] = len(prods); row[\"own_products\"] = len(own)\n    row[\"role\"] = \"PRODUCT\" if own else (\"LISTING\" if prods else \"OTHER\")\n    new_id = new_idb = enrich_fields = new_assert = new_conf = 0\n    touched = set()\n    for p in own:\n        i = ident(p, u)\n        is_new = i not in cum_ident\n        if is_new:\n            cum_ident[i] = {\"first\": ordinal, \"idb\": i.startswith((\"gtin:\", \"mpn:\"))}\n            new_id += 1; new_idb += cum_ident[i][\"idb\"]\n        touched.add(i)\n        for k, v in p.items():\n            if k in SCALAR_SKIP or v is None or isinstance(v, (dict, list)) or v == \"\": continue\n            if k not in (\"title\", \"brand\", \"price_minor\", \"currency\", \"availability\", \"sku\", \"mpn\", \"ean\", \"category\", \"color\", \"description\", \"image\", \"rating\", \"review_count\", \"seller\", \"weight_g\") and not k.startswith(\"gtin\"): continue\n            if (i, k) not in cum_fields:\n                cum_fields.add((i, k))\n                if not is_new: enrich_fields += 1\n            a = (i, k, json.dumps(v, sort_keys=True))\n            if a not in cum_assert:\n                cum_assert.add(a); new_assert += 1\n                vals[(i, k)].add(a[2])\n                if len(vals[(i, k)]) == 2: conflicts.add((i, k)); new_conf += 1\n    others = [p for p in prods if p not in own]\n    new_list = 0\n    for p in others:\n        i = ident(p, p.get(\"canonical_url\") or u)\n        if i not in cum_ident and i not in cum_list:\n            cum_list[i] = ordinal; new_list += 1\n    row[\"new_listing_identities\"] = new_list; row[\"cum_listing_identities\"] = len(cum_list)\n    row[\"new_identities\"] = new_id; row[\"new_identifier_bearing\"] = new_idb\n    row[\"new_fields_on_known\"] = enrich_fields; row[\"new_assertions\"] = new_assert; row[\"new_conflicts\"] = new_conf\n    row[\"enriched_known\"] = (not new_id) and (enrich_fields > 0)\n    row[\"cum_identities\"] = len(cum_ident); row[\"cum_fields\"] = len(cum_fields); row[\"cum_assertions\"] = len(cum_assert); row[\"cum_conflicts\"] = len(conflicts)\n    rows.append(row)\njson.dump({\"site\": site, \"pages\": rows, \"identities\": cum_ident}, open(out, \"w\"), indent=0)\nfetched = [r for r in rows if r.get(\"fetched\")]\nprint(site, \"fetched\", len(fetched), \"handled\", sum(r[\"state\"] == \"HANDLED\" for r in rows), \"identities\", len(cum_ident), \"roles\", dict(collections.Counter(r.get(\"role\") for r in rows if r[\"state\"] == \"HANDLED\")))\n",
+  "replay.py": "\"\"\"Offline replay of early-stop and path-scope policies on captured per-page yield traces.\npython -I replay.py <out.json> <trace.json>...\nNo network. The full bounded trace is the baseline, never the catalogue total.\"\"\"\nimport json, sys, collections, itertools\nout = sys.argv[1]\nT = {}\nfor f in sys.argv[2:]:\n    d = json.load(open(f)); T[d[\"site\"]] = d\ndef pages(d): return [r for r in d[\"pages\"] if r.get(\"fetched\")]\ndef low(r): return r.get(\"role\") is None or (r.get(\"new_identities\", 0) + r.get(\"new_fields_on_known\", 0) + r.get(\"new_listing_identities\", 0)) == 0\ndef totals(rows):\n    ids = set(); idb = 0; fields = 0; assertions = 0; conflicts = 0\n    return {\"identities\": sum(r.get(\"new_identities\", 0) for r in rows), \"listing_identities\": sum(r.get(\"new_listing_identities\", 0) for r in rows), \"identifier_bearing\": sum(r.get(\"new_identifier_bearing\", 0) for r in rows),\n            \"enrichment_fields\": sum(r.get(\"new_fields_on_known\", 0) for r in rows), \"assertions\": sum(r.get(\"new_assertions\", 0) for r in rows), \"conflicts\": sum(r.get(\"new_conflicts\", 0) for r in rows)}\ndef metrics(d, kept_ordinals):\n    P = pages(d); kept = [r for r in P if r[\"ordinal\"] in kept_ordinals]\n    full, got = totals(P), totals(kept)\n    n = len(P); k = len(kept)\n    last_q = P[int(n * 0.75):]\n    late_full = totals(last_q)[\"identities\"]; late_got = totals([r for r in last_q if r[\"ordinal\"] in kept_ordinals])[\"identities\"]\n    m = {\"pages\": n, \"pages_kept\": k, \"saved_pages\": n - k, \"saved_frac\": round((n - k) / n, 4) if n else 0.0}\n    for key in full:\n        m[key + \"_full\"] = full[key]; m[key + \"_kept\"] = got[key]\n        m[key + \"_missed_frac\"] = round(1 - got[key] / full[key], 4) if full[key] else None\n    m[\"late_identities_full\"] = late_full; m[\"late_identities_lost\"] = late_full - late_got\n    return m\ndef consec(d, N):\n    \"\"\"stop the whole crawl after N consecutive fetched pages with no new identity and no new field\"\"\"\n    kept = set(); run = 0\n    for r in pages(d):\n        kept.add(r[\"ordinal\"])\n        run = run + 1 if low(r) else 0\n        if run >= N: break\n    return kept\ndef window(d, W, tau):\n    \"\"\"stop when new identities in the last W fetched pages <= tau (after at least W pages)\"\"\"\n    kept = set(); hist = []\n    for r in pages(d):\n        kept.add(r[\"ordinal\"]); hist.append(r.get(\"new_identities\", 0) + r.get(\"new_listing_identities\", 0))\n        if len(hist) >= W and sum(hist[-W:]) <= tau: break\n    return kept\ndef region(d, N, minpages=0):\n    \"\"\"per path-shape: after N consecutive zero-yield pages in that shape, skip the shape's later pages and their descendants\"\"\"\n    P = pages(d); kept = set(); run = collections.Counter(); closed = set(); skipped_urls = set()\n    for r in P:\n        if r[\"shape\"] in closed or r[\"parent\"] in skipped_urls:\n            skipped_urls.add(r[\"url\"]); continue\n        kept.add(r[\"ordinal\"])\n        run[r[\"shape\"]] = run[r[\"shape\"]] + 1 if low(r) else 0\n        if run[r[\"shape\"]] >= N: closed.add(r[\"shape\"])\n    return kept\ndef both(d, N, W):\n    kept = set(); run = 0; hist = []\n    for r in pages(d):\n        kept.add(r[\"ordinal\"]); hist.append(r.get(\"new_identities\", 0) + r.get(\"new_listing_identities\", 0))\n        run = run + 1 if low(r) else 0\n        if run >= N and len(hist) >= W and sum(hist[-W:]) == 0: break\n    return kept\ndef subtree_adaptive(d, k):\n    \"\"\"per path-shape, online: close a shape once k of its pages were fetched and neither they nor any page\n    below them has yielded a new identity or field so far (subtree yield, not page yield); skip its later pages\n    and their descendants.\"\"\"\n    P = pages(d); kept = set(); fetched = collections.Counter(); sub = collections.Counter(); closed = set(); skipped = set()\n    shape_of = {r[\"url\"]: r[\"shape\"] for r in P}; parent = {r[\"url\"]: r[\"parent\"] for r in P}\n    for r in P:\n        if r[\"shape\"] in closed or r[\"parent\"] in skipped:\n            skipped.add(r[\"url\"]); continue\n        kept.add(r[\"ordinal\"]); fetched[r[\"shape\"]] += 1\n        y = r.get(\"new_identities\", 0) + r.get(\"new_fields_on_known\", 0) + r.get(\"new_listing_identities\", 0)\n        if y:\n            u = r[\"url\"]; seen = set()\n            while u is not None and u not in seen:\n                seen.add(u)\n                if u in shape_of: sub[shape_of[u]] += y\n                u = parent.get(u)\n        for sh in list(fetched):\n            if sh not in closed and fetched[sh] >= k and sub[sh] == 0: closed.add(sh)\n    return kept\nGRID = [(\"consecutive_low\", {\"N\": N}, lambda d, p: consec(d, p[\"N\"])) for N in (3, 5, 8, 12, 20, 30)] + \\\n       [(\"rolling_identity_window\", {\"W\": W, \"tau\": 0}, lambda d, p: window(d, p[\"W\"], p[\"tau\"])) for W in (10, 20, 30, 40)] + \\\n       [(\"region_consecutive_low\", {\"N\": N}, lambda d, p: region(d, p[\"N\"])) for N in (2, 3, 5, 8, 12)] + \\\n       [(\"region_subtree_adaptive\", {\"k\": k}, lambda d, p: subtree_adaptive(d, p[\"k\"])) for k in (2, 3, 5, 8, 12)] + \\\n       [(\"identity_and_enrichment_low\", {\"N\": N, \"W\": W}, lambda d, p: both(d, p[\"N\"], p[\"W\"])) for N in (5, 10) for W in (20, 40)]\nres = {}\nfor site, d in T.items():\n    res[site] = {\"trace\": {\"fetched_pages\": len(pages(d)), **totals(pages(d))}, \"policies\": []}\n    for name, params, fn in GRID:\n        kept = fn(d, params)\n        res[site][\"policies\"].append({\"policy\": name, \"params\": params, **metrics(d, kept)})\n# leave-one-catalogue-out: pick, on the other sites with identities, the policy with the largest mean saved fraction\n# whose worst missed-identity fraction is <= EPS; evaluate it on the held-out site.\nEPS = 0.02\ndef key(p): return (p[\"policy\"], json.dumps(p[\"params\"], sort_keys=True))\nloo = []\nsites = [s for s in T if res[s][\"trace\"][\"identities\"] + res[s][\"trace\"][\"listing_identities\"] > 0]\nfor held in T:\n    train = [s for s in sites if s != held]\n    cand = collections.defaultdict(list)\n    for s in train:\n        for p in res[s][\"policies\"]: cand[key(p)].append(p)\n    best = None\n    for k, ps in cand.items():\n        worst = max(max((p[\"identities_missed_frac\"] or 0), (p[\"listing_identities_missed_frac\"] or 0)) for p in ps)\n        mean_saved = sum(p[\"saved_frac\"] for p in ps) / len(ps)\n        if worst <= EPS and (best is None or mean_saved > best[0]): best = (mean_saved, k, worst)\n    row = {\"held_out\": held, \"train_sites\": train, \"eps_max_missed_identity_fraction\": EPS}\n    if best is None:\n        row[\"chosen\"] = None; row[\"note\"] = \"no policy kept missed identities within EPS on every training site\"\n    else:\n        k = best[1]; row[\"chosen\"] = {\"policy\": k[0], \"params\": json.loads(k[1]), \"train_mean_saved\": round(best[0], 4), \"train_worst_missed\": best[2]}\n        hp = next(p for p in res[held][\"policies\"] if key(p) == k)\n        row[\"held_out_result\"] = hp\n    loo.append(row)\njson.dump({\"sites\": res, \"leave_one_catalogue_out\": loo, \"grid_size\": len(GRID)}, open(out, \"w\"), indent=1)\nfor s, v in res.items(): print(s, v[\"trace\"])\nprint(\"--- no-lose policies per site (missed identities == 0 and saved>0):\")\nfor s, v in res.items():\n    ok = [(p[\"policy\"], p[\"params\"], p[\"saved_frac\"]) for p in v[\"policies\"] if (p[\"identities_missed_frac\"] in (0, 0.0, None)) and (p[\"listing_identities_missed_frac\"] in (0, 0.0, None)) and p[\"saved_frac\"] > 0]\n    print(s, len(ok), sorted(ok, key=lambda x: -x[2])[:3])\nprint(\"--- LOO:\")\nfor r in loo: print(r[\"held_out\"], r.get(\"chosen\"), (r.get(\"held_out_result\") or {}).get(\"saved_frac\"), (r.get(\"held_out_result\") or {}).get(\"identities_missed_frac\"))\n",
+  "scope.py": "\"\"\"Path/query-shape productivity and subtree yield on captured traces; offline exclusion-rule evaluation.\npython -I scope.py <out.json> <trace.json>...\"\"\"\nimport json, sys, collections\nout = sys.argv[1]\nT = {}\nfor f in sys.argv[2:]:\n    d = json.load(open(f)); T[d[\"site\"]] = d\ndef yld(r): return r.get(\"new_identities\", 0) + r.get(\"new_fields_on_known\", 0) + r.get(\"new_listing_identities\", 0)\nres = {}\nfor site, d in T.items():\n    P = [r for r in d[\"pages\"] if r.get(\"fetched\")]\n    allrows = d[\"pages\"]\n    parent = {r[\"url\"]: r[\"parent\"] for r in P}\n    shape = {r[\"url\"]: r[\"shape\"] for r in P}\n    g = collections.defaultdict(lambda: collections.Counter())\n    sub = collections.Counter(); subpages = collections.Counter()\n    for r in P:\n        s = r[\"shape\"]; g[s][\"fetched\"] += 1\n        g[s][\"product_pages\"] += r.get(\"role\") == \"PRODUCT\"; g[s][\"listing_pages\"] += r.get(\"role\") == \"LISTING\"\n        g[s][\"own_new_identities\"] += r.get(\"new_identities\", 0); g[s][\"new_listing_identities\"] += r.get(\"new_listing_identities\", 0)\n        g[s][\"errors\"] += r.get(\"state\") != \"HANDLED\"\n        g[s][\"children_admitted\"] += r.get(\"children_admitted\", 0)\n        y = yld(r)\n        # credit every ancestor shape (once per shape per page chain) with the yield: subtree yield\n        u = r[\"url\"]; seen = set(); chain = set()\n        while u is not None and u not in seen:\n            seen.add(u)\n            if u in shape: chain.add(shape[u])\n            u = parent.get(u)\n        for sh in chain:\n            sub[sh] += y; subpages[sh] += 1\n    refused = collections.Counter()\n    for r in allrows:\n        if r.get(\"reason\", \"\") and str(r[\"reason\"]).startswith(\"ROBOTS\"): refused[r[\"shape\"]] += 1\n    groups = []\n    for sh, c in g.items():\n        groups.append({\"shape\": sh, **c, \"page_yield\": c[\"own_new_identities\"] + c[\"new_listing_identities\"], \"subtree_yield\": sub[sh], \"subtree_pages\": subpages[sh], \"policy_refused_children_seen\": 0})\n    groups.sort(key=lambda x: -x[\"fetched\"])\n    # exclusion rule evaluation: exclude shape G (never fetch it nor anything beneath it)\n    rules = []\n    total_y = sum(yld(r) for r in P)\n    for gr in groups:\n        lost_pages = gr[\"subtree_pages\"]; lost_y = gr[\"subtree_yield\"]\n        rules.append({\"exclude_shape\": gr[\"shape\"], \"pages_not_fetched\": lost_pages, \"pages_frac\": round(lost_pages / len(P), 4), \"yield_lost\": lost_y, \"yield_lost_frac\": round(lost_y / total_y, 4) if total_y else None, \"page_yield_of_group\": gr[\"page_yield\"], \"subtree_yield_of_group\": gr[\"subtree_yield\"]})\n    res[site] = {\"fetched\": len(P), \"total_yield\": total_y, \"policy_refused_urls\": dict(refused), \"groups\": groups[:25], \"exclusion_rules\": [r for r in rules if r[\"pages_frac\"] >= 0.03][:25]}\njson.dump(res, open(out, \"w\"), indent=1)\nfor site, v in res.items():\n    print(\"==\", site, \"fetched\", v[\"fetched\"], \"total_yield\", v[\"total_yield\"])\n    for gr in v[\"groups\"][:8]:\n        print(\"  %-38s fetched=%-3d prod=%-3d list=%-3d pageY=%-5d subtreeY=%-5d\" % (gr[\"shape\"][:38], gr[\"fetched\"], gr[\"product_pages\"], gr[\"listing_pages\"], gr[\"page_yield\"], gr[\"subtree_yield\"]))\n",
+  "crawl.sh": "#!/bin/bash\n# sequential live catalogue crawls under ECDEV policy; one engine root per site\ncd /home/user/ECDEV\nexport ECDEV_EGRESS_PROXY=\"$HTTPS_PROXY\" ECDEV_EGRESS_CA_BUNDLE=/root/.ccr/ca-bundle.crt\nS=/tmp/claude-0/-home-user-ECDEV/c000280f-3151-5564-9330-dca84c370647/scratchpad/cat\nwhile read name url; do\n  rm -rf $S/$name; \n  target/release/ecdev_side live $S/$name ecdev.research.run \"{\\\"market\\\":\\\"PUBLIC_WEB\\\",\\\"query\\\":\\\"product\\\",\\\"sources\\\":[{\\\"url\\\":\\\"$url\\\"}],\\\"max_pages\\\":80,\\\"max_depth\\\":3,\\\"max_urls\\\":400,\\\"deadline_seconds\\\":1200,\\\"force_refresh\\\":true}\" > $S/$name.json 2>$S/$name.err\n  echo \"$name done $(date +%s)\" >> $S/progress.txt\ndone <<L\nbooks https://books.toscrape.com/\nwebscraper https://webscraper.io/test-sites/e-commerce/static\nscrapeme https://scrapeme.live/shop/\nallbirds https://www.allbirds.com/collections/mens-shoes\nL\necho ALLDONE >> $S/progress.txt\n"
+ },
+ "trace_files": "research/commerce/frontier-traces/<site>.json (per fetched page, with raw_capture_sha256)"
+}

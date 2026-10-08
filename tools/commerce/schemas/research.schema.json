@@ -235,6 +235,17 @@
           }
         }
       }
+    },
+    "include_path_prefixes": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512,
+        "pattern": "^/[^?#]*$"
+      },
+      "description": "Operator-stated crawl scope: only discovered URLs whose path starts with one of these prefixes are admitted to the frontier (seeds and robots-declared sitemaps always are). Empty: the whole host. Never inferred, because no structural rule found the right prefix on measured catalogues; the run reports the links it skipped."
     }
   },
   "required": [

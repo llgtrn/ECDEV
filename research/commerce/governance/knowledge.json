@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "fc488e6bf375926f26a74a43e55804be9ecc9973",
+  "assessed_parent_commit": "4ed801a98f32b378d83026967a4c397fbf79d8dc",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -19,13 +19,13 @@
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 41,
-    "benchmark_candidates": 33,
+    "benchmark_candidates": 32,
     "algorithm_candidates": 4,
     "reference_only": 59,
-    "study_complete_capabilities": 151,
+    "study_complete_capabilities": 152,
     "not_relevant_after_review": 29,
-    "research_questions_open": 78,
-    "knowledge_coverage_ratio": 0.753943
+    "research_questions_open": 77,
+    "knowledge_coverage_ratio": 0.757098
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 40,
@@ -335,8 +335,7 @@
         "scrapy.meta-refresh-redirect STUDY_CANDIDATE(how many store and listing pages redirect only by meta refresh, which ECDEV reads as a final page with no products)",
         "scrapy.autothrottle BENCHMARK_CANDIDATE(does a latency-derived per-origin interval beat the fixed 750 ms floor, measured as origin response latency under ECDEV's own request pattern over a time series)",
         "scrapy.heuristic-freshness BENCHMARK_CANDIDATE(does a Last-Modified heuristic cut refetches of rarely changing pages without serving a stale commerce fact, measured against the change rate ECDEV's own monitor observes)",
-        "scrapy.decompression ALGORITHM_CANDIDATE(a bounded native inflate for the other content codings and for transfer compression: whether requesting gzip on page fetches saves enough bytes and time on real pages to justify sending Accept-Encoding, with the decoded size capped and the stored capture's hash defined (decoded bytes or received bytes))",
-        "scrapy.close-conditions BENCHMARK_CANDIDATE(does stopping a crawl after N pages that surface no product save requests without losing products, on recorded crawls of real store sites? One live catalogue trace (research/commerce/crawl-budget-trace.json) found a different waste first: 27% of the page budget went to robots-denied URLs that made no request, now refunded (+31% pages fetched on the same budget); yield per page on that site was not flat enough to name a stopping point, so the question needs traces from several catalogues)"
+        "scrapy.decompression ALGORITHM_CANDIDATE(a bounded native inflate for the other content codings and for transfer compression: whether requesting gzip on page fetches saves enough bytes and time on real pages to justify sending Accept-Encoding, with the decoded size capped and the stored capture's hash defined (decoded bytes or received bytes))"
       ],
       "resolved": [
         "scrapy.request-fingerprint STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV and Scrapy merge host case, scheme case, dot segments, an empty path, fragments, escaped unreserved letters and escape case, and keep path case, parameter values and names apart. They differ in three named ways: ECDEV merges an explicit default port (Scrapy fetches ':443' and the bare URL as two requests); query order and a bare trailing '?' are distinct by default in ECDEV and merged by Scrapy; tracking parameters are never removed by Scrapy and only by ECDEV policy.)",
@@ -355,10 +354,11 @@
         "scrapy.response-status-handling STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV keeps the failure as evidence (a 404 and a robots refusal are different findings); live survey of 36 hosts recorded 404, 204 and refusals by name.)",
         "scrapy.download-size-and-time-limits STUDY_COMPLETE[INDEPENDENT_NATIVE](Same two-stage check, much tighter bounds.)",
         "scrapy.link-extraction STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](On 7 real pages ECDEV and Scrapy agree except where recorded: Scrapy's extension filter would drop 26 same-host links, all Wikipedia 'File:*.jpg' description pages that are HTML, so ECDEV's content-type check after fetch is the safer rule; <area> and <base> occurred in 0 of 57 sampled pages.)",
-        "scrapy.offsite-scope STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Of 1,740 real links 59 (3.4%) go to another host of the same registrable domain, almost all Wikipedia language editions and bbc.com help and shop sites: different sites in practice, so exact-host scope is a defensible default.)",
+        "scrapy.offsite-scope STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Of 1,740 real links 59 (3.4%) go to another host of the same registrable domain, almost all Wikipedia language editions and bbc.com help and shop sites: different sites in practice, so exact-host scope is a defensible default. Path scope was measured on 7 live catalogue traces (research/commerce/frontier-trace-benchmark.json): the right prefix cannot be read from structure (the seed's own subtree saved 71-93% with no loss, a sibling prefix lost every product), so ECDEV adds only an explicit operator scope, include_path_prefixes on ecdev.research.run, and learns or defaults nothing)",
         "scrapy.depth-priority-and-url-length STUDY_COMPLETE[INDEPENDENT_NATIVE](Measured on 2,611 page links and 646 post URLs the longest was 247 characters, so the bound limits abuse, never real links.)",
         "scrapy.sitemap-reading STUDY_COMPLETE[INDEPENDENT_NATIVE](Gap closed: compressed sitemaps were refused outright and 6 of 178 sites with sitemaps publish only those. Differences kept: no recover-mode XML, no relative locations, no alternates.)",
         "scrapy.charset-decoding STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Settled earlier by research/commerce/charset-benchmark.json: 44 of 48 pages on 19 Japanese retailers decoded; the 4 refusals were one stub with no product data.)",
+        "scrapy.close-conditions STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV does not stop a crawl early on low yield. Measured on 7 live catalogue traces (research/commerce/frontier-trace-benchmark.json, 24 policies, leave-one-catalogue-out): zero-yield stretches of 68, 45, 25, 23 and 17 fetches preceded further yield on five catalogues, so no stopping rule is both useful and safe; the one rule that passed training lost 78% of the identities on its held-out site. Earlier finding kept: 27% of one crawl's page budget went to robots-denied URLs that made no request, now refunded)",
         "scrapy.download-latency-telemetry STUDY_COMPLETE[INDEPENDENT_NATIVE](Observability the adaptive-delay question needs; live: 12 origins measured.)",
         "scrapy.shutdown-and-cancellation STUDY_COMPLETE[INDEPENDENT_NATIVE](Same intent; ECDEV's cancellation is a persisted state.)",
         "scrapy.ssrf-and-private-address-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](A deliberate and proven divergence in ECDEV's favour for a crawler fed URLs from the open web.)"
