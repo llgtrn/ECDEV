@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "1598b18d05bf161044f00db071eed5024626d581",
+  "assessed_parent_commit": "e97b0160999f127ca0339f6c4804b52a7978a9fc",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,28 +14,28 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 299,
-    "semantic_censused_capabilities": 299,
+    "known_donor_capabilities": 308,
+    "semantic_censused_capabilities": 308,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 39,
+    "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 57,
-    "study_complete_capabilities": 141,
+    "reference_only": 59,
+    "study_complete_capabilities": 147,
     "not_relevant_after_review": 28,
-    "research_questions_open": 73,
-    "knowledge_coverage_ratio": 0.755853
+    "research_questions_open": 74,
+    "knowledge_coverage_ratio": 0.75974
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 45,
+    "donors_knowledge_unreviewed": 44,
     "donors_structural_census": 0,
     "donors_semantic_census": 2,
-    "donors_active_study": 18,
+    "donors_active_study": 19,
     "donors_study_complete": 3,
-    "donors_structurally_censused": 23,
+    "donors_structurally_censused": 24,
     "donors_semantically_censused": 15,
-    "donors_with_open_candidates": 18,
+    "donors_with_open_candidates": 19,
     "donors_with_open_research": 65
   },
   "denominators": {
@@ -132,9 +132,9 @@
     },
     {
       "donor": "coaxon--amazon-mcp",
-      "runtime": "DISCOVERED",
-      "effective": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "REGISTERED",
+      "effective": "REGISTERED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -142,8 +142,19 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
-      "resolved": []
+      "open": [
+        "amazon-mcp.report-lifecycle STUDY_CANDIDATE(If a seller-side report read is ever enabled, the shape is create, poll, resolve document, download, decompress. The three weaknesses above are the specification of what to do differently: bound the download, bound the inflate, decode strictly. Needs a credentialed seller account to test and the restricted-domain decision.)"
+      ],
+      "resolved": [
+        "amazon-mcp.rate-limit-pacing STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The donor hard-codes category rates from documentation at one point in time; ECDEV follows the rate the API reports per operation and per response, which also covers an operation absent from the table. Divergence is deliberate: a constant table goes stale, a reported limit cannot.)",
+        "amazon-mcp.429-retry-backoff STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Pinned on 20 header values run through the donor handler: it accepts \"+7\", \"-1\", \"1.5\", \"1e3\", \"inf\", \"nan\", \"\" (waits 1 s) and 99999999999999999999 (1e+20 s), and raises ValueError on all three HTTP-date forms, so a legal 429 turns into an unhandled exception. ECDEV waits on the valid grammar only and never guesses. Not adopted: automatic retry with doubling backoff; ECDEV surfaces the not-before time to the caller instead of sleeping inside a tool call.)",
+        "amazon-mcp.response-cache-ttl STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The donor TTLs are product choices with no stated basis and no revalidation; ECDEV takes freshness from the origin and keeps the evidence of when a value was observed. Nothing to absorb.)",
+        "amazon-mcp.finance-event-accounting STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Float money, abs() on fees (a fee reversal becomes a charge) and silent classification of unknown fee types are exactly what ECDEV types out. Fee-type vocabulary (Commission, ReferralFee, FBAPerUnitFulfillmentFee, FBAFees, FulfillmentFee, FBAWeightBasedFee) is noted as reference for the day a seller-side financial read is enabled.)",
+        "amazon-mcp.pagination-tokens STUDY_COMPLETE[INDEPENDENT_NATIVE](Single-page pass-through; ECDEV already walks cursors under a budget and reports coverage. Nothing further.)",
+        "amazon-mcp.lwa-token-cache STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The 300 s early-refresh margin is the same idea ECDEV applies. Writing the access token to a file is refused by ECDEV's secret boundary.)",
+        "amazon-mcp.seller-operations-analytics REFERENCE_ONLY(Account-bound seller operations, outside ECDEV's research scope. Listed so the corpus is known, not read in depth.)",
+        "amazon-mcp.ads-tiktok-meli-clients REFERENCE_ONLY(Other platforms' authenticated APIs; not reviewed. Mercado Libre and TikTok shop data would be new sources if ever wanted.)"
+      ]
     },
     {
       "donor": "aws-samples--sample-amazon-spapi-mcp-server",

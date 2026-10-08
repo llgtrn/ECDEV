@@ -1,0 +1,108 @@
+{
+ "donor": "coaxon/amazon-mcp",
+ "commit": "1dacb20bb4070bfedcf6cf214377cb46fc81a1ed",
+ "httpx": "0.28.1",
+ "function": "amazon_mcp.clients.http_retry.raise_on_429",
+ "cases": [
+  {
+   "header": "0",
+   "outcome": "WAIT",
+   "seconds": "0.0"
+  },
+  {
+   "header": "1",
+   "outcome": "WAIT",
+   "seconds": "1.0"
+  },
+  {
+   "header": "7",
+   "outcome": "WAIT",
+   "seconds": "7.0"
+  },
+  {
+   "header": "120",
+   "outcome": "WAIT",
+   "seconds": "120.0"
+  },
+  {
+   "header": "86400",
+   "outcome": "WAIT",
+   "seconds": "86400.0"
+  },
+  {
+   "header": "1.5",
+   "outcome": "WAIT",
+   "seconds": "1.5"
+  },
+  {
+   "header": " 7 ",
+   "outcome": "WAIT",
+   "seconds": "7.0"
+  },
+  {
+   "header": "+7",
+   "outcome": "WAIT",
+   "seconds": "7.0"
+  },
+  {
+   "header": "-1",
+   "outcome": "WAIT",
+   "seconds": "-1.0"
+  },
+  {
+   "header": "1e3",
+   "outcome": "WAIT",
+   "seconds": "1000.0"
+  },
+  {
+   "header": "inf",
+   "outcome": "WAIT",
+   "seconds": "inf"
+  },
+  {
+   "header": "nan",
+   "outcome": "WAIT",
+   "seconds": "nan"
+  },
+  {
+   "header": "",
+   "outcome": "WAIT",
+   "seconds": "1.0"
+  },
+  {
+   "header": "abc",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  },
+  {
+   "header": "7s",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  },
+  {
+   "header": "Wed, 21 Oct 2015 07:28:00 GMT",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  },
+  {
+   "header": "Wednesday, 21-Oct-15 07:28:00 GMT",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  },
+  {
+   "header": "Wed Oct 21 07:28:00 2015",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  },
+  {
+   "header": "99999999999999999999",
+   "outcome": "WAIT",
+   "seconds": "1e+20"
+  },
+  {
+   "header": "0x10",
+   "outcome": "EXCEPTION",
+   "type": "ValueError"
+  }
+ ]
+}

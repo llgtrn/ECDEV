@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "1598b18d05bf161044f00db071eed5024626d581",
+  "assessed_parent_commit": "e97b0160999f127ca0339f6c4804b52a7978a9fc",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -8,10 +8,10 @@
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
     "CUTOVER": 3,
-    "DISCOVERED": 13,
+    "DISCOVERED": 12,
     "EXTINCT": 2,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 45
+    "REGISTERED": 46
   },
   "extinct": [
     "scrapinghub--price-parser",
@@ -559,12 +559,12 @@
     },
     {
       "donor": "coaxon--amazon-mcp",
-      "claimed": "DISCOVERED",
-      "effective": "DISCOVERED",
+      "claimed": "REGISTERED",
+      "effective": "REGISTERED",
       "exception": "",
-      "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
-      "runtime": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "stopped_by": "CENSUSED: not decomposed into any required capability",
+      "runtime": "REGISTERED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -573,7 +573,71 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "amazon-mcp.rate-limit-pacing",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The donor hard-codes category rates from documentation at one point in time; ECDEV follows the rate the API reports per operation and per response, which also covers an operation absent from the table. Divergence is deliberate: a constant table goes stale, a reported limit cannot.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.429-retry-backoff",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Pinned on 20 header values run through the donor handler: it accepts \"+7\", \"-1\", \"1.5\", \"1e3\", \"inf\", \"nan\", \"\" (waits 1 s) and 99999999999999999999 (1e+20 s), and raises ValueError on all three HTTP-date forms, so a legal 429 turns into an unhandled exception. ECDEV waits on the valid grammar only and never guesses. Not adopted: automatic retry with doubling backoff; ECDEV surfaces the not-before time to the caller instead of sleeping inside a tool call.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.response-cache-ttl",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The donor TTLs are product choices with no stated basis and no revalidation; ECDEV takes freshness from the origin and keeps the evidence of when a value was observed. Nothing to absorb.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.finance-event-accounting",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Float money, abs() on fees (a fee reversal becomes a charge) and silent classification of unknown fee types are exactly what ECDEV types out. Fee-type vocabulary (Commission, ReferralFee, FBAPerUnitFulfillmentFee, FBAFees, FulfillmentFee, FBAWeightBasedFee) is noted as reference for the day a seller-side financial read is enabled.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.report-lifecycle",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(If a seller-side report read is ever enabled, the shape is create, poll, resolve document, download, decompress. The three weaknesses above are the specification of what to do differently: bound the download, bound the inflate, decode strictly. Needs a credentialed seller account to test and the restricted-domain decision.)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "amazon-mcp.pagination-tokens",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](Single-page pass-through; ECDEV already walks cursors under a budget and reports coverage. Nothing further.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.lwa-token-cache",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The 300 s early-refresh margin is the same idea ECDEV applies. Writing the access token to a file is refused by ECDEV's secret boundary.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.seller-operations-analytics",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Account-bound seller operations, outside ECDEV's research scope. Listed so the corpus is known, not read in depth.)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "amazon-mcp.ads-tiktok-meli-clients",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(Other platforms' authenticated APIs; not reviewed. Mercado Libre and TikTok shop data would be new sources if ever wanted.)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -582,8 +646,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: IMPORT PYTHON amazon-mcp in tools/commerce/amazon_mcp_retry_after_oracle.py"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -632,13 +696,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 9 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "1 of 9 declared capabilities still have open research: amazon-mcp.report-lifecycle (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -647,8 +711,8 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": true,
-          "detail": "no node consumes, calls, controls or shims the donor"
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
         }
       ]
     },
@@ -3200,8 +3264,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: IMPORT PYTHON httpx in tools/commerce/amazon_mcp_retry_after_oracle.py"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -3265,8 +3329,8 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": true,
-          "detail": "no node consumes, calls, controls or shims the donor"
+          "pass": false,
+          "detail": "still depended on by: tools.commerce (uses it)"
         }
       ]
     },
@@ -5905,7 +5969,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "68 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "69 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
