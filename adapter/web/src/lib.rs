@@ -1,6 +1,7 @@
 //! Native public-source research: bounded fetching, policy, DOM/JSON-LD and hashing.
 pub mod amazon;
 pub mod commerce;
+pub mod currency;
 pub mod document;
 pub mod gzip;
 pub mod microdata;
@@ -311,11 +312,7 @@ fn money(value: &Value, currency: &str) -> Option<i64> {
     } else {
         raw
     };
-    let digits = match currency {
-        "JPY" => 0,
-        "USD" | "EUR" | "GBP" => 2,
-        _ => return None,
-    };
+    let digits = currency::minor_unit_digits(currency)?;
     let (whole, frac) = s.split_once('.').unwrap_or((&s, ""));
     let frac = frac.trim_end_matches('0');
     if whole.is_empty()
@@ -1151,6 +1148,20 @@ mod tests {
         assert_eq!(money(&json!(550.0), "JPY"), Some(550));
         assert_eq!(money(&json!("550.00"), "JPY"), Some(550));
         assert_eq!(money(&json!("550.50"), "JPY"), None);
+    }
+    #[test]
+    fn a_stated_iso_currency_converts_by_its_own_minor_units() {
+        // Live: Uniqlo AU states "59.9" AUD and Sonos NO states NOK; both were left unknown.
+        assert_eq!(money(&json!("59.9"), "AUD"), Some(5990));
+        assert_eq!(money(&json!("1299"), "NOK"), Some(129900));
+        assert_eq!(money(&json!(12.5), "CHF"), Some(1250));
+        assert_eq!(money(&json!("1.234"), "KWD"), Some(1234));
+        assert_eq!(money(&json!("1.2345"), "KWD"), None);
+        assert_eq!(money(&json!("59.999"), "AUD"), None);
+        // Not a currency ECDEV can convert: unknown stays unknown.
+        for c in ["", "aud", "$", "XAU", "ZZZ"] {
+            assert_eq!(money(&json!("59.9"), c), None, "{c}");
+        }
     }
     #[test]
     fn json_numeric_prices_preserve_source_precision() {
