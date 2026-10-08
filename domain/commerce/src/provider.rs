@@ -268,6 +268,24 @@ impl AcquireError {
                 .and_then(|header| retry_after_not_before(header, received_at_ms)),
         }
     }
+    /// A refusal that still states how many requests were made before it (a robots.txt fetch
+    /// counts; a robots.txt answered from the cache does not).
+    pub fn refused(reason: &str, requests: u64) -> Self {
+        Self {
+            reason: reason.to_owned(),
+            http_status: None,
+            request_count: Some(requests),
+            retry_after_header: None,
+            retry_not_before_ms: None,
+        }
+    }
+    /// A refusal decided from policy alone, before any request to the page or its host:
+    /// it should not spend acquisition budget.
+    pub fn spent_no_request(&self) -> bool {
+        self.request_count == Some(0)
+            && (self.reason == "ROBOTS_DENIED_OR_UNKNOWN"
+                || self.reason == "ROBOTS_REFUSES_AI_AGENTS")
+    }
     pub fn retry_delay_ms(&self, now_ms: i64) -> Option<i64> {
         self.retry_not_before_ms
             .map(|time| time.saturating_sub(now_ms).max(0))

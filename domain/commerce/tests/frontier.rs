@@ -515,3 +515,49 @@ fn a_url_past_the_length_bound_has_no_identity() {
     let ok = format!("https://shop.example/p?q={}", "a".repeat(2000));
     assert!(canonicalize(&ok, None, &UrlPolicy::default(), 0).is_ok());
 }
+
+#[test]
+fn a_policy_refusal_before_any_request_does_not_spend_the_page_budget() {
+    let p = path();
+    let mut f = Frontier::open(&p).unwrap();
+    let mut config = limits();
+    config.max_pages = 2;
+    config.origin_interval_ms = 5_000;
+    f.create_run("a", &config).unwrap();
+    for u in [
+        "denied-1", "denied-2", "denied-3", "kept-1", "kept-2", "kept-3",
+    ] {
+        f.enqueue(
+            "a",
+            &url(&format!("https://shop.example/{u}")),
+            0,
+            if u.starts_with("denied") { 9 } else { 1 },
+        )
+        .unwrap();
+    }
+    // Three refused-by-policy attempts in a row: none counts, none delays the origin.
+    for t in [10, 11, 12] {
+        let l = f.lease("a", t).unwrap().unwrap();
+        assert!(l.canonical_url.contains("denied"));
+        f.fail_unspent(&l, t, "ROBOTS_DENIED_OR_UNKNOWN").unwrap();
+    }
+    let status = f.status("a").unwrap();
+    assert_eq!(status["acquisition_attempts"], 0);
+    assert_eq!(status["states"]["FAILED"], 3);
+    // Real acquisitions still stop at the budget, and still pace the origin.
+    let a = f.lease("a", 13).unwrap().unwrap();
+    f.complete(&a, 14, &json!({})).unwrap();
+    assert!(
+        f.lease("a", 15).unwrap().is_none(),
+        "origin interval applies to a real attempt"
+    );
+    let b = f.lease("a", 5_020).unwrap().unwrap();
+    f.complete(&b, 5_021, &json!({})).unwrap();
+    assert!(
+        f.lease("a", 20_000).unwrap().is_none(),
+        "budget of two real attempts"
+    );
+    assert_eq!(f.status("a").unwrap()["acquisition_attempts"], 2);
+    drop(f);
+    fs::remove_file(p).unwrap();
+}

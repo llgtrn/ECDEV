@@ -1,0 +1,60 @@
+{
+ "benchmark": "crawl-budget-yield: how much of a page budget buys evidence, measured on one live catalogue crawl",
+ "captured_on": "2026-10-08",
+ "site": "scrapeme.live/shop (a public scraping-practice WooCommerce site), seed https://scrapeme.live/shop/, depth 2, max_pages 60, max_urls 120, ECDEV robots and pacing, query pokemon, force_refresh",
+ "yield_definition": "pages_with_snapshot: leased URLs that were fetched and extracted; candidates: product candidates the run produced. Both are counts of what the budget bought, not a claim about completeness of the catalogue.",
+ "finding": "In the first run 16 of 60 budgeted attempts (27%) were robots-denied add-to-cart URLs (?add-to-cart=N) answered from the cached robots.txt: no request was made, yet each used a page-budget unit and the origin interval. 5 more went to feed URLs that returned a non-HTML content type (UNSUPPORTED_CONTENT_TYPE).",
+ "fix": "A refusal decided by policy before any request no longer spends the page budget or paces the origin (Frontier::fail_unspent, AcquireError::spent_no_request; the adapter also now reports the request count on robots refusals). Real attempts, retries and fetches that failed still count.",
+ "runs": {
+  "before": {
+   "max_pages": 60,
+   "acquisition_attempts": 60,
+   "states": {
+    "CANCELLED": 0,
+    "DISCOVERED": 0,
+    "FAILED": 18,
+    "HANDLED": 42,
+    "LEASED": 0,
+    "PENDING": 60,
+    "RETRYABLE": 0
+   },
+   "network_requests": 43,
+   "pages_with_snapshot": 42,
+   "candidates": 16,
+   "failure_reasons": {
+    "UNSUPPORTED_CONTENT_TYPE": 2,
+    "ROBOTS_DENIED_OR_UNKNOWN": 16
+   },
+   "status": "PARTIAL"
+  },
+  "after": {
+   "max_pages": 60,
+   "acquisition_attempts": 60,
+   "states": {
+    "CANCELLED": 0,
+    "DISCOVERED": 0,
+    "FAILED": 33,
+    "HANDLED": 55,
+    "LEASED": 0,
+    "PENDING": 32,
+    "RETRYABLE": 0
+   },
+   "network_requests": 56,
+   "pages_with_snapshot": 55,
+   "candidates": 19,
+   "failure_reasons": {
+    "UNSUPPORTED_CONTENT_TYPE": 5,
+    "ROBOTS_DENIED_OR_UNKNOWN": 28
+   },
+   "status": "PARTIAL"
+  }
+ },
+ "effect": "same seed and limits: pages fetched and extracted 42 -> 55 (+31%), candidates 16 -> 19, network requests 43 -> 56 within the same budget of 60",
+ "yield_based_early_stopping": "not adopted and not decidable on this trace: with 55 pages the run was still PARTIAL (32 URLs pending); yield per page was not flat enough to define a stopping point, and one practice site is not a defensible operating point. Remains an open BENCHMARK_CANDIDATE needing traces from several real catalogues.",
+ "limits": [
+  "one site, one run before and one after; live pages and pacing vary run to run",
+  "a practice site whose robots.txt denies add-to-cart is the cleanest case; the size of the effect on other catalogues is unmeasured, though add-to-cart, sort, filter and login links are common",
+  "the before/after is a demonstration on the sample that exposed the defect, not independent proof",
+  "5 of 60 attempts in the second run still went to feed URLs; pre-filtering by extension was not adopted (an earlier measurement on Wikipedia showed extension filters would drop real HTML pages)"
+ ]
+}

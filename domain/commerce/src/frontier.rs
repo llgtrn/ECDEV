@@ -387,6 +387,35 @@ impl Frontier {
             },
         )
     }
+    /// End a lease as FAILED when the attempt was refused by policy before any request was
+    /// made (a robots rule answered from the cache). The attempt does not spend the page
+    /// budget and does not delay the origin: live, 16 of 60 attempts (27%) on one catalogue
+    /// were robots-denied add-to-cart URLs that cost no request but used the budget.
+    pub fn fail_unspent(&mut self, lease: &Lease, now: i64, reason: &str) -> Result<(), String> {
+        self.transition(
+            lease,
+            now,
+            Transition {
+                state: "FAILED",
+                next: now,
+                payload: None,
+                reason: Some(reason),
+                priority: None,
+                origin_not_before: None,
+            },
+        )?;
+        let tx = self
+            .db
+            .transaction_with_behavior(TransactionBehavior::Immediate)
+            .map_err(err)?;
+        tx.execute(
+            "UPDATE crawl_runs SET starts=MAX(starts-1,0) WHERE id=?1",
+            [&lease.run_id],
+        )
+        .map_err(err)?;
+        tx.execute("UPDATE crawl_origins SET next_at=MIN(next_at,?3) WHERE run_id=?1 AND origin=(SELECT origin FROM crawl_urls WHERE run_id=?1 AND identity_hash=?2)", params![lease.run_id, lease.identity_hash, now]).map_err(err)?;
+        tx.commit().map_err(err)
+    }
     /// Release a live lease for retry without delay; an explicit priority can promote it.
     /// Lease fencing, acquisition budget and retry exhaustion still apply.
     /// `fail` remains the route for exponential backoff and Retry-After.

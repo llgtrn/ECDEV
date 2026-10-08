@@ -779,6 +779,10 @@ impl Engine {
                             if let Some(lease) = &lease {
                                 let retryable = retryable_failure(failure.http_status, reason);
                                 let failed_at = (timestamp() * 1000) as i64;
+                                if failure.spent_no_request() {
+                                    frontier.fail_unspent(lease, failed_at, reason)?;
+                                    continue;
+                                }
                                 frontier.fail(
                                     lease,
                                     failed_at,

@@ -811,11 +811,11 @@ impl Provider for Web {
                     ));
                 }
                 if rs != 404 && (rs != 200 || !decision.allowed) {
-                    return Err("ROBOTS_DENIED_OR_UNKNOWN".into());
+                    return Err(AcquireError::refused("ROBOTS_DENIED_OR_UNKNOWN", requests));
                 }
                 // A site refusing AI agents (or AI input) for this path is honoured too.
                 if rs == 200 && robots::ai_agent_refusal(policy, url.as_str()).is_some() {
-                    return Err("ROBOTS_REFUSES_AI_AGENTS".into());
+                    return Err(AcquireError::refused("ROBOTS_REFUSES_AI_AGENTS", requests));
                 }
                 let delay = if rs == 404 {
                     0.0
@@ -823,7 +823,10 @@ impl Provider for Web {
                     decision.crawl_delay_seconds.unwrap_or(0.0)
                 };
                 if delay > 20.0 {
-                    return Err("ROBOTS_DELAY_EXCEEDS_FETCH_BUDGET".into());
+                    return Err(AcquireError::refused(
+                        "ROBOTS_DELAY_EXCEEDS_FETCH_BUDGET",
+                        requests,
+                    ));
                 }
                 let interval = Duration::from_secs_f64(delay).max(Duration::from_millis(750));
                 let validators = validators_for(&r.query["conditional"], &url, hop == 0);

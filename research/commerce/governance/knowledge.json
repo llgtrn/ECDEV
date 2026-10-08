@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "28e557515b06f05959b94f0daba800a67541fbb3",
+  "assessed_parent_commit": "12ba20497f8e6b8ac33628785c1e046bc9896c93",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -336,7 +336,7 @@
         "scrapy.autothrottle BENCHMARK_CANDIDATE(does a latency-derived per-origin interval beat the fixed 750 ms floor, measured as origin response latency under ECDEV's own request pattern over a time series)",
         "scrapy.heuristic-freshness BENCHMARK_CANDIDATE(does a Last-Modified heuristic cut refetches of rarely changing pages without serving a stale commerce fact, measured against the change rate ECDEV's own monitor observes)",
         "scrapy.decompression ALGORITHM_CANDIDATE(a bounded native inflate for the other content codings and for transfer compression: whether requesting gzip on page fetches saves enough bytes and time on real pages to justify sending Accept-Encoding, with the decoded size capped and the stored capture's hash defined (decoded bytes or received bytes))",
-        "scrapy.close-conditions BENCHMARK_CANDIDATE(does stopping a crawl after N pages that surface no product save requests without losing products, on recorded crawls of real store sites)"
+        "scrapy.close-conditions BENCHMARK_CANDIDATE(does stopping a crawl after N pages that surface no product save requests without losing products, on recorded crawls of real store sites? One live catalogue trace (research/commerce/crawl-budget-trace.json) found a different waste first: 27% of the page budget went to robots-denied URLs that made no request, now refunded (+31% pages fetched on the same budget); yield per page on that site was not flat enough to name a stopping point, so the question needs traces from several catalogues)"
       ],
       "resolved": [
         "scrapy.request-fingerprint STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV and Scrapy merge host case, scheme case, dot segments, an empty path, fragments, escaped unreserved letters and escape case, and keep path case, parameter values and names apart. They differ in three named ways: ECDEV merges an explicit default port (Scrapy fetches ':443' and the bare URL as two requests); query order and a bare trailing '?' are distinct by default in ECDEV and merged by Scrapy; tracking parameters are never removed by Scrapy and only by ECDEV policy.)",
