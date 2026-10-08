@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e97b0160999f127ca0339f6c4804b52a7978a9fc",
+  "assessed_parent_commit": "4fd213e3cab30023042ca6261af303fd86eef12a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,28 +14,28 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 308,
-    "semantic_censused_capabilities": 308,
+    "known_donor_capabilities": 317,
+    "semantic_censused_capabilities": 317,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 40,
-    "benchmark_candidates": 30,
+    "study_candidates": 41,
+    "benchmark_candidates": 33,
     "algorithm_candidates": 4,
     "reference_only": 59,
-    "study_complete_capabilities": 147,
-    "not_relevant_after_review": 28,
-    "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.75974
+    "study_complete_capabilities": 151,
+    "not_relevant_after_review": 29,
+    "research_questions_open": 78,
+    "knowledge_coverage_ratio": 0.753943
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 44,
+    "donors_knowledge_unreviewed": 40,
     "donors_structural_census": 0,
-    "donors_semantic_census": 2,
-    "donors_active_study": 19,
+    "donors_semantic_census": 3,
+    "donors_active_study": 22,
     "donors_study_complete": 3,
-    "donors_structurally_censused": 24,
+    "donors_structurally_censused": 28,
     "donors_semantically_censused": 15,
-    "donors_with_open_candidates": 19,
+    "donors_with_open_candidates": 22,
     "donors_with_open_research": 65
   },
   "denominators": {
@@ -48,7 +48,7 @@
       "donor": "mrkooblu--semrush-mcp",
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -56,8 +56,12 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
-      "resolved": []
+      "open": [
+        "semrush.keyword-metric-columns BENCHMARK_CANDIDATE(Volume plus a twelve-month trend vector per phrase is a labelled demand series; see junglescout.keyword-demand-api for the question and its blocker.)"
+      ],
+      "resolved": [
+        "semrush.request-pacing-retry-cache STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The retry set (429, 500, 502, 503, 504) sits inside what ECDEV retries and agrees with Scrapy's list on those codes. Weaknesses: delays are fixed at 2, 4 and 6 s and ignore Retry-After, and the API key is a query parameter that is also part of the cache key. Nothing to absorb.)"
+      ]
     },
     {
       "donor": "purahmanian--keepa-mcp",
@@ -89,7 +93,7 @@
       "donor": "purahmanian--junglescout-mcp",
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -97,14 +101,16 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
+      "open": [
+        "junglescout.keyword-demand-api BENCHMARK_CANDIDATE(Paid keyword volume (here and in Semrush phrase reports) is the labelled demand ECDEV could test its zero-paid hypotheses against: for a set of hypothesis phrases, does social recurrence rank them like search volume does? Answerable with a few dozen paid lookups; blocked on credentials and a spend decision.)"
+      ],
       "resolved": []
     },
     {
       "donor": "purahmanian--google-trends-mcp",
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -112,14 +118,20 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
-      "resolved": []
+      "open": [
+        "gtrends.explore-widget-token-flow BENCHMARK_CANDIDATE(Run live on 2026-10-08 with ECDEV's own user agent: /explore answered 200 with the four widgets and /widgetdata/multiline returned 53 weekly points of a 0-100 index for \"matcha\" (US, 12 months). A relative search-interest series is the demand evidence ECDEV lacks. Open question: does interest over time for a hypothesis phrase agree with its social recurrence, and does it add information beyond it? Answerable with two requests per phrase. Not run beyond the probe, and not implemented: the endpoint is undocumented and Google labels the request USER_TYPE_SCRAPER, so using it is a product and terms decision.)",
+        "gtrends.relative-index-semantics STUDY_CANDIDATE(A relative index cannot be added across requests or phrases, so any ECDEV use must compare phrases inside one request and label values as relative. Not studied further without the product decision above.)"
+      ],
+      "resolved": [
+        "gtrends.session-cookie-bootstrap STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Reproduced live: the cookie-less request got 429 with a NID cookie, and with that cookie and ECDEV's honest user agent the same request returned 200. The browser user agent is not needed; ECDEV would not send one. Whether a server-issued cookie from a 429 is acceptable to carry is part of the same product decision.)",
+        "gtrends.partial-period STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Live: the final weekly point (Oct 4-10, 2026) had isPartial true with value 60 against 63 the week before; a growth or slope computed over it would read a fall that is an incomplete week. Any ECDEV use must drop or flag the partial period; the donor does neither.)"
+      ]
     },
     {
       "donor": "amzscout-corp--amzscout-skill-mcp",
       "runtime": "DISCOVERED",
       "effective": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -128,7 +140,10 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "amzscout.niche-metrics STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The vendor derives revenue shares from its own sales estimates; ECDEV declines to state market share from a sample. The vocabulary (top-5 share, price bands, reviews as moat) is already how ECDEV reports sample structure.)",
+        "amzscout.hosted-mcp NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Plugin packaging and a hosted endpoint; no logic in the repository.)"
+      ]
     },
     {
       "donor": "coaxon--amazon-mcp",

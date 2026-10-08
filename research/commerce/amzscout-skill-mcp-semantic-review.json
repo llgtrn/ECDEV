@@ -1,0 +1,42 @@
+{
+ "donor_id": "amzscout-corp--amzscout-skill-mcp",
+ "commit_sha": "6abe386907179930a9407ebf9da84160913dfba5",
+ "license": "MIT",
+ "method": "fresh shallow clone of the pinned commit; classified first (access method, demand signal, retry and pacing, failure, plumbing), then compared with ECDEV",
+ "coverage": {
+  "read": "tools/README.md, amzscout_analyze_niche.md, .mcp.json",
+  "not_read": "other tool documents, skills, commands, plugin manifests",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "amzscout.niche-metrics",
+   "donor_source": "tools/amzscout_analyze_niche.md, amzscout_get_keywords.md",
+   "behaviour": "Niche snapshot per keyword: top products by estimated revenue, revenueTop5SharePercent as demand concentration, price bands, review counts as an entry moat, brand spread, with filters on estimated sales and revenue. No source code: tool documentation for a hosted server.",
+   "failure_semantics": "not documented",
+   "configuration": "count 5-100, filters, marketplace",
+   "ecdev_today": "Brand concentration is computed from a captured sample and labelled as sample proportions, not market share; estimated sales and revenue are not claimed.",
+   "ecdev_real_caller": "yes: market intelligence report",
+   "runtime_decision": "not executed",
+   "knowledge_state": "DIVERGENT",
+   "knowledge": "The vendor derives revenue shares from its own sales estimates; ECDEV declines to state market share from a sample. The vocabulary (top-5 share, price bands, reviews as moat) is already how ECDEV reports sample structure.",
+   "evidence": "tool documents read; hosted server not called",
+   "oracle_or_benchmark": "not needed"
+  },
+  {
+   "capability": "amzscout.hosted-mcp",
+   "donor_source": ".mcp.json; skills/*; commands/*; plugin manifests",
+   "behaviour": "A streamable-HTTP MCP endpoint at a vendor URL with a token balance; the repository holds documentation and plugin manifests only.",
+   "failure_semantics": "",
+   "configuration": "vendor account",
+   "ecdev_today": "Not applicable.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "NO_RESEARCH_VALUE",
+   "knowledge": "Plugin packaging and a hosted endpoint; no logic in the repository.",
+   "evidence": "file listing",
+   "oracle_or_benchmark": "not needed"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}

@@ -1,0 +1,28 @@
+{
+ "donor_id": "purahmanian--junglescout-mcp",
+ "commit_sha": "0341f4a252443a720bc2a4f517d43e118892e506",
+ "license": "MIT",
+ "method": "fresh shallow clone of the pinned commit; classified first (access method, demand signal, retry and pacing, failure, plumbing), then compared with ECDEV",
+ "coverage": {
+  "read": "src/client.ts, src/tools.ts (parts), src/constants.ts",
+  "not_read": "http.ts, createServer.ts, tests",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "junglescout.keyword-demand-api",
+   "donor_source": "src/client.ts:1-140; src/tools.ts:200-300 (keywords_by_keyword_query, keywords_by_asin_query)",
+   "behaviour": "A paid Jungle Scout API wrapper: keys as a key-name:key Authorization header; keyword and ASIN keyword queries return search-volume estimates. Errors are mapped 401/403 (check key), 422 (bad parameters), 429 (wait), other.",
+   "failure_semantics": "429 is reported as a fixed message; Retry-After is not read; no retry",
+   "configuration": "JUNGLESCOUT_API_KEY, JUNGLESCOUT_KEY_NAME",
+   "ecdev_today": "No paid keyword-volume source. Demand is an unknown on every result.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "BENCHMARK_CANDIDATE",
+   "knowledge": "Paid keyword volume (here and in Semrush phrase reports) is the labelled demand ECDEV could test its zero-paid hypotheses against: for a set of hypothesis phrases, does social recurrence rank them like search volume does? Answerable with a few dozen paid lookups; blocked on credentials and a spend decision.",
+   "evidence": "source read; no key",
+   "oracle_or_benchmark": "answerable with a paid key; not run"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}

@@ -1,0 +1,70 @@
+{
+ "donor_id": "purahmanian--google-trends-mcp",
+ "commit_sha": "a505da1ebe99ab78742381d776530b81075e86f4",
+ "license": "MIT",
+ "method": "fresh shallow clone of the pinned commit; classified first (access method, demand signal, retry and pacing, failure, plumbing), then compared with ECDEV",
+ "coverage": {
+  "read": "src/trends-client.ts (1-250), src/index.ts (tool descriptions); one live probe",
+  "not_read": "tests, vitest config",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "gtrends.explore-widget-token-flow",
+   "donor_source": "src/trends-client.ts:1-200",
+   "behaviour": "Interest over time is read in two calls to the undocumented trends.google.com/trends/api: /explore with a comparisonItem request returns widgets (TIMESERIES, GEO_MAP, RELATED_TOPICS, RELATED_QUERIES), each with a request and a token; /widgetdata/multiline with that request and token returns the series. Every body starts with an anti-hijacking prefix )]}' (with an optional comma) that must be stripped before parsing.",
+   "failure_semantics": "400 on a bad geo or timeframe, 429 on rate limit, other statuses as a generic failure; no retry beyond the cookie step",
+   "configuration": "hl, tz, geo, timeframe such as \"today 12-m\"",
+   "ecdev_today": "ECDEV reads only the official daily-trends RSS (trends.google.com/trending/rss) as discovery leads; it has no interest-over-time series. Search demand is listed as an unknown on every trend result.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "BENCHMARK_CANDIDATE",
+   "knowledge": "Run live on 2026-10-08 with ECDEV's own user agent: /explore answered 200 with the four widgets and /widgetdata/multiline returned 53 weekly points of a 0-100 index for \"matcha\" (US, 12 months). A relative search-interest series is the demand evidence ECDEV lacks. Open question: does interest over time for a hypothesis phrase agree with its social recurrence, and does it add information beyond it? Answerable with two requests per phrase. Not run beyond the probe, and not implemented: the endpoint is undocumented and Google labels the request USER_TYPE_SCRAPER, so using it is a product and terms decision.",
+   "evidence": "one live probe (2 requests); response shape recorded, not frozen as a fixture",
+   "oracle_or_benchmark": "answerable with ~2 requests per phrase; blocked on a product decision about an undocumented endpoint"
+  },
+  {
+   "capability": "gtrends.session-cookie-bootstrap",
+   "donor_source": "src/trends-client.ts:40-95 fetchTrends",
+   "behaviour": "A request without a cookie gets HTTP 429 whose Set-Cookie carries a NID cookie; the client stores it and retries once; a second 429 is a real rate limit. The donor also sends a Chrome user agent and Referer to avoid blocking.",
+   "failure_semantics": "429 without Set-Cookie, or after the retry, is reported as rate limited",
+   "configuration": "process-lifetime cookie",
+   "ecdev_today": "Not applicable; ECDEV identifies itself and does not send a browser user agent.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "DIVERGENT",
+   "knowledge": "Reproduced live: the cookie-less request got 429 with a NID cookie, and with that cookie and ECDEV's honest user agent the same request returned 200. The browser user agent is not needed; ECDEV would not send one. Whether a server-issued cookie from a 429 is acceptable to carry is part of the same product decision.",
+   "evidence": "one live reproduction",
+   "oracle_or_benchmark": "answered for access; policy decision open"
+  },
+  {
+   "capability": "gtrends.partial-period",
+   "donor_source": "src/trends-client.ts:170-250 (TimelinePoint)",
+   "behaviour": "The series carries hasData per point and an isPartial flag on the current, incomplete period. The donor's types do not declare isPartial and no code reads it.",
+   "failure_semantics": "a partial last point is passed through as an ordinary value",
+   "configuration": "",
+   "ecdev_today": "Not applicable.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "DIVERGENT",
+   "knowledge": "Live: the final weekly point (Oct 4-10, 2026) had isPartial true with value 60 against 63 the week before; a growth or slope computed over it would read a fall that is an incomplete week. Any ECDEV use must drop or flag the partial period; the donor does neither.",
+   "evidence": "one live series (53 points)",
+   "oracle_or_benchmark": "answered"
+  },
+  {
+   "capability": "gtrends.relative-index-semantics",
+   "donor_source": "src/index.ts:100-180 (tool descriptions)",
+   "behaviour": "Values are an index from 0 to 100 scaled to the highest point in the request, not search volume; terms are comparable only inside one request (up to 5); rising and top related queries come from a separate widget.",
+   "failure_semantics": "a term with too little volume has hasData false and value 0",
+   "configuration": "",
+   "ecdev_today": "Not applicable.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "STUDY_CANDIDATE",
+   "knowledge": "A relative index cannot be added across requests or phrases, so any ECDEV use must compare phrases inside one request and label values as relative. Not studied further without the product decision above.",
+   "evidence": "tool descriptions read",
+   "oracle_or_benchmark": "not needed now"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}

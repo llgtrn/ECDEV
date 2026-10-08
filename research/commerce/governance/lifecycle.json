@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e97b0160999f127ca0339f6c4804b52a7978a9fc",
+  "assessed_parent_commit": "4fd213e3cab30023042ca6261af303fd86eef12a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -25,7 +25,7 @@
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
       "runtime": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -34,7 +34,22 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "semrush.request-pacing-retry-cache",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The retry set (429, 500, 502, 503, 504) sits inside what ECDEV retries and agrees with Scrapy's list on those codes. Weaknesses: delays are fixed at 2, 4 and 6 s and ignore Retry-After, and the API key is a query parameter that is also part of the cache key. Nothing to absorb.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "semrush.keyword-metric-columns",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(Volume plus a twelve-month trend vector per phrase is a labelled demand series; see junglescout.keyword-demand-api for the question and its blocker.)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -93,13 +108,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 2 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "1 of 2 declared capabilities still have open research: semrush.keyword-metric-columns (BENCHMARK_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -279,7 +294,7 @@
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
       "runtime": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -288,7 +303,15 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "junglescout.keyword-demand-api",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(Paid keyword volume (here and in Semrush phrase reports) is the labelled demand ECDEV could test its zero-paid hypotheses against: for a set of hypothesis phrases, does social recurrence rank them like search volume does? Answerable with a few dozen paid lookups; blocked on credentials and a spend decision.)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -347,13 +370,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 1 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "1 of 1 declared capabilities still have open research: junglescout.keyword-demand-api (BENCHMARK_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -374,7 +397,7 @@
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
       "runtime": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -383,7 +406,36 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "gtrends.explore-widget-token-flow",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(Run live on 2026-10-08 with ECDEV's own user agent: /explore answered 200 with the four widgets and /widgetdata/multiline returned 53 weekly points of a 0-100 index for \"matcha\" (US, 12 months). A relative search-interest series is the demand evidence ECDEV lacks. Open question: does interest over time for a hypothesis phrase agree with its social recurrence, and does it add information beyond it? Answerable with two requests per phrase. Not run beyond the probe, and not implemented: the endpoint is undocumented and Google labels the request USER_TYPE_SCRAPER, so using it is a product and terms decision.)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "gtrends.session-cookie-bootstrap",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Reproduced live: the cookie-less request got 429 with a NID cookie, and with that cookie and ECDEV's honest user agent the same request returned 200. The browser user agent is not needed; ECDEV would not send one. Whether a server-issued cookie from a 429 is acceptable to carry is part of the same product decision.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "gtrends.partial-period",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Live: the final weekly point (Oct 4-10, 2026) had isPartial true with value 60 against 63 the week before; a growth or slope computed over it would read a fall that is an incomplete week. Any ECDEV use must drop or flag the partial period; the donor does neither.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "gtrends.relative-index-semantics",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(A relative index cannot be added across requests or phrases, so any ECDEV use must compare phrases inside one request and label values as relative. Not studied further without the product decision above.)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -442,13 +494,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "2 of 4 declared capabilities still have open research: gtrends.explore-widget-token-flow (BENCHMARK_CANDIDATE), gtrends.relative-index-semantics (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",
@@ -469,7 +521,7 @@
       "exception": "",
       "stopped_by": "REGISTERED: declared as a DISCOVERED candidate; registration is an explicit claim",
       "runtime": "DISCOVERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "SEMANTIC_CENSUS",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -478,7 +530,22 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "amzscout.niche-metrics",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](The vendor derives revenue shares from its own sales estimates; ECDEV declines to state market share from a sample. The vocabulary (top-5 share, price bands, reviews as moat) is already how ECDEV reports sample structure.)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "amzscout.hosted-mcp",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[HOSTED_SERVICE_PLUMBING](Plugin packaging and a hosted endpoint; no logic in the repository.)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -537,13 +604,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 2 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "every declared capability is resolved, but the whole-source semantic review is PENDING: capabilities may remain unextracted"
         },
         {
           "gate": "CUTOVER_COMPLETED",

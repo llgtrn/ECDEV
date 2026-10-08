@@ -1,0 +1,42 @@
+{
+ "donor_id": "mrkooblu--semrush-mcp",
+ "commit_sha": "f2e858521109948aa0c024ea0d52ef7c04742913",
+ "license": "MIT",
+ "method": "fresh shallow clone of the pinned commit; classified first (access method, demand signal, retry and pacing, failure, plumbing), then compared with ECDEV",
+ "coverage": {
+  "read": "src/semrush-api.ts (1-225 and column sets)",
+  "not_read": "cli.ts, index.ts, schemas.ts, config.ts, rest of semrush-api.ts, dist/, tests",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "semrush.request-pacing-retry-cache",
+   "donor_source": "src/semrush-api.ts:17-225",
+   "behaviour": "A sliding one-second window limiter polled every 100 ms; GET responses cached by URL and parameters for a configured TTL; retries on 429/500/502/503/504 up to 3 times at 2, 4 and 6 s, ignoring Retry-After.",
+   "failure_semantics": "retry delays are fixed and do not look at the server's instruction; the API key is a query parameter and is part of the cache key",
+   "configuration": "API_RATE_LIMIT_PER_SECOND, API_CACHE_TTL_SECONDS",
+   "ecdev_today": "Provider calls honour the server's retry time, record it, and keep secrets out of URLs, keys and receipts.",
+   "ecdev_real_caller": "yes: every provider call",
+   "runtime_decision": "not executed",
+   "knowledge_state": "DIVERGENT",
+   "knowledge": "The retry set (429, 500, 502, 503, 504) sits inside what ECDEV retries and agrees with Scrapy's list on those codes. Weaknesses: delays are fixed at 2, 4 and 6 s and ignore Retry-After, and the API key is a query parameter that is also part of the cache key. Nothing to absorb.",
+   "evidence": "source read",
+   "oracle_or_benchmark": "not needed"
+  },
+  {
+   "capability": "semrush.keyword-metric-columns",
+   "donor_source": "src/semrush-api.ts:76-90 (export column sets)",
+   "behaviour": "Keyword reports request phrase, monthly volume (Nq), CPC (Cp), competition (Co), result count (Nr), twelve-month trend (Td), intent (In) and difficulty (Kd); rank reports request position and traffic columns.",
+   "failure_semantics": "",
+   "configuration": "export_columns",
+   "ecdev_today": "No paid keyword data.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "BENCHMARK_CANDIDATE",
+   "knowledge": "Volume plus a twelve-month trend vector per phrase is a labelled demand series; see junglescout.keyword-demand-api for the question and its blocker.",
+   "evidence": "column list read",
+   "oracle_or_benchmark": "answerable with a paid key; not run"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}
