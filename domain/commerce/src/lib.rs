@@ -1,4 +1,5 @@
 pub mod availability;
+pub mod bound;
 mod capture;
 pub mod decision;
 pub mod domain;

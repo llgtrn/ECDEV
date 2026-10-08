@@ -1,0 +1,84 @@
+{
+ "donor_id": "apify--apify-mcp-server",
+ "commit_sha": "0507de457363eb788c9e60a3ae7b2285aef231d0",
+ "license": "MIT",
+ "method": "fresh shallow clone of the pinned commit; classify first (protocol/tool schema, session semantics, extraction, orchestration, retry, pagination, cost, failure, provenance, or plumbing), then compare with ECDEV",
+ "coverage": {
+  "read": "src/mcp/tool_call_error_mapper.ts (all), src/utils/tool_status.ts (1-140), src/tools/actors/actor_executor.ts (1-60), grep of actor_run_response.ts, get_dataset_items.ts, const.ts",
+  "not_read": "src/mcp/server.ts, task_execution.ts, tool_call_engine.ts, payments/x402.ts, skyfire.ts, the rest of tools/*, utils/*, resources, prompts, widgets, tests",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "apify.actor-run-lifecycle",
+   "donor_source": "src/tools/actors/actor_executor.ts:1-112; actor_run_response.ts:36-41, 474-580",
+   "behaviour": "An Actor run starts asynchronously, the call waits a bounded time (default 30 s, max 45 s) and returns the run with its status. A run still RUNNING is a successful call; the response carries a nextStep telling the model how to wait or read results. Abort before start returns null and an abort during the wait stops the run.",
+   "failure_semantics": "input rejected by the platform becomes a user error with a 200-character detail; an abort is its own status",
+   "configuration": "waitSecs 30 default, 45 max, task mode waits until terminal",
+   "ecdev_today": "research.run has a deadline and persisted run state; research.status reads state without network; an interrupted crawl resumes.",
+   "ecdev_real_caller": "yes: research.run / status",
+   "runtime_decision": "not executed; Actor platform is vendor-hosted",
+   "knowledge_state": "INDEPENDENT_NATIVE",
+   "knowledge": "Start/wait/status are the same three verbs ECDEV has. The donor adds that a run in progress is a successful call distinct from a failed one; ECDEV reports PARTIAL and CRAWL_RUNNING_OR_INTERRUPTED the same way.",
+   "evidence": "apps/server resume tests",
+   "oracle_or_benchmark": "not needed"
+  },
+  {
+   "capability": "apify.result-size-bound-and-paging",
+   "donor_source": "src/const.ts:25 MAX_INLINE_BYTES; apify_client.ts:72-78; tools/storage/get_dataset_items.ts; actor_run_response.ts:545-580",
+   "behaviour": "Results are never inlined whole: a response is capped at 256 KiB (an axios maxContentLength stops the stream mid-read), dataset items are read by offset and limit with a default limit, fields can be projected and nested fields flattened, and the run response carries a nextStep naming the call that reads the rest.",
+   "failure_semantics": "over the cap the read fails rather than filling the context",
+   "configuration": "MAX_INLINE_BYTES 256 KiB; default dataset limit",
+   "ecdev_today": "Before this wave ecdev.trend.discover returned the whole snapshot: 1.1 to 1.9 MB on live runs (343 posts), unreadable to a model. Now the tool boundary repeats nothing and cuts nothing silently.",
+   "ecdev_real_caller": "yes: ecdev.trend.discover / ecdev.trend.inspect",
+   "runtime_decision": "ABSORBED (this wave): domain/commerce/src/bound.rs",
+   "knowledge_state": "ABSORBED",
+   "knowledge": "The donor reached the same boundary independently. ECDEV now bounds tool results at 256 KiB: a list that repeats a top-level list element for element (one 343-id evidence list was repeated 47 times, 40 to 55% of the result) becomes a {same_as,count} reference; remaining oversize lists are shortened to a common prefix with the totals named; ecdev.trend.inspect pages any field by offset and limit. Measured on three saved live results (1.69, 1.86 and 1.83 MB): all fit after the change, keeping 42, 61 and 46 items per list. Divergence: the donor refuses an oversize read, ECDEV shortens and says so.",
+   "evidence": "apps/server an_oversize_trend_result test; bound.rs unit tests; saved live results",
+   "oracle_or_benchmark": "answered: measured on live results and pinned by tests"
+  },
+  {
+   "capability": "apify.tool-failure-taxonomy",
+   "donor_source": "src/utils/tool_status.ts:1-140; src/mcp/tool_call_error_mapper.ts; const.ts:293-306",
+   "behaviour": "A tool error is classified three ways: payment required (402), permission approval required, or execution. Status is ABORTED (client abort), SOFT_FAIL (4xx, invalid params, run-limit billing) or FAILED (5xx or unknown); the category is INVALID_INPUT, AUTH, PERMISSION_APPROVAL_REQUIRED or INTERNAL_ERROR; the detail is cut to 200 characters; a run-limit error is a user condition even when it arrives as a 5xx.",
+   "failure_semantics": "user-fixable and operator-fixable failures are kept apart",
+   "configuration": "none",
+   "ecdev_today": "ECDEV tool errors are stable code strings (SCHEMA_VIOLATION, RESTRICTED_DOMAIN_DISABLED, ...) with a separate retryable_failure() predicate for provider calls; provider failures record http_status and reason.",
+   "ecdev_real_caller": "yes: Engine::call",
+   "runtime_decision": "not executed",
+   "knowledge_state": "DIVERGENT",
+   "knowledge": "ECDEV keeps the specific reason code instead of collapsing it to four categories, because its callers act on the reason (budget, robots, restricted domain). The one idea worth keeping is user-condition versus server-failure, which retryable_failure() already encodes for statuses. No change.",
+   "evidence": "tests/scrapy_retry.rs and schema tests",
+   "oracle_or_benchmark": "not needed"
+  },
+  {
+   "capability": "apify.payments-x402-skyfire",
+   "donor_source": "src/payments/*.ts (x402.ts 293 lines, skyfire.ts, types.ts, resolve.ts)",
+   "behaviour": "Pay-per-call authorisation: an x402 payment-required response is turned into a structured payment response, and a Skyfire pay id is redacted from logs.",
+   "failure_semantics": "402 is classified as a payment failure with its own response",
+   "configuration": "payment protocol credentials",
+   "ecdev_today": "ECDEV is zero-paid by default and has no payment protocol; paid providers are gated by budget and credentials.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "STUDY_CANDIDATE",
+   "knowledge": "Agent-payable APIs (x402) could one day replace key-based paid providers. No ECDEV provider uses it and no decision needs it now; recorded as a protocol to study if a paid provider offers it. Redacting payment identifiers from logs is the only practice that applies today and ECDEV already keeps secrets out of receipts.",
+   "evidence": "files listed; x402.ts not read",
+   "oracle_or_benchmark": "no oracle possible without a paying counterparty"
+  },
+  {
+   "capability": "apify.actor-catalogue-schedules-tasks-docs",
+   "donor_source": "src/tools/actors/*, schedules/*, tasks/*, builds/*, docs/*, widgets/*, resources/*, prompts/*",
+   "behaviour": "Search and call hosted Actors, manage schedules, saved tasks, builds and documentation search; input schemas are validated with AJV before the run, and the platform can still reject what passed.",
+   "failure_semantics": "a platform rejection of input that passed the local check is reported as invalid input",
+   "configuration": "hosted account",
+   "ecdev_today": "ECDEV validates every tool call against its declared input schema before anything runs (this was fixed after a live slip), and has watches instead of schedules.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "NO_RESEARCH_VALUE",
+   "knowledge": "Hosted marketplace and platform management tools; the one reusable rule, validating input locally before a paid call, ECDEV already enforces.",
+   "evidence": "files named; not read in depth",
+   "oracle_or_benchmark": "not needed"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}

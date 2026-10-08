@@ -1,0 +1,42 @@
+{
+ "donor_id": "microsoft--playwright-mcp",
+ "commit_sha": "a6d7678b7bc10d9fb2ae828a103e9872cf75e483",
+ "license": "Apache-2.0",
+ "method": "fresh shallow clone of the pinned commit; classify first (protocol/tool schema, session semantics, extraction, orchestration, retry, pagination, cost, failure, provenance, or plumbing), then compare with ECDEV",
+ "coverage": {
+  "read": "README.md tool list, index.js, src/README.md",
+  "not_read": "tests/*.spec.ts, config.d.ts; the implementation is in the Playwright monorepo and was not fetched",
+  "statement": "Bounded semantic review of the files named, not the whole source. No extinction is claimed."
+ },
+ "rows": [
+  {
+   "capability": "playwright-mcp.tool-surface",
+   "donor_source": "README.md:894-1300 (tool list); index.js",
+   "behaviour": "Source is not in this repository: it is a launcher over playwright-core. What is readable is the tool surface: accessibility-tree snapshot (browser_snapshot) as the action basis, navigate, click, type, fill_form, wait_for, tabs, network request list plus per-request detail, console messages, cookies and local storage get/set/clear, route mocking, and an unsafe code evaluator.",
+   "failure_semantics": "not readable here",
+   "configuration": "server config (browser, headless, capabilities)",
+   "ecdev_today": "ECDEV has no browser. Pages are fetched as bytes under robots with visible-text and main-content fingerprints.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "REFERENCE_ONLY",
+   "knowledge": "Protocol and tool schema of a browser-automation server; the behaviour sits in the Playwright monorepo (donor microsoft--playwright, still UNREVIEWED). Nothing in this repository to learn that the tool list does not already say.",
+   "evidence": "README tool list; src/README.md points to the monorepo",
+   "oracle_or_benchmark": "not needed"
+  },
+  {
+   "capability": "playwright-mcp.rendered-page-need",
+   "donor_source": "tests/*.spec.ts; README capability flags",
+   "behaviour": "The server exists because some pages only show content after script execution. Whether that matters for ECDEV depends on how many product pages carry no price in their static HTML.",
+   "failure_semantics": "not applicable",
+   "configuration": "",
+   "ecdev_today": "Static fetch only, with extraction failures recorded as unknowns rather than guessed.",
+   "ecdev_real_caller": "no",
+   "runtime_decision": "not executed",
+   "knowledge_state": "BENCHMARK_CANDIDATE",
+   "knowledge": "How many live product pages publish a price only after script execution? ECDEV can answer part of it without a browser: the share of fetched product pages with no extractable price and no JSON-LD/microdata offer, then a headless render on that subset to see how many gain one. Not run: it needs a browser and a labelled page sample.",
+   "evidence": "none yet",
+   "oracle_or_benchmark": "answerable: static-versus-rendered price recovery on a live sample; not run"
+  }
+ ],
+ "status": "BOUNDED_REVIEW_NO_EXTINCTION_CLAIMED"
+}

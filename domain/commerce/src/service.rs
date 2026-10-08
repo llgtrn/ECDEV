@@ -578,11 +578,27 @@ impl Engine {
             return Err(violation);
         }
         match name {
-            "ecdev.trend.discover" => self.trend_discover(args),
+            "ecdev.trend.discover" => self.trend_discover(args).map(|v| {
+                let next = v["snapshot_id"].as_str().map(|id| json!({"tool":"ecdev.trend.inspect","arguments":{"snapshot_id":id,"fields":["captured_posts"],"offset":0,"limit":50}}));
+                crate::bound::bound(v, crate::bound::MAX_RESULT_BYTES, next)
+            }),
             "ecdev.trend.feeds" => self.trend_feeds(args),
             "ecdev.listing.search" => self.listing_search(args),
             "ecdev.price.observations" => self.price_observations(args),
-            "ecdev.trend.inspect" | "ecdev.trend.explain" => self.trend_inspect(args),
+            "ecdev.trend.inspect" | "ecdev.trend.explain" => {
+                if args.get("fields").is_some() && args["snapshot_id"].as_str().is_none() {
+                    return Err("FIELDS_NEED_SNAPSHOT_ID".into());
+                }
+                let full = self.trend_inspect(args.clone())?;
+                if let Some(fields) = args["fields"].as_array() {
+                    let fields: Vec<String> = fields.iter().filter_map(|f| f.as_str().map(str::to_owned)).collect();
+                    let offset = args["offset"].as_u64().unwrap_or(0) as usize;
+                    let limit = (args["limit"].as_u64().unwrap_or(50) as usize).min(crate::bound::PAGE_LIMIT_MAX);
+                    return crate::bound::project(&full, &fields, offset, limit);
+                }
+                let next = args["snapshot_id"].as_str().map(|id| json!({"tool":"ecdev.trend.inspect","arguments":{"snapshot_id":id,"fields":["captured_posts"],"offset":0,"limit":50}}));
+                Ok(crate::bound::bound(full, crate::bound::MAX_RESULT_BYTES, next))
+            }
             "ecdev.trend.compare" => self.trend_compare(args),
             "ecdev.trend.hypothesize" => self.trend_hypothesize(args),
             "ecdev.trend.watch" => self.trend_watch(args),

@@ -2201,4 +2201,70 @@ mod research_tests {
         assert_eq!(bounded_resume["network_calls"], 0);
         assert_eq!(bounded_resume["frontier"]["acquisition_attempts"], 1);
     }
+
+    #[test]
+    fn an_oversize_trend_result_is_shortened_at_the_tool_boundary_and_the_rest_is_pageable() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-bound-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::social::Social::default()));
+        let page = |n: usize| {
+            let hits: Vec<_> = (0..50)
+                .map(|k| {
+                    let i = n * 50 + k;
+                    json!({"objectID":format!("{}", 1000 + i),"title":format!("matcha glass {i} {} {}", "whisk".repeat(1 + i % 7), "bowl".repeat(1 + i % 5)),"created_at_i":9000 + i,"points":i,"num_comments":i % 9})
+                })
+                .collect();
+            json!({"page":n,"nbPages":5,"hits":hits}).to_string()
+        };
+        let args = json!({"query":"matcha","fixture_now":10000,"sources":[{"platform":"HACKER_NEWS","max_pages":5,"fixture_raw":page(0),"fixture_pages":[page(1),page(2),page(3),page(4)]}]});
+        // The engine's own callers still get the whole result.
+        let whole = engine.trend_discover(args.clone()).unwrap();
+        let whole_bytes = serde_json::to_vec(&whole).unwrap().len();
+        assert!(
+            whole_bytes > ecdev_core::bound::MAX_RESULT_BYTES,
+            "{whole_bytes} {} {} {}",
+            whole["mention_count"],
+            whole["provider_failures"],
+            whole["unknowns"]
+        );
+        let out = engine.call("ecdev.trend.discover", args).unwrap();
+        let bytes = serde_json::to_vec(&out).unwrap().len();
+        assert!(bytes <= ecdev_core::bound::MAX_RESULT_BYTES, "{bytes}");
+        let bound = &out["output_bound"];
+        assert_eq!(bound["state"], "LISTS_SHORTENED_TO_FIT");
+        let total = whole["captured_posts"].as_array().unwrap().len();
+        assert!(total >= 200, "{total}");
+        assert_eq!(bound["truncated"]["captured_posts"]["total"], total);
+        let id = out["snapshot_id"].as_str().unwrap();
+        assert_eq!(bound["read_the_rest"]["arguments"]["snapshot_id"], id);
+        // Scalars are never shortened.
+        assert_eq!(out["mention_count"], whole["mention_count"]);
+        // Paging reads the posts the bounded result dropped.
+        let page = engine
+            .call("ecdev.trend.inspect", json!({"snapshot_id":id,"fields":["captured_posts"],"offset":total - 10,"limit":50}))
+            .unwrap();
+        assert_eq!(page["captured_posts"].as_array().unwrap().len(), 10);
+        assert_eq!(page["paging"]["captured_posts"]["total"], total);
+        assert_eq!(page["paging"]["captured_posts"]["next_offset"], Value::Null);
+        assert_eq!(
+            engine
+                .call("ecdev.trend.inspect", json!({"fields":["captured_posts"]}))
+                .unwrap_err(),
+            "FIELDS_NEED_SNAPSHOT_ID"
+        );
+        let inspected = engine
+            .call("ecdev.trend.inspect", json!({"snapshot_id":id}))
+            .unwrap();
+        assert!(
+            serde_json::to_vec(&inspected).unwrap().len() <= ecdev_core::bound::MAX_RESULT_BYTES
+        );
+        let _ = std::fs::remove_dir_all(root);
+    }
 }
