@@ -518,6 +518,17 @@ const JAPANESE_GENERAL_WORDS: &[&str] = &[
     "今日", "昨日", "明日", "今年", "去年", "最近", "今回", "前回", "本当", "自分", "感じ", "美味",
     "時間", "毎日", "一番", "全部", "大好", "普通", "結構", "今度",
 ];
+/// Words in at least 1% of the posts of every one of five unrelated live topic samples (rust,
+/// python, apple, coffee, matcha; 1,140 posts, 2026-10-07) and not already listed: measured, not
+/// chosen (research/commerce/background-common-words.json, tools/commerce/
+/// background_common_words.py). A word that common everywhere refines no product query; live,
+/// "best", "love" and "off" were matcha refinements.
+const BACKGROUND_COMMON_WORDS: &[&str] = &[
+    "actually", "add", "another", "best", "between", "both", "doing", "don", "down", "enough",
+    "first", "free", "goes", "having", "instead", "little", "local", "long", "love", "making",
+    "off", "old", "order", "probably", "products", "real", "right", "save", "stop", "sure",
+    "through", "two", "until", "using", "where", "while", "work", "worth", "year",
+];
 const PHRASE_STOP_WORDS: &[&str] = &[
     "a", "an", "and", "are", "as", "at", "be", "but", "by", "for", "from", "has", "have", "i",
     "in", "is", "it", "its", "my", "of", "on", "or", "our", "so", "that", "the", "their", "this",
@@ -676,6 +687,7 @@ pub fn candidate_phrases(posts: &[&SocialPost]) -> Vec<Value> {
                 w.is_empty()
                     || PHRASE_STOP_WORDS.contains(w)
                     || FOREIGN_FUNCTION_WORDS.contains(w)
+                    || BACKGROUND_COMMON_WORDS.contains(w)
                     || GENERAL_WORDS.contains(w)
                     || w.chars().count() < 2
                     || w.chars().any(is_cjk)
@@ -912,6 +924,7 @@ pub fn informative(term: &str) -> bool {
         && !kana
         && !PHRASE_STOP_WORDS.contains(&term)
         && !FOREIGN_FUNCTION_WORDS.contains(&term)
+        && !BACKGROUND_COMMON_WORDS.contains(&term)
         && !GENERAL_WORDS.contains(&term)
         && !JAPANESE_GENERAL_WORDS.contains(&term)
 }
