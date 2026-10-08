@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "d8e77fd7d2678368dc723dea1d25a9ec589e3cdb",
+  "assessed_parent_commit": "d6fcf4f25506dde694eca1bc91497570e2140647",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,28 +14,28 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 255,
-    "semantic_censused_capabilities": 255,
+    "known_donor_capabilities": 284,
+    "semantic_censused_capabilities": 284,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 35,
-    "benchmark_candidates": 26,
-    "algorithm_candidates": 3,
+    "study_candidates": 37,
+    "benchmark_candidates": 29,
+    "algorithm_candidates": 4,
     "reference_only": 56,
-    "study_complete_capabilities": 110,
+    "study_complete_capabilities": 133,
     "not_relevant_after_review": 25,
-    "research_questions_open": 64,
-    "knowledge_coverage_ratio": 0.74902
+    "research_questions_open": 70,
+    "knowledge_coverage_ratio": 0.753521
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 49,
+    "donors_knowledge_unreviewed": 48,
     "donors_structural_census": 0,
     "donors_semantic_census": 2,
-    "donors_active_study": 14,
+    "donors_active_study": 15,
     "donors_study_complete": 3,
-    "donors_structurally_censused": 19,
+    "donors_structurally_censused": 20,
     "donors_semantically_censused": 15,
-    "donors_with_open_candidates": 14,
+    "donors_with_open_candidates": 15,
     "donors_with_open_research": 65
   },
   "denominators": {
@@ -275,7 +275,7 @@
       "donor": "scrapy--scrapy",
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -283,8 +283,39 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
-      "resolved": []
+      "open": [
+        "scrapy.url-canonicalization-merge-rules STUDY_CANDIDATE(whether turning on query sorting and tracking-parameter removal for crawl discovery would merge any real duplicate links, on link sets from tracking-heavy sites (affiliate and newsletter navigation): measured on 8 saved pages (2,586 links) and 646 post URLs it merged zero, and a bare trailing '?' occurred in 0 of 1,703 page links)",
+        "scrapy.meta-refresh-redirect STUDY_CANDIDATE(how many store and listing pages redirect only by meta refresh, which ECDEV reads as a final page with no products)",
+        "scrapy.autothrottle BENCHMARK_CANDIDATE(does a latency-derived per-origin interval beat the fixed 750 ms floor, measured as origin response latency under ECDEV's own request pattern over a time series)",
+        "scrapy.heuristic-freshness BENCHMARK_CANDIDATE(does a Last-Modified heuristic cut refetches of rarely changing pages without serving a stale commerce fact, measured against the change rate ECDEV's own monitor observes)",
+        "scrapy.decompression ALGORITHM_CANDIDATE(a bounded native inflate for the other content codings and for transfer compression: whether requesting gzip on page fetches saves enough bytes and time on real pages to justify sending Accept-Encoding, with the decoded size capped and the stored capture's hash defined (decoded bytes or received bytes))",
+        "scrapy.close-conditions BENCHMARK_CANDIDATE(does stopping a crawl after N pages that surface no product save requests without losing products, on recorded crawls of real store sites)"
+      ],
+      "resolved": [
+        "scrapy.request-fingerprint STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV and Scrapy merge host case, scheme case, dot segments, an empty path, fragments, escaped unreserved letters and escape case, and keep path case, parameter values and names apart. They differ in three named ways: ECDEV merges an explicit default port (Scrapy fetches ':443' and the bare URL as two requests); query order and a bare trailing '?' are distinct by default in ECDEV and merged by Scrapy; tracking parameters are never removed by Scrapy and only by ECDEV policy.)",
+        "scrapy.duplicate-filter STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV records progress, not mere sight: a discovered URL is distinct from a leased one and from a handled one, and an expired lease is reclaimed. Scrapy's seen-at-enqueue rule is cheaper and can lose in-flight work on a crash.)",
+        "scrapy.scheduler-and-priority-queues STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Breadth-first by design (ECDEV researches a site's neighbourhood to a depth, not an unbounded descent); origin fairness comes from the cooldown and per-origin lease cap, so a large queue for one origin does not starve another.)",
+        "scrapy.job-persistence-and-resume STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV's durable frontier makes crash recovery a state transition (an expired lease is observable and reclaimed) rather than a file sync.)",
+        "scrapy.retry STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Same transient statuses; Scrapy retries immediately at lower priority, ECDEV waits (backoff and Retry-After). Found by comparison and fixed: ECDEV did not retry 408 and did retry the permanent 501, 505 and 511.)",
+        "scrapy.retry-after-handling STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](A deliberate and proven divergence in ECDEV's favour: honouring Retry-After is a politeness requirement ECDEV has and Scrapy lacks.)",
+        "scrapy.redirect STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Of 2,000 cases, 1,700 agree in decision and target. ECDEV refuses what Scrapy follows only where its policy says so (credentials in a target, a credential-named query parameter, non-http schemes) or where a Location is resolved differently by different clients ('//', '///x', 'http:/x', a host with a space, backslashes). Found and fixed: a non-ASCII Location (a Japanese path, an IDN host) was dropped as if absent, so the redirect read as the final response; ECDEV now follows it as Scrapy does.)",
+        "scrapy.robots-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV is fail-closed and status-aware (RFC 9309); Scrapy is opt-in and fail-open. Not a gap to close.)",
+        "scrapy.robots-parser STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV and Protego agree on all 1,620 reppy-oracle cases and on 37 of 47 handcrafted edge-case texts. Live, over 256 real robots.txt files and 5,499 URL checks the two differed in 3 files: google.com (ECDEV allowed what the file disallows: consecutive 'User-agent: *' and 'User-agent: Yandex' lines lost the wildcard group), monolog.r-n-i.jp ('Allow: /item/*' tied with 'Disallow: /item/' after ECDEV stripped the trailing wildcard) and cs.android.com ('Disallow: /*' tied with 'Allow: /$'). All three fixed; a bare-CR file was also read as one line, now fixed. One difference remains live: a 'User -agent' typo makes ECDEV refuse a site Protego allows (the cautious side). Recorded divergences: ECDEV applies rules written before any User-agent line to every agent, refuses a pattern given both Allow and Disallow, voids a group on an unparseable Crawl-delay or a '$' inside a pattern, and does not accept directives without a colon or substring agent names; none occurred in 247 live files.)",
+        "scrapy.downloader-slots-and-concurrency STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV schedules deterministically (reproducible tests, auditable timing) and never randomises delay: jitter exists in Scrapy to look less mechanical, which is not a goal for a crawler that identifies itself and obeys robots.)",
+        "scrapy.http-cache-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Over 528 header combinations ECDEV and Scrapy give the same remaining freshness in 395; ECDEV holds a page at most 24 hours (96 cases where Scrapy keeps it longer), treats an invalid max-age as already stale (13), holds a response with no freshness information for its one-hour default (16) where Scrapy keeps nothing, and has no Last-Modified heuristic (8).)",
+        "scrapy.conditional-requests-and-validators STUDY_COMPLETE[INDEPENDENT_NATIVE](Same mechanism; ECDEV is stricter about which URL a validator may reach.)",
+        "scrapy.cookies-and-sessions STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ECDEV acquires public pages without a session, so a region, price or availability that depends on a cookie is simply not observed, and says so (SOURCE_BLOCKED or absent fields), rather than being persisted into a session. The public-suffix cookie rule is the only fragment worth remembering.)",
+        "scrapy.response-status-handling STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV keeps the failure as evidence (a 404 and a robots refusal are different findings); live survey of 36 hosts recorded 404, 204 and refusals by name.)",
+        "scrapy.download-size-and-time-limits STUDY_COMPLETE[INDEPENDENT_NATIVE](Same two-stage check, much tighter bounds.)",
+        "scrapy.link-extraction STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](On 7 real pages ECDEV and Scrapy agree except where recorded: Scrapy's extension filter would drop 26 same-host links, all Wikipedia 'File:*.jpg' description pages that are HTML, so ECDEV's content-type check after fetch is the safer rule; <area> and <base> occurred in 0 of 57 sampled pages.)",
+        "scrapy.offsite-scope STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Of 1,740 real links 59 (3.4%) go to another host of the same registrable domain, almost all Wikipedia language editions and bbc.com help and shop sites: different sites in practice, so exact-host scope is a defensible default.)",
+        "scrapy.depth-priority-and-url-length STUDY_COMPLETE[INDEPENDENT_NATIVE](Measured on 2,611 page links and 646 post URLs the longest was 247 characters, so the bound limits abuse, never real links.)",
+        "scrapy.sitemap-reading STUDY_COMPLETE[INDEPENDENT_NATIVE](Gap closed: compressed sitemaps were refused outright and 6 of 178 sites with sitemaps publish only those. Differences kept: no recover-mode XML, no relative locations, no alternates.)",
+        "scrapy.charset-decoding STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Settled earlier by research/commerce/charset-benchmark.json: 44 of 48 pages on 19 Japanese retailers decoded; the 4 refusals were one stub with no product data.)",
+        "scrapy.download-latency-telemetry STUDY_COMPLETE[INDEPENDENT_NATIVE](Observability the adaptive-delay question needs; live: 12 origins measured.)",
+        "scrapy.shutdown-and-cancellation STUDY_COMPLETE[INDEPENDENT_NATIVE](Same intent; ECDEV's cancellation is a persisted state.)",
+        "scrapy.ssrf-and-private-address-policy STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](A deliberate and proven divergence in ECDEV's favour for a crawler fed URLs from the open web.)"
+      ]
     },
     {
       "donor": "dgtlmoon--changedetection.io",

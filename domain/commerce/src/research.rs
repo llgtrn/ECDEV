@@ -60,6 +60,19 @@ fn pages() -> usize {
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
+/// Whether a failed fetch is worth another attempt: the request may succeed if repeated.
+/// Retried: 408 (the server gave up waiting for the request), 429, server errors that can pass
+/// (500, 502, 503, 504 and the other 5xx), a network error, a failed DNS lookup. Not retried:
+/// 501, 505 and 511, which say the server cannot ever serve this request as made. Scrapy's
+/// RETRY_HTTP_CODES is 500, 502, 503, 504, 522, 524, 408 and 429; ECDEV retries more 5xx than
+/// that list (bounded by the frontier's retry limit and backoff) and no permanent ones.
+pub fn retryable_failure(http_status: Option<u16>, reason: &str) -> bool {
+    matches!(http_status, Some(408 | 429 | 500..=599))
+        && !matches!(http_status, Some(501 | 505 | 511))
+        || reason == "FETCH_NETWORK_ERROR"
+        || reason == "DNS_FAILED"
+}
+
 /// Seconds a fetched page stays fresh in the persistent fetch cache.
 pub const FETCH_TTL_SECONDS: u64 = 3600;
 /// Seconds after expiry an entry may still stand in for a failed fetch (`allow_stale`).
@@ -764,10 +777,7 @@ impl Engine {
                             failures.push(json!({"source":source.url,"provider":provider.id(),"status":if reason.contains("ROBOTS") || reason.contains("HTTP_STATUS_403") || reason.contains("REDIRECT_SCOPE_DENIED") {"SOURCE_BLOCKED"}else{"SOURCE_UNAVAILABLE"},"reason":reason,"acquisition_failure":failure}));
                             calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"source":source.url,"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"status":"FAILED","actual_cost_minor":0,"request_count":failure.request_count,"cache_hit":false,"error":reason,"acquisition_failure":failure}));
                             if let Some(lease) = &lease {
-                                let retryable =
-                                    matches!(failure.http_status, Some(429 | 500..=599))
-                                        || reason == "FETCH_NETWORK_ERROR"
-                                        || reason == "DNS_FAILED";
+                                let retryable = retryable_failure(failure.http_status, reason);
                                 let failed_at = (timestamp() * 1000) as i64;
                                 frontier.fail(
                                     lease,
@@ -938,7 +948,7 @@ impl Engine {
                 let (seconds, basis) = freshness_lifetime(&captured["provider_cost"]["headers"]);
                 json!({"seconds": seconds, "basis": basis})
             };
-            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"source":source.url,"response_bytes":captured["provider_cost"]["response_bytes"],"blocked_reason":result["blocked_reason"],"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"cache_freshness":cache_freshness,"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
+            calls.push(json!({"id":Uuid::new_v4().to_string(),"provider":provider.id(),"source":source.url,"response_bytes":captured["provider_cost"]["response_bytes"],"blocked_reason":result["blocked_reason"],"capability":"fetch.http","started_at":started,"completed_at":timestamp()*1000,"latency_ms":started_clock.elapsed().as_millis(),"content_ttfb_ms":captured["provider_cost"]["headers"]["ttfb_ms"],"content_body_ms":captured["provider_cost"]["headers"]["body_ms"],"latency_basis":"LATENCY_MS_IS_THE_WHOLE_SOURCE_INCLUDING_ROBOTS_AND_POLITENESS_GAPS_CONTENT_FIELDS_ARE_THE_CONTENT_REQUEST_ALONE","request_count":if fresh || recovered_capture {json!(0)}else{captured["provider_cost"]["request_count"].clone()},"quota_before":null,"quota_after":null,"estimated_cost_minor":0,"actual_cost_minor":0,"cache_hit":cache_hit,"cache_status":if stale_used{"STALE_USABLE"}else if cache_hit{"FRESH_OR_REVALIDATED"}else{"MISS"},"cache_freshness":cache_freshness,"result_count":result["products"].as_array().unwrap().len(),"evidence_ids":evidence_ids,"acquisition_failure":captured["provider_cost"]["acquisition_failure"],"status":if result["source_status"]=="SOURCE_BLOCKED"{"SOURCE_BLOCKED"}else{"COMPLETE"}}));
         }
         let (mut candidates, entity_resolution) = crate::resolution::resolve(candidates);
         let observed_sample = crate::intelligence::enrich(&mut candidates, &snapshots)?;

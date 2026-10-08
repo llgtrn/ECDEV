@@ -2,6 +2,7 @@
 pub mod amazon;
 pub mod commerce;
 pub mod document;
+pub mod gzip;
 pub mod microdata;
 pub mod open_prices;
 pub mod page_product;
@@ -122,6 +123,24 @@ impl Web {
         }
     }
 }
+/// A gzip-compressed sitemap: a gzip media type for a URL whose path ends in ".gz" (the
+/// sitemaps.org compressed form). A gzip body at any other URL is not read as a sitemap.
+pub fn is_gzip_sitemap(content_type: &str, url: &Url) -> bool {
+    let media = content_type
+        .split(';')
+        .next()
+        .unwrap_or("")
+        .trim()
+        .to_ascii_lowercase();
+    matches!(
+        media.as_str(),
+        "application/gzip"
+            | "application/x-gzip"
+            | "application/x-gunzip"
+            | "application/octet-stream"
+            | "binary/octet-stream"
+    ) && url.path().to_ascii_lowercase().ends_with(".gz")
+}
 /// XML media types, read only as sitemaps.
 pub fn is_xml(content_type: &str) -> bool {
     let media = content_type
@@ -165,6 +184,45 @@ pub fn normalize_url(input: &str) -> Result<String, String> {
     u.set_fragment(None);
     Ok(u.to_string())
 }
+/// The most body bytes a fetch reads.
+pub const MAX_BODY_BYTES: u64 = 4 * 1024 * 1024;
+
+/// Whether a `Content-Length` value declares more than `limit` bytes. Absent or unparseable
+/// declares nothing (the stream cap still applies).
+pub fn declared_length_exceeds(value: Option<&str>, limit: u64) -> bool {
+    value
+        .and_then(|v| v.trim().parse::<u64>().ok())
+        .is_some_and(|n| n > limit)
+}
+
+/// Whether a `Content-Encoding` value names a transformation ECDEV never asked for and cannot
+/// undo. Absent, empty and `identity` (in any case, with surrounding space) are no encoding.
+pub fn unsolicited_encoding(value: Option<&[u8]>) -> bool {
+    value.is_some_and(|v| {
+        let v = v.trim_ascii().to_ascii_lowercase();
+        !v.is_empty() && v != b"identity"
+    })
+}
+
+/// A `Location` header value as text for `redirect_target`. Header values are ASCII, but servers
+/// send raw non-ASCII bytes (a Japanese path, an IDN host) and clients follow them: every byte
+/// outside printable ASCII is percent-encoded as it was received, which preserves the bytes
+/// whatever encoding the server meant (UTF-8 or Shift_JIS) and needs no guess; a host the URL
+/// parser cannot decode from those bytes is refused later as INVALID_REDIRECT. Before this, a
+/// non-ASCII `Location` was dropped as if absent and the redirect read as the final response
+/// (found against Scrapy's redirect middleware, which does the same percent-encoding).
+pub fn location_text(raw: &[u8]) -> String {
+    let mut out = String::with_capacity(raw.len());
+    for &b in raw {
+        if (0x21..0x7f).contains(&b) || b == b' ' {
+            out.push(b as char);
+        } else {
+            out.push_str(&format!("%{b:02X}"));
+        }
+    }
+    out
+}
+
 /// Where a response sends the fetch loop next. `Ok(None)`: the response is final (only 301, 302,
 /// 303, 307 and 308 with a `Location` redirect, as in httpx). `Ok(Some(url))`: the next URL,
 /// resolved against `current` and held to the same public-URL policy as the requested one
@@ -493,9 +551,19 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
         product["provenance"] = json!({"source":"MICRODATA","page":source,"data_container":"microdata","json_pointer":raw_pointer,"raw_capture_sha256":hash,"identity_assertions":{"title":product["title"],"sku":product["sku"]},"price_derivation":"Exact minor-unit conversion; conflicting offers retained; no selected price"});
     }
     let mut links = BTreeSet::new();
+    // Relative links resolve against the document base: the first <base href> (itself resolved
+    // against the page URL), else the page URL (HTML standard; Scrapy's get_base_url). Only an
+    // http(s) base counts; sameness of host is still judged against the page itself.
+    let link_base = doc
+        .select(&Selector::parse("base[href]").unwrap())
+        .next()
+        .and_then(|b| b.value().attr("href"))
+        .and_then(|h| base.join(h.trim()).ok())
+        .filter(|u| matches!(u.scheme(), "http" | "https"))
+        .unwrap_or_else(|| base.clone());
     for a in doc.select(&Selector::parse("a[href]").unwrap()) {
         if let Some(h) = a.value().attr("href")
-            && let Ok(u) = base.join(h)
+            && let Ok(u) = link_base.join(h)
             && u.host_str() == base.host_str()
             && let Ok(normal) = normalize_url(u.as_str())
         {
@@ -579,6 +647,10 @@ impl Web {
         // the handshake) delivered no request to the source: one retry, never more. Live, 5 of
         // 60 requests to api.bsky.app through the operator proxy failed so (2026-10-07).
         let retry = request.try_clone();
+        // Per-request server latency, recorded as Scrapy does (download_latency): time from
+        // sending to the response headers, then the body read. Without it a slow origin and a
+        // slow ECDEV cannot be told apart, and any adaptive politeness would rest on guesses.
+        let sent = Instant::now();
         let (response, connect_retries) = match request.send() {
             Ok(r) => (r, 0),
             Err(e) if e.is_connect() => {
@@ -588,20 +660,40 @@ impl Web {
             Err(_) => return Err("FETCH_NETWORK_ERROR".into()),
         };
         let status = response.status().as_u16();
-        let headers = json!({"connect_retries":connect_retries,"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").and_then(|v|v.to_str().ok()),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"content_length":response.headers().get("content-length").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
+        let ttfb_ms = sent.elapsed().as_millis() as u64;
+        let headers = json!({"connect_retries":connect_retries,"ttfb_ms":ttfb_ms,"etag":response.headers().get("etag").and_then(|v|v.to_str().ok()),"last_modified":response.headers().get("last-modified").and_then(|v|v.to_str().ok()),"content_type":response.headers().get("content-type").and_then(|v|v.to_str().ok()),"location":response.headers().get("location").map(|v|location_text(v.as_bytes())),"retry_after":response.headers().get("retry-after").and_then(|v|v.to_str().ok()),"cache_control":response.headers().get("cache-control").and_then(|v|v.to_str().ok()),"expires":response.headers().get("expires").and_then(|v|v.to_str().ok()),"date":response.headers().get("date").and_then(|v|v.to_str().ok()),"age":response.headers().get("age").and_then(|v|v.to_str().ok()),"content_length":response.headers().get("content-length").and_then(|v|v.to_str().ok()),"received_at_ms":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_millis().min(i64::MAX as u128) as i64});
         if status != 200 {
             // Error, redirect and validator responses are control evidence; an unused
             // body read must not discard their status or Retry-After header.
             return Ok((status, vec![], headers));
         }
-        let mut body = vec![];
-        response
-            .take(4 * 1024 * 1024 + 1)
-            .read_to_end(&mut body)
-            .map_err(|_| "BODY_READ_FAILED")?;
-        if body.len() > 4 * 1024 * 1024 {
+        // ECDEV asks for no compression (no Accept-Encoding) and carries no decoder: a body that
+        // is encoded anyway would be parsed as the page while still compressed, silently.
+        // Refused by name instead; a bounded decoder is a separate decision (see the Scrapy
+        // review: its decompression is capped at DOWNLOAD_MAXSIZE on the decoded output).
+        if unsolicited_encoding(
+            response
+                .headers()
+                .get("content-encoding")
+                .map(|v| v.as_bytes()),
+        ) {
+            return Err("UNSOLICITED_CONTENT_ENCODING".into());
+        }
+        // A declared length past the cap is refused before a byte of body is read (Scrapy checks
+        // Content-Length against DOWNLOAD_MAXSIZE first, then caps the stream as well).
+        if declared_length_exceeds(headers["content_length"].as_str(), MAX_BODY_BYTES) {
             return Err("BODY_LIMIT_EXCEEDED".into());
         }
+        let mut headers = headers;
+        let mut body = vec![];
+        response
+            .take(MAX_BODY_BYTES + 1)
+            .read_to_end(&mut body)
+            .map_err(|_| "BODY_READ_FAILED")?;
+        if body.len() as u64 > MAX_BODY_BYTES {
+            return Err("BODY_LIMIT_EXCEEDED".into());
+        }
+        headers["body_ms"] = json!(sent.elapsed().as_millis() as u64 - ttfb_ms);
         Ok((status, body, headers))
     }
 }
@@ -767,7 +859,10 @@ impl Provider for Web {
                     ));
                 }
                 if !headers["content_type"].as_str().is_some_and(|c| {
-                    c.contains("text/html") || c.contains("application/xhtml+xml") || is_xml(c)
+                    c.contains("text/html")
+                        || c.contains("application/xhtml+xml")
+                        || is_xml(c)
+                        || is_gzip_sitemap(c, &url)
                 }) {
                     return Err("UNSUPPORTED_CONTENT_TYPE".into());
                 }
@@ -784,7 +879,9 @@ impl Provider for Web {
                 final_url,
             )
         };
-        let sitemap = is_xml(headers["content_type"].as_str().unwrap_or(""));
+        let sitemap = is_xml(headers["content_type"].as_str().unwrap_or(""))
+            || Url::parse(&final_url)
+                .is_ok_and(|u| is_gzip_sitemap(headers["content_type"].as_str().unwrap_or(""), &u));
         let mut result = if sitemap {
             sitemap_result(&raw, &final_url)?
         } else {
@@ -835,6 +932,111 @@ impl Provider for Web {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn relative_links_resolve_against_base_href() {
+        let html = |base: &str| {
+            format!(
+                "<base href=\"{base}\"><a href=\"item/1\">a</a><a href=\"/abs\">b</a><a href=\"https://other.example/x\">c</a>"
+            )
+        };
+        let links =
+            |b: &str| extract(&html(b), "https://shop.example/cat/page").unwrap()["links"].clone();
+        // No base: relative to the page's directory.
+        assert_eq!(
+            extract("<a href=\"item/1\">a</a>", "https://shop.example/cat/page").unwrap()["links"]
+                [0],
+            "https://shop.example/cat/item/1"
+        );
+        // A relative base moves relative links; an absolute path is unaffected; other hosts stay out.
+        assert_eq!(
+            links("/shop/"),
+            serde_json::json!([
+                "https://shop.example/abs",
+                "https://shop.example/shop/item/1"
+            ])
+        );
+        // An absolute base on the same host; a base on another host would send same-host judgement
+        // elsewhere, so links resolved there are dropped as off-host.
+        assert_eq!(
+            links("https://shop.example/v2/")[1],
+            "https://shop.example/v2/item/1"
+        );
+        assert_eq!(links("https://cdn.example/"), serde_json::json!([]));
+        // A non-http base is ignored.
+        assert_eq!(
+            links("javascript:void(0)")[1],
+            "https://shop.example/cat/item/1"
+        );
+    }
+
+    #[test]
+    fn a_declared_length_past_the_cap_is_refused_before_reading() {
+        assert!(declared_length_exceeds(Some("4194305"), MAX_BODY_BYTES));
+        assert!(declared_length_exceeds(
+            Some(" 99999999999 "),
+            MAX_BODY_BYTES
+        ));
+        for fine in [
+            None,
+            Some("4194304"),
+            Some("0"),
+            Some("abc"),
+            Some("-1"),
+            Some(""),
+        ] {
+            assert!(!declared_length_exceeds(fine, MAX_BODY_BYTES), "{fine:?}");
+        }
+    }
+
+    #[test]
+    fn a_gzip_media_type_is_a_sitemap_only_at_a_dot_gz_url() {
+        let u = |s: &str| Url::parse(s).unwrap();
+        assert!(is_gzip_sitemap(
+            "application/gzip",
+            &u("https://shop.example/sitemap.xml.gz")
+        ));
+        assert!(is_gzip_sitemap(
+            "application/x-gzip; charset=binary",
+            &u("https://shop.example/a/sitemap-1.XML.GZ?x=1")
+        ));
+        assert!(is_gzip_sitemap(
+            "application/octet-stream",
+            &u("https://shop.example/s.gz")
+        ));
+        assert!(!is_gzip_sitemap(
+            "application/gzip",
+            &u("https://shop.example/data")
+        ));
+        assert!(!is_gzip_sitemap(
+            "text/html",
+            &u("https://shop.example/sitemap.xml.gz")
+        ));
+    }
+
+    #[test]
+    fn only_a_real_content_encoding_is_unsolicited() {
+        for none in [
+            None,
+            Some(&b""[..]),
+            Some(b"  "),
+            Some(b"identity"),
+            Some(b" Identity "),
+        ] {
+            assert!(!unsolicited_encoding(none), "{none:?}");
+        }
+        for encoded in [
+            &b"gzip"[..],
+            b"GZIP",
+            b"br",
+            b"deflate",
+            b"zstd",
+            b"gzip, br",
+            b"x-gzip",
+        ] {
+            assert!(unsolicited_encoding(Some(encoded)), "{encoded:?}");
+        }
+    }
 
     #[test]
     fn egress_is_direct_by_default_and_refuses_half_configuration() {

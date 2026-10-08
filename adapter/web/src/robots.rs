@@ -12,10 +12,15 @@ pub struct Decision {
 #[derive(Default)]
 struct Group {
     agents: Vec<String>,
-    rules: Vec<(bool, String, usize)>,
+    /// (allow, pattern, line, priority). Priority is the pattern's length as written (RFC 9309:
+    /// the most specific match is the one with the most octets), so "/item/*" outranks "/item/".
+    rules: Vec<(bool, String, usize, usize)>,
     delay: Option<f64>,
     unknown: bool,
     started: bool,
+    /// The group's agents come from User-agent lines, not from the implicit wildcard group that
+    /// rules written before any User-agent line fall into.
+    explicit: bool,
 }
 
 fn normalized_path(raw: &str, base: &str) -> Option<String> {
@@ -30,7 +35,7 @@ fn normalized_path(raw: &str, base: &str) -> Option<String> {
         url.query().map(|q| format!("?{q}")).unwrap_or_default()
     ))
 }
-fn pattern(raw: &str, base: &str) -> Option<String> {
+fn pattern(raw: &str, base: &str) -> Option<(String, usize)> {
     if raw.len() > 4096 {
         return None;
     }
@@ -63,10 +68,11 @@ fn pattern(raw: &str, base: &str) -> Option<String> {
             result.push(c);
         }
     }
+    let written = result.len();
     while result.ends_with('*') {
         result.pop();
     }
-    Some(result)
+    Some((result, written))
 }
 fn matches(pattern: &str, path: &str) -> bool {
     let anchored = pattern.ends_with('$');
@@ -111,7 +117,7 @@ pub const MAX_DECLARED_SITEMAPS: usize = 50;
 
 pub fn sitemaps(text: &str, robots: &Url) -> Vec<Url> {
     let mut out: Vec<Url> = vec![];
-    for line in text.lines() {
+    for line in text.replace("\r\n", "\n").replace('\r', "\n").lines() {
         let line = line.split('#').next().unwrap_or("").trim();
         let Some((key, value)) = line.split_once(':') else {
             continue;
@@ -243,6 +249,9 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
         agents: vec!["*".into()],
         ..Default::default()
     };
+    // Line ends are LF, CRLF or a bare CR (old Mac files); a bare CR left in place would make the
+    // whole file one line with no directives, which reads as allow-all.
+    let text = text.replace("\r\n", "\n").replace('\r', "\n");
     for (number, line) in text.trim_start_matches('\u{feff}').lines().enumerate() {
         let line = line.split('#').next().unwrap_or("").trim();
         let Some((key, value)) = line.split_once(':') else {
@@ -255,8 +264,14 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
                 groups.push(group);
                 group = Group::default();
             }
-            if group.agents == ["*"] && group.rules.is_empty() && !group.started {
+            // The first User-agent line replaces the implicit wildcard; later ones add to the
+            // group. (Comparing the list with ["*"] could not tell the implicit wildcard from a
+            // real "User-agent: *" line, so "User-agent: *" followed by "User-agent: Yandex"
+            // lost its wildcard: found on google.com's live robots.txt, which then allowed
+            // /search.)
+            if !group.explicit {
                 group.agents.clear();
+                group.explicit = true;
             }
             group.agents.push(value.to_ascii_lowercase());
             continue;
@@ -275,7 +290,9 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
                     continue;
                 }
                 match pattern(value, url) {
-                    Some(p) => group.rules.push((key == "allow", p, number + 1)),
+                    Some((p, written)) => {
+                        group.rules.push((key == "allow", p, number + 1, written))
+                    }
                     None => group.unknown = true,
                 }
             }
@@ -290,6 +307,7 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
     let agent = agent.to_ascii_lowercase();
     let specific = groups.iter().any(|g| g.agents.contains(&agent));
     let mut selected_rules = vec![];
+    let mut top: Vec<(bool, &str)> = vec![];
     let mut priority = 0;
     let mut allowed = true;
     let mut delay: Option<f64> = None;
@@ -304,17 +322,30 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
         if let Some(d) = g.delay {
             delay = Some(delay.unwrap_or(0.0).max(d));
         }
-        for (allow, p, line) in &g.rules {
+        for (allow, p, line, rank) in &g.rules {
             if matches(p, &path) {
-                selected_rules.push(json!({"line":line,"directive":if *allow{"Allow"}else{"Disallow"},"pattern":p,"priority":p.len()}));
-                if p.len() > priority {
-                    priority = p.len();
+                selected_rules.push(json!({"line":line,"directive":if *allow{"Allow"}else{"Disallow"},"pattern":p,"priority":rank}));
+                if *rank > priority {
+                    priority = *rank;
                     allowed = *allow;
-                } else if p.len() == priority {
-                    allowed &= *allow;
+                    top.clear();
+                } else if *rank == priority {
+                    // RFC 9309: of equally specific rules the least restrictive wins, except
+                    // that one pattern given both directives is a contradiction, and stays
+                    // refused (below).
+                    allowed |= *allow;
+                }
+                if *rank == priority {
+                    top.push((*allow, p.as_str()));
                 }
             }
         }
+    }
+    if top
+        .iter()
+        .any(|(a, p)| *a && top.iter().any(|(b, q)| !*b && p == q))
+    {
+        allowed = false;
     }
     if path == "/robots.txt" {
         allowed = true;
@@ -322,13 +353,75 @@ pub fn evaluate(text: &str, url: &str, agent: &str) -> Decision {
     Decision {
         allowed,
         crawl_delay_seconds: delay,
-        evidence: json!({"agent":agent,"selection":if specific{"EXACT_AGENT"}else{"WILDCARD_FALLBACK"},"path_and_query":path,"matched_rules":selected_rules,"tie_policy":"DENY_IF_AMBIGUOUS","contract":"REPPY_ORACLE_TESTED_SUBSET"}),
+        evidence: json!({"agent":agent,"selection":if specific{"EXACT_AGENT"}else{"WILDCARD_FALLBACK"},"path_and_query":path,"matched_rules":selected_rules,"tie_policy":"LEAST_RESTRICTIVE_EXCEPT_ONE_PATTERN_WITH_BOTH_DIRECTIVES_DENIED","contract":"REPPY_ORACLE_TESTED_SUBSET"}),
     }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn consecutive_user_agent_lines_share_one_group_including_a_wildcard() {
+        // google.com's robots.txt opens this way and disallows /search for every agent.
+        let robots = "User-agent: *\nUser-agent: Yandex\nDisallow: /search\nAllow: /search/about\n";
+        assert!(!evaluate(robots, "https://x.example/search?q=1", "ECDEV").allowed);
+        assert!(evaluate(robots, "https://x.example/search/about", "ECDEV").allowed);
+        assert!(!evaluate(robots, "https://x.example/search", "Yandex").allowed);
+        // Rules written before any User-agent line still fall into the wildcard group.
+        assert!(
+            !evaluate(
+                "Disallow: /a\nUser-agent: other\nDisallow: /b\n",
+                "https://x.example/a",
+                "ECDEV"
+            )
+            .allowed
+        );
+    }
+
+    #[test]
+    fn the_longest_pattern_as_written_wins_wildcard_included() {
+        // monolog.r-n-i.jp opens its item pages this way; a trailing wildcard made the allow tie
+        // with the disallow (ECDEV compared lengths after trimming it) and the pages were refused.
+        let robots = "User-agent: *\nDisallow: /item/\nAllow: /item/*\nDisallow: /api/\n";
+        assert!(evaluate(robots, "https://x.example/item/", "ECDEV").allowed);
+        assert!(evaluate(robots, "https://x.example/item/42", "ECDEV").allowed);
+        assert!(!evaluate(robots, "https://x.example/api/x", "ECDEV").allowed);
+        // Equally specific different patterns: the least restrictive wins (cs.android.com
+        // disallows "/*" and allows "/$", and means its root to be fetchable).
+        let android = "User-agent: *\nDisallow: /*\nAllow: /$\nAllow: /android$\n";
+        assert!(evaluate(android, "https://x.example/", "ECDEV").allowed);
+        assert!(evaluate(android, "https://x.example/android", "ECDEV").allowed);
+        assert!(!evaluate(android, "https://x.example/other", "ECDEV").allowed);
+        // A genuine contradiction (same pattern, both directives) still refuses.
+        assert!(
+            !evaluate(
+                "User-agent: *\nDisallow: /a\nAllow: /a\n",
+                "https://x.example/a",
+                "ECDEV"
+            )
+            .allowed
+        );
+    }
+
+    #[test]
+    fn a_bare_cr_ends_a_line() {
+        let robots = "User-agent: *\rDisallow: /a\r";
+        assert!(!evaluate(robots, "https://x.example/a", "ECDEV").allowed);
+        assert!(
+            !evaluate(
+                "User-agent: *\r\nDisallow: /a\r\n",
+                "https://x.example/a",
+                "ECDEV"
+            )
+            .allowed
+        );
+        let map = sitemaps(
+            "Sitemap: https://x.example/s.xml\rSitemap: https://x.example/t.xml\r",
+            &Url::parse("https://x.example/robots.txt").unwrap(),
+        );
+        assert_eq!(map.len(), 2);
+    }
+
     #[test]
     fn locked_reppy_oracle() {
         let oracle: Value =

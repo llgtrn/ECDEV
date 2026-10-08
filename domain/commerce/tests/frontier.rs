@@ -492,3 +492,26 @@ fn deliberate_process_interruption_recovers_expired_lease() {
     fs::remove_file(p).unwrap();
     fs::remove_file(ready).unwrap();
 }
+
+#[test]
+fn a_url_past_the_length_bound_has_no_identity() {
+    use ecdev_core::frontier::{MAX_URL_BYTES, UrlPolicy, canonicalize};
+    let long = format!("https://shop.example/p?q={}", "a".repeat(MAX_URL_BYTES));
+    assert_eq!(
+        canonicalize(&long, None, &UrlPolicy::default(), 0).unwrap_err(),
+        "URL_TOO_LONG"
+    );
+    // The same bound holds for a relative link joined to its page, and a long but legal URL passes.
+    assert_eq!(
+        canonicalize(
+            &format!("/p?q={}", "a".repeat(MAX_URL_BYTES)),
+            Some("https://shop.example/"),
+            &UrlPolicy::default(),
+            0
+        )
+        .unwrap_err(),
+        "URL_TOO_LONG"
+    );
+    let ok = format!("https://shop.example/p?q={}", "a".repeat(2000));
+    assert!(canonicalize(&ok, None, &UrlPolicy::default(), 0).is_ok());
+}

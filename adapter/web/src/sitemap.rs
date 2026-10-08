@@ -1,7 +1,8 @@
 //! Bounded sitemap reading (sitemaps.org 0.9): a `<urlset>` lists pages, a `<sitemapindex>`
 //! lists further sitemaps. Only each entry's own `<loc>` and `<lastmod>` are read; extension
 //! elements such as `<image:loc>` are not entries. The protocol's limits (50,000 entries,
-//! 50 MiB uncompressed) are enforced, compressed bodies are refused rather than guessed, and an
+//! 50 MiB uncompressed) are enforced, gzip bodies are decoded under that cap (anything that does
+//! not decode completely is refused), and an
 //! entry whose location is not an absolute http(s) URL is counted as rejected, never repaired.
 
 use serde_json::{Value, json};
@@ -63,9 +64,16 @@ pub fn parse(body: &[u8]) -> Result<Sitemap, String> {
     if body.len() > MAX_BYTES {
         return Err("SITEMAP_TOO_LARGE".into());
     }
-    if body.starts_with(&[0x1f, 0x8b]) {
-        return Err("SITEMAP_COMPRESSED_UNSUPPORTED".into());
-    }
+    // A gzip sitemap (".xml.gz", the protocol's own compressed form) is read from the stored
+    // capture itself, so replay never depends on a second copy; the limit is the protocol's
+    // 50 MiB uncompressed, and a stream that does not decode completely is refused whole.
+    let decoded;
+    let body = if crate::gzip::is_gzip(body) {
+        decoded = crate::gzip::gunzip(body, MAX_BYTES).map_err(|e| e.code().to_string())?;
+        &decoded[..]
+    } else {
+        body
+    };
     let text = std::str::from_utf8(body).map_err(|_| "SITEMAP_NOT_UTF8")?;
     let text = text.trim_start_matches('\u{feff}');
     let (kind, tag) = match (text.find("<urlset"), text.find("<sitemapindex")) {
@@ -152,10 +160,8 @@ mod tests {
         let s = parse(i).unwrap();
         assert_eq!(s.kind, "SITEMAP_INDEX");
         assert_eq!(s.entries[0].0.query(), Some("from=1&to=9"));
-        assert_eq!(
-            parse(&[0x1f, 0x8b, 8]).unwrap_err(),
-            "SITEMAP_COMPRESSED_UNSUPPORTED"
-        );
+        // A gzip header with no stream behind it is refused by name, not read as text.
+        assert_eq!(parse(&[0x1f, 0x8b, 8]).unwrap_err(), "GZIP_TRUNCATED");
         assert_eq!(parse(b"<html></html>").unwrap_err(), "SITEMAP_ROOT_UNKNOWN");
         assert_eq!(
             parse(b"<urlset><url><loc>https://a.example/</loc>").unwrap_err(),
