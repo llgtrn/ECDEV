@@ -21,7 +21,11 @@ fn brand(p: &Value) -> String {
 /// A checksum-valid GTIN-8/12/13/14 as GTIN-14; None otherwise.
 pub fn gtin(v: &Value) -> Option<String> {
     let s = v.as_str()?;
-    if ![8, 12, 13, 14].contains(&s.len()) || !s.bytes().all(|b| b.is_ascii_digit()) {
+    // An all-zero code passes the check digit but is a placeholder, never a product.
+    if ![8, 12, 13, 14].contains(&s.len())
+        || !s.bytes().all(|b| b.is_ascii_digit())
+        || s.bytes().all(|b| b == b'0')
+    {
         return None;
     }
     let sum: u32 = s
@@ -32,17 +36,83 @@ pub fn gtin(v: &Value) -> Option<String> {
         .sum();
     (sum.is_multiple_of(10)).then(|| format!("{s:0>14}"))
 }
+/// An ISBN-13 as GTIN-14. ISBN-13 is an EAN-13 (prefix 978 or 979), and ISBNs are written with
+/// hyphens or spaces, so only here are those two separators removed. The stated value is kept
+/// beside it; an ISBN-10 is not a GTIN and stays a stated claim.
+pub fn isbn13(v: &Value) -> Option<String> {
+    let s: String = v
+        .as_str()?
+        .chars()
+        .filter(|c| *c != '-' && *c != ' ')
+        .collect();
+    if s.len() == 13 && (s.starts_with("978") || s.starts_with("979")) {
+        gtin(&json!(s))
+    } else {
+        None
+    }
+}
+const GTIN_FIELDS: [&str; 5] = ["gtin", "ean", "upc", "gtin8", "gtin14"];
+fn valid_codes(p: &Value) -> BTreeSet<String> {
+    GTIN_FIELDS
+        .iter()
+        .filter_map(|k| gtin(&p[*k]))
+        .chain(isbn13(&p["isbn"]))
+        .collect()
+}
+/// Every stated product code with what ECDEV can say about it. Nothing is repaired: a code that
+/// fails its check digit stays a claim and never becomes identity.
+pub fn identifier_claims(p: &Value) -> Vec<Value> {
+    let mut out = vec![];
+    for k in GTIN_FIELDS.iter().chain(["isbn"].iter()) {
+        let v = &p[*k];
+        let stated = match v {
+            Value::String(s) => s.clone(),
+            Value::Number(n) => n.to_string(),
+            _ => continue,
+        };
+        let (state, normalized) = if *k == "isbn" {
+            let compact: String = stated.chars().filter(|c| *c != '-' && *c != ' ').collect();
+            match isbn13(&json!(stated)) {
+                Some(g) => ("VALID_ISBN13_AS_GTIN13", Some(g)),
+                None if compact.len() == 10 => ("ISBN10_NOT_A_GTIN", None),
+                None if compact.len() == 13 && compact.bytes().all(|b| b.is_ascii_digit()) => {
+                    ("INVALID_CHECK_DIGIT_OR_PREFIX", None)
+                }
+                None => ("MALFORMED", None),
+            }
+        } else if let Some(g) = gtin(&json!(stated)) {
+            ("VALID_GTIN", Some(g))
+        } else if stated.bytes().all(|b| b.is_ascii_digit())
+            && [8, 12, 13, 14].contains(&stated.len())
+        {
+            ("INVALID_CHECK_DIGIT", None)
+        } else {
+            ("MALFORMED", None)
+        };
+        out.push(json!({"field":k,"stated":stated,"state":state,"gtin14_normalized":normalized}));
+    }
+    out
+}
 fn key(c: &Value) -> (String, &'static str) {
     let p = &c["product"];
     let variant = format!("{}|{}", text(&p["color"]), text(&p["size"]));
-    let codes: BTreeSet<_> = ["gtin", "ean", "upc", "gtin8", "gtin14"]
-        .iter()
-        .filter_map(|k| gtin(&p[*k]))
-        .collect();
+    let codes = valid_codes(p);
     if codes.len() == 1 {
         return (
             format!("gtin:{}:{variant}", codes.first().unwrap()),
             "CHECKSUM_VALID_GTIN_AND_VARIANT",
+        );
+    }
+    if codes.len() > 1 {
+        // Two different valid codes on one product are a conflict between claims. Neither is
+        // chosen, nothing merges on either, and the record stays its own entity.
+        return (
+            format!(
+                "gtin_conflict:{}:{}:{variant}",
+                codes.iter().cloned().collect::<Vec<_>>().join("+"),
+                c["source"].as_str().unwrap_or("")
+            ),
+            "CONFLICTING_GTIN_CLAIMS",
         );
     }
     let asin = p["asin"].as_str().unwrap_or("").to_ascii_uppercase();
@@ -130,9 +200,11 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
     for c in records {
         let (mut identity, basis) = key(&c);
         if basis == "ORIGIN_SCOPED_SKU_AND_VARIANT"
-            && ["gtin", "ean", "upc", "gtin8", "gtin14"].iter().all(|k| {
-                c["product"][*k].is_null() && c["product"]["fields"][*k]["status"] != "CONFLICT"
-            })
+            && ["gtin", "ean", "upc", "gtin8", "gtin14", "isbn"]
+                .iter()
+                .all(|k| {
+                    c["product"][*k].is_null() && c["product"]["fields"][*k]["status"] != "CONFLICT"
+                })
             && let Some(ids) = sku_anchor(&c).and_then(|sku| gtin_skus.get(&sku))
             && ids.len() == 1
         {
@@ -281,9 +353,32 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
                     primary["product"]["price_status"].clone();
             }
         }
+        let claims = identifier_claims(&primary["product"]);
+        let identifier_state = if basis == "CONFLICTING_GTIN_CLAIMS" {
+            let codes: Vec<_> = claims
+                .iter()
+                .filter_map(|c| c["gtin14_normalized"].as_str())
+                .collect::<BTreeSet<_>>()
+                .into_iter()
+                .collect();
+            conflicts.insert(
+                "gtin14".into(),
+                json!({"status":"CONFLICT","codes":codes,"claims":claims}),
+            );
+            "IDENTIFIER_CONFLICT"
+        } else if basis == "CHECKSUM_VALID_GTIN_AND_VARIANT" {
+            "VALID_GTIN_STATED"
+        } else if claims
+            .iter()
+            .any(|c| !c["state"].as_str().unwrap_or("").starts_with("VALID"))
+        {
+            "INVALID_IDENTIFIER_STATED_NOT_USED"
+        } else {
+            "NO_GTIN_STATED"
+        };
         primary["evidence_ids"] = json!(evidence);
         primary["entity_id"] = json!(entity_id);
-        primary["resolution"] = json!({"status":"DERIVED_IDENTITY_FROM_SOURCE_ASSERTIONS","basis":basis,"identity_key":identity,"source_pages":sources,"observation_count":rows.len(),"observations":rows,"conflicts":conflicts,"independently_verified_identity":false});
+        primary["resolution"] = json!({"status":"DERIVED_IDENTITY_FROM_SOURCE_ASSERTIONS","basis":basis,"identity_key":identity,"identifier_state":identifier_state,"identifier_claims":claims,"source_pages":sources,"observation_count":rows.len(),"observations":rows,"conflicts":conflicts,"independently_verified_identity":false});
         let title = text(&primary["product"]["title"]);
         if !title.is_empty() {
             title_groups.entry(title).or_default().push(json!({"candidate_id":primary["id"],"entity_id":entity_id,"brand":brand(&primary["product"])}));
@@ -318,6 +413,125 @@ mod tests {
     use super::*;
     fn candidate(id: &str, origin: &str, sku: &str, color: &str) -> Value {
         json!({"id":id,"source":format!("https://{origin}/products/{id}"),"product":{"title":"Coffee Cup","sku":sku,"color":color,"brand":"Hario","price_minor":3000,"currency":"JPY"},"evidence_ids":[id],"state":"VALIDATING"})
+    }
+    #[test]
+    fn identifier_matrix_normalizes_by_standard_and_never_repairs() {
+        // Valid forms of one product, written four ways, share a GTIN-14.
+        let ean = "4006381333931";
+        for (stated, normalized) in [
+            (ean, "04006381333931"),
+            ("04006381333931", "04006381333931"),
+            ("036000291452", "00036000291452"),
+            ("0036000291452", "00036000291452"),
+            ("73513537", "00000073513537"),
+            ("9780306406157", "09780306406157"),
+        ] {
+            assert_eq!(
+                gtin(&json!(stated)).as_deref(),
+                Some(normalized),
+                "{stated}"
+            );
+        }
+        // Not repaired: bad check digit, bad length, separators, letters, numbers, all-zero.
+        for bad in [
+            "4006381333932",
+            "400638133393",
+            "40063813339311",
+            "4006381-333931",
+            " 4006381333931",
+            "4006381333931 ",
+            "40063813339A1",
+            "",
+            "0000000000000",
+            "00000000",
+            "000000000000",
+            "00000000000000",
+        ] {
+            assert_eq!(gtin(&json!(bad)), None, "{bad:?}");
+        }
+        assert_eq!(
+            gtin(&json!(4006381333931_u64)),
+            None,
+            "a JSON number is not a stated string"
+        );
+        // ISBN-13 is an EAN-13 and is written with hyphens; ISBN-10 and bad ones are not GTINs.
+        assert_eq!(
+            isbn13(&json!("978-3-473-48878-0")).as_deref(),
+            Some("09783473488780")
+        );
+        assert_eq!(
+            isbn13(&json!("978 0 306 40615 7")).as_deref(),
+            Some("09780306406157")
+        );
+        for bad in [
+            "0306406152",
+            "978-0-306-40615-8",
+            "4006381333931",
+            "9770306406157",
+            "",
+        ] {
+            assert_eq!(isbn13(&json!(bad)), None, "{bad}");
+        }
+        let claims = identifier_claims(
+            &json!({"ean":"4006381333932","upc":"036000291452","gtin":"abc","isbn":"0306406152"}),
+        );
+        let state = |f: &str| claims.iter().find(|c| c["field"] == f).unwrap()["state"].clone();
+        assert_eq!(state("ean"), "INVALID_CHECK_DIGIT");
+        assert_eq!(state("upc"), "VALID_GTIN");
+        assert_eq!(state("gtin"), "MALFORMED");
+        assert_eq!(state("isbn"), "ISBN10_NOT_A_GTIN");
+    }
+    #[test]
+    fn conflicting_valid_codes_stay_a_visible_conflict_and_never_merge() {
+        let mut both = candidate("both", "one.example", "C1", "");
+        both["product"]["ean"] = json!("4006381333931");
+        both["product"]["upc"] = json!("036000291452");
+        let mut plain = candidate("plain", "one.example", "C1", "");
+        plain["product"]["ean"] = json!("4006381333931");
+        let (rows, _) = resolve(vec![both, plain]);
+        assert_eq!(
+            rows.len(),
+            2,
+            "a conflicted record is not merged into either code"
+        );
+        let conflicted = rows
+            .iter()
+            .find(|r| r["resolution"]["basis"] == "CONFLICTING_GTIN_CLAIMS")
+            .unwrap();
+        assert_eq!(
+            conflicted["resolution"]["identifier_state"],
+            "IDENTIFIER_CONFLICT"
+        );
+        assert_eq!(
+            conflicted["resolution"]["conflicts"]["gtin14"]["codes"],
+            json!(["00036000291452", "04006381333931"])
+        );
+        let other = rows
+            .iter()
+            .find(|r| r["resolution"]["basis"] == "CHECKSUM_VALID_GTIN_AND_VARIANT")
+            .unwrap();
+        assert_eq!(other["resolution"]["identifier_state"], "VALID_GTIN_STATED");
+        // The same code in ISBN form and EAN form is one identity, not a conflict.
+        let mut book = candidate("book", "two.example", "B1", "");
+        book["product"]["isbn"] = json!("978-3-473-48878-0");
+        book["product"]["ean"] = json!("9783473488780");
+        let (rows, _) = resolve(vec![book]);
+        assert_eq!(
+            rows[0]["resolution"]["identity_key"],
+            "gtin:09783473488780:|"
+        );
+        // An invalid code is reported and not used.
+        let mut bad = candidate("bad", "three.example", "D1", "");
+        bad["product"]["ean"] = json!("4006381333932");
+        let (rows, _) = resolve(vec![bad]);
+        assert_eq!(
+            rows[0]["resolution"]["identifier_state"],
+            "INVALID_IDENTIFIER_STATED_NOT_USED"
+        );
+        assert_eq!(
+            rows[0]["resolution"]["basis"],
+            "ORIGIN_SCOPED_SKU_AND_VARIANT"
+        );
     }
     #[test]
     fn near_duplicate_titles_are_uncertain_links_never_merges() {

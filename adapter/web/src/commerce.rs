@@ -17,6 +17,7 @@ pub fn annotate(product: &mut Value, page: &str, script: usize, hash: &str) {
         ("upc", "gtin12"),
         ("gtin8", "gtin8"),
         ("gtin14", "gtin14"),
+        ("isbn", "isbn"),
         ("mpn", "mpn"),
         ("model", "model"),
         ("images", "image"),

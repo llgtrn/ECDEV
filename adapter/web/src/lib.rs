@@ -1153,6 +1153,17 @@ mod tests {
         assert_eq!(money(&json!("550.50"), "JPY"), None);
     }
     #[test]
+    fn a_stated_isbn_is_kept_exactly_as_the_source_wrote_it_with_its_locator() {
+        // Shape of a live bookseller page (ravensburger.de): isbn written with hyphens beside an mpn.
+        let h = r#"<script type="application/ld+json">{"@type":"Product","name":"Raetselblock","mpn":"48878","isbn":"978-3-473-48878-0","offers":{"price":"7.99","priceCurrency":"EUR"}}</script>"#;
+        let v = extract(h, "https://books.example/p/48878").unwrap();
+        let p = &v["products"][0];
+        assert_eq!(p["isbn"], "978-3-473-48878-0");
+        assert_eq!(p["fields"]["isbn"]["evidence"][0]["json_pointer"], "/isbn");
+        assert_eq!(p["fields"]["isbn"]["status"], "OBSERVED");
+        assert_eq!(p["mpn"], "48878");
+    }
+    #[test]
     fn a_stated_iso_currency_converts_by_its_own_minor_units() {
         // Live: Uniqlo AU states "59.9" AUD and Sonos NO states NOK; both were left unknown.
         assert_eq!(money(&json!("59.9"), "AUD"), Some(5990));
