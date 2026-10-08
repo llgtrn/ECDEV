@@ -2267,4 +2267,50 @@ mod research_tests {
         );
         let _ = std::fs::remove_dir_all(root);
     }
+
+    #[test]
+    fn an_oversize_research_run_is_shortened_at_the_tool_boundary_and_pageable() {
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-runbound-{}",
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let engine = Engine::open(&root)
+            .unwrap()
+            .with_provider(Arc::new(ecdev_web::Web::default()));
+        let sources: Vec<_> = (0..20)
+            .map(|i| {
+                let links: String = (0..80).map(|k| format!("<a href='/p/{i}/{k}'>item {i} {k} {}</a>", "x".repeat(40))).collect();
+                json!({"url":format!("https://shop{i}.example/cup"),"fixture_html":format!("<title>Cup {i}</title><script type='application/ld+json'>{{\"@type\":\"Product\",\"name\":\"Cup {i}\",\"sku\":\"S{i}\",\"offers\":{{\"price\":\"19.90\",\"priceCurrency\":\"AUD\",\"availability\":\"https://schema.org/InStock\"}}}}</script>{links}")})
+            })
+            .collect();
+        let args = json!({"market":"PUBLIC_WEB","query":"cup","sources":sources,"max_pages":20});
+        let whole = engine.research(args.clone()).unwrap();
+        let whole_bytes = serde_json::to_vec(&whole).unwrap().len();
+        let out = engine.call("ecdev.research.run", args).unwrap();
+        let bytes = serde_json::to_vec(&out).unwrap().len();
+        assert!(
+            whole_bytes > ecdev_core::bound::MAX_RESULT_BYTES,
+            "fixture run is only {whole_bytes} bytes"
+        );
+        assert!(bytes <= ecdev_core::bound::MAX_RESULT_BYTES, "{bytes}");
+        assert!(
+            !out["output_bound"]["truncated"]
+                .as_object()
+                .unwrap()
+                .is_empty()
+        );
+        let id = out["run_id"].as_str().unwrap();
+        let page = engine
+            .call(
+                "ecdev.research.status",
+                json!({"run_id":id,"fields":["candidates"],"offset":0,"limit":5}),
+            )
+            .unwrap();
+        assert_eq!(page["candidates"].as_array().unwrap().len(), 5);
+        assert!(page["paging"]["candidates"]["total"].as_u64().unwrap() >= 20);
+        let _ = std::fs::remove_dir_all(root);
+    }
 }

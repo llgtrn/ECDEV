@@ -602,7 +602,9 @@ impl Engine {
             "ecdev.trend.compare" => self.trend_compare(args),
             "ecdev.trend.hypothesize" => self.trend_hypothesize(args),
             "ecdev.trend.watch" => self.trend_watch(args),
-            "ecdev.research.run" | "ecdev.product.discover" => self.research(args),
+            "ecdev.research.run" | "ecdev.product.discover" => {
+                self.research(args).and_then(|v| shape_run(v, &json!({})))
+            }
             "ecdev.monitor.create" => self.monitor_create(args),
             "ecdev.monitor.status" => self.monitor_status(args["watch_id"].as_str()),
             "ecdev.monitor.export" => self.monitor_export(required_str(&args, "watch_id")?),
@@ -627,17 +629,18 @@ impl Engine {
                 let frontier = crate::frontier::Frontier::open(
                     &self.root.join(".ecdev-data/runtime/ecdev.sqlite"),
                 )?;
-                match self.run(id) {
+                let res = match self.run(id) {
                     Ok(mut run) => {
                         if let Some(crawl) = run["crawl_run_id"].as_str() {
                             run["frontier"] = frontier.status(crawl)?;
                         }
-                        Ok(run)
+                        run
                     }
-                    Err(_) => Ok(
-                        json!({"run_id":id,"status":"CRAWL_RUNNING_OR_INTERRUPTED","frontier":frontier.status(id)?}),
-                    ),
-                }
+                    Err(_) => {
+                        json!({"run_id":id,"status":"CRAWL_RUNNING_OR_INTERRUPTED","frontier":frontier.status(id)?})
+                    }
+                };
+                shape_run(res, &args)
             }
             "ecdev.provider.budget" => self.budget_status(),
             "ecdev.provider.calls" => self.accounting(),
@@ -736,9 +739,9 @@ pub fn tool_definitions() -> Vec<Value> {
     ] {
         out.push(json!({"name":name,"description":desc,"inputSchema":empty}));
     }
-    for name in ["ecdev.research.status", "ecdev.evidence.inspect"] {
-        out.push(json!({"name":name,"description":"Persisted research run or evidence","inputSchema":run}));
-    }
+    let run_paged = json!({"type":"object","properties":{"run_id":{"type":"string"},"fields":{"type":"array","items":{"type":"string","maxLength":64},"minItems":1,"maxItems":20,"description":"Top-level fields of the run to return, each list paged by offset and limit. Without it an oversize run comes back with its long lists shortened and the loss named."},"offset":{"type":"integer","minimum":0},"limit":{"type":"integer","minimum":1,"maximum":500}},"required":["run_id"],"additionalProperties":false});
+    out.push(json!({"name":"ecdev.research.status","description":"Persisted research run; page any list with fields, offset and limit","inputSchema":run_paged}));
+    out.push(json!({"name":"ecdev.evidence.inspect","description":"Persisted research run or evidence","inputSchema":run}));
     out.push(json!({"name":"ecdev.simulation.compare","description":"Deterministic commerce simulation (SIMULATED, never observed, never demand): a scenario of typed buyer agents, or a baseline against a variant paired on common random numbers, over seeded replicates with dispersion; every declared parameter must be consumed; kept apart from observed stores; no network, no LLM","inputSchema":{"type":"object","properties":{"baseline":{"type":"object","description":"SimulationScenario: name, horizon_steps (1-365), step_seconds, population {buyers, budget_minor, price_sensitivity, brand_loyalty, category_interest as {low,high}}, market {currency, our_price_minor, competitor_price_minor, reference_price_minor}, shocks [{kind: OurPriceChange|CompetitorPriceChange, at_step, bps}], termination {rule: Horizon|Quiescence, window, max_units_per_step}, review_probability, return_base_probability"},"variant":{"type":"object","description":"Optional SimulationScenario compared against the baseline"},"seed":{"type":"integer","minimum":0},"replicates":{"type":"integer","minimum":1,"maximum":50,"default":10}},"required":["baseline","seed"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.reextract","description":"Re-derive typed product series (price, currency, availability) from the stored, hash-verified raw captures of up to 50 research runs with the current extractor, and report where it disagrees with what was recorded; missing or altered captures contribute nothing; no network","inputSchema":{"type":"object","properties":{"run_ids":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":50}},"required":["run_ids"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
@@ -893,6 +896,29 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
         }
     }
     None
+}
+
+/// A run result is read by a client with a context window: page it by field when asked,
+/// otherwise keep it under the tool-result bound and say what was shortened.
+fn shape_run(run: Value, args: &Value) -> Result<Value, String> {
+    if let Some(fields) = args["fields"].as_array() {
+        let fields: Vec<String> = fields
+            .iter()
+            .filter_map(|f| f.as_str().map(str::to_owned))
+            .collect();
+        let offset = args["offset"].as_u64().unwrap_or(0) as usize;
+        let limit =
+            (args["limit"].as_u64().unwrap_or(20) as usize).min(crate::bound::PAGE_LIMIT_MAX);
+        return crate::bound::project(&run, &fields, offset, limit);
+    }
+    let next = run["run_id"].as_str().map(|id| {
+        json!({"tool":"ecdev.research.status","arguments":{"run_id":id,"fields":["candidates"],"offset":0,"limit":20}})
+    });
+    Ok(crate::bound::bound(
+        run,
+        crate::bound::MAX_RESULT_BYTES,
+        next,
+    ))
 }
 
 #[cfg(test)]
