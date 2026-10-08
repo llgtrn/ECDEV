@@ -644,12 +644,19 @@ impl Engine {
             }
             "ecdev.provider.budget" => self.budget_status(),
             "ecdev.provider.calls" => self.accounting(),
-            "ecdev.research.candidates" => self.candidates(),
+            "ecdev.research.candidates" => self
+                .candidates()
+                .and_then(|v| shape_items(v, &args, "ecdev.research.candidates", json!({}))),
             "ecdev.research.reextract" => self.research_reextract(
                 &serde_json::from_value::<Vec<String>>(args["run_ids"].clone())
                     .map_err(|_| "Required string array: run_ids")?,
             ),
-            "ecdev.evidence.inspect" => self.evidence(required_str(&args, "run_id")?),
+            "ecdev.evidence.inspect" => {
+                let id = required_str(&args, "run_id")?;
+                self.evidence(id).and_then(|v| {
+                    shape_items(v, &args, "ecdev.evidence.inspect", json!({"run_id":id}))
+                })
+            }
             "ecdev.evidence.graph" => self.evidence_graph(),
             "ecdev.marketplace.normalize" => {
                 let entity = crate::marketplace::amazon_catalog(
@@ -732,16 +739,20 @@ pub fn tool_definitions() -> Vec<Value> {
             "ecdev.provider.calls",
             "Persisted provider call/cache accounting",
         ),
-        (
-            "ecdev.research.candidates",
-            "Candidate ledger including rejections",
-        ),
     ] {
         out.push(json!({"name":name,"description":desc,"inputSchema":empty}));
     }
+    let items_paged = |extra: bool| {
+        let mut props = json!({"offset":{"type":"integer","minimum":0},"limit":{"type":"integer","minimum":1,"maximum":500}});
+        if extra {
+            props["run_id"] = json!({"type":"string"});
+        }
+        json!({"type":"object","properties":props,"required":if extra {json!(["run_id"])} else {json!([])},"additionalProperties":false})
+    };
+    out.push(json!({"name":"ecdev.research.candidates","description":"Candidate ledger including rejections; paged by offset and limit, 50 per page by default","inputSchema":items_paged(false)}));
     let run_paged = json!({"type":"object","properties":{"run_id":{"type":"string"},"fields":{"type":"array","items":{"type":"string","maxLength":64},"minItems":1,"maxItems":20,"description":"Top-level fields of the run to return, each list paged by offset and limit. Without it an oversize run comes back with its long lists shortened and the loss named."},"offset":{"type":"integer","minimum":0},"limit":{"type":"integer","minimum":1,"maximum":500}},"required":["run_id"],"additionalProperties":false});
     out.push(json!({"name":"ecdev.research.status","description":"Persisted research run; page any list with fields, offset and limit","inputSchema":run_paged}));
-    out.push(json!({"name":"ecdev.evidence.inspect","description":"Persisted research run or evidence","inputSchema":run}));
+    out.push(json!({"name":"ecdev.evidence.inspect","description":"Persisted observations of a research run; paged by offset and limit, 50 per page by default","inputSchema":items_paged(true)}));
     out.push(json!({"name":"ecdev.simulation.compare","description":"Deterministic commerce simulation (SIMULATED, never observed, never demand): a scenario of typed buyer agents, or a baseline against a variant paired on common random numbers, over seeded replicates with dispersion; every declared parameter must be consumed; kept apart from observed stores; no network, no LLM","inputSchema":{"type":"object","properties":{"baseline":{"type":"object","description":"SimulationScenario: name, horizon_steps (1-365), step_seconds, population {buyers, budget_minor, price_sensitivity, brand_loyalty, category_interest as {low,high}}, market {currency, our_price_minor, competitor_price_minor, reference_price_minor}, shocks [{kind: OurPriceChange|CompetitorPriceChange, at_step, bps}], termination {rule: Horizon|Quiescence, window, max_units_per_step}, review_probability, return_base_probability"},"variant":{"type":"object","description":"Optional SimulationScenario compared against the baseline"},"seed":{"type":"integer","minimum":0},"replicates":{"type":"integer","minimum":1,"maximum":50,"default":10}},"required":["baseline","seed"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.reextract","description":"Re-derive typed product series (price, currency, availability) from the stored, hash-verified raw captures of up to 50 research runs with the current extractor, and report where it disagrees with what was recorded; missing or altered captures contribute nothing; no network","inputSchema":{"type":"object","properties":{"run_ids":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":50}},"required":["run_ids"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
@@ -896,6 +907,26 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
         }
     }
     None
+}
+
+/// A list result is returned as `{items, paging}`: the first page (50 by default), or the page
+/// asked for, with the total and the next offset. Nothing is dropped silently.
+fn shape_items(list: Value, args: &Value, tool: &str, base: Value) -> Result<Value, String> {
+    let all = list.as_array().ok_or("RESULT_NOT_A_LIST")?;
+    let offset = args["offset"].as_u64().unwrap_or(0) as usize;
+    let limit = (args["limit"].as_u64().unwrap_or(50) as usize).min(crate::bound::PAGE_LIMIT_MAX);
+    let mut page =
+        crate::bound::project(&json!({"items": all}), &["items".to_owned()], offset, limit)?;
+    // A page of large items can still exceed the bound: shorten it and say how to ask for less.
+    let mut arguments = base;
+    arguments["offset"] = json!(offset);
+    arguments["limit"] = json!((limit / 2).max(1));
+    page = crate::bound::bound(
+        page,
+        crate::bound::MAX_RESULT_BYTES,
+        Some(json!({"tool":tool,"arguments":arguments})),
+    );
+    Ok(page)
 }
 
 /// A run result is read by a client with a context window: page it by field when asked,

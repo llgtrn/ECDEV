@@ -2311,6 +2311,36 @@ mod research_tests {
             .unwrap();
         assert_eq!(page["candidates"].as_array().unwrap().len(), 5);
         assert!(page["paging"]["candidates"]["total"].as_u64().unwrap() >= 20);
+        // The ledgers are paged lists, not unbounded arrays.
+        let first = engine
+            .call("ecdev.research.candidates", json!({"limit":7}))
+            .unwrap();
+        assert_eq!(first["items"].as_array().unwrap().len(), 7);
+        let total = first["paging"]["items"]["total"].as_u64().unwrap();
+        assert!(total >= 20);
+        assert_eq!(first["paging"]["items"]["next_offset"], 7);
+        let tail = engine
+            .call(
+                "ecdev.research.candidates",
+                json!({"offset":total - 3,"limit":50}),
+            )
+            .unwrap();
+        assert_eq!(tail["items"].as_array().unwrap().len(), 3);
+        assert_eq!(
+            tail["paging"]["items"]["next_offset"],
+            serde_json::Value::Null
+        );
+        let evidence = engine
+            .call("ecdev.evidence.inspect", json!({"run_id":id,"limit":4}))
+            .unwrap();
+        assert_eq!(evidence["items"].as_array().unwrap().len(), 4);
+        assert!(evidence["paging"]["items"]["total"].as_u64().unwrap() >= 20);
+        assert!(
+            engine
+                .call("ecdev.research.candidates", json!({"limit":0}))
+                .unwrap_err()
+                .starts_with("SCHEMA_VIOLATION")
+        );
         let _ = std::fs::remove_dir_all(root);
     }
 }
