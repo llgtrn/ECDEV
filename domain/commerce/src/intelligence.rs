@@ -184,6 +184,9 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
                 if let (Some(currency), Some(price)) =
                     (offer["currency"].as_str(), offer["price_minor"].as_i64())
                 {
+                    if offer["audience"] == "BUSINESS_ONLY" {
+                        continue;
+                    }
                     prices
                         .entry(currency.to_string())
                         .or_default()

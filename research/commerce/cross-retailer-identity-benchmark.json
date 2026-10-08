@@ -1,0 +1,71 @@
+{
+  "record": "cross-retailer-identity-benchmark",
+  "base_head": "87ea5b63cebf21317d8433ff48b7b7402ed0ff2a",
+  "method": "Truth = one checksum-valid code stated in structured data of the fetched page (independent scanner). ECDEV side = ecdev_core resolve() groups over page-subject records from the same bytes. Search snippets were never identity evidence.",
+  "evidence_class": "OBSERVED_LIVE_PAGES_UNDER_ECDEV_POLICY",
+  "pages": 200,
+  "distinct_valid_codes": 78,
+  "results_by_relation": {
+    "SAME_HOST|hard_negative": {
+      "pairs": 97,
+      "false_merges": 0
+    },
+    "SAME_HOST|negative": {
+      "pairs": 3608,
+      "false_merges": 0
+    },
+    "SAME_RETAIL_GROUP|hard_negative": {
+      "pairs": 282,
+      "false_merges": 0
+    },
+    "SAME_RETAIL_GROUP|negative": {
+      "pairs": 10333,
+      "false_merges": 0
+    },
+    "SAME_RETAIL_GROUP|positive": {
+      "pairs": 240,
+      "merged": 240
+    },
+    "UNKNOWN_RELATION|negative": {
+      "pairs": 5719,
+      "false_merges": 0
+    }
+  },
+  "summary": {
+    "same_retail_group_positive_pairs": 240,
+    "same_retail_group_merged": 240,
+    "false_splits": 0,
+    "false_merges": 0,
+    "negative_pairs": 19659,
+    "hard_negative_pairs_same_host_or_group": 379,
+    "precision": 1.0,
+    "recall_same_group": 1.0
+  },
+  "independent_retailer_pairs": {
+    "found": 0,
+    "status": "UNMEASURED",
+    "reason": "Exact-identifier discovery found no independent-retailer page: retailer search surfaces had no static results (coolshop/hifi-regler 404, thomann no results, webhallen SPA); the book route (exlibris.ch, booktopia.com.au by ISBN URL) failed with proxy disconnects after 46 fetches, so INDEPENDENT_RETAILER and MANUFACTURER_VS_RETAILER stay UNKNOWN_RELATION, not assumed.",
+    "next_action": "Retry ISBN-URL fetches (exlibris, booktopia) on a network without proxy disconnects; the 13/13 Open Library catalogue-vs-ISBN pairs in identity-benchmark.json are CATALOGUE_DATABASE_VS_RETAILER-style evidence only."
+  },
+  "gtin_misuse_in_the_wild": "none observed in 200 pages (conflicting valid codes on one page: 0); absence recorded, not proof of absence",
+  "mpn_fallback": "not measured: GTIN baseline already resolves all same-group positives; no defect shown, no heuristic added",
+  "seller_sku": "The Elgiganten group shares SKUs across its own origins; SKU stays source-local and is never an identity key (unchanged).",
+  "defect_found_and_fixed": {
+    "what": "JSON-LD offers array carrying a public gross offer (599 DKK) and a business-only ex-VAT offer (479.2 DKK) was reported as price_status CONFLICT with a false 479.2-599 range, affecting every Elgiganten/Elkjop/Gigantti product and competition_evidence ranges.",
+    "fix": "Offers carry eligible_customer_type and audience (BUSINESS_ONLY or PUBLIC_OR_UNSTATED); headline price/range and competition price ranges exclude BUSINESS_ONLY offers, which stay visible as observed offers; two public offers that differ remain a CONFLICT.",
+    "tests": "business_only_offer_is_not_a_price_conflict_with_the_public_offer"
+  },
+  "competition_evidence": {
+    "scope": "OBSERVED_SAMPLE_ONLY, per-currency ranges, no FX conversion",
+    "example": "article 193793 DK/NO/FI resolves to one identity gtin:05722000134053 with 3 observations in 3 currencies (one page per currency).",
+    "decision_chain": [
+      "IDENTITY_CONFIRMED",
+      "COMPETITION_PARTIALLY_OBSERVED (same-group pages only, independence UNVERIFIED)",
+      "DEMAND_UNVERIFIED",
+      "SUPPLIER_UNKNOWN",
+      "ECONOMICS_UNKNOWN"
+    ],
+    "next_action": "Observe an independent retailer by exact identifier; OFFICIAL_MARKETPLACE_VALIDATION_PENDING while SP-API credentials are absent."
+  },
+  "bottleneck": "Independent-retailer exact-identifier discovery (not identity resolution, which shows 0 false merges / 0 false splits on this sample)."
+}

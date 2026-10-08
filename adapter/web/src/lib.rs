@@ -366,9 +366,24 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
                 let observed_offers:Vec<Value>=raw_offers.iter().enumerate().map(|(i,offer)|{
                     let currency=offer["priceCurrency"].as_str().unwrap_or("");
                     let interpretation=offer["price"].as_str().map(|raw|json!({"state":if raw.len()<=4096{"DERIVED"}else{"UNKNOWN"},"result":price::parse_price(Some(raw),offer["priceCurrency"].as_str(),None,None),"method":"FIRST_PRICE_TEXT_CURRENCY_TOKEN_AND_SEPARATOR_HEURISTICS","used_for_observed_price":false,"currency_token_is_iso_identity":false,"limitations":"First number may precede the actual price; signs may be discarded; free substring may become zero. Requires source review before commercial use."}));
-                    json!({"price_minor":money(&offer["price"],currency),"raw_price":offer["price"],"price_text_interpretation":interpretation,"currency":offer["priceCurrency"],"availability":offer["availability"],"seller":offer["seller"],"sku":offer["sku"],"url":offer["url"],"provenance":{"source":"JSON_LD","field_path":format!("Product.offers[{i}]")}})
+                    json!({"price_minor":money(&offer["price"],currency),"raw_price":offer["price"],"price_text_interpretation":interpretation,"currency":offer["priceCurrency"],"availability":offer["availability"],"seller":offer["seller"],"sku":offer["sku"],"url":offer["url"],"eligible_customer_type":offer["eligibleCustomerType"],"audience":offer_audience(offer),"provenance":{"source":"JSON_LD","field_path":format!("Product.offers[{i}]")}})
                 }).collect();
-                let currencies: BTreeSet<_> = observed_offers
+                // A business-only offer (ex-VAT trade price) is a different price for a different
+                // audience, not a conflicting price for the same product: it stays visible as an
+                // observed offer but is outside the headline price and range. If every offer is
+                // business-only the headline keeps them all.
+                let headline: Vec<&Value> = {
+                    let public: Vec<&Value> = observed_offers
+                        .iter()
+                        .filter(|o| o["audience"] != "BUSINESS_ONLY")
+                        .collect();
+                    if public.is_empty() {
+                        observed_offers.iter().collect()
+                    } else {
+                        public
+                    }
+                };
+                let currencies: BTreeSet<_> = headline
                     .iter()
                     .filter_map(|v| v["currency"].as_str())
                     .collect();
@@ -377,14 +392,14 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
                 } else {
                     ""
                 };
-                let prices: BTreeSet<_> = observed_offers
+                let prices: BTreeSet<_> = headline
                     .iter()
                     .filter_map(|v| v["price_minor"].as_i64())
                     .collect();
-                let price = if !observed_offers.is_empty()
+                let price = if !headline.is_empty()
                     && currencies.len() == 1
                     && prices.len() == 1
-                    && observed_offers.iter().all(|o| o["price_minor"].is_i64())
+                    && headline.iter().all(|o| o["price_minor"].is_i64())
                 {
                     prices.first().copied()
                 } else {
@@ -404,6 +419,18 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
             }
         }
         _ => {}
+    }
+}
+/// Who an offer is addressed to, from its stated `eligibleCustomerType`: business-only when it
+/// names business and neither public nor consumer; otherwise public or unstated.
+fn offer_audience(offer: &Value) -> &'static str {
+    let t = offer["eligibleCustomerType"]
+        .to_string()
+        .to_ascii_lowercase();
+    if t.contains("business") && !t.contains("public") && !t.contains("consumer") {
+        "BUSINESS_ONLY"
+    } else {
+        "PUBLIC_OR_UNSTATED"
     }
 }
 /// The page a URL names: host and path, without query, fragment or trailing slash.
@@ -1263,6 +1290,19 @@ mod tests {
                 );
             }
         }
+    }
+    #[test]
+    fn business_only_offer_is_not_a_price_conflict_with_the_public_offer() {
+        let html = r#"<script type="application/ld+json">{"@type":"Product","name":"TV","offers":[{"name":"Standard Price","price":599,"priceCurrency":"DKK","eligibleCustomerType":"https://schema.org/Public"},{"name":"Business Price (Excl. VAT)","price":479.2,"priceCurrency":"DKK","eligibleCustomerType":"https://schema.org/Business"}]}</script>"#;
+        let p = &extract(html, "https://example.org/p").unwrap()["products"][0];
+        assert_eq!(p["price_minor"], 59900);
+        assert_eq!(p["price_status"], "OBSERVED");
+        assert_eq!(p["price_range"]["min_minor"], 59900);
+        assert_eq!(p["observed_offers"].as_array().unwrap().len(), 2);
+        assert_eq!(p["observed_offers"][1]["audience"], "BUSINESS_ONLY");
+        let both = r#"<script type="application/ld+json">{"@type":"Product","name":"TV","offers":[{"price":10,"priceCurrency":"DKK"},{"price":12,"priceCurrency":"DKK"}]}</script>"#;
+        let q = &extract(both, "https://example.org/p").unwrap()["products"][0];
+        assert_eq!(q["price_status"], "CONFLICT");
     }
     #[test]
     fn formatted_price_hints_preserve_unknown_observed_money_and_raw_source() {
