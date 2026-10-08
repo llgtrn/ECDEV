@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "fd47af8407185244eedc7a857f635167830ac444",
+  "assessed_parent_commit": "d8e77fd7d2678368dc723dea1d25a9ec589e3cdb",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -2061,7 +2061,7 @@
       "exception": "",
       "stopped_by": "CENSUSED: not decomposed into any required capability",
       "runtime": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "Apache-2.0",
         "family": "PERMISSIVE",
@@ -2070,7 +2070,85 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "readability.readerable-gate",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV reports main-content substance as numbers (adapter/web/src/page_text.rs::substance, same square-root-beyond-140-characters family, written without copying code) and draws no verdict: live, JavaScript app shells measured 0 characters, store pages 12 to 117, an encyclopedia article 1487, and the donor's article threshold of 20 does not separate store pages (research/commerce/readability-semantic-review.json))",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "readability.content-scoring",
+          "required": false,
+          "knowledge": "BENCHMARK_CANDIDATE(does tag, class and link-density scoring select a better main region than ECDEV's landmark rule on pages with no main landmark (6 of 10 live pages declared one), measured by overlap with the landmark where both exist and by hand where not)",
+          "knowledge_status": "BENCHMARK_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "readability.unlikely-candidate-patterns",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(would a class and id vocabulary (comment, footer, sidebar, sponsor...) remove page chrome that carries no landmark without removing product content on words like related and social, measured on captured product pages)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "readability.title-cleanup",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(does separator-based site-name stripping recover the product name from a page title better than the stated title, against structured-data names on pages that carry both)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "readability.jsonld-selection",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV reads all JSON-LD blocks, arrays, @graph, ProductGroup variants and Product offers (adapter/web/src/lib.rs); the donor's first-article-block selection and name-versus-headline similarity rule do not apply to product data)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "readability.jsonld-context-check",
+          "required": false,
+          "knowledge": "STUDY_CANDIDATE(how often a JSON-LD block outside the schema.org vocabulary names a Product on live store pages, and whether refusing it would lose real products)",
+          "knowledge_status": "STUDY_CANDIDATE",
+          "open": true
+        },
+        {
+          "key": "readability.article-metadata",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(article metadata precedence (JSON-LD, then dc:, og:, twitter: and plain meta tags) is a reference for page metadata handling, not a native target)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "readability.visibility",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](closed a gap: text capture counted text hidden by its own markup; now the hidden attribute and inline display:none and visibility:hidden are skipped (adapter/web/src/page_text.rs::hidden_by_markup), aria-hidden deliberately kept visible; live, 2 of 10 saved pages lost one line each)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "readability.image-unwrapping",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(only the lazy-loading attribute vocabulary is reusable; ECDEV stores no pictures)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "readability.reader-output-rewriting",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(reader-view transforms (link-heavy block removal, style and class stripping, br to paragraph); ECDEV keeps source bytes and compares visible text)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "readability.dom-parser-and-options",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(a forgiving-markup worker parser and its option surface; ECDEV uses html5ever through scraper)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
@@ -2129,13 +2207,13 @@
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 11 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
           "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "detail": "4 of 11 declared capabilities still have open research: readability.content-scoring (BENCHMARK_CANDIDATE), readability.unlikely-candidate-patterns (STUDY_CANDIDATE), readability.title-cleanup (STUDY_CANDIDATE), readability.jsonld-context-check (STUDY_CANDIDATE)"
         },
         {
           "gate": "CUTOVER_COMPLETED",

@@ -1,0 +1,124 @@
+{
+ "donor_id": "mozilla--readability",
+ "commit_sha": "ab4027a8b37669745016869a37a504727992b2ba",
+ "license": "Apache-2.0 (repository and Readability*.js); JSDOMParser.js carries a Mozilla Public License 2.0 header",
+ "method": "Readability.js (2,812 lines) and Readability-readerable.js read in full for behaviour, JSDOMParser.js read for structure (its node, element, attribute, style and tokenizer classes; no network or file access, no behaviour beyond building a tree), index.js and index.d.ts for the option surface; behaviour described in ECDEV's words, no code copied. The pinned commit was cloned into an isolated scratch directory and not kept.",
+ "licence_note": "The repository is Apache-2.0, but JSDOMParser.js (37 KB) is MPL-2.0 by its own header: file-level licences are mixed. Nothing here copies either; legal conclusions are not made.",
+ "rows": [
+  {
+   "capability": "readability.readerable-gate",
+   "source": "Readability-readerable.js isProbablyReaderable",
+   "behaviour": "Takes visible p, pre, article (and parents of div > br) outside unlikely-candidate class/id patterns and not in li p; each with at least 140 characters adds sqrt(length - 140); true once the sum passes 20",
+   "ecdev": "INDEPENDENT_NATIVE",
+   "native": "adapter/web/src/page_text.rs::substance",
+   "note": "ECDEV reports the numbers (main characters, long lines, the square-root score), not a verdict. Live, 10 pages (2026-10-07): JavaScript app shells 0 characters (Open Prices, Mastodon explore, Bluesky); Wikipedia Matcha 50,912 characters and score 1,487; Allbirds story 117; Rothy's about 41; BBC news 20; Decathlon contact 12; GitHub changelog 8; Hacker News 3,881 characters and score 0 (a list, no long lines). The donor's article threshold of 20 does not fit store pages, which is why no verdict is drawn."
+  },
+  {
+   "capability": "readability.content-scoring",
+   "source": "Readability.js _grabArticle, _initializeNode, _getClassWeight, _getLinkDensity",
+   "behaviour": "Scores candidate containers: tag base scores (div +5; pre, td, blockquote +3; lists and form -3; headings -5), class/id weight of 25 either way, text length per 100 characters (capped at 3) and comma count, spread to ancestors at full, half and a third of the score, discounted by link density where fragment links count 0.3",
+   "ecdev": "BENCHMARK_CANDIDATE",
+   "note": "ECDEV selects main content by the main landmark and falls back to the whole page without chrome landmarks. Live, 6 of 10 pages declared a main landmark; Hacker News (table layout) and three app shells did not. A scored fallback can only matter for pages like the first."
+  },
+  {
+   "capability": "readability.unlikely-candidate-patterns",
+   "source": "Readability.js REGEXPS.unlikelyCandidates, okMaybeItsACandidate; Readability-readerable.js",
+   "behaviour": "Class and id vocabulary (comment, footer, sidebar, social, sponsor, related, shoutbox, pager...) marks a container unlikely unless it also matches article, body, column, content, main",
+   "ecdev": "STUDY_CANDIDATE",
+   "note": "A chrome signal beyond landmarks and ARIA roles; on product pages words like related and social can wrap real content, so it needs measuring against product page captures before use."
+  },
+  {
+   "capability": "readability.title-cleanup",
+   "source": "Readability.js _getArticleTitle",
+   "behaviour": "Strips a site-name tail after the last ' | - – — \\ / > » ' separator when the rest keeps at least 3 words, falls back to a colon split or a single h1 when the title is very long or short, and reverts to the original title when the result has 4 words or fewer",
+   "ecdev": "STUDY_CANDIDATE",
+   "note": "ECDEV takes product titles from structured data and keeps the page title as stated; whether separator cleanup recovers a product name better than the stated title is unmeasured."
+  },
+  {
+   "capability": "readability.jsonld-selection",
+   "source": "Readability.js _getJSONLD",
+   "behaviour": "Takes the first application/ld+json block (CDATA wrapper removed) that is an article type, found directly, in an array, or under @graph; requires a schema.org @context (string or object with @vocab); resolves name versus headline by text similarity above 0.75 with the page title",
+   "ecdev": "INDEPENDENT_NATIVE",
+   "native": "adapter/web/src/lib.rs structured data extraction",
+   "note": "ECDEV reads every JSON-LD block, arrays and @graph, ProductGroup variants and Product offers, and takes no article metadata. It does not check @context, so a Product type in a non-schema.org vocabulary would be read as schema.org: see readability.jsonld-context-check."
+  },
+  {
+   "capability": "readability.jsonld-context-check",
+   "source": "Readability.js _getJSONLD schemaDotOrgRegex",
+   "behaviour": "Ignores a JSON-LD block whose @context is not schema.org, including an object context whose @vocab is not",
+   "ecdev": "STUDY_CANDIDATE",
+   "note": "How often a non-schema.org context names a Product on live store pages is unmeasured; the donor's rule is cheap and refuses rather than guesses."
+  },
+  {
+   "capability": "readability.article-metadata",
+   "source": "Readability.js _getArticleMetadata",
+   "behaviour": "Byline, excerpt, site name and published time from JSON-LD, then dc:, og:, twitter: and plain meta tags in a fixed precedence, entities unescaped",
+   "ecdev": "REFERENCE_ONLY",
+   "note": "Article metadata is not product evidence; ECDEV keeps page metadata and structured product data as stated."
+  },
+  {
+   "capability": "readability.visibility",
+   "source": "Readability.js _isProbablyVisible; Readability-readerable.js isNodeVisible",
+   "behaviour": "A node is invisible when its inline display is none, its visibility is hidden, it has the hidden attribute, or aria-hidden is true (unless it is a fallback image)",
+   "ecdev": "INDEPENDENT_NATIVE",
+   "native": "adapter/web/src/page_text.rs::hidden_by_markup",
+   "note": "Gap found and closed: ECDEV's text capture skipped script, style and similar tags but counted text hidden by its own markup. It now skips the hidden attribute and inline display:none and visibility:hidden; it deliberately leaves aria-hidden (hidden from assistive technology, not from sight) and evaluates no stylesheets. Live, 2 of 10 saved pages lost one visible line each (353 to 352, 1,056 to 1,055)."
+  },
+  {
+   "capability": "readability.image-unwrapping",
+   "source": "Readability.js _unwrapNoscriptImages, _fixLazyImages, _isSingleImage",
+   "behaviour": "Recovers real image sources from noscript fallbacks and lazy-load attributes (data-src and similar) so reader output shows pictures",
+   "ecdev": "REFERENCE_ONLY",
+   "note": "ECDEV keeps no pictures (tests pin that image URLs are not stored); the lazy-loading attribute vocabulary is the only reusable fact."
+  },
+  {
+   "capability": "readability.reader-output-rewriting",
+   "source": "Readability.js _prepArticle, _cleanConditionally, _cleanStyles, _fixRelativeUris, _simplifyNestedElements, _replaceBrs, _cleanClasses, _postProcessContent",
+   "behaviour": "Rewrites the chosen content for display: drops empty or link-heavy blocks and forms, strips styles and classes, makes links absolute, merges nested wrappers, turns br runs into paragraphs",
+   "ecdev": "REFERENCE_ONLY",
+   "note": "Reader-view transforms. ECDEV hashes and compares visible text and keeps source bytes unchanged as evidence; a rewritten DOM would be a derived document, not a capture."
+  },
+  {
+   "capability": "readability.dom-parser-and-options",
+   "source": "JSDOMParser.js, index.js, index.d.ts",
+   "behaviour": "A minimal DOM parser for worker use that needs well-formed markup (no live NodeLists), and the option surface: charThreshold 500, nbTopCandidates 5, maxElemsToParse, keepClasses, classesToPreserve, disableJSONLD, linkDensityModifier, serializer",
+   "ecdev": "REFERENCE_ONLY",
+   "note": "ECDEV parses with an HTML5 parser (html5ever through scraper); a forgiving-markup parser is the opposite of what the donor's own header warns about."
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "Readability.js",
+    "capabilities": "readability.content-scoring, unlikely-candidate-patterns, title-cleanup, jsonld-selection, jsonld-context-check, article-metadata, visibility, image-unwrapping, reader-output-rewriting"
+   },
+   {
+    "prefix": "Readability-readerable.js",
+    "capabilities": "readability.readerable-gate, readability.visibility"
+   },
+   {
+    "prefix": "JSDOMParser.js",
+    "capabilities": "readability.dom-parser-and-options"
+   },
+   {
+    "prefix": "index.js",
+    "capabilities": "readability.dom-parser-and-options"
+   },
+   {
+    "prefix": "index.d.ts",
+    "capabilities": "readability.dom-parser-and-options"
+   },
+   {
+    "prefix": ".prettierrc.js",
+    "capabilities": "tooling only: formatting configuration, no behaviour"
+   },
+   {
+    "prefix": "eslint.config.mjs",
+    "capabilities": "tooling only: lint configuration, no behaviour"
+   }
+  ]
+ },
+ "census_note": "The 396 test files are fixtures of expected extraction output and were counted, not read; no extinction is claimed",
+ "status": "SEMANTIC_REVIEW_FILE_LEVEL_COMPLETE_ALL_FIRST_PARTY_SOURCE_COVERED_NO_EXTINCTION_CLAIMED"
+}

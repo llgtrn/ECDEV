@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "fd47af8407185244eedc7a857f635167830ac444",
+  "assessed_parent_commit": "d8e77fd7d2678368dc723dea1d25a9ec589e3cdb",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -14,28 +14,28 @@
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 244,
-    "semantic_censused_capabilities": 244,
+    "known_donor_capabilities": 255,
+    "semantic_censused_capabilities": 255,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 32,
-    "benchmark_candidates": 25,
+    "study_candidates": 35,
+    "benchmark_candidates": 26,
     "algorithm_candidates": 3,
-    "reference_only": 52,
-    "study_complete_capabilities": 107,
+    "reference_only": 56,
+    "study_complete_capabilities": 110,
     "not_relevant_after_review": 25,
-    "research_questions_open": 60,
-    "knowledge_coverage_ratio": 0.754098
+    "research_questions_open": 64,
+    "knowledge_coverage_ratio": 0.74902
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 50,
+    "donors_knowledge_unreviewed": 49,
     "donors_structural_census": 0,
     "donors_semantic_census": 2,
-    "donors_active_study": 13,
+    "donors_active_study": 14,
     "donors_study_complete": 3,
-    "donors_structurally_censused": 18,
-    "donors_semantically_censused": 14,
-    "donors_with_open_candidates": 13,
+    "donors_structurally_censused": 19,
+    "donors_semantically_censused": 15,
+    "donors_with_open_candidates": 14,
     "donors_with_open_research": 65
   },
   "denominators": {
@@ -372,7 +372,7 @@
       "donor": "mozilla--readability",
       "runtime": "REGISTERED",
       "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "knowledge": "ACTIVE_STUDY",
       "licence_policy": {
         "licence": "Apache-2.0",
         "family": "PERMISSIVE",
@@ -380,8 +380,21 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [],
-      "resolved": []
+      "open": [
+        "readability.content-scoring BENCHMARK_CANDIDATE(does tag, class and link-density scoring select a better main region than ECDEV's landmark rule on pages with no main landmark (6 of 10 live pages declared one), measured by overlap with the landmark where both exist and by hand where not)",
+        "readability.unlikely-candidate-patterns STUDY_CANDIDATE(would a class and id vocabulary (comment, footer, sidebar, sponsor...) remove page chrome that carries no landmark without removing product content on words like related and social, measured on captured product pages)",
+        "readability.title-cleanup STUDY_CANDIDATE(does separator-based site-name stripping recover the product name from a page title better than the stated title, against structured-data names on pages that carry both)",
+        "readability.jsonld-context-check STUDY_CANDIDATE(how often a JSON-LD block outside the schema.org vocabulary names a Product on live store pages, and whether refusing it would lose real products)"
+      ],
+      "resolved": [
+        "readability.readerable-gate STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV reports main-content substance as numbers (adapter/web/src/page_text.rs::substance, same square-root-beyond-140-characters family, written without copying code) and draws no verdict: live, JavaScript app shells measured 0 characters, store pages 12 to 117, an encyclopedia article 1487, and the donor's article threshold of 20 does not separate store pages (research/commerce/readability-semantic-review.json))",
+        "readability.jsonld-selection STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV reads all JSON-LD blocks, arrays, @graph, ProductGroup variants and Product offers (adapter/web/src/lib.rs); the donor's first-article-block selection and name-versus-headline similarity rule do not apply to product data)",
+        "readability.article-metadata REFERENCE_ONLY(article metadata precedence (JSON-LD, then dc:, og:, twitter: and plain meta tags) is a reference for page metadata handling, not a native target)",
+        "readability.visibility STUDY_COMPLETE[INDEPENDENT_NATIVE](closed a gap: text capture counted text hidden by its own markup; now the hidden attribute and inline display:none and visibility:hidden are skipped (adapter/web/src/page_text.rs::hidden_by_markup), aria-hidden deliberately kept visible; live, 2 of 10 saved pages lost one line each)",
+        "readability.image-unwrapping REFERENCE_ONLY(only the lazy-loading attribute vocabulary is reusable; ECDEV stores no pictures)",
+        "readability.reader-output-rewriting REFERENCE_ONLY(reader-view transforms (link-heavy block removal, style and class stripping, br to paragraph); ECDEV keeps source bytes and compares visible text)",
+        "readability.dom-parser-and-options REFERENCE_ONLY(a forgiving-markup worker parser and its option surface; ECDEV uses html5ever through scraper)"
+      ]
     },
     {
       "donor": "scrapinghub--extruct",

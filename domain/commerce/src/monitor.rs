@@ -401,7 +401,7 @@ fn snapshot(run: &Value, request: &Value) -> Value {
             // Pages that state no products are watched by their visible text instead.
             let text = &page["page_text"];
             let text = if products.is_empty() && text["sha256"].is_string() {
-                json!({"sha256":text["sha256"],"lines":text["lines"],"truncated":text["truncated"],"main_sha256":text["main_sha256"],"main_line_count":text["main_line_count"],"main_scope":text["main_scope"]})
+                json!({"sha256":text["sha256"],"lines":text["lines"],"truncated":text["truncated"],"main_sha256":text["main_sha256"],"main_line_count":text["main_line_count"],"main_scope":text["main_scope"],"substance":text["substance"]})
             } else {
                 Value::Null
             };
