@@ -344,11 +344,19 @@ fn products(value: &Value, out: &mut Vec<Value>, pointer: &str) {
             }
         }
         Value::Object(o) => {
+            // A schema.org Product, or a node that states both an offer and a product code under
+            // another type (Book, MusicAlbum: live, 15 identifier-bearing pages on 3 hosts that
+            // carried no Product type). An offer alone, or a code alone, is not enough.
             let product = o.get("@type").is_some_and(|t| {
                 t == "Product"
                     || t.as_array()
                         .is_some_and(|a| a.iter().any(|v| v == "Product"))
-            });
+            }) || (o
+                .get("offers")
+                .is_some_and(|v| v.is_object() || v.is_array())
+                && ["gtin8", "gtin12", "gtin13", "gtin14", "isbn"]
+                    .iter()
+                    .any(|k| o.get(*k).is_some_and(|v| v.is_string() || v.is_number())));
             if product {
                 let raw_offers: Vec<&Value> = match value["offers"].as_array() {
                     Some(a) => a.iter().collect(),
@@ -1151,6 +1159,54 @@ mod tests {
         assert_eq!(money(&json!(550.0), "JPY"), Some(550));
         assert_eq!(money(&json!("550.00"), "JPY"), Some(550));
         assert_eq!(money(&json!("550.50"), "JPY"), None);
+    }
+    #[test]
+    fn a_book_product_states_its_isbn_on_the_edition_it_sells() {
+        // Shape of a live bookseller page (booktopia.com.au): Product+Book, isbn only on workExample.
+        let h = r#"<script type="application/ld+json">{"@type":["Product","Book"],"name":"Bel Canto","productID":"9780193171091","workExample":{"@type":"Book","isbn":"9780193171091"},"offers":[{"price":"89.99","priceCurrency":"AUD"}]}</script>"#;
+        let p = &extract(h, "https://books.example/b").unwrap()["products"][0];
+        assert_eq!(p["isbn"], "9780193171091");
+        assert_eq!(
+            p["fields"]["isbn"]["evidence"][0]["json_pointer"],
+            "/workExample/isbn"
+        );
+        assert_eq!(p["price_minor"], 8999);
+        // Its own isbn wins and is the one located.
+        let own = r#"<script type="application/ld+json">{"@type":"Product","name":"B","isbn":"9783473488780","workExample":{"isbn":"9780193171091"}}</script>"#;
+        let q = &extract(own, "https://books.example/c").unwrap()["products"][0];
+        assert_eq!(q["isbn"], "9783473488780");
+        assert_eq!(q["fields"]["isbn"]["evidence"][0]["json_pointer"], "/isbn");
+    }
+    #[test]
+    fn an_offer_with_a_product_code_makes_a_product_under_any_type_but_neither_alone_does() {
+        let wrap = |node: &str| format!(r#"<script type="application/ld+json">{node}</script>"#);
+        let album = wrap(
+            r#"{"@type":"MusicAlbum","name":"Cruel World","gtin13":"0602488113762","offers":{"@type":"Offer","price":25.9,"priceCurrency":"CHF"}}"#,
+        );
+        let p = extract(&album, "https://shop.example/cd").unwrap();
+        assert_eq!(p["products"].as_array().unwrap().len(), 1);
+        assert_eq!(p["products"][0]["ean"], "0602488113762");
+        assert_eq!(p["products"][0]["price_minor"], 2590);
+        let book = wrap(
+            r#"{"@type":"Book","name":"B","isbn":"978-3-473-48878-0","offers":{"price":"7.99","priceCurrency":"EUR"}}"#,
+        );
+        assert_eq!(
+            extract(&book, "https://shop.example/b").unwrap()["products"][0]["isbn"],
+            "978-3-473-48878-0"
+        );
+        for no in [
+            r#"{"@type":"Event","name":"E","offers":{"price":"5","priceCurrency":"EUR"}}"#,
+            r#"{"@type":"Organization","name":"O","gtin13":"0602488113762"}"#,
+            r#"{"@type":"Book","name":"B","isbn":"9783473488780"}"#,
+        ] {
+            assert!(
+                extract(&wrap(no), "https://shop.example/x").unwrap()["products"]
+                    .as_array()
+                    .unwrap()
+                    .is_empty(),
+                "{no}"
+            );
+        }
     }
     #[test]
     fn a_stated_isbn_is_kept_exactly_as_the_source_wrote_it_with_its_locator() {

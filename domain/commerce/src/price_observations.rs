@@ -83,7 +83,7 @@ pub fn name_holds_query(name: &str, query: &str) -> bool {
 
 /// The official catalog check a barcode allows: a 12-digit code is a UPC, a 13-digit code with
 /// Japan's 45 or 49 prefix a JAN, any other an EAN.
-fn catalog_action(code: &str) -> Value {
+pub(crate) fn catalog_action(code: &str) -> Value {
     // A 13-digit code with a leading zero is a UPC-A written as an EAN-13.
     let code = match code.strip_prefix('0') {
         Some(upc) if code.len() == 13 => upc,

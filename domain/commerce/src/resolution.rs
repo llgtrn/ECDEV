@@ -48,8 +48,34 @@ pub fn isbn13(v: &Value) -> Option<String> {
     if s.len() == 13 && (s.starts_with("978") || s.starts_with("979")) {
         gtin(&json!(s))
     } else {
-        None
+        isbn10_as_gtin(&s)
     }
+}
+/// A valid ISBN-10 (mod-11 check, final X allowed) converted by the ISO 2108 rule: prefix 978,
+/// the first nine digits, a new EAN-13 check digit. One failing the ISBN-10 check is not converted.
+fn isbn10_as_gtin(s: &str) -> Option<String> {
+    let b = s.as_bytes();
+    if b.len() != 10
+        || !b[..9].iter().all(u8::is_ascii_digit)
+        || !(b[9].is_ascii_digit() || b[9] == b'X')
+    {
+        return None;
+    }
+    let sum: u32 = b
+        .iter()
+        .enumerate()
+        .map(|(i, c)| (10 - i as u32) * if *c == b'X' { 10 } else { u32::from(c - b'0') })
+        .sum();
+    if !sum.is_multiple_of(11) {
+        return None;
+    }
+    let body = format!("978{}", &s[..9]);
+    let t: u32 = body
+        .bytes()
+        .enumerate()
+        .map(|(i, c)| u32::from(c - b'0') * if i % 2 == 1 { 3 } else { 1 })
+        .sum();
+    gtin(&json!(format!("{body}{}", (10 - t % 10) % 10)))
 }
 const GTIN_FIELDS: [&str; 5] = ["gtin", "ean", "upc", "gtin8", "gtin14"];
 fn valid_codes(p: &Value) -> BTreeSet<String> {
@@ -66,6 +92,8 @@ pub fn identifier_claims(p: &Value) -> Vec<Value> {
     for k in GTIN_FIELDS.iter().chain(["isbn"].iter()) {
         let v = &p[*k];
         let stated = match v {
+            // A blank field is not a stated code.
+            Value::String(s) if s.trim().is_empty() => continue,
             Value::String(s) => s.clone(),
             Value::Number(n) => n.to_string(),
             _ => continue,
@@ -73,8 +101,9 @@ pub fn identifier_claims(p: &Value) -> Vec<Value> {
         let (state, normalized) = if *k == "isbn" {
             let compact: String = stated.chars().filter(|c| *c != '-' && *c != ' ').collect();
             match isbn13(&json!(stated)) {
+                Some(g) if compact.len() == 10 => ("VALID_ISBN10_CONVERTED_TO_GTIN13", Some(g)),
                 Some(g) => ("VALID_ISBN13_AS_GTIN13", Some(g)),
-                None if compact.len() == 10 => ("ISBN10_NOT_A_GTIN", None),
+                None if compact.len() == 10 => ("INVALID_ISBN10", None),
                 None if compact.len() == 13 && compact.bytes().all(|b| b.is_ascii_digit()) => {
                     ("INVALID_CHECK_DIGIT_OR_PREFIX", None)
                 }
@@ -92,6 +121,28 @@ pub fn identifier_claims(p: &Value) -> Vec<Value> {
         out.push(json!({"field":k,"stated":stated,"state":state,"gtin14_normalized":normalized}));
     }
     out
+}
+/// What identity uncertainty asks for next. Certainty about identity is a separate question from
+/// whether the product is worth pursuing: nothing here changes a candidate's state.
+fn identity_next_step(state: &str, identity_key: &str, product: &Value) -> Value {
+    match state {
+        "IDENTIFIER_CONFLICT" => {
+            json!({"step":"RESOLVE_CONFLICT_BEFORE_ANY_MERGE","note":"the source states different valid codes; find the manufacturer or an independent source that names this product, and do not choose between them"})
+        }
+        "VALID_GTIN_STATED" => {
+            let code = identity_key.split(':').nth(1).unwrap_or("");
+            json!({"step":"CONFIRM_CODE_IN_A_SECOND_SOURCE","official_lookup":crate::price_observations::catalog_action(code.trim_start_matches('0')),"note":"a code stated by one source is a source assertion until a second source or an official lookup lists the same code"})
+        }
+        "INVALID_IDENTIFIER_STATED_NOT_USED" => {
+            json!({"step":"RECHECK_SOURCE_CODE_OR_FIND_ANOTHER_LISTING","note":"the stated code fails its check digit or format and was not used"})
+        }
+        _ if !text(&product["mpn"]).is_empty() => {
+            json!({"step":"FIND_MANUFACTURER_OR_SECOND_SOURCE_FOR_MPN","note":"an MPN needs its brand and a second source before it can identify the product"})
+        }
+        _ => {
+            json!({"step":"FIND_LISTING_WITH_A_PRODUCT_CODE","note":"no stable identifier stated"})
+        }
+    }
 }
 fn key(c: &Value) -> (String, &'static str) {
     let p = &c["product"];
@@ -376,9 +427,11 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
         } else {
             "NO_GTIN_STATED"
         };
+        let identity_next_step =
+            identity_next_step(identifier_state, &identity, &primary["product"]);
         primary["evidence_ids"] = json!(evidence);
         primary["entity_id"] = json!(entity_id);
-        primary["resolution"] = json!({"status":"DERIVED_IDENTITY_FROM_SOURCE_ASSERTIONS","basis":basis,"identity_key":identity,"identifier_state":identifier_state,"identifier_claims":claims,"source_pages":sources,"observation_count":rows.len(),"observations":rows,"conflicts":conflicts,"independently_verified_identity":false});
+        primary["resolution"] = json!({"status":"DERIVED_IDENTITY_FROM_SOURCE_ASSERTIONS","basis":basis,"identity_key":identity,"identifier_state":identifier_state,"identity_next_step":identity_next_step,"identifier_claims":claims,"source_pages":sources,"observation_count":rows.len(),"observations":rows,"conflicts":conflicts,"independently_verified_identity":false});
         let title = text(&primary["product"]["title"]);
         if !title.is_empty() {
             title_groups.entry(title).or_default().push(json!({"candidate_id":primary["id"],"entity_id":entity_id,"brand":brand(&primary["product"])}));
@@ -463,8 +516,23 @@ mod tests {
             isbn13(&json!("978 0 306 40615 7")).as_deref(),
             Some("09780306406157")
         );
+        // A valid ISBN-10 converts by the ISO 2108 rule (live: exlibris.ch, whose URL carries the
+        // ISBN-13 of the ISBN-10 it states).
+        assert_eq!(
+            isbn13(&json!("0306406152")).as_deref(),
+            Some("09780306406157")
+        );
+        assert_eq!(
+            isbn13(&json!("3387700237")).as_deref(),
+            Some("09783387700237")
+        );
+        assert_eq!(
+            isbn13(&json!("0-8044-2957-X")).as_deref(),
+            Some("09780804429573")
+        );
         for bad in [
-            "0306406152",
+            "0306406153",
+            "030640615X",
             "978-0-306-40615-8",
             "4006381333931",
             "9770306406157",
@@ -473,13 +541,17 @@ mod tests {
             assert_eq!(isbn13(&json!(bad)), None, "{bad}");
         }
         let claims = identifier_claims(
-            &json!({"ean":"4006381333932","upc":"036000291452","gtin":"abc","isbn":"0306406152"}),
+            &json!({"ean":"4006381333932","upc":"036000291452","gtin":"abc","isbn":"0306406153","gtin14":"  "}),
         );
         let state = |f: &str| claims.iter().find(|c| c["field"] == f).unwrap()["state"].clone();
         assert_eq!(state("ean"), "INVALID_CHECK_DIGIT");
         assert_eq!(state("upc"), "VALID_GTIN");
         assert_eq!(state("gtin"), "MALFORMED");
-        assert_eq!(state("isbn"), "ISBN10_NOT_A_GTIN");
+        assert_eq!(state("isbn"), "INVALID_ISBN10");
+        assert!(
+            claims.iter().all(|c| c["field"] != "gtin14"),
+            "a blank field is not a claim"
+        );
     }
     #[test]
     fn conflicting_valid_codes_stay_a_visible_conflict_and_never_merge() {
@@ -511,6 +583,18 @@ mod tests {
             .find(|r| r["resolution"]["basis"] == "CHECKSUM_VALID_GTIN_AND_VARIANT")
             .unwrap();
         assert_eq!(other["resolution"]["identifier_state"], "VALID_GTIN_STATED");
+        assert_eq!(
+            other["resolution"]["identity_next_step"]["step"],
+            "CONFIRM_CODE_IN_A_SECOND_SOURCE"
+        );
+        assert_eq!(
+            conflicted["resolution"]["identity_next_step"]["step"],
+            "RESOLVE_CONFLICT_BEFORE_ANY_MERGE"
+        );
+        assert_eq!(
+            other["state"], conflicted["state"],
+            "identity uncertainty never changes the candidate state"
+        );
         // The same code in ISBN form and EAN form is one identity, not a conflict.
         let mut book = candidate("book", "two.example", "B1", "");
         book["product"]["isbn"] = json!("978-3-473-48878-0");

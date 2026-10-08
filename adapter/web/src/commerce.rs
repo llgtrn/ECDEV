@@ -32,6 +32,16 @@ pub fn annotate(product: &mut Value, page: &str, script: usize, hash: &str) {
         ("rating", "aggregateRating/ratingValue"),
         ("review_count", "aggregateRating/reviewCount"),
     ] {
+        // A Product that is also a Book states its ISBN on the edition it sells (workExample):
+        // used only when the product states none itself, and located where it was found.
+        let key = if name == "isbn" && raw.pointer("/isbn").is_none() {
+            ["workExample/isbn", "workExample/0/isbn"]
+                .into_iter()
+                .find(|k| raw.pointer(&format!("/{k}")).is_some())
+                .unwrap_or(key)
+        } else {
+            key
+        };
         let value = raw
             .pointer(&format!("/{key}"))
             .cloned()

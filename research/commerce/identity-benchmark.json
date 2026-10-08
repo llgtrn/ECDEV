@@ -1,0 +1,123 @@
+{
+ "benchmark": "identity-quality: how reliably does ECDEV read product identifiers and decide that two observations are the same product?",
+ "captured_on": "2026-10-08",
+ "method": "policy-permitted product pages sampled from retailers' own sitemaps (ECDEV robots evaluator and AI-agent policy, 2 s per host, ECDEV user agent, plain HTTP, no browser); an independent parser (json.loads over every ld+json script, microdata and meta regexes, a visible-label pass, own check-digit code) states what each page says; ECDEV's own extractor and its fixture resolution say what ECDEV recovered; Open Library edition records give a second, explicitly identified source for books",
+ "hosts": {
+  "first_pass_attempted": 90,
+  "first_pass_outcomes": {
+   "OK": 24,
+   "ROBOTS_UNAVAILABLE_403": 19,
+   "NO_PRODUCT_URLS": 38,
+   "AI_AGENT_REFUSED": 5,
+   "ROBOTS_UNAVAILABLE_ERR": 3,
+   "ROBOTS_UNAVAILABLE_503": 1
+  },
+  "second_pass_attempted": 43,
+  "second_pass_outcomes": {
+   "OK": 21,
+   "ROBOTS_UNAVAILABLE_ERR": 2,
+   "ROBOTS_UNAVAILABLE_403": 6,
+   "NO_PRODUCT_URLS": 8,
+   "ROBOTS_UNAVAILABLE_429": 4,
+   "ROBOTS_UNAVAILABLE_503": 1,
+   "AI_AGENT_REFUSED": 1
+  },
+  "pages_fetched": 280,
+  "hosts_with_a_structured_valid_code": 11,
+  "japanese_hosts_sampled": [
+   "books.rakuten.co.jp",
+   "www.joshin.co.jp",
+   "www.kojima.net",
+   "www.sofmap.com"
+  ],
+  "japanese_finding": "no stated JAN in static HTML on any of 12 pages (13-digit JANs appear only inside image file names on sofmap.com and books.rakuten.co.jp, which assert nothing); JAN evidence therefore comes from Open Prices and Yahoo Shopping, not retailer pages"
+ },
+ "source_coverage": {
+  "pages_with_a_checksum_valid_code_in_structured_data": 97,
+  "valid_structured_codes": 105,
+  "by_representation": {
+   "JSON-LD gtin": 47,
+   "JSON-LD gtin13": 28,
+   "JSON-LD gtin12": 2,
+   "microdata gtin13": 12,
+   "JSON-LD isbn": 24,
+   "JSON-LD identifier (about)": 10
+  },
+  "pages_with_visible_label_and_structured_code": 54,
+  "visible_codes_equal_to_structured_codes": "54 of 54",
+  "pages_with_only_a_visible_label": 18,
+  "visible_only_pages": "ravensburger.de and libraccio.it listing/author pages naming several editions; a visible label there is not the page subject",
+  "stated_codes_failing_check_digit_or_all_zero": "0 of 105 structured codes"
+ },
+ "extraction_recall": {
+  "before_fix_first_66_pages": "9 of 17 valid stated codes (JSON-LD gtin, gtin13 and microdata gtin13: 9 of 9; JSON-LD isbn: 0 of 5; visible labels and a nested identifier: 0)",
+  "after_fixes_280_pages": "104 of 105 structured codes recovered",
+  "the_miss": "braun.de /about/identifier (a PropertyValue under an about node), 1 page",
+  "fixes": [
+   "JSON-LD isbn extracted (hyphenated ISBN-13 and ISBN-10 normalised by the ISBN standard, stated value kept)",
+   "isbn on workExample for Product+Book (booktopia.com.au: 12 pages)",
+   "a node carrying both offers and a product code is a product under any type (exlibris.ch Book and MusicAlbum)"
+  ]
+ },
+ "identifier_bases_of_record_groups": {
+  "CHECKSUM_VALID_GTIN_AND_VARIANT": 109,
+  "BRAND_MANUFACTURER_IDENTIFIER_AND_VARIANT": 25,
+  "ORIGIN_SCOPED_SKU_AND_VARIANT": 39,
+  "EXACT_PAGE_TITLE_AND_VARIANT_ONLY": 43
+ },
+ "normalization_matrix": "domain/commerce/src/resolution.rs::identifier_matrix_normalizes_by_standard_and_never_repairs (GTIN-8/12/13/14, padded forms, bad check digits, bad lengths, separators, letters, numbers, all-zero, ISBN-13 with hyphens or spaces, ISBN-10 including X)",
+ "cross_source_matching": {
+  "retailer_to_retailer": "0 cross-host product overlaps in 280 pages: no cross-retailer positive pair exists in this sample, so retailer-to-retailer precision and recall are NOT measured",
+  "store_to_open_library": {
+   "bookstore_pages_with_isbn": 24,
+   "found_in_open_library": 13,
+   "positive_pairs_using_the_identifier_the_record_lists_for_the_code": {
+    "pairs": 13,
+    "merged": 13,
+    "before_isbn10_conversion": 4
+   },
+   "positive_pairs_using_the_first_listed_identifier": {
+    "pairs": 13,
+    "merged": 10,
+    "note": "the 3 non-merges are Open Library records that list several editions' ISBNs; the first one names a different edition, so not merging is right"
+   },
+   "negative_pairs_same_work_different_stated_isbn": {
+    "pairs": 28,
+    "false_merges": 0
+   },
+   "false_splits_after_fix": 0,
+   "unresolved": "11 of 24 bookstore ISBNs are not in Open Library (no pair)"
+  },
+  "sample_reuse": "the ISBN-10 conversion was added because this benchmark showed 9 of 13 positives unmerged; the 13/13 is a demonstration on the sample that exposed the gap"
+ },
+ "conflicts": "real structured data: 0 pages with two different valid codes; the conflict case is pinned by fixture (conflicting_valid_codes_stay_a_visible_conflict_and_never_merge) and was a silent SKU fallback before this wave",
+ "variants": "hifi-regler.de publishes one distinct valid EAN per variant (3 variants, 3 codes) and ECDEV keeps three identities; logitech.com states one mpn per ProductModel, which ECDEV reads only as a blob on the parent product, so those variant MPNs are not separate identities",
+ "official_lookup_invariant": "already implemented and tested (adapter/marketplace/src/reads.rs catalog_search: an item answers a requested code only when its own identifiers list that code, compared as GTIN-14); benchmarked, not rewritten; fixture only, no credentials",
+ "native_changes": [
+  "ISBN-13/ISBN-10 as GTIN (resolution::isbn13)",
+  "CONFLICTING_GTIN_CLAIMS instead of a silent SKU fallback",
+  "identifier_claims, identifier_state and identity_next_step on every resolution (stated value, state, normalised form kept apart)",
+  "all-zero code is not a GTIN",
+  "blank identifier is not a claim",
+  "isbn in JSON-LD annotate (and on workExample for Product+Book)",
+  "offers + product code makes a product under any @type"
+ ],
+ "deliberate_no_change": [
+  "visible-label identifier extraction: visible codes equalled structured codes on 54 of 54 pages and the visible-only pages are multi-edition listings, so it would add wrong subject attributions",
+  "fuzzy or title matching: the unresolved remainder cannot be judged without cross-retailer overlap; title near-duplicates stay uncertain links"
+ ],
+ "limits": [
+  "35 hosts fetched, 11 with a structured valid code, mostly Nordic/German electronics and books; no Japanese retailer page states a JAN",
+  "no cross-retailer overlap so no retailer-to-retailer precision/recall; product-family vs variant identity not exercised beyond variant EANs",
+  "one capture time; fixture resolution (the same code path as a live run, fed captured bytes)",
+  "Open Library is an open catalogue, not an authority; a record listing several ISBNs is itself conflated"
+ ],
+ "files": {
+  "pages": "research/commerce/identity-benchmark/pages.json",
+  "pairs": "research/commerce/identity-benchmark/openlibrary-pairs.json"
+ },
+ "harness_sources": {
+  "idscan.py": "\"\"\"Identifier benchmark: what a page states (independent parser) versus what ECDEV extracts and resolves.\npython -I idscan.py <dir with targets.json + captures> <ecdev_side> <out.json>\nSource side: json.loads over every ld+json script, a plain regex pass for microdata/meta, and a visible-label\npass; check digits computed here, separately from ECDEV. ECDEV side: `trace` extraction, and a fixture\nresearch run for the resolution identity key. Nothing is fetched.\"\"\"\nimport json, re, sys, subprocess, pathlib, shutil, html as H, collections\nd = pathlib.Path(sys.argv[1]); helper = sys.argv[2]; out = sys.argv[3]\nT = json.loads((d / \"targets.json\").read_text())\nKEYS = {\"gtin\": \"gtin\", \"gtin8\": \"gtin8\", \"gtin12\": \"gtin12\", \"gtin13\": \"gtin13\", \"gtin14\": \"gtin14\", \"isbn\": \"isbn\", \"mpn\": \"mpn\", \"sku\": \"sku\", \"productid\": \"productID\", \"identifier\": \"identifier\", \"model\": \"model\"}\ndef check(s):\n    if not s.isdigit() or len(s) not in (8, 12, 13, 14): return False\n    t = sum(int(c) * (3 if i % 2 else 1) for i, c in enumerate(reversed(s)))\n    return t % 10 == 0\ndef walk(o, ptr, acc):\n    if isinstance(o, dict):\n        for k, v in o.items():\n            kl = k.lower()\n            if kl in KEYS and isinstance(v, (str, int, float)) and not isinstance(v, bool):\n                acc.append((KEYS[kl], str(v), \"JSON_LD \" + ptr + \"/\" + k))\n            elif kl in KEYS and isinstance(v, list):\n                for i, x in enumerate(v):\n                    if isinstance(x, (str, int)): acc.append((KEYS[kl], str(x), \"JSON_LD %s/%s/%d\" % (ptr, k, i)))\n            walk(v, ptr + \"/\" + k, acc)\n    elif isinstance(o, list):\n        for i, x in enumerate(o): walk(x, ptr + \"/%d\" % i, acc)\ndef source_ids(text):\n    acc = []\n    for m in re.finditer(r'<script[^>]*type=[\"\\']application/ld\\+json[\"\\'][^>]*>(.*?)</script>', text, re.S | re.I):\n        try: walk(json.loads(H.unescape(m.group(1)).strip()), \"\", acc)\n        except Exception: acc.append((\"UNPARSEABLE_LD_JSON\", \"\", \"JSON_LD\"))\n    for m in re.finditer(r'itemprop=[\"\\'](gtin\\d*|isbn|mpn|sku|productID)[\"\\'][^>]*?content=[\"\\']([^\"\\']+)', text, re.I):\n        acc.append((m.group(1).lower() if m.group(1).lower() != \"productid\" else \"productID\", m.group(2), \"MICRODATA_META\"))\n    for m in re.finditer(r'<[^>]*itemprop=[\"\\'](gtin\\d*|isbn|mpn)[\"\\'][^>]*>([^<]{4,30})<', text, re.I):\n        acc.append((m.group(1).lower(), m.group(2).strip(), \"MICRODATA_TEXT\"))\n    for m in re.finditer(r'<meta[^>]+(?:property|name)=[\"\\'](?:product:(?:ean|upc|gtin|isbn|mpn|retailer_item_id)|og:upc|og:ean|og:isbn)[\"\\'][^>]*content=[\"\\']([^\"\\']+)', text, re.I):\n        acc.append((\"meta\", m.group(1), \"META\"))\n    vis = re.sub(r\"<script.*?</script>|<style.*?</style>\", \" \", text, flags=re.S | re.I)\n    vis = H.unescape(re.sub(r\"<[^>]+>\", \" \", vis))\n    for m in re.finditer(r\"(JAN(?:コード)?|EAN|GTIN|UPC|ISBN(?:-13)?|バーコード)[^0-9A-Za-z]{0,12}([0-9][0-9\\- ]{6,18}[0-9])\", vis, re.I):\n        acc.append((\"visible_\" + m.group(1).lower(), m.group(2), \"VISIBLE_LABEL\"))\n    return acc\nrows = []\nfor t in T:\n    h = t.get(\"http\", {})\n    if \"file\" not in h or h.get(\"status\") != 200: continue\n    raw = (d / h[\"file\"]).read_bytes(); text = raw.decode(\"utf-8\", \"replace\")\n    ids = source_ids(text)\n    rec = {\"site\": t[\"site\"], \"url\": t[\"url\"], \"raw_capture_sha256\": __import__(\"hashlib\").sha256(raw).hexdigest(), \"source_identifiers\": []}\n    for kind, val, loc in ids:\n        digits = re.sub(r\"[\\s-]\", \"\", val)\n        e = {\"kind\": kind, \"stated\": val, \"locator\": loc}\n        if kind in (\"gtin\", \"gtin8\", \"gtin12\", \"gtin13\", \"gtin14\", \"isbn\", \"meta\") or kind.startswith(\"visible_\"):\n            e[\"digits_only\"] = val.isdigit(); e[\"length\"] = len(digits)\n            e[\"gtin_checksum_valid_as_stated\"] = check(val) if val.isdigit() else False\n            e[\"gtin_checksum_valid_after_stripping_separators\"] = check(digits)\n        rec[\"source_identifiers\"].append(e)\n    tr = json.loads(subprocess.check_output([helper, \"trace\", str(d / h[\"file\"]), h.get(\"content_type\", \"text/html\"), h[\"final_url\"]]))\n    rec[\"ecdev_products\"] = [{k: p.get(k) for k in (\"title\", \"sku\", \"mpn\", \"model\", \"ean\", \"upc\", \"gtin\", \"gtin8\", \"gtin14\")} for p in tr.get(\"products\", [])]\n    try:\n        r = json.loads(subprocess.check_output([helper, \"resolve\", str(d / h[\"file\"]), h[\"final_url\"]]))\n        rec[\"ecdev_resolution\"] = r.get(\"candidates\", []) if r.get(\"ok\") else {\"error\": r.get(\"error\")}\n    except Exception as ex:\n        rec[\"ecdev_resolution_error\"] = str(ex)[:100]\n    rows.append(rec)\njson.dump(rows, open(out, \"w\"), indent=0)\nprint(len(rows), \"pages scanned\")\n",
+  "discover_idn.py": "\"\"\"Sample product URLs from retailers' own sitemaps, under ECDEV's robots evaluator.\npython -I discover.py <helper> <out seeds.json>\nPer host: robots.txt -> ECDEV evaluator + AI-agent policy -> Sitemap lines -> sitemap (gz ok) ->\nfirst child whose URL looks like a product sitemap -> 2 URLs evenly spaced. 2 s per host minimum.\"\"\"\nimport gzip, json, re, subprocess, sys, time, urllib.parse, requests\nhelper, out = sys.argv[1], sys.argv[2]\nUA = \"ECDEV/0.1 (+read-only research)\"\nS = requests.Session(); S.headers[\"User-Agent\"] = UA\nHOSTS = ['www.thomann.de', 'www.conrad.de', 'www.decathlon.de', 'www.alternate.de', 'www.cyberport.de', 'www.notebooksbilliger.de', 'www.hornbach.de', 'www.obi.de', 'www.manomano.de', 'www.kaufland.de', 'www.galaxus.ch', 'www.digitec.ch', 'www.coolblue.nl', 'www.fnac.com', 'www.darty.com', 'www.screwfix.com', 'www.toolstation.com', 'www.bhphotovideo.com', 'www.sweetwater.com', 'www.guitarcenter.com', 'www.microcenter.com', 'www.samsclub.com', 'www.walgreens.com', 'www.target.com', 'www.joshin.co.jp', 'www.kojima.net', 'www.sofmap.com', 'www.monotaro.com', 'www.kohnan-eshop.com', 'www.cainz.com', 'www.honto.jp', 'books.rakuten.co.jp', 'item.rakuten.co.jp', 'www.rakuten.co.jp', 'www.tsutaya.co.jp', 'www.kinokuniya.co.jp', 'www.maruzen-publishing.co.jp', 'www.booktopia.com.au', 'www.bookdepository.com', 'www.waterstones.com', 'www.blackwells.co.uk', 'www.wob.com', 'www.thalia.de', 'www.buecher.de', 'www.orellfuessli.com', 'www.fnac.es', 'www.casadellibro.com', 'www.cdon.se', 'www.elgiganten.se', 'www.power.no', 'www.komplett.no', 'www.proshop.dk', 'www.proshop.de', 'www.mindfactory.de', 'www.caseking.de', 'www.reichelt.de', 'www.pollin.de', 'www.voelkner.de', 'www.hifi-regler.de', 'www.audio-technica.com', 'www.sennheiser-hearing.com', 'www.logitech.com', 'www.razer.com', 'www.corsair.com', 'www.gigabyte.com', 'www.jbl.com', 'www.bose.com', 'www.dyson.co.uk', 'www.philips.com', 'www.braun.de', 'www.nespresso.com', 'www.lego.com', 'www.playmobil.de', 'www.ravensburger.de', 'www.hasbro.com', 'www.mattel.com', 'www.nintendo.com', 'www.gamestop.com', 'www.gamesplanet.com', 'www.zavvi.com', 'www.hmv.com', 'www.hmv.co.jp', 'www.tower.jp', 'www.neowing.co.jp', 'www.cdjapan.co.jp', 'www.yesasia.com', 'www.hobbylink.tv', 'www.amiami.com', 'www.hlj.com', 'www.nin-nin-game.com']\ndef j(*a): return json.loads(subprocess.check_output([helper, *a]))\nlast = {}\ndef get(url, host):\n    w = 2 - (time.time() - last.get(host, 0))\n    if w > 0: time.sleep(w)\n    try: r = S.get(url, timeout=25)\n    except Exception as e: return None\n    last[host] = time.time(); return r\nseeds, log = [], []\nfor host in HOSTS:\n    rec = {\"host\": host}\n    r = get(f\"https://{host}/robots.txt\", host)\n    if r is None or r.status_code != 200:\n        rec[\"result\"] = \"ROBOTS_UNAVAILABLE_%s\" % (r.status_code if r is not None else \"ERR\"); log.append(rec); continue\n    pth = f\"/tmp/claude-0/robots-{host}.txt\"; open(pth, \"w\").write(r.text)\n    ai = j(\"aipolicy\", pth, \"https://%s/\" % host)\n    if ai.get(\"refusal\"):\n        rec[\"result\"] = \"AI_AGENT_REFUSED\"; rec[\"ai_policy\"] = ai; log.append(rec); continue\n    maps = re.findall(r\"(?im)^\\s*sitemap:\\s*(\\S+)\", r.text)\n    rec[\"sitemaps\"] = len(maps)\n    def fetch_map(u):\n        rr = get(u, host)\n        if rr is None or rr.status_code != 200: return None\n        b = rr.content\n        if b[:2] == b\"\\x1f\\x8b\":\n            try: b = gzip.decompress(b)\n            except Exception: return None\n        return b.decode(\"utf-8\", \"replace\")\n    urls = []\n    cand = maps[:6]\n    prod = [m for m in maps if re.search(r\"product|item|/p[-_]|catalog\", m, re.I)]\n    for m in (prod or cand)[:2]:\n        t = fetch_map(m)\n        if not t: continue\n        locs = re.findall(r\"<loc>\\s*([^<\\s]+)\\s*</loc>\", t)\n        if \"<sitemapindex\" in t:\n            kids = [k for k in locs if re.search(r\"product|item|catalog\", k, re.I)] or locs\n            for k in kids[:1]:\n                t2 = fetch_map(k)\n                if t2: urls += re.findall(r\"<loc>\\s*([^<\\s]+)\\s*</loc>\", t2)\n        else: urls += locs\n        if urls: break\n    urls = [u for u in urls if urllib.parse.urlsplit(u).netloc == host and not u.endswith((\".jpg\", \".png\", \".xml\", \".gz\"))]\n    rec[\"urls_seen\"] = len(urls)\n    if len(urls) < 2: rec[\"result\"] = \"NO_PRODUCT_URLS\"; log.append(rec); continue\n    pick = [urls[len(urls)//7], urls[len(urls)*3//7], urls[len(urls)*5//7]]\n    for u in pick: seeds.append({\"site\": host, \"kind\": \"product\", \"url\": u})\n    rec[\"result\"] = \"OK\"; log.append(rec)\n    print(host, rec[\"result\"], flush=True)\njson.dump(seeds, open(out, \"w\"), indent=1); json.dump(log, open(out + \".log.json\", \"w\"), indent=1)\nprint(len(seeds), \"seeds\")\n"
+ }
+}
