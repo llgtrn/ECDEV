@@ -513,10 +513,13 @@ const FOREIGN_FUNCTION_WORDS: &[&str] = &[
     "qué", "se", "su", "al", "mi", "son", "hay", "ya", "con", "não", "mas", "muito",
 ];
 /// Everyday Japanese words that read as kanji or katakana runs but name no product: live, 今日,
-/// 昨日 and 美味 were 抹茶 refinements.
+/// 昨日 and 美味 were 抹茶 refinements. 一緒, 世界 and 気持 are measured: in at least 1% of the posts of
+/// at least 3 of 6 unrelated live topics (抹茶, ラーメン, コーヒー, ゲーム, 猫, iPhone; 1,539 posts,
+/// research/commerce/background-common-words-japanese.json). No word reached every topic, so
+/// the criterion is weaker than the English one; the other nine words it found were already here.
 const JAPANESE_GENERAL_WORDS: &[&str] = &[
-    "今日", "昨日", "明日", "今年", "去年", "最近", "今回", "前回", "本当", "自分", "感じ", "美味",
-    "時間", "毎日", "一番", "全部", "大好", "普通", "結構", "今度",
+    "一緒", "世界", "気持", "今日", "昨日", "明日", "今年", "去年", "最近", "今回", "前回", "本当",
+    "自分", "感じ", "美味", "時間", "毎日", "一番", "全部", "大好", "普通", "結構", "今度",
 ];
 /// Words in at least 1% of the posts of every one of five unrelated live topic samples (rust,
 /// python, apple, coffee, matcha; 1,140 posts, 2026-10-07) and not already listed: measured, not
@@ -1022,6 +1025,82 @@ pub fn clusters_with(posts: &[SocialPost], rule: &ClusterRule) -> Vec<Value> {
     groups.into_iter().enumerate().map(|(i,(t,ps))|json!({"id":format!("cluster-{i}"),"terms":t,"salient_terms":salient_terms(&ps),"representatives":representatives(&ps),"candidate_phrases":candidate_phrases(&ps),"method":format!("LEXICAL_{}_{}_MIN_{}_SHARED_{}_TERMS_7_DAY_COOCCURRENCE",if rule.overlap {"OVERLAP"} else {"JACCARD"},rule.min_similarity,rule.min_shared,if rule.informative_only {"INFORMATIVE"} else {"ALL"}),"state":"DERIVED","identity_state":"DERIVED_WEAK_MATCH","observations":ps.iter().map(|p|p.key()).collect::<Vec<_>>(),"evidence_ids":ps.iter().map(|p|p.evidence_id.clone()).collect::<Vec<_>>(),"distinct_authors":copies::distinct_authors(&ps),"distinct_texts":copies::groups(&ps).len(),"platforms":ps.iter().map(|p|p.platform.clone()).collect::<BTreeSet<_>>(),"semantic_embedding_similarity":"UNAVAILABLE","source_edges":ps.iter().map(|p|json!({"from":format!("cluster-{i}"),"relation":"SUPPORTED_BY","to":p.evidence_id})).collect::<Vec<_>>()})).collect()
 }
 
+fn trend_state(
+    n: usize,
+    velocity: Option<f64>,
+    acceleration: Option<f64>,
+    persistence: Option<f64>,
+) -> &'static str {
+    if n < 2 {
+        "INSUFFICIENT_EVIDENCE"
+    } else if acceleration.is_some_and(|v| v > 0.) {
+        "ACCELERATING"
+    } else if velocity.is_some_and(|v| v < 0.) {
+        "COOLING"
+    } else if persistence.is_some_and(|v| v >= 0.75) {
+        "PERSISTENT"
+    } else if velocity.is_some_and(|v| v > 0.) {
+        "EMERGING"
+    } else {
+        "DISCOVERED"
+    }
+}
+
+/// Weight a lower-bound arrival rate carries when count velocity cannot be compared.
+pub const ARRIVALS_WEIGHT: f64 = 0.2;
+
+/// Counts of capped or partial acquisitions are not comparable between snapshots: velocity and
+/// acceleration then stay as diagnostics only. They leave the score (and the trend state, which
+/// reads them), and the arrival rate (posts published since the prior capture and absent from
+/// it, a lower bound) enters in their place, labelled as such.
+pub fn exclude_incomparable_counts(snap: &mut Value, arrivals_per_hour: Option<f64>) {
+    let window = snap["window_seconds"].clone();
+    let diagnostic = |name: &str| {
+        snap["score"]["components"]
+            .as_array()
+            .into_iter()
+            .flatten()
+            .find(|c| c["name"] == name)
+            .map(|c| c["metric"]["value"].clone())
+    };
+    let (v, a) = (diagnostic("velocity"), diagnostic("acceleration"));
+    let arrivals = arrivals_per_hour.map(|r| r.max(0.) / (1. + r.max(0.)));
+    let sources = snap["unique_sources"].clone();
+    let ids = snap["evidence_ids"].clone();
+    if let Some(components) = snap["score"]["components"].as_array_mut() {
+        for c in components.iter_mut() {
+            if c["name"] == "velocity" || c["name"] == "acceleration" {
+                let value = c["metric"]["value"].clone();
+                c["metric"]["diagnostic_value"] = value;
+                c["metric"]["value"] = Value::Null;
+                c["metric"]["state"] = json!("EXCLUDED_NOT_COMPARABLE_COUNTS");
+                c["weight"] = json!(0.);
+            }
+        }
+        components.push(json!({"name":"arrivals_lower_bound","weight":ARRIVALS_WEIGHT,"metric":{"value":arrivals,"state":if arrivals.is_some(){"DERIVED"}else{"UNKNOWN"},"window_seconds":window,"denominator":"hours since prior snapshot","source_count":sources,"evidence_ids":ids,"normalization":"POSTS_PUBLISHED_SINCE_PRIOR_CAPTURE_AND_ABSENT_FROM_IT_PER_HOUR_SATURATION_LOWER_BOUND","bound":"LOWER_BOUND_CAPPED_OR_PARTIAL","confidence":"UNCALIBRATED_SAMPLED_EVIDENCE"}}));
+        let known: Vec<&Value> = components
+            .iter()
+            .filter(|c| c["metric"]["value"].is_number())
+            .collect();
+        let coverage: f64 = known.iter().filter_map(|c| c["weight"].as_f64()).sum();
+        let score: f64 = known
+            .iter()
+            .filter_map(|c| Some(c["weight"].as_f64()? * c["metric"]["value"].as_f64()?))
+            .sum();
+        snap["score"]["value"] = json!(score);
+        snap["score"]["known_weight_coverage"] = json!(coverage);
+    }
+    snap["score"]["policy"] = json!(
+        "EXPLICIT_HEURISTIC_V1_UNKNOWN_COMPONENTS_UNSCORED_NOT_ZERO_INCOMPARABLE_COUNT_DELTAS_EXCLUDED"
+    );
+    snap["score"]["diagnostics_excluded_from_score"] =
+        json!({"velocity":v,"acceleration":a,"reason":"NOT_COMPARABLE_CAPPED_OR_PARTIAL_COUNTS"});
+    let n = snap["mention_count"].as_u64().unwrap_or(0) as usize;
+    let persistence = snap["persistence"]["value"].as_f64();
+    snap["state"] = json!(trend_state(n, None, None, persistence));
+    snap["state_basis"] = json!("COUNT_DELTAS_EXCLUDED_NOT_COMPARABLE");
+}
+
 pub fn snapshot(
     posts: &[SocialPost],
     history: &[Value],
@@ -1118,19 +1197,7 @@ pub fn snapshot(
         .iter()
         .filter_map(|c| Some(c["weight"].as_f64()? * c["metric"]["value"].as_f64()?))
         .sum::<f64>();
-    let state = if n < 2 {
-        "INSUFFICIENT_EVIDENCE"
-    } else if acceleration.is_some_and(|v| v > 0.) {
-        "ACCELERATING"
-    } else if velocity.is_some_and(|v| v < 0.) {
-        "COOLING"
-    } else if persistence.is_some_and(|v| v >= 0.75) {
-        "PERSISTENT"
-    } else if velocity.is_some_and(|v| v > 0.) {
-        "EMERGING"
-    } else {
-        "DISCOVERED"
-    };
+    let state = trend_state(n, velocity, acceleration, persistence);
     let mut result = json!({"query":query,"capture_mode":mode,"captured_at":now,"window_seconds":window,"window_start_exclusive":now.saturating_sub(window),"window_end_inclusive":now,"mention_count":n,"observation_count":n,"unique_sources":sources.len(),"platform_count":platforms.len(),"platforms":platforms,"publisher_count":publishers.len(),"publishers":publishers,"independent_original_publishers":{"state":"UNKNOWN","value":null},"original_post_count":originals,"post_keys":eligible.iter().map(SocialPost::key).collect::<Vec<_>>(),"evidence_ids":ids,"start_time":eligible.iter().filter_map(|p|p.published_at).min(),"last_observed_time":latest,"velocity":metric(velocity,"DELTA_CAPTURED_WINDOW_MENTIONS_PER_HOUR",json!(last.map(|s|now.saturating_sub(s["captured_at"].as_u64().unwrap_or(now))))),"acceleration":metric(acceleration,"DELTA_VELOCITY_PER_HOUR",json!("actual snapshot hours")),"persistence":metric(persistence,"NONEMPTY_PRIOR_SNAPSHOTS_RATIO",json!(history.len())),"novelty":metric(novelty.map(|v|v as f64),"NEW_POST_IDENTITIES",json!(n)),"time_decay":metric(latest.and_then(|t|decay(now-t,86400)),"HEURISTIC_ONE_DAY_HALF_LIFE",json!(86400)),"score":{"value":score,"state":"DERIVED","components":components,"known_weight_coverage":coverage,"policy":"EXPLICIT_HEURISTIC_V1_UNKNOWN_COMPONENTS_UNSCORED_NOT_ZERO","learned":false},"state":state,"clusters":clusters(&eligible),"engagement_observations":eligible.iter().map(|p|json!({"post_key":p.key(),"platform":p.platform,"metrics":p.engagement,"evidence_id":p.evidence_id,"missing":"UNKNOWN","comparability":"PLATFORM_SPECIFIC_COUNTERS_NOT_SUMMED"})).collect::<Vec<_>>(),"sentiment":eligible.iter().map(sentiment).collect::<Vec<_>>(),"entity_links":eligible.iter().flat_map(|p|p.entities.iter()).collect::<Vec<_>>(),"commerce_links":[],"conflicts":conflicts,"unknowns":["Population coverage","Independent publisher verification","Sales/search demand/conversion/revenue","Semantic embedding similarity","Engagement growth without compatible counter history"],"timestamp_unknown_excluded":dedup.iter().filter(|p|p.published_at.is_none()).count(),"sampling":"Bounded retrieved sample, not total platform mentions; velocity includes capture coverage changes","simulation_contribution":0});
     result["text_copies"] = copies::summary(&eligible.iter().collect::<Vec<_>>());
     let growth = last.and_then(|old| runtime::compatible_engagement_delta(old, &result));

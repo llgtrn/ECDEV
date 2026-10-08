@@ -549,6 +549,47 @@ mod research_tests {
             third["arrivals_since_prior_snapshot"]["bound"],
             "LOWER_BOUND_CAPPED_OR_PARTIAL"
         );
+        // Incomparable count deltas are diagnostics: out of the score, replaced by the
+        // lower-bound arrival rate; comparable ones stay in.
+        let comp = |snap: &Value, name: &str| {
+            snap["score"]["components"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .find(|c| c["name"] == name)
+                .cloned()
+        };
+        for name in ["velocity", "acceleration"] {
+            let c = comp(&third, name).unwrap();
+            assert_eq!(
+                (
+                    c["weight"].clone(),
+                    c["metric"]["value"].clone(),
+                    c["metric"]["state"].clone()
+                ),
+                (
+                    json!(0.0),
+                    Value::Null,
+                    json!("EXCLUDED_NOT_COMPARABLE_COUNTS")
+                ),
+                "{name}"
+            );
+        }
+        assert!(
+            third["velocity"]["value"].is_number(),
+            "kept as a diagnostic"
+        );
+        let arrivals = comp(&third, "arrivals_lower_bound").unwrap();
+        assert_eq!(arrivals["metric"]["bound"], "LOWER_BOUND_CAPPED_OR_PARTIAL");
+        assert!(
+            arrivals["metric"]["value"].is_number() && arrivals["weight"].as_f64().unwrap() > 0.
+        );
+        assert!(third["score"]["diagnostics_excluded_from_score"]["velocity"].is_number());
+        assert_ne!(third["state"], "ACCELERATING");
+        assert_eq!(third["state_basis"], "COUNT_DELTAS_EXCLUDED_NOT_COMPARABLE");
+        assert!(comp(&second, "arrivals_lower_bound").is_none());
+        assert_eq!(comp(&second, "velocity").unwrap()["weight"], json!(0.3));
+        assert!(comp(&second, "velocity").unwrap()["metric"]["value"].is_number());
     }
     #[test]
     fn store_prices_are_reference_observations_with_pseudonymous_witnesses() {

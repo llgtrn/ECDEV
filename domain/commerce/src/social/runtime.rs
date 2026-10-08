@@ -859,6 +859,10 @@ impl Engine {
                 "per_hour":(hours > 0.).then(|| arrived as f64 / hours),
                 "bound":if comparable {"EXACT_BY_SOURCE"} else {"LOWER_BOUND_CAPPED_OR_PARTIAL"},
                 "basis":"POSTS_PUBLISHED_AFTER_PRIOR_CAPTURE_AND_ABSENT_FROM_IT"});
+            if !comparable {
+                let rate = snap["arrivals_since_prior_snapshot"]["per_hour"].as_f64();
+                super::exclude_incomparable_counts(&mut snap, rate);
+            }
         }
         snap["source_counters"] = json!(counters);
         snap["budget_usage"] = json!({"cost_minor":0,"request_count":if failures.iter().any(|f|f.get("request_count").is_some_and(Value::is_null)){Value::Null}else{json!(requests)},"known_request_count":requests,"request_budget":request_budget,"cache_hits":hits,"paid_budget_minor":0,"paid_execution":"NOT_IMPLEMENTED_PAID_PROPOSALS_ONLY","allocation":allocation});
