@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "87ea5b63cebf21317d8433ff48b7b7402ed0ff2a",
+  "assessed_parent_commit": "6f04ae9148c193cca4315c78dcde1ecfdae8e169",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
@@ -18,25 +18,25 @@
     "semantic_censused_capabilities": 317,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
-    "study_candidates": 41,
-    "benchmark_candidates": 32,
+    "study_candidates": 40,
+    "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 59,
+    "reference_only": 62,
     "study_complete_capabilities": 152,
     "not_relevant_after_review": 29,
-    "research_questions_open": 77,
-    "knowledge_coverage_ratio": 0.757098
+    "research_questions_open": 74,
+    "knowledge_coverage_ratio": 0.766562
   },
   "donor_coverage": {
     "donors_knowledge_unreviewed": 40,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
-    "donors_active_study": 22,
-    "donors_study_complete": 3,
+    "donors_active_study": 21,
+    "donors_study_complete": 4,
     "donors_structurally_censused": 28,
     "donors_semantically_censused": 15,
-    "donors_with_open_candidates": 22,
-    "donors_with_open_research": 65
+    "donors_with_open_candidates": 21,
+    "donors_with_open_research": 64
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -65,9 +65,9 @@
     },
     {
       "donor": "purahmanian--keepa-mcp",
-      "runtime": "CUTOVER",
-      "effective": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -75,16 +75,15 @@
         "knowledge_study": "STUDY_AND_DERIVE",
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
-      "open": [
-        "keepa.search_products BENCHMARK_CANDIDATE(does Keepa's paid product finder surface candidates that zero-paid public discovery misses, at what cost per useful candidate?)",
-        "keepa.get_best_sellers BENCHMARK_CANDIDATE(do bestseller lists improve market discovery coverage over public research seeds, per category and marketplace?)",
-        "keepa.get_deals STUDY_CANDIDATE(price-drop deal feeds as signals of competitor discounting and promotion dynamics)"
-      ],
+      "open": [],
       "resolved": [
         "keepa.resolve-current STUDY_COMPLETE[DERIVED_NATIVE](current-value resolution proven on 508 frozen donor cases)",
         "keepa.get_product STUDY_COMPLETE[DERIVED_NATIVE](product-summary slot mapping proven on 304 frozen donor cases)",
         "keepa.get_price_history STUDY_COMPLETE[DERIVED_NATIVE](adapter/keepa/src/history.rs decodes csv slots (Keepa minutes, pairs, buy-box triples) and agrees with 12 frozen donor decodeHistory cases and 5 keepaTimeToDate cases wherever ECDEV does not diverge; it keeps -1 as unavailable spans, keeps every point and keeps minutes where the donor drops, downsamples and truncates to dates; metrics in domain/commerce/src/external_history.rs)",
         "keepa.get_sales_rank_history STUDY_COMPLETE[DERIVED_NATIVE](slot 3 decoded with the oracle-checked decoder; domain/commerce/src/external_history.rs::rank_history_metrics samples the step series daily into log-rank velocity, volatility and direction, skipping rank 0 and unavailable spans; no sales estimate is derived)",
+        "keepa.search_products REFERENCE_ONLY(provider wire contract only (GET /search term, catid); the donor returns the provider ASIN list unprocessed, so there is no algorithm to absorb; paid discovery is not adopted)",
+        "keepa.get_best_sellers REFERENCE_ONLY(provider wire contract only (GET /bestsellers category); the donor slices the provider ASIN list, so there is no algorithm to absorb; paid discovery is not adopted)",
+        "keepa.get_deals REFERENCE_ONLY(provider wire contract only (GET /deal with one JSON selection: dateRange 0 is the interval deltaPercentRange is measured over, rating on a 0-50 scale); the donor formats provider rows and holds no deal-scoring algorithm; paid discovery is not adopted)",
         "keepa.text-formatting STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](formats every domain as USD; ECDEV keeps typed minor units in the market currency)",
         "keepa.server-and-transport STUDY_COMPLETE[INDEPENDENT_NATIVE](ECDEV's bounded Keepa transport with receipts and secret boundaries)"
       ]

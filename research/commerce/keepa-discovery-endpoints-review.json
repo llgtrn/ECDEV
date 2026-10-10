@@ -1,0 +1,26 @@
+{
+  "record": "keepa-discovery-endpoints-review",
+  "donor": "purahmanian--keepa-mcp",
+  "commit": "84c2145c9f74bd29a91a19b12c24abe1c2535223",
+  "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+  "method": "Full read of src/tools/{search-products,get-best-sellers,get-deals}.ts, the three client functions in src/services/keepa-client.ts and their registration in src/index.ts, at the pinned commit.",
+  "capabilities": {
+    "keepa.search_products": {
+      "provider_request": "GET /search with domain, type=product, term, optional catid",
+      "donor_processing": "returns the provider's asinList as a numbered markdown list; no ranking, deduplication, scoring or filtering",
+      "donor_semantics_of_value": "none beyond the request contract"
+    },
+    "keepa.get_best_sellers": {
+      "provider_request": "GET /bestsellers with domain, category",
+      "donor_processing": "takes bestSellersList.asinList, slices the first 100 for display; no ranking logic",
+      "donor_semantics_of_value": "none beyond the request contract"
+    },
+    "keepa.get_deals": {
+      "provider_request": "GET /deal with a single selection parameter holding a JSON query: page, domainId, priceTypes [AMAZON], dateRange 0 (last day, the interval deltaPercentRange is measured over), isRangeEnabled, deltaPercentRange [pct, int32 max], minRating (0-50 scale)",
+      "donor_processing": "reads current[] by csv slot via resolveCurrent; rating 0-50 divided by 10; prices formatted as USD",
+      "finding": "the donor's own history records that flat dealCondition/deltaDroppedPct query parameters were never recognised by Keepa, so earlier filters silently did nothing"
+    }
+  },
+  "conclusion": "All three donor tools are thin request wrappers that return provider-computed ASIN lists or deal rows. The donor holds no discovery, ranking or deal-scoring algorithm to absorb; the only transferable knowledge is the provider wire contract above, recorded here as a reference. ECDEV does not adopt these paid discovery endpoints (zero-paid public discovery is the production path), so the donor surface is resolved as REFERENCE_ONLY.",
+  "not_resolved_here": "Whether the Keepa service surfaces candidates that zero-paid public discovery misses is a question about the paid provider, not about the donor source. It needs a Keepa key and a benchmark against ECDEV's public discovery; it is tracked as provider evidence pending (credentials absent) and no result is claimed."
+}

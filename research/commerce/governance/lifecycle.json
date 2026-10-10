@@ -1,19 +1,20 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "87ea5b63cebf21317d8433ff48b7b7402ed0ff2a",
+  "assessed_parent_commit": "6f04ae9148c193cca4315c78dcde1ecfdae8e169",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
   "donor_count": 68,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
-    "CUTOVER": 3,
+    "CUTOVER": 2,
     "DISCOVERED": 12,
-    "EXTINCT": 2,
+    "EXTINCT": 3,
     "PARITY_PROVEN": 1,
     "REGISTERED": 46
   },
   "extinct": [
+    "purahmanian--keepa-mcp",
     "scrapinghub--price-parser",
     "seomoz--reppy"
   ],
@@ -130,12 +131,12 @@
     },
     {
       "donor": "purahmanian--keepa-mcp",
-      "claimed": "CUTOVER",
-      "effective": "CUTOVER",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "EXTINCT: failing gates: KNOWLEDGE_RESOLVED",
-      "runtime": "CUTOVER",
-      "knowledge": "ACTIVE_STUDY",
+      "stopped_by": "",
+      "runtime": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -176,23 +177,23 @@
         {
           "key": "keepa.search_products",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(does Keepa's paid product finder surface candidates that zero-paid public discovery misses, at what cost per useful candidate?)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "REFERENCE_ONLY(provider wire contract only (GET /search term, catid); the donor returns the provider ASIN list unprocessed, so there is no algorithm to absorb; paid discovery is not adopted)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
         },
         {
           "key": "keepa.get_best_sellers",
           "required": false,
-          "knowledge": "BENCHMARK_CANDIDATE(do bestseller lists improve market discovery coverage over public research seeds, per category and marketplace?)",
-          "knowledge_status": "BENCHMARK_CANDIDATE",
-          "open": true
+          "knowledge": "REFERENCE_ONLY(provider wire contract only (GET /bestsellers category); the donor slices the provider ASIN list, so there is no algorithm to absorb; paid discovery is not adopted)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
         },
         {
           "key": "keepa.get_deals",
           "required": false,
-          "knowledge": "STUDY_CANDIDATE(price-drop deal feeds as signals of competitor discounting and promotion dynamics)",
-          "knowledge_status": "STUDY_CANDIDATE",
-          "open": true
+          "knowledge": "REFERENCE_ONLY(provider wire contract only (GET /deal with one JSON selection: dateRange 0 is the interval deltaPercentRange is measured over, rating on a 0-50 scale); the donor formats provider rows and holds no deal-scoring algorithm; paid discovery is not adopted)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
         },
         {
           "key": "keepa.text-formatting",
@@ -272,8 +273,8 @@
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "3 of 9 declared capabilities still have open research: keepa.search_products (BENCHMARK_CANDIDATE), keepa.get_best_sellers (BENCHMARK_CANDIDATE), keepa.get_deals (STUDY_CANDIDATE)"
+          "pass": true,
+          "detail": "all 9 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
