@@ -3,7 +3,7 @@ import json,pathlib,sys,re,collections,subprocess
 ROOT=pathlib.Path(__file__).resolve().parents[2]
 LIFECYCLE=ROOT/('target/lifecycle-review.exe' if sys.platform=='win32' else 'target/lifecycle-review')
 sys.path.insert(0,str(ROOT/'.venv/research'))
-import jsonschema
+import schema_check
 import census
 def read(p):return json.loads(p.read_text(encoding='utf-8'))
 
@@ -104,8 +104,8 @@ def main():
  assessed={d['donor_id']:d for d in json.loads(subprocess.check_output([str(authority),str(ROOT)]))}
  total=classified=source=parsed=unknown=tests=capabilities=0
  for d in reg['donors']:
-  jsonschema.validate(d,read(schema/'donor.schema.json'))
-  path=ROOT/'research/commerce/donors/census'/d['donor_id'];summary=read(path/'summary.json');jsonschema.validate(summary,read(schema/'census.schema.json'))
+  schema_check.validate(d,read(schema/'donor.schema.json'))
+  path=ROOT/'research/commerce/donors/census'/d['donor_id'];summary=read(path/'summary.json');schema_check.validate(summary,read(schema/'census.schema.json'))
   files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
   validate_inventory(summary,files)
   assert summary['status']=='CENSUS_PARTIAL' or (summary['unknown_files']==0 and summary['parse_unknown']==0 and summary['semantic_review']=='COMPLETE')
@@ -242,6 +242,6 @@ def main():
  stages=re.findall(r'\("[^"]+",\s*(true|false)\)',block)
  assert stages
  report['zero_cost_stage_count']=sum(s=='true' for s in stages);report['research_stage_count']=len(stages);report['zero_cost_coverage_bps']=report['zero_cost_stage_count']*10000//len(stages)
- jsonschema.validate({k:v for k,v in report.items() if isinstance(v,int)},read(schema/'metrics.schema.json'))
+ schema_check.validate({k:v for k,v in report.items() if isinstance(v,int)},read(schema/'metrics.schema.json'))
  census.dump(ROOT/'research/commerce/metrics.json',report);print(json.dumps(report,indent=2))
 if __name__=='__main__':main()
