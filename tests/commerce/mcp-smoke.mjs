@@ -1,11 +1,10 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-import { Client } from '@modelcontextprotocol/sdk/client/index.js';
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { Client } from './mcp-client.mjs';
 const base=process.env.ECDEV_TEST_URL||'http://127.0.0.1:8765';
 const client=new Client({name:'ecdev-conformance-client',version:'1.0.0'});
-await client.connect(new StreamableHTTPClientTransport(new URL(base+'/mcp')));
+await client.connect(base+'/mcp');
 try {
  const tools=await client.listTools();assert.equal(tools.tools.length,48);
  const officialFixtures=JSON.parse(await readFile(new URL('../../adapter/marketplace/tests/fixtures/official-responses.json',import.meta.url),'utf8'));
@@ -68,5 +67,5 @@ try {
  assert.equal((await fetch(base+'/api/status',{headers:{Origin:'https://example.org'}})).status,403);
  assert.equal((await fetch(base+'/mcp',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json, text/event-stream','MCP-Protocol-Version':'invalid'},body:JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/list'})})).status,400);
  const abort=new AbortController();const sse=await fetch(base+'/events',{signal:abort.signal});const reader=sse.body.getReader();const chunk=await reader.read();assert.match(new TextDecoder().decode(chunk.value),/event: run/);abort.abort();
- console.log(JSON.stringify({status:'PASS',transport:'SDK_STREAMABLE_HTTP',client:'@modelcontextprotocol/sdk',tool_count:tools.tools.length,source_scope_version:zoned.structuredContent.source_scope_version,timezone_fixture_snapshot_id:zoned.structuredContent.snapshot_id,timezone_and_source_scope:'PASS_OFFSET_UTC_UNKNOWN_ZONE_AND_FEED_WITHOUT_HN_LEAKAGE',plan_run_id:value.run_id,replay_run_id:replay.structuredContent.run_id,economics_run_id:economics.structuredContent.run_id,fixture_research_run_id:research.structuredContent.run_id,zero_paid_research:'PASS_FIXTURE_MODE',live_e2e:status.structuredContent.live_e2e,live_validation_scope:'NO_LIVE_ACQUISITION_IN_THIS_SMOKE_TEST'},null,2));
+ console.log(JSON.stringify({status:'PASS',transport:'STREAMABLE_HTTP',client:'ecdev-native-mcp-client',tool_count:tools.tools.length,source_scope_version:zoned.structuredContent.source_scope_version,timezone_fixture_snapshot_id:zoned.structuredContent.snapshot_id,timezone_and_source_scope:'PASS_OFFSET_UTC_UNKNOWN_ZONE_AND_FEED_WITHOUT_HN_LEAKAGE',plan_run_id:value.run_id,replay_run_id:replay.structuredContent.run_id,economics_run_id:economics.structuredContent.run_id,fixture_research_run_id:research.structuredContent.run_id,zero_paid_research:'PASS_FIXTURE_MODE',live_e2e:status.structuredContent.live_e2e,live_validation_scope:'NO_LIVE_ACQUISITION_IN_THIS_SMOKE_TEST'},null,2));
 } finally {await client.close();}

@@ -39,7 +39,6 @@ jobs:
       - run: python tools/commerce/validate.py --records-only
       - run: python tools/commerce/validate.py --lifecycle-negative-cases
       - run: python tools/commerce/validate.py --inventory-negative-cases
-      - run: npm ci --prefix tests/commerce
       - name: MCP and HTTP integration
         env:
           ECDEV_MAX_PROVIDER_REQUESTS_PER_DAY: '0'
