@@ -1,16 +1,16 @@
 //! Durable observations, snapshots and fenced watches, owned by commerce.
 use super::{ForecastScenario, SocialPost, snapshot, terms};
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{
     Engine, planner::allocate_information_actions, provider::AcquireRequest, service::timestamp,
 };
 use rusqlite::{Connection, params};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
 };
-use uuid::Uuid;
 // Requested source identity is narrower than a platform label for public JSON feeds.
 fn source_key(source: &Value) -> String {
     let platform = source["platform"].as_str().unwrap_or("UNKNOWN");

@@ -354,7 +354,10 @@ mod tests {
 
     #[test]
     fn unknown_arguments_are_refused_before_a_tool_runs() {
-        let root = std::env::temp_dir().join(format!("ecdev-schema-{}", uuid::Uuid::new_v4()));
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-schema-{}",
+            crate::identifier::Uuid::new_v4()
+        ));
         let engine = crate::Engine::open(&root).unwrap();
         // The slip a live run made: an unknown field inside a source.
         let e = engine

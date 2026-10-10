@@ -1,12 +1,12 @@
 //! High-level official product intent; no provider substitution or implicit live permission.
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{
     provider::AcquireRequest,
     service::{Engine, timestamp},
 };
 use serde::Deserialize;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
-use uuid::Uuid;
 
 impl Engine {
     /// Official boundary readiness: zero network, never persisted, never secret-bearing.

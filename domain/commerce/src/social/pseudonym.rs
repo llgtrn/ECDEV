@@ -7,7 +7,7 @@
 //! source bytes unchanged: they are hashed evidence.
 
 use super::SocialPost;
-use sha2::{Digest, Sha256};
+use crate::sha256::Sha256;
 use std::{fs, path::Path};
 
 pub const PREFIX: &str = "anon1:";
@@ -36,8 +36,13 @@ pub fn installation_key(root: &Path) -> Result<[u8; 32], String> {
             .map_err(|_| "AUTHOR_PSEUDONYM_KEY_CORRUPT".to_string());
     }
     let mut key = [0u8; 32];
-    key[..16].copy_from_slice(uuid::Uuid::new_v4().as_bytes());
-    key[16..].copy_from_slice(uuid::Uuid::new_v4().as_bytes());
+    // Key material is never derived from the non-secret identifier fallback: no OS randomness, no key.
+    for half in key.chunks_mut(16) {
+        half.copy_from_slice(
+            &crate::identifier::os_random_16()
+                .ok_or_else(|| "AUTHOR_PSEUDONYM_KEY_OS_RANDOMNESS_UNAVAILABLE".to_string())?,
+        );
+    }
     fs::create_dir_all(path.parent().unwrap()).map_err(|e| e.to_string())?;
     let mut options = fs::OpenOptions::new();
     options.write(true).create_new(true);
@@ -114,7 +119,10 @@ mod tests {
 
     #[test]
     fn the_installation_key_is_created_once_and_private() {
-        let root = std::env::temp_dir().join(format!("ecdev-pseudonym-{}", uuid::Uuid::new_v4()));
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-pseudonym-{}",
+            crate::identifier::Uuid::new_v4()
+        ));
         let k1 = installation_key(&root).unwrap();
         assert_eq!(k1, installation_key(&root).unwrap());
         #[cfg(unix)]

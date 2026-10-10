@@ -211,7 +211,10 @@ fn limits() -> CrawlLimits {
     }
 }
 fn path() -> PathBuf {
-    std::env::temp_dir().join(format!("ecdev-frontier-{}.sqlite", uuid::Uuid::new_v4()))
+    std::env::temp_dir().join(format!(
+        "ecdev-frontier-{}.sqlite",
+        ecdev_core::identifier::Uuid::new_v4()
+    ))
 }
 fn url(s: &str) -> ecdev_core::frontier::UrlIdentity {
     canonicalize(s, None, &UrlPolicy::default(), 1).unwrap()

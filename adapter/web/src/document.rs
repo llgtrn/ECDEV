@@ -1,8 +1,8 @@
 //! Declared HTML decoding. Wire bytes remain the capture; decoding is a projection.
+use ecdev_core::sha256::Sha256;
 use encoding_rs::{Encoding, UTF_8};
 use scraper::{Html, Selector};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 
 fn charset(content_type: &str) -> Option<String> {
     content_type.split(';').find_map(|part| {

@@ -2,8 +2,8 @@
 //! data. Script, style, template, noscript, svg and head content is not visible and is skipped;
 //! block elements end a line; whitespace inside a line collapses to single spaces.
 
+use ecdev_core::sha256::Sha256;
 use scraper::{ElementRef, Html};
-use sha2::{Digest, Sha256};
 
 const HIDDEN: [&str; 7] = [
     "script", "style", "template", "noscript", "svg", "head", "iframe",

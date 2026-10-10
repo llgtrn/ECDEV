@@ -3,15 +3,15 @@
 //! in physical stores by volunteers, kept apart from online listings and marketplace offers;
 //! never demand. Contributors are told apart by keyed pseudonym only (several prices from one
 //! person are one witness, not several). ODbL-1.0 obligations travel with every result.
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp, social::pseudonym};
 use rusqlite::params;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
 };
-use uuid::Uuid;
 
 pub const MAX_PRODUCTS: u64 = 5;
 

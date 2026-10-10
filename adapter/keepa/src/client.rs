@@ -1,12 +1,12 @@
 use crate::resolve_current;
+use ecdev_core::identifier::Uuid;
+use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
-use uuid::Uuid;
 
 /// Read-only native provider client. Secrets are held only in memory, never returned.
 pub struct Keepa {

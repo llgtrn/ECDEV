@@ -7,9 +7,9 @@
 //! and every output is SIMULATED, which no observed store accepts and no demand evidence reads.
 //! V0 aims at reproducibility, not realism: its buyer model is an uncalibrated heuristic.
 
+use crate::sha256::Sha256;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::collections::BTreeSet;
 
 pub const SIMULATED: &str = "SIMULATED";
@@ -556,7 +556,7 @@ impl crate::Engine {
             }
             None => (run(&baseline, seed, replicates)?, None),
         };
-        let id = uuid::Uuid::new_v4().to_string();
+        let id = crate::identifier::Uuid::new_v4().to_string();
         self.db
             .lock()
             .map_err(|e| e.to_string())?
@@ -606,7 +606,8 @@ mod tests {
 
     #[test]
     fn simulations_persist_apart_and_observed_stores_refuse_them() {
-        let root = std::env::temp_dir().join(format!("ecdev-sim-{}", uuid::Uuid::new_v4()));
+        let root =
+            std::env::temp_dir().join(format!("ecdev-sim-{}", crate::identifier::Uuid::new_v4()));
         let e = crate::Engine::open(&root).unwrap();
         let before = e.candidates().unwrap();
         let out = e

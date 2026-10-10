@@ -1,6 +1,6 @@
 //! Local capture integrity for stored commerce projections. Never performs network IO.
+use crate::sha256::Sha256;
 use serde_json::Value;
-use sha2::{Digest, Sha256};
 use std::{fs::File, io::Read, path::Path};
 
 pub(crate) const UNAVAILABLE: &str = "RAW_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH";
@@ -96,7 +96,10 @@ mod tests {
 
     #[test]
     fn captures_require_matching_bytes_in_the_declared_source_boundary() {
-        let root = std::env::temp_dir().join(format!("ecdev-capture-{}", uuid::Uuid::new_v4()));
+        let root = std::env::temp_dir().join(format!(
+            "ecdev-capture-{}",
+            crate::identifier::Uuid::new_v4()
+        ));
         let bytes = b"captured response";
         let hash = format!("{:x}", Sha256::digest(bytes));
         for (source, directory, extension) in [

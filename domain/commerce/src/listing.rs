@@ -2,12 +2,12 @@
 //! provider's listings, kept with their raw capture hash: OFFICIAL_MARKETPLACE_API claims, not
 //! ECDEV page observations. Offers are grouped by checksum-valid JAN so the same product's
 //! sellers and prices sit together; sellers inside one marketplace are never independent sites.
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp};
 use rusqlite::params;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fs};
-use uuid::Uuid;
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()

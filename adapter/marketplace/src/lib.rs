@@ -2,13 +2,13 @@
 pub mod doctor;
 pub mod reads;
 pub mod transport;
+use ecdev_core::identifier::Uuid;
+use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
 };
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
-use uuid::Uuid;
 
 pub const MODEL_COMMIT: &str = "3677bb9d96f4450e6843f1f8207005e925d5c867";
 pub const LWA_ENDPOINT: &str = "https://api.amazon.com/auth/o2/token";

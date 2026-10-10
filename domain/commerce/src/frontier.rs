@@ -1,12 +1,12 @@
 //! ECDEV-owned durable frontier. SQLite transactions fence workers across processes.
 //! Time is supplied in Unix milliseconds so scheduling is reproducible in tests.
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{collections::BTreeSet, path::Path, time::Duration};
 use url::Url;
-use uuid::Uuid;
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()

@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "67dd3e88704932e2008cdae9fb6a6340d635ad69",
+  "assessed_parent_commit": "7c81cb22c123fafc4409f152f89d22a396e0d5a8",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -3642,8 +3642,8 @@
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
-          "pass": false,
-          "detail": "4 observed: MANIFEST CARGO sha2 in adapter/keepa/Cargo.toml; MANIFEST CARGO sha2 in adapter/marketplace/Cargo.toml; MANIFEST CARGO sha2 in adapter/web/Cargo.toml; \u2026 1 more"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "BUILD_EDGES_ZERO",
@@ -3662,8 +3662,8 @@
         },
         {
           "gate": "SOURCE_IMPORTS_ZERO",
-          "pass": false,
-          "detail": "24 imports: sha2 in adapter/keepa/src/client.rs; sha2 in adapter/marketplace/src/lib.rs; sha2 in adapter/web/src/document.rs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -3712,8 +3712,8 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: commerce (uses it), commerce.keepa (uses it), commerce.marketplace (uses it), commerce.web-research (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },
@@ -6587,8 +6587,8 @@
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
-          "pass": false,
-          "detail": "4 observed: MANIFEST CARGO uuid in adapter/keepa/Cargo.toml; MANIFEST CARGO uuid in adapter/marketplace/Cargo.toml; MANIFEST CARGO uuid in adapter/web/Cargo.toml; \u2026 1 more"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "BUILD_EDGES_ZERO",
@@ -6597,8 +6597,8 @@
         },
         {
           "gate": "LINKED_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: LOCK CARGO uuid linked via rmcp 3.3.0: apps/server/Cargo.toml \u2192 rmcp 3.3.0 \u2192 uuid 1.23.1 (in Cargo.lock)"
         },
         {
           "gate": "TEST_EDGES_ZERO",
@@ -6607,8 +6607,8 @@
         },
         {
           "gate": "SOURCE_IMPORTS_ZERO",
-          "pass": false,
-          "detail": "19 imports: uuid in adapter/keepa/src/client.rs; uuid in adapter/marketplace/src/lib.rs; uuid in adapter/web/src/lib.rs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6658,7 +6658,7 @@
         {
           "gate": "ROLLBACK_INDEPENDENT",
           "pass": false,
-          "detail": "still depended on by: commerce (uses it), commerce.keepa (uses it), commerce.marketplace (uses it), commerce.web-research (uses it)"
+          "detail": "still depended on by: commerce.server (uses it)"
         }
       ]
     },

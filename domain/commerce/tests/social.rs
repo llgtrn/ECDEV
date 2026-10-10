@@ -1,6 +1,6 @@
+use ecdev_core::identifier::Uuid;
 use ecdev_core::{Engine, social::*};
 use serde_json::{Value, json};
-use uuid::Uuid;
 fn post(id: &str, platform: &str, at: u64) -> SocialPost {
     SocialPost {
         platform: platform.into(),
@@ -47,7 +47,7 @@ fn root() -> std::path::PathBuf {
 #[test]
 fn social_live_capture_requires_http_witness_and_preserves_unknown_counts() {
     use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
-    use sha2::{Digest, Sha256};
+    use ecdev_core::sha256::Sha256;
     use std::sync::Arc;
     struct Witness(Value);
     impl Provider for Witness {
@@ -126,7 +126,7 @@ fn social_live_capture_requires_http_witness_and_preserves_unknown_counts() {
 }
 #[test]
 fn cached_captures_require_original_bytes_and_never_establish_live_acquisition() {
-    use sha2::{Digest, Sha256};
+    use ecdev_core::sha256::Sha256;
     let root = root();
     let engine = Engine::open(&root).unwrap();
     let now = std::time::SystemTime::now()
@@ -715,7 +715,7 @@ fn cluster_representatives_rank_centrality_then_same_platform_engagement() {
 #[test]
 fn a_source_refusing_its_own_next_cursor_limits_coverage_without_an_outage() {
     use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
-    use sha2::{Digest, Sha256};
+    use ecdev_core::sha256::Sha256;
     use std::sync::Arc;
     // Like Bluesky's unauthenticated search: page one is served, its cursor is refused with 403.
     struct Refuses;
@@ -772,7 +772,7 @@ fn a_source_refusing_its_own_next_cursor_limits_coverage_without_an_outage() {
 #[test]
 fn a_tight_budget_samples_every_slice_instead_of_the_newest_one() {
     use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
-    use sha2::{Digest, Sha256};
+    use ecdev_core::sha256::Sha256;
     use std::sync::Arc;
     // Every slice has many pages; each page costs two requests.
     struct Deep;

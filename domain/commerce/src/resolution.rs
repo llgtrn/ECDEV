@@ -1,6 +1,6 @@
 //! Conservative product identity from source assertions; title similarity is not identity.
+use crate::sha256::Sha256;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 
 fn text(v: &Value) -> String {

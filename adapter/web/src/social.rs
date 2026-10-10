@@ -1,5 +1,7 @@
 //! Independent public social API/JSON Feed boundary. No donor runtime, auth or media fetch.
 use crate::{Web, normalize_url, robots};
+use ecdev_core::identifier::Uuid;
+use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
@@ -7,10 +9,8 @@ use ecdev_core::{
 };
 use scraper::Html;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::time::Duration;
 use url::Url;
-use uuid::Uuid;
 #[derive(Default)]
 pub struct Social {
     web: Web,

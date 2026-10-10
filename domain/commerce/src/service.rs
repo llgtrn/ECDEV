@@ -1,3 +1,4 @@
+use crate::identifier::Uuid;
 use crate::{
     economics::{self, Scenario},
     planner::{self, Intent},
@@ -10,7 +11,6 @@ use std::{
     sync::{Arc, Mutex},
     time::{SystemTime, UNIX_EPOCH},
 };
-use uuid::Uuid;
 
 #[derive(Clone)]
 pub struct Engine {
@@ -818,7 +818,7 @@ pub fn tool_definitions() -> Vec<Value> {
 }
 // Historical capture validation, never a freshness or profitability assertion.
 fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
-    use sha2::{Digest, Sha256};
+    use crate::sha256::Sha256;
     if run["mode"] != "LIVE"
         || run["research_run"] != true
         || run["cost_minor"] != 0
@@ -1063,7 +1063,7 @@ mod tests {
     }
     #[test]
     fn live_status_requires_network_witnesses_and_capture_hashes() {
-        use sha2::{Digest, Sha256};
+        use crate::sha256::Sha256;
         let root = temp();
         let engine = Engine::open(&root).unwrap();
         let dir = root.join(".ecdev-data/raw");

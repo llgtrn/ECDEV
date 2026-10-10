@@ -6,12 +6,12 @@
 //! documentation; no live call made without an operator's Client ID).
 
 use crate::Web;
+use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::time::Duration;
 use url::Url;
 

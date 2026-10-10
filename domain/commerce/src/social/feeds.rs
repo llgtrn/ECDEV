@@ -2,12 +2,12 @@
 //! discovery feeds. An entry is a lead to research with a suggested query: never a mention, a
 //! product measurement or demand, and ranked by an algorithm the source does not disclose.
 use super::growth::daily_attention_growth;
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp};
 use rusqlite::params;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fs};
-use uuid::Uuid;
 
 pub const FEED_PLATFORMS: [&str; 3] = ["MASTODON_TRENDS", "BLUESKY_TRENDS", "GOOGLE_TRENDS_RSS"];
 

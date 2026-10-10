@@ -16,6 +16,8 @@ pub mod supplier;
 pub mod supplier_terms;
 pub mod xml_feed;
 pub mod yahoo_shopping;
+use ecdev_core::identifier::Uuid;
+use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
@@ -23,7 +25,6 @@ use ecdev_core::{
 };
 use scraper::{Html, Selector};
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::{
     collections::BTreeSet,
     io::Read,
@@ -32,7 +33,6 @@ use std::{
     time::{Duration, Instant},
 };
 use url::Url;
-use uuid::Uuid;
 pub struct Web {
     gate: Mutex<Option<Instant>>,
     robots: Mutex<robots::RobotsCache>,

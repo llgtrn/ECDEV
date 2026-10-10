@@ -1,11 +1,11 @@
 //! Persisted bounded watches. Leases fence concurrent schedulers and survive restart.
 use crate::Engine;
 use crate::availability::{availability_term, derived_availability};
+use crate::identifier::Uuid;
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
-use uuid::Uuid;
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
@@ -502,7 +502,7 @@ pub fn fact_as_of(windows: &[FactWindow], at: u64) -> Value {
 pub const EXPORT_FORMAT: &str = "ECDEV_WATCH_EXPORT_V1";
 
 fn sha256_hex(bytes: &[u8]) -> String {
-    use sha2::{Digest, Sha256};
+    use crate::sha256::Sha256;
     format!("{:x}", Sha256::digest(bytes))
 }
 

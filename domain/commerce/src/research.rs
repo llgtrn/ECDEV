@@ -1,5 +1,7 @@
 //! Zero-paid research workflow, persisted evidence/cache, candidate ledger and accounting.
 use crate::frontier::{CrawlLimits, Frontier, UrlPolicy, canonicalize};
+use crate::identifier::Uuid;
+use crate::sha256::Sha256;
 use crate::{
     domain::Evidence,
     economics::{self, Scenario},
@@ -9,9 +11,7 @@ use crate::{
 use rusqlite::{OptionalExtension, params};
 use serde::Deserialize;
 use serde_json::{Value, json};
-use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
-use uuid::Uuid;
 #[derive(Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Source {
