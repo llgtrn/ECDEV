@@ -225,7 +225,7 @@ pub fn router(e: Engine, port: u16) -> Router {
             get(|| async {
                 (
                     [(header::CONTENT_TYPE, "text/javascript")],
-                    include_str!("../../web/dist/app.js"),
+                    include_str!("../../web/app.js"),
                 )
             }),
         )
