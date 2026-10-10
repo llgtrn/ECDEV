@@ -1,20 +1,21 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "6f04ae9148c193cca4315c78dcde1ecfdae8e169",
+  "assessed_parent_commit": "5ee148771ef7f2a42bc2334f7f7a66e6e7d7ce2a",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
   "donor_count": 68,
   "effective_states": {
     "CAPABILITY_RELEVANCE_RESOLVED": 4,
-    "CUTOVER": 2,
+    "CUTOVER": 1,
     "DISCOVERED": 12,
-    "EXTINCT": 3,
+    "EXTINCT": 4,
     "PARITY_PROVEN": 1,
     "REGISTERED": 46
   },
   "extinct": [
     "purahmanian--keepa-mcp",
+    "scrapinghub--extruct",
     "scrapinghub--price-parser",
     "seomoz--reppy"
   ],
@@ -2673,11 +2674,11 @@
     },
     {
       "donor": "scrapinghub--extruct",
-      "claimed": "CUTOVER",
-      "effective": "CUTOVER",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "EXTINCT: failing gates: BUILD_EDGES_ZERO, ROLLBACK_INDEPENDENT",
-      "runtime": "CUTOVER",
+      "stopped_by": "",
+      "runtime": "EXTINCT",
       "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "BSD-3-Clause",
@@ -2760,8 +2761,8 @@
         },
         {
           "gate": "BUILD_EDGES_ZERO",
-          "pass": false,
-          "detail": "1 observed: IMPORT PYTHON extruct in tools/commerce/structured_data_benchmark.py"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "LINKED_EDGES_ZERO",
@@ -2825,8 +2826,8 @@
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: tools.commerce (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },
