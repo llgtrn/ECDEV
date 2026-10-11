@@ -14,6 +14,8 @@ pub mod sitemap;
 pub mod social;
 pub mod supplier;
 pub mod supplier_terms;
+pub mod text_decoding;
+mod text_decoding_labels;
 pub mod xml_feed;
 pub mod yahoo_shopping;
 use ecdev_core::identifier::Uuid;

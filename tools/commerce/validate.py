@@ -40,6 +40,16 @@ def validate_file_coverage(summary, files):
   reviewed=matrix.get('submodule_coverage',{}).get(sub['path'])
   assert reviewed and reviewed['commit_sha']==sub['commit_sha'] and reviewed['files'], ('SUBMODULE_NOT_SEMANTICALLY_REVIEWED',sub['path'])
 
+def validate_dependency_censuses(registered):
+ """Dependency donors outside the legacy registry: a COMPLETE review needs a matrix that maps every
+ first-party source file, and parse_policy must say the source was read, not parsed."""
+ for path in sorted((ROOT/'research/commerce/donors/census').glob('*/summary.json')):
+  summary=read(path)
+  if summary['donor_id'] in registered or 'parse_policy' not in summary: continue
+  assert summary['semantic_review']=='COMPLETE' and summary['status']=='CENSUS_PARTIAL', ('DEPENDENCY_CENSUS_STATE',summary['donor_id'])
+  files=[json.loads(x) for x in (path.parent/'files.jsonl').read_text(encoding='utf-8').splitlines()]
+  validate_inventory(summary,files);validate_file_coverage(summary,files)
+
 def inventory_negative_cases():
  path=ROOT/'research/commerce/donors/census/scrapinghub--price-parser'
  summary=read(path/'summary.json');files=[json.loads(x) for x in (path/'files.jsonl').read_text(encoding='utf-8').splitlines()]
@@ -99,6 +109,7 @@ def main():
  if '--lifecycle-negative-cases' in sys.argv:
   lifecycle_negative_cases();return
  reg=read(ROOT/'research/commerce/donors/registry.json');schema=ROOT/'tools/commerce/schemas'
+ validate_dependency_censuses({d['donor_id'] for d in reg['donors']})
  authority=LIFECYCLE
  assert authority.is_file(), 'Build tools/commerce/lifecycle_review.rs against .ecdev before measuring donor lifecycle'
  assessed={d['donor_id']:d for d in json.loads(subprocess.check_output([str(authority),str(ROOT)]))}

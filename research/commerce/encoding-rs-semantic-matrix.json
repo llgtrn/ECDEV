@@ -1,0 +1,166 @@
+{
+  "record": "encoding-rs-semantic-matrix",
+  "donor": "hsivonen/encoding_rs",
+  "donor_commit": "2fa58aecf537cc76ff52c0eb3d5e9f8fda466844",
+  "donor_version_read": "0.8.35 (tag v0.8.35, the version ECDEV resolved and the differential oracle); public surface also read at 0.8.42 (a155adc7)",
+  "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+  "public_surface_read": "src/lib.rs Encoding, Decoder, Encoder; src/mem.rs free functions; per-encoding modules (utf_8, utf_16, single_byte, big5, euc_jp, euc_kr, gb18030, shift_jis, iso_2022_jp, x_user_defined, replacement)",
+  "capabilities": [
+    {
+      "key": "encoding_rs.label-lookup",
+      "donor": "Encoding::for_label",
+      "ecdev": "text_decoding.rs Encoding::for_label",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "encoding_rs.bom-sniffing",
+      "donor": "Encoding::for_bom",
+      "ecdev": "text_decoding.rs Encoding::for_bom",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "encoding_rs.decode-without-bom-handling",
+      "donor": "Encoding::decode_without_bom_handling and the per-encoding decoders",
+      "ecdev": "text_decoding.rs Encoding::decode_without_bom_handling",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "encoding_rs.bom-composing-decode",
+      "donor": "Encoding::decode, decode_with_bom_removal",
+      "ecdev": "document.rs composes for_bom, label precedence and decode and records the recipe",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "encoding_rs.no-replacement-variants",
+      "donor": "for_label_no_replacement, decode_without_bom_handling_and_without_replacement",
+      "ecdev": "error flag; document refused as INVALID_DOCUMENT_ENCODING",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "encoding_rs.encoders",
+      "donor": "Encoding::encode, Encoder",
+      "ecdev": "none; nothing encodes",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "encoding_rs.streaming-decoder",
+      "donor": "Decoder (decode_to_string, decode_to_utf16, pending state)",
+      "ecdev": "whole bounded body decode",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "encoding_rs.vectorised-fast-paths",
+      "donor": "ascii.rs, simd_funcs.rs, per-encoding ASCII runs",
+      "ecdev": "scalar decoders, measured in native-charset-decoding.json",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "encoding_rs.buffer-conversions",
+      "donor": "mem.rs latin1/utf16/bidi helpers",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "src/lib.rs",
+        "capabilities": "encoding_rs.label-lookup + encoding_rs.bom-sniffing + encoding_rs.decode-without-bom-handling + encoding_rs.bom-composing-decode + encoding_rs.no-replacement-variants + encoding_rs.encoders + encoding_rs.streaming-decoder (Encoding, Decoder, Encoder and the label table)"
+      },
+      {
+        "prefix": "src/data.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling (generated index tables from the WHATWG indexes; ECDEV commits its own tables generated from the same standard)"
+      },
+      {
+        "prefix": "src/utf_8.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.vectorised-fast-paths"
+      },
+      {
+        "prefix": "src/utf_16.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling"
+      },
+      {
+        "prefix": "src/single_byte.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/big5.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/euc_jp.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/euc_kr.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/gb18030.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/gb18030_2022.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling (GB18030-2022 mapping deltas)"
+      },
+      {
+        "prefix": "src/shift_jis.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/iso_2022_jp.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling + encoding_rs.encoders"
+      },
+      {
+        "prefix": "src/replacement.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling (the replacement encoding)"
+      },
+      {
+        "prefix": "src/x_user_defined.rs",
+        "capabilities": "encoding_rs.decode-without-bom-handling"
+      },
+      {
+        "prefix": "src/variant.rs",
+        "capabilities": "encoding_rs.streaming-decoder (per-encoding decoder and encoder dispatch)"
+      },
+      {
+        "prefix": "src/handles.rs",
+        "capabilities": "encoding_rs.vectorised-fast-paths (unsafe buffer handles for the streaming coders)"
+      },
+      {
+        "prefix": "src/ascii.rs",
+        "capabilities": "encoding_rs.vectorised-fast-paths"
+      },
+      {
+        "prefix": "src/simd_funcs.rs",
+        "capabilities": "encoding_rs.vectorised-fast-paths"
+      },
+      {
+        "prefix": "src/macros.rs",
+        "capabilities": "encoding_rs.streaming-decoder + encoding_rs.vectorised-fast-paths (code generation macros shared by the coders)"
+      },
+      {
+        "prefix": "src/mem.rs",
+        "capabilities": "encoding_rs.buffer-conversions"
+      },
+      {
+        "prefix": "src/testing.rs",
+        "capabilities": "none (test support)"
+      },
+      {
+        "prefix": "generate-encoding-data.py",
+        "capabilities": "encoding_rs.decode-without-bom-handling (generates src/data.rs and the label table from the standard; ECDEV generated its own from the same indexes)"
+      },
+      {
+        "prefix": "fuzz/",
+        "capabilities": "none (fuzz harnesses over Encoding, labels and mem)"
+      },
+      {
+        "prefix": "ci/",
+        "capabilities": "none (continuous integration script)"
+      }
+    ]
+  },
+  "status": "SEMANTIC_REVIEW_COMPLETE"
+}

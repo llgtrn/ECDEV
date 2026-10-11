@@ -1,6 +1,6 @@
 //! Declared HTML decoding. Wire bytes remain the capture; decoding is a projection.
+use crate::text_decoding::{Encoding, UTF_8};
 use ecdev_core::sha256::Sha256;
-use encoding_rs::{Encoding, UTF_8};
 use scraper::{Html, Selector};
 use serde_json::{Value, json};
 
@@ -67,7 +67,7 @@ pub fn decode(bytes: &[u8], content_type: &str) -> Result<(String, Value), Strin
         "wire_capture_sha256":format!("{:x}",Sha256::digest(bytes)),
         "decoded_utf8_sha256":format!("{:x}",Sha256::digest(text.as_bytes())),
         "policy":"BOM, HTTP charset, first 1024 bytes HTML meta, then strict UTF-8; no statistical guessing"});
-    Ok((text.into_owned(), recipe))
+    Ok((text, recipe))
 }
 
 /// All extracted evidence points to original bytes, including non-UTF-8 captures.
@@ -107,10 +107,9 @@ mod tests {
     }
     #[test]
     fn declared_japanese_preserves_wire_provenance() {
-        let html = r#"<meta charset="Shift_JIS"><script type="application/ld+json">{"@type":"Product","name":"耐熱ガラス","content_hash":"source assertion","offers":{"price":"2980","priceCurrency":"JPY"}}</script>"#;
-        let (bytes, _, errors) = encoding_rs::SHIFT_JIS.encode(html);
-        assert!(!errors);
-        let value = extract(&bytes, "text/html", "https://shop.example/item").unwrap();
+        // The page below, encoded as Shift_JIS by an independent encoder and committed as bytes.
+        let bytes: &[u8] = b"<meta charset=\"Shift_JIS\"><script type=\"application/ld+json\">{\"@type\":\"Product\",\"name\":\"\x91\xcf\x94M\x83K\x83\x89\x83X\",\"content_hash\":\"source assertion\",\"offers\":{\"price\":\"2980\",\"priceCurrency\":\"JPY\"}}</script>";
+        let value = extract(bytes, "text/html", "https://shop.example/item").unwrap();
         assert_eq!(value["products"][0]["title"], "耐熱ガラス");
         assert_eq!(value["products"][0]["price_minor"], 2980);
         assert_eq!(
@@ -121,7 +120,7 @@ mod tests {
             value["structured_data"][0]["value"]["content_hash"],
             "source assertion"
         );
-        let wire = format!("{:x}", Sha256::digest(&bytes));
+        let wire = format!("{:x}", Sha256::digest(bytes));
         assert_eq!(value["content_hash"], wire);
         assert_eq!(
             value["products"][0]["provenance"]["raw_capture_sha256"],

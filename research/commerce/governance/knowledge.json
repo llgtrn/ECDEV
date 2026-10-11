@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "7c81cb22c123fafc4409f152f89d22a396e0d5a8",
+  "assessed_parent_commit": "2c06d60b15833190dd55d7dbf0a315b4f59084e8",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 29,
-    "production_capabilities_native": 29,
-    "production_capabilities_proven": 29,
+    "production_capabilities_required": 32,
+    "production_capabilities_native": 32,
+    "production_capabilities_proven": 32,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 317,
-    "semantic_censused_capabilities": 317,
+    "known_donor_capabilities": 326,
+    "semantic_censused_capabilities": 326,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 62,
-    "study_complete_capabilities": 152,
+    "reference_only": 64,
+    "study_complete_capabilities": 159,
     "not_relevant_after_review": 29,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.766562
+    "knowledge_coverage_ratio": 0.773006
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 40,
+    "donors_knowledge_unreviewed": 39,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 4,
-    "donors_structurally_censused": 28,
-    "donors_semantically_censused": 15,
+    "donors_study_complete": 5,
+    "donors_structurally_censused": 29,
+    "donors_semantically_censused": 16,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 64
+    "donors_with_open_research": 63
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -745,9 +745,9 @@
     },
     {
       "donor": "dependency--github-com-hsivonen-encoding-rs",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "(Apache-2.0 OR MIT) AND BSD-3-Clause",
         "family": "PERMISSIVE",
@@ -756,7 +756,17 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "encoding_rs.label-lookup STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard label table, 228 labels over 40 encodings, written from the standard and pinned against encoding_rs on 13 label cases)",
+        "encoding_rs.bom-sniffing STUDY_COMPLETE[INDEPENDENT_NATIVE](UTF-8, UTF-16LE and UTF-16BE marks with their lengths, pinned against encoding_rs on 6 inputs)",
+        "encoding_rs.decode-without-bom-handling STUDY_COMPLETE[INDEPENDENT_NATIVE](native decoders for all 40 standard encodings, identical to encoding_rs 0.8.35 in text and error flag on the empty input, every 1-byte and 2-byte input and 300000 seeded inputs per label; frozen as digests)",
+        "encoding_rs.bom-composing-decode STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/document.rs decode records source, label and bytes removed in the decoding recipe)",
+        "encoding_rs.no-replacement-variants STUDY_COMPLETE[INDEPENDENT_NATIVE](a document with any invalid sequence is refused as INVALID_DOCUMENT_ENCODING, never partly decoded)",
+        "encoding_rs.encoders REFERENCE_ONLY(the standard's encoder algorithms are the reference if a future adapter has to send legacy-encoded request bodies)",
+        "encoding_rs.streaming-decoder STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](a sequence cut off at the end of the bounded body is an error, never carried into a following chunk)",
+        "encoding_rs.vectorised-fast-paths STUDY_COMPLETE[INDEPENDENT_NATIVE](measured in research/commerce/native-charset-decoding.json: fetch pacing, not decoding, bounds a research run)",
+        "encoding_rs.buffer-conversions REFERENCE_ONLY(mem.rs conversions and bidi checks are a reference for a future renderer, not a research capability)"
+      ]
     },
     {
       "donor": "dependency--github-com-lxml-lxml",
