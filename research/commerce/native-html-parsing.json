@@ -1,0 +1,80 @@
+{
+ "record": "native-html-parsing",
+ "evidence_class": "DERIVED_FROM_STANDARDS_AND_DIFFERENTIALLY_PROVEN",
+ "standards": [
+  "WHATWG HTML Standard 13.2.5 tokenization (including the named character reference table and processing-instruction states)",
+  "WHATWG HTML Standard 13.2.6 tree construction (all insertion modes, adoption agency, foster parenting, foreign content, templates) and 13.4 fragment parsing",
+  "Selectors Level 4 (type, universal, id, class, attribute selectors with the i and s flags, the four combinators, selector lists)",
+  "HTML Standard list of case-insensitive attribute values for attribute selectors"
+ ],
+ "licence_note": "The parser is written from the standard's text, not from html5ever, scraper or any browser. The html5lib-tests tokenizer and tree-construction data are MIT (Copyright html5lib contributors) and are committed with their LICENSE. Named character references are generated from the WHATWG entities.json (entities.tsv).",
+ "modules": [
+  "adapter/web/src/html/tokenizer.rs",
+  "adapter/web/src/html/tree_builder.rs",
+  "adapter/web/src/html/dom.rs",
+  "adapter/web/src/html/selector.rs",
+  "adapter/web/src/html/foreign.rs",
+  "adapter/web/src/html/quirks.rs"
+ ],
+ "data": {
+  "entities.tsv": {
+   "path": "adapter/web/src/html/entities.tsv",
+   "entries": 2231,
+   "sha256": "539e71575a2b959bd1af8af148cf4c500ecd68af3089918f7b96db33138023e1"
+  }
+ },
+ "scope": {
+  "scripting": "enabled (noscript holds raw text, as html5ever and browsers with scripting on); no script is ever executed",
+  "template": "a template element's contents are a detached fragment, so they are not matched by selectors or counted in text (the standard and browsers); the donor kept them as a child of the template",
+  "selectors": "pseudo-classes, pseudo-elements and namespace prefixes are rejected when the selector is parsed, never silently unmatched; ids and classes always compare case-sensitively",
+  "unsupported_in_the_standard_text_followed": "declarative shadow roots and template-for patching are not implemented (such templates are plain templates); the selectedcontent cloning of customizable select is not implemented (4 html5lib cases skipped by name)",
+  "select": "the select element has no insertion mode in the current standard: its children are parsed in body, with select a scope boundary",
+  "depth": "the stack of open elements is iterative and counts the elements that scope checks look for, so 60000 nested elements parse in 0.1 seconds in a debug build"
+ },
+ "conformance": {
+  "tokenizer": {
+   "corpus": "html5lib-tests tokenizer/*.test (15 files, commit c777c40)",
+   "result": "7049 cases pass, 0 fail (xmlViolation.test excluded: it tests the retired coercing mode)",
+   "asserted_by": "adapter/web/tests/html_tokenizer.rs"
+  },
+  "tree_construction": {
+   "corpus": "html5lib-tests tree-construction/*.dat (58 files), scripting on",
+   "result": "1757 pass; 27 #script-off cases not run; 4 cases whose expected tree holds a comment where the current standard has a processing instruction; 4 selectedcontent cases",
+   "asserted_by": "adapter/web/tests/html_tree_construction.rs"
+  }
+ },
+ "differential_proof": {
+  "oracles": [
+   "scraper 0.24.0 over html5ever (the retired donor)",
+   "Chromium 1194 headless, document.write into an iframe with scripting enabled, run once outside the repository"
+  ],
+  "corpora": [
+   "the 1600 html5lib document cases",
+   "30000 generated misnested documents (tests/html_corpus, xorshift64* seed 0x9E3779B97F4A7C15, 3 to 42 tags, text and comments from 70 open tags, 48 close tags, 10 text and 4 comment forms)",
+   "11600 fragments (html5lib plus the first 10000 generated) in a body context"
+  ],
+  "donor_result": {
+   "html5lib_documents": "1567 of 1600 identical trees; 33 differ (4 processing instructions, 1 menuitem, select family incl. 4 selectedcontent, annotation-xml integration points the donor never marks) and are listed in the fixture",
+   "generated_documents": "29974 of 30000 identical; the 26 that differ are all the donor skipping the reconstruction of active formatting elements before math and svg start tags, which the standard requires",
+   "fragments": "11423 of 11600 identical",
+   "selectors": "61 selectors over every identical document: identical sets of matched elements; the donor lists matches in node-creation order, the native engine in document order; the donor also reports matches in 70 trees whose parent links it left stale after reparenting, so those documents are excluded from selector and text digests",
+   "text": "descendant text identical on every compared document without a template"
+  },
+  "chromium_result": "29978 of 30000 generated documents identical; the 22 that differ all contain a CDATA section directly inside a MathML text integration point, which the standard parses as CDATA and Chromium as a bogus comment (listed in the fixture)",
+  "frozen_fixture": "adapter/web/tests/fixtures/html-differential-digests.json",
+  "frozen_fixture_sha256": "2db60bbd1122c81fa3c553bf65c26e9f534ec6dc16b70a4245680f93c3a31701",
+  "post_removal_tests": [
+   "adapter/web/tests/html_parity.rs::html5lib_documents_match_the_donor",
+   "adapter/web/tests/html_parity.rs::generated_documents_match_the_donor",
+   "adapter/web/tests/html_parity.rs::fragments_match_the_donor",
+   "adapter/web/tests/html_parity.rs::generated_documents_match_chromium"
+  ],
+  "bugs_found_by_the_differential_and_fixed": [
+   "select must be a scope boundary (the first run mis-closed formatting elements across select)",
+   "the fragment case must not set an appropriate end tag for script and RCDATA contexts",
+   "selectors must match only no-namespace attributes (xml:lang is not [lang])",
+   "template contents must stay out of the document tree"
+  ]
+ },
+ "closure": "scraper and its 36 transitive packages (html5ever, markup5ever, selectors, cssparser, tendril, ego-tree, phf, string_cache and others) are removed from Cargo.lock; no ECDEV crate depends on an external HTML or CSS library"
+}

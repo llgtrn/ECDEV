@@ -4,6 +4,7 @@ pub mod commerce;
 pub mod currency;
 pub mod document;
 pub mod gzip;
+pub mod html;
 pub mod microdata;
 pub mod open_prices;
 pub mod page_product;
@@ -18,6 +19,7 @@ pub mod text_decoding;
 mod text_decoding_labels;
 pub mod xml_feed;
 pub mod yahoo_shopping;
+use crate::html::{Html, Selector};
 use ecdev_core::identifier::Uuid;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::web_address::Url;
@@ -26,7 +28,6 @@ use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
-use scraper::{Html, Selector};
 use serde_json::{Value, json};
 use std::{
     collections::BTreeSet,

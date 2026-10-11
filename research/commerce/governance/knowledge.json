@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8885a9650b86b746bbb47ce3ed8e21ee324435ec",
+  "assessed_parent_commit": "468ad4137d3bc94a750077bd858843d917412701",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 39,
-    "production_capabilities_native": 39,
-    "production_capabilities_proven": 39,
+    "production_capabilities_required": 43,
+    "production_capabilities_native": 43,
+    "production_capabilities_proven": 43,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 342,
-    "semantic_censused_capabilities": 342,
+    "known_donor_capabilities": 350,
+    "semantic_censused_capabilities": 350,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 69,
-    "study_complete_capabilities": 170,
+    "reference_only": 72,
+    "study_complete_capabilities": 175,
     "not_relevant_after_review": 29,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.783626
+    "knowledge_coverage_ratio": 0.788571
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 37,
+    "donors_knowledge_unreviewed": 36,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 7,
-    "donors_structurally_censused": 31,
-    "donors_semantically_censused": 18,
+    "donors_study_complete": 8,
+    "donors_structurally_censused": 32,
+    "donors_semantically_censused": 19,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 61
+    "donors_with_open_research": 60
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -677,9 +677,9 @@
     },
     {
       "donor": "dependency--github-com-causal-agent-scraper",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "ISC",
         "family": "PERMISSIVE",
@@ -688,7 +688,16 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "scraper.document-parsing STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard tokenizer and tree construction written from the specification; 7049 html5lib tokenizer cases and 1757 tree-construction cases exact, 30000 generated misnested documents identical to Chromium apart from CDATA in MathML text points, and identical to the retired donor apart from documented differences (processing instructions, select, annotation-xml integration points, math and svg reconstruction))",
+        "scraper.fragment-parsing STUDY_COMPLETE[INDEPENDENT_NATIVE](the fragment algorithm with a context element; 11423 of 11600 fragments identical to the donor, the rest documented)",
+        "scraper.selector-matching STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](type, universal, id, class and attribute selectors with all operators and flags, the four combinators and lists, identical to the donor on 61 selectors over every compared document; pseudo-classes, pseudo-elements and namespaces are refused when the selector is parsed (the donor accepts structural pseudo-classes ECDEV never uses), matches come in document order where the donor lists node-creation order, and ids and classes always compare case-sensitively)",
+        "scraper.element-and-node-api STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](element, node, attribute, text, children, ancestors and select accessors as ECDEV uses them; descendant text is identical to the donor on every compared document, and template contents are a detached fragment outside the tree and the text, as the standard and browsers define, where the donor kept them as a child)",
+        "scraper.parse-errors REFERENCE_ONLY(the list of parse error codes is a reference for a future markup-quality signal; the standard names each error)",
+        "scraper.serialization STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/lib.rs reads JSON-LD from the script element text, never from inner_html)",
+        "scraper.selectable-trait REFERENCE_ONLY(a shared trait for selecting from documents and elements is a convenience, not a behaviour)",
+        "scraper.cli-and-examples REFERENCE_ONLY(the donor binary prints selections as text; ECDEV has its own surfaces)"
+      ]
     },
     {
       "donor": "dependency--github-com-colinhacks-zod",

@@ -1,6 +1,6 @@
 //! Commerce metadata projections. Values remain source assertions with field locators.
+use crate::html::{Html, Selector};
 use ecdev_core::web_address::Url;
-use scraper::{Html, Selector};
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
 

@@ -1,7 +1,7 @@
 //! Native nested HTML microdata graph; independently compiled, donor used only as an oracle.
 //! Behavior derived from extruct's BSD-3-Clause parser. Notice: tests/fixtures/extruct-LICENSE.txt.
+use crate::html::{ElementRef, Html, Selector};
 use ecdev_core::web_address::Url;
-use scraper::{ElementRef, Html, Selector};
 use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 

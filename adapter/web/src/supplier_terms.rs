@@ -304,7 +304,7 @@ pub fn microdata(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use scraper::Html;
+    use crate::html::Html;
     #[test]
     fn explicit_supplier_offers_preserve_terms_and_source_pointers() {
         let raw = json!({"@graph":[{"@type":"Organization","name":"Supplier","address":{"addressCountry":"JP"},"hasCertification":{"name":"ISO source claim"},"makesOffer":{"@type":"Offer","itemOffered":{"@type":"Product","countryOfOrigin":"VN"},"eligibleQuantity":{"minValue":24,"unitCode":"C62"},"deliveryLeadTime":{"minValue":7,"maxValue":14,"unitCode":"DAY"},"priceSpecification":{"@type":"UnitPriceSpecification","price":"12.50","priceCurrency":"USD","referenceQuantity":{"value":1,"unitCode":"C62"}}}}]});

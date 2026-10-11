@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "8885a9650b86b746bbb47ce3ed8e21ee324435ec",
+  "assessed_parent_commit": "468ad4137d3bc94a750077bd858843d917412701",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -9,11 +9,12 @@
     "CAPABILITY_RELEVANCE_RESOLVED": 5,
     "CUTOVER": 1,
     "DISCOVERED": 12,
-    "EXTINCT": 6,
+    "EXTINCT": 7,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 43
+    "REGISTERED": 42
   },
   "extinct": [
+    "dependency--github-com-causal-agent-scraper",
     "dependency--github-com-hsivonen-encoding-rs",
     "dependency--github-com-rustcrypto-hashes",
     "purahmanian--keepa-mcp",
@@ -3954,12 +3955,12 @@
     },
     {
       "donor": "dependency--github-com-causal-agent-scraper",
-      "claimed": "REGISTERED",
-      "effective": "REGISTERED",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "CENSUSED: not decomposed into any required capability",
-      "runtime": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "stopped_by": "",
+      "runtime": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "ISC",
         "family": "PERMISSIVE",
@@ -3968,12 +3969,69 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "scraper.document-parsing",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard tokenizer and tree construction written from the specification; 7049 html5lib tokenizer cases and 1757 tree-construction cases exact, 30000 generated misnested documents identical to Chromium apart from CDATA in MathML text points, and identical to the retired donor apart from documented differences (processing instructions, select, annotation-xml integration points, math and svg reconstruction))",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "scraper.fragment-parsing",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](the fragment algorithm with a context element; 11423 of 11600 fragments identical to the donor, the rest documented)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "scraper.selector-matching",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](type, universal, id, class and attribute selectors with all operators and flags, the four combinators and lists, identical to the donor on 61 selectors over every compared document; pseudo-classes, pseudo-elements and namespaces are refused when the selector is parsed (the donor accepts structural pseudo-classes ECDEV never uses), matches come in document order where the donor lists node-creation order, and ids and classes always compare case-sensitively)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "scraper.element-and-node-api",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](element, node, attribute, text, children, ancestors and select accessors as ECDEV uses them; descendant text is identical to the donor on every compared document, and template contents are a detached fragment outside the tree and the text, as the standard and browsers define, where the donor kept them as a child)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "scraper.parse-errors",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(the list of parse error codes is a reference for a future markup-quality signal; the standard names each error)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "scraper.serialization",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](adapter/web/src/lib.rs reads JSON-LD from the script element text, never from inner_html)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "scraper.selectable-trait",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(a shared trait for selecting from documents and elements is a convenience, not a behaviour)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "scraper.cli-and-examples",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(the donor binary prints selections as text; ECDEV has its own surfaces)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
-          "pass": false,
-          "detail": "1 observed: MANIFEST CARGO scraper in adapter/web/Cargo.toml"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "BUILD_EDGES_ZERO",
@@ -3992,8 +4050,8 @@
         },
         {
           "gate": "SOURCE_IMPORTS_ZERO",
-          "pass": false,
-          "detail": "10 imports: scraper in adapter/web/src/amazon.rs; scraper in adapter/web/src/commerce.rs; scraper in adapter/web/src/document.rs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -4002,48 +4060,48 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 4 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "pass": true,
+          "detail": "all 8 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: commerce.web-research (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },
@@ -6147,7 +6205,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "73 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "75 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",

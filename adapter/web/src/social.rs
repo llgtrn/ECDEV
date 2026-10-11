@@ -1,4 +1,5 @@
 //! Independent public social API/JSON Feed boundary. No donor runtime, auth or media fetch.
+use crate::html::Html;
 use crate::{Web, normalize_url, robots};
 use ecdev_core::identifier::Uuid;
 use ecdev_core::sha256::Sha256;
@@ -8,7 +9,6 @@ use ecdev_core::{
     service::timestamp,
     social::{EvidenceState, SocialEngagement, SocialPost},
 };
-use scraper::Html;
 use serde_json::{Value, json};
 use std::time::Duration;
 #[derive(Default)]
@@ -73,7 +73,7 @@ fn html_text(s: &str) -> String {
         "dd",
         "dt",
     ];
-    fn walk(e: scraper::ElementRef, out: &mut String, depth: usize) {
+    fn walk(e: crate::html::ElementRef, out: &mut String, depth: usize) {
         let name = e.value().name();
         if depth > 256 || matches!(name, "script" | "style") {
             return;
@@ -83,7 +83,7 @@ fn html_text(s: &str) -> String {
             out.push(' ');
         }
         for child in e.children() {
-            if let Some(el) = scraper::ElementRef::wrap(child) {
+            if let Some(el) = crate::html::ElementRef::wrap(child) {
                 walk(el, out, depth + 1);
             } else if let Some(t) = child.value().as_text() {
                 out.push_str(t);

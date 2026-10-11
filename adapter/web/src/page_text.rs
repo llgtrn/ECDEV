@@ -2,8 +2,8 @@
 //! data. Script, style, template, noscript, svg and head content is not visible and is skipped;
 //! block elements end a line; whitespace inside a line collapses to single spaces.
 
+use crate::html::{ElementRef, Html};
 use ecdev_core::sha256::Sha256;
-use scraper::{ElementRef, Html};
 
 const HIDDEN: [&str; 7] = [
     "script", "style", "template", "noscript", "svg", "head", "iframe",
@@ -159,7 +159,7 @@ fn main_walk(
 /// left out either way. Returns the lines and which scope they come from.
 pub fn main_lines(html: &str) -> (Vec<String>, &'static str) {
     let doc = Html::parse_document(html);
-    let main = scraper::Selector::parse("main, [role=main]").unwrap();
+    let main = crate::html::Selector::parse("main, [role=main]").unwrap();
     let (root, scope) = match doc.select(&main).next() {
         Some(m) => (m, "MAIN_LANDMARK"),
         None => (doc.root_element(), "PAGE_WITHOUT_CHROME_LANDMARKS"),

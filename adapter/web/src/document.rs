@@ -1,7 +1,7 @@
 //! Declared HTML decoding. Wire bytes remain the capture; decoding is a projection.
+use crate::html::{Html, Selector};
 use crate::text_decoding::{Encoding, UTF_8};
 use ecdev_core::sha256::Sha256;
-use scraper::{Html, Selector};
 use serde_json::{Value, json};
 
 fn charset(content_type: &str) -> Option<String> {

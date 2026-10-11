@@ -306,8 +306,8 @@ mod tests {
             result["products"][0]["fields"]["title"]["status"],
             "OBSERVED"
         );
-        let tags: Vec<_> = scraper::Html::parse_document(html)
-            .select(&scraper::Selector::parse("meta").unwrap())
+        let tags: Vec<_> = crate::html::Html::parse_document(html)
+            .select(&crate::html::Selector::parse("meta").unwrap())
             .map(|e| e.value().attr("content").unwrap().to_owned())
             .collect();
         for e in evidence {

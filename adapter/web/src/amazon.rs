@@ -63,14 +63,15 @@ impl Provider for PublicAmazon {
         acquired.result["source_authenticity"] =
             json!("PUBLIC_DOCUMENT_ASSERTIONS_NOT_OFFICIAL_API");
         acquired.result["public_source_url"] = json!(source);
-        let challenge =
-            scraper::Html::parse_document(std::str::from_utf8(&acquired.raw_payload).unwrap_or(""))
-                .select(&scraper::Selector::parse("form[action]").unwrap())
-                .any(|form| {
-                    form.value()
-                        .attr("action")
-                        .is_some_and(|action| action.contains("/errors/validateCaptcha"))
-                });
+        let challenge = crate::html::Html::parse_document(
+            std::str::from_utf8(&acquired.raw_payload).unwrap_or(""),
+        )
+        .select(&crate::html::Selector::parse("form[action]").unwrap())
+        .any(|form| {
+            form.value()
+                .attr("action")
+                .is_some_and(|action| action.contains("/errors/validateCaptcha"))
+        });
         if challenge {
             acquired.result["source_status"] = json!("SOURCE_BLOCKED");
             acquired.result["blocked_reason"] = json!("PUBLIC_AMAZON_CAPTCHA_FORM");

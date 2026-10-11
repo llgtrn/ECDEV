@@ -1,0 +1,100 @@
+[
+  {
+    "source_path": "Cargo.lock",
+    "blob_hash": "0c26059967904f7193800dcd63480790b134125c",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "cbece98a34b468aa313ccb6d82c2c352d9d15422",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "resolver": "2",
+        "members": [
+          "scraper"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "scraper/Cargo.lock",
+    "blob_hash": "6264c2dcf89a130451f0f634dcf6c10891aab2c7",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "scraper/Cargo.toml",
+    "blob_hash": "ea08c615b8fd8dd20829da02414a7d9789429b78",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "scraper",
+        "version": "0.24.0",
+        "edition": "2021",
+        "description": "HTML parsing and querying with CSS selectors",
+        "keywords": [
+          "html",
+          "css",
+          "selector",
+          "scraping"
+        ],
+        "authors": [
+          "June McEnroe <june@causal.agency>"
+        ],
+        "license": "ISC",
+        "repository": "https://github.com/causal-agent/scraper",
+        "readme": "README.md"
+      },
+      "dependencies": {
+        "cssparser": "0.35.0",
+        "ego-tree": "0.10.0",
+        "html5ever": "0.35.0",
+        "indexmap": {
+          "version": "2.7.1",
+          "optional": true
+        },
+        "precomputed-hash": "0.1.1",
+        "selectors": "0.31.0",
+        "serde": {
+          "version": "1.0.218",
+          "optional": true
+        },
+        "tendril": "0.4.3",
+        "getopts": {
+          "version": "0.2.22",
+          "optional": true
+        }
+      },
+      "features": {
+        "default": [
+          "main",
+          "errors"
+        ],
+        "deterministic": [
+          "indexmap"
+        ],
+        "main": [
+          "getopts"
+        ],
+        "atomic": [],
+        "errors": [],
+        "serde": [
+          "dep:serde"
+        ]
+      },
+      "bin": [
+        {
+          "name": "scraper",
+          "path": "src/main.rs",
+          "required-features": [
+            "main"
+          ]
+        }
+      ]
+    }
+  }
+]

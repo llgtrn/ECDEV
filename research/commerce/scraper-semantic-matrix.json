@@ -1,0 +1,123 @@
+{
+ "record": "scraper-semantic-matrix",
+ "donor": "causal-agent/scraper",
+ "donor_commit": "b2b90d394c603a1725016754adc6a098a102007a",
+ "donor_version_read": "scraper 0.24.0 (tag v0.24.0), with its html5ever, selectors and cssparser contracts read through scraper's use of them",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "scraper.document-parsing",
+   "donor": "Html::parse_document over html5ever (tokenizer, tree builder, entity table, quirks)",
+   "ecdev": "html/tokenizer.rs, tree_builder.rs, Html::parse_document",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "scraper.fragment-parsing",
+   "donor": "Html::parse_fragment (body context)",
+   "ecdev": "Html::parse_fragment and parse_fragment_in",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "scraper.selector-matching",
+   "donor": "Selector::parse, Html::select, ElementRef::select over the selectors crate",
+   "ecdev": "html/selector.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "scraper.element-and-node-api",
+   "donor": "ElementRef, NodeRef, Node, Element value, attr, text, children, ancestors",
+   "ecdev": "html/dom.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "scraper.parse-errors",
+   "donor": "Html::errors and the TreeSink error collection",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "scraper.serialization",
+   "donor": "Html::html, ElementRef::html and inner_html, serializable impls",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "scraper.selectable-trait",
+   "donor": "Selectable trait over Html and ElementRef",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "scraper.cli-and-examples",
+   "donor": "the scraper binary and examples",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "scraper/src/html/mod.rs",
+    "capabilities": "scraper.document-parsing + scraper.fragment-parsing + scraper.selector-matching (Html and Select)"
+   },
+   {
+    "prefix": "scraper/src/html/tree_sink.rs",
+    "capabilities": "scraper.document-parsing + scraper.parse-errors (the html5ever TreeSink: node creation, reparenting, template contents as a child fragment, quirks mode, error list)"
+   },
+   {
+    "prefix": "scraper/src/html/serializable.rs",
+    "capabilities": "scraper.serialization"
+   },
+   {
+    "prefix": "scraper/src/element_ref/mod.rs",
+    "capabilities": "scraper.element-and-node-api + scraper.selector-matching (ElementRef, text, select)"
+   },
+   {
+    "prefix": "scraper/src/element_ref/element.rs",
+    "capabilities": "scraper.selector-matching (the selectors::Element implementation: parent, siblings, attribute and class matching)"
+   },
+   {
+    "prefix": "scraper/src/element_ref/serializable.rs",
+    "capabilities": "scraper.serialization"
+   },
+   {
+    "prefix": "scraper/src/node.rs",
+    "capabilities": "scraper.element-and-node-api"
+   },
+   {
+    "prefix": "scraper/src/node/serializable.rs",
+    "capabilities": "scraper.serialization"
+   },
+   {
+    "prefix": "scraper/src/selector.rs",
+    "capabilities": "scraper.selector-matching (Selector, the selectors parser contract, empty non-tree-structural pseudo-class set)"
+   },
+   {
+    "prefix": "scraper/src/selectable.rs",
+    "capabilities": "scraper.selectable-trait"
+   },
+   {
+    "prefix": "scraper/src/error.rs",
+    "capabilities": "scraper.selector-matching (selector error kinds)"
+   },
+   {
+    "prefix": "scraper/src/error/utils.rs",
+    "capabilities": "scraper.selector-matching (selector error messages)"
+   },
+   {
+    "prefix": "scraper/src/lib.rs",
+    "capabilities": "scraper.element-and-node-api (re-exports)"
+   },
+   {
+    "prefix": "scraper/src/main.rs",
+    "capabilities": "scraper.cli-and-examples"
+   },
+   {
+    "prefix": "scraper/examples/",
+    "capabilities": "scraper.cli-and-examples"
+   }
+  ]
+ },
+ "status": "SEMANTIC_REVIEW_COMPLETE"
+}
