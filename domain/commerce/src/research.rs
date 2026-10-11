@@ -11,7 +11,7 @@ use crate::{
     provider::{AcquireRequest, BudgetPolicy},
     service::{Engine, timestamp},
 };
-use rusqlite::{OptionalExtension, params};
+use ecdev_store::{OptionalExtension, params};
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 #[derive(Clone, FromJson)]
 #[json(deny_unknown_fields)]
@@ -181,7 +181,7 @@ pub const MAX_FETCH_CACHE_BYTES: i64 = 256 * 1024 * 1024;
 /// refetch into a 304 that reuses the stored capture, so it is kept ahead of valueless entries.
 /// Returns how many entries were evicted.
 pub fn trim_fetch_cache(
-    db: &rusqlite::Connection,
+    db: &ecdev_store::Connection,
     now: u64,
     max_bytes: i64,
 ) -> Result<usize, String> {
@@ -325,7 +325,7 @@ impl Engine {
     ) -> Result<(), String> {
         let mut db = self.db.lock().map_err(err)?;
         let tx = db
-            .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+            .transaction_with_behavior(ecdev_store::TransactionBehavior::Immediate)
             .map_err(err)?;
         let day = timestamp() / 86400 * 86400;
         let month: u64 = tx
@@ -560,7 +560,7 @@ impl Engine {
         if !crate::service::valid_id(&crawl_id) {
             return Err("INVALID_CRAWL_RUN_ID".into());
         }
-        let mut frontier = Frontier::open(&self.root.join(".ecdev-data/runtime/ecdev.sqlite"))?;
+        let mut frontier = Frontier::open(&self.root.join(".ecdev-data/runtime/ecdev.db"))?;
         if input.crawl_run_id.is_none() {
             frontier.create_run(
                 &crawl_id,
@@ -1241,7 +1241,7 @@ mod budget_storage_tests {
     use super::*;
     #[test]
     fn fetch_cache_is_bounded_and_keeps_what_still_has_value() {
-        let db = rusqlite::Connection::open_in_memory().unwrap();
+        let db = ecdev_store::Connection::open_in_memory().unwrap();
         db.execute_batch("CREATE TABLE fetch_cache(key TEXT PRIMARY KEY, payload TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL);").unwrap();
         let now = 1_000_000u64;
         let put = |key: &str, expires: u64, etag: Option<&str>| {
@@ -1663,8 +1663,7 @@ mod budget_storage_tests {
                 .unwrap();
             }
             drop(e);
-            let mut reopened =
-                Frontier::open(&root.join(".ecdev-data/runtime/ecdev.sqlite")).unwrap();
+            let mut reopened = Frontier::open(&root.join(".ecdev-data/runtime/ecdev.db")).unwrap();
             assert!(reopened.lease(id, next_at - 1).unwrap().is_none());
             assert_eq!(reopened.lease(id, next_at).unwrap().unwrap().attempts, 2);
         }

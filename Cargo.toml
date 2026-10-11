@@ -1,16 +1,19 @@
 [workspace]
 resolver = "2"
-members = ["domain/json-derive", "domain/commerce", "adapter/keepa", "adapter/web", "adapter/marketplace", "apps/server"]
+members = ["substrate/storage", "domain/json-derive", "domain/commerce", "adapter/keepa", "adapter/web", "adapter/marketplace", "apps/server"]
 exclude = [".ecdev"]
 
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.88"
+rust-version = "1.89"
 
 [workspace.dependencies]
 serde_json = { version = "1.0", features = ["arbitrary_precision"] }
-rusqlite = { version = "=0.32.1", features = ["bundled"] }
 tokio = { version = "=1.52.3", features = ["full"] }
 axum = "=0.7.9"
 rmcp = { version = "=3.3.0", default-features = false, features = ["server", "transport-streamable-http-server", "transport-io"] }
+
+# The store's replay suites run hundreds of thousands of statements; optimise it even in dev builds.
+[profile.dev.package.ecdev-store]
+opt-level = 3

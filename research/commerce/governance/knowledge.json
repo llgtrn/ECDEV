@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "f898c6c826721e9f45239d21f14861ada7779980",
+  "assessed_parent_commit": "5d60a3734e98c03f4335aede626a7c8235322571",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 51,
-    "production_capabilities_native": 51,
-    "production_capabilities_proven": 51,
+    "production_capabilities_required": 59,
+    "production_capabilities_native": 59,
+    "production_capabilities_proven": 59,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 364,
-    "semantic_censused_capabilities": 364,
+    "known_donor_capabilities": 380,
+    "semantic_censused_capabilities": 380,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 75,
-    "study_complete_capabilities": 186,
-    "not_relevant_after_review": 29,
+    "reference_only": 78,
+    "study_complete_capabilities": 195,
+    "not_relevant_after_review": 33,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.796703
+    "knowledge_coverage_ratio": 0.805263
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 34,
+    "donors_knowledge_unreviewed": 33,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 10,
-    "donors_structurally_censused": 34,
-    "donors_semantically_censused": 21,
+    "donors_study_complete": 11,
+    "donors_structurally_censused": 35,
+    "donors_semantically_censused": 22,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 58
+    "donors_with_open_research": 57
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -966,9 +966,9 @@
     },
     {
       "donor": "dependency--github-com-rusqlite-rusqlite",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -977,7 +977,24 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "rusqlite.connection STUDY_COMPLETE[INDEPENDENT_NATIVE](Connection::open, open_in_memory, execute, execute_batch, prepare, query_row, busy_timeout and last_insert_rowid with the donor method shapes, so call sites change only their crate name)",
+        "rusqlite.statements-and-rows STUDY_COMPLETE[INDEPENDENT_NATIVE](Statement, Rows, Row::get, query_map, query_row, exists, OptionalExtension, Params for tuples of references, arrays up to 32, slices and Vec, and the params! macro)",
+        "rusqlite.transactions STUDY_COMPLETE[INDEPENDENT_NATIVE](Transaction with Deferred, Immediate and Exclusive behaviour, commit, rollback and rollback on drop; a failed statement leaves nothing behind)",
+        "rusqlite.value-conversion STUDY_COMPLETE[INDEPENDENT_NATIVE](ToSql and FromSql for the primitive types, String, Vec<u8>, Option, bool and Value with SQLite range and type checks; reals print as SQLite prints them)",
+        "rusqlite.errors STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Error with an ErrorKind (Constraint, Busy, Syntax, Misuse, Corrupt, Io, InvalidParameterCount, QueryReturnedNoRows); messages differ from SQLite, the class is kept)",
+        "rusqlite.sql-engine STUDY_COMPLETE[INDEPENDENT_NATIVE](parser, evaluator and executor for the SQL subset with SQLite affinity, NULL ordering and three-valued logic; every outcome and every table content identical to SQLite 3.46.0 on 72000 replayed statements)",
+        "rusqlite.durability STUDY_COMPLETE[INDEPENDENT_NATIVE](CRC-32C framed transaction records, torn-tail recovery, advisory shared and exclusive file locks, replay of other writers appends and snapshot compaction with generation following; the kill-the-writer scenario passes on SQLite 3.46 WAL as well)",
+        "rusqlite.builtin-functions STUDY_COMPLETE[INDEPENDENT_NATIVE](json_extract paths, date, time, datetime, julianday, unixepoch, strftime and the core functions; 3000000 date and time calls and 338 json_extract cases identical to SQLite 3.46.0; localtime, utc, subsec and %J are refused)",
+        "rusqlite.user-functions REFERENCE_ONLY(the donor registers scalar, aggregate and window functions through callbacks; the native store keeps create_scalar_function for tests)",
+        "rusqlite.chrono-time-url-json-types NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](conversions to third-party types that ECDEV does not link)",
+        "rusqlite.backup-blob-serialize REFERENCE_ONLY(online backup and incremental blob I/O are reference for a future snapshot export)",
+        "rusqlite.hooks-trace-session REFERENCE_ONLY(commit and update hooks and the session extension are reference for change feeds)",
+        "rusqlite.virtual-tables-collations-extensions NO_RESEARCH_VALUE[UNRELATED_DOMAIN](loading foreign code is outside the zero external technology rule)",
+        "rusqlite.pragma-limits-config-cache STUDY_COMPLETE[INDEPENDENT_NATIVE](substrate/storage/src/exec.rs answers foreign_keys, user_version, table_info and journal_mode and ignores the tuning pragmas)",
+        "rusqlite.ffi-and-build NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](bindings to a C library the repository no longer builds)",
+        "rusqlite.examples-and-benches NO_RESEARCH_VALUE[RELEASE_TOOLING](donor examples)"
+      ]
     },
     {
       "donor": "dependency--github-com-rust-lang-futures-rs",

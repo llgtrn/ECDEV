@@ -1,0 +1,57 @@
+{
+ "record": "native-sql-store",
+ "evidence_class": "DERIVED_FROM_THE_SQL_DOCUMENTATION_AND_DIFFERENTIALLY_PROVEN",
+ "standards": [
+  "ISO/IEC 9075 SQL (the subset below)",
+  "SQLite language documentation as observed behaviour: type affinity, comparison and sorting rules, NULL handling, date and time functions, WAL file locking",
+  "CRC-32C (RFC 3720 appendix B.4) for log record checksums"
+ ],
+ "licence_note": "Written from the SQL and SQLite documentation and from the observed behaviour of SQLite 3.46.0 (rusqlite 0.32.1, bundled) while it was still a dependency; no donor source is copied or translated.",
+ "modules": [
+  "substrate/storage/src/ (value, ast, parser, eval, exec, db, persist, jsonlite, datetime, error, lib)"
+ ],
+ "behaviour": {
+  "statements": "SELECT (DISTINCT, joins INNER/LEFT/CROSS/NATURAL/USING, subqueries, EXISTS, IN, GROUP BY, HAVING, UNION, UNION ALL, INTERSECT, EXCEPT, ORDER BY, LIMIT, OFFSET), INSERT (VALUES, SELECT, OR IGNORE/REPLACE/ABORT, ON CONFLICT DO UPDATE/NOTHING), UPDATE, DELETE, CREATE TABLE and INDEX (IF NOT EXISTS, PRIMARY KEY, AUTOINCREMENT, UNIQUE, NOT NULL, CHECK, DEFAULT, REFERENCES), DROP TABLE, ALTER TABLE ADD COLUMN, PRAGMA foreign_keys, user_version, table_info, journal_mode and the ignored tuning pragmas, BEGIN DEFERRED/IMMEDIATE/EXCLUSIVE, COMMIT, ROLLBACK",
+  "value_rules": "five storage classes; column affinity applied on write and on comparison; NULL sorts first ascending; three-valued logic; integer overflow to real; division and modulo by zero give NULL; text compares by bytes; LIKE is ASCII case-insensitive",
+  "functions": "count, sum, total, avg, min, max, group_concat, coalesce, ifnull, nullif, iif, abs, length, lower, upper, typeof, trim, ltrim, rtrim, substr, instr, replace, round, like, hex, json_extract (paths $, .key, .\"key\", [n], [#-n]), date, time, datetime, julianday, unixepoch, strftime",
+  "durability": "the database is an in-memory image rebuilt from an append-only log of CRC-32C-framed transactions; a commit appends one record and syncs it before returning; a torn tail is ignored and overwritten by the next writer; advisory whole-file locks (shared for readers, exclusive for writers) serialise processes and threads; other handles replay what a writer appended; the log is rewritten as a snapshot when it has grown past 8 MiB and holds four times the live data, and handles holding the old file follow the new generation",
+  "limits": "the whole image lives in memory; no ATTACH, views, triggers, window functions, WITH, VALUES as a SELECT, collations other than binary, virtual tables, loadable extensions, user aggregate functions or foreign-key actions other than the declared constraint check"
+ },
+ "differences_from_sqlite": [
+  "the file is not a SQLite database: a file that begins with the SQLite header is refused and left untouched, and the runtime database is now named ecdev.db so an old ecdev.sqlite is never opened or overwritten",
+  "error texts and extended error codes differ; the class (constraint, busy, datatype mismatch, SQL error, parameter count, no rows, column type, out of range, column index, column name, binding, returned rows) is the same",
+  "the date modifiers localtime, utc and subsec and the strftime format %J are refused with an error because the store has no zone database and SQLite's own %J rounding is not reproduced; date offsets of the form +YYYY-MM-DD are refused; every other modifier form is identical",
+  "execute and prepare refuse a script of several statements (the donor silently runs only the first); execute_batch runs scripts",
+  "readers on other connections wait while a write transaction is open (SQLite in WAL mode lets them read the previous commit); the application's write transactions are short and the wait is bounded by busy_timeout",
+  "PRAGMA journal_mode always reports wal; synchronous, cache_size, temp_store and busy_timeout pragmas are accepted and ignored",
+  "rows of an unordered SELECT come back in rowid order; SQLite's planner may return them in index order, so queries that need an order carry ORDER BY (the differential compares unordered results as sets)"
+ ],
+ "differential_proof": {
+  "oracle": "SQLite 3.46.0 through rusqlite 0.32.1 (bundled)",
+  "corpora": {
+   "application SQL": "all 133 statements the application issues (schema and 114 query and write templates) plus BEGIN, BEGIN IMMEDIATE, BEGIN EXCLUSIVE, BEGIN DEFERRED, COMMIT and ROLLBACK, replayed with seeded random parameters, 12 seeds of 6000 statements (72000 statements: about 31000 queries, about 29000 writes and transaction statements, about 12000 errors); every outcome, every changed-row count (including the stale count SQLite reports for statements that change nothing) and the full contents of all 27 tables after each write identical on SQLite and the native store",
+   "json_extract": "13 documents by 26 paths (338 cases) identical",
+   "date and time functions": "3000000 random combinations of 48 time values, 47 modifiers (0 to 3 per call) and 5 functions or 45 strftime formats compared once outside the repository, identical; the frozen fixture holds 200000 of them",
+   "durability": "10 repository tests: reopen, DDL replay, torn tail, concurrent threads and processes, rollback, compaction with followers, a child writer killed 12 times, value round trip, refusal of a SQLite file, waiting for an open write transaction; the kill scenario was also run unchanged against SQLite 3.46 in WAL mode (12 kills, 5368 transactions, no half transaction)",
+   "typed access": "41 stored values read back as each of 20 Rust types (820 cases: integer range errors, text and blob refusals, NULL as Option, NaN stored as NULL), 33 typed bindings (unsigned values above i64::MAX refused, f32, bool, slices, options), and 34 failing operations classified (constraint, busy, datatype mismatch, SQL error, parameter count, no rows, column type, out of range, column index, column name, binding, returned rows) identical to rusqlite 0.32.1"
+  },
+  "bugs_found_by_the_differential_and_fixed": [
+   "ORDER BY compared the wrong key vector for compound selects",
+   "OR IGNORE must swallow NOT NULL and CHECK failures as well as uniqueness",
+   "json_extract array indexes from the end and raw string text",
+   "date arithmetic: lazy julian-day computation, the 24:00 time, overflow of the day in a month and the floor and ceiling modifiers, negative years, ISO week derivation",
+   "a compaction check that measured the live size on every commit made autocommit inserts into a 100000-row table cost 170 ms each; the check now runs each time the log doubles (2000 such inserts: 350 s to 0.4 s)",
+   "a rolled-back INSERT kept its AUTOINCREMENT value",
+   "execute on BEGIN, COMMIT, ROLLBACK, DDL and a zero-row SELECT must report the stale count of the last completed INSERT, UPDATE or DELETE, and a write that failed reports 0",
+   "NaN is stored as NULL",
+   "a blob read from text, a wrong parameter count and execute on a statement that returns rows must be errors"
+  ],
+  "frozen_fixture": "substrate/storage/tests/fixtures/sql-differential-digests.json",
+  "corpus_fixture": "substrate/storage/tests/fixtures/app-sql.txt",
+  "post_removal_tests": [
+   "substrate/storage/tests/sql_parity.rs",
+   "substrate/storage/tests/durability.rs"
+  ]
+ },
+ "closure": "ecdev-core depends on ecdev-store alone for storage; rusqlite and 11 packages that only it needed (libsqlite3-sys, hashlink, hashbrown, ahash, zerocopy, zerocopy-derive, fallible-iterator, fallible-streaming-iterator, pkg-config, vcpkg, version_check) leave Cargo.lock; the bundled C amalgamation (9 MB of C compiled by cc) leaves the build"
+}

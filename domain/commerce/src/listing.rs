@@ -7,14 +7,14 @@ use crate::json;
 use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp};
-use rusqlite::params;
+use ecdev_store::params;
 use std::{collections::BTreeMap, fs};
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()
 }
 
-pub fn initialize(db: &rusqlite::Connection) -> Result<(), String> {
+pub fn initialize(db: &ecdev_store::Connection) -> Result<(), String> {
     db.execute_batch("CREATE TABLE IF NOT EXISTS listing_searches(id TEXT PRIMARY KEY,mode TEXT NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL);")
         .map_err(err)
 }

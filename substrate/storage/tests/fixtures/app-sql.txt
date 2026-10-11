@@ -1,0 +1,133 @@
+domain/commerce/src/simulation.rs	CREATE TABLE IF NOT EXISTS simulation_runs(id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, state TEXT NOT NULL CHECK(state='SIMULATED'), baseline_hash TEXT NOT NULL, variant_hash TEXT, seed INTEGER NOT NULL, replicates INTEGER NOT NULL, payload TEXT NOT NULL);
+domain/commerce/src/simulation.rs	INSERT INTO simulation_runs VALUES(?1,?2,?3,?4,?5,?6,?7,?8)
+domain/commerce/src/simulation.rs	SELECT state,payload FROM simulation_runs WHERE id=?1
+domain/commerce/src/simulation.rs	SELECT (SELECT count(*) FROM runs)+(SELECT count(*) FROM evidence)
+domain/commerce/src/simulation.rs	INSERT INTO simulation_runs VALUES('z',0,'OBSERVED','h',NULL,1,1,'{}')
+domain/commerce/src/frontier.rs	PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; CREATE TABLE IF NOT EXISTS crawl_runs(id TEXT PRIMARY KEY, limits TEXT NOT NULL, cancelled INTEGER NOT NULL DEFAULT 0, starts INTEGER NOT NULL DEFAULT 0); CREATE TABLE IF NOT EXISTS crawl_urls(run_id TEXT NOT NULL REFERENCES crawl_runs(id), identity_hash TEXT NOT NULL, canonical_url TEXT NOT NULL, raw_url TEXT NOT NULL, source_page TEXT, discovered_at INTEGER NOT NULL, origin TEXT NOT NULL, depth INTEGER NOT NULL, priority INTEGER NOT NULL, state TEXT NOT NULL CHECK(state IN ('DISCOVERED','PENDING','LEASED','HANDLED','RETRYABLE','FAILED','CANCELLED')), attempts INTEGER NOT NULL DEFAULT 0, next_at INTEGER NOT NULL, lease_token TEXT, lease_until INTEGER, payload TEXT, last_error TEXT, PRIMARY KEY(run_id,identity_hash)); CREATE INDEX IF NOT EXISTS crawl_ready ON crawl_urls(run_id,state,next_at,priority); CREATE TABLE IF NOT EXISTS crawl_origins(run_id TEXT NOT NULL, origin TEXT NOT NULL, next_at INTEGER NOT NULL, PRIMARY KEY(run_id,origin)); CREATE TABLE IF NOT EXISTS crawl_events(id INTEGER PRIMARY KEY, run_id TEXT NOT NULL, identity_hash TEXT, at INTEGER NOT NULL, state TEXT NOT NULL, reason TEXT);
+domain/commerce/src/frontier.rs	INSERT INTO crawl_runs(id,limits) VALUES(?1,?2)
+domain/commerce/src/frontier.rs	SELECT limits,cancelled FROM crawl_runs WHERE id=?1
+domain/commerce/src/frontier.rs	SELECT count(*) FROM crawl_urls WHERE run_id=?1
+domain/commerce/src/frontier.rs	INSERT OR IGNORE INTO crawl_urls(run_id,identity_hash,canonical_url,raw_url,source_page,discovered_at,origin,depth,priority,state,next_at) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,'DISCOVERED',?6)
+domain/commerce/src/frontier.rs	INSERT INTO crawl_events(run_id,identity_hash,at,state) VALUES(?1,?2,?3,?4)
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state='PENDING' WHERE run_id=?1 AND identity_hash=?2
+domain/commerce/src/frontier.rs	SELECT limits,cancelled,starts FROM crawl_runs WHERE id=?1
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state='CANCELLED',lease_token=NULL,lease_until=NULL,last_error=?2 WHERE run_id=?1 AND state IN ('PENDING','LEASED','RETRYABLE','DISCOVERED')
+domain/commerce/src/frontier.rs	INSERT INTO crawl_events(run_id,identity_hash,at,state,reason) SELECT run_id,identity_hash,?2,CASE WHEN attempts>?3 THEN 'FAILED' ELSE 'RETRYABLE' END,'LEASE_EXPIRED' FROM crawl_urls WHERE run_id=?1 AND state='LEASED' AND lease_until<=?2
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state=CASE WHEN attempts>?3 THEN 'FAILED' ELSE 'RETRYABLE' END,lease_token=NULL,lease_until=NULL,next_at=?2,last_error='LEASE_EXPIRED' WHERE run_id=?1 AND state='LEASED' AND lease_until<=?2
+domain/commerce/src/frontier.rs	SELECT count(*) FROM crawl_urls WHERE run_id=?1 AND state='LEASED'
+domain/commerce/src/frontier.rs	SELECT u.identity_hash,u.canonical_url,u.depth,u.attempts,u.origin FROM crawl_urls u LEFT JOIN crawl_origins o ON o.run_id=u.run_id AND o.origin=u.origin WHERE u.run_id=?1 AND u.state IN ('PENDING','RETRYABLE') AND u.next_at<=?2 AND COALESCE(o.next_at,0)<=?2 AND (SELECT count(*) FROM crawl_urls l WHERE l.run_id=u.run_id AND l.origin=u.origin AND l.state='LEASED')<?3 ORDER BY u.priority DESC,u.next_at,u.discovered_at,u.rowid LIMIT 1
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state='LEASED',lease_token=?3,lease_until=?4,attempts=attempts+1 WHERE run_id=?1 AND identity_hash=?2
+domain/commerce/src/frontier.rs	UPDATE crawl_runs SET starts=starts+1 WHERE id=?1
+domain/commerce/src/frontier.rs	INSERT OR REPLACE INTO crawl_origins VALUES(?1,?2,?3)
+domain/commerce/src/frontier.rs	INSERT INTO crawl_events(run_id,identity_hash,at,state) VALUES(?1,?2,?3,'LEASED')
+domain/commerce/src/frontier.rs	SELECT limits FROM crawl_runs WHERE id=?1
+domain/commerce/src/frontier.rs	UPDATE crawl_runs SET starts=MAX(starts-1,0) WHERE id=?1
+domain/commerce/src/frontier.rs	UPDATE crawl_origins SET next_at=MIN(next_at,?3) WHERE run_id=?1 AND origin=(SELECT origin FROM crawl_urls WHERE run_id=?1 AND identity_hash=?2)
+domain/commerce/src/frontier.rs	SELECT limits FROM crawl_runs WHERE id=?1
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state=?4,next_at=?5,payload=?6,last_error=?7,priority=COALESCE(?9,priority),lease_token=NULL,lease_until=NULL WHERE run_id=?1 AND identity_hash=?2 AND lease_token=?3 AND state='LEASED' AND lease_until>?8 AND EXISTS(SELECT 1 FROM crawl_runs WHERE id=?1 AND cancelled=0)
+domain/commerce/src/frontier.rs	INSERT INTO crawl_origins(run_id,origin,next_at) SELECT run_id,origin,?3 FROM crawl_urls WHERE run_id=?1 AND identity_hash=?2 ON CONFLICT(run_id,origin) DO UPDATE SET next_at=MAX(crawl_origins.next_at,excluded.next_at)
+domain/commerce/src/frontier.rs	INSERT INTO crawl_events(run_id,identity_hash,at,state,reason) VALUES(?1,?2,?3,?4,?5)
+domain/commerce/src/frontier.rs	UPDATE crawl_runs SET cancelled=1 WHERE id=?1
+domain/commerce/src/frontier.rs	INSERT INTO crawl_events(run_id,identity_hash,at,state,reason) SELECT run_id,identity_hash,?2,'CANCELLED','USER_CANCELLED' FROM crawl_urls WHERE run_id=?1 AND state IN ('DISCOVERED','PENDING','LEASED','RETRYABLE')
+domain/commerce/src/frontier.rs	UPDATE crawl_urls SET state='CANCELLED',lease_token=NULL,lease_until=NULL WHERE run_id=?1 AND state IN ('DISCOVERED','PENDING','LEASED','RETRYABLE')
+domain/commerce/src/frontier.rs	SELECT state,count(*) FROM crawl_urls WHERE run_id=?1 GROUP BY state
+domain/commerce/src/frontier.rs	SELECT starts,limits,cancelled FROM crawl_runs WHERE id=?1
+domain/commerce/src/frontier.rs	SELECT count(*) FROM crawl_events WHERE run_id=?1 AND state='RETRYABLE'
+domain/commerce/src/frontier.rs	SELECT origin,state,count(*) FROM crawl_urls WHERE run_id=?1 GROUP BY origin,state ORDER BY origin,state
+domain/commerce/src/frontier.rs	SELECT payload FROM crawl_urls WHERE run_id=?1 AND state='HANDLED' AND payload IS NOT NULL ORDER BY rowid
+domain/commerce/src/social.rs	with
+domain/commerce/src/social.rs	with
+domain/commerce/src/social.rs	with
+domain/commerce/src/monitor.rs	CREATE TABLE IF NOT EXISTS watches(id TEXT PRIMARY KEY,args TEXT NOT NULL,interval_secs INTEGER NOT NULL,next_due INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,token TEXT,baseline TEXT,last_error TEXT); CREATE TABLE IF NOT EXISTS watch_snapshots(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watch_changes(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),at INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS watch_facts(id INTEGER PRIMARY KEY,watch_id TEXT NOT NULL REFERENCES watches(id),url TEXT NOT NULL,product TEXT NOT NULL,field TEXT NOT NULL,value TEXT NOT NULL,valid_at INTEGER NOT NULL,invalid_at INTEGER,run_id TEXT,raw_capture_sha256 TEXT); PRAGMA user_version=2;
+domain/commerce/src/monitor.rs	PRAGMA table_info(watches)
+domain/commerce/src/monitor.rs	ALTER TABLE watches ADD COLUMN enabled INTEGER NOT NULL DEFAULT 1;
+domain/commerce/src/monitor.rs	PRAGMA table_info(watch_facts)
+domain/commerce/src/monitor.rs	ALTER TABLE watch_facts ADD COLUMN last_observed_at INTEGER; UPDATE watch_facts SET last_observed_at=valid_at WHERE last_observed_at IS NULL;
+domain/commerce/src/monitor.rs	UPDATE watches SET args=?2,interval_secs=?3,next_due=?4,enabled=?5,token=NULL,lease_until=0 WHERE id=?1
+domain/commerce/src/monitor.rs	INSERT INTO watches(id,args,interval_secs,next_due,enabled) VALUES(?1,?2,?3,?4,?5)
+domain/commerce/src/monitor.rs	SELECT id,args,interval_secs,next_due,lease_until,baseline,last_error,enabled FROM watches WHERE (?1 IS NULL OR id=?1) ORDER BY rowid DESC LIMIT 100
+domain/commerce/src/monitor.rs	SELECT payload FROM {table} WHERE watch_id=?1 ORDER BY id DESC LIMIT 100
+domain/commerce/src/monitor.rs	SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at FROM watch_facts WHERE watch_id=?1 ORDER BY id DESC LIMIT 200
+domain/commerce/src/monitor.rs	SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND field IN ('price_minor','currency') ORDER BY id
+domain/commerce/src/monitor.rs	SELECT id,args FROM watches WHERE enabled=1 AND next_due<=?1 AND lease_until<=?1 ORDER BY next_due,rowid LIMIT 1
+domain/commerce/src/monitor.rs	UPDATE watches SET lease_until=?2,token=?3 WHERE id=?1
+domain/commerce/src/monitor.rs	SELECT baseline FROM watches WHERE id=?1 AND token=?2 AND lease_until>?3
+domain/commerce/src/monitor.rs	INSERT INTO watch_snapshots(watch_id,at,payload) VALUES(?1,?2,?3)
+domain/commerce/src/monitor.rs	INSERT INTO watch_changes(watch_id,at,payload) VALUES(?1,?2,?3)
+domain/commerce/src/monitor.rs	UPDATE watches SET baseline=?2,last_error=?3,next_due=?4+interval_secs,lease_until=0,token=NULL WHERE id=?1
+domain/commerce/src/monitor.rs	UPDATE watches SET last_error=?2,next_due=?3+interval_secs,lease_until=0,token=NULL WHERE id=?1
+domain/commerce/src/monitor.rs	SELECT id,value,valid_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product=?3 AND field=?4 AND invalid_at IS NULL ORDER BY id
+domain/commerce/src/monitor.rs	UPDATE watch_facts SET last_observed_at=?2 WHERE id=?1
+domain/commerce/src/monitor.rs	UPDATE watch_facts SET invalid_at=?2 WHERE id=?1
+domain/commerce/src/monitor.rs	INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at) VALUES(?1,?2,?3,?4,?5,?6,NULL,?7,?8,?6)
+domain/commerce/src/monitor.rs	SELECT url,product,field,value,valid_at,invalid_at,last_observed_at FROM watch_facts WHERE watch_id=?1 AND url=?2 AND product IN (?3,?5) AND field=?4 ORDER BY id
+domain/commerce/src/monitor.rs	SELECT args,interval_secs,enabled,baseline FROM watches WHERE id=?1
+domain/commerce/src/monitor.rs	SELECT at,payload FROM {table} WHERE watch_id=?1 ORDER BY id
+domain/commerce/src/monitor.rs	SELECT url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at FROM watch_facts WHERE watch_id=?1 ORDER BY id
+domain/commerce/src/monitor.rs	SELECT count(*)>0 FROM watches WHERE id=?1
+domain/commerce/src/monitor.rs	INSERT INTO watches(id,args,interval_secs,next_due,enabled,baseline) VALUES(?1,?2,?3,?4,0,?5)
+domain/commerce/src/monitor.rs	INSERT INTO {table}(watch_id,at,payload) VALUES(?1,?2,?3)
+domain/commerce/src/monitor.rs	INSERT INTO watch_facts(watch_id,url,product,field,value,valid_at,invalid_at,run_id,raw_capture_sha256,last_observed_at) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10)
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=?1
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=0
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=?1
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=?1
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=100
+domain/commerce/src/monitor.rs	UPDATE watches SET next_due=?1
+domain/commerce/src/price_observations.rs	CREATE TABLE IF NOT EXISTS price_observation_runs(id TEXT PRIMARY KEY,mode TEXT NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL);
+domain/commerce/src/price_observations.rs	INSERT INTO price_observation_runs VALUES(?1,?2,?3,?4)
+domain/commerce/src/research.rs	SELECT SUM(LENGTH(payload)) FROM fetch_cache
+domain/commerce/src/research.rs	SELECT key FROM fetch_cache ORDER BY key
+domain/commerce/src/research.rs	SELECT next_at FROM crawl_urls WHERE run_id=?1
+domain/commerce/src/research.rs	SELECT limits FROM crawl_runs WHERE id=?1
+domain/commerce/src/research.rs	UPDATE crawl_runs SET limits=?2 WHERE id=?1
+domain/commerce/src/research.rs	SELECT COUNT(*) FROM paid_reservations
+domain/commerce/src/listing.rs	CREATE TABLE IF NOT EXISTS listing_searches(id TEXT PRIMARY KEY,mode TEXT NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL);
+domain/commerce/src/listing.rs	INSERT INTO listing_searches VALUES(?1,?2,?3,?4)
+domain/commerce/src/service.rs	PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; CREATE TABLE IF NOT EXISTS runs(id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, mode TEXT NOT NULL, payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS evidence(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS entities(id TEXT PRIMARY KEY, payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS edges(id INTEGER PRIMARY KEY, payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS provider_calls(run_id TEXT PRIMARY KEY, provider TEXT NOT NULL, created_at INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS paid_reservations(run_id TEXT PRIMARY KEY, provider TEXT NOT NULL, capability TEXT NOT NULL, created_at INTEGER NOT NULL, reserved_minor INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS fetch_cache(key TEXT PRIMARY KEY, payload TEXT NOT NULL, created_at INTEGER NOT NULL, expires_at INTEGER NOT NULL); CREATE TABLE IF NOT EXISTS candidates(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), state TEXT NOT NULL, payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS provider_accounting(id TEXT PRIMARY KEY, run_id TEXT NOT NULL REFERENCES runs(id), payload TEXT NOT NULL); PRAGMA user_version=1;
+domain/commerce/src/service.rs	SELECT COUNT(*) FROM provider_calls WHERE provider='keepa' AND created_at>=?1
+domain/commerce/src/service.rs	INSERT INTO provider_calls VALUES(?1,?2,?3)
+domain/commerce/src/service.rs	INSERT INTO runs(id,created_at,mode,payload) VALUES(?1,?2,?3,?4)
+domain/commerce/src/service.rs	INSERT INTO evidence VALUES(?1,?2,?3)
+domain/commerce/src/service.rs	INSERT INTO candidates VALUES(?1,?2,?3,?4)
+domain/commerce/src/service.rs	INSERT INTO entities VALUES(?1,?2)
+domain/commerce/src/service.rs	INSERT INTO edges(payload) VALUES(?1)
+domain/commerce/src/service.rs	INSERT INTO provider_accounting VALUES(?1,?2,?3)
+domain/commerce/src/service.rs	INSERT INTO events(run_id,payload) VALUES(?1,?2)
+domain/commerce/src/service.rs	SELECT payload FROM runs ORDER BY created_at DESC,rowid DESC LIMIT 100
+domain/commerce/src/service.rs	SELECT payload FROM runs WHERE id=?1
+domain/commerce/src/service.rs	SELECT id,payload FROM events WHERE id>?1 ORDER BY id LIMIT 100
+domain/commerce/src/service.rs	SELECT payload FROM runs WHERE mode='LIVE' AND json_extract(payload,'$.research_run')=1 ORDER BY created_at DESC,rowid DESC LIMIT 100
+domain/commerce/src/service.rs	Create or update a persisted public watch for up to five URLs; watch_id updates and enabled=false disables; refresh acquisitions use native robots/budget policy; no external notifications
+domain/commerce/src/service.rs	SELECT SUM(reserved_minor) FROM paid_reservations
+domain/commerce/src/social/runtime.rs	CREATE TABLE IF NOT EXISTS social_posts(mode TEXT NOT NULL,key TEXT NOT NULL,payload TEXT NOT NULL, PRIMARY KEY(mode,key)); CREATE TABLE IF NOT EXISTS trend_snapshots(id TEXT PRIMARY KEY,query TEXT NOT NULL,mode TEXT NOT NULL,window INTEGER NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS social_cache(key TEXT PRIMARY KEY,created INTEGER NOT NULL,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS trend_watches(id TEXT PRIMARY KEY,enabled INTEGER NOT NULL,next_due INTEGER NOT NULL,lease_until INTEGER NOT NULL DEFAULT 0,lease_token TEXT,payload TEXT NOT NULL); CREATE TABLE IF NOT EXISTS social_scenarios(id TEXT PRIMARY KEY,payload TEXT NOT NULL);
+domain/commerce/src/social/runtime.rs	Create/update persisted public trend watch or action=list; eleven trigger kinds (VOLUME_SPIKE and SENTIMENT_DROP use harken-parity threshold rules), fenced leases, local events, minimum sample and complete-source policy; enabled=false disables
+domain/commerce/src/social/runtime.rs	create
+domain/commerce/src/social/runtime.rs	SELECT payload FROM social_posts WHERE mode=?1 ORDER BY key LIMIT 5000
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_snapshots WHERE query=?1 AND mode=?2 AND captured<?3 AND id<>?4 ORDER BY captured DESC LIMIT 1
+domain/commerce/src/social/runtime.rs	SELECT payload FROM price_observation_runs WHERE mode=?1 ORDER BY captured DESC LIMIT 200
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_snapshots WHERE id=?1
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_snapshots ORDER BY captured DESC,rowid DESC LIMIT 100
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_watches ORDER BY id
+domain/commerce/src/social/runtime.rs	SELECT created,payload FROM social_cache WHERE key=?1
+domain/commerce/src/social/runtime.rs	INSERT OR REPLACE INTO social_cache VALUES(?1,?2,?3)
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_snapshots WHERE query=?1 AND mode=?2 AND window=?3 AND captured<?4 ORDER BY captured DESC,rowid DESC LIMIT 30
+domain/commerce/src/social/runtime.rs	INSERT INTO social_posts VALUES(?1,?2,?3) ON CONFLICT(mode,key) DO UPDATE SET payload=excluded.payload
+domain/commerce/src/social/runtime.rs	INSERT INTO trend_snapshots VALUES(?1,?2,?3,?4,?5,?6)
+domain/commerce/src/social/runtime.rs	INSERT INTO edges(payload) VALUES(?1)
+domain/commerce/src/social/runtime.rs	INSERT INTO entities VALUES(?1,?2)
+domain/commerce/src/social/runtime.rs	INSERT INTO social_scenarios VALUES(?1,?2)
+domain/commerce/src/social/runtime.rs	SELECT payload FROM trend_watches WHERE id=?1
+domain/commerce/src/social/runtime.rs	INSERT INTO trend_watches VALUES(?1,?2,?3,0,NULL,?4) ON CONFLICT(id) DO UPDATE SET enabled=excluded.enabled,next_due=excluded.next_due,lease_until=0,lease_token=NULL,payload=excluded.payload
+domain/commerce/src/social/runtime.rs	SELECT id,payload FROM trend_watches WHERE enabled=1 AND next_due<=?1 AND lease_until<=?1 ORDER BY next_due LIMIT 1
+domain/commerce/src/social/runtime.rs	UPDATE trend_watches SET lease_until=?1,lease_token=?2 WHERE id=?3
+domain/commerce/src/social/runtime.rs	UPDATE trend_watches SET payload=?1,next_due=?2,lease_until=0,lease_token=NULL WHERE id=?3 AND lease_token=?4
+domain/commerce/src/social/feeds.rs	CREATE TABLE IF NOT EXISTS trend_feeds(id TEXT PRIMARY KEY,mode TEXT NOT NULL,captured INTEGER NOT NULL,payload TEXT NOT NULL);
+domain/commerce/src/social/feeds.rs	SELECT payload FROM (SELECT payload,captured,rowid AS r FROM trend_feeds WHERE mode=?1 AND captured<=?2 ORDER BY captured DESC,rowid DESC LIMIT 500) ORDER BY captured,r
+domain/commerce/src/social/feeds.rs	INSERT INTO trend_feeds VALUES(?1,?2,?3,?4)
+domain/commerce/src/marketplace/runtime.rs	SELECT COUNT(*) FROM paid_reservations
+domain/commerce/tests/social.rs	INSERT INTO social_cache VALUES(?1,?2,?3)
+domain/commerce/tests/social.rs	UPDATE trend_watches SET lease_token='RECLAIMED_BY_ANOTHER_WORKER'
+domain/commerce/tests/social.rs	UPDATE trend_watches SET next_due=0,lease_until=1000,lease_token='OLD'
+domain/commerce/tests/social.rs	UPDATE trend_watches SET next_due=0,lease_until=0
+adapter/marketplace/src/reads.rs	DELETE

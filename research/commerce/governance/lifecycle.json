@@ -1,6 +1,6 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "f898c6c826721e9f45239d21f14861ada7779980",
+  "assessed_parent_commit": "5d60a3734e98c03f4335aede626a7c8235322571",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
@@ -9,13 +9,14 @@
     "CAPABILITY_RELEVANCE_RESOLVED": 7,
     "CUTOVER": 1,
     "DISCOVERED": 12,
-    "EXTINCT": 7,
+    "EXTINCT": 8,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 40
+    "REGISTERED": 39
   },
   "extinct": [
     "dependency--github-com-causal-agent-scraper",
     "dependency--github-com-hsivonen-encoding-rs",
+    "dependency--github-com-rusqlite-rusqlite",
     "dependency--github-com-rustcrypto-hashes",
     "purahmanian--keepa-mcp",
     "scrapinghub--extruct",
@@ -5786,12 +5787,12 @@
     },
     {
       "donor": "dependency--github-com-rusqlite-rusqlite",
-      "claimed": "REGISTERED",
-      "effective": "REGISTERED",
+      "claimed": "EXTINCT",
+      "effective": "EXTINCT",
       "exception": "",
-      "stopped_by": "CENSUSED: not decomposed into any required capability",
-      "runtime": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "stopped_by": "",
+      "runtime": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -5800,12 +5801,125 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "rusqlite.connection",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](Connection::open, open_in_memory, execute, execute_batch, prepare, query_row, busy_timeout and last_insert_rowid with the donor method shapes, so call sites change only their crate name)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.statements-and-rows",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](Statement, Rows, Row::get, query_map, query_row, exists, OptionalExtension, Params for tuples of references, arrays up to 32, slices and Vec, and the params! macro)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.transactions",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](Transaction with Deferred, Immediate and Exclusive behaviour, commit, rollback and rollback on drop; a failed statement leaves nothing behind)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.value-conversion",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](ToSql and FromSql for the primitive types, String, Vec<u8>, Option, bool and Value with SQLite range and type checks; reals print as SQLite prints them)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.errors",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](Error with an ErrorKind (Constraint, Busy, Syntax, Misuse, Corrupt, Io, InvalidParameterCount, QueryReturnedNoRows); messages differ from SQLite, the class is kept)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.sql-engine",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](parser, evaluator and executor for the SQL subset with SQLite affinity, NULL ordering and three-valued logic; every outcome and every table content identical to SQLite 3.46.0 on 72000 replayed statements)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.durability",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](CRC-32C framed transaction records, torn-tail recovery, advisory shared and exclusive file locks, replay of other writers appends and snapshot compaction with generation following; the kill-the-writer scenario passes on SQLite 3.46 WAL as well)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.builtin-functions",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](json_extract paths, date, time, datetime, julianday, unixepoch, strftime and the core functions; 3000000 date and time calls and 338 json_extract cases identical to SQLite 3.46.0; localtime, utc, subsec and %J are refused)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.user-functions",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(the donor registers scalar, aggregate and window functions through callbacks; the native store keeps create_scalar_function for tests)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "rusqlite.chrono-time-url-json-types",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](conversions to third-party types that ECDEV does not link)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.backup-blob-serialize",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(online backup and incremental blob I/O are reference for a future snapshot export)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "rusqlite.hooks-trace-session",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(commit and update hooks and the session extension are reference for change feeds)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "rusqlite.virtual-tables-collations-extensions",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[UNRELATED_DOMAIN](loading foreign code is outside the zero external technology rule)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.pragma-limits-config-cache",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](substrate/storage/src/exec.rs answers foreign_keys, user_version, table_info and journal_mode and ignores the tuning pragmas)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.ffi-and-build",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](bindings to a C library the repository no longer builds)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        },
+        {
+          "key": "rusqlite.examples-and-benches",
+          "required": false,
+          "knowledge": "NO_RESEARCH_VALUE[RELEASE_TOOLING](donor examples)",
+          "knowledge_status": "NO_RESEARCH_VALUE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
-          "pass": false,
-          "detail": "1 observed: MANIFEST CARGO rusqlite in domain/commerce/Cargo.toml"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "BUILD_EDGES_ZERO",
@@ -5824,8 +5938,8 @@
         },
         {
           "gate": "SOURCE_IMPORTS_ZERO",
-          "pass": false,
-          "detail": "10 imports: rusqlite in domain/commerce/src/frontier.rs; rusqlite in domain/commerce/src/listing.rs; rusqlite in domain/commerce/src/monitor.rs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -5834,48 +5948,48 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 8 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 16 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "pass": true,
+          "detail": "all 16 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
-          "pass": false,
-          "detail": "still depended on by: commerce (uses it)"
+          "pass": true,
+          "detail": "no node consumes, calls, controls or shims the donor"
         }
       ]
     },

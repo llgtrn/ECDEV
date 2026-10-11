@@ -5,7 +5,7 @@ use crate::{
     economics::{self, Scenario},
     planner::{self, Intent},
 };
-use rusqlite::{Connection, params};
+use ecdev_store::{Connection, params};
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -32,7 +32,7 @@ impl Engine {
     pub fn open(root: &Path) -> Result<Self, String> {
         let dir = root.join(".ecdev-data/runtime");
         fs::create_dir_all(&dir).map_err(error)?;
-        let db = Connection::open(dir.join("ecdev.sqlite")).map_err(error)?;
+        let db = Connection::open(dir.join("ecdev.db")).map_err(error)?;
         db.busy_timeout(std::time::Duration::from_secs(5))
             .map_err(error)?;
         db.execute_batch("PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON;
@@ -628,7 +628,7 @@ impl Engine {
                     return Err("INVALID_CRAWL_RUN_ID".into());
                 }
                 let frontier = crate::frontier::Frontier::open(
-                    &self.root.join(".ecdev-data/runtime/ecdev.sqlite"),
+                    &self.root.join(".ecdev-data/runtime/ecdev.db"),
                 )?;
                 let res = match self.run(id) {
                     Ok(mut run) => {

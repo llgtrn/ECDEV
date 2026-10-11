@@ -1,0 +1,338 @@
+{
+ "record": "rusqlite-semantic-matrix",
+ "donor": "rusqlite/rusqlite",
+ "donor_commit": "499cc7bb986e04cc66e6ed762522f7ea449178d1",
+ "donor_version_read": "rusqlite 0.32.1 (tag v0.32.1) with the bundled feature: libsqlite3-sys 0.30 carrying SQLite 3.46.0",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "rusqlite.connection",
+   "donor": "Connection: open a file or memory database, execute, execute_batch, prepare, query_row, busy_timeout, last_insert_rowid",
+   "ecdev": "substrate/storage/src/lib.rs (Connection)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.statements-and-rows",
+   "donor": "Statement, Rows, Row::get, query_map, query_row, exists, OptionalExtension, Params and the params! macro",
+   "ecdev": "substrate/storage/src/lib.rs (Statement, Rows, Row, Params, params!)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.transactions",
+   "donor": "Transaction with Deferred, Immediate and Exclusive behaviour, commit, rollback and rollback on drop",
+   "ecdev": "substrate/storage/src/lib.rs (Transaction) and db.rs (journal)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.value-conversion",
+   "donor": "ToSql and FromSql for integers, reals, text, blobs, options and booleans; Value and ValueRef",
+   "ecdev": "substrate/storage/src/value.rs and lib.rs (ToSql, FromSql)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.errors",
+   "donor": "Error and ErrorCode, constraint and busy classification",
+   "ecdev": "substrate/storage/src/error.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.sql-engine",
+   "donor": "the bundled SQLite 3.46 parser, planner and executor: type affinity, NULL ordering, three-valued logic, constraints, foreign keys, upsert, compound selects, joins, aggregates, window-free subqueries",
+   "ecdev": "substrate/storage/src/parser.rs, eval.rs, exec.rs, db.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.durability",
+   "donor": "SQLite's write-ahead log, file locks and crash recovery behind journal_mode=WAL",
+   "ecdev": "substrate/storage/src/persist.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.builtin-functions",
+   "donor": "SQLite's scalar and date-time functions the queries call: json_extract, strftime, date, time, datetime, julianday, unixepoch and the core string and numeric functions",
+   "ecdev": "substrate/storage/src/eval.rs, jsonlite.rs, datetime.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rusqlite.user-functions",
+   "donor": "create_scalar_function and aggregate and window function registration",
+   "ecdev": "substrate/storage/src/lib.rs (create_scalar_function only)",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.chrono-time-url-json-types",
+   "donor": "ToSql and FromSql for chrono, time, url and serde_json values",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.backup-blob-serialize",
+   "donor": "online backup, incremental blob I/O and database serialisation",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.hooks-trace-session",
+   "donor": "commit, rollback, update and pre-update hooks, tracing, the session extension and unlock notification",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.virtual-tables-collations-extensions",
+   "donor": "virtual tables (array, csv, series, log), collations, loadable extensions and auto extensions",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.pragma-limits-config-cache",
+   "donor": "PRAGMA helpers, runtime limits, db config, the prepared-statement cache and column metadata",
+   "ecdev": "substrate/storage/src/exec.rs (user_version, foreign_keys, journal_mode, table_info)",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.ffi-and-build",
+   "donor": "libsqlite3-sys bindings, bindgen output, the C build script, SQLCipher and the wasm VFS",
+   "ecdev": "none (no foreign code or build step)",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rusqlite.examples-and-benches",
+   "donor": "examples, benches and the rusqlite-macros crate",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "src/types/chrono.rs",
+    "capabilities": "rusqlite.chrono-time-url-json-types"
+   },
+   {
+    "prefix": "src/types/time.rs",
+    "capabilities": "rusqlite.chrono-time-url-json-types"
+   },
+   {
+    "prefix": "src/types/url.rs",
+    "capabilities": "rusqlite.chrono-time-url-json-types"
+   },
+   {
+    "prefix": "src/types/serde_json.rs",
+    "capabilities": "rusqlite.chrono-time-url-json-types"
+   },
+   {
+    "prefix": "src/types/from_sql.rs",
+    "capabilities": "rusqlite.value-conversion"
+   },
+   {
+    "prefix": "src/types/to_sql.rs",
+    "capabilities": "rusqlite.value-conversion"
+   },
+   {
+    "prefix": "src/types/value.rs",
+    "capabilities": "rusqlite.value-conversion"
+   },
+   {
+    "prefix": "src/types/value_ref.rs",
+    "capabilities": "rusqlite.value-conversion"
+   },
+   {
+    "prefix": "src/types/mod.rs",
+    "capabilities": "rusqlite.value-conversion"
+   },
+   {
+    "prefix": "src/lib.rs",
+    "capabilities": "rusqlite.connection"
+   },
+   {
+    "prefix": "src/inner_connection.rs",
+    "capabilities": "rusqlite.connection"
+   },
+   {
+    "prefix": "src/busy.rs",
+    "capabilities": "rusqlite.connection"
+   },
+   {
+    "prefix": "src/statement.rs",
+    "capabilities": "rusqlite.statements-and-rows"
+   },
+   {
+    "prefix": "src/raw_statement.rs",
+    "capabilities": "rusqlite.statements-and-rows"
+   },
+   {
+    "prefix": "src/row.rs",
+    "capabilities": "rusqlite.statements-and-rows"
+   },
+   {
+    "prefix": "src/params.rs",
+    "capabilities": "rusqlite.statements-and-rows"
+   },
+   {
+    "prefix": "src/transaction.rs",
+    "capabilities": "rusqlite.transactions"
+   },
+   {
+    "prefix": "src/error.rs",
+    "capabilities": "rusqlite.errors"
+   },
+   {
+    "prefix": "libsqlite3-sys/src/error.rs",
+    "capabilities": "rusqlite.errors"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/sqlite3.c",
+    "capabilities": "rusqlite.sql-engine, rusqlite.durability, rusqlite.builtin-functions"
+   },
+   {
+    "prefix": "src/functions.rs",
+    "capabilities": "rusqlite.user-functions"
+   },
+   {
+    "prefix": "src/context.rs",
+    "capabilities": "rusqlite.user-functions"
+   },
+   {
+    "prefix": "src/backup.rs",
+    "capabilities": "rusqlite.backup-blob-serialize"
+   },
+   {
+    "prefix": "src/blob/",
+    "capabilities": "rusqlite.backup-blob-serialize"
+   },
+   {
+    "prefix": "src/serialize.rs",
+    "capabilities": "rusqlite.backup-blob-serialize"
+   },
+   {
+    "prefix": "src/hooks/",
+    "capabilities": "rusqlite.hooks-trace-session"
+   },
+   {
+    "prefix": "src/trace.rs",
+    "capabilities": "rusqlite.hooks-trace-session"
+   },
+   {
+    "prefix": "src/session.rs",
+    "capabilities": "rusqlite.hooks-trace-session"
+   },
+   {
+    "prefix": "src/unlock_notify.rs",
+    "capabilities": "rusqlite.hooks-trace-session"
+   },
+   {
+    "prefix": "src/vtab/",
+    "capabilities": "rusqlite.virtual-tables-collations-extensions"
+   },
+   {
+    "prefix": "src/collation.rs",
+    "capabilities": "rusqlite.virtual-tables-collations-extensions"
+   },
+   {
+    "prefix": "src/load_extension_guard.rs",
+    "capabilities": "rusqlite.virtual-tables-collations-extensions"
+   },
+   {
+    "prefix": "src/auto_extension.rs",
+    "capabilities": "rusqlite.virtual-tables-collations-extensions"
+   },
+   {
+    "prefix": "src/pragma.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/limits.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/config.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/cache.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/column.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/version.rs",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "src/util/",
+    "capabilities": "rusqlite.pragma-limits-config-cache"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/sqlite3.h",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/sqlite3ext.h",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/bindgen_bundled_version.rs",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/bindgen_bundled_version_ext.rs",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlite3/wasm32-wasi-vfs.c",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/sqlcipher/",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/bindgen-bindings/",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/build.rs",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/src/lib.rs",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/upgrade.sh",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/upgrade_sqlcipher.sh",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/wrapper.h",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "libsqlite3-sys/wrapper_ext.h",
+    "capabilities": "rusqlite.ffi-and-build"
+   },
+   {
+    "prefix": "benches/",
+    "capabilities": "rusqlite.examples-and-benches"
+   },
+   {
+    "prefix": "examples/",
+    "capabilities": "rusqlite.examples-and-benches"
+   },
+   {
+    "prefix": "rusqlite-macros/",
+    "capabilities": "rusqlite.examples-and-benches"
+   },
+   {
+    "prefix": "src/auto_extension.rs",
+    "capabilities": "rusqlite.virtual-tables-collations-extensions"
+   }
+  ]
+ }
+}

@@ -5,7 +5,7 @@ use crate::identifier::Uuid;
 use crate::json;
 use crate::json::Value;
 use crate::json::{FromJson, ToJson};
-use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
+use ecdev_store::{Connection, OptionalExtension, TransactionBehavior, params};
 use std::collections::{BTreeMap, BTreeSet};
 
 fn err(e: impl std::fmt::Display) -> String {
@@ -282,7 +282,7 @@ impl Engine {
 /// its `last_observed_at`; a value missing from a capture closes nothing, so a window kept open
 /// through a gap shows when it was last actually seen.
 fn record_facts(
-    tx: &rusqlite::Transaction,
+    tx: &ecdev_store::Transaction,
     watch: &str,
     now: u64,
     run: &Value,

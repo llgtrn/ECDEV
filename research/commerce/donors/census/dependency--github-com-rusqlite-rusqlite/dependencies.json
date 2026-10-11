@@ -1,0 +1,460 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "a8cb94aca35c6402dc929835d4df70c1439849ba",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "rusqlite",
+        "version": "0.32.1",
+        "authors": [
+          "The rusqlite developers"
+        ],
+        "edition": "2021",
+        "description": "Ergonomic wrapper for SQLite",
+        "repository": "https://github.com/rusqlite/rusqlite",
+        "documentation": "https://docs.rs/rusqlite/",
+        "readme": "README.md",
+        "keywords": [
+          "sqlite",
+          "database",
+          "ffi"
+        ],
+        "license": "MIT",
+        "categories": [
+          "database"
+        ],
+        "exclude": [
+          "/.github/*",
+          "/.gitattributes",
+          "/appveyor.yml",
+          "/Changelog.md",
+          "/clippy.toml",
+          "/codecov.yml"
+        ],
+        "metadata": {
+          "docs": {
+            "rs": {
+              "features": [
+                "modern-full",
+                "rusqlite-macros"
+              ],
+              "all-features": false,
+              "no-default-features": true,
+              "default-target": "x86_64-unknown-linux-gnu",
+              "rustdoc-args": [
+                "--cfg",
+                "docsrs"
+              ]
+            }
+          },
+          "playground": {
+            "features": [
+              "bundled-full"
+            ],
+            "all-features": false
+          }
+        }
+      },
+      "badges": {
+        "appveyor": {
+          "repository": "rusqlite/rusqlite"
+        },
+        "codecov": {
+          "repository": "rusqlite/rusqlite"
+        },
+        "maintenance": {
+          "status": "actively-developed"
+        }
+      },
+      "lib": {
+        "name": "rusqlite"
+      },
+      "workspace": {
+        "members": [
+          "libsqlite3-sys"
+        ]
+      },
+      "features": {
+        "load_extension": [],
+        "backup": [],
+        "blob": [],
+        "collation": [],
+        "functions": [],
+        "trace": [],
+        "release_memory": [],
+        "bundled": [
+          "libsqlite3-sys/bundled",
+          "modern_sqlite"
+        ],
+        "bundled-sqlcipher": [
+          "libsqlite3-sys/bundled-sqlcipher",
+          "bundled"
+        ],
+        "bundled-sqlcipher-vendored-openssl": [
+          "libsqlite3-sys/bundled-sqlcipher-vendored-openssl",
+          "bundled-sqlcipher"
+        ],
+        "buildtime_bindgen": [
+          "libsqlite3-sys/buildtime_bindgen"
+        ],
+        "limits": [],
+        "loadable_extension": [
+          "libsqlite3-sys/loadable_extension"
+        ],
+        "hooks": [],
+        "preupdate_hook": [
+          "libsqlite3-sys/preupdate_hook",
+          "hooks"
+        ],
+        "i128_blob": [],
+        "sqlcipher": [
+          "libsqlite3-sys/sqlcipher"
+        ],
+        "unlock_notify": [
+          "libsqlite3-sys/unlock_notify"
+        ],
+        "vtab": [],
+        "csvtab": [
+          "csv",
+          "vtab"
+        ],
+        "array": [
+          "vtab"
+        ],
+        "session": [
+          "libsqlite3-sys/session",
+          "hooks"
+        ],
+        "window": [
+          "functions"
+        ],
+        "series": [
+          "vtab"
+        ],
+        "extra_check": [],
+        "modern_sqlite": [
+          "libsqlite3-sys/bundled_bindings"
+        ],
+        "in_gecko": [
+          "modern_sqlite",
+          "libsqlite3-sys/in_gecko"
+        ],
+        "bundled-windows": [
+          "libsqlite3-sys/bundled-windows"
+        ],
+        "with-asan": [
+          "libsqlite3-sys/with-asan"
+        ],
+        "column_decltype": [],
+        "wasm32-wasi-vfs": [
+          "libsqlite3-sys/wasm32-wasi-vfs"
+        ],
+        "serialize": [
+          "modern_sqlite"
+        ],
+        "modern-full": [
+          "array",
+          "backup",
+          "blob",
+          "modern_sqlite",
+          "chrono",
+          "collation",
+          "column_decltype",
+          "csvtab",
+          "extra_check",
+          "functions",
+          "hooks",
+          "i128_blob",
+          "limits",
+          "load_extension",
+          "serde_json",
+          "series",
+          "time",
+          "trace",
+          "unlock_notify",
+          "url",
+          "uuid",
+          "vtab",
+          "window"
+        ],
+        "bundled-full": [
+          "modern-full",
+          "bundled"
+        ]
+      },
+      "dependencies": {
+        "time": {
+          "version": "0.3.36",
+          "features": [
+            "formatting",
+            "macros",
+            "parsing"
+          ],
+          "optional": true
+        },
+        "bitflags": "2.6.0",
+        "hashlink": "0.9",
+        "chrono": {
+          "version": "0.4.38",
+          "optional": true,
+          "default-features": false,
+          "features": [
+            "clock"
+          ]
+        },
+        "serde_json": {
+          "version": "1.0",
+          "optional": true
+        },
+        "csv": {
+          "version": "1.1",
+          "optional": true
+        },
+        "url": {
+          "version": "2.1",
+          "optional": true
+        },
+        "fallible-iterator": "0.3",
+        "fallible-streaming-iterator": "0.1",
+        "uuid": {
+          "version": "1.0",
+          "optional": true
+        },
+        "smallvec": "1.6.1",
+        "rusqlite-macros": {
+          "path": "rusqlite-macros",
+          "version": "0.3.0",
+          "optional": true
+        },
+        "libsqlite3-sys": {
+          "path": "libsqlite3-sys",
+          "version": "0.30.1"
+        }
+      },
+      "dev-dependencies": {
+        "doc-comment": "0.3",
+        "tempfile": "3.1.0",
+        "lazy_static": "1.4",
+        "regex": "1.5.5",
+        "uuid": {
+          "version": "1.0",
+          "features": [
+            "v4"
+          ]
+        },
+        "unicase": "2.6.0",
+        "bencher": "0.1"
+      },
+      "test": [
+        {
+          "name": "auto_ext"
+        },
+        {
+          "name": "config_log",
+          "harness": false
+        },
+        {
+          "name": "deny_single_threaded_sqlite_config"
+        },
+        {
+          "name": "vtab"
+        }
+      ],
+      "bench": [
+        {
+          "name": "cache",
+          "harness": false
+        },
+        {
+          "name": "exec",
+          "harness": false
+        }
+      ],
+      "example": [
+        {
+          "name": "loadable_extension",
+          "crate-type": [
+            "cdylib"
+          ],
+          "required-features": [
+            "loadable_extension",
+            "functions",
+            "trace"
+          ]
+        },
+        {
+          "name": "load_extension",
+          "required-features": [
+            "load_extension",
+            "bundled",
+            "functions",
+            "trace"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "libsqlite3-sys/Cargo.toml",
+    "blob_hash": "11fb6d8756b14b0db1f1accfd7b3429b1bd08410",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "libsqlite3-sys",
+        "version": "0.30.1",
+        "authors": [
+          "The rusqlite developers"
+        ],
+        "edition": "2021",
+        "repository": "https://github.com/rusqlite/rusqlite",
+        "description": "Native bindings to the libsqlite3 library",
+        "license": "MIT",
+        "links": "sqlite3",
+        "build": "build.rs",
+        "keywords": [
+          "sqlite",
+          "sqlcipher",
+          "ffi"
+        ],
+        "categories": [
+          "external-ffi-bindings"
+        ]
+      },
+      "features": {
+        "default": [
+          "min_sqlite_version_3_14_0"
+        ],
+        "bundled": [
+          "cc",
+          "bundled_bindings"
+        ],
+        "bundled-windows": [
+          "cc",
+          "bundled_bindings"
+        ],
+        "bundled-sqlcipher": [
+          "bundled"
+        ],
+        "bundled-sqlcipher-vendored-openssl": [
+          "bundled-sqlcipher",
+          "openssl-sys/vendored"
+        ],
+        "buildtime_bindgen": [
+          "bindgen",
+          "pkg-config",
+          "vcpkg"
+        ],
+        "sqlcipher": [],
+        "min_sqlite_version_3_14_0": [
+          "pkg-config",
+          "vcpkg"
+        ],
+        "bundled_bindings": [],
+        "loadable_extension": [
+          "prettyplease",
+          "quote",
+          "syn"
+        ],
+        "unlock_notify": [],
+        "preupdate_hook": [
+          "buildtime_bindgen"
+        ],
+        "session": [
+          "preupdate_hook",
+          "buildtime_bindgen"
+        ],
+        "in_gecko": [],
+        "with-asan": [],
+        "wasm32-wasi-vfs": []
+      },
+      "dependencies": {
+        "openssl-sys": {
+          "version": "0.9.103",
+          "optional": true
+        }
+      },
+      "build-dependencies": {
+        "bindgen": {
+          "version": "0.69",
+          "optional": true,
+          "default-features": false,
+          "features": [
+            "runtime"
+          ]
+        },
+        "pkg-config": {
+          "version": "0.3.19",
+          "optional": true
+        },
+        "cc": {
+          "version": "1.1.6",
+          "optional": true
+        },
+        "vcpkg": {
+          "version": "0.2.15",
+          "optional": true
+        },
+        "prettyplease": {
+          "version": "0.2.20",
+          "optional": true
+        },
+        "quote": {
+          "version": "1.0.36",
+          "optional": true,
+          "default-features": false
+        },
+        "syn": {
+          "version": "2.0.72",
+          "optional": true,
+          "features": [
+            "full",
+            "extra-traits",
+            "visit-mut"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "rusqlite-macros/Cargo.toml",
+    "blob_hash": "fc30ca76a41dfa98e6b297cdc435673f38f6ad7a",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "rusqlite-macros",
+        "version": "0.3.0",
+        "authors": [
+          "The rusqlite developers"
+        ],
+        "edition": "2021",
+        "description": "Private implementation detail of rusqlite crate",
+        "repository": "https://github.com/rusqlite/rusqlite",
+        "license": "MIT",
+        "categories": [
+          "database"
+        ]
+      },
+      "lib": {
+        "proc-macro": true
+      },
+      "dependencies": {
+        "sqlite3-parser": {
+          "version": "0.13",
+          "default-features": false,
+          "features": [
+            "YYNOERRORRECOVERY"
+          ]
+        },
+        "fallible-iterator": "0.3",
+        "litrs": {
+          "version": "0.4",
+          "default-features": false
+        }
+      }
+    }
+  }
+]

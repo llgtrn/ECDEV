@@ -6,7 +6,7 @@ use crate::json::Value;
 use crate::json::{FromJson, ToJson};
 use crate::sha256::Sha256;
 use crate::web_address::Url;
-use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
+use ecdev_store::{Connection, OptionalExtension, TransactionBehavior, params};
 use std::{collections::BTreeSet, path::Path, time::Duration};
 
 fn err(e: impl std::fmt::Display) -> String {

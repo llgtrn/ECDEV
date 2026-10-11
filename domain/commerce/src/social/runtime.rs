@@ -7,7 +7,7 @@ use crate::sha256::Sha256;
 use crate::{
     Engine, planner::allocate_information_actions, provider::AcquireRequest, service::timestamp,
 };
-use rusqlite::{Connection, params};
+use ecdev_store::{Connection, params};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
@@ -162,7 +162,7 @@ impl Engine {
             let db = self.db.lock().map_err(err)?;
             db.query_row(
                 "SELECT payload FROM trend_snapshots WHERE query=?1 AND mode=?2 AND captured<?3 AND id<>?4 ORDER BY captured DESC LIMIT 1",
-                rusqlite::params![
+                ecdev_store::params![
                     snapshot["query"].as_str().unwrap_or_default(),
                     snapshot["capture_mode"].as_str().unwrap_or_default(),
                     snapshot["captured_at"].as_u64().unwrap_or(0) as i64,
@@ -1032,7 +1032,7 @@ impl Engine {
         let claimed: Option<(String, Value)> = {
             let mut db = self.db.lock().map_err(err)?;
             let tx = db
-                .transaction_with_behavior(rusqlite::TransactionBehavior::Immediate)
+                .transaction_with_behavior(ecdev_store::TransactionBehavior::Immediate)
                 .map_err(err)?;
             let row:Option<(String,String)>=tx.query_row("SELECT id,payload FROM trend_watches WHERE enabled=1 AND next_due<=?1 AND lease_until<=?1 ORDER BY next_due LIMIT 1",[now],|r|Ok((r.get(0)?,r.get(1)?))).ok();
             if let Some((id, payload)) = row {

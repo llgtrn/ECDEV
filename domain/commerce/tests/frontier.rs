@@ -212,7 +212,7 @@ fn limits() -> CrawlLimits {
 }
 fn path() -> PathBuf {
     std::env::temp_dir().join(format!(
-        "ecdev-frontier-{}.sqlite",
+        "ecdev-frontier-{}.db",
         ecdev_core::identifier::Uuid::new_v4()
     ))
 }

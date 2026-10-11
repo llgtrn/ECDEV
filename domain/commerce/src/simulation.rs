@@ -530,7 +530,7 @@ pub fn carries_simulated(v: &Value) -> bool {
     }
 }
 
-pub fn initialize(db: &rusqlite::Connection) -> Result<(), String> {
+pub fn initialize(db: &ecdev_store::Connection) -> Result<(), String> {
     db.execute_batch("CREATE TABLE IF NOT EXISTS simulation_runs(id TEXT PRIMARY KEY, created_at INTEGER NOT NULL, state TEXT NOT NULL CHECK(state='SIMULATED'), baseline_hash TEXT NOT NULL, variant_hash TEXT, seed INTEGER NOT NULL, replicates INTEGER NOT NULL, payload TEXT NOT NULL);")
         .map_err(|e| e.to_string())
 }
@@ -563,7 +563,7 @@ impl crate::Engine {
             .map_err(|e| e.to_string())?
             .execute(
                 "INSERT INTO simulation_runs VALUES(?1,?2,?3,?4,?5,?6,?7,?8)",
-                rusqlite::params![
+                ecdev_store::params![
                     id,
                     crate::service::timestamp(),
                     SIMULATED,

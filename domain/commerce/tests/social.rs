@@ -152,10 +152,10 @@ fn cached_captures_require_original_bytes_and_never_establish_live_acquisition()
                 .as_bytes()
         )
     );
-    let db = rusqlite::Connection::open(root.join(".ecdev-data/runtime/ecdev.sqlite")).unwrap();
+    let db = ecdev_store::Connection::open(root.join(".ecdev-data/runtime/ecdev.db")).unwrap();
     db.execute(
         "INSERT INTO social_cache VALUES(?1,?2,?3)",
-        rusqlite::params![key, now, json!([p]).to_string()],
+        ecdev_store::params![key, now, json!([p]).to_string()],
     )
     .unwrap();
     drop(db);
@@ -515,7 +515,7 @@ fn expired_trend_watch_leases_recover_and_stale_workers_cannot_publish() {
             Ok(q.clone())
         }
         fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
-            let db = rusqlite::Connection::open(&self.0).unwrap();
+            let db = ecdev_store::Connection::open(&self.0).unwrap();
             db.execute(
                 "UPDATE trend_watches SET lease_token='RECLAIMED_BY_ANOTHER_WORKER'",
                 [],
@@ -527,8 +527,8 @@ fn expired_trend_watch_leases_recover_and_stale_workers_cannot_publish() {
     let path = root();
     let engine = Engine::open(&path).unwrap();
     let watch=engine.trend_watch(json!({"query":"matcha","research":{"query":"matcha","sources":[{"platform":"HACKER_NEWS"}]},"triggers":["TOPIC_MENTION_GROWTH"],"interval_seconds":60,"enabled":true})).unwrap();
-    let dbpath = path.join(".ecdev-data/runtime/ecdev.sqlite");
-    let db = rusqlite::Connection::open(&dbpath).unwrap();
+    let dbpath = path.join(".ecdev-data/runtime/ecdev.db");
+    let db = ecdev_store::Connection::open(&dbpath).unwrap();
     db.execute(
         "UPDATE trend_watches SET next_due=0,lease_until=1000,lease_token='OLD'",
         [],
