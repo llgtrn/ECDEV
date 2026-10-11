@@ -4,7 +4,8 @@
 //! source total is exact by the source's own statement; approximate or capped totals (Algolia
 //! nbHits, Bluesky hitsTotal) are carried as reported and never divided by.
 
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
 
 /// Stops after which a slice holds everything the source would return for it.
 const ENDED: [&str; 2] = ["END_OF_RESULTS", "EMPTY_PAGE"];

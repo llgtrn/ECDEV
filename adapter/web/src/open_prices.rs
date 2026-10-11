@@ -10,13 +10,14 @@
 //! in its robots.txt and is not read.
 
 use crate::{Web, robots};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::web_address::Url;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
-use serde_json::{Value, json};
 use std::time::Duration;
 
 pub const BASE: &str = "https://prices.openfoodfacts.org/api/v1/";
@@ -231,7 +232,7 @@ impl Provider for OpenPrices {
         if raw.len() > 4 * 1024 * 1024 {
             return Err(failure("PAYLOAD_TOO_LARGE", None, requests));
         }
-        let data: Value = serde_json::from_slice(&raw)
+        let data: Value = ecdev_core::json::from_slice(&raw)
             .map_err(|_| failure("MALFORMED_PRICE_JSON", None, requests))?;
         let mut result = match r.query["endpoint"].as_str() {
             Some("PRODUCTS") => products(&data),

@@ -1,3 +1,6 @@
+// The derive macros name this crate by its public path even from inside it.
+extern crate self as ecdev_core;
+
 pub mod availability;
 pub mod bound;
 mod capture;
@@ -10,6 +13,7 @@ pub mod hypothesis;
 pub mod identifier;
 pub mod intelligence;
 pub mod international_domain;
+pub mod json;
 pub mod listing;
 pub mod marketplace;
 pub mod memory;

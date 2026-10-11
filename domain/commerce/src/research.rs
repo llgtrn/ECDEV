@@ -1,6 +1,9 @@
 //! Zero-paid research workflow, persisted evidence/cache, candidate ledger and accounting.
 use crate::frontier::{CrawlLimits, Frontier, UrlPolicy, canonicalize};
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::FromJson;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{
     domain::Evidence,
@@ -9,46 +12,44 @@ use crate::{
     service::{Engine, timestamp},
 };
 use rusqlite::{OptionalExtension, params};
-use serde::Deserialize;
-use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
-#[derive(Clone, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, FromJson)]
+#[json(deny_unknown_fields)]
 struct Source {
     url: String,
     fixture_html: Option<String>,
 }
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(FromJson)]
+#[json(deny_unknown_fields)]
 struct Input {
     market: String,
     query: String,
-    #[serde(default)]
+    #[json(default)]
     sources: Vec<Source>,
     follow_up_run_id: Option<String>,
-    #[serde(default = "pages")]
+    #[json(default = "pages")]
     max_pages: usize,
     min_price_minor: Option<i64>,
     max_price_minor: Option<i64>,
     economics: Option<Scenario>,
-    #[serde(default)]
+    #[json(default)]
     decision_policy: crate::decision::Policy,
-    #[serde(default)]
+    #[json(default)]
     allow_stale: bool,
-    #[serde(default)]
+    #[json(default)]
     force_refresh: bool,
-    #[serde(default = "depth_limit")]
+    #[json(default = "depth_limit")]
     max_depth: u32,
-    #[serde(default = "url_limit")]
+    #[json(default = "url_limit")]
     max_urls: u32,
-    #[serde(default = "run_deadline")]
+    #[json(default = "run_deadline")]
     deadline_seconds: u32,
     crawl_run_id: Option<String>,
     /// Operator-stated crawl scope: only discovered URLs whose path starts with one of these are
     /// admitted to the frontier (seeds and robots-declared sitemaps always are). Empty: the whole
     /// host, as before. Never inferred: on 7 measured catalogues no structural rule found the right
     /// prefix, and a wrong one lost every product (research/commerce/frontier-trace-benchmark.json).
-    #[serde(default)]
+    #[json(default)]
     include_path_prefixes: Vec<String>,
 }
 /// Whether a canonical URL's path starts with one of the operator's prefixes.
@@ -297,12 +298,12 @@ impl Engine {
         Ok(candidate)
     }
     pub fn compare_candidates(&self, args: Value) -> Result<Value, String> {
-        #[derive(Deserialize)]
-        #[serde(deny_unknown_fields)]
+        #[derive(FromJson)]
+        #[json(deny_unknown_fields)]
         struct Compare {
             candidate_ids: Vec<String>,
         }
-        let input: Compare = serde_json::from_value(args).map_err(err)?;
+        let input: Compare = crate::json::from_value(args).map_err(err)?;
         if !(2..=20).contains(&input.candidate_ids.len()) {
             return Err("COMPARE_REQUIRES_2_TO_20_CANDIDATES".into());
         }
@@ -449,12 +450,12 @@ impl Engine {
         let mut out = vec![];
         while let Some(r) = rows.next().map_err(err)? {
             let text: String = r.get(0).map_err(err)?;
-            out.push(serde_json::from_str::<Value>(&text).map_err(err)?);
+            out.push(crate::json::from_str::<Value>(&text).map_err(err)?);
         }
         Ok(json!(out))
     }
     pub fn research(&self, args: Value) -> Result<Value, String> {
-        let mut input: Input = serde_json::from_value(args).map_err(err)?;
+        let mut input: Input = crate::json::from_value(args).map_err(err)?;
         if input
             .decision_policy
             .currency
@@ -694,7 +695,7 @@ impl Engine {
                 .map_err(err)?;
             let previous = cached
                 .as_ref()
-                .map(|(s, _)| serde_json::from_str::<Value>(s))
+                .map(|(s, _)| crate::json::from_str::<Value>(s))
                 .transpose()
                 .map_err(err)?
                 .filter(|capture| crate::capture::verify_payload(&self.root, capture).is_ok());
@@ -846,7 +847,7 @@ impl Engine {
                 if cache_hit && !fixture {
                     observation["mode"] = json!("CACHED");
                 }
-                let typed: Evidence = serde_json::from_value(observation.clone()).map_err(err)?;
+                let typed: Evidence = crate::json::from_value(observation.clone()).map_err(err)?;
                 typed.validate()?;
             }
             let evidence_ids: Vec<_> = evidence.iter().map(|v| v["id"].clone()).collect();
@@ -1049,7 +1050,7 @@ impl Engine {
             !observations.is_empty() && calls.iter().all(|c| c["cache_hit"] == true),
         );
         let cache_metrics = crate::intelligence::cache_metrics(&calls, accounting_mode);
-        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"scope":if input.include_path_prefixes.is_empty(){json!({"basis":"WHOLE_HOST","include_path_prefixes":[]})}else{json!({"basis":"OPERATOR_EXPLICIT","include_path_prefixes":input.include_path_prefixes,"out_of_scope_links_skipped":out_of_scope,"out_of_scope_examples":out_of_scope_examples,"coverage":"LIMITED_TO_OPERATOR_SCOPE: a drained frontier means the scope was read, not the host; skipped links are unobserved, not irrelevant"})},"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"access_diagnostics":access_diagnostics(&calls),"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){serde_json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
+        let run=self.persist(json!({"acquisition_run_id":id,"research_run":true,"supplier_leads":supplier_leads,"next_actions":next_actions,"executed_information_gain_plan":executed_plan,"entity_resolution":entity_resolution,"observed_sample":observed_sample,"cache_metrics":cache_metrics,"completeness":completeness,"crawl_run_id":crawl_id,"frontier":frontier_status,"scope":if input.include_path_prefixes.is_empty(){json!({"basis":"WHOLE_HOST","include_path_prefixes":[]})}else{json!({"basis":"OPERATOR_EXPLICIT","include_path_prefixes":input.include_path_prefixes,"out_of_scope_links_skipped":out_of_scope,"out_of_scope_examples":out_of_scope_examples,"coverage":"LIMITED_TO_OPERATOR_SCOPE: a drained frontier means the scope was read, not the host; skipped links are unobserved, not irrelevant"})},"mode":accounting_mode,"status":if observations.is_empty(){"UNAVAILABLE"}else if failures.is_empty() && !incomplete {"COMPLETE_WITH_UNKNOWNS"}else{"PARTIAL"},"market":input.market,"query":input.query,"observations":observations,"candidates":candidates,"provider_calls":calls,"access_diagnostics":access_diagnostics(&calls),"snapshots":snapshots,"errors":failures,"cost_minor":0,"network_calls":if calls.iter().any(|c|c["request_count"].is_null()){crate::json::Value::Null}else{json!(network)},"known_network_calls":network,"source_routes":routes,"paid_providers":[{"provider":"semrush","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"keepa","status":"SKIPPED","reason":"OPTIONAL_PAID_EVIDENCE_NOT_REQUIRED"},{"provider":"hosted-firecrawl","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"},{"provider":"hosted-apify","status":"SKIPPED","reason":"NATIVE_PUBLIC_PATH"}],"funnel":{"discovered":candidates.len(),"screened":candidates.iter().filter(|c|c["state"]=="SCREENED").count(),"validating":candidates.iter().filter(|c|c["state"]=="VALIDATING").count(),"insufficient_evidence":candidates.iter().filter(|c|c["state"]=="INSUFFICIENT_EVIDENCE").count(),"rejected":candidates.iter().filter(|c|c["state"]=="REJECTED").count(),"shortlisted":candidates.iter().filter(|c|c["state"]=="SHORTLISTED").count(),"sampling":0},"ranking_rule":"Explicit rejections last, observed price ascending; no learned sales score","coverage":self.budget_status()?,"missing_evidence":"Demand, supplier, logistics quotations, official marketplace validation, PPC, regulatory risk"}))?;
         Ok(run)
     }
     pub fn evidence_graph(&self) -> Result<Value, String> {
@@ -1121,7 +1122,7 @@ impl Engine {
                     r.get(0)
                 })
                 .map_err(|_| "RUN_NOT_FOUND")?;
-            let run: Value = serde_json::from_str(&payload).map_err(err)?;
+            let run: Value = crate::json::from_str(&payload).map_err(err)?;
             for o in run["observations"].as_array().into_iter().flatten() {
                 let hash = o["raw_hash"].as_str().unwrap_or("").to_string();
                 if !seen.insert((run_id.clone(), hash.clone())) {
@@ -1196,13 +1197,13 @@ impl Engine {
     }
 
     pub fn compare_snapshots(&self, args: Value) -> Result<Value, String> {
-        #[derive(Deserialize)]
-        #[serde(deny_unknown_fields)]
+        #[derive(FromJson)]
+        #[json(deny_unknown_fields)]
         struct Compare {
             before_run_id: String,
             after_run_id: String,
         }
-        let c: Compare = serde_json::from_value(args).map_err(err)?;
+        let c: Compare = crate::json::from_value(args).map_err(err)?;
         let before = self.run(&c.before_run_id)?;
         let after = self.run(&c.after_run_id)?;
         let mut changes = vec![];
@@ -1653,11 +1654,11 @@ mod budget_storage_tests {
                         row.get(0)
                     })
                     .unwrap();
-                let mut limits: CrawlLimits = serde_json::from_str(&text).unwrap();
+                let mut limits: CrawlLimits = crate::json::from_str(&text).unwrap();
                 limits.max_pages = 2;
                 db.execute(
                     "UPDATE crawl_runs SET limits=?2 WHERE id=?1",
-                    params![id, serde_json::to_string(&limits).unwrap()],
+                    params![id, crate::json::to_string(&limits).unwrap()],
                 )
                 .unwrap();
             }

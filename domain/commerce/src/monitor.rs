@@ -2,9 +2,10 @@
 use crate::Engine;
 use crate::availability::{availability_term, derived_availability};
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
 fn err(e: impl std::fmt::Display) -> String {
@@ -37,18 +38,18 @@ pub fn initialize(db: &Connection) -> Result<(), String> {
     }
     Ok(())
 }
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(FromJson)]
+#[json(deny_unknown_fields)]
 struct WatchInput {
-    #[serde(default)]
+    #[json(default)]
     watch_id: Option<String>,
-    #[serde(default = "default_enabled")]
+    #[json(default = "default_enabled")]
     enabled: bool,
     market: String,
     query: String,
     targets: Vec<String>,
     interval_seconds: u64,
-    #[serde(default)]
+    #[json(default)]
     conditions: Vec<Condition>,
 }
 fn default_enabled() -> bool {
@@ -56,7 +57,7 @@ fn default_enabled() -> bool {
 }
 impl Engine {
     pub fn monitor_create(&self, args: Value) -> Result<Value, String> {
-        let input: WatchInput = serde_json::from_value(args).map_err(err)?;
+        let input: WatchInput = crate::json::from_value(args).map_err(err)?;
         if !(60..=604800).contains(&input.interval_seconds)
             || input.targets.is_empty()
             || input.targets.len() > 5
@@ -122,7 +123,7 @@ impl Engine {
                     ))
                     .map_err(err)?;
                 let rows = s.query_map([&id], |r| r.get::<_, String>(0)).map_err(err)?;
-                rows.map(|r| serde_json::from_str(&r.map_err(err)?).map_err(err))
+                rows.map(|r| crate::json::from_str(&r.map_err(err)?).map_err(err))
                     .collect()
             };
             let facts = {
@@ -131,7 +132,7 @@ impl Engine {
                     .map_err(err)?;
                 let rows = s
                     .query_map([&id], |r| {
-                        Ok(json!({"url":r.get::<_,String>(0)?,"product":shown(&r.get::<_,String>(1)?),"product_key":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":serde_json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?,"state":"OBSERVED"}))
+                        Ok(json!({"url":r.get::<_,String>(0)?,"product":shown(&r.get::<_,String>(1)?),"product_key":r.get::<_,String>(1)?,"field":r.get::<_,String>(2)?,"value":crate::json::from_str::<Value>(&r.get::<_,String>(3)?).unwrap_or(Value::Null),"valid_at":r.get::<_,u64>(4)?,"invalid_at":r.get::<_,Option<u64>>(5)?,"run_id":r.get::<_,Option<String>>(6)?,"raw_capture_sha256":r.get::<_,Option<String>>(7)?,"last_observed_at":r.get::<_,Option<u64>>(8)?,"state":"OBSERVED"}))
                     })
                     .map_err(err)?;
                 rows.collect::<Result<Vec<_>, _>>().map_err(err)?
@@ -164,7 +165,7 @@ impl Engine {
                     c["trigger"]["product"] = shown(&k);
                 }
             }
-            watches.push(json!({"watch_id":id,"facts":facts,"price_statistics":price_statistics,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":serde_json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|serde_json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":changes,"notifications":"NONE"}));
+            watches.push(json!({"watch_id":id,"facts":facts,"price_statistics":price_statistics,"status":if enabled {"ACTIVE"} else {"DISABLED"},"schedule":{"interval_seconds":interval,"next_due":next},"lease_until":lease,"request":crate::json::from_str::<Value>(&args).map_err(err)?,"baseline":baseline.map(|s|crate::json::from_str::<Value>(&s)).transpose().map_err(err)?,"last_error":error,"snapshots":history("watch_snapshots")?,"changes":changes,"notifications":"NONE"}));
         }
         if id.is_some() {
             watches.into_iter().next().ok_or("WATCH_NOT_FOUND".into())
@@ -189,7 +190,7 @@ impl Engine {
         .map_err(err)?;
         tx.commit().map_err(err)?;
         Ok(Some(
-            json!({"watch_id":id,"token":token,"request":serde_json::from_str::<Value>(&args).map_err(err)?}),
+            json!({"watch_id":id,"token":token,"request":crate::json::from_str::<Value>(&args).map_err(err)?}),
         ))
     }
     pub fn monitor_tick(&self, now: u64) -> Result<bool, String> {
@@ -229,14 +230,14 @@ impl Engine {
         match result {
             Ok(run) => {
                 let old = prior
-                    .map(|s| serde_json::from_str::<Value>(&s))
+                    .map(|s| crate::json::from_str::<Value>(&s))
                     .transpose()
                     .map_err(err)?
                     .unwrap_or(json!({}));
                 let current = snapshot(&run, &lease["request"]);
                 let mut changes = changes(&old, &current);
                 let conditions: Vec<Condition> =
-                    serde_json::from_value(lease["request"]["conditions"].clone())
+                    crate::json::from_value(lease["request"]["conditions"].clone())
                         .unwrap_or_default();
                 changes.extend(conditions_met(&conditions, &old, &current));
                 let mut baseline = old.clone();
@@ -342,7 +343,7 @@ fn record_facts(
 }
 
 fn snapshot(run: &Value, request: &Value) -> Value {
-    let mut sources = serde_json::Map::new();
+    let mut sources = crate::json::Map::new();
     for source in request["sources"].as_array().into_iter().flatten() {
         let Some(url) = source["url"].as_str() else {
             continue;
@@ -374,7 +375,7 @@ fn snapshot(run: &Value, request: &Value) -> Value {
                 } else {
                     p["title"].to_string()
                 };
-                let fields: serde_json::Map<String, Value> = [
+                let fields: crate::json::Map<String, Value> = [
                     "title",
                     "sku",
                     "brand",
@@ -463,7 +464,7 @@ impl Engine {
 /// and the superseding one (closed window). Before the first observation, and for a field never
 /// observed, the answer is UNKNOWN; windows that disagree at `at` are a CONFLICT.
 pub fn fact_as_of(windows: &[FactWindow], at: u64) -> Value {
-    let parse = |v: &str| serde_json::from_str::<Value>(v).unwrap_or(Value::Null);
+    let parse = |v: &str| crate::json::from_str::<Value>(v).unwrap_or(Value::Null);
     let covering: Vec<&FactWindow> = windows
         .iter()
         .filter(|w| w.valid_at <= at && w.invalid_at.is_none_or(|i| at < i))
@@ -562,7 +563,7 @@ impl Engine {
             .optional()
             .map_err(err)?
             .ok_or("WATCH_NOT_FOUND")?;
-        let parse = |s: &str| serde_json::from_str::<Value>(s).map_err(err);
+        let parse = |s: &str| crate::json::from_str::<Value>(s).map_err(err);
         let watch = json!({"id":watch_id,"request":parse(&args)?,"interval_seconds":interval,"baseline":baseline.as_deref().map(parse).transpose()?});
         let mut records = vec![];
         for (kind, table) in [("SNAPSHOT", "watch_snapshots"), ("CHANGE", "watch_changes")] {
@@ -657,14 +658,14 @@ impl Engine {
 }
 
 /// A declarative rule over one observed product field of a watch.
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct Condition {
     pub id: String,
     pub field: String,
     pub op: String,
     pub value: Value,
-    #[serde(default)]
+    #[json(default)]
     pub currency: Option<String>,
 }
 
@@ -868,7 +869,7 @@ pub struct FactWindow {
 /// A stored product key or value shown as people read it: keys and values are kept as JSON text
 /// so types round-trip ("\"EUR\"" is the text EUR), and decoded only for display.
 pub fn shown(stored: &str) -> Value {
-    serde_json::from_str::<Value>(stored)
+    crate::json::from_str::<Value>(stored)
         .ok()
         .filter(Value::is_string)
         .unwrap_or_else(|| json!(stored))
@@ -971,12 +972,12 @@ const TRACKED: [(&str, &str); 2] = [
 /// The products of a baseline source as last observed in its latest capture: products and
 /// fields carried through a gap are left out, so a gap is reported once, not on every tick.
 fn observed_view(products: &Value) -> Value {
-    let mut out = serde_json::Map::new();
+    let mut out = crate::json::Map::new();
     for (key, p) in products.as_object().into_iter().flatten() {
         if !p["_unobserved_since"].is_null() {
             continue;
         }
-        let mut fields = serde_json::Map::new();
+        let mut fields = crate::json::Map::new();
         for (k, v) in p.as_object().into_iter().flatten() {
             if k.starts_with('_') {
                 continue;
@@ -1141,7 +1142,7 @@ mod tests {
             Engine::open(&std::env::temp_dir().join(format!("ecdev-import-{}", Uuid::new_v4())))
                 .unwrap();
         let imported = other
-            .monitor_import(&serde_json::from_str(&text).unwrap())
+            .monitor_import(&crate::json::from_str(&text).unwrap())
             .unwrap();
         assert_eq!(imported["enabled"], false);
         let again = other.monitor_export(&id).unwrap();

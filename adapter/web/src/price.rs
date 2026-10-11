@@ -1,12 +1,13 @@
 //! Exact formatted numeric amounts. Separator guessing is a disclosed heuristic.
 //! Reviewed against locked price-parser; BSD notice retained with oracle fixtures.
-use serde_json::{Value, json};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use std::sync::OnceLock;
 
 fn lexicon() -> &'static Value {
     static DATA: OnceLock<Value> = OnceLock::new();
     DATA.get_or_init(|| {
-        serde_json::from_str(include_str!("../data/price-currency.json"))
+        ecdev_core::json::from_str(include_str!("../data/price-currency.json"))
             .expect("checked licensed currency data")
     })
 }
@@ -670,9 +671,10 @@ mod tests {
     use super::*;
     #[test]
     fn locked_price_typed_scalar_oracle() {
-        let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-scalar-contract.json"))
-                .unwrap();
+        let oracle: Value = ecdev_core::json::from_str(include_str!(
+            "../tests/fixtures/price-scalar-contract.json"
+        ))
+        .unwrap();
         assert_eq!(
             oracle["commit_sha"],
             "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
@@ -742,9 +744,10 @@ mod tests {
     }
     #[test]
     fn locked_price_object_contract_oracle() {
-        let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-object-contract.json"))
-                .unwrap();
+        let oracle: Value = ecdev_core::json::from_str(include_str!(
+            "../tests/fixtures/price-object-contract.json"
+        ))
+        .unwrap();
         assert_eq!(
             oracle["commit_sha"],
             "64e213a46a40473ba4f8aa3b249917fdc64d8a16"
@@ -840,7 +843,7 @@ mod tests {
     #[test]
     fn locked_price_source_helpers_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-source-helpers.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/price-source-helpers.json"))
                 .unwrap();
         assert_eq!(
             oracle["commit_sha"],
@@ -859,7 +862,7 @@ mod tests {
     #[test]
     fn locked_price_literal_helper_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-literal-helper.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/price-literal-helper.json"))
                 .unwrap();
         assert_eq!(
             oracle["commit_sha"],
@@ -882,7 +885,7 @@ mod tests {
     #[test]
     fn locked_price_decimal_helper_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-decimal-helper.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/price-decimal-helper.json"))
                 .unwrap();
         assert_eq!(
             oracle["commit_sha"],
@@ -906,7 +909,8 @@ mod tests {
     #[test]
     fn locked_price_public_api_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-contract.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/price-contract.json"))
+                .unwrap();
         assert_eq!(oracle["cases"].as_array().unwrap().len(), 2937);
         let mut mismatches = vec![];
         for case in oracle["cases"].as_array().unwrap() {
@@ -932,7 +936,8 @@ mod tests {
     #[test]
     fn locked_price_parser_numeric_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/price-number.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/price-number.json"))
+                .unwrap();
         assert_eq!(
             oracle["commit_sha"],
             "64e213a46a40473ba4f8aa3b249917fdc64d8a16"

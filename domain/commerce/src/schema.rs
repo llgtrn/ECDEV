@@ -6,7 +6,7 @@
 //! literals, escapes, character classes, groups and the quantifiers ? + * {n} {n,m}; a pattern
 //! outside that is a definition error, never silently skipped.
 
-use serde_json::Value;
+use crate::json::Value;
 
 #[derive(Debug, Clone)]
 enum Node {
@@ -289,7 +289,7 @@ pub fn patterns(schema: &Value, out: &mut Vec<String>) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use crate::json;
 
     #[test]
     fn the_patterns_in_use_match_as_regular_expressions_would() {

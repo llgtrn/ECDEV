@@ -121,7 +121,9 @@ impl Wire for Http {
             builder = builder.form(&form);
         }
         if let Some(body) = request.body {
-            builder = builder.json(&body);
+            builder = builder
+                .header("content-type", "application/json")
+                .body(body.to_string());
         }
         if let Some(query) = request.query.as_object() {
             let params: Vec<_> = query
@@ -317,7 +319,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
         let mut completed = 0u64;
         let mut uncertain = false;
         let mut records = Vec::new();
-        let mut captures = serde_json::Map::new();
+        let mut captures = ecdev_core::json::Map::new();
         let mut failure: Option<Value> = None;
         if refresh {
             let form = lwa_refresh_form(
@@ -360,7 +362,7 @@ impl<W: Wire, C: Clock> Session<W, C> {
                             json!({"phase":"LWA","error":error,"raw_capture":"NEVER_PERSIST_AUTHENTICATION_BODY"}),
                         );
                     } else {
-                        let token = serde_json::from_slice::<Value>(&response.raw)
+                        let token = ecdev_core::json::from_slice::<Value>(&response.raw)
                             .ok()
                             .and_then(|v| LwaToken::from_response(&v, self.clock.now()).ok());
                         if token
@@ -801,7 +803,7 @@ mod tests {
     }
     fn offer() -> (u16, String, String) {
         let v: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/official-responses.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/official-responses.json"))
                 .unwrap();
         (
             200,
@@ -854,7 +856,7 @@ mod tests {
             assert_eq!(result.provider_cost["request_count"], count);
             assert_eq!(result.result["mode"], "LIVE");
             assert_eq!(result.observations.len(), 1);
-            let serialized = serde_json::to_string(&result.result).unwrap();
+            let serialized = ecdev_core::json::to_string(&result.result).unwrap();
             for secret in ["mock-secret", "mock-refresh", "mock-access-token"] {
                 assert!(!serialized.contains(secret));
             }
@@ -964,7 +966,7 @@ mod tests {
     #[test]
     fn official_http_fee_post_preserves_explicit_assumptions() {
         let fixtures: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/official-responses.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/official-responses.json"))
                 .unwrap();
         let (wire, server) = mock(vec![
             token(),
@@ -990,7 +992,7 @@ mod tests {
         let requests = server.join().unwrap();
         assert!(requests[1].starts_with("POST /products/fees/v0/items/B00V5DG6IQ/feesEstimate"));
         let body: Value =
-            serde_json::from_str(requests[1].split_once("\r\n\r\n").unwrap().1).unwrap();
+            ecdev_core::json::from_str(requests[1].split_once("\r\n\r\n").unwrap().1).unwrap();
         assert_eq!(body, protocol(&request).unwrap()["operations"][0]["body"]);
     }
     #[test]

@@ -7,8 +7,8 @@ use ecdev_core::web_address::Url;
 mod web_address_corpus;
 use web_address_corpus::*;
 
-fn frozen() -> serde_json::Value {
-    serde_json::from_str(include_str!(
+fn frozen() -> ecdev_core::json::Value {
+    ecdev_core::json::from_str(include_str!(
         "fixtures/web-address-differential-digests.json"
     ))
     .unwrap()

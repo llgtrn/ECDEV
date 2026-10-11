@@ -5,8 +5,9 @@
 //! not decode completely is refused), and an
 //! entry whose location is not an absolute http(s) URL is counted as rejected, never repaired.
 
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 
 pub const MAX_ENTRIES: usize = 50_000;
 pub const MAX_BYTES: usize = 50 * 1024 * 1024;

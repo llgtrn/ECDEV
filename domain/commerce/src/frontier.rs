@@ -1,11 +1,12 @@
 //! ECDEV-owned durable frontier. SQLite transactions fence workers across processes.
 //! Time is supplied in Unix milliseconds so scheduling is reproducible in tests.
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use crate::sha256::Sha256;
 use crate::web_address::Url;
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use std::{collections::BTreeSet, path::Path, time::Duration};
 
 fn err(e: impl std::fmt::Display) -> String {
@@ -14,15 +15,15 @@ fn err(e: impl std::fmt::Display) -> String {
 
 /// Defaults preserve identity-bearing parameters and repeated-slash path semantics.
 /// Sorting is opt-in: some sites treat repeated query parameter order as significant.
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, Default, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct UrlPolicy {
     pub sort_query: bool,
     pub collapse_slashes: bool,
     pub tracking_parameters: BTreeSet<String>,
     pub identity_parameters: BTreeSet<String>,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct UrlIdentity {
     pub raw_url: String,
     pub canonical_url: String,
@@ -118,8 +119,8 @@ fn normalize_escapes(s: &str) -> String {
     out
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct CrawlLimits {
     pub max_pages: u32,
     pub max_urls: u32,
@@ -152,7 +153,7 @@ impl CrawlLimits {
         Ok(())
     }
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct Lease {
     pub run_id: String,
     pub identity_hash: String,
@@ -191,7 +192,7 @@ impl Frontier {
         self.db
             .execute(
                 "INSERT INTO crawl_runs(id,limits) VALUES(?1,?2)",
-                params![id, serde_json::to_string(limits).map_err(err)?],
+                params![id, crate::json::to_string(limits).map_err(err)?],
             )
             .map_err(err)?;
         Ok(())
@@ -214,7 +215,7 @@ impl Frontier {
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )
             .map_err(err)?;
-        let limits: CrawlLimits = serde_json::from_str(&limits).map_err(err)?;
+        let limits: CrawlLimits = crate::json::from_str(&limits).map_err(err)?;
         let count: u32 = tx
             .query_row(
                 "SELECT count(*) FROM crawl_urls WHERE run_id=?1",
@@ -259,7 +260,7 @@ impl Frontier {
                 |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
             )
             .map_err(err)?;
-        let limits: CrawlLimits = serde_json::from_str(&limits).map_err(err)?;
+        let limits: CrawlLimits = crate::json::from_str(&limits).map_err(err)?;
         if cancelled || now >= limits.deadline_ms {
             tx.execute("UPDATE crawl_urls SET state='CANCELLED',lease_token=NULL,lease_until=NULL,last_error=?2 WHERE run_id=?1 AND state IN ('PENDING','LEASED','RETRYABLE','DISCOVERED')",params![run,if cancelled {"CANCELLED"}else{"DEADLINE"}]).map_err(err)?;
             tx.commit().map_err(err)?;
@@ -358,7 +359,7 @@ impl Frontier {
                 |r| r.get(0),
             )
             .map_err(err)?;
-        let limits: CrawlLimits = serde_json::from_str(&text).map_err(err)?;
+        let limits: CrawlLimits = crate::json::from_str(&text).map_err(err)?;
         let backoff = limits
             .backoff_ms
             .saturating_mul(1_i64 << lease.attempts.saturating_sub(1).min(20))
@@ -433,7 +434,7 @@ impl Frontier {
                 |r| r.get(0),
             )
             .map_err(err)?;
-        let limits: CrawlLimits = serde_json::from_str(&text).map_err(err)?;
+        let limits: CrawlLimits = crate::json::from_str(&text).map_err(err)?;
         let state = if lease.attempts <= limits.max_retries {
             "RETRYABLE"
         } else {
@@ -503,7 +504,7 @@ impl Frontier {
         tx.commit().map_err(err)
     }
     pub fn status(&self, run: &str) -> Result<Value, String> {
-        let mut states = serde_json::Map::new();
+        let mut states = crate::json::Map::new();
         for name in [
             "DISCOVERED",
             "PENDING",
@@ -543,7 +544,7 @@ impl Frontier {
             )
             .map_err(err)?;
         let mut origins =
-            std::collections::BTreeMap::<String, serde_json::Map<String, Value>>::new();
+            std::collections::BTreeMap::<String, crate::json::Map<String, Value>>::new();
         let mut origin_rows = self.db.prepare("SELECT origin,state,count(*) FROM crawl_urls WHERE run_id=?1 GROUP BY origin,state ORDER BY origin,state").map_err(err)?;
         for row in origin_rows
             .query_map([run], |r| {
@@ -569,7 +570,7 @@ impl Frontier {
             })
             .collect();
         Ok(
-            json!({"run_id":run,"states":states,"origins":origins,"origin_scope":"ENQUEUED_URLS_IN_THIS_FRONTIER_RUN_NOT_INDEPENDENT_PUBLISHERS","acquisition_attempts":starts,"retry_events":retries,"cancelled":cancelled,"limits":serde_json::from_str::<Value>(&limits).map_err(err)?}),
+            json!({"run_id":run,"states":states,"origins":origins,"origin_scope":"ENQUEUED_URLS_IN_THIS_FRONTIER_RUN_NOT_INDEPENDENT_PUBLISHERS","acquisition_attempts":starts,"retry_events":retries,"cancelled":cancelled,"limits":crate::json::from_str::<Value>(&limits).map_err(err)?}),
         )
     }
     /// Captures are committed with HANDLED so an interrupted report can be rebuilt.
@@ -577,7 +578,7 @@ impl Frontier {
         let mut st=self.db.prepare("SELECT payload FROM crawl_urls WHERE run_id=?1 AND state='HANDLED' AND payload IS NOT NULL ORDER BY rowid").map_err(err)?;
         st.query_map([run], |r| r.get::<_, String>(0))
             .map_err(err)?
-            .map(|row| serde_json::from_str(&row.map_err(err)?).map_err(err))
+            .map(|row| crate::json::from_str(&row.map_err(err)?).map_err(err))
             .collect()
     }
 }

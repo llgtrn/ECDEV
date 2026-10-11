@@ -1,8 +1,9 @@
 //! Native robots evaluator, tested against the locked Reppy C++ oracle.
 //! Exact agent selection follows the reviewed donor contract. Ambiguous ties deny.
 use ecdev_core::frontier::{UrlPolicy, canonicalize};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 #[derive(Debug)]
 pub struct Decision {
     pub allowed: bool,
@@ -425,7 +426,8 @@ mod tests {
     #[test]
     fn locked_reppy_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/reppy-robots.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/reppy-robots.json"))
+                .unwrap();
         let cases = oracle["cases"].as_array().unwrap();
         assert_eq!(cases.len(), 1620);
         for c in cases {
@@ -553,7 +555,8 @@ mod tests {
     #[test]
     fn locked_reppy_robots_url_and_gpp_reproduction() {
         let fixture: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/reppy-robots-gpp.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/reppy-robots-gpp.json"))
+                .unwrap();
         let reproduction = &fixture["reproduction_of_msvc_fixture"];
         assert_eq!(reproduction["fixture_cases"], 1620);
         assert_eq!(reproduction["gpp_agreeing"], 1620);

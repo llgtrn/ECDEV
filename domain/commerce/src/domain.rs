@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ObservationMode {
     Live,
     Cached,
@@ -12,8 +12,8 @@ pub enum ObservationMode {
     Inferred,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct Evidence {
     pub id: String,
     pub mode: ObservationMode,
@@ -55,7 +55,7 @@ impl Evidence {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct GraphEdge {
     pub from: String,
     pub relation: String,
@@ -64,7 +64,7 @@ pub struct GraphEdge {
     pub mode: ObservationMode,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct ProductFingerprint {
     pub concepts: Vec<String>,
     pub category: Option<String>,
@@ -75,8 +75,8 @@ pub struct ProductFingerprint {
     pub pack_quantity: Option<u64>,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MatchConfidence {
     Exact,
     HighConfidenceMatch,
@@ -85,7 +85,7 @@ pub enum MatchConfidence {
     Unknown,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct Entity {
     pub id: String,
     pub kind: String,

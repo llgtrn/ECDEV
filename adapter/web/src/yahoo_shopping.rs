@@ -6,13 +6,14 @@
 //! documentation; no live call made without an operator's Client ID).
 
 use crate::Web;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::web_address::Url;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
-use serde_json::{Value, json};
 use std::time::Duration;
 
 pub const ENDPOINT: &str = "https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch";
@@ -181,7 +182,7 @@ impl Provider for YahooShopping {
         if raw.len() > 4 * 1024 * 1024 {
             return Err(failure("PAYLOAD_TOO_LARGE", None, requests));
         }
-        let data: Value = serde_json::from_slice(&raw)
+        let data: Value = ecdev_core::json::from_slice(&raw)
             .map_err(|_| failure("MALFORMED_LISTING_JSON", None, requests))?;
         let mut result = listings(&data).map_err(|e| failure(e, None, requests))?;
         let mode = if fixture.is_some() { "FIXTURE" } else { "LIVE" };
@@ -238,7 +239,7 @@ mod tests {
 
     #[test]
     fn listings_follow_the_documented_shape() {
-        let data: Value = serde_json::from_str(include_str!(
+        let data: Value = ecdev_core::json::from_str(include_str!(
             "../tests/fixtures/yahoo-itemsearch-synthetic.json"
         ))
         .unwrap();

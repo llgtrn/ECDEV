@@ -1,8 +1,9 @@
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct Intent {
     pub market: String,
     pub currency: String,
@@ -12,9 +13,9 @@ pub struct Intent {
     pub max_weight_g: u64,
     pub minimum_margin_bps: u64,
     pub max_inventory_per_sku: u64,
-    #[serde(default)]
+    #[json(default)]
     pub positive_trend: bool,
-    #[serde(default)]
+    #[json(default)]
     pub exclude_regulated: bool,
 }
 impl Intent {

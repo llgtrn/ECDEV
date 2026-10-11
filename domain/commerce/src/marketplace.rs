@@ -1,9 +1,10 @@
 //! Provider-independent ontology; schema conversion never asserts live authenticity.
 pub(crate) mod runtime;
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
+#[derive(Debug, ToJson, FromJson)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum MarketplaceKind {
     Marketplace,
     Seller,
@@ -22,7 +23,7 @@ pub enum MarketplaceKind {
     Brand,
     Fee,
 }
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, ToJson, FromJson)]
 pub struct MarketplaceEntity {
     pub id: String,
     pub kind: MarketplaceKind,
@@ -51,7 +52,7 @@ pub fn amazon_catalog(value: &Value, marketplace_id: &str) -> Result<Marketplace
         evidence_ids: vec![],
     })
 }
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, ToJson, FromJson)]
 pub struct BrowserTask {
     pub id: String,
     pub url: String,
@@ -61,7 +62,7 @@ pub struct BrowserTask {
     pub session_id: Option<String>,
     pub cancellation_requested: bool,
 }
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, ToJson, FromJson)]
 pub struct BrowserObservation {
     pub task_id: String,
     pub source: String,

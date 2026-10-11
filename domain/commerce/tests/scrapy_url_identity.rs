@@ -3,7 +3,7 @@
 //! 2.19.0 at 54f7ed9c, w3lib 2.5.0); ECDEV's side is computed here. Divergence is pinned, not
 //! hidden: where the two differ, the table below says which is stricter and why.
 use ecdev_core::frontier::{UrlPolicy, canonicalize};
-use serde_json::Value;
+use ecdev_core::json::Value;
 use std::collections::BTreeMap;
 
 fn same(a: &str, b: &str, policy: &UrlPolicy) -> bool {
@@ -20,7 +20,8 @@ fn same(a: &str, b: &str, policy: &UrlPolicy) -> bool {
 /// kind -> (cases, scrapy_same, ecdev_default_same, ecdev_sorted_same, ecdev_sorted_untracked_same)
 fn measure() -> BTreeMap<String, [usize; 5]> {
     let fixture: Value =
-        serde_json::from_str(include_str!("fixtures/scrapy-url-identity-oracle.json")).unwrap();
+        ecdev_core::json::from_str(include_str!("fixtures/scrapy-url-identity-oracle.json"))
+            .unwrap();
     let default = UrlPolicy::default();
     let sorted = UrlPolicy {
         sort_query: true,

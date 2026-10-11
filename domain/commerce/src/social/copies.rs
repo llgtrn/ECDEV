@@ -7,7 +7,8 @@
 //! six-post cluster that became a hypothesis of its own.
 
 use super::SocialPost;
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
 use std::collections::BTreeSet;
 
 /// Character 5-gram Jaccard at or above which two texts are the same text.
@@ -126,7 +127,7 @@ mod tests {
     use super::*;
 
     fn post(id: &str, author: &str, text: &str) -> SocialPost {
-        serde_json::from_value(json!({"platform":"BLUESKY","provider":"test","source_url":format!("https://example.org/{id}"),"native_id":id,"thread_id":null,"author_id":author,"publisher":null,"published_at":9000,"captured_at":10000,"text":text,"language":"en","media":[],"hashtags":[],"mentions":[],"entities":[],"propagation":"ORIGINAL","parent_id":null,"engagement":{"views":null,"likes":null,"comments":null,"reposts":null,"favorites":null,"followers":null},"raw_hash":"a".repeat(64),"raw_locator":"/0","extraction_method":"FIXTURE","state":"OBSERVED","capture_mode":"FIXTURE","evidence_id":format!("e{id}"),"freshness_seconds":1000,"origin_evidence_id":null})).unwrap()
+        crate::json::from_value(json!({"platform":"BLUESKY","provider":"test","source_url":format!("https://example.org/{id}"),"native_id":id,"thread_id":null,"author_id":author,"publisher":null,"published_at":9000,"captured_at":10000,"text":text,"language":"en","media":[],"hashtags":[],"mentions":[],"entities":[],"propagation":"ORIGINAL","parent_id":null,"engagement":{"views":null,"likes":null,"comments":null,"reposts":null,"favorites":null,"followers":null},"raw_hash":"a".repeat(64),"raw_locator":"/0","extraction_method":"FIXTURE","state":"OBSERVED","capture_mode":"FIXTURE","evidence_id":format!("e{id}"),"freshness_seconds":1000,"origin_evidence_id":null})).unwrap()
     }
 
     #[test]

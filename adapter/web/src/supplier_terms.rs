@@ -1,6 +1,7 @@
 //! Published organization offers. No negotiated wholesale or commercial validation is implied.
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 struct Source<'a> {
@@ -21,7 +22,7 @@ impl Source<'_> {
         json!({"value":value,"source":"JSON_LD","page":self.base.as_str(),"script_index":self.script,"json_pointer":pointer,"raw_capture_sha256":self.hash,"interpretation":"PUBLISHED_SOURCE_ASSERTION_NOT_NEGOTIATED_OR_INDEPENDENTLY_VERIFIED"})
     }
     fn offer(&self, offer: &Value, pointer: &str) -> Value {
-        let mut fields = serde_json::Map::new();
+        let mut fields = ecdev_core::json::Map::new();
         for (name, key) in [
             ("item", "itemOffered"),
             ("lead_time", "deliveryLeadTime"),
@@ -198,7 +199,7 @@ pub fn extract(base: &Url, structured: &[Value], hash: &str) -> Vec<Value> {
                 continue;
             }
             let terms: Vec<_> = raw.iter().map(|(v, p)| source.offer(v, p)).collect();
-            let mut fields = serde_json::Map::new();
+            let mut fields = ecdev_core::json::Map::new();
             for (name, key) in [
                 ("name", "name"),
                 ("organization_country", "address/addressCountry"),

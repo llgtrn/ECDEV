@@ -1,22 +1,23 @@
 //! High-level official product intent; no provider substitution or implicit live permission.
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::FromJson;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{
     provider::AcquireRequest,
     service::{Engine, timestamp},
 };
-use serde::Deserialize;
-use serde_json::{Value, json};
 
 impl Engine {
     /// Official boundary readiness: zero network, never persisted, never secret-bearing.
     pub(crate) fn provider_doctor(&self, args: Value) -> Result<Value, String> {
-        #[derive(Deserialize)]
-        #[serde(deny_unknown_fields)]
+        #[derive(FromJson)]
+        #[json(deny_unknown_fields)]
         struct Input {
             provider: Option<String>,
         }
-        let input: Input = serde_json::from_value(if args.is_null() { json!({}) } else { args })
+        let input: Input = crate::json::from_value(if args.is_null() { json!({}) } else { args })
             .map_err(|e| e.to_string())?;
         let id = input.provider.unwrap_or_else(|| "amazon-sp-api".into());
         if id != "amazon-sp-api" {
@@ -44,8 +45,8 @@ impl Engine {
         args: Value,
         budget: &crate::provider::BudgetPolicy,
     ) -> Result<Value, String> {
-        #[derive(Deserialize)]
-        #[serde(deny_unknown_fields)]
+        #[derive(FromJson)]
+        #[json(deny_unknown_fields)]
         struct Intent {
             market: String,
             asin: String,
@@ -54,7 +55,7 @@ impl Engine {
             fee_estimate: Option<Value>,
             fixture_responses: Option<Value>,
         }
-        let intent: Intent = serde_json::from_value(args).map_err(|e| e.to_string())?;
+        let intent: Intent = crate::json::from_value(args).map_err(|e| e.to_string())?;
         if intent.evidence_layer != "OFFICIAL_SP_API"
             || !matches!(intent.market.as_str(), "AMAZON_JP" | "AMAZON_US")
             || intent.asin.len() != 10

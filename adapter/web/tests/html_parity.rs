@@ -9,12 +9,12 @@
 //! reconstructed before `<math>`/`<svg>`, and Chromium reads CDATA in a MathML text integration
 //! point as a bogus comment where the standard defines a CDATA section.
 mod html_corpus;
+use ecdev_core::json::Value;
 use ecdev_web::html::Html;
 use html_corpus::*;
-use serde_json::Value;
 
 fn fixture() -> Value {
-    serde_json::from_str(include_str!("fixtures/html-differential-digests.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/html-differential-digests.json")).unwrap()
 }
 
 fn strings(v: &Value) -> Vec<String> {

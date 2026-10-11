@@ -21,6 +21,8 @@ pub mod xml_feed;
 pub mod yahoo_shopping;
 use crate::html::{Html, Selector};
 use ecdev_core::identifier::Uuid;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::web_address::Url;
 use ecdev_core::{
@@ -28,7 +30,6 @@ use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
-use serde_json::{Value, json};
 use std::{
     collections::BTreeSet,
     io::Read,
@@ -534,7 +535,7 @@ fn extract_with_hash(html: &str, source: &str, hash: &str) -> Result<Value, Stri
     {
         // Raw script text: re-serialising the element (inner_html) escapes `&` and `>` in
         // documents html5ever does not treat as raw text, which corrupts string values.
-        match serde_json::from_str::<Value>(&script.text().collect::<String>()) {
+        match ecdev_core::json::from_str::<Value>(&script.text().collect::<String>()) {
             Ok(v) => {
                 structured_data.push(json!({"script_index":script_number,"value":v}));
                 let start = found.len();
@@ -1000,7 +1001,7 @@ mod tests {
         // A relative base moves relative links; an absolute path is unaffected; other hosts stay out.
         assert_eq!(
             links("/shop/"),
-            serde_json::json!([
+            ecdev_core::json!([
                 "https://shop.example/abs",
                 "https://shop.example/shop/item/1"
             ])
@@ -1011,7 +1012,7 @@ mod tests {
             links("https://shop.example/v2/")[1],
             "https://shop.example/v2/item/1"
         );
-        assert_eq!(links("https://cdn.example/"), serde_json::json!([]));
+        assert_eq!(links("https://cdn.example/"), ecdev_core::json!([]));
         // A non-http base is ignored.
         assert_eq!(
             links("javascript:void(0)")[1],

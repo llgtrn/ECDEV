@@ -1,10 +1,10 @@
 //! Native evidence-memory semantics against the frozen Graphiti oracle (no donor execution).
+use ecdev_core::json::Value;
 use ecdev_core::memory::*;
-use serde_json::Value;
 use std::collections::BTreeSet;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/graphiti-semantics.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/graphiti-semantics.json")).unwrap()
 }
 fn f(v: &Value) -> f64 {
     v.as_str().unwrap().parse().unwrap()
@@ -125,7 +125,7 @@ fn graphiti_name_resolution_oracle_with_deterministic_ties() {
                             .any(|t| t.as_array().unwrap().len() > 1)
                         {
                             assert_eq!(
-                                serde_json::json!(existing[*i].labels),
+                                ecdev_core::json!(existing[*i].labels),
                                 want["labels"],
                                 "{case}"
                             );

@@ -185,7 +185,7 @@ pub const MAX_KEPT_LINES: usize = 1_000;
 pub const MAX_KEPT_BYTES: usize = 100 * 1024;
 
 /// The fingerprint of the whole visible text, with its first lines up to the bounds.
-pub fn summary(html: &str) -> serde_json::Value {
+pub fn summary(html: &str) -> ecdev_core::json::Value {
     let lines = visible_lines(html);
     let mut kept = vec![];
     let mut bytes = 0;
@@ -197,7 +197,7 @@ pub fn summary(html: &str) -> serde_json::Value {
         kept.push(l.clone());
     }
     let (main, scope) = main_lines(html);
-    serde_json::json!({"sha256":text_sha256(&lines),"line_count":lines.len(),"lines":kept,"truncated":kept.len() < lines.len(),"method":"VISIBLE_TEXT_LINES_V1",
+    ecdev_core::json!({"sha256":text_sha256(&lines),"line_count":lines.len(),"lines":kept,"truncated":kept.len() < lines.len(),"method":"VISIBLE_TEXT_LINES_V1",
         "main_sha256":text_sha256(&main),"main_line_count":main.len(),"main_scope":scope,"substance":substance(&main)})
 }
 
@@ -208,7 +208,7 @@ pub fn summary(html: &str) -> serde_json::Value {
 /// on it can only ever see the shell.
 pub const LONG_LINE: usize = 140;
 
-pub fn substance(main: &[String]) -> serde_json::Value {
+pub fn substance(main: &[String]) -> ecdev_core::json::Value {
     let chars: usize = main.iter().map(|l| l.chars().count()).sum();
     let score: f64 = main
         .iter()
@@ -218,7 +218,7 @@ pub fn substance(main: &[String]) -> serde_json::Value {
         .sum::<f64>()
         // An empty float sum is -0.0.
         + 0.0;
-    serde_json::json!({"main_chars":chars,"main_long_lines":main.iter().filter(|l| l.chars().count() > LONG_LINE).count(),"long_line_score":score,"long_line_threshold_chars":LONG_LINE,"basis":"SUM_SQRT_LINE_LENGTH_BEYOND_THRESHOLD_OF_MAIN_CONTENT"})
+    ecdev_core::json!({"main_chars":chars,"main_long_lines":main.iter().filter(|l| l.chars().count() > LONG_LINE).count(),"long_line_score":score,"long_line_threshold_chars":LONG_LINE,"basis":"SUM_SQRT_LINE_LENGTH_BEYOND_THRESHOLD_OF_MAIN_CONTENT"})
 }
 
 pub fn text_sha256(lines: &[String]) -> String {

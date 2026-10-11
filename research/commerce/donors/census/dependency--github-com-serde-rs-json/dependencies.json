@@ -1,0 +1,212 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "888735e94e38e879801710a83f1f55fa3a7933fb",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_json",
+        "version": "1.0.151",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "categories": [
+          "encoding",
+          "parser-implementations",
+          "no-std"
+        ],
+        "description": "A JSON serialization file format",
+        "documentation": "https://docs.rs/serde_json",
+        "edition": "2021",
+        "keywords": [
+          "json",
+          "serde",
+          "serialization"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "repository": "https://github.com/serde-rs/json",
+        "rust-version": "1.71",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "features": [
+                "preserve_order",
+                "raw_value",
+                "unbounded_depth"
+              ],
+              "targets": [
+                "x86_64-unknown-linux-gnu"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition",
+                "--generate-macro-expansion",
+                "--extern-html-root-url=core=https://doc.rust-lang.org",
+                "--extern-html-root-url=alloc=https://doc.rust-lang.org",
+                "--extern-html-root-url=std=https://doc.rust-lang.org"
+              ]
+            }
+          },
+          "playground": {
+            "features": [
+              "float_roundtrip",
+              "raw_value",
+              "unbounded_depth"
+            ]
+          }
+        }
+      },
+      "dependencies": {
+        "indexmap": {
+          "version": "2.2.3",
+          "optional": true
+        },
+        "itoa": "1.0",
+        "memchr": {
+          "version": "2",
+          "default-features": false
+        },
+        "serde_core": {
+          "version": "1.0.220",
+          "default-features": false
+        },
+        "zmij": "1.0"
+      },
+      "target": {
+        "cfg(any())": {
+          "dependencies": {
+            "serde": {
+              "version": "1.0.220",
+              "default-features": false
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "automod": "1.0.11",
+        "indoc": "2.0.2",
+        "ref-cast": "1.0.18",
+        "rustversion": "1.0.13",
+        "serde": {
+          "version": "1.0.194",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_bytes": "0.11.10",
+        "serde_derive": "1.0.166",
+        "serde_stacker": "0.1.8",
+        "trybuild": {
+          "version": "1.0.108",
+          "features": [
+            "diff"
+          ]
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "memchr/std",
+          "serde_core/std"
+        ],
+        "alloc": [
+          "serde_core/alloc"
+        ],
+        "preserve_order": [
+          "indexmap",
+          "std"
+        ],
+        "float_roundtrip": [],
+        "arbitrary_precision": [],
+        "raw_value": [],
+        "unbounded_depth": []
+      }
+    }
+  },
+  {
+    "source_path": "fuzz/Cargo.toml",
+    "blob_hash": "5fe38b67929b2886bee2b6df9cddbe6b4da1dc66",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_json-fuzz",
+        "version": "0.0.0",
+        "authors": [
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "edition": "2021",
+        "publish": false,
+        "metadata": {
+          "cargo-fuzz": true
+        }
+      },
+      "dependencies": {
+        "libfuzzer-sys": "0.4",
+        "serde_json": {
+          "path": ".."
+        }
+      },
+      "bin": [
+        {
+          "name": "from_slice",
+          "path": "fuzz_targets/from_slice.rs",
+          "test": false,
+          "doc": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "tests/crate/Cargo.toml",
+    "blob_hash": "e13df6a8eb3e1a4a9bbf79bd40e614c7f3e9dbfc",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_json_test",
+        "version": "0.0.0",
+        "authors": [
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "edition": "2021",
+        "publish": false
+      },
+      "lib": {
+        "path": "test.rs"
+      },
+      "dependencies": {
+        "serde_json": {
+          "path": "../..",
+          "default-features": false
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "serde_json/std"
+        ],
+        "alloc": [
+          "serde_json/alloc"
+        ],
+        "float_roundtrip": [
+          "serde_json/float_roundtrip"
+        ],
+        "arbitrary_precision": [
+          "serde_json/arbitrary_precision"
+        ],
+        "raw_value": [
+          "serde_json/raw_value"
+        ],
+        "unbounded_depth": [
+          "serde_json/unbounded_depth"
+        ]
+      }
+    }
+  }
+]

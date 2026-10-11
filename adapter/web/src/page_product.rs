@@ -1,5 +1,6 @@
 //! Page assertions enrich only a single associated product; no variant-wide price assignment.
-use serde_json::{Value, json};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use std::collections::BTreeSet;
 
 fn merge(product: &mut Value, name: &str, observations: Vec<Value>, status: &str) {

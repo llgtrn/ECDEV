@@ -1,7 +1,8 @@
 //! The native HTML tokenizer against the html5lib tokenizer conformance tests (MIT,
 //! https://github.com/html5lib/html5lib-tests, tokenizer/*.test, commit c777c40).
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_web::html::tokenizer::{State, Token, Tokenizer};
-use serde_json::{Value, json};
 
 fn unescape(s: &str) -> String {
     let chars: Vec<char> = s.chars().collect();
@@ -84,7 +85,7 @@ fn run(input: &str, state: State, last_start_tag: Option<&str>) -> Vec<Value> {
                 attrs,
                 self_closing,
             } => {
-                let map: serde_json::Map<String, Value> =
+                let map: ecdev_core::json::Map<String, Value> =
                     attrs.into_iter().map(|(k, v)| (k, json!(v))).collect();
                 if self_closing {
                     out.push(json!(["StartTag", name, map, true]));
@@ -120,7 +121,8 @@ fn html5lib_tokenizer_tests() {
         if file.file_name().is_some_and(|n| n == "xmlViolation.test") {
             continue;
         }
-        let data: Value = serde_json::from_str(&std::fs::read_to_string(&file).unwrap()).unwrap();
+        let data: Value =
+            ecdev_core::json::from_str(&std::fs::read_to_string(&file).unwrap()).unwrap();
         let tests = data
             .as_object()
             .unwrap()

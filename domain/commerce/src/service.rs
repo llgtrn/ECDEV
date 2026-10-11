@@ -1,10 +1,11 @@
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
 use crate::{
     economics::{self, Scenario},
     planner::{self, Intent},
 };
 use rusqlite::{Connection, params};
-use serde_json::{Value, json};
 use std::{
     fs,
     path::{Path, PathBuf},
@@ -63,7 +64,7 @@ impl Engine {
         self
     }
     pub fn read_json(&self, path: &str) -> Result<Value, String> {
-        serde_json::from_slice(&fs::read(self.root.join(path)).map_err(error)?).map_err(error)
+        crate::json::from_slice(&fs::read(self.root.join(path)).map_err(error)?).map_err(error)
     }
     pub fn registry(&self) -> Result<Value, String> {
         let mut registry = self.read_json("research/commerce/donors/registry.json")?;
@@ -267,13 +268,13 @@ impl Engine {
                 .ok_or("PRODUCT_INTENT_OBJECT_REQUIRED")?
                 .remove("evidence_layer");
         }
-        #[derive(serde::Deserialize)]
-        #[serde(deny_unknown_fields)]
+        #[derive(crate::json::FromJson)]
+        #[json(deny_unknown_fields)]
         struct Input {
             market: String,
             asin: String,
         }
-        let input: Input = serde_json::from_value(args).map_err(error)?;
+        let input: Input = crate::json::from_value(args).map_err(error)?;
         if !matches!(input.market.as_str(), "AMAZON_JP" | "AMAZON_US")
             || input.asin.len() != 10
             || !input
@@ -472,7 +473,7 @@ impl Engine {
         let rows = st.query_map([], |r| r.get::<_, String>(0)).map_err(error)?;
         let mut out = vec![];
         for row in rows {
-            let value = serde_json::from_str::<Value>(&row.map_err(error)?).map_err(error)?;
+            let value = crate::json::from_str::<Value>(&row.map_err(error)?).map_err(error)?;
             out.push(match crate::capture::verify_payload(&self.root, &value) {
                 Ok(()) => value,
                 Err(reason) => json!({"run_id":value["run_id"],"created_at":value["created_at"],"mode":value["mode"],"status":"UNAVAILABLE","reason":reason,"network_calls":0,"historical_projection":true}),
@@ -485,7 +486,7 @@ impl Engine {
         let text: String = db
             .query_row("SELECT payload FROM runs WHERE id=?1", [id], |r| r.get(0))
             .map_err(error)?;
-        let mut payload: Value = serde_json::from_str(&text).map_err(error)?;
+        let mut payload: Value = crate::json::from_str(&text).map_err(error)?;
         crate::capture::verify_payload(&self.root, &payload)?;
         payload["raw_capture_verification"] = json!("VERIFIED_LOCAL_SHA256_NO_NETWORK");
         Ok(payload)
@@ -526,7 +527,7 @@ impl Engine {
         let mut out = vec![];
         for row in rows {
             let (id, text) = row.map_err(error)?;
-            out.push(json!({"id":id,"data":serde_json::from_str::<Value>(&text).map_err(error)?}));
+            out.push(json!({"id":id,"data":crate::json::from_str::<Value>(&text).map_err(error)?}));
         }
         Ok(json!(out))
     }
@@ -541,7 +542,7 @@ impl Engine {
                 .map_err(error)?
         };
         for payload in payloads {
-            let run: Value = serde_json::from_str(&payload).map_err(error)?;
+            let run: Value = crate::json::from_str(&payload).map_err(error)?;
             if let Some(witness) = live_shortlist_witness(&self.root, &run) {
                 return Ok(witness);
             }
@@ -648,7 +649,7 @@ impl Engine {
                 .candidates()
                 .and_then(|v| shape_items(v, &args, "ecdev.research.candidates", json!({}))),
             "ecdev.research.reextract" => self.research_reextract(
-                &serde_json::from_value::<Vec<String>>(args["run_ids"].clone())
+                &crate::json::from_value::<Vec<String>>(args["run_ids"].clone())
                     .map_err(|_| "Required string array: run_ids")?,
             ),
             "ecdev.evidence.inspect" => {
@@ -663,7 +664,7 @@ impl Engine {
                     &args["catalog_item"],
                     required_str(&args, "marketplace_id")?,
                 )?;
-                serde_json::to_value(entity).map_err(error)
+                crate::json::to_value(entity).map_err(error)
             }
             "ecdev.monitor.compare" => self.compare_snapshots(args),
             "ecdev.product.analyze" => self.product(args),
@@ -684,10 +685,10 @@ impl Engine {
             "ecdev.runs.list" => self.runs(),
             "ecdev.runs.inspect" => self.run(required_str(&args, "run_id")?),
             "ecdev.runs.replay" => self.replay(required_str(&args, "run_id")?),
-            "ecdev.opportunity.search" => self.submit(serde_json::from_value(args).map_err(error)?),
+            "ecdev.opportunity.search" => self.submit(crate::json::from_value(args).map_err(error)?),
             "ecdev.simulation.compare" => self.simulation_compare(args),
             "ecdev.economics.simulate" => {
-                let s: Scenario = serde_json::from_value(args).map_err(error)?;
+                let s: Scenario = crate::json::from_value(args).map_err(error)?;
                 self.persist(json!({"mode":"SIMULATED","status":"COMPLETE","scenario":s,"result":economics::simulate(&s)?,"observations":[],"cost_minor":0}))
             }
             _ => Err(format!("Unknown capability: {name}")),
@@ -715,7 +716,7 @@ pub fn tool_definitions() -> Vec<Value> {
     out.push(crate::social::feeds::tool_definition());
     out.push(crate::listing::tool_definition());
     out.push(crate::price_observations::tool_definition());
-    out.push(json!({"name":"ecdev.product.discover","description":"Discover real product candidates through bounded native research; paid providers optional; supplied fixtures explicitly labeled","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
+    out.push(json!({"name":"ecdev.product.discover","description":"Discover real product candidates through bounded native research; paid providers optional; supplied fixtures explicitly labeled","inputSchema":crate::json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.product.inspect","description":"Inspect one persisted candidate with field provenance, conflicts and economics uncertainty; zero network","inputSchema":{"type":"object","properties":{"candidate_id":{"type":"string"}},"required":["candidate_id"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.product.compare","description":"Compare 2 to 20 captured candidates without network acquisition or invented market ranking","inputSchema":{"type":"object","properties":{"candidate_ids":{"type":"array","items":{"type":"string"},"minItems":2,"maxItems":20}},"required":["candidate_ids"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.provider.status","description":"Provider availability and credentials state without secrets or network","inputSchema":empty}));
@@ -755,7 +756,7 @@ pub fn tool_definitions() -> Vec<Value> {
     out.push(json!({"name":"ecdev.evidence.inspect","description":"Persisted observations of a research run; paged by offset and limit, 50 per page by default","inputSchema":items_paged(true)}));
     out.push(json!({"name":"ecdev.simulation.compare","description":"Deterministic commerce simulation (SIMULATED, never observed, never demand): a scenario of typed buyer agents, or a baseline against a variant paired on common random numbers, over seeded replicates with dispersion; every declared parameter must be consumed; kept apart from observed stores; no network, no LLM","inputSchema":{"type":"object","properties":{"baseline":{"type":"object","description":"SimulationScenario: name, horizon_steps (1-365), step_seconds, population {buyers, budget_minor, price_sensitivity, brand_loyalty, category_interest as {low,high}}, market {currency, our_price_minor, competitor_price_minor, reference_price_minor}, shocks [{kind: OurPriceChange|CompetitorPriceChange, at_step, bps}], termination {rule: Horizon|Quiescence, window, max_units_per_step}, review_probability, return_base_probability"},"variant":{"type":"object","description":"Optional SimulationScenario compared against the baseline"},"seed":{"type":"integer","minimum":0},"replicates":{"type":"integer","minimum":1,"maximum":50,"default":10}},"required":["baseline","seed"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.research.reextract","description":"Re-derive typed product series (price, currency, availability) from the stored, hash-verified raw captures of up to 50 research runs with the current extractor, and report where it disagrees with what was recorded; missing or altered captures contribute nothing; no network","inputSchema":{"type":"object","properties":{"run_ids":{"type":"array","items":{"type":"string"},"minItems":1,"maxItems":50}},"required":["run_ids"],"additionalProperties":false}}));
-    out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":serde_json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
+    out.push(json!({"name":"ecdev.research.run","description":"Bounded native/public-source product research. Paid providers never required. Supplied HTML is explicitly FIXTURE; unknown commercial fields remain unknown.","inputSchema":crate::json::from_str::<Value>(include_str!("../../../tools/commerce/schemas/research.schema.json")).unwrap()}));
     out.push(json!({"name":"ecdev.monitor.compare","description":"Compare captured product fields between two persisted research snapshots","inputSchema":{"type":"object","properties":{"before_run_id":{"type":"string"},"after_run_id":{"type":"string"}},"required":["before_run_id","after_run_id"],"additionalProperties":false}}));
     out.push(json!({"name":"ecdev.product.analyze","description":"Inspect one ASIN through an explicit evidence layer. KEEPA is the default paid path; OFFICIAL_SP_API supports separate catalog, offers and estimated fees in JP/US, supplied fixtures and operator-authorized bounded HTTP reads. Live reads require host credentials, request limits and explicit monetary ceilings; fixtures never establish official live validation.","inputSchema":{"type":"object","properties":{"market":{"enum":["AMAZON_JP","AMAZON_US"]},"asin":{"type":"string","pattern":"^[A-Z0-9]{10}$"},"evidence_layer":{"enum":["KEEPA","OFFICIAL_SP_API"]},"include":{"type":"array","items":{"enum":["CATALOG","OFFERS","FEE_ESTIMATE"]},"uniqueItems":true,"minItems":1,"maxItems":3},"fee_estimate":{"type":"object","properties":{"listing_price":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false},"shipping":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false},"is_amazon_fulfilled":{"type":"boolean"},"identifier":{"type":"string","minLength":1,"maxLength":128},"points":{"type":"object","properties":{"count":{"type":"integer","minimum":0},"value":{"type":"object","properties":{"amount":{"type":"string","maxLength":80,"pattern":"^[0-9]+(\\.[0-9]+)?$"},"currency":{"enum":["JPY","USD"]}},"required":["amount","currency"],"additionalProperties":false}},"required":["count","value"],"additionalProperties":false}},"required":["listing_price","is_amazon_fulfilled"],"additionalProperties":false},"fixture_responses":{"type":"object","properties":{"catalog":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false},"offers":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false},"fees":{"type":"object","properties":{"status":{"type":"integer","minimum":100,"maximum":599},"raw_body":{"type":"string","maxLength":4194304},"headers":{"type":"object","properties":{"x-amzn-requestid":{"type":"string","maxLength":4096},"x-amzn-ratelimit-limit":{"type":"string","maxLength":4096},"retry-after":{"type":"string","maxLength":4096}},"additionalProperties":false}},"required":["status","raw_body"],"additionalProperties":false}},"additionalProperties":false}},"required":["market","asin"],"additionalProperties":false}}));
     for (name, desc) in [
@@ -812,7 +813,7 @@ pub fn tool_definitions() -> Vec<Value> {
         } else {
             include_str!("../../../tools/commerce/schemas/scenario.schema.json")
         };
-        out.push(json!({"name":name,"description":desc,"inputSchema":serde_json::from_str::<Value>(schema).unwrap()}));
+        out.push(json!({"name":name,"description":desc,"inputSchema":crate::json::from_str::<Value>(schema).unwrap()}));
     }
     out
 }
@@ -1049,7 +1050,7 @@ mod tests {
     fn durable_runs_replay_without_network() {
         let p = temp();
         let e = Engine::open(&p).unwrap();
-        let intent:Intent=serde_json::from_value(json!({"market":"AMAZON_JP","currency":"JPY","capital":300000,"min_price":3000,"max_price":6000,"max_weight_g":700,"minimum_margin_bps":2500,"max_inventory_per_sku":150000})).unwrap();
+        let intent:Intent=crate::json::from_value(json!({"market":"AMAZON_JP","currency":"JPY","capital":300000,"min_price":3000,"max_price":6000,"max_weight_g":700,"minimum_margin_bps":2500,"max_inventory_per_sku":150000})).unwrap();
         let run = e.submit(intent).unwrap();
         let id = run["run_id"].as_str().unwrap();
         drop(e);

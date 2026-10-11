@@ -4,10 +4,11 @@
 //! never demand. Contributors are told apart by keyed pseudonym only (several prices from one
 //! person are one witness, not several). ODbL-1.0 obligations travel with every result.
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp, social::pseudonym};
 use rusqlite::params;
-use serde_json::{Value, json};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,

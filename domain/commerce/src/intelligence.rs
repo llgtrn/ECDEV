@@ -1,5 +1,6 @@
 //! Observed sample projections; these do not estimate the size or demand of a market.
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// Cache events count logical acquisitions, including failed attempts, rather than wire requests.
@@ -101,7 +102,7 @@ fn listing_observation(row: &Value) -> Value {
             },
         )
     })
-    .collect::<serde_json::Map<_, _>>();
+    .collect::<crate::json::Map<_, _>>();
     let variants = &product["fields"]["variants"];
     let count = if supported.contains(&"variants") {
         variants["value"]

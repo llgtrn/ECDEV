@@ -4,11 +4,11 @@
 //! count. A rise from zero has no ratio and no invented baseline; a handful of mentions cannot be
 //! called growth however large its percentage.
 
-use serde::Serialize;
+use crate::json::ToJson;
 
 pub const GROWTH_ALPHA: f64 = 0.05;
 
-#[derive(Clone, Debug, PartialEq, Serialize)]
+#[derive(Clone, Debug, PartialEq, ToJson)]
 pub struct RateComparison {
     pub before: u64,
     pub after: u64,
@@ -96,8 +96,8 @@ pub fn rate_comparison(
 /// UTC day): the last three complete days against the three before them. The day still open at
 /// capture is never compared. Statuses cluster, so the Poisson test is optimistic; distinct
 /// accounts per day (account-days) is the steadier of the two and is reported first.
-pub fn daily_attention_growth(usage: &serde_json::Value) -> serde_json::Value {
-    use serde_json::json;
+pub fn daily_attention_growth(usage: &crate::json::Value) -> crate::json::Value {
+    use crate::json;
     let days: Vec<(u64, u64, u64)> = usage["series"]
         .as_array()
         .into_iter()
@@ -193,7 +193,7 @@ mod tests {
 
     #[test]
     fn daily_attention_compares_complete_days_only() {
-        use serde_json::json;
+        use crate::json;
         let day = |d: u64, uses: u64, accounts: u64, complete: bool| json!({"day":d * 86_400,"uses":uses,"accounts":accounts,"complete":complete});
         let mut series: Vec<_> = (0..3).map(|d| day(d, 4, 2, true)).collect();
         series.extend((3..6).map(|d| day(d, 40, 12, true)));

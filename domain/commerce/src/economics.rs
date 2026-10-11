@@ -1,60 +1,60 @@
-use serde::{Deserialize, Serialize};
+use crate::json::{FromJson, ToJson};
 
 /// All monetary inputs use one currency's minor units, all rates basis points.
 /// Fee and tax values are supplied assumptions, never current marketplace quotes.
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct Scenario {
     pub currency: String,
     pub fulfillment: Fulfillment,
     pub selling_price: u64,
     pub product_cost: u64,
-    #[serde(default)]
+    #[json(default)]
     pub packaging: u64,
-    #[serde(default)]
+    #[json(default)]
     pub sample_amortization: u64,
-    #[serde(default)]
+    #[json(default)]
     pub freight: u64,
-    #[serde(default)]
+    #[json(default)]
     pub insurance: u64,
-    #[serde(default)]
+    #[json(default)]
     pub duty: u64,
-    #[serde(default)]
+    #[json(default)]
     pub import_tax: u64,
-    #[serde(default)]
+    #[json(default)]
     pub brokerage: u64,
-    #[serde(default)]
+    #[json(default)]
     pub prep: u64,
-    #[serde(default)]
+    #[json(default)]
     pub label: u64,
     pub fulfillment_fee: u64,
     pub referral_bps: u64,
-    #[serde(default)]
+    #[json(default)]
     pub storage_fee: u64,
-    #[serde(default)]
+    #[json(default)]
     pub payment_cost: u64,
-    #[serde(default)]
+    #[json(default)]
     pub ppc: u64,
-    #[serde(default)]
+    #[json(default)]
     pub returns: u64,
-    #[serde(default)]
+    #[json(default)]
     pub fx_cost: u64,
-    #[serde(default)]
+    #[json(default)]
     pub reserve: u64,
     pub units: u64,
-    #[serde(default)]
+    #[json(default)]
     pub fixed_launch_cost: u64,
-    #[serde(default)]
+    #[json(default)]
     pub lead_time_days: u64,
-    #[serde(default)]
+    #[json(default)]
     pub inventory_days: u64,
-    #[serde(default)]
+    #[json(default)]
     pub payout_days: u64,
-    #[serde(default)]
+    #[json(default)]
     pub supplier_credit_days: u64,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Fulfillment {
     Fba,
     Fbm,
@@ -64,7 +64,7 @@ pub enum Fulfillment {
     FactoryDirect,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson)]
 pub struct Economics {
     pub mode: &'static str,
     pub currency: String,
@@ -167,7 +167,7 @@ pub fn simulate(s: &Scenario) -> Result<Economics, String> {
 mod tests {
     use super::*;
     fn scenario() -> Scenario {
-        serde_json::from_value(serde_json::json!({"currency":"JPY","fulfillment":"FBA","selling_price":4000,"product_cost":800,"freight":200,"fulfillment_fee":500,"referral_bps":1500,"ppc":400,"units":100,"fixed_launch_cost":10000})).unwrap()
+        crate::json::from_value(crate::json!({"currency":"JPY","fulfillment":"FBA","selling_price":4000,"product_cost":800,"freight":200,"fulfillment_fee":500,"referral_bps":1500,"ppc":400,"units":100,"fixed_launch_cost":10000})).unwrap()
     }
     #[test]
     fn known_unit_economics() {

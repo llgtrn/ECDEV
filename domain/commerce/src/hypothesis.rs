@@ -2,9 +2,10 @@
 //! evidence of demand: mention counts are not sales, and cross-platform recurrence is not
 //! independent market validation. Hypotheses can only lead to research; no hypothesis is
 //! shortlist-eligible on social evidence alone.
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::social::terms;
-use serde_json::{Value, json};
 use std::collections::BTreeSet;
 
 /// Commerce evidence a social signal can never supply; each must come from other sources.

@@ -1,6 +1,6 @@
 //! Keepa boundary normalization derived from a reviewed, commit-locked behavior contract.
 //! No donor runtime, network requests, currency inference or live observations.
-use serde_json::Value;
+use ecdev_core::json::Value;
 pub mod client;
 pub mod history;
 
@@ -37,11 +37,11 @@ pub fn resolve_current(source: &Value, index: usize, legacy: Option<&Value>) -> 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use ecdev_core::json;
     #[test]
     fn donor_oracle_integer_json_contract() {
         let cases: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/keepa-current-oracle.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/keepa-current-oracle.json"))
                 .unwrap();
         let cases = cases["cases"].as_array().unwrap();
         assert!(cases.len() >= 500);
@@ -52,7 +52,7 @@ mod tests {
                 case.get("legacy"),
             );
             assert_eq!(
-                serde_json::to_value(actual).unwrap(),
+                ecdev_core::json::to_value(actual).unwrap(),
                 case["expected"],
                 "{}",
                 case["case_id"]

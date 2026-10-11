@@ -1,11 +1,12 @@
 //! Which statuses ECDEV retries against Scrapy's RetryMiddleware defaults (BSD-3-Clause,
 //! scrapy/scrapy at 54f7ed9c), status by status from 100 to 599 (tools/commerce/scrapy_retry_oracle.py).
+use ecdev_core::json::Value;
 use ecdev_core::research::retryable_failure;
-use serde_json::Value;
 
 #[test]
 fn retry_decisions_differ_from_scrapy_in_named_statuses_only() {
-    let f: Value = serde_json::from_str(include_str!("fixtures/scrapy-retry-oracle.json")).unwrap();
+    let f: Value =
+        ecdev_core::json::from_str(include_str!("fixtures/scrapy-retry-oracle.json")).unwrap();
     let (mut both, mut scrapy_only, mut ecdev_only) = (vec![], vec![], vec![]);
     for (status, v) in f["statuses"].as_object().unwrap() {
         let code: u16 = status.parse().unwrap();

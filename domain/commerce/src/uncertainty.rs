@@ -1,10 +1,11 @@
 //! Interval arithmetic on explicit monetary evidence. Missing costs are never zero estimates.
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use std::collections::BTreeMap;
 
-#[derive(Clone, Debug, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, FromJson, ToJson)]
+#[json(deny_unknown_fields)]
 pub struct Bound {
     pub min: u64,
     pub max: u64,

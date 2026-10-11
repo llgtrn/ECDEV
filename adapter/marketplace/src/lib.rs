@@ -3,12 +3,13 @@ pub mod doctor;
 pub mod reads;
 pub mod transport;
 use ecdev_core::identifier::Uuid;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
 };
-use serde_json::{Value, json};
 
 pub const MODEL_COMMIT: &str = "3677bb9d96f4450e6843f1f8207005e925d5c867";
 pub const LWA_ENDPOINT: &str = "https://api.amazon.com/auth/o2/token";
@@ -99,7 +100,7 @@ fn money(value: &Value, currency: &str) -> Result<Value, String> {
     {
         return Err("INVALID_FEE_PRICE_OR_MARKET_CURRENCY".into());
     }
-    let number: Value = serde_json::from_str(amount).map_err(|_| "INVALID_FEE_PRICE")?;
+    let number: Value = ecdev_core::json::from_str(amount).map_err(|_| "INVALID_FEE_PRICE")?;
     if !number.is_number() {
         return Err("INVALID_FEE_PRICE".into());
     }
@@ -357,7 +358,7 @@ impl Provider for Amazon {
             let headers = json!({"x-amzn-requestid":capture["headers"]["x-amzn-requestid"],"x-amzn-ratelimit-limit":capture["headers"]["x-amzn-ratelimit-limit"],"retry-after":capture["headers"]["retry-after"]});
             let observed_at = ecdev_core::service::timestamp().to_string();
             let normalized = if status == 200 {
-                let value: Value = serde_json::from_str(raw)
+                let value: Value = ecdev_core::json::from_str(raw)
                     .map_err(|_| AcquireError::from("MALFORMED_OFFICIAL_FIXTURE_JSON"))?;
                 normalize(key, &value, &plan).map(|mut n| {
                     reads::stamp_fields(&mut n, &json!({"provider":"amazon-sp-api","source_layer":"OFFICIAL_SP_API","observed_at":observed_at,"raw_capture_sha256":hash,"receipt":{"x-amzn-requestid":headers["x-amzn-requestid"]},"market":request.market,"marketplace_id":plan["marketplace_id"],"operation":key,"observation_mode":"FIXTURE"}));
@@ -373,7 +374,7 @@ impl Provider for Amazon {
         let complete = records.iter().all(|r| r["status"] == "COMPLETE");
         let result = json!({"source_layer":"OFFICIAL_SP_API","capability":request.capability,"mode":"FIXTURE","status":if complete{"COMPLETE_FIXTURE_WITH_UNKNOWNS"}else{"PARTIAL"},"plan":plan,"records":records,"official_live_validation":"UNAVAILABLE","sales":null,"demand":null,"profit_expected":null,"new_live_acquisition":false});
         Ok(AcquireResult {
-            raw_payload: serde_json::to_vec(&result)
+            raw_payload: ecdev_core::json::to_vec(&result)
                 .map_err(|_| AcquireError::from("FIXTURE_SERIALIZATION_FAILED"))?,
             observations,
             result,
@@ -386,7 +387,8 @@ impl Provider for Amazon {
 mod tests {
     use super::*;
     fn cases() -> Value {
-        serde_json::from_str(include_str!("../tests/fixtures/official-responses.json")).unwrap()
+        ecdev_core::json::from_str(include_str!("../tests/fixtures/official-responses.json"))
+            .unwrap()
     }
     fn request(case: &Value) -> AcquireRequest {
         let mut query = json!({"asin":case["asin"],"include":[match case["operation"].as_str().unwrap(){"catalog"=>"CATALOG","offers"=>"OFFERS",_=>"FEE_ESTIMATE"}],"fixture_responses":{case["operation"].as_str().unwrap():case["response"]}});

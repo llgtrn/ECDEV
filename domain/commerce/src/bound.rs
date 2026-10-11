@@ -4,7 +4,8 @@
 //! oversize result keeps its scalars and shortens its long lists, and says exactly what
 //! it dropped and how to read the rest. Nothing is dropped silently, and the frozen
 //! snapshot behind it is untouched.
-use serde_json::{Map, Value, json};
+use crate::json;
+use crate::json::{Map, Value};
 
 pub const MAX_RESULT_BYTES: usize = 256 * 1024;
 const MIN_ITEMS: usize = 3;
@@ -12,7 +13,7 @@ const MIN_REPEATED: usize = 8;
 pub const PAGE_LIMIT_MAX: usize = 500;
 
 fn size(v: &Value) -> usize {
-    serde_json::to_vec(v).map_or(usize::MAX, |b| b.len())
+    crate::json::to_vec(v).map_or(usize::MAX, |b| b.len())
 }
 
 /// Replace a nested list that repeats a top-level list element for element with a

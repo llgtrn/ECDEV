@@ -4,10 +4,10 @@
 //! the keyword (ECDEV keeps every returned item as an observation of the query), stamps the
 //! current time on items without a timestamp (ECDEV leaves it UNKNOWN), and prefers Bluesky's
 //! server indexedAt over the author's createdAt (ECDEV keeps createdAt).
-use serde_json::Value;
+use ecdev_core::json::Value;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/harken-sources-oracle.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/harken-sources-oracle.json")).unwrap()
 }
 
 fn squash(s: &str) -> String {
@@ -24,7 +24,7 @@ fn harken_hn_and_bluesky_normalisation_oracle() {
     let (mut compared, mut fabricated_now, mut indexed_at, mut keyword_dropped) = (0, 0, 0, 0);
     for case in oracle()["cases"].as_array().unwrap() {
         let platform = case["platform"].as_str().unwrap();
-        let raw = serde_json::to_vec(&case["raw"]).unwrap();
+        let raw = ecdev_core::json::to_vec(&case["raw"]).unwrap();
         let posts = ecdev_web::social::normalize(
             &case["raw"],
             platform,

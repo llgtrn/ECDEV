@@ -1,6 +1,6 @@
 //! Local capture integrity for stored commerce projections. Never performs network IO.
+use crate::json::Value;
 use crate::sha256::Sha256;
-use serde_json::Value;
 use std::{fs::File, io::Read, path::Path};
 
 pub(crate) const UNAVAILABLE: &str = "RAW_CAPTURE_HASH_UNAVAILABLE_OR_MISMATCH";
@@ -92,7 +92,7 @@ pub(crate) fn verify_payload(root: &Path, payload: &Value) -> Result<(), String>
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use crate::json;
 
     #[test]
     fn captures_require_matching_bytes_in_the_declared_source_boundary() {

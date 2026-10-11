@@ -3,12 +3,13 @@
 //! undeclared parameter, every required parameter present, enum values inside the declared enum.
 //! Restricted (orders, RDT) and write operations are checked to exist in the models as declared,
 //! and to be refused by the planner.
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::provider::AcquireRequest;
 use ecdev_marketplace::reads::{OPERATIONS, RESTRICTED_OPERATIONS, WRITE_OPERATIONS, spec};
-use serde_json::{Value, json};
 
 fn contracts() -> Value {
-    serde_json::from_str(include_str!("fixtures/sp-api-operation-contracts.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/sp-api-operation-contracts.json")).unwrap()
 }
 
 fn contract<'a>(all: &'a Value, operation_id: &str) -> &'a Value {

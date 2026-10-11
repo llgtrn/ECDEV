@@ -1,0 +1,149 @@
+{
+ "record": "serde-json-semantic-matrix",
+ "donor": "serde-rs/json",
+ "donor_commit": "de8500740cdcabffb9734f503e4889def823cf10",
+ "donor_version_read": "serde_json 1.0.151 (tag v1.0.151), features arbitrary_precision",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "serde_json.value-model",
+   "donor": "Value, Map, Index, From and PartialEq impls",
+   "ecdev": "json/value.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.number-text",
+   "donor": "Number with arbitrary_precision: digits kept, spelling normalised, accessors",
+   "ecdev": "json/number.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.parse-text",
+   "donor": "Deserializer over SliceRead and StrRead, error positions, recursion limit",
+   "ecdev": "json/parse.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.write-text",
+   "donor": "Serializer: compact and pretty formatters, string escapes, float text",
+   "ecdev": "json/write.rs and number.rs format_f64",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.typed-conversion",
+   "donor": "from_str, from_slice, from_value, to_value, to_string, to_vec, to_string_pretty over serde",
+   "ecdev": "json/traits.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.json-macro",
+   "donor": "the json! macro",
+   "ecdev": "json/macros.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde_json.lexical-float-parsing",
+   "donor": "the lexical float parser behind f64 numbers without arbitrary_precision",
+   "ecdev": "none (numbers keep their text; as_f64 uses the standard library)",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "serde_json.raw-value-and-streaming",
+   "donor": "RawValue, StreamDeserializer, io reader and writer entry points",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "serde_json.fuzz-and-build",
+   "donor": "build.rs feature probes and the from_slice fuzz target",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "src/value/mod.rs",
+    "capabilities": "serde_json.value-model"
+   },
+   {
+    "prefix": "src/value/from.rs",
+    "capabilities": "serde_json.value-model"
+   },
+   {
+    "prefix": "src/value/index.rs",
+    "capabilities": "serde_json.value-model"
+   },
+   {
+    "prefix": "src/value/partial_eq.rs",
+    "capabilities": "serde_json.value-model"
+   },
+   {
+    "prefix": "src/value/de.rs",
+    "capabilities": "serde_json.typed-conversion (from_value)"
+   },
+   {
+    "prefix": "src/value/ser.rs",
+    "capabilities": "serde_json.typed-conversion (to_value)"
+   },
+   {
+    "prefix": "src/map.rs",
+    "capabilities": "serde_json.value-model"
+   },
+   {
+    "prefix": "src/number.rs",
+    "capabilities": "serde_json.number-text"
+   },
+   {
+    "prefix": "src/de.rs",
+    "capabilities": "serde_json.parse-text + serde_json.typed-conversion"
+   },
+   {
+    "prefix": "src/read.rs",
+    "capabilities": "serde_json.parse-text"
+   },
+   {
+    "prefix": "src/error.rs",
+    "capabilities": "serde_json.parse-text"
+   },
+   {
+    "prefix": "src/ser.rs",
+    "capabilities": "serde_json.write-text"
+   },
+   {
+    "prefix": "src/macros.rs",
+    "capabilities": "serde_json.json-macro"
+   },
+   {
+    "prefix": "src/lib.rs",
+    "capabilities": "serde_json.typed-conversion (entry points and re-exports)"
+   },
+   {
+    "prefix": "src/lexical/",
+    "capabilities": "serde_json.lexical-float-parsing"
+   },
+   {
+    "prefix": "src/raw.rs",
+    "capabilities": "serde_json.raw-value-and-streaming"
+   },
+   {
+    "prefix": "src/iter.rs",
+    "capabilities": "serde_json.raw-value-and-streaming"
+   },
+   {
+    "prefix": "src/io/",
+    "capabilities": "serde_json.raw-value-and-streaming"
+   },
+   {
+    "prefix": "build.rs",
+    "capabilities": "serde_json.fuzz-and-build"
+   },
+   {
+    "prefix": "fuzz/",
+    "capabilities": "serde_json.fuzz-and-build"
+   }
+  ]
+ },
+ "status": "SEMANTIC_REVIEW_COMPLETE"
+}

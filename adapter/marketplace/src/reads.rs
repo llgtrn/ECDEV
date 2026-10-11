@@ -1005,7 +1005,7 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
                     "NOT_RETURNED",
                 ));
             }
-            let groups: serde_json::Map<String, Value> = body["propertyGroups"]
+            let groups: ecdev_core::json::Map<String, Value> = body["propertyGroups"]
                 .as_object()
                 .unwrap()
                 .iter()
@@ -1062,7 +1062,7 @@ pub(crate) mod tests {
     use super::*;
     use ecdev_core::provider::Provider;
     pub(crate) fn cases() -> Value {
-        serde_json::from_str(include_str!(
+        ecdev_core::json::from_str(include_str!(
             "../tests/fixtures/official-read-responses.json"
         ))
         .unwrap()
@@ -1098,7 +1098,7 @@ pub(crate) mod tests {
         .unwrap();
         let hashes: Vec<Value> = census
             .lines()
-            .map(|l| serde_json::from_str(l).unwrap())
+            .map(|l| ecdev_core::json::from_str(l).unwrap())
             .collect();
         let locked = |path: &str| {
             hashes

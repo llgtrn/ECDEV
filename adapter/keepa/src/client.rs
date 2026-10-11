@@ -1,12 +1,13 @@
 use crate::resolve_current;
 use ecdev_core::identifier::Uuid;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
-use serde_json::{Value, json};
 
 /// Read-only native provider client. Secrets are held only in memory, never returned.
 pub struct Keepa {
@@ -148,7 +149,7 @@ impl Keepa {
         if raw.len() > 8 * 1024 * 1024 {
             return Err(response_failure(&receipt, "PROVIDER_RESPONSE_TOO_LARGE"));
         }
-        let body: Value = serde_json::from_slice(&raw)
+        let body: Value = ecdev_core::json::from_slice(&raw)
             .map_err(|_| response_failure(&receipt, "PROVIDER_INVALID_JSON"))?;
         let normalized =
             Self::normalize(r, &body).map_err(|reason| response_failure(&receipt, reason))?;
@@ -257,7 +258,7 @@ mod tests {
     }
     #[test]
     fn donor_product_summary_oracle() {
-        let oracle: Value = serde_json::from_str(include_str!(
+        let oracle: Value = ecdev_core::json::from_str(include_str!(
             "../tests/fixtures/keepa-product-summary-oracle.json"
         ))
         .unwrap();
@@ -367,7 +368,7 @@ mod tests {
             assert_eq!(failure.retry_after_header.as_deref(), Some("5"));
             assert!(failure.retry_not_before_ms.is_some());
             assert!(
-                !serde_json::to_string(&failure)
+                !ecdev_core::json::to_string(&failure)
                     .unwrap()
                     .contains("mock-secret")
             );

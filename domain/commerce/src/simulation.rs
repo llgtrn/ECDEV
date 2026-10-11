@@ -7,9 +7,10 @@
 //! and every output is SIMULATED, which no observed store accepts and no demand evidence reads.
 //! V0 aims at reproducibility, not realism: its buyer model is an uncalibrated heuristic.
 
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use crate::sha256::Sha256;
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
 use std::collections::BTreeSet;
 
 pub const SIMULATED: &str = "SIMULATED";
@@ -46,15 +47,15 @@ impl Stream {
 }
 
 /// A uniform range a population attribute is drawn from.
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(deny_unknown_fields)]
 pub struct Range {
     pub low: f64,
     pub high: f64,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(deny_unknown_fields)]
 pub struct Population {
     pub buyers: u32,
     /// Spendable budget per buyer over the horizon, in minor units.
@@ -67,8 +68,8 @@ pub struct Population {
     pub category_interest: Range,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(deny_unknown_fields)]
 pub struct Market {
     pub currency: String,
     pub our_price_minor: u64,
@@ -77,8 +78,8 @@ pub struct Market {
     pub reference_price_minor: u64,
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(tag = "kind", deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(tag = "kind", deny_unknown_fields)]
 pub enum Shock {
     /// Our price changes by `bps` basis points from the step on (a promotion is negative).
     OurPriceChange {
@@ -91,8 +92,8 @@ pub enum Shock {
     },
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq, Default)]
-#[serde(tag = "rule", deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq, Default)]
+#[json(tag = "rule", deny_unknown_fields)]
 pub enum Termination {
     #[default]
     Horizon,
@@ -103,8 +104,8 @@ pub enum Termination {
     },
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson, PartialEq)]
+#[json(deny_unknown_fields)]
 pub struct SimulationScenario {
     pub name: String,
     pub horizon_steps: u32,
@@ -112,9 +113,9 @@ pub struct SimulationScenario {
     pub step_seconds: u64,
     pub population: Population,
     pub market: Market,
-    #[serde(default)]
+    #[json(default)]
     pub shocks: Vec<Shock>,
-    #[serde(default)]
+    #[json(default)]
     pub termination: Termination,
     pub review_probability: f64,
     /// Base chance a purchase is returned, scaled by price sensitivity and the price paid.
@@ -148,7 +149,7 @@ fn declared(s: &SimulationScenario) -> BTreeSet<String> {
     let mut out = BTreeSet::new();
     walk(
         "",
-        &serde_json::to_value(s).unwrap_or(Value::Null),
+        &crate::json::to_value(s).unwrap_or(Value::Null),
         &mut out,
     );
     out
@@ -198,7 +199,7 @@ impl SimulationScenario {
         format!(
             "{:x}",
             Sha256::digest(
-                serde_json::to_value(self)
+                crate::json::to_value(self)
                     .unwrap_or(Value::Null)
                     .to_string()
                     .as_bytes()
@@ -208,7 +209,7 @@ impl SimulationScenario {
 }
 
 /// The closed set of actions a simulated buyer can take in a step.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Serialize)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, ToJson)]
 pub enum Action {
     Buy,
     Wait,
@@ -399,7 +400,7 @@ fn replicate(s: &SimulationScenario, seed: u64, r: u32, consumed: &mut BTreeSet<
             }
         }
         steps_run = step + 1;
-        timeline.push(json!({"step":step,"simulated_seconds":u64::from(step + 1) * s.step_seconds,"active_buyers":active,"units_ours":step_units[0],"units_competitor":step_units[1],"our_price_minor":prices[0],"competitor_price_minor":prices[1],"actions":Action::ALL.iter().map(|a| (a.wire().to_string(), json!(acted.get(a).copied().unwrap_or(0)))).collect::<serde_json::Map<_, _>>()}));
+        timeline.push(json!({"step":step,"simulated_seconds":u64::from(step + 1) * s.step_seconds,"active_buyers":active,"units_ours":step_units[0],"units_competitor":step_units[1],"our_price_minor":prices[0],"competitor_price_minor":prices[1],"actions":Action::ALL.iter().map(|a| (a.wire().to_string(), json!(acted.get(a).copied().unwrap_or(0)))).collect::<crate::json::Map<_, _>>()}));
         if let Termination::Quiescence {
             window,
             max_units_per_step,
@@ -464,7 +465,7 @@ pub fn run(s: &SimulationScenario, seed: u64, replicates: u32) -> Result<Value, 
     if !dead.is_empty() {
         return Err(format!("DEAD_PARAMETER: {}", dead.join(",")));
     }
-    let summary: serde_json::Map<String, Value> = METRICS
+    let summary: crate::json::Map<String, Value> = METRICS
         .iter()
         .map(|m| {
             (
@@ -497,7 +498,7 @@ pub fn compare(
 ) -> Result<Value, String> {
     let a = run(baseline, seed, replicates)?;
     let b = run(variant, seed, replicates)?;
-    let diffs: serde_json::Map<String, Value> = METRICS
+    let diffs: crate::json::Map<String, Value> = METRICS
         .iter()
         .map(|m| {
             let d: Vec<f64> = (0..replicates as usize)
@@ -542,12 +543,12 @@ impl crate::Engine {
             .as_u64()
             .ok_or("Required unsigned integer: seed")?;
         let replicates = args["replicates"].as_u64().unwrap_or(10) as u32;
-        let baseline: SimulationScenario = serde_json::from_value(args["baseline"].clone())
+        let baseline: SimulationScenario = crate::json::from_value(args["baseline"].clone())
             .map_err(|e| format!("INVALID_SIMULATION_SCENARIO: {e}"))?;
         let started = std::time::Instant::now();
         let (mut result, variant_hash) = match args.get("variant").filter(|v| !v.is_null()) {
             Some(v) => {
-                let variant: SimulationScenario = serde_json::from_value(v.clone())
+                let variant: SimulationScenario = crate::json::from_value(v.clone())
                     .map_err(|e| format!("INVALID_SIMULATION_SCENARIO: {e}"))?;
                 (
                     compare(&baseline, &variant, seed, replicates)?,
@@ -585,7 +586,7 @@ mod tests {
     use super::*;
 
     pub fn baseline() -> SimulationScenario {
-        serde_json::from_value(json!({
+        crate::json::from_value(json!({
             "name":"baseline price","horizon_steps":30,"step_seconds":86400,
             "population":{"buyers":400,"budget_minor":{"low":2000.0,"high":20000.0},"price_sensitivity":{"low":0.2,"high":0.9},
                 "brand_loyalty":{"low":0.3,"high":0.7},"category_interest":{"low":0.02,"high":0.12}},
@@ -729,9 +730,9 @@ mod tests {
             .collect();
         assert_eq!(consumed, declared(&promotion()));
         // Unknown parameters never parse; a shock past the horizon could never act.
-        let mut v = serde_json::to_value(baseline()).unwrap();
+        let mut v = crate::json::to_value(baseline()).unwrap();
         v["agent_mood"] = json!(0.5);
-        assert!(serde_json::from_value::<SimulationScenario>(v).is_err());
+        assert!(crate::json::from_value::<SimulationScenario>(v).is_err());
         let mut late = baseline();
         late.shocks = vec![Shock::CompetitorPriceChange {
             at_step: 30,

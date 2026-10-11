@@ -1,12 +1,12 @@
 //! ECDEV's gunzip against streams made by CPython's zlib (the reference DEFLATE implementation),
 //! frozen by tools/commerce/gzip_oracle.py: every block type, level and strategy, header variants,
 //! concatenated members, and malformed streams. Scrapy's gunzip is recorded on the malformed ones.
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
 use ecdev_web::gzip::{GzipError, gunzip};
-use serde_json::Value;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/gzip-oracle.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/gzip-oracle.json")).unwrap()
 }
 
 fn unhex(s: &str) -> Vec<u8> {

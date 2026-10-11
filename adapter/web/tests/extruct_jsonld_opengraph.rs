@@ -3,10 +3,10 @@
 //! same items; scripts extruct only reads after repairing them (comment/CDATA framing, JavaScript
 //! escapes, guessed quotes, trailing junk, HTML-encoded syntax) are refused by ECDEV and
 //! recorded as INVALID_JSON_LD, because a repaired value is a guess, not an observed assertion.
-use serde_json::Value;
+use ecdev_core::json::Value;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/extruct-jsonld-opengraph.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/extruct-jsonld-opengraph.json")).unwrap()
 }
 
 /// extruct's item view of one decoded script: an array contributes its elements, an object
@@ -158,7 +158,7 @@ fn extruct_opengraph_oracle_head_property_partition_matches() {
                     Some("og" | "product")
                 )
             })
-            .map(|o| serde_json::json!([o["property"], o["value"]]))
+            .map(|o| ecdev_core::json!([o["property"], o["value"]]))
             .collect();
         // A bare `og`/`product` property names no OpenGraph property; extruct keeps it because it
         // only checks the namespace before the first colon. ECDEV requires `prefix:` (divergence

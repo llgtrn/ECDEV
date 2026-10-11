@@ -5,7 +5,8 @@
 //! point without a value is a span in which the provider reports the offer unavailable; it is
 //! kept, never bridged by the previous price.
 
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
 
 pub const EXTERNAL_HISTORY: &str = "EXTERNAL_HISTORY";
 pub const DEMAND_PROXY: &str = "DEMAND_PROXY";

@@ -6,7 +6,7 @@
 //! previous price across the gap), every point is kept (the donor downsamples to 60), and times
 //! keep their minute (the donor truncates to the date).
 
-use serde_json::Value;
+use ecdev_core::json::Value;
 
 /// Keepa minutes start at 2011-01-01T00:00Z, 21 564 000 minutes after the Unix epoch.
 pub const KEEPA_TIME_OFFSET_MINUTES: i64 = 21_564_000;
@@ -40,7 +40,7 @@ pub fn decode(series: &Value, slot: usize) -> Vec<(i64, Option<i64>)> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use serde_json::json;
+    use ecdev_core::json;
 
     fn iso_date(unix: i64) -> String {
         let days = unix.div_euclid(86_400);
@@ -63,7 +63,7 @@ mod tests {
     #[test]
     fn donor_oracle_agrees_where_ecdev_does_not_diverge() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/keepa-history-oracle.json"))
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/keepa-history-oracle.json"))
                 .unwrap();
         assert_eq!(
             oracle["commit_sha"],

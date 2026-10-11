@@ -1,8 +1,9 @@
 //! Native nested HTML microdata graph; independently compiled, donor used only as an oracle.
 //! Behavior derived from extruct's BSD-3-Clause parser. Notice: tests/fixtures/extruct-LICENSE.txt.
 use crate::html::{ElementRef, Html, Selector};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
 pub fn extract(doc: &Html, base: Option<&Url>, strict: bool) -> Value {
@@ -55,7 +56,7 @@ impl Parser<'_, '_> {
         if depth > 64 || !self.seen.insert(id) {
             return None;
         }
-        let mut item = serde_json::Map::new();
+        let mut item = ecdev_core::json::Map::new();
         let types: Vec<_> = node
             .value()
             .attr("itemtype")
@@ -204,7 +205,7 @@ impl Parser<'_, '_> {
             .attr("itemprop")
             .is_some_and(|p| p.ends_with("-input") || p.ends_with("-output"))
         {
-            let mut value = serde_json::Map::new();
+            let mut value = ecdev_core::json::Map::new();
             if node.value().attr("required").is_some() {
                 value.insert("valueRequired".into(), json!(true));
             }
@@ -325,7 +326,7 @@ pub fn normalize(items: &Value) -> (Value, BTreeMap<String, String>) {
                     .collect::<Vec<_>>()
             ),
             Value::Object(o) if o.contains_key("properties") || o.contains_key("type") => {
-                let mut out = serde_json::Map::new();
+                let mut out = ecdev_core::json::Map::new();
                 if let Some(types) = o.get("type") {
                     let local = |s: &str| s.rsplit(['/', '#']).next().unwrap_or(s).to_string();
                     out.insert(
@@ -404,13 +405,14 @@ mod tests {
             Some(&base),
             false,
         );
-        assert_eq!(none, serde_json::json!([]));
+        assert_eq!(none, ecdev_core::json!([]));
     }
 
     #[test]
     fn locked_extruct_microdata_oracle() {
         let fixture: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/extruct-microdata.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/extruct-microdata.json"))
+                .unwrap();
         for case in fixture["cases"].as_array().unwrap() {
             let doc = Html::parse_document(case["html"].as_str().unwrap());
             let base = case["base_url"].as_str().and_then(|s| Url::parse(s).ok());

@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "468ad4137d3bc94a750077bd858843d917412701",
+  "assessed_parent_commit": "f898c6c826721e9f45239d21f14861ada7779980",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 43,
-    "production_capabilities_native": 43,
-    "production_capabilities_proven": 43,
+    "production_capabilities_required": 51,
+    "production_capabilities_native": 51,
+    "production_capabilities_proven": 51,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 350,
-    "semantic_censused_capabilities": 350,
+    "known_donor_capabilities": 364,
+    "semantic_censused_capabilities": 364,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 72,
-    "study_complete_capabilities": 175,
+    "reference_only": 75,
+    "study_complete_capabilities": 186,
     "not_relevant_after_review": 29,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.788571
+    "knowledge_coverage_ratio": 0.796703
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 36,
+    "donors_knowledge_unreviewed": 34,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 8,
-    "donors_structurally_censused": 32,
-    "donors_semantically_censused": 19,
+    "donors_study_complete": 10,
+    "donors_structurally_censused": 34,
+    "donors_semantically_censused": 21,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 60
+    "donors_with_open_research": 58
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -1026,9 +1026,9 @@
     },
     {
       "donor": "dependency--github-com-serde-rs-json",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -1037,13 +1037,23 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "serde_json.value-model STUDY_COMPLETE[INDEPENDENT_NATIVE](Value, Map (sorted keys), Index, From, PartialEq and the pointer, take and mutable accessors; the JSONTestSuite and 80000 generated documents parse and serialise identically to serde_json 1.0.151)",
+        "serde_json.number-text STUDY_COMPLETE[INDEPENDENT_NATIVE](numbers keep every digit as text and are spelled as serde_json spells them (signed exponents, integer -0); f64 text identical on 400000 values and 20 million further values)",
+        "serde_json.parse-text STUDY_COMPLETE[INDEPENDENT_NATIVE](strict RFC 8259 with the 127-container limit, lone-surrogate and control-character refusal; 318 JSONTestSuite files, 60000 mutated documents and the nesting boundary agree on accept or reject and on the parsed value)",
+        "serde_json.write-text STUDY_COMPLETE[INDEPENDENT_NATIVE](compact and two-space pretty text with the same escapes and float layout, identical on all accepted corpus documents)",
+        "serde_json.typed-conversion STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](from_str, from_slice, from_value, to_value, to_string, to_vec and to_string_pretty through ToJson and FromJson; identical outcome and value on 40000 typed documents apart from a documented stricter set (struct from sequence, members after an internally tagged unit variant) and different error texts)",
+        "serde_json.json-macro STUDY_COMPLETE[INDEPENDENT_NATIVE](a macro_rules json! over the same shapes (nesting, expressions, trailing commas, parenthesised keys); 44 invocations identical)",
+        "serde_json.lexical-float-parsing STUDY_COMPLETE[INDEPENDENT_NATIVE](as_f64 parses the text with the standard library and refuses values beyond f64)",
+        "serde_json.raw-value-and-streaming REFERENCE_ONLY(RawValue and stream deserialisation are references if a multi-gigabyte feed ever has to be read incrementally)",
+        "serde_json.fuzz-and-build STUDY_COMPLETE[INDEPENDENT_NATIVE](the generated and mutated corpora of domain/commerce/tests/json_corpus take the fuzzer role)"
+      ]
     },
     {
       "donor": "dependency--github-com-serde-rs-serde",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -1052,7 +1062,13 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "serde.derive-struct-and-enum STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](ToJson and FromJson derives on the compiler proc_macro interface for named-field structs, unit enums and internally tagged enums with default, default = fn, skip_if, deny_unknown_fields, rename_all, rename and tag; identical outcome and value to the serde derives on 40000 typed documents apart from the documented stricter set)",
+        "serde.std-type-impls STUDY_COMPLETE[INDEPENDENT_NATIVE](range-checked integers, f64, Option (absent means none), Vec, BTreeMap and HashMap with text keys, sets, tuples and arrays; identical to serde on the typed corpus)",
+        "serde.other-representations REFERENCE_ONLY(serde defines those representations; any future type that needs one has them as the reference)",
+        "serde.generic-data-model REFERENCE_ONLY(the visitor-based data model is the reference if a second wire format is ever added)",
+        "serde.bounds-and-no-std STUDY_COMPLETE[INDEPENDENT_NATIVE](the derive refuses generic types with a compile error rather than guess bounds)"
+      ]
     },
     {
       "donor": "dependency--github-com-servo-rust-url",

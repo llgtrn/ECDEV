@@ -3,7 +3,8 @@
 //! "schema:InStock", "http://schema.org/InStock/") are one term, and an unrecognised value is
 //! UNRECOGNISED, never guessed into stock or out of it.
 
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
 
 /// (term, class). Classes say what a buyer can do now, not how many units exist.
 const TERMS: &[(&str, &str)] = &[

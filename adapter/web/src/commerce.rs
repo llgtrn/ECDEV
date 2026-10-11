@@ -1,13 +1,14 @@
 //! Commerce metadata projections. Values remain source assertions with field locators.
 use crate::html::{Html, Selector};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 use std::collections::BTreeSet;
 
 pub fn annotate(product: &mut Value, page: &str, script: usize, hash: &str) {
     let raw = product["raw_json_ld"].clone();
     let pointer = product["json_pointer"].as_str().unwrap_or("").to_string();
-    let mut fields = serde_json::Map::new();
+    let mut fields = ecdev_core::json::Map::new();
     for (name, key) in [
         ("title", "name"),
         ("brand", "brand"),

@@ -1,7 +1,8 @@
 //! Public supplier leads, not verified quotations or factory audits.
 use crate::html::{Html, Selector};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
-use serde_json::{Value, json};
 use std::collections::BTreeSet;
 
 fn field(value: Value, evidence: Vec<Value>, status: &str) -> Value {
@@ -74,7 +75,7 @@ pub fn extract(doc: &Html, base: &Url, structured: &[Value], hash: &str) -> Vec<
         );
     }
     let organization = (organizations.len() == 1).then(|| organizations[0].clone());
-    let mut fields = serde_json::Map::new();
+    let mut fields = ecdev_core::json::Map::new();
     if let Some((org, pointer, script)) = &organization {
         for (name, key) in [
             ("name", "name"),

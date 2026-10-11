@@ -3,10 +3,11 @@
 //! product measurement or demand, and ranked by an algorithm the source does not disclose.
 use super::growth::daily_attention_growth;
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp};
 use rusqlite::params;
-use serde_json::{Value, json};
 use std::{collections::BTreeMap, fs};
 
 pub const FEED_PLATFORMS: [&str; 3] = ["MASTODON_TRENDS", "BLUESKY_TRENDS", "GOOGLE_TRENDS_RSS"];
@@ -188,7 +189,7 @@ impl Engine {
                     .query_map(params![mode, now], |r| r.get::<_, String>(0))
                     .map_err(err)?
                 {
-                    let past: Value = serde_json::from_str(&row.map_err(err)?).map_err(err)?;
+                    let past: Value = crate::json::from_str(&row.map_err(err)?).map_err(err)?;
                     for f in past["feeds"].as_array().into_iter().flatten() {
                         if f["source_url"] == scope {
                             captures.push((f["captured_at"].as_u64().unwrap_or(0), ranks_of(f)));

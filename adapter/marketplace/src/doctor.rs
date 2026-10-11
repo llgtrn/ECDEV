@@ -246,7 +246,7 @@ mod tests {
     }
     /// No value, prefix, suffix or 6-byte window of any secret may appear in the report.
     fn assert_secret_free(report: &Value) {
-        let text = serde_json::to_string(report).unwrap();
+        let text = ecdev_core::json::to_string(report).unwrap();
         for (_, secret) in secrets() {
             assert!(!text.contains(secret));
             for window in secret.as_bytes().windows(6) {

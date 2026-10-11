@@ -1,14 +1,15 @@
 //! Evidence-based research selection; unknown commercial inputs stay unknown.
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use std::collections::BTreeSet;
 
-#[derive(Clone, Default, Deserialize, Serialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Default, FromJson, ToJson)]
+#[json(deny_unknown_fields)]
 pub struct Policy {
     pub currency: Option<String>,
     pub max_weight_g: Option<u64>,
-    #[serde(default)]
+    #[json(default)]
     pub excluded_categories: Vec<String>,
 }
 

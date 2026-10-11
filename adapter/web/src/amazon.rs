@@ -1,7 +1,8 @@
 //! Public Amazon documents share native HTTP policy, never SP-API or Keepa data.
 use crate::Web;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider};
-use serde_json::{Value, json};
 
 pub fn public_host(url: &str) -> bool {
     ecdev_core::web_address::Url::parse(url)

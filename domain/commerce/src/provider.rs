@@ -1,10 +1,10 @@
 //! Canonical acquisition boundary. Provider models remain inside adapters.
 use crate::domain::Evidence;
-use serde_json::Value;
+use crate::json::Value;
 #[derive(
-    Clone, Copy, Debug, serde::Serialize, serde::Deserialize, PartialEq, Eq, PartialOrd, Ord,
+    Clone, Copy, Debug, crate::json::ToJson, crate::json::FromJson, PartialEq, Eq, PartialOrd, Ord,
 )]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ProviderClass {
     Native,
     Public,
@@ -30,7 +30,7 @@ pub(crate) fn acquisition_mode(
         "PLAN_ONLY"
     }
 }
-#[derive(Clone, Debug, serde::Serialize, serde::Deserialize)]
+#[derive(Clone, Debug, crate::json::ToJson, crate::json::FromJson)]
 pub struct BudgetPolicy {
     pub currency: String,
     pub per_run_minor: u64,
@@ -112,7 +112,7 @@ pub fn routes(capability: &str, providers: &[Value], paid_budget: u64, candidate
             None
         };
         if let Some(reason) = reason {
-            skipped.push(serde_json::json!({"provider":p["id"],"reason":reason}));
+            skipped.push(crate::json!({"provider":p["id"],"reason":reason}));
         } else {
             eligible.push(p.clone());
         }
@@ -124,7 +124,7 @@ pub fn routes(capability: &str, providers: &[Value], paid_budget: u64, candidate
         Some("OFFICIAL") => 3,
         _ => 4,
     });
-    serde_json::json!({"capability":capability,"routes":eligible,"skipped":skipped,"expected_information_gain":null,"confidence_required":"SOURCE_BACKED","freshness_required_seconds":null,"policy":"NATIVE_CACHE_PUBLIC_OFFICIAL_PAID_FINALISTS"})
+    crate::json!({"capability":capability,"routes":eligible,"skipped":skipped,"expected_information_gain":null,"confidence_required":"SOURCE_BACKED","freshness_required_seconds":null,"policy":"NATIVE_CACHE_PUBLIC_OFFICIAL_PAID_FINALISTS"})
 }
 #[cfg(test)]
 mod budget_tests {
@@ -199,8 +199,8 @@ mod budget_tests {
     #[test]
     fn fallback_does_not_require_paid_providers() {
         let p = vec![
-            serde_json::json!({"id":"semrush","class":"PAID","status":"AVAILABLE","capabilities":["research.market"]}),
-            serde_json::json!({"id":"web","class":"PUBLIC","status":"AVAILABLE","capabilities":["research.market"]}),
+            crate::json!({"id":"semrush","class":"PAID","status":"AVAILABLE","capabilities":["research.market"]}),
+            crate::json!({"id":"web","class":"PUBLIC","status":"AVAILABLE","capabilities":["research.market"]}),
         ];
         let r = routes("research.market", &p, 0, 500);
         assert_eq!(r["routes"][0]["id"], "web");
@@ -208,7 +208,7 @@ mod budget_tests {
     }
 }
 
-#[derive(serde::Serialize)]
+#[derive(crate::json::ToJson)]
 pub struct AcquireRequest {
     pub run_id: String,
     pub capability: String,
@@ -222,7 +222,7 @@ pub struct AcquireResult {
     pub provider_cost: Value,
 }
 /// Acquisition failures retain machine-readable HTTP facts without disguising them as captures.
-#[derive(Clone, Debug, serde::Serialize)]
+#[derive(Clone, Debug, crate::json::ToJson)]
 pub struct AcquireError {
     pub reason: String,
     pub http_status: Option<u16>,

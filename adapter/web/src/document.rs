@@ -1,8 +1,9 @@
 //! Declared HTML decoding. Wire bytes remain the capture; decoding is a projection.
 use crate::html::{Html, Selector};
 use crate::text_decoding::{Encoding, UTF_8};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::sha256::Sha256;
-use serde_json::{Value, json};
 
 fn charset(content_type: &str) -> Option<String> {
     content_type.split(';').find_map(|part| {
@@ -88,7 +89,8 @@ mod tests {
     #[test]
     fn locked_w3lib_declared_document_oracle() {
         let oracle: Value =
-            serde_json::from_str(include_str!("../tests/fixtures/w3lib-document.json")).unwrap();
+            ecdev_core::json::from_str(include_str!("../tests/fixtures/w3lib-document.json"))
+                .unwrap();
         assert_eq!(
             oracle["commit_sha"],
             "537c5d46455ae8b2c67b53fc03b36ef1da8c4837"

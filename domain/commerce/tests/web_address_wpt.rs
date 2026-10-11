@@ -5,8 +5,8 @@
 //! exceptions: the `file` scheme, which is refused outright, and labels the standard's newest
 //! revision treats as lenient Punycode (IgnoreInvalidPunycode) where ECDEV, like the url crate it
 //! replaces, rejects the host.
+use ecdev_core::json::Value;
 use ecdev_core::web_address::{ParseError, Url};
-use serde_json::Value;
 
 /// Hosts the newest standard accepts as invalid Punycode but ECDEV rejects.
 const LENIENT_PUNYCODE: &[&str] = &[
@@ -43,7 +43,8 @@ fn components(u: &Url) -> [String; 9] {
 
 #[test]
 fn native_urls_match_the_web_platform_tests_except_the_documented_refusals() {
-    let data: Value = serde_json::from_str(include_str!("fixtures/wpt-urltestdata.json")).unwrap();
+    let data: Value =
+        ecdev_core::json::from_str(include_str!("fixtures/wpt-urltestdata.json")).unwrap();
     let (mut ok, mut refused, mut lenient) = (0, 0, vec![]);
     for case in data.as_array().unwrap().iter().filter(|c| c.is_object()) {
         let input = case["input"].as_str().unwrap();

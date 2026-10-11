@@ -4,11 +4,11 @@
 //! the interval covers both. Months and years have no fixed length and are refused, as are words
 //! without a stated quantity ("刚刚", "昨天").
 
-use serde::Serialize;
+use crate::json::ToJson;
 
 pub const DISPLAY_BASIS: &str = "TRUNCATED_OR_ROUNDED_DISPLAY";
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, ToJson)]
 pub struct DisplayedCount {
     pub display: String,
     pub unit: Option<String>,
@@ -24,7 +24,7 @@ pub struct DisplayedCount {
     pub basis: &'static str,
 }
 
-#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+#[derive(Clone, Debug, PartialEq, Eq, ToJson)]
 pub struct DisplayedTime {
     pub display: String,
     pub unit: String,

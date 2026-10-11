@@ -1,6 +1,7 @@
 use ecdev_core::identifier::Uuid;
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::{Engine, social::*};
-use serde_json::{Value, json};
 fn post(id: &str, platform: &str, at: u64) -> SocialPost {
     SocialPost {
         platform: platform.into(),
@@ -195,7 +196,7 @@ fn cached_captures_require_original_bytes_and_never_establish_live_acquisition()
 #[test]
 fn unknown_counter_is_not_zero() {
     let p = post("1", "HACKER_NEWS", 9000);
-    let v = serde_json::to_value(p).unwrap();
+    let v = ecdev_core::json::to_value(p).unwrap();
     assert_eq!(v["engagement"]["likes"], 0);
     assert!(v["engagement"]["views"].is_null());
 }
@@ -409,7 +410,7 @@ fn volume_spike_and_sentiment_drop_follow_harken_thresholds() {
     let mut after = before.clone();
     after["captured_at"] = json!(13600);
     let policy = json!({"minimum_mentions":3,"volume_multiplier":2.0,"sentiment_drop":0.5,"triggers":["VOLUME_SPIKE","SENTIMENT_DROP"]});
-    let kinds = |b: &serde_json::Value, a: &serde_json::Value| -> Vec<String> {
+    let kinds = |b: &ecdev_core::json::Value, a: &ecdev_core::json::Value| -> Vec<String> {
         watch_events(b, a, &policy)
             .as_array()
             .unwrap()

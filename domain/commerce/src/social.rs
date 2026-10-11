@@ -7,12 +7,13 @@ pub mod growth;
 pub mod pagination;
 pub mod pseudonym;
 pub mod runtime;
-use serde::{Deserialize, Serialize};
-use serde_json::{Value, json};
+use crate::json;
+use crate::json::Value;
+use crate::json::{FromJson, ToJson};
 use std::collections::{BTreeMap, BTreeSet};
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ToJson, FromJson)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum EvidenceState {
     Observed,
     Derived,
@@ -22,8 +23,8 @@ pub enum EvidenceState {
     Conflict,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, ToJson, FromJson)]
+#[json(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum IdentityState {
     ExactIdentifier,
     SourceAsserted,
@@ -80,8 +81,8 @@ pub fn entity_link(a: &Value, b: &Value) -> IdentityState {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct SocialEngagement {
     pub views: Option<u64>,
     pub likes: Option<u64>,
@@ -90,8 +91,8 @@ pub struct SocialEngagement {
     pub favorites: Option<u64>,
     pub followers: Option<u64>,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(deny_unknown_fields)]
+#[derive(Clone, Debug, ToJson, FromJson)]
+#[json(deny_unknown_fields)]
 pub struct SocialPost {
     pub platform: String,
     pub provider: String,
@@ -120,7 +121,7 @@ pub struct SocialPost {
     pub freshness_seconds: Option<u64>,
     pub origin_evidence_id: Option<String>,
     /// Depth below the thread root for posts read from a reply tree; absent elsewhere.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
+    #[json(default, skip_if = "Option::is_none")]
     pub depth: Option<u32>,
 }
 impl SocialPost {
@@ -164,25 +165,25 @@ impl SocialPost {
     }
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct SimulatedActor {
     pub id: String,
     pub persona: String,
     pub state: EvidenceState,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct SimulatedPost {
     pub actor_id: String,
     pub text: String,
     pub state: EvidenceState,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct SimulatedReaction {
     pub actor_id: String,
     pub post_index: usize,
     pub state: EvidenceState,
 }
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, ToJson, FromJson)]
 pub struct ForecastScenario {
     pub id: String,
     pub seed_snapshot_id: String,
@@ -430,7 +431,7 @@ pub fn sentiment_summary(rows: &[Value], prior: Option<&Value>) -> Value {
         .iter()
         .filter(|r| label(r).is_some_and(|l| SENTIMENT_LABELS.contains(&l.as_str())))
         .count() as u64;
-    let mut shares = serde_json::Map::new();
+    let mut shares = crate::json::Map::<String, Value>::new();
     for l in SENTIMENT_LABELS {
         let k = rows
             .iter()
@@ -1370,7 +1371,7 @@ mod tests {
     }
     #[test]
     fn independent_social_donor_oracles() {
-        let fixture: Value = serde_json::from_str(include_str!(
+        let fixture: Value = crate::json::from_str(include_str!(
             "../../../research/commerce/social-oracle-fixtures.json"
         ))
         .unwrap();

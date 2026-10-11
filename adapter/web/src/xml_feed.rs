@@ -4,7 +4,8 @@
 //! predefined entities and numeric character references only, matched end tags, a depth and
 //! node limit. A feed it cannot read is refused with a reason, never guessed.
 
-use serde_json::{Value, json};
+use ecdev_core::json;
+use ecdev_core::json::Value;
 
 const MAX_DEPTH: usize = 64;
 const MAX_NODES: usize = 200_000;

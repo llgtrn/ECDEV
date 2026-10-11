@@ -78,8 +78,9 @@ fn absorb(hash: &mut Sha256, text: &str, flag: bool) {
 
 #[test]
 fn native_decoders_reproduce_the_frozen_encoding_rs_digests() {
-    let frozen: serde_json::Value =
-        serde_json::from_str(include_str!("fixtures/charset-differential-digest.json")).unwrap();
+    let frozen: ecdev_core::json::Value =
+        ecdev_core::json::from_str(include_str!("fixtures/charset-differential-digest.json"))
+            .unwrap();
     for label in labels() {
         let mine = Encoding::for_label(label.as_bytes()).unwrap_or_else(|| panic!("label {label}"));
         let mut hash = Sha256::new();

@@ -1,6 +1,7 @@
 //! Conservative product identity from source assertions; title similarity is not identity.
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
-use serde_json::{Value, json};
 use std::collections::{BTreeMap, BTreeSet};
 
 fn text(v: &Value) -> String {
@@ -293,7 +294,7 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
             .iter()
             .filter_map(|r| r["source"].as_str().map(str::to_string))
             .collect();
-        let mut conflicts = serde_json::Map::new();
+        let mut conflicts = crate::json::Map::<String, Value>::new();
         for name in [
             "title",
             "brand",

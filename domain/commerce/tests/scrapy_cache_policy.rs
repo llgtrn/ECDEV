@@ -3,13 +3,15 @@
 //! Compared on the freshness remaining when the response is received. Differences are classified
 //! and counted: ECDEV has no heuristic freshness from Last-Modified, applies a 24-hour ceiling
 //! and a one-hour default, and treats no-store and no-cache as no freshness.
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::research::{MAX_FRESHNESS_SECONDS, freshness_lifetime};
-use serde_json::{Value, json};
 use std::collections::BTreeMap;
 
 fn classify() -> BTreeMap<String, usize> {
     let f: Value =
-        serde_json::from_str(include_str!("fixtures/scrapy-cache-policy-oracle.json")).unwrap();
+        ecdev_core::json::from_str(include_str!("fixtures/scrapy-cache-policy-oracle.json"))
+            .unwrap();
     assert_eq!(
         f["scrapy_commit"],
         "54f7ed9cccbe19db3fe6cd2252bf3c29326c67d7"

@@ -1,12 +1,12 @@
 //! coaxon/amazon-mcp reads Retry-After with float(); ECDEV reads the RFC 9110 grammar.
 //! The fixture freezes what the donor's own handler did with 20 header values.
+use ecdev_core::json::Value;
 use ecdev_core::provider::retry_after_not_before;
-use serde_json::Value;
 
 const RECEIVED: i64 = 1_000_000;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/amazon-mcp-retry-after-oracle.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/amazon-mcp-retry-after-oracle.json")).unwrap()
 }
 
 #[test]

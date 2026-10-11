@@ -2,12 +2,12 @@
 //! pinned with scrapy/scrapy at 54f7ed9c). Two frozen sets: the 1,620 reppy-oracle cases ECDEV
 //! was built to match, and a probe of 47 handcrafted edge-case texts chosen to find differences.
 //! The donor's answers are the donor's, not a standard's; differences are listed, not hidden.
+use ecdev_core::json::Value;
 use ecdev_web::robots::evaluate;
-use serde_json::Value;
 use std::collections::BTreeMap;
 
 fn load(s: &str) -> Value {
-    serde_json::from_str(s).unwrap()
+    ecdev_core::json::from_str(s).unwrap()
 }
 
 fn delay_equal(a: Option<f64>, b: Option<f64>) -> bool {

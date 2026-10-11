@@ -1,0 +1,161 @@
+{
+ "record": "serde-semantic-matrix",
+ "donor": "serde-rs/serde",
+ "donor_commit": "a866b336f14aa57a07f0d0be9f8762746e64ecb4",
+ "donor_version_read": "serde 1.0.228 (tag v1.0.228): serde, serde_core, serde_derive, serde_derive_internals",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "serde.derive-struct-and-enum",
+   "donor": "serde_derive Serialize and Deserialize for named structs, unit enums and internally tagged enums with the container and field attributes ECDEV writes",
+   "ecdev": "domain/json-derive ToJson and FromJson",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde.std-type-impls",
+   "donor": "serde_core impls for integers, floats, strings, Option, Vec, maps, sets, tuples and arrays",
+   "ecdev": "json/traits.rs",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "serde.other-representations",
+   "donor": "externally, adjacently tagged and untagged enums, flatten, aliases, with, serialize_with, remote",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "serde.generic-data-model",
+   "donor": "the Serializer and Deserializer trait families, visitors, impossible and value deserializers",
+   "ecdev": "none (values are a tree)",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "serde.bounds-and-no-std",
+   "donor": "generic bound inference, lifetimes, no_std support, test_suite",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "serde_derive/src/ser.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/struct_.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/enum_internally.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/enum_.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/unit.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/identifier.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/de/enum_externally.rs",
+    "capabilities": "serde.other-representations"
+   },
+   {
+    "prefix": "serde_derive/src/de/enum_adjacently.rs",
+    "capabilities": "serde.other-representations"
+   },
+   {
+    "prefix": "serde_derive/src/de/enum_untagged.rs",
+    "capabilities": "serde.other-representations"
+   },
+   {
+    "prefix": "serde_derive/src/de/tuple.rs",
+    "capabilities": "serde.other-representations"
+   },
+   {
+    "prefix": "serde_derive/src/internals/attr.rs",
+    "capabilities": "serde.derive-struct-and-enum (attribute parsing) + serde.other-representations"
+   },
+   {
+    "prefix": "serde_derive/src/internals/case.rs",
+    "capabilities": "serde.derive-struct-and-enum (rename_all)"
+   },
+   {
+    "prefix": "serde_derive/src/internals/",
+    "capabilities": "serde.derive-struct-and-enum (syntax tree, checks, names, symbols)"
+   },
+   {
+    "prefix": "serde_derive/src/bound.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde_derive/src/deprecated.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde_derive/src/dummy.rs",
+    "capabilities": "serde.derive-struct-and-enum (hygiene of generated code)"
+   },
+   {
+    "prefix": "serde_derive/src/fragment.rs",
+    "capabilities": "serde.derive-struct-and-enum (code assembly)"
+   },
+   {
+    "prefix": "serde_derive/src/lib.rs",
+    "capabilities": "serde.derive-struct-and-enum"
+   },
+   {
+    "prefix": "serde_derive/src/pretend.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde_derive/src/this.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde_derive/build.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde_derive_internals/",
+    "capabilities": "serde.derive-struct-and-enum (shared syntax-tree crate)"
+   },
+   {
+    "prefix": "serde_core/src/ser/impls.rs",
+    "capabilities": "serde.std-type-impls"
+   },
+   {
+    "prefix": "serde_core/src/de/impls.rs",
+    "capabilities": "serde.std-type-impls"
+   },
+   {
+    "prefix": "serde_core/src/",
+    "capabilities": "serde.generic-data-model"
+   },
+   {
+    "prefix": "serde_core/build.rs",
+    "capabilities": "serde.bounds-and-no-std"
+   },
+   {
+    "prefix": "serde/",
+    "capabilities": "serde.generic-data-model (the facade, private helpers for derives, integer128)"
+   },
+   {
+    "prefix": "test_suite/",
+    "capabilities": "serde.bounds-and-no-std"
+   }
+  ]
+ },
+ "status": "SEMANTIC_REVIEW_COMPLETE"
+}

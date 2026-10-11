@@ -5,12 +5,12 @@
 //! redirect target to its public-URL policy (httpx follows credentials, credential queries and
 //! non-http schemes), and refuses a Location that clients resolve differently where httpx
 //! guesses (empty authority, scheme without authority, backslashes, invalid host or port).
+use ecdev_core::json::Value;
 use ecdev_core::web_address::Url;
 use ecdev_web::redirect_target;
-use serde_json::Value;
 
 fn oracle() -> Value {
-    serde_json::from_str(include_str!("fixtures/httpx-redirect-oracle.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/httpx-redirect-oracle.json")).unwrap()
 }
 
 /// httpx's target without its fragment, in WHATWG serialization (an empty path is `/`; the

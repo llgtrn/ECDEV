@@ -1,0 +1,486 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "a139b97dc4a0f6b7081f5f14cb34f345a301f34c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "members": [
+          "serde",
+          "serde_core",
+          "serde_derive",
+          "serde_derive_internals",
+          "test_suite"
+        ],
+        "resolver": "2",
+        "dependencies": {
+          "proc-macro2": {
+            "version": "1.0.74",
+            "default-features": false
+          },
+          "quote": {
+            "version": "1.0.35",
+            "default-features": false
+          },
+          "syn": {
+            "version": "2.0.81",
+            "default-features": false
+          }
+        }
+      },
+      "patch": {
+        "crates-io": {
+          "serde": {
+            "path": "serde"
+          },
+          "serde_core": {
+            "path": "serde_core"
+          },
+          "serde_derive": {
+            "path": "serde_derive"
+          }
+        }
+      }
+    }
+  },
+  {
+    "source_path": "serde/Cargo.toml",
+    "blob_hash": "0bffa22d4fd4dbce767b7d2c904e940cc02f4c51",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde",
+        "version": "1.0.228",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "build": "build.rs",
+        "categories": [
+          "encoding",
+          "no-std",
+          "no-std::no-alloc"
+        ],
+        "description": "A generic serialization/deserialization framework",
+        "documentation": "https://docs.rs/serde",
+        "edition": "2021",
+        "homepage": "https://serde.rs",
+        "keywords": [
+          "serde",
+          "serialization",
+          "no_std"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "crates-io.md",
+        "repository": "https://github.com/serde-rs/serde",
+        "rust-version": "1.56",
+        "metadata": {
+          "playground": {
+            "features": [
+              "derive",
+              "rc"
+            ]
+          },
+          "docs": {
+            "rs": {
+              "features": [
+                "derive",
+                "rc",
+                "unstable"
+              ],
+              "targets": [
+                "x86_64-unknown-linux-gnu"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition",
+                "--generate-macro-expansion",
+                "--extern-html-root-url=core=https://doc.rust-lang.org",
+                "--extern-html-root-url=alloc=https://doc.rust-lang.org",
+                "--extern-html-root-url=std=https://doc.rust-lang.org"
+              ]
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "serde_core": {
+          "version": "=1.0.228",
+          "path": "../serde_core",
+          "default-features": false,
+          "features": [
+            "result"
+          ]
+        },
+        "serde_derive": {
+          "version": "1",
+          "optional": true,
+          "path": "../serde_derive"
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "derive": [
+          "serde_derive"
+        ],
+        "std": [
+          "serde_core/std"
+        ],
+        "unstable": [
+          "serde_core/unstable"
+        ],
+        "alloc": [
+          "serde_core/alloc"
+        ],
+        "rc": [
+          "serde_core/rc"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "serde_core/Cargo.toml",
+    "blob_hash": "6705c998ab6a4ad156e1b9c2845833ecec47fac9",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_core",
+        "version": "1.0.228",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "build": "build.rs",
+        "categories": [
+          "encoding",
+          "no-std",
+          "no-std::no-alloc"
+        ],
+        "description": "Serde traits only, with no support for derive -- use the `serde` crate instead",
+        "documentation": "https://docs.rs/serde_core",
+        "edition": "2021",
+        "homepage": "https://serde.rs",
+        "keywords": [
+          "serde",
+          "serialization",
+          "no_std"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "repository": "https://github.com/serde-rs/serde",
+        "rust-version": "1.56",
+        "metadata": {
+          "playground": {
+            "features": [
+              "rc",
+              "result"
+            ]
+          },
+          "docs": {
+            "rs": {
+              "features": [
+                "rc",
+                "result",
+                "unstable"
+              ],
+              "targets": [
+                "x86_64-unknown-linux-gnu"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition",
+                "--generate-macro-expansion",
+                "--extern-html-root-url=core=https://doc.rust-lang.org",
+                "--extern-html-root-url=alloc=https://doc.rust-lang.org",
+                "--extern-html-root-url=std=https://doc.rust-lang.org"
+              ]
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "serde": {
+          "version": "1",
+          "path": "../serde"
+        },
+        "serde_derive": {
+          "version": "1",
+          "path": "../serde_derive"
+        }
+      },
+      "target": {
+        "cfg(any())": {
+          "dependencies": {
+            "serde_derive": {
+              "version": "=1.0.228",
+              "path": "../serde_derive"
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "std",
+          "result"
+        ],
+        "std": [],
+        "unstable": [],
+        "alloc": [],
+        "rc": [],
+        "result": []
+      }
+    }
+  },
+  {
+    "source_path": "serde_derive/Cargo.toml",
+    "blob_hash": "88f8f6a4360dd34f9497fd071671d171dc504143",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_derive",
+        "version": "1.0.228",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "categories": [
+          "no-std",
+          "no-std::no-alloc"
+        ],
+        "description": "Macros 1.1 implementation of #[derive(Serialize, Deserialize)]",
+        "documentation": "https://serde.rs/derive.html",
+        "edition": "2021",
+        "exclude": [
+          "build.rs"
+        ],
+        "homepage": "https://serde.rs",
+        "keywords": [
+          "serde",
+          "serialization",
+          "no_std",
+          "derive"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "crates-io.md",
+        "repository": "https://github.com/serde-rs/serde",
+        "rust-version": "1.61",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "targets": [
+                "x86_64-unknown-linux-gnu"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition",
+                "--generate-macro-expansion",
+                "--extern-html-root-url=core=https://doc.rust-lang.org",
+                "--extern-html-root-url=alloc=https://doc.rust-lang.org",
+                "--extern-html-root-url=std=https://doc.rust-lang.org",
+                "--extern-html-root-url=proc_macro=https://doc.rust-lang.org"
+              ]
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [],
+        "deserialize_in_place": []
+      },
+      "lib": {
+        "name": "serde_derive",
+        "proc-macro": true
+      },
+      "dependencies": {
+        "proc-macro2": {
+          "workspace": true,
+          "features": [
+            "proc-macro"
+          ]
+        },
+        "quote": {
+          "workspace": true,
+          "features": [
+            "proc-macro"
+          ]
+        },
+        "syn": {
+          "workspace": true,
+          "features": [
+            "clone-impls",
+            "derive",
+            "parsing",
+            "printing",
+            "proc-macro"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "serde": {
+          "version": "1",
+          "path": "../serde"
+        }
+      }
+    }
+  },
+  {
+    "source_path": "serde_derive_internals/Cargo.toml",
+    "blob_hash": "abcc11ddcf807209e2950bb07dab23c2a434c11e",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_derive_internals",
+        "version": "0.29.1",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "description": "AST representation used by Serde derive macros. Unstable.",
+        "documentation": "https://docs.rs/serde_derive_internals",
+        "edition": "2021",
+        "exclude": [
+          "build.rs"
+        ],
+        "homepage": "https://serde.rs",
+        "keywords": [
+          "serde",
+          "serialization"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "repository": "https://github.com/serde-rs/serde",
+        "rust-version": "1.61",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "targets": [
+                "x86_64-unknown-linux-gnu"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition",
+                "--generate-macro-expansion",
+                "--extern-html-root-url=core=https://doc.rust-lang.org",
+                "--extern-html-root-url=alloc=https://doc.rust-lang.org",
+                "--extern-html-root-url=std=https://doc.rust-lang.org",
+                "--extern-html-root-url=proc_macro=https://doc.rust-lang.org"
+              ]
+            }
+          }
+        }
+      },
+      "lib": {
+        "path": "lib.rs"
+      },
+      "dependencies": {
+        "proc-macro2": {
+          "workspace": true
+        },
+        "quote": {
+          "workspace": true
+        },
+        "syn": {
+          "workspace": true,
+          "features": [
+            "clone-impls",
+            "derive",
+            "parsing",
+            "printing"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "test_suite/Cargo.toml",
+    "blob_hash": "df1cdc372a47aa04be3033b6fd0327b5669c475b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_test_suite",
+        "version": "0.0.0",
+        "authors": [
+          "Erick Tryzelaar <erick.tryzelaar@gmail.com>",
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "edition": "2021",
+        "publish": false
+      },
+      "features": {
+        "unstable": [
+          "serde/unstable"
+        ]
+      },
+      "dependencies": {
+        "serde": {
+          "path": "../serde"
+        }
+      },
+      "dev-dependencies": {
+        "automod": "1.0.1",
+        "foldhash": "0.2",
+        "rustversion": "1.0",
+        "serde": {
+          "path": "../serde",
+          "features": [
+            "rc"
+          ]
+        },
+        "serde_derive": {
+          "path": "../serde_derive",
+          "features": [
+            "deserialize_in_place"
+          ]
+        },
+        "serde_test": "1.0.176",
+        "trybuild": {
+          "version": "1.0.108",
+          "features": [
+            "diff"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "test_suite/no_std/Cargo.toml",
+    "blob_hash": "7909a2d6b75b3522a538a2d4cf93968ee066d74d",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "serde_derive_tests_no_std",
+        "version": "0.0.0",
+        "authors": [
+          "David Tolnay <dtolnay@gmail.com>"
+        ],
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "libc": {
+          "version": "0.2",
+          "default-features": false
+        },
+        "serde": {
+          "path": "../../serde",
+          "default-features": false
+        },
+        "serde_derive": {
+          "path": "../../serde_derive"
+        }
+      },
+      "profile": {
+        "dev": {
+          "panic": "abort"
+        },
+        "release": {
+          "panic": "abort"
+        }
+      },
+      "workspace": {}
+    }
+  }
+]

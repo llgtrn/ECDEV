@@ -1,0 +1,53 @@
+{
+ "record": "native-json",
+ "evidence_class": "DERIVED_FROM_STANDARDS_AND_DIFFERENTIALLY_PROVEN",
+ "standards": [
+  "RFC 8259 The JSON Data Interchange Format (strict grammar, UTF-8, surrogate pairs)",
+  "ECMA-404"
+ ],
+ "licence_note": "Written from the RFC and from observed behaviour of serde_json 1.0.151 (arbitrary_precision) and serde 1.0.228; no donor code is copied. The JSONTestSuite files are MIT (Copyright 2016 Nicolas Seriot), committed with their LICENSE.",
+ "modules": [
+  "domain/commerce/src/json/ (value, number, parse, write, traits, macros)",
+  "domain/json-derive/src/lib.rs (derive macros on the compiler's proc_macro interface alone)"
+ ],
+ "behaviour": {
+  "grammar": "strict RFC 8259: no comments, trailing commas, leading zeros, lone surrogates, control characters in strings, single quotes or bytes outside UTF-8; trailing characters and empty input are errors",
+  "nesting": "at most 127 containers deep; the 128th is a recursion-limit error (the limit serde_json has)",
+  "numbers": "every digit kept as text (a 30-digit integer, 1.10, 2.50); a number is spelled as the document model has always spelled it: exponents as e with an explicit sign (1E5 is 1e+5), the integer -0 as 0, -0.0 and -0e0 keep their sign; as_i64, as_u64, as_f64 and the is_* tests parse the text; as_f64 is None beyond f64",
+  "floats": "f64 values print as the shortest round-trip text, fixed notation for decimal exponents -5 to 15 (always with a fraction), scientific with a signed exponent otherwise; ties between two equally short candidates go to the even digit",
+  "objects": "keys sorted, duplicate keys keep the last value, so serialisation is deterministic (typed values serialise key-sorted, not in declaration order)",
+  "strings": "escapes for quote, backslash and C0 controls only; U+007F and non-ASCII are written as UTF-8",
+  "pretty": "two-space indent, a space after the colon, empty containers as [] and {}",
+  "typed": "ToJson and FromJson with derive macros for named-field structs, unit-only enums and internally tagged enums; attributes default, default = fn, skip_if, deny_unknown_fields, rename_all, rename, tag; Option members may be absent"
+ },
+ "differences_from_serde_derive": [
+  "a struct is read from an object only; serde also reads it from a sequence of field values by position",
+  "unknown members after the tag of an internally tagged unit variant are refused; serde skips them even with deny_unknown_fields",
+  "error texts differ (the native text says integer 5 or floating point 1.5 where serde_json says number; unknown fields are reported before field errors)",
+  "enum variants with data need an internal tag; externally tagged, adjacently tagged and untagged representations, flatten, aliases and custom (de)serialisers are not provided because no ECDEV type uses them",
+  "typed values serialise key-sorted"
+ ],
+ "differential_proof": {
+  "oracle": "serde_json 1.0.151 with arbitrary_precision; serde 1.0.228 derives",
+  "corpora": {
+   "JSONTestSuite": "318 files: 105 accepted, 213 rejected, identical outcome and output",
+   "generated": "20000 documents with random whitespace, escape spellings and number spellings: 19326 accepted, 674 rejected",
+   "mutated": "60000 documents with one to three byte edits: 8490 accepted, 51510 rejected",
+   "nesting": "44 documents at depths 1 to 1000",
+   "floats": "400000 f64 values, and 20 million further random values checked once outside the repository, identical text",
+   "typed": "30000 Outer, 5000 Loose, 5000 Shock, 11 Market documents with up to two mutations: identical outcome and value; stricter than serde on 1180 documents (listed in the fixture)",
+   "json!": "44 macro invocations identical"
+  },
+  "bugs_found_by_the_differential_and_fixed": [
+   "number spelling: exponent sign and -0 normalisation",
+   "float text: signed exponent and the even-digit tie rule (27 of 400000 values)",
+   "internally tagged unit variants and struct-from-sequence recorded as deliberate stricter behaviour"
+  ],
+  "frozen_fixture": "domain/commerce/tests/fixtures/json-differential-digests.json",
+  "post_removal_tests": [
+   "domain/commerce/tests/json_parity.rs",
+   "domain/commerce/tests/json_macro.rs"
+  ]
+ },
+ "closure": "ecdev-core and the three adapters no longer depend on serde or serde_json; apps/server keeps serde_json only at the boundary with axum and rmcp, converting through text, until those are replaced"
+}

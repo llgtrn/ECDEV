@@ -9,6 +9,8 @@ use axum::{
     },
     routing::{get, post},
 };
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::{Engine, service::tool_definitions};
 use futures::Stream;
 use rmcp::{
@@ -19,7 +21,17 @@ use rmcp::{
         StreamableHttpServerConfig, StreamableHttpService, session::local::LocalSessionManager,
     },
 };
-use serde_json::{Value, json};
+
+/// The protocol and HTTP libraries still speak `serde_json`; the engine speaks the native `Value`.
+/// Both sides convert through their text.
+mod bridge {
+    pub fn serde(v: &ecdev_core::json::Value) -> serde_json::Value {
+        serde_json::from_str(&v.to_string()).expect("native JSON text is valid JSON")
+    }
+    pub fn native(v: &serde_json::Value) -> ecdev_core::json::Value {
+        ecdev_core::json::from_str(&v.to_string()).expect("serde_json text is valid JSON")
+    }
+}
 use std::{collections::HashMap, convert::Infallible, path::PathBuf, sync::Arc, time::Duration};
 
 #[derive(Clone)]
@@ -35,16 +47,16 @@ impl ServerHandler for Mcp {
     ) -> Result<ListToolsResult, ErrorData> {
         let tools: Vec<Tool> = tool_definitions()
             .into_iter()
-            .map(|v| serde_json::from_value(v).unwrap())
+            .map(|v| serde_json::from_value(bridge::serde(&v)).unwrap())
             .collect();
-        serde_json::from_value(json!({"tools":tools}))
+        serde_json::from_value(serde_json::json!({"tools":tools}))
             .map_err(|e| ErrorData::internal_error(e.to_string(), None))
     }
     fn get_tool(&self, name: &str) -> Option<Tool> {
         tool_definitions()
             .into_iter()
             .find(|v| v["name"] == name)
-            .and_then(|v| serde_json::from_value(v).ok())
+            .and_then(|v| serde_json::from_value(bridge::serde(&v)).ok())
     }
     async fn call_tool(
         &self,
@@ -53,16 +65,16 @@ impl ServerHandler for Mcp {
     ) -> Result<CallToolResponse, ErrorData> {
         let engine = self.0.clone();
         let name = r.name.to_string();
-        let args = Value::Object(r.arguments.unwrap_or_default());
+        let args = bridge::native(&serde_json::Value::Object(r.arguments.unwrap_or_default()));
         let result = tokio::task::spawn_blocking(move || engine.call(&name, args))
             .await
             .map_err(|_| ErrorData::internal_error("Engine task failed", None))?;
         Ok(match result {
-            Ok(v) => CallToolResult::structured(if v.is_object() {
+            Ok(v) => CallToolResult::structured(bridge::serde(&if v.is_object() {
                 v
             } else {
                 json!({"items": v})
-            }),
+            })),
             Err(e) => CallToolResult::error(vec![ContentBlock::text(e)]),
         }
         .into())
@@ -72,7 +84,7 @@ impl ServerHandler for Mcp {
         _: Option<PaginatedRequestParams>,
         _: RequestContext<RoleServer>,
     ) -> Result<ListResourceTemplatesResult, ErrorData> {
-        serde_json::from_value(json!({"resourceTemplates":[{"uriTemplate":"ecdev://run/{id}","name":"Persisted run","mimeType":"application/json"},{"uriTemplate":"ecdev://governance/donor/{id}","name":"Donor census","mimeType":"application/json"}]})).map_err(|e|ErrorData::internal_error(e.to_string(),None))
+        serde_json::from_value(serde_json::json!({"resourceTemplates":[{"uriTemplate":"ecdev://run/{id}","name":"Persisted run","mimeType":"application/json"},{"uriTemplate":"ecdev://governance/donor/{id}","name":"Donor census","mimeType":"application/json"}]})).map_err(|e|ErrorData::internal_error(e.to_string(),None))
     }
     async fn read_resource(
         &self,
@@ -87,7 +99,7 @@ impl ServerHandler for Mcp {
             Err("Unknown resource".into())
         };
         let value = result.map_err(|e| ErrorData::invalid_params(e, None))?;
-        serde_json::from_value::<ReadResourceResult>(json!({"contents":[{"uri":r.uri,"mimeType":"application/json","text":value.to_string()}]})).map(Into::into).map_err(|e|ErrorData::internal_error(e.to_string(),None))
+        serde_json::from_value::<ReadResourceResult>(serde_json::json!({"contents":[{"uri":r.uri,"mimeType":"application/json","text":value.to_string()}]})).map(Into::into).map_err(|e|ErrorData::internal_error(e.to_string(),None))
     }
 }
 fn root() -> PathBuf {
@@ -99,15 +111,19 @@ fn root() -> PathBuf {
 }
 fn response(result: Result<Value, String>) -> Response {
     match result {
-        Ok(v) => Json(v).into_response(),
-        Err(e) => (StatusCode::BAD_REQUEST, Json(json!({"error":e}))).into_response(),
+        Ok(v) => Json(bridge::serde(&v)).into_response(),
+        Err(e) => (
+            StatusCode::BAD_REQUEST,
+            Json(serde_json::json!({"error":e})),
+        )
+            .into_response(),
     }
 }
 async fn status(State(e): State<Engine>) -> Response {
     response(e.status())
 }
-async fn providers(State(e): State<Engine>) -> Json<Value> {
-    Json(e.providers())
+async fn providers(State(e): State<Engine>) -> Json<serde_json::Value> {
+    Json(bridge::serde(&e.providers()))
 }
 async fn donors(State(e): State<Engine>) -> Response {
     response(e.registry())
@@ -135,8 +151,8 @@ async fn metrics(State(e): State<Engine>) -> Response {
 async fn health(State(e): State<Engine>) -> Response {
     response(e.call("ecdev.system.health", json!({})))
 }
-async fn tools() -> Json<Value> {
-    Json(json!(tool_definitions()))
+async fn tools() -> Json<serde_json::Value> {
+    Json(bridge::serde(&json!(tool_definitions())))
 }
 async fn runs(State(e): State<Engine>) -> Response {
     response(e.runs())
@@ -147,8 +163,9 @@ async fn run_detail(State(e): State<Engine>, AxumPath(id): AxumPath<String>) -> 
 async fn execute(
     State(e): State<Engine>,
     AxumPath(name): AxumPath<String>,
-    Json(args): Json<Value>,
+    Json(args): Json<serde_json::Value>,
 ) -> Response {
+    let args = bridge::native(&args);
     match tokio::task::spawn_blocking(move || e.call(&name, args)).await {
         Ok(v) => response(v),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Engine failed").into_response(),
@@ -251,7 +268,7 @@ pub fn router(e: Engine, port: u16) -> Router {
             "/api/research/example",
             get(|| async {
                 Json(
-                    serde_json::from_str::<Value>(include_str!(
+                    serde_json::from_str::<serde_json::Value>(include_str!(
                         "../../../domain/commerce/tests/fixtures/research-household.json"
                     ))
                     .unwrap(),
@@ -330,7 +347,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
     if cmd == "mcp-config" {
         println!(
             "{}",
-            serde_json::to_string_pretty(
+            ecdev_core::json::to_string_pretty(
                 &json!({"mcpServers":{"ecdev":{"type":"http","url":"http://127.0.0.1:8765/mcp"}}})
             )?
         );
@@ -353,7 +370,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
         "call" => {
             let name = a.get(1).ok_or("tool name required")?.clone();
             let args = if let Some(path) = a.get(2) {
-                serde_json::from_slice(&std::fs::read(path)?)?
+                ecdev_core::json::from_slice(&std::fs::read(path)?)?
             } else {
                 json!({})
             };
@@ -366,7 +383,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
             return Ok(());
         }
     };
-    println!("{}", serde_json::to_string_pretty(&value)?);
+    println!("{}", ecdev_core::json::to_string_pretty(&value)?);
     Ok(())
 }
 /// `ecdev doctor` and `ecdev doctor sp-api`. Neither probes the network nor reveals secrets.
@@ -708,7 +725,7 @@ mod research_tests {
             .unwrap()
             .with_provider(Arc::new(ecdev_web::Web::default()))
             .with_provider(Arc::new(ecdev_web::social::Social::default()));
-        let commerce_fixture: Value = serde_json::from_str(include_str!(
+        let commerce_fixture: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -1743,7 +1760,7 @@ mod research_tests {
         let engine = Engine::open(&root)
             .unwrap()
             .with_provider(Arc::new(ecdev_web::Web::default()));
-        let input: Value = serde_json::from_str(include_str!(
+        let input: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -1821,7 +1838,7 @@ mod research_tests {
             .unwrap()
             .with_provider(Arc::new(ecdev_marketplace::Amazon))
             .with_provider(Arc::new(ecdev_web::Web::default()));
-        let fixtures: Value = serde_json::from_str(include_str!(
+        let fixtures: Value = ecdev_core::json::from_str(include_str!(
             "../../../adapter/marketplace/tests/fixtures/official-responses.json"
         ))
         .unwrap();
@@ -2102,7 +2119,7 @@ mod research_tests {
         let engine = Engine::open(&root)
             .unwrap()
             .with_provider(Arc::new(ecdev_web::Web::default()));
-        let input: Value = serde_json::from_str(include_str!(
+        let input: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -2146,7 +2163,7 @@ mod research_tests {
                 .len(),
             6
         );
-        let mut changed: Value = serde_json::from_str(include_str!(
+        let mut changed: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -2164,7 +2181,7 @@ mod research_tests {
             .unwrap();
         assert_eq!(diff["changes"][0]["field"], "price_minor");
         assert_eq!(diff["changes"][0]["after"], 4100);
-        let mut resume: Value = serde_json::from_str(include_str!(
+        let mut resume: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -2180,7 +2197,7 @@ mod research_tests {
         assert_eq!(restored["funnel"]["discovered"], 3);
         assert_eq!(restored["funnel"]["rejected"], 2);
         assert_eq!(restored["provider_calls"][0]["request_count"], 0);
-        let mut bounded: Value = serde_json::from_str(include_str!(
+        let mut bounded: Value = ecdev_core::json::from_str(include_str!(
             "../../../domain/commerce/tests/fixtures/research-household.json"
         ))
         .unwrap();
@@ -2226,7 +2243,7 @@ mod research_tests {
         let args = json!({"query":"matcha","fixture_now":10000,"sources":[{"platform":"HACKER_NEWS","max_pages":5,"fixture_raw":page(0),"fixture_pages":[page(1),page(2),page(3),page(4)]}]});
         // The engine's own callers still get the whole result.
         let whole = engine.trend_discover(args.clone()).unwrap();
-        let whole_bytes = serde_json::to_vec(&whole).unwrap().len();
+        let whole_bytes = ecdev_core::json::to_vec(&whole).unwrap().len();
         assert!(
             whole_bytes > ecdev_core::bound::MAX_RESULT_BYTES,
             "{whole_bytes} {} {} {}",
@@ -2235,7 +2252,7 @@ mod research_tests {
             whole["unknowns"]
         );
         let out = engine.call("ecdev.trend.discover", args).unwrap();
-        let bytes = serde_json::to_vec(&out).unwrap().len();
+        let bytes = ecdev_core::json::to_vec(&out).unwrap().len();
         assert!(bytes <= ecdev_core::bound::MAX_RESULT_BYTES, "{bytes}");
         let bound = &out["output_bound"];
         assert_eq!(bound["state"], "LISTS_SHORTENED_TO_FIT");
@@ -2263,7 +2280,8 @@ mod research_tests {
             .call("ecdev.trend.inspect", json!({"snapshot_id":id}))
             .unwrap();
         assert!(
-            serde_json::to_vec(&inspected).unwrap().len() <= ecdev_core::bound::MAX_RESULT_BYTES
+            ecdev_core::json::to_vec(&inspected).unwrap().len()
+                <= ecdev_core::bound::MAX_RESULT_BYTES
         );
         let _ = std::fs::remove_dir_all(root);
     }
@@ -2288,9 +2306,9 @@ mod research_tests {
             .collect();
         let args = json!({"market":"PUBLIC_WEB","query":"cup","sources":sources,"max_pages":20});
         let whole = engine.research(args.clone()).unwrap();
-        let whole_bytes = serde_json::to_vec(&whole).unwrap().len();
+        let whole_bytes = ecdev_core::json::to_vec(&whole).unwrap().len();
         let out = engine.call("ecdev.research.run", args).unwrap();
-        let bytes = serde_json::to_vec(&out).unwrap().len();
+        let bytes = ecdev_core::json::to_vec(&out).unwrap().len();
         assert!(
             whole_bytes > ecdev_core::bound::MAX_RESULT_BYTES,
             "fixture run is only {whole_bytes} bytes"
@@ -2328,7 +2346,7 @@ mod research_tests {
         assert_eq!(tail["items"].as_array().unwrap().len(), 3);
         assert_eq!(
             tail["paging"]["items"]["next_offset"],
-            serde_json::Value::Null
+            ecdev_core::json::Value::Null
         );
         let evidence = engine
             .call("ecdev.evidence.inspect", json!({"run_id":id,"limit":4}))

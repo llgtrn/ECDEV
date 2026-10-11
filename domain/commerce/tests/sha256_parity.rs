@@ -32,8 +32,8 @@ fn inputs() -> Vec<Vec<u8>> {
 
 #[test]
 fn native_digests_reproduce_the_frozen_sha2_digest_of_digests() {
-    let frozen: serde_json::Value =
-        serde_json::from_str(include_str!("fixtures/sha256-differential.json")).unwrap();
+    let frozen: ecdev_core::json::Value =
+        ecdev_core::json::from_str(include_str!("fixtures/sha256-differential.json")).unwrap();
     let mut all = Sha256::new();
     let mut n = 0;
     for input in inputs() {

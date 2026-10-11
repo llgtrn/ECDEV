@@ -1,12 +1,13 @@
 //! Durable observations, snapshots and fenced watches, owned by commerce.
 use super::{ForecastScenario, SocialPost, snapshot, terms};
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{
     Engine, planner::allocate_information_actions, provider::AcquireRequest, service::timestamp,
 };
 use rusqlite::{Connection, params};
-use serde_json::{Value, json};
 use std::{
     collections::{BTreeMap, BTreeSet},
     fs,
@@ -129,7 +130,7 @@ impl Engine {
         counters
             && value["captured_posts"].as_array().is_some_and(|posts| {
                 posts.iter().all(|p| {
-                    serde_json::from_value::<SocialPost>(p.clone())
+                    crate::json::from_value::<SocialPost>(p.clone())
                         .is_ok_and(|p| self.verified_social_capture(&p, checked))
                 })
             })
@@ -142,7 +143,7 @@ impl Engine {
         let rows = stmt
             .query_map([mode], |r| r.get::<_, String>(0))
             .map_err(err)?;
-        rows.map(|r| serde_json::from_str(&r.map_err(err)?).map_err(err))
+        rows.map(|r| crate::json::from_str(&r.map_err(err)?).map_err(err))
             .collect()
     }
     /// Hypotheses from a verified frozen snapshot; persisted as a zero-network PLAN_ONLY run.
@@ -170,7 +171,7 @@ impl Engine {
                 |r| r.get::<_, String>(0),
             )
             .ok()
-            .and_then(|p| serde_json::from_str(&p).ok())
+            .and_then(|p| crate::json::from_str(&p).ok())
         };
         crate::hypothesis::mark_recurrence(&mut out, &snapshot, prior.as_ref(), candidates);
         let price_runs: Vec<Value> = {
@@ -184,7 +185,7 @@ impl Engine {
             )
             .map_err(err)?
             .filter_map(Result::ok)
-            .filter_map(|p| serde_json::from_str(&p).ok())
+            .filter_map(|p| crate::json::from_str(&p).ok())
             .collect()
         };
         crate::hypothesis::attach_store_prices(&mut out, &price_runs);
@@ -202,7 +203,7 @@ impl Engine {
                     |r| r.get(0),
                 )
                 .map_err(err)?;
-            let mut value: Value = serde_json::from_str(&row).map_err(err)?;
+            let mut value: Value = crate::json::from_str(&row).map_err(err)?;
             let mode = value["capture_mode"]
                 .as_str()
                 .unwrap_or("FIXTURE")
@@ -240,7 +241,7 @@ impl Engine {
         let rows: Result<Vec<Value>, String> = stmt
             .query_map([], |r| r.get::<_, String>(0))
             .map_err(err)?
-            .map(|s| serde_json::from_str(&s.map_err(err)?).map_err(err))
+            .map(|s| crate::json::from_str(&s.map_err(err)?).map_err(err))
             .collect();
         let mut watches = db
             .prepare("SELECT payload FROM trend_watches ORDER BY id")
@@ -248,7 +249,7 @@ impl Engine {
         let watches: Result<Vec<Value>, String> = watches
             .query_map([], |r| r.get::<_, String>(0))
             .map_err(err)?
-            .map(|s| serde_json::from_str(&s.map_err(err)?).map_err(err))
+            .map(|s| crate::json::from_str(&s.map_err(err)?).map_err(err))
             .collect();
         let mut checked = BTreeMap::new();
         let mut unavailable = vec![];
@@ -370,7 +371,8 @@ impl Engine {
                 if let Ok((created, payload)) = row
                     && now.saturating_sub(created) <= 3600
                 {
-                    let mut posts: Vec<SocialPost> = serde_json::from_str(&payload).map_err(err)?;
+                    let mut posts: Vec<SocialPost> =
+                        crate::json::from_str(&payload).map_err(err)?;
                     if !posts
                         .iter()
                         .all(|p| self.verified_social_capture(p, &mut checked))
@@ -519,7 +521,7 @@ impl Engine {
                                 break "PAGE_FAILED";
                             }
                             let posts: Vec<SocialPost> =
-                                serde_json::from_value(acquired.result["posts"].clone())
+                                crate::json::from_value(acquired.result["posts"].clone())
                                     .map_err(err)?;
                             let mut posts = posts;
                             for p in &mut posts {
@@ -644,7 +646,7 @@ impl Engine {
                                 .join(format!("{root_hash}.raw")),
                         )
                         .ok()
-                        .and_then(|raw| serde_json::from_slice::<Value>(&raw).ok())
+                        .and_then(|raw| crate::json::from_slice::<Value>(&raw).ok())
                         .and_then(|v| v.pointer(&root_locator)?["id"].as_str().map(str::to_string));
                         let Some(local) = local else {
                             threads.push(json!({"root":root,"reported_comments":reported,"state":"THREAD_FAILED","reason":"ROOT_LOCAL_ID_NOT_IN_CAPTURE"}));
@@ -681,7 +683,7 @@ impl Engine {
                                 continue;
                             }
                             let posts: Vec<SocialPost> =
-                                serde_json::from_value(acquired.result["posts"].clone())
+                                crate::json::from_value(acquired.result["posts"].clone())
                                     .map_err(err)?;
                             let mut posts = posts;
                             for p in &mut posts {
@@ -763,7 +765,11 @@ impl Engine {
                     .map_err(err)?
                     .execute(
                         "INSERT OR REPLACE INTO social_cache VALUES(?1,?2,?3)",
-                        params![key, now, serde_json::to_string(&source_posts).map_err(err)?],
+                        params![
+                            key,
+                            now,
+                            crate::json::to_string(&source_posts).map_err(err)?
+                        ],
                     )
                     .map_err(err)?;
             }
@@ -801,7 +807,7 @@ impl Engine {
                 .query_map(params![query, mode, window, now], |r| r.get::<_, String>(0))
                 .map_err(err)?
             {
-                let previous = serde_json::from_str::<Value>(&row.map_err(err)?).map_err(err)?;
+                let previous = crate::json::from_str::<Value>(&row.map_err(err)?).map_err(err)?;
                 if acquisition_complete
                     && previous["source_complete"] == true
                     && previous["source_scope"] == source_scope
@@ -936,7 +942,7 @@ impl Engine {
             let mut db = self.db.lock().map_err(err)?;
             let tx = db.transaction().map_err(err)?;
             for p in captured {
-                tx.execute("INSERT INTO social_posts VALUES(?1,?2,?3) ON CONFLICT(mode,key) DO UPDATE SET payload=excluded.payload",params![mode,p.key(),serde_json::to_string(&p).map_err(err)?]).map_err(err)?;
+                tx.execute("INSERT INTO social_posts VALUES(?1,?2,?3) ON CONFLICT(mode,key) DO UPDATE SET payload=excluded.payload",params![mode,p.key(),crate::json::to_string(&p).map_err(err)?]).map_err(err)?;
             }
             tx.execute(
                 "INSERT INTO trend_snapshots VALUES(?1,?2,?3,?4,?5,?6)",
@@ -960,7 +966,7 @@ impl Engine {
             .map_err(err)?
             .execute(
                 "INSERT INTO social_scenarios VALUES(?1,?2)",
-                params![scenario.id, serde_json::to_string(&scenario).map_err(err)?],
+                params![scenario.id, crate::json::to_string(&scenario).map_err(err)?],
             )
             .map_err(err)?;
         Ok(())
@@ -1011,7 +1017,7 @@ impl Engine {
             )
             .ok();
         let old: Value = old
-            .and_then(|s| serde_json::from_str(&s).ok())
+            .and_then(|s| crate::json::from_str(&s).ok())
             .unwrap_or(json!({}));
         let same = old["query"] == query
             && old["research"] == *research
@@ -1036,7 +1042,7 @@ impl Engine {
                 )
                 .map_err(err)?;
                 tx.commit().map_err(err)?;
-                Some((id, serde_json::from_str(&payload).map_err(err)?))
+                Some((id, crate::json::from_str(&payload).map_err(err)?))
             } else {
                 None
             }

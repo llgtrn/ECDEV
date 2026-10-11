@@ -1,12 +1,13 @@
 //! `ecdev.seller.read` through the engine: official layer only, fixtures labeled, raw capture
 //! persisted by hash, restricted domain and missing authorization refused before any IO.
+use ecdev_core::json;
+use ecdev_core::json::Value;
 use ecdev_core::service::Engine;
 use ecdev_marketplace::Amazon;
-use serde_json::{Value, json};
 use std::sync::Arc;
 
 fn cases() -> Value {
-    serde_json::from_str(include_str!("fixtures/official-read-responses.json")).unwrap()
+    ecdev_core::json::from_str(include_str!("fixtures/official-read-responses.json")).unwrap()
 }
 
 fn engine(name: &str) -> (Engine, std::path::PathBuf) {

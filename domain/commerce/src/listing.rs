@@ -3,10 +3,11 @@
 //! ECDEV page observations. Offers are grouped by checksum-valid JAN so the same product's
 //! sellers and prices sit together; sellers inside one marketplace are never independent sites.
 use crate::identifier::Uuid;
+use crate::json;
+use crate::json::Value;
 use crate::sha256::Sha256;
 use crate::{Engine, provider::AcquireRequest, service::timestamp};
 use rusqlite::params;
-use serde_json::{Value, json};
 use std::{collections::BTreeMap, fs};
 
 fn err(e: impl std::fmt::Display) -> String {

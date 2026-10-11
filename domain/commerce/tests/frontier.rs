@@ -1,5 +1,5 @@
 use ecdev_core::frontier::{CrawlLimits, Frontier, UrlPolicy, canonicalize};
-use serde_json::json;
+use ecdev_core::json;
 use std::{
     collections::BTreeMap,
     fs,
@@ -10,8 +10,8 @@ use std::{
 
 #[test]
 fn locked_crawlee_queue_oracle() {
-    let oracle: serde_json::Value =
-        serde_json::from_str(include_str!("fixtures/crawlee-frontier.json")).unwrap();
+    let oracle: ecdev_core::json::Value =
+        ecdev_core::json::from_str(include_str!("fixtures/crawlee-frontier.json")).unwrap();
     assert_eq!(
         oracle["commit_sha"],
         "438e3419626bd070f8984566bfb86ab9355f55d6"
@@ -74,7 +74,7 @@ fn locked_crawlee_queue_oracle() {
                         leases.insert(address.clone(), lease);
                         json!(address)
                     }
-                    None => serde_json::Value::Null,
+                    None => ecdev_core::json::Value::Null,
                 },
                 "handle" => json!(
                     frontier
@@ -103,11 +103,11 @@ fn locked_crawlee_queue_oracle() {
                 }
                 "advance" => {
                     now += step["millis"].as_i64().unwrap();
-                    serde_json::Value::Null
+                    ecdev_core::json::Value::Null
                 }
                 "reopen" => {
                     frontier = Frontier::open(&database).unwrap();
-                    serde_json::Value::Null
+                    ecdev_core::json::Value::Null
                 }
                 "status" => {
                     let status = frontier.status("oracle").unwrap();
