@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "2c06d60b15833190dd55d7dbf0a315b4f59084e8",
+  "assessed_parent_commit": "e67487f0cc4e385feb07da58ed0e6a6fa4c61a72",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 32,
-    "production_capabilities_native": 32,
-    "production_capabilities_proven": 32,
+    "production_capabilities_required": 33,
+    "production_capabilities_native": 33,
+    "production_capabilities_proven": 33,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 326,
-    "semantic_censused_capabilities": 326,
+    "known_donor_capabilities": 332,
+    "semantic_censused_capabilities": 332,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 64,
-    "study_complete_capabilities": 159,
+    "reference_only": 67,
+    "study_complete_capabilities": 162,
     "not_relevant_after_review": 29,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.773006
+    "knowledge_coverage_ratio": 0.777108
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 39,
+    "donors_knowledge_unreviewed": 38,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 5,
-    "donors_structurally_censused": 29,
-    "donors_semantically_censused": 16,
+    "donors_study_complete": 6,
+    "donors_structurally_censused": 30,
+    "donors_semantically_censused": 17,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 63
+    "donors_with_open_research": 62
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -625,9 +625,9 @@
     },
     {
       "donor": "dependency--github-com-rustcrypto-hashes",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -636,7 +636,14 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "sha2.sha256 STUDY_COMPLETE[INDEPENDENT_NATIVE](FIPS 180-4 SHA-256 with the incremental and chained interface ECDEV uses, identical to sha2 0.10.9 on 2242 frozen inputs and the FIPS vectors)",
+        "sha2.digest-trait-api STUDY_COMPLETE[INDEPENDENT_NATIVE](domain/commerce/src/sha256.rs offers digest, update, chain_update and finalize on one type)",
+        "sha2.sha512-family REFERENCE_ONLY(FIPS 180-4 defines the family; the compression structure is the reference if another digest size is ever needed)",
+        "sha2.hardware-acceleration STUDY_COMPLETE[INDEPENDENT_NATIVE](measured in research/commerce/native-sha256.json: pacing of fetches, not hashing, bounds a research run)",
+        "sha2.size-optimised-backends REFERENCE_ONLY(a compact compression loop is a reference for constrained targets only)",
+        "sha2.other-hash-algorithms REFERENCE_ONLY(public standards implemented by the donor monorepo; nothing to carry)"
+      ]
     },
     {
       "donor": "dependency--github-com-apify-apify-shared-js",

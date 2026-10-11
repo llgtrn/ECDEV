@@ -1,0 +1,183 @@
+{
+  "record": "sha2-semantic-matrix",
+  "donor": "RustCrypto/hashes",
+  "donor_commit": "82c36a428f8d6f05f3bfccdedb243e9d1f85359d",
+  "donor_version_read": "sha2 0.10.9 (tag sha2-v0.10.9, the version ECDEV resolved and the differential oracle)",
+  "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+  "capabilities": [
+    {
+      "key": "sha2.sha256",
+      "donor": "sha2::Sha256 (digest, update, chain_update, finalize, LowerHex)",
+      "ecdev": "domain/commerce/src/sha256.rs",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "sha2.digest-trait-api",
+      "donor": "Digest/Update/FixedOutput trait adapters, OIDs",
+      "ecdev": "a smaller concrete API",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "sha2.sha512-family",
+      "donor": "Sha224/384/512/512_224/512_256",
+      "ecdev": "none; no ECDEV caller",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "sha2.hardware-acceleration",
+      "donor": "x86 SHA-NI, ARMv8 SHA2, LoongArch backends with runtime detection",
+      "ecdev": "portable scalar compression",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "sha2.size-optimised-backends",
+      "donor": "soft_compact.rs",
+      "ecdev": "portable scalar compression",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "sha2.other-hash-algorithms",
+      "donor": "the other 20 hash crates in the monorepo",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "sha2/src/lib.rs",
+        "capabilities": "sha2.digest-trait-api + sha2.sha256 (crate surface, type aliases, feature gates)"
+      },
+      {
+        "prefix": "sha2/src/core_api.rs",
+        "capabilities": "sha2.digest-trait-api (block-buffer and digest crate adapters, OID support)"
+      },
+      {
+        "prefix": "sha2/src/consts.rs",
+        "capabilities": "sha2.sha256 + sha2.sha512-family (round constants, initial states)"
+      },
+      {
+        "prefix": "sha2/src/sha256.rs",
+        "capabilities": "sha2.sha256 + sha2.hardware-acceleration (backend selection)"
+      },
+      {
+        "prefix": "sha2/src/sha256/soft.rs",
+        "capabilities": "sha2.sha256 (portable compression function)"
+      },
+      {
+        "prefix": "sha2/src/sha256/soft_compact.rs",
+        "capabilities": "sha2.size-optimised-backends"
+      },
+      {
+        "prefix": "sha2/src/sha256/x86.rs",
+        "capabilities": "sha2.hardware-acceleration (SHA-NI)"
+      },
+      {
+        "prefix": "sha2/src/sha256/aarch64.rs",
+        "capabilities": "sha2.hardware-acceleration (ARMv8 SHA2)"
+      },
+      {
+        "prefix": "sha2/src/sha256/loongarch64_asm.rs",
+        "capabilities": "sha2.hardware-acceleration (LoongArch)"
+      },
+      {
+        "prefix": "sha2/src/sha512.rs",
+        "capabilities": "sha2.sha512-family (SHA-384, SHA-512, SHA-512/t compression and backends)"
+      },
+      {
+        "prefix": "sha2/benches/",
+        "capabilities": "none (benchmarks)"
+      },
+      {
+        "prefix": "sha2/src/sha512/",
+        "capabilities": "sha2.sha512-family (backends)"
+      },
+      {
+        "prefix": "blake2/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "sha1/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "md5/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "ripemd/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "groestl/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "streebog/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "gost94/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "jh/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "sha3/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "shabal/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "skein/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "sm3/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "tiger/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "whirlpool/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "fsb/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "md2/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "ascon-hash/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "belt-hash/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "k12/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "md4/",
+        "capabilities": "sha2.other-hash-algorithms (a sibling crate of the RustCrypto/hashes monorepo; ECDEV uses none)"
+      },
+      {
+        "prefix": "benches/",
+        "capabilities": "none (workspace benchmark harness)"
+      }
+    ]
+  },
+  "status": "SEMANTIC_REVIEW_COMPLETE"
+}

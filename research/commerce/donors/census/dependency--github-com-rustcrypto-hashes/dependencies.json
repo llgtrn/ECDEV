@@ -1,0 +1,1364 @@
+[
+  {
+    "source_path": "Cargo.lock",
+    "blob_hash": "b359ca8a70f014fefc9719b240fc2c7165013aa5",
+    "status": "INVENTORIED",
+    "roles": []
+  },
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "790a09c7fa561f0162e87d4d9d3ae860ec35bafa",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "members": [
+          "blake2",
+          "fsb",
+          "gost94",
+          "groestl",
+          "md2",
+          "md4",
+          "md5",
+          "ripemd",
+          "sha1",
+          "sha2",
+          "sha3",
+          "shabal",
+          "sm3",
+          "streebog",
+          "tiger",
+          "whirlpool"
+        ],
+        "exclude": [
+          "ascon-hash",
+          "belt-hash",
+          "jh",
+          "k12",
+          "skein"
+        ]
+      },
+      "profile": {
+        "dev": {
+          "opt-level": 2
+        }
+      }
+    }
+  },
+  {
+    "source_path": "ascon-hash/Cargo.toml",
+    "blob_hash": "cb3707cc7631b383b98d9bd4b62161f68efee5b4",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "ascon-hash",
+        "version": "0.2.0",
+        "description": "Implementation of the Ascon and AsconA hashes and XOFs",
+        "authors": [
+          "Sebastian Ramacher <sebastian.ramacher@ait.ac.at>",
+          "RustCrypto Developers"
+        ],
+        "license": "Apache-2.0 OR MIT",
+        "readme": "README.md",
+        "edition": "2021",
+        "documentation": "https://docs.rs/ascon-hash",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "hash",
+          "ascon"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ],
+        "rust-version": "1.56",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true,
+              "rustdoc-args": [
+                "--cfg",
+                "docsrs"
+              ]
+            }
+          }
+        }
+      },
+      "workspace": {},
+      "dependencies": {
+        "digest": {
+          "version": "0.10",
+          "default-features": false,
+          "features": [
+            "core-api"
+          ]
+        },
+        "ascon": {
+          "version": "0.4",
+          "default-features": false
+        }
+      },
+      "dev-dependencies": {
+        "spectral": {
+          "version": "0.6",
+          "default-features": false
+        },
+        "hex": "0.4"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "zeroize": [
+          "ascon/zeroize"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "belt-hash/Cargo.toml",
+    "blob_hash": "a104a181083de1759434d2c3c8e08da762917319",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "belt-hash",
+        "version": "0.1.1",
+        "description": "BelT hash function (STB 34.101.31-2020)",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2021",
+        "rust-version": "1.57",
+        "documentation": "https://docs.rs/belt-hash",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "belt",
+          "stb",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.4",
+        "belt-block": {
+          "version": "0.1.1",
+          "default-features": false
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.4",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.3.3"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      },
+      "profile": {
+        "dev": {
+          "opt-level": 2
+        }
+      }
+    }
+  },
+  {
+    "source_path": "benches/Cargo.toml",
+    "blob_hash": "26e57ce6cc76b5bd3667bc0370a97839652ad291",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "benches",
+        "version": "0.0.0",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "Apache-2.0 OR MIT",
+        "description": "Criterion benchmarks of the hash crates",
+        "edition": "2021",
+        "rust-version": "1.59",
+        "publish": false
+      },
+      "workspace": {},
+      "dependencies": {
+        "ascon-hash": {
+          "path": "../ascon-hash"
+        },
+        "criterion": "0.4",
+        "rand": {
+          "version": "0.8",
+          "default-features": false,
+          "features": [
+            "std_rng",
+            "getrandom"
+          ]
+        }
+      },
+      "bench": [
+        {
+          "name": "ascon-hash",
+          "path": "src/ascon-hash.rs",
+          "harness": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "blake2/Cargo.toml",
+    "blob_hash": "adb06e061de04f2a87557247400ebb63cdfd70a2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "blake2",
+        "version": "0.10.6",
+        "description": "BLAKE2 hash functions",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/blake2",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "blake2",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "mac"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "reset": [],
+        "simd": [],
+        "simd_opt": [
+          "simd"
+        ],
+        "simd_asm": [
+          "simd_opt"
+        ],
+        "size_opt": []
+      }
+    }
+  },
+  {
+    "source_path": "fsb/Cargo.toml",
+    "blob_hash": "399cd970db8ecfcc8fabdd911d8253f922066e1e",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "fsb",
+        "version": "0.1.3",
+        "description": "FSB hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/fsb",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "fsb",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7",
+        "whirlpool": {
+          "version": "0.10.1",
+          "path": "../whirlpool",
+          "default-features": false
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "gost94/Cargo.toml",
+    "blob_hash": "7fa75ab7f4f7a5bd23e699bca797336f96e8acd8",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "gost94",
+        "version": "0.10.4",
+        "description": "GOST R 34.11-94 hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/gost94",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "gost94",
+          "gost",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "groestl/Cargo.toml",
+    "blob_hash": "87915c7340f4c5d5a604d1901098df12072c2ea1",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "groestl",
+        "version": "0.10.1",
+        "description": "Grøstl hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/groestl",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "groestl",
+          "grostl",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "jh/Cargo.toml",
+    "blob_hash": "28e8f539d1443856166fac99563a322ee08169b6",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "jh",
+        "version": "0.1.0",
+        "description": "Pure Rust implementation of the JH cryptographic hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "edition": "2021",
+        "rust-version": "1.57",
+        "readme": "README.md",
+        "documentation": "https://docs.rs/jh",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "jh",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10",
+        "hex-literal": "0.4",
+        "simd": {
+          "package": "ppv-lite86",
+          "version": "0.2.6"
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10",
+          "features": [
+            "dev"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "k12/Cargo.toml",
+    "blob_hash": "f0679ea5369f854e837e243933453547e2267801",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "k12",
+        "version": "0.3.0",
+        "description": "Pure Rust implementation of the KangarooTwelve hash function",
+        "authors": [
+          "RustCrypto Developers",
+          "Diggory Hardy <github1@dhardy.name>"
+        ],
+        "license": "Apache-2.0 OR MIT",
+        "readme": "README.md",
+        "edition": "2021",
+        "documentation": "https://docs.rs/k12",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ],
+        "rust-version": "1.56"
+      },
+      "dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "default-features": false,
+          "features": [
+            "core-api"
+          ]
+        },
+        "sha3": {
+          "version": "0.10.8",
+          "default-features": false
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "alloc",
+            "dev"
+          ]
+        },
+        "hex-literal": "0.3"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      },
+      "profile": {
+        "dev": {
+          "opt-level": 2
+        }
+      }
+    }
+  },
+  {
+    "source_path": "md2/Cargo.toml",
+    "blob_hash": "679594a2659f83bc60124f3a182c9ab44206cd5b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "md2",
+        "version": "0.10.2",
+        "license": "MIT OR Apache-2.0",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "description": "MD2 hash function",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/md2",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "md2",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "md4/Cargo.toml",
+    "blob_hash": "b55aa5fd9a7e9f57e58ab86885265a8f86ca3ce6",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "md4",
+        "version": "0.10.2",
+        "description": "MD4 hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/md4",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "md4",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "md5/Cargo.toml",
+    "blob_hash": "8103cd8a4059676aba30d72bc49928c03687afd4",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "md-5",
+        "version": "0.10.6",
+        "description": "MD5 hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/md-5",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "md5",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "lib": {
+        "name": "md5"
+      },
+      "dependencies": {
+        "digest": "0.10.7",
+        "cfg-if": "1.0"
+      },
+      "target": {
+        "cfg(any(target_arch = \"x86\", target_arch = \"x86_64\"))": {
+          "dependencies": {
+            "md5-asm": {
+              "version": "0.5",
+              "optional": true
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "asm": [
+          "md5-asm"
+        ],
+        "loongarch64_asm": [],
+        "oid": [
+          "digest/oid"
+        ],
+        "force-soft": []
+      }
+    }
+  },
+  {
+    "source_path": "ripemd/Cargo.toml",
+    "blob_hash": "88c69aa2848e7bba93058cdf45fe7468abfdfc35",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "ripemd",
+        "version": "0.1.3",
+        "description": "Pure Rust implementation of the RIPEMD hash functions",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/ripemd",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "ripemd",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "sha1/Cargo.toml",
+    "blob_hash": "3f4b8d3ff90acc7724a4df607c3938de19141cab",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "sha1",
+        "version": "0.10.6",
+        "description": "SHA-1 hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/sha1",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "sha1",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ],
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true,
+              "rustdoc-args": [
+                "--cfg",
+                "docsrs"
+              ]
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "digest": "0.10.7",
+        "cfg-if": "1.0"
+      },
+      "target": {
+        "cfg(any(target_arch = \"aarch64\", target_arch = \"x86\", target_arch = \"x86_64\"))": {
+          "dependencies": {
+            "cpufeatures": "0.2",
+            "sha1-asm": {
+              "version": "0.5",
+              "optional": true
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ],
+        "asm": [
+          "sha1-asm"
+        ],
+        "loongarch64_asm": [],
+        "compress": [],
+        "force-soft": []
+      }
+    }
+  },
+  {
+    "source_path": "sha2/Cargo.toml",
+    "blob_hash": "b9657c2647f9ff7736660286ed820ec5e28a55a5",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "sha2",
+        "version": "0.10.9",
+        "description": "Pure Rust implementation of the SHA-2 hash function family\nincluding SHA-224, SHA-256, SHA-384, and SHA-512.\n",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/sha2",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "sha2",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ],
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true,
+              "rustdoc-args": [
+                "--cfg",
+                "docsrs"
+              ]
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "digest": "0.10.7",
+        "cfg-if": "1.0"
+      },
+      "target": {
+        "cfg(any(target_arch = \"aarch64\", target_arch = \"x86_64\", target_arch = \"x86\"))": {
+          "dependencies": {
+            "cpufeatures": "0.2",
+            "sha2-asm": {
+              "version": "0.6.1",
+              "optional": true
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ],
+        "asm": [
+          "sha2-asm"
+        ],
+        "loongarch64_asm": [],
+        "compress": [],
+        "force-soft": [],
+        "force-soft-compact": [],
+        "asm-aarch64": [
+          "asm"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "sha3/Cargo.toml",
+    "blob_hash": "652630b5d2687922012acce7d2d4e021546c45a7",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "sha3",
+        "version": "0.10.8",
+        "description": "Pure Rust implementation of SHA-3, a family of Keccak-based hash functions\nincluding the SHAKE family of eXtendable-Output Functions (XOFs), as well as\nthe accelerated variant TurboSHAKE\n",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/sha3",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "sha3",
+          "keccak",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7",
+        "keccak": "0.1.4",
+        "zeroize": {
+          "version": "1.6.0",
+          "default-features": false,
+          "optional": true
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "asm": [
+          "keccak/asm"
+        ],
+        "oid": [
+          "digest/oid"
+        ],
+        "reset": []
+      }
+    }
+  },
+  {
+    "source_path": "shabal/Cargo.toml",
+    "blob_hash": "87c0c390590ba7768005b1fb767f03a2fbb431ec",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "shabal",
+        "version": "0.4.1",
+        "description": "Shabal hash functions",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/shabal",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "shabal",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "skein/Cargo.toml",
+    "blob_hash": "5b0341b7ce4db78ef9305bcc63252fa9a91de1ca",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "skein",
+        "version": "0.1.1",
+        "description": "Skein hash functions",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "edition": "2021",
+        "rust-version": "1.57",
+        "readme": "README.md",
+        "documentation": "https://docs.rs/skein",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "skein",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10",
+        "threefish": {
+          "version": "0.5.2",
+          "default-features": false
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.4"
+      }
+    }
+  },
+  {
+    "source_path": "sm3/Cargo.toml",
+    "blob_hash": "c1d46567b8f987013b174f35ca75b1140674827c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "sm3",
+        "version": "0.4.2",
+        "description": "SM3 (OSCCA GM/T 0004-2012) hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/sm3",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "sm3",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "streebog/Cargo.toml",
+    "blob_hash": "bc5bddc54fdd39d42b2f8ad04aee0a9435a82efd",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "streebog",
+        "version": "0.10.2",
+        "description": "Streebog (GOST R 34.11-2012) hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/streebog",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "streebog",
+          "gost",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "oid": [
+          "digest/oid"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "tiger/Cargo.toml",
+    "blob_hash": "a8f59a4c7dbbaf40b07804dff20cadc0762eb31e",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "tiger",
+        "version": "0.2.1",
+        "description": "Tiger hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/tiger",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "hash",
+          "tiger",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "whirlpool/Cargo.toml",
+    "blob_hash": "ee3e53bfde8f47707a0776992fa7a289eae149e0",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "whirlpool",
+        "version": "0.10.4",
+        "description": "Whirlpool hash function",
+        "authors": [
+          "RustCrypto Developers"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "readme": "README.md",
+        "edition": "2018",
+        "documentation": "https://docs.rs/whirlpool",
+        "repository": "https://github.com/RustCrypto/hashes",
+        "keywords": [
+          "crypto",
+          "whirlpool",
+          "hash",
+          "digest"
+        ],
+        "categories": [
+          "cryptography",
+          "no-std"
+        ]
+      },
+      "dependencies": {
+        "digest": "0.10.7"
+      },
+      "target": {
+        "cfg(any(target_arch = \"x86\", target_arch = \"x86_64\"))": {
+          "dependencies": {
+            "whirlpool-asm": {
+              "version": "0.6",
+              "optional": true
+            }
+          }
+        }
+      },
+      "dev-dependencies": {
+        "digest": {
+          "version": "0.10.7",
+          "features": [
+            "dev"
+          ]
+        },
+        "hex-literal": "0.2.2"
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "digest/std"
+        ],
+        "asm": [
+          "whirlpool-asm"
+        ]
+      }
+    }
+  }
+]

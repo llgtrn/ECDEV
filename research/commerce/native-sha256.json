@@ -1,0 +1,20 @@
+{
+  "record": "native-sha256",
+  "evidence_class": "DERIVED_FROM_STANDARD_AND_DIFFERENTIALLY_PROVEN",
+  "standard": "FIPS 180-4 SHA-256",
+  "implementation": "domain/commerce/src/sha256.rs (moved from the governance tool's native digest, which has carried the FIPS vectors since its creation)",
+  "known_answer_vectors": "empty, abc, the 448-bit message, one million a (domain/commerce/src/sha256.rs tests)",
+  "differential_proof": {
+    "oracle": "sha2 0.10.9 Sha256",
+    "inputs": 2242,
+    "fixture": "domain/commerce/tests/fixtures/sha256-differential.json",
+    "fixture_sha256": "85f4789af0a05774d8254664b6a2473569ea190bd05b511d22f5ae3830f19784",
+    "test": "domain/commerce/tests/sha256_parity.rs",
+    "note": "the oracle ran in a throwaway crate outside the workspace; sha2 is absent from Cargo.lock"
+  },
+  "throughput_release_build": {
+    "4_MiB_ms": 20.8,
+    "conclusion": "bodies are bounded at 4 MiB; hardware acceleration would save about 15 ms per body against second-scale fetch pacing"
+  },
+  "closure": "cargo tree: sha2 no longer appears anywhere in the resolved graph"
+}
