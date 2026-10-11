@@ -1,0 +1,180 @@
+{
+ "record": "rmcp-semantic-matrix",
+ "donor": "modelcontextprotocol/rust-sdk",
+ "donor_commit": "3e636cab26c013eca5131103c03d20237f12c4df",
+ "donor_version_read": "rmcp 3.3.0 (tag rmcp-v3.3.0) with rmcp-macros and the conformance, examples and scripts directories",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "rmcp.server-handler",
+   "donor": "ServerHandler, the tool router and the resource and prompt handlers",
+   "ecdev": "apps/server/src/mcp.rs (Mcp::dispatch)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rmcp.json-rpc-and-model",
+   "donor": "JSON-RPC message types, error codes, capabilities and version negotiation",
+   "ecdev": "apps/server/src/mcp.rs (handle, handle_text)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rmcp.streamable-http-transport",
+   "donor": "the Streamable HTTP server transport and its session manager",
+   "ecdev": "apps/server/src/web.rs (mcp_post, mcp_delete)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rmcp.stdio-transport",
+   "donor": "the stdin and stdout transport",
+   "ecdev": "apps/server/src/lib.rs (stdio)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "rmcp.client-oauth-and-other-transports",
+   "donor": "the client, OAuth and enterprise authorisation, child-process, WebSocket, Unix-socket and worker transports, task manager",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rmcp.macros",
+   "donor": "rmcp-macros: tool, tool_router, tool_handler and prompt attribute macros",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "rmcp.examples-and-conformance",
+   "donor": "examples, conformance binaries, scripts and hooks",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "crates/rmcp/src/handler/server/",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/handler/server.rs",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/handler.rs",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/service/server.rs",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/service.rs",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/lib.rs",
+    "capabilities": "rmcp.server-handler"
+   },
+   {
+    "prefix": "crates/rmcp/src/model/",
+    "capabilities": "rmcp.json-rpc-and-model"
+   },
+   {
+    "prefix": "crates/rmcp/src/model.rs",
+    "capabilities": "rmcp.json-rpc-and-model"
+   },
+   {
+    "prefix": "crates/rmcp/src/error.rs",
+    "capabilities": "rmcp.json-rpc-and-model"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/streamable_http_server/",
+    "capabilities": "rmcp.streamable-http-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/streamable_http_server.rs",
+    "capabilities": "rmcp.streamable-http-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/common/server_side_http.rs",
+    "capabilities": "rmcp.streamable-http-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/common/http_header.rs",
+    "capabilities": "rmcp.streamable-http-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/common/mcp_headers.rs",
+    "capabilities": "rmcp.streamable-http-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/io.rs",
+    "capabilities": "rmcp.stdio-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/async_rw.rs",
+    "capabilities": "rmcp.stdio-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/sink_stream.rs",
+    "capabilities": "rmcp.stdio-transport"
+   },
+   {
+    "prefix": "crates/rmcp/src/handler/client/",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/handler/client.rs",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/service/client/",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/service/client.rs",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/service/tower.rs",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/task_manager.rs",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport/",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/src/transport.rs",
+    "capabilities": "rmcp.client-oauth-and-other-transports"
+   },
+   {
+    "prefix": "crates/rmcp/build.rs",
+    "capabilities": "rmcp.macros"
+   },
+   {
+    "prefix": "crates/rmcp-macros/",
+    "capabilities": "rmcp.macros"
+   },
+   {
+    "prefix": "examples/",
+    "capabilities": "rmcp.examples-and-conformance"
+   },
+   {
+    "prefix": "conformance/",
+    "capabilities": "rmcp.examples-and-conformance"
+   },
+   {
+    "prefix": "scripts/",
+    "capabilities": "rmcp.examples-and-conformance"
+   },
+   {
+    "prefix": ".githooks/",
+    "capabilities": "rmcp.examples-and-conformance"
+   }
+  ]
+ }
+}

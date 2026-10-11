@@ -1,0 +1,172 @@
+{
+ "record": "axum-semantic-matrix",
+ "donor": "tokio-rs/axum",
+ "donor_commit": "9983bc1da460becd3a0f08c513d610411e84dd43",
+ "donor_version_read": "axum 0.7.9 (tag axum-v0.7.9) with axum-core, axum-extra and axum-macros from the same repository",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "axum.routing-and-handlers",
+   "donor": "Router, route, method routing, fallbacks and handler traits",
+   "ecdev": "apps/server/src/web.rs (route)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "axum.extractors-and-responses",
+   "donor": "Path, Query, Json and State extractors and IntoResponse",
+   "ecdev": "apps/server/src/web.rs (percent_decode, query_param, json_response)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "axum.sse",
+   "donor": "Sse, Event and KeepAlive",
+   "ecdev": "apps/server/src/web.rs (events), substrate/net/src/server.rs (Reply::Stream)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "axum.middleware",
+   "donor": "from_fn middleware, Next and layers",
+   "ecdev": "apps/server/src/web.rs (origin_guard)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "axum.serve",
+   "donor": "axum::serve over a listener with graceful shutdown",
+   "ecdev": "substrate/net/src/server.rs (Server::serve, ShutdownHandle)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "axum.extra-and-macros",
+   "donor": "axum-extra typed headers, cookies, multipart, protobuf, JSON lines; axum-macros derives",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "axum.examples-and-benches",
+   "donor": "examples, benchmarks and test helpers",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "axum/src/routing/",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/handler/",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/lib.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/boxed.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/macros.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/util.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/service_ext.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum-core/src/lib.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum-core/src/macros.rs",
+    "capabilities": "axum.routing-and-handlers"
+   },
+   {
+    "prefix": "axum/src/test_helpers/",
+    "capabilities": "axum.examples-and-benches"
+   },
+   {
+    "prefix": "axum/src/extract/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/json.rs",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/form.rs",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/extension.rs",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/body/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/error_handling/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum-core/src/extract/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum-core/src/response/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum-core/src/body.rs",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum-core/src/ext_traits/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum-core/src/error.rs",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/response/sse.rs",
+    "capabilities": "axum.sse"
+   },
+   {
+    "prefix": "axum/src/response/",
+    "capabilities": "axum.extractors-and-responses"
+   },
+   {
+    "prefix": "axum/src/middleware/",
+    "capabilities": "axum.middleware"
+   },
+   {
+    "prefix": "axum/src/serve.rs",
+    "capabilities": "axum.serve"
+   },
+   {
+    "prefix": "axum-extra/",
+    "capabilities": "axum.extra-and-macros"
+   },
+   {
+    "prefix": "axum-macros/",
+    "capabilities": "axum.extra-and-macros"
+   },
+   {
+    "prefix": "axum/benches/",
+    "capabilities": "axum.examples-and-benches"
+   },
+   {
+    "prefix": "examples/",
+    "capabilities": "axum.examples-and-benches"
+   }
+  ]
+ }
+}

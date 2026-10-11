@@ -1,0 +1,253 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "tokio-stream/CHANGELOG.md",
+      "line_start": 83,
+      "line_end": 83,
+      "blob_hash": "6216bbf8202d24a2e27109d7739b5d48453078aa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- time: remove `Unpin` bound on `Throttle` methods ([#5105])"
+    },
+    {
+      "source_path": "tokio-stream/CHANGELOG.md",
+      "line_start": 84,
+      "line_end": 84,
+      "blob_hash": "6216bbf8202d24a2e27109d7739b5d48453078aa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- time: document that `throttle` operates on ms granularity ([#5101])"
+    },
+    {
+      "source_path": "tokio-stream/CHANGELOG.md",
+      "line_start": 162,
+      "line_end": 162,
+      "blob_hash": "6216bbf8202d24a2e27109d7739b5d48453078aa",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- stream: documentation note for throttle `Unpin` ([#3600])"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 67,
+      "line_end": 67,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    mod throttle;"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    use throttle::{throttle, Throttle};"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 1106,
+      "line_end": 1106,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// Create a throttled stream."
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 1112,
+      "line_end": 1112,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// let item_stream = futures::stream::repeat(\"one\").throttle(Duration::from_secs(2));"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 1123,
+      "line_end": 1123,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    fn throttle(self, duration: Duration) -> Throttle<Self>"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext.rs",
+      "line_start": 1127,
+      "line_end": 1127,
+      "blob_hash": "fe589869215de3978799d513a7229db926652968",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        throttle(duration, self)"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 12,
+      "line_end": 12,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "pub(super) fn throttle<T>(duration: Duration, stream: T) -> Throttle<T>"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 16,
+      "line_end": 16,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    Throttle {"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 25,
+      "line_end": 25,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// Stream for the [`throttle`](throttle) function. This object is `!Unpin`. If you need it to"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 26,
+      "line_end": 26,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// implement `Unpin` you can pin your throttle like this: `Box::pin(your_throttle)`."
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 29,
+      "line_end": 29,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    pub struct Throttle<T> {"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 37,
+      "line_end": 37,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        // The stream to throttle"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 43,
+      "line_end": 43,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "impl<T> Throttle<T> {"
+    },
+    {
+      "source_path": "tokio-stream/src/stream_ext/throttle.rs",
+      "line_start": 68,
+      "line_end": 68,
+      "blob_hash": "4e71debf3ce38215184d868792ab9ed4581e07d8",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "impl<T: Stream> Stream for Throttle<T> {"
+    },
+    {
+      "source_path": "tokio-stream/tests/time_throttle.rs",
+      "line_start": 14,
+      "line_end": 14,
+      "blob_hash": "e6c9917be3b5ca64733e98a29918d02991953c67",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    let mut stream = task::spawn(futures::stream::repeat(()).throttle(Duration::from_millis(100)));"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 173,
+      "line_end": 173,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- rt: fix missing quotation in docs ([#7925])"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 537,
+      "line_end": 537,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- net: update `AsRawFd` doc link to current Rust stdlib location ([#7429])"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 560,
+      "line_end": 560,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "[#7429]: https://github.com/tokio-rs/tokio/pull/7429"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 1776,
+      "line_end": 1776,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- fs: add `fs::try_exists` ([#4299])"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 1816,
+      "line_end": 1816,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "[#4299]: https://github.com/tokio-rs/tokio/pull/4299"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 2648,
+      "line_end": 2648,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- process: add `Command::as_std()` ([#4295])"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 2656,
+      "line_end": 2656,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "[#4295]: https://github.com/tokio-rs/tokio/pull/4295"
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 4130,
+      "line_end": 4130,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- `time::throttle` for throttling streams ([#1949])."
+    },
+    {
+      "source_path": "tokio/CHANGELOG.md",
+      "line_start": 4362,
+      "line_end": 4362,
+      "blob_hash": "6f5e56f2a06dcd0d60f7191906fe73555d28119d",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "- Implement throttle stream combinator ([#736])."
+    },
+    {
+      "source_path": "tokio/src/fs/open_options.rs",
+      "line_start": 487,
+      "line_end": 487,
+      "blob_hash": "27e98b5b2347727234b61404ab54badd9253d285",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    ///   requested on a read-only file system, exceeded disk quota, too many"
+    },
+    {
+      "source_path": "tokio/src/sync/semaphore.rs",
+      "line_start": 301,
+      "line_end": 301,
+      "blob_hash": "8af5b54e88b059a9d506f8051a49ca8e1a4cfb23",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/// ## Rate limiting using a token bucket"
+    },
+    {
+      "source_path": "tokio/src/sync/semaphore.rs",
+      "line_start": 309,
+      "line_end": 309,
+      "blob_hash": "8af5b54e88b059a9d506f8051a49ca8e1a4cfb23",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/// This example implements rate limiting using a [token bucket]. A token bucket is a form of rate"
+    },
+    {
+      "source_path": "tokio/src/sync/semaphore.rs",
+      "line_start": 314,
+      "line_end": 314,
+      "blob_hash": "8af5b54e88b059a9d506f8051a49ca8e1a4cfb23",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "/// certain rate that defines the rate limit. When a burst of requests arrives, tokens are"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+ "record": "futures-semantic-matrix",
+ "donor": "rust-lang/futures-rs",
+ "donor_commit": "705e6b5c0f06535b1aac1cb1989a172b3d45be8c",
+ "donor_version_read": "futures 0.3.34 (tag 0.3.34) with futures-core, -util, -task, -channel, -executor, -io, -sink, -macro and -test",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "futures.stream-and-sink-traits",
+   "donor": "Stream, StreamExt, Sink and the combinators over them",
+   "ecdev": "substrate/net/src/server.rs (Reply::Stream producer)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "futures.executors-and-tasks",
+   "donor": "Future combinators, join and select, executors, task wakers, async_await",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "futures.io-channels-and-locks",
+   "donor": "AsyncRead and AsyncWrite, mpsc and oneshot channels, BiLock",
+   "ecdev": "std::io, std::sync",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "futures.macros-test-and-examples",
+   "donor": "procedural macros, test utilities, examples and benches",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "futures-core/src/stream.rs",
+    "capabilities": "futures.stream-and-sink-traits"
+   },
+   {
+    "prefix": "futures-sink/",
+    "capabilities": "futures.stream-and-sink-traits"
+   },
+   {
+    "prefix": "futures-util/src/stream/",
+    "capabilities": "futures.stream-and-sink-traits"
+   },
+   {
+    "prefix": "futures-util/src/sink/",
+    "capabilities": "futures.stream-and-sink-traits"
+   },
+   {
+    "prefix": "futures/src/lib.rs",
+    "capabilities": "futures.stream-and-sink-traits"
+   },
+   {
+    "prefix": "futures-core/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-task/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-executor/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/future/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/async_await/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/task/",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/abortable.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/fns.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/lib.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/macros.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/never.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/unfold_state.rs",
+    "capabilities": "futures.executors-and-tasks"
+   },
+   {
+    "prefix": "futures-util/src/compat/",
+    "capabilities": "futures.io-channels-and-locks"
+   },
+   {
+    "prefix": "futures-util/src/io/",
+    "capabilities": "futures.io-channels-and-locks"
+   },
+   {
+    "prefix": "futures-util/src/lock/",
+    "capabilities": "futures.io-channels-and-locks"
+   },
+   {
+    "prefix": "futures-io/",
+    "capabilities": "futures.io-channels-and-locks"
+   },
+   {
+    "prefix": "futures-channel/",
+    "capabilities": "futures.io-channels-and-locks"
+   },
+   {
+    "prefix": "futures-macro/",
+    "capabilities": "futures.macros-test-and-examples"
+   },
+   {
+    "prefix": "futures-test/",
+    "capabilities": "futures.macros-test-and-examples"
+   },
+   {
+    "prefix": "futures-util/benches/",
+    "capabilities": "futures.macros-test-and-examples"
+   },
+   {
+    "prefix": "futures/tests_disabled/",
+    "capabilities": "futures.macros-test-and-examples"
+   },
+   {
+    "prefix": "examples/",
+    "capabilities": "futures.macros-test-and-examples"
+   },
+   {
+    "prefix": "ci/",
+    "capabilities": "futures.macros-test-and-examples"
+   }
+  ]
+ }
+}

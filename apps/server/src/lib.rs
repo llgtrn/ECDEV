@@ -1,107 +1,17 @@
-use axum::{
-    Json, Router,
-    extract::{Path as AxumPath, Query, Request, State},
-    http::{StatusCode, header},
-    middleware::{self, Next},
-    response::{
-        Html, IntoResponse, Response,
-        sse::{Event, KeepAlive, Sse},
-    },
-    routing::{get, post},
-};
+use ecdev_core::Engine;
 use ecdev_core::json;
 use ecdev_core::json::Value;
-use ecdev_core::{Engine, service::tool_definitions};
-use futures::Stream;
-use rmcp::{
-    ErrorData, RoleServer, ServerHandler, ServiceExt,
-    model::*,
-    service::RequestContext,
-    transport::streamable_http_server::{
-        StreamableHttpServerConfig, StreamableHttpService, session::local::LocalSessionManager,
-    },
+use ecdev_net::server::{Config, Server};
+use std::{
+    io::{BufRead, Write},
+    path::PathBuf,
+    sync::{Arc, Mutex},
+    time::Duration,
 };
 
-/// The protocol and HTTP libraries still speak `serde_json`; the engine speaks the native `Value`.
-/// Both sides convert through their text.
-mod bridge {
-    pub fn serde(v: &ecdev_core::json::Value) -> serde_json::Value {
-        serde_json::from_str(&v.to_string()).expect("native JSON text is valid JSON")
-    }
-    pub fn native(v: &serde_json::Value) -> ecdev_core::json::Value {
-        ecdev_core::json::from_str(&v.to_string()).expect("serde_json text is valid JSON")
-    }
-}
-use std::{collections::HashMap, convert::Infallible, path::PathBuf, sync::Arc, time::Duration};
+pub mod mcp;
+pub mod web;
 
-#[derive(Clone)]
-struct Mcp(Engine);
-impl ServerHandler for Mcp {
-    fn get_info(&self) -> ServerInfo {
-        ServerInfo::new(ServerCapabilities::builder().enable_tools().enable_resources().build()).with_instructions("Native/public research is available without paid providers. Supplied HTML is FIXTURE; unknown commercial evidence remains unknown. Keepa is optional and denied by zero budget before IO; live auth unverified. Economics SIMULATED; opportunity search PLAN_ONLY. Donor extinction requires proofs.")
-    }
-    async fn list_tools(
-        &self,
-        _: Option<PaginatedRequestParams>,
-        _: RequestContext<RoleServer>,
-    ) -> Result<ListToolsResult, ErrorData> {
-        let tools: Vec<Tool> = tool_definitions()
-            .into_iter()
-            .map(|v| serde_json::from_value(bridge::serde(&v)).unwrap())
-            .collect();
-        serde_json::from_value(serde_json::json!({"tools":tools}))
-            .map_err(|e| ErrorData::internal_error(e.to_string(), None))
-    }
-    fn get_tool(&self, name: &str) -> Option<Tool> {
-        tool_definitions()
-            .into_iter()
-            .find(|v| v["name"] == name)
-            .and_then(|v| serde_json::from_value(bridge::serde(&v)).ok())
-    }
-    async fn call_tool(
-        &self,
-        r: CallToolRequestParams,
-        _: RequestContext<RoleServer>,
-    ) -> Result<CallToolResponse, ErrorData> {
-        let engine = self.0.clone();
-        let name = r.name.to_string();
-        let args = bridge::native(&serde_json::Value::Object(r.arguments.unwrap_or_default()));
-        let result = tokio::task::spawn_blocking(move || engine.call(&name, args))
-            .await
-            .map_err(|_| ErrorData::internal_error("Engine task failed", None))?;
-        Ok(match result {
-            Ok(v) => CallToolResult::structured(bridge::serde(&if v.is_object() {
-                v
-            } else {
-                json!({"items": v})
-            })),
-            Err(e) => CallToolResult::error(vec![ContentBlock::text(e)]),
-        }
-        .into())
-    }
-    async fn list_resource_templates(
-        &self,
-        _: Option<PaginatedRequestParams>,
-        _: RequestContext<RoleServer>,
-    ) -> Result<ListResourceTemplatesResult, ErrorData> {
-        serde_json::from_value(serde_json::json!({"resourceTemplates":[{"uriTemplate":"ecdev://run/{id}","name":"Persisted run","mimeType":"application/json"},{"uriTemplate":"ecdev://governance/donor/{id}","name":"Donor census","mimeType":"application/json"}]})).map_err(|e|ErrorData::internal_error(e.to_string(),None))
-    }
-    async fn read_resource(
-        &self,
-        r: ReadResourceRequestParams,
-        _: RequestContext<RoleServer>,
-    ) -> Result<ReadResourceResponse, ErrorData> {
-        let result = if let Some(id) = r.uri.strip_prefix("ecdev://run/") {
-            self.0.run(id)
-        } else if let Some(id) = r.uri.strip_prefix("ecdev://governance/donor/") {
-            self.0.census(id)
-        } else {
-            Err("Unknown resource".into())
-        };
-        let value = result.map_err(|e| ErrorData::invalid_params(e, None))?;
-        serde_json::from_value::<ReadResourceResult>(serde_json::json!({"contents":[{"uri":r.uri,"mimeType":"application/json","text":value.to_string()}]})).map(Into::into).map_err(|e|ErrorData::internal_error(e.to_string(),None))
-    }
-}
 fn root() -> PathBuf {
     std::env::var_os("ECDEV_ROOT")
         .map(PathBuf::from)
@@ -109,226 +19,80 @@ fn root() -> PathBuf {
         .canonicalize()
         .expect("ECDEV_ROOT must exist")
 }
-fn response(result: Result<Value, String>) -> Response {
-    match result {
-        Ok(v) => Json(bridge::serde(&v)).into_response(),
-        Err(e) => (
-            StatusCode::BAD_REQUEST,
-            Json(serde_json::json!({"error":e})),
-        )
-            .into_response(),
-    }
-}
-async fn status(State(e): State<Engine>) -> Response {
-    response(e.status())
-}
-async fn providers(State(e): State<Engine>) -> Json<serde_json::Value> {
-    Json(bridge::serde(&e.providers()))
-}
-async fn donors(State(e): State<Engine>) -> Response {
-    response(e.registry())
-}
-async fn census(State(e): State<Engine>, AxumPath(id): AxumPath<String>) -> Response {
-    response(e.census(&id))
-}
-async fn metrics_json(State(e): State<Engine>) -> Response {
-    response(e.metrics())
-}
-async fn metrics(State(e): State<Engine>) -> Response {
-    match e.metrics() {
-        Ok(v) => {
-            let lines = v
-                .as_object()
-                .unwrap()
-                .iter()
-                .filter_map(|(k, v)| v.as_u64().map(|n| format!("ecdev_{k} {n}\n")))
-                .collect::<String>();
-            ([(header::CONTENT_TYPE, "text/plain; version=0.0.4")], lines).into_response()
-        }
-        Err(e) => (StatusCode::INTERNAL_SERVER_ERROR, e).into_response(),
-    }
-}
-async fn health(State(e): State<Engine>) -> Response {
-    response(e.call("ecdev.system.health", json!({})))
-}
-async fn tools() -> Json<serde_json::Value> {
-    Json(bridge::serde(&json!(tool_definitions())))
-}
-async fn runs(State(e): State<Engine>) -> Response {
-    response(e.runs())
-}
-async fn run_detail(State(e): State<Engine>, AxumPath(id): AxumPath<String>) -> Response {
-    response(e.run(&id))
-}
-async fn execute(
-    State(e): State<Engine>,
-    AxumPath(name): AxumPath<String>,
-    Json(args): Json<serde_json::Value>,
-) -> Response {
-    let args = bridge::native(&args);
-    match tokio::task::spawn_blocking(move || e.call(&name, args)).await {
-        Ok(v) => response(v),
-        Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, "Engine failed").into_response(),
-    }
-}
-async fn events(
-    State(e): State<Engine>,
-    Query(q): Query<HashMap<String, String>>,
-    request: Request,
-) -> Sse<impl Stream<Item = Result<Event, Infallible>>> {
-    let after = request
-        .headers()
-        .get("last-event-id")
-        .and_then(|v| v.to_str().ok())
-        .or_else(|| q.get("after").map(String::as_str))
-        .and_then(|s| s.parse::<u64>().ok())
-        .unwrap_or(0);
-    let stream = futures::stream::unfold((e, after), |(e, mut after)| async move {
-        loop {
-            if let Ok(v) = e.events(after) {
-                let a = v.as_array().unwrap();
-                if let Some(event) = a.first() {
-                    after = event["id"].as_u64().unwrap();
-                    let item = Event::default()
-                        .id(after.to_string())
-                        .event("run")
-                        .data(event["data"].to_string());
-                    return Some((Ok(item), (e, after)));
-                }
-            }
-            tokio::time::sleep(Duration::from_millis(500)).await;
-        }
-    });
-    Sse::new(stream).keep_alive(KeepAlive::default())
-}
-async fn origin_guard(request: Request, next: Next) -> Response {
-    let host = request
-        .headers()
-        .get("host")
-        .and_then(|h| h.to_str().ok())
-        .unwrap_or("");
-    if !host.starts_with("127.0.0.1:") && !host.starts_with("localhost:") {
-        return (StatusCode::FORBIDDEN, "Invalid local host").into_response();
-    }
-    if let Some(origin) = request.headers().get("origin") {
-        let expected = format!("http://{host}");
-        if origin.to_str().ok() != Some(expected.as_str()) {
-            return (StatusCode::FORBIDDEN, "Invalid origin").into_response();
-        }
-    }
-    next.run(request).await
-}
-pub fn router(e: Engine, port: u16) -> Router {
-    let m = e.clone();
-    let mut config = StreamableHttpServerConfig::default();
-    config.legacy_session_mode = false;
-    config.json_response = true;
-    config.allowed_origins = vec![
-        format!("http://127.0.0.1:{port}"),
-        format!("http://localhost:{port}"),
-    ];
-    let mcp = StreamableHttpService::new(
-        move || Ok(Mcp(m.clone())),
-        Arc::new(LocalSessionManager::default()),
-        config,
-    );
-    Router::new()
-        .route(
-            "/",
-            get(|| async { Html(include_str!("../../web/index.html")) }),
-        )
-        .route(
-            "/app.js",
-            get(|| async {
-                (
-                    [(header::CONTENT_TYPE, "text/javascript")],
-                    include_str!("../../web/app.js"),
-                )
-            }),
-        )
-        .route(
-            "/style.css",
-            get(|| async {
-                (
-                    [(header::CONTENT_TYPE, "text/css")],
-                    include_str!("../../web/style.css"),
-                )
-            }),
-        )
-        .route("/health", get(health))
-        .route("/metrics", get(metrics))
-        .route("/events", get(events))
-        .route("/api/status", get(status))
-        .route("/api/providers", get(providers))
-        .route("/api/donors", get(donors))
-        .route("/api/donors/:id", get(census))
-        .route("/api/metrics", get(metrics_json))
-        .route("/api/tools", get(tools))
-        .route(
-            "/api/research/example",
-            get(|| async {
-                Json(
-                    serde_json::from_str::<serde_json::Value>(include_str!(
-                        "../../../domain/commerce/tests/fixtures/research-household.json"
-                    ))
-                    .unwrap(),
-                )
-            }),
-        )
-        .route("/api/runs", get(runs))
-        .route("/api/runs/:id", get(run_detail))
-        .route("/api/tools/:name", post(execute))
-        .nest_service("/mcp", mcp)
-        .with_state(e)
-        .layer(middleware::from_fn(origin_guard))
-}
-pub async fn serve() -> Result<(), Box<dyn std::error::Error>> {
+
+/// Serves the web console, the JSON API and MCP over HTTP on the loopback port `ECDEV_PORT`
+/// (default 8765; 0 picks a free one) until the process is stopped.
+pub fn serve() -> Result<(), Box<dyn std::error::Error>> {
     let port = std::env::var("ECDEV_PORT")
         .unwrap_or("8765".into())
         .parse::<u16>()?;
     let e = configured_engine()?;
-    let listener = tokio::net::TcpListener::bind((std::net::Ipv4Addr::LOCALHOST, port)).await?;
+    let server = Server::bind((std::net::Ipv4Addr::LOCALHOST, port), Config::default())?;
+    let port = server.local_addr()?.port();
     println!(
         "ECDEV SERVER READY\n\nMCP     http://127.0.0.1:{port}/mcp\nWEB     http://127.0.0.1:{port}/\nAPI     http://127.0.0.1:{port}/api/status\nHEALTH  http://127.0.0.1:{port}/health"
     );
-    let scheduler = start_watch_scheduler(e.clone());
-    axum::serve(listener, router(e, port))
-        .with_graceful_shutdown(async {
-            let _ = tokio::signal::ctrl_c().await;
-        })
-        .await?;
-    scheduler.abort();
+    start_watch_scheduler(e.clone());
+    server.serve(web::App::new(e))?;
     Ok(())
 }
-fn start_watch_scheduler(engine: Engine) -> tokio::task::JoinHandle<()> {
-    tokio::spawn(async move {
+
+/// Runs due watches once a second for as long as the process lives.
+fn start_watch_scheduler(engine: Engine) {
+    std::thread::spawn(move || {
         loop {
-            let e = engine.clone();
-            let result = tokio::task::spawn_blocking(move || {
-                e.monitor_tick(ecdev_core::service::timestamp())?;
-                e.trend_watch_tick(ecdev_core::service::timestamp())
-            })
-            .await;
-            if let Ok(Err(reason)) = result {
+            let now = ecdev_core::service::timestamp();
+            if let Err(reason) = engine
+                .monitor_tick(now)
+                .and_then(|_| engine.trend_watch_tick(now))
+            {
                 eprintln!("Watch scheduler: {reason}");
             }
-            tokio::time::sleep(Duration::from_secs(1)).await;
+            std::thread::sleep(Duration::from_secs(1));
         }
-    })
+    });
 }
-pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
+
+/// MCP over standard input and output: one JSON-RPC message per line, requests answered
+/// concurrently, until the input ends.
+fn stdio(engine: Engine) -> Result<(), Box<dyn std::error::Error>> {
+    start_watch_scheduler(engine.clone());
+    let mcp = mcp::Mcp::new(engine);
+    let out = Arc::new(Mutex::new(std::io::stdout()));
+    let mut running: Vec<std::thread::JoinHandle<()>> = Vec::new();
+    for line in std::io::stdin().lock().lines() {
+        let line = line?;
+        if line.trim().is_empty() {
+            continue;
+        }
+        running.retain(|h| !h.is_finished());
+        let (mcp, out) = (mcp.clone(), out.clone());
+        let answer = move || {
+            if let Some(reply) = mcp.handle_text(&line) {
+                let mut o = out.lock().unwrap_or_else(|e| e.into_inner());
+                let _ = writeln!(o, "{reply}").and_then(|()| o.flush());
+            }
+        };
+        if running.len() < 32 {
+            running.push(std::thread::spawn(answer));
+        } else {
+            answer();
+        }
+    }
+    for h in running {
+        let _ = h.join();
+    }
+    Ok(())
+}
+
+pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let a: Vec<String> = std::env::args().skip(1).collect();
     let cmd = a.first().map(String::as_str).unwrap_or("help");
     if cmd == "server" {
-        return serve().await;
+        return serve();
     }
     if cmd == "stdio" {
-        let engine = configured_engine()?;
-        let scheduler = start_watch_scheduler(engine.clone());
-        let service = Mcp(engine).serve(rmcp::transport::stdio()).await?;
-        service.waiting().await?;
-        scheduler.abort();
-        return Ok(());
+        return stdio(configured_engine()?);
     }
     if cmd == "governance" {
         let status = std::process::Command::new("cargo")
@@ -374,7 +138,7 @@ pub async fn run() -> Result<(), Box<dyn std::error::Error>> {
             } else {
                 json!({})
             };
-            tokio::task::spawn_blocking(move || e.call(&name, args)).await??
+            e.call(&name, args)?
         }
         _ => {
             println!(
@@ -440,6 +204,7 @@ mod metrics_tests {
 #[cfg(test)]
 mod doctor_tests {
     use super::*;
+    use ecdev_core::service::tool_definitions;
     use ecdev_marketplace::{doctor::MapEnv, transport::ConfiguredAmazon};
     fn engine(pairs: &[(&str, &str)]) -> Engine {
         let root = std::env::temp_dir().join(format!(

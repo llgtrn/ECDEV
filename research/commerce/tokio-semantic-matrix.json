@@ -1,0 +1,186 @@
+{
+ "record": "tokio-semantic-matrix",
+ "donor": "tokio-rs/tokio",
+ "donor_commit": "d87569164fb61145e79e7ffe0b25783569cc8f93",
+ "donor_version_read": "tokio 1.52.3 (tag tokio-1.52.3) with tokio-stream 0.1.19, tokio-util, tokio-macros and tokio-test from the same repository",
+ "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+ "capabilities": [
+  {
+   "key": "tokio.runtime-and-tasks",
+   "donor": "the multi-thread work-stealing scheduler, task spawning, spawn_blocking and the runtime builder",
+   "ecdev": "substrate/net/src/server.rs (thread per connection under a limit), apps/server/src/lib.rs (scheduler thread)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "tokio.tcp-and-io",
+   "donor": "TcpListener, TcpStream, AsyncRead and AsyncWrite, readiness and the I/O driver",
+   "ecdev": "substrate/net/src/server.rs, client.rs and http.rs over std::net",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "tokio.time",
+   "donor": "sleep, interval, timeout and the hierarchical timer wheel",
+   "ecdev": "std::thread::sleep, socket read and write timeouts, substrate/net deadlines",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "tokio.stream-adapters",
+   "donor": "tokio-stream: Stream adapters and wrappers over channels and intervals",
+   "ecdev": "substrate/net/src/server.rs (Reply::Stream producer), apps/server/src/web.rs (events)",
+   "relevance": "RELIED_ON"
+  },
+  {
+   "key": "tokio.signal",
+   "donor": "ctrl_c and unix signal streams",
+   "ecdev": "none: SIGINT ends the process",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "tokio.sync",
+   "donor": "mpsc, oneshot, broadcast, watch, Mutex, RwLock, Semaphore, Notify and Barrier for tasks",
+   "ecdev": "std::sync",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "tokio.fs-and-process",
+   "donor": "asynchronous file, directory and child-process wrappers over blocking pools",
+   "ecdev": "std::fs, std::process",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "tokio.util-codecs",
+   "donor": "tokio-util: codecs, framed transports, CancellationToken, task tracking",
+   "ecdev": "substrate/net/src/http.rs",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "tokio.macros-and-test-support",
+   "donor": "tokio::main, tokio::test, select!, join! and the mock-I/O test crate",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  },
+  {
+   "key": "tokio.examples-and-benches",
+   "donor": "examples, benchmarks, stress tests and fuzz targets",
+   "ecdev": "none",
+   "relevance": "NOT_ADOPTED"
+  }
+ ],
+ "file_coverage": {
+  "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+  "entries": [
+   {
+    "prefix": "tokio/src/runtime/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/task/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/future/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/loom/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/util/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/macros/",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/blocking.rs",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/doc/",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "tokio/src/fuzz.rs",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "tokio/src/lib.rs",
+    "capabilities": "tokio.runtime-and-tasks"
+   },
+   {
+    "prefix": "tokio/src/process/",
+    "capabilities": "tokio.fs-and-process"
+   },
+   {
+    "prefix": "tokio/src/net/",
+    "capabilities": "tokio.tcp-and-io"
+   },
+   {
+    "prefix": "tokio/src/io/",
+    "capabilities": "tokio.tcp-and-io"
+   },
+   {
+    "prefix": "tokio/src/time/",
+    "capabilities": "tokio.time"
+   },
+   {
+    "prefix": "tokio/src/signal/",
+    "capabilities": "tokio.signal"
+   },
+   {
+    "prefix": "tokio/src/sync/",
+    "capabilities": "tokio.sync"
+   },
+   {
+    "prefix": "tokio/src/fs/",
+    "capabilities": "tokio.fs-and-process"
+   },
+   {
+    "prefix": "tokio-stream/src/",
+    "capabilities": "tokio.stream-adapters"
+   },
+   {
+    "prefix": "tokio-util/src/",
+    "capabilities": "tokio.util-codecs"
+   },
+   {
+    "prefix": "tokio-macros/src/",
+    "capabilities": "tokio.macros-and-test-support"
+   },
+   {
+    "prefix": "tokio-test/src/",
+    "capabilities": "tokio.macros-and-test-support"
+   },
+   {
+    "prefix": "tests-integration/src/",
+    "capabilities": "tokio.macros-and-test-support"
+   },
+   {
+    "prefix": "tests-build/src/",
+    "capabilities": "tokio.macros-and-test-support"
+   },
+   {
+    "prefix": "benches/",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "examples/",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "stress-test/",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "tokio-stream/fuzz/",
+    "capabilities": "tokio.examples-and-benches"
+   },
+   {
+    "prefix": "tokio/fuzz/",
+    "capabilities": "tokio.examples-and-benches"
+   }
+  ]
+ }
+}

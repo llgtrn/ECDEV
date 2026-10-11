@@ -1,0 +1,36 @@
+{
+ "record": "native-http-mcp",
+ "evidence_class": "DERIVED_FROM_THE_STANDARDS_AND_TESTED_BY_CONFORMANCE_AND_HOSTILE_INPUT_SUITES",
+ "standards": [
+  "RFC 9110 HTTP Semantics",
+  "RFC 9112 HTTP/1.1 message syntax, framing and connection management",
+  "WHATWG HTML Living Standard, server-sent events",
+  "JSON-RPC 2.0 specification",
+  "Model Context Protocol specification revisions 2025-06-18, 2025-03-26 and 2024-11-05 (lifecycle, tools, resources, stdio and Streamable HTTP transports)"
+ ],
+ "licence_note": "Written from the published standards and from the observable behaviour of the previous implementation (axum 0.7.9 and rmcp 3.3.0 over tokio) while it was still a dependency; no donor source is copied or translated.",
+ "modules": [
+  "substrate/net/src/ (http, server, client)",
+  "apps/server/src/ (lib, mcp, web)"
+ ],
+ "behaviour": {
+  "http_syntax": "request and status lines, field names as tokens, field values without bare CR, LF or NUL, obs-fold refused, header count and size limits, HTTP/1.0 and 1.1, absolute-form and origin-form targets, Transfer-Encoding chunked with extensions and trailers, Content-Length, close-delimited response bodies, Expect: 100-continue",
+  "smuggling_defences": "a message with both Transfer-Encoding and Content-Length, duplicate or conflicting Content-Length, a non-final or repeated chunked coding and malformed chunk sizes are refused with 400 and the connection is closed",
+  "server": "thread per connection under a limit with a 503 beyond it, request and idle deadlines with 408, persistent connections, HEAD, chunked streaming responses that end the connection, bounded bodies with 413, and a shutdown handle",
+  "client": "blocking requests with an absolute deadline covering connect, write and read, pinned addresses with the Host header left as the name, HTTP proxies in absolute form with credentials, CONNECT tunnels for a transport-security connector, header-injection refusal, and framing for length, chunked, close-delimited, HEAD and no-content responses",
+  "console_and_api": "the embedded console assets, 14 JSON routes and prefix routes with 404, 405 and Allow, HEAD as GET, strict percent decoding, an event stream with Last-Event-ID, and a Host and Origin guard that admits only the loopback host and its own origin",
+  "mcp": "JSON-RPC 2.0 envelopes with parse, invalid-request and method-not-found errors, batches, notifications without replies, initialize with version negotiation, ping, tools list and call, resource templates and reads, one message per line on standard input, and Streamable HTTP in JSON response mode with Mcp-Session-Id, 202 for notifications, 400 for an unsupported MCP-Protocol-Version, 404 for an unknown session and session deletion"
+ },
+ "documented_differences": [
+  "the server is thread per connection and bounded by a connection limit instead of an event loop",
+  "the Streamable HTTP endpoint answers every POST with a JSON body and never opens a server-initiated stream; GET /mcp is 405, which the specification permits",
+  "process termination is not graceful: the write-ahead log makes it safe at any instant"
+ ],
+ "proofs": [
+  "substrate/net/src/http.rs tests: framing, smuggling shapes, limits, mutated heads never panic",
+  "substrate/net/src/server.rs tests: persistence, chunked requests, error statuses, streams, deadlines, many clients, garbage input",
+  "substrate/net/tests/client.rs: round trips, framings, broken responses, deadlines, pinned addresses, proxies, CONNECT tunnels",
+  "apps/server/src/mcp.rs and web.rs unit tests",
+  "apps/server/tests/protocol.rs: the real binary driven over HTTP and over standard input"
+ ]
+}

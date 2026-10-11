@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "5d60a3734e98c03f4335aede626a7c8235322571",
+  "assessed_parent_commit": "bb589919267446fe05f1fa1231c1a94a0f7dd0e8",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 59,
-    "production_capabilities_native": 59,
-    "production_capabilities_proven": 59,
+    "production_capabilities_required": 73,
+    "production_capabilities_native": 73,
+    "production_capabilities_proven": 73,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 380,
-    "semantic_censused_capabilities": 380,
+    "known_donor_capabilities": 408,
+    "semantic_censused_capabilities": 408,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 78,
-    "study_complete_capabilities": 195,
-    "not_relevant_after_review": 33,
+    "reference_only": 85,
+    "study_complete_capabilities": 210,
+    "not_relevant_after_review": 39,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.805263
+    "knowledge_coverage_ratio": 0.818627
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 33,
+    "donors_knowledge_unreviewed": 29,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 11,
-    "donors_structurally_censused": 35,
-    "donors_semantically_censused": 22,
+    "donors_study_complete": 15,
+    "donors_structurally_censused": 39,
+    "donors_semantically_censused": 26,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 57
+    "donors_with_open_research": 53
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -816,9 +816,9 @@
     },
     {
       "donor": "dependency--github-com-modelcontextprotocol-rust-sdk",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "Apache-2.0",
         "family": "PERMISSIVE",
@@ -827,7 +827,15 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "rmcp.server-handler STUDY_COMPLETE[INDEPENDENT_NATIVE](tools/list, tools/call with isError results and structuredContent, resources/templates/list and resources/read, each answered from the shared engine)",
+        "rmcp.json-rpc-and-model STUDY_COMPLETE[INDEPENDENT_NATIVE](parse, invalid-request and method-not-found errors with the right ids, batches, notifications and client responses without replies, and initialize that echoes a supported revision or offers the newest)",
+        "rmcp.streamable-http-transport STUDY_COMPLETE[INDEPENDENT_NATIVE](JSON response mode: POST with Accept and Content-Type checks, Mcp-Session-Id issued on initialize and required afterwards, 202 for notifications, 400 for a bad MCP-Protocol-Version, DELETE ends a session, and a bounded session table; the server opens no stream of its own)",
+        "rmcp.stdio-transport STUDY_COMPLETE[INDEPENDENT_NATIVE](one JSON message per line on standard input, replies written whole under a lock, requests answered concurrently up to a limit, and exit when input ends)",
+        "rmcp.client-oauth-and-other-transports REFERENCE_ONLY(client and authorisation machinery for roles ECDEV does not play; the server speaks only loopback with an Origin guard)",
+        "rmcp.macros NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](procedural macros that generate handlers from Rust types)",
+        "rmcp.examples-and-conformance NO_RESEARCH_VALUE[RELEASE_TOOLING](donor examples and repository scripts)"
+      ]
     },
     {
       "donor": "dependency--github-com-modelcontextprotocol-typescript-sdk",
@@ -998,9 +1006,9 @@
     },
     {
       "donor": "dependency--github-com-rust-lang-futures-rs",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -1009,7 +1017,12 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "futures.stream-and-sink-traits STUDY_COMPLETE[INDEPENDENT_NATIVE](a blocking producer that writes chunks to the connection and stops when a write fails or the server shuts down)",
+        "futures.executors-and-tasks REFERENCE_ONLY(cooperative task machinery; threads replace it)",
+        "futures.io-channels-and-locks REFERENCE_ONLY(asynchronous counterparts of std types)",
+        "futures.macros-test-and-examples NO_RESEARCH_VALUE[RELEASE_TOOLING](donor macros, tests, examples and benches)"
+      ]
     },
     {
       "donor": "dependency--github-com-scrapy-w3lib",
@@ -1115,9 +1128,9 @@
     },
     {
       "donor": "dependency--github-com-tokio-rs-axum",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "EXTINCT",
+      "effective": "EXTINCT",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -1126,13 +1139,21 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "axum.routing-and-handlers STUDY_COMPLETE[INDEPENDENT_NATIVE](a match on the path with explicit 404, 405 with an Allow header, HEAD served as GET, and prefix routes for runs, donors and tools)",
+        "axum.extractors-and-responses STUDY_COMPLETE[INDEPENDENT_NATIVE](strict percent decoding that refuses malformed escapes and invalid UTF-8, query lookup, JSON bodies through the native JSON model, 400 for a body that is not JSON)",
+        "axum.sse STUDY_COMPLETE[INDEPENDENT_NATIVE](a chunked text/event-stream producer with Last-Event-ID and after cursors and a keep-alive comment every fifteen seconds that also detects a departed client)",
+        "axum.middleware STUDY_COMPLETE[INDEPENDENT_NATIVE](the guard runs before routing: the Host must be the loopback host and a browser Origin must be that same origin (403 otherwise))",
+        "axum.serve STUDY_COMPLETE[INDEPENDENT_NATIVE](an accept loop with a connection limit, a read deadline and a ShutdownHandle that stops accepting and lets streams finish)",
+        "axum.extra-and-macros REFERENCE_ONLY(extractor conveniences ECDEV has no route for)",
+        "axum.examples-and-benches NO_RESEARCH_VALUE[RELEASE_TOOLING](donor examples and benches)"
+      ]
     },
     {
       "donor": "dependency--github-com-tokio-rs-tokio",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT",
         "family": "PERMISSIVE",
@@ -1141,7 +1162,18 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "tokio.runtime-and-tasks STUDY_COMPLETE[INDEPENDENT_NATIVE](one operating-system thread per connection up to a configured limit with a clean 503 beyond it, one scheduler thread, and plain calls for blocking engine work; nothing is polled or woken)",
+        "tokio.tcp-and-io STUDY_COMPLETE[INDEPENDENT_NATIVE](std TcpListener and TcpStream with RFC 9112 message framing written from the standard: chunked and length bodies, expectations, persistent connections and request-smuggling refusals)",
+        "tokio.time STUDY_COMPLETE[INDEPENDENT_NATIVE](socket timeouts for slow clients and idle connections, an absolute deadline for client requests, and a sleeping scheduler thread)",
+        "tokio.stream-adapters STUDY_COMPLETE[INDEPENDENT_NATIVE](a producer closure that writes chunks and learns of a departed client by the failed write, so no stream type is needed)",
+        "tokio.signal STUDY_COMPLETE[INDEPENDENT_NATIVE](the write-ahead log makes ending the process at any instant safe, so there is nothing to drain; tests stop a server with its ShutdownHandle)",
+        "tokio.sync REFERENCE_ONLY(async synchronisation primitives for a task runtime ECDEV does not have)",
+        "tokio.fs-and-process REFERENCE_ONLY(thread-pool wrappers for std calls)",
+        "tokio.util-codecs REFERENCE_ONLY(generic codec framework; the one framing ECDEV needs is native and tested against hostile input)",
+        "tokio.macros-and-test-support NO_RESEARCH_VALUE[LANGUAGE_BINDINGS](procedural macros for an async runtime)",
+        "tokio.examples-and-benches NO_RESEARCH_VALUE[RELEASE_TOOLING](donor examples and benches)"
+      ]
     },
     {
       "donor": "dependency--github-com-tree-sitter-py-tree-sitter",

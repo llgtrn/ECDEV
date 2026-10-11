@@ -1,0 +1,1649 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "261b77e833e2c333fbd4d95edc34d94259ff2f09",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "members": [
+          "crates/rmcp",
+          "crates/rmcp-macros",
+          "examples/*",
+          "conformance"
+        ],
+        "default-members": [
+          "crates/rmcp",
+          "crates/rmcp-macros"
+        ],
+        "resolver": "2",
+        "dependencies": {
+          "rmcp": {
+            "version": "3.3.0",
+            "path": "./crates/rmcp"
+          },
+          "rmcp-macros": {
+            "version": "3.3.0",
+            "path": "./crates/rmcp-macros"
+          }
+        },
+        "package": {
+          "edition": "2024",
+          "rust-version": "1.88",
+          "version": "3.3.0",
+          "authors": [
+            "4t145 <u4t145@163.com>"
+          ],
+          "license": "Apache-2.0",
+          "repository": "https://github.com/modelcontextprotocol/rust-sdk/",
+          "description": "Rust SDK for Model Context Protocol",
+          "keywords": [
+            "mcp",
+            "sdk",
+            "tokio",
+            "modelcontextprotocol"
+          ],
+          "homepage": "https://github.com/modelcontextprotocol/rust-sdk",
+          "categories": [
+            "network-programming",
+            "asynchronous"
+          ],
+          "readme": "README.md"
+        }
+      }
+    }
+  },
+  {
+    "source_path": "conformance/Cargo.toml",
+    "blob_hash": "e8de6f072d44ef7626b4b1641a053efbc5dbc5ba",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "mcp-conformance",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "bin": [
+        {
+          "name": "conformance-server",
+          "path": "src/bin/server.rs"
+        },
+        {
+          "name": "conformance-client",
+          "path": "src/bin/client.rs"
+        }
+      ],
+      "dependencies": {
+        "rmcp": {
+          "path": "../crates/rmcp",
+          "features": [
+            "server",
+            "client",
+            "elicitation",
+            "auth",
+            "auth-client-credentials-jwt",
+            "auth-enterprise-managed",
+            "request-state",
+            "transport-streamable-http-server",
+            "transport-streamable-http-client-reqwest"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-util": {
+          "version": "0.7"
+        },
+        "serde": {
+          "version": "1",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "axum": {
+          "version": "0.8",
+          "features": [
+            "macros"
+          ]
+        },
+        "anyhow": "1",
+        "oauth2": {
+          "version": "5.0",
+          "default-features": false
+        },
+        "reqwest": {
+          "version": "0.13",
+          "features": [
+            "json"
+          ]
+        },
+        "urlencoding": "2",
+        "url": "2"
+      }
+    }
+  },
+  {
+    "source_path": "crates/rmcp-macros/Cargo.toml",
+    "blob_hash": "9f0b3d309ac2fd1198acd81241ff456fa11a4e66",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "rmcp-macros",
+        "license": {
+          "workspace": true
+        },
+        "version": {
+          "workspace": true
+        },
+        "edition": {
+          "workspace": true
+        },
+        "rust-version": {
+          "workspace": true
+        },
+        "repository": {
+          "workspace": true
+        },
+        "homepage": {
+          "workspace": true
+        },
+        "readme": {
+          "workspace": true
+        },
+        "description": "Rust SDK for Model Context Protocol macros library",
+        "documentation": "https://docs.rs/rmcp-macros"
+      },
+      "lib": {
+        "proc-macro": true
+      },
+      "dependencies": {
+        "syn": {
+          "version": "3",
+          "features": [
+            "full"
+          ]
+        },
+        "quote": "1",
+        "proc-macro2": "1",
+        "serde_json": "1.0",
+        "darling": {
+          "version": "0.24"
+        }
+      },
+      "features": {
+        "local": []
+      },
+      "dev-dependencies": {}
+    }
+  },
+  {
+    "source_path": "crates/rmcp/Cargo.toml",
+    "blob_hash": "ac51ebfcdd3bcb0bcf0ae6b81fb2044307ce2f43",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "rmcp",
+        "license": {
+          "workspace": true
+        },
+        "version": {
+          "workspace": true
+        },
+        "edition": {
+          "workspace": true
+        },
+        "rust-version": {
+          "workspace": true
+        },
+        "repository": {
+          "workspace": true
+        },
+        "homepage": {
+          "workspace": true
+        },
+        "readme": {
+          "workspace": true
+        },
+        "description": "Rust SDK for Model Context Protocol",
+        "documentation": "https://docs.rs/rmcp",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "features": [
+                "auth",
+                "auth-client-credentials-jwt",
+                "auth-enterprise-managed",
+                "base64",
+                "client",
+                "client-side-sse",
+                "elicitation",
+                "macros",
+                "request-state",
+                "reqwest",
+                "reqwest-native-tls",
+                "reqwest-tls-no-provider",
+                "schemars",
+                "server",
+                "server-side-http",
+                "tower",
+                "transport-async-rw",
+                "transport-child-process",
+                "transport-io",
+                "transport-streamable-http-client",
+                "transport-streamable-http-client-reqwest",
+                "transport-streamable-http-client-unix-socket",
+                "transport-streamable-http-server",
+                "transport-streamable-http-server-session",
+                "transport-worker",
+                "uuid"
+              ],
+              "rustdoc-args": [
+                "--cfg",
+                "docsrs"
+              ]
+            }
+          }
+        }
+      },
+      "lints": {
+        "clippy": {
+          "exhaustive_structs": "warn",
+          "exhaustive_enums": "warn"
+        }
+      },
+      "dependencies": {
+        "async-trait": {
+          "version": "0.1.89",
+          "optional": true
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive",
+            "rc"
+          ]
+        },
+        "serde_json": "1.0",
+        "thiserror": "2",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "sync",
+            "macros",
+            "rt",
+            "time"
+          ]
+        },
+        "futures": "0.3",
+        "indexmap": {
+          "version": "2",
+          "features": [
+            "serde"
+          ]
+        },
+        "tracing": {
+          "version": "0.1"
+        },
+        "tokio-util": {
+          "version": "0.7"
+        },
+        "pin-project-lite": "0.2",
+        "pastey": {
+          "version": "0.2.0",
+          "optional": true
+        },
+        "oauth2": {
+          "version": "5.0",
+          "optional": true,
+          "default-features": false
+        },
+        "jsonwebtoken": {
+          "version": "11",
+          "optional": true,
+          "features": [
+            "aws_lc_rs"
+          ]
+        },
+        "schemars": {
+          "version": "1.0",
+          "optional": true,
+          "features": [
+            "chrono04"
+          ]
+        },
+        "base64": {
+          "version": "0.23",
+          "optional": true
+        },
+        "hmac": {
+          "version": "0.13",
+          "optional": true
+        },
+        "sha2": {
+          "version": "0.11",
+          "optional": true
+        },
+        "zeroize": {
+          "version": "1",
+          "optional": true
+        },
+        "reqwest": {
+          "version": "0.13.2",
+          "default-features": false,
+          "features": [
+            "json",
+            "stream"
+          ],
+          "optional": true
+        },
+        "sse-stream": {
+          "version": "0.2.4",
+          "optional": true
+        },
+        "http": {
+          "version": "1",
+          "optional": true
+        },
+        "url": {
+          "version": "2.4",
+          "optional": true
+        },
+        "tower-service": {
+          "version": "0.3",
+          "optional": true
+        },
+        "process-wrap": {
+          "version": "10.0",
+          "features": [
+            "tokio1"
+          ],
+          "optional": true
+        },
+        "which": {
+          "version": "8",
+          "optional": true
+        },
+        "rand": {
+          "version": "0.10",
+          "optional": true
+        },
+        "tokio-stream": {
+          "version": "0.1",
+          "optional": true
+        },
+        "uuid": {
+          "version": "1",
+          "features": [
+            "v4"
+          ],
+          "optional": true
+        },
+        "http-body": {
+          "version": "1",
+          "optional": true
+        },
+        "http-body-util": {
+          "version": "0.1",
+          "optional": true
+        },
+        "bytes": {
+          "version": "1",
+          "optional": true
+        },
+        "hyper": {
+          "version": "1",
+          "features": [
+            "client",
+            "http1"
+          ],
+          "optional": true
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio"
+          ],
+          "optional": true
+        },
+        "rmcp-macros": {
+          "workspace": true,
+          "optional": true
+        }
+      },
+      "target": {
+        "cfg(not(all(target_family = \"wasm\", target_os = \"unknown\")))": {
+          "dependencies": {
+            "chrono": {
+              "version": "0.4.38",
+              "default-features": false,
+              "features": [
+                "serde",
+                "now"
+              ]
+            }
+          }
+        },
+        "cfg(all(target_family = \"wasm\", target_os = \"unknown\"))": {
+          "dependencies": {
+            "chrono": {
+              "version": "0.4.38",
+              "default-features": false,
+              "features": [
+                "serde",
+                "clock",
+                "std",
+                "oldtime"
+              ]
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "base64",
+          "macros",
+          "server"
+        ],
+        "local": [
+          "rmcp-macros?/local"
+        ],
+        "client": [
+          "dep:tokio-stream"
+        ],
+        "server": [
+          "transport-async-rw",
+          "schemars",
+          "dep:pastey",
+          "uuid"
+        ],
+        "macros": [
+          "dep:rmcp-macros",
+          "dep:pastey"
+        ],
+        "elicitation": [
+          "dep:url"
+        ],
+        "request-state": [
+          "dep:hmac",
+          "dep:sha2",
+          "dep:zeroize",
+          "base64"
+        ],
+        "__reqwest": [
+          "dep:reqwest"
+        ],
+        "reqwest": [
+          "__reqwest",
+          "reqwest?/rustls"
+        ],
+        "reqwest-tls-no-provider": [
+          "__reqwest",
+          "reqwest?/rustls-no-provider"
+        ],
+        "reqwest-native-tls": [
+          "__reqwest",
+          "reqwest?/native-tls"
+        ],
+        "server-side-http": [
+          "uuid",
+          "dep:rand",
+          "dep:tokio-stream",
+          "dep:http",
+          "dep:http-body",
+          "dep:http-body-util",
+          "dep:bytes",
+          "dep:sse-stream",
+          "tower",
+          "base64"
+        ],
+        "transport-worker": [
+          "dep:tokio-stream"
+        ],
+        "client-side-sse": [
+          "dep:sse-stream",
+          "dep:http",
+          "dep:bytes",
+          "base64"
+        ],
+        "transport-streamable-http-client": [
+          "client-side-sse",
+          "transport-worker"
+        ],
+        "transport-streamable-http-client-reqwest": [
+          "transport-streamable-http-client",
+          "__reqwest"
+        ],
+        "transport-streamable-http-client-unix-socket": [
+          "transport-streamable-http-client",
+          "dep:hyper",
+          "dep:hyper-util",
+          "dep:http-body-util",
+          "dep:http",
+          "dep:bytes",
+          "tokio/net"
+        ],
+        "transport-async-rw": [
+          "tokio/io-util",
+          "tokio-util/codec"
+        ],
+        "transport-io": [
+          "transport-async-rw",
+          "tokio/io-std"
+        ],
+        "transport-child-process": [
+          "transport-async-rw",
+          "tokio/process",
+          "dep:process-wrap"
+        ],
+        "which-command": [
+          "transport-child-process",
+          "dep:which"
+        ],
+        "transport-streamable-http-server": [
+          "transport-streamable-http-server-session",
+          "server-side-http",
+          "transport-worker"
+        ],
+        "transport-streamable-http-server-session": [
+          "transport-async-rw",
+          "dep:async-trait",
+          "dep:tokio-stream"
+        ],
+        "tower": [
+          "dep:tower-service"
+        ],
+        "auth": [
+          "dep:async-trait",
+          "dep:oauth2",
+          "__reqwest",
+          "dep:url"
+        ],
+        "auth-client-credentials-jwt": [
+          "auth",
+          "dep:jsonwebtoken",
+          "uuid"
+        ],
+        "auth-enterprise-managed": [
+          "auth",
+          "base64"
+        ],
+        "schemars": [
+          "dep:schemars"
+        ]
+      },
+      "dev-dependencies": {
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full",
+            "test-util"
+          ]
+        },
+        "schemars": {
+          "version": "1.1.0",
+          "features": [
+            "chrono04"
+          ]
+        },
+        "axum": {
+          "version": "0.8",
+          "default-features": false,
+          "features": [
+            "http1",
+            "tokio"
+          ]
+        },
+        "hyper": {
+          "version": "1",
+          "features": [
+            "server",
+            "http1"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio"
+          ]
+        },
+        "tower-service": "0.3",
+        "url": "2.4",
+        "anyhow": "1.0",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter",
+            "std",
+            "fmt"
+          ]
+        },
+        "async-trait": "0.1",
+        "rstest": "0.26.1"
+      },
+      "test": [
+        {
+          "name": "test_tool_macros",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_tool_macros.rs"
+        },
+        {
+          "name": "test_with_python",
+          "required-features": [
+            "reqwest",
+            "server",
+            "client",
+            "transport-child-process"
+          ],
+          "path": "tests/test_with_python.rs"
+        },
+        {
+          "name": "test_with_js",
+          "required-features": [
+            "server",
+            "client",
+            "transport-child-process",
+            "transport-streamable-http-server",
+            "transport-streamable-http-client",
+            "__reqwest"
+          ],
+          "path": "tests/test_with_js.rs"
+        },
+        {
+          "name": "test_local_client_handler",
+          "required-features": [
+            "client",
+            "local"
+          ],
+          "path": "tests/test_local_client_handler.rs"
+        },
+        {
+          "name": "test_notification",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_notification.rs"
+        },
+        {
+          "name": "test_logging",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_logging.rs"
+        },
+        {
+          "name": "test_message_protocol",
+          "required-features": [
+            "client"
+          ],
+          "path": "tests/test_message_protocol.rs"
+        },
+        {
+          "name": "test_message_schema",
+          "required-features": [
+            "server",
+            "client",
+            "schemars"
+          ],
+          "path": "tests/test_message_schema.rs"
+        },
+        {
+          "name": "test_progress_subscriber",
+          "required-features": [
+            "server",
+            "client",
+            "macros"
+          ],
+          "path": "tests/test_progress_subscriber.rs"
+        },
+        {
+          "name": "test_request_timeout_progress",
+          "required-features": [
+            "server",
+            "client",
+            "macros"
+          ],
+          "path": "tests/test_request_timeout_progress.rs"
+        },
+        {
+          "name": "test_elicitation",
+          "required-features": [
+            "elicitation",
+            "client",
+            "server"
+          ],
+          "path": "tests/test_elicitation.rs"
+        },
+        {
+          "name": "test_task",
+          "required-features": [
+            "server",
+            "client",
+            "macros"
+          ],
+          "path": "tests/test_task.rs"
+        },
+        {
+          "name": "test_streamable_http_priming",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_streamable_http_priming.rs"
+        },
+        {
+          "name": "test_streamable_http_json_response",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_streamable_http_json_response.rs"
+        },
+        {
+          "name": "test_streamable_http_client_concurrency",
+          "required-features": [
+            "client",
+            "transport-streamable-http-client"
+          ],
+          "path": "tests/test_streamable_http_client_concurrency.rs"
+        },
+        {
+          "name": "test_streamable_http_protocol_version",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_streamable_http_protocol_version.rs"
+        },
+        {
+          "name": "test_stateless_protocol_version",
+          "required-features": [
+            "server",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_stateless_protocol_version.rs"
+        },
+        {
+          "name": "test_protocol_version_negotiation",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_protocol_version_negotiation.rs"
+        },
+        {
+          "name": "test_client_lifecycle_modes",
+          "required-features": [
+            "client",
+            "server"
+          ],
+          "path": "tests/test_client_lifecycle_modes.rs"
+        },
+        {
+          "name": "test_stateless_server_requests",
+          "required-features": [
+            "client",
+            "server"
+          ],
+          "path": "tests/test_stateless_server_requests.rs"
+        },
+        {
+          "name": "test_discover_http_client_startup",
+          "required-features": [
+            "client",
+            "reqwest",
+            "transport-streamable-http-client-reqwest",
+            "transport-streamable-http-server"
+          ],
+          "path": "tests/test_discover_http_client_startup.rs"
+        },
+        {
+          "name": "test_streamable_http_standard_headers",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_streamable_http_standard_headers.rs"
+        },
+        {
+          "name": "test_streamable_http_4xx_error_body",
+          "required-features": [
+            "transport-streamable-http-client",
+            "transport-streamable-http-client-reqwest"
+          ],
+          "path": "tests/test_streamable_http_4xx_error_body.rs"
+        },
+        {
+          "name": "test_custom_request",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_custom_request.rs"
+        },
+        {
+          "name": "test_trace_context",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_trace_context.rs"
+        },
+        {
+          "name": "test_mrtr_behavior",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_mrtr_behavior.rs"
+        },
+        {
+          "name": "test_prompt_macros",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_prompt_macros.rs"
+        },
+        {
+          "name": "test_sampling",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_sampling.rs"
+        },
+        {
+          "name": "test_close_connection",
+          "required-features": [
+            "server",
+            "client"
+          ],
+          "path": "tests/test_close_connection.rs"
+        },
+        {
+          "name": "test_custom_headers",
+          "required-features": [
+            "client",
+            "server",
+            "transport-streamable-http-client-reqwest",
+            "transport-streamable-http-server"
+          ],
+          "path": "tests/test_custom_headers.rs"
+        },
+        {
+          "name": "test_sse_concurrent_streams",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "transport-streamable-http-client",
+            "reqwest"
+          ],
+          "path": "tests/test_sse_concurrent_streams.rs"
+        },
+        {
+          "name": "test_client_credentials",
+          "required-features": [
+            "auth"
+          ],
+          "path": "tests/test_client_credentials.rs"
+        },
+        {
+          "name": "test_auth_error_classification",
+          "required-features": [
+            "auth",
+            "client",
+            "transport-streamable-http-client"
+          ],
+          "path": "tests/test_auth_error_classification.rs"
+        },
+        {
+          "name": "test_unix_socket_transport",
+          "required-features": [
+            "client",
+            "server",
+            "transport-streamable-http-client-unix-socket"
+          ],
+          "path": "tests/test_unix_socket_transport.rs"
+        },
+        {
+          "name": "test_streamable_http_stale_session",
+          "required-features": [
+            "server",
+            "client",
+            "transport-streamable-http-server",
+            "transport-streamable-http-client",
+            "transport-streamable-http-client-reqwest"
+          ],
+          "path": "tests/test_streamable_http_stale_session.rs"
+        },
+        {
+          "name": "test_streamable_http_session_store",
+          "required-features": [
+            "client",
+            "server",
+            "transport-streamable-http-client-reqwest",
+            "transport-streamable-http-server"
+          ],
+          "path": "tests/test_streamable_http_session_store.rs"
+        },
+        {
+          "name": "test_streamable_http_event_store",
+          "required-features": [
+            "client",
+            "server",
+            "transport-streamable-http-client-reqwest",
+            "transport-streamable-http-server"
+          ],
+          "path": "tests/test_streamable_http_event_store.rs"
+        },
+        {
+          "name": "test_streamable_http_connection_reuse",
+          "required-features": [
+            "server",
+            "client",
+            "macros",
+            "schemars",
+            "transport-streamable-http-server",
+            "transport-streamable-http-client",
+            "transport-streamable-http-client-reqwest"
+          ],
+          "path": "tests/test_streamable_http_connection_reuse.rs"
+        },
+        {
+          "name": "test_streamable_http_disconnect_cancel",
+          "required-features": [
+            "server",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_streamable_http_disconnect_cancel.rs"
+        },
+        {
+          "name": "test_sep_2260_stream_routing",
+          "required-features": [
+            "server",
+            "elicitation",
+            "transport-streamable-http-server",
+            "reqwest"
+          ],
+          "path": "tests/test_sep_2260_stream_routing.rs"
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "crates/rmcp/tests/test_with_js/package.json",
+    "blob_hash": "d8ecfbfb9b6407c5101343124dfffdbaea36dc5e",
+    "status": "PARSED",
+    "roles": [
+      {
+        "name": "@modelcontextprotocol/sdk",
+        "version": "^1.10",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "eventsource-parser",
+        "version": "^3.0.1",
+        "role": "RUNTIME"
+      },
+      {
+        "name": "express",
+        "version": "^5.1.0",
+        "role": "RUNTIME"
+      }
+    ],
+    "manifest": {
+      "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.10",
+        "eventsource-parser": "^3.0.1",
+        "express": "^5.1.0"
+      },
+      "type": "module",
+      "name": "test_with_ts",
+      "version": "1.0.0",
+      "main": "index.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "author": "",
+      "license": "ISC",
+      "description": ""
+    }
+  },
+  {
+    "source_path": "crates/rmcp/tests/test_with_python/pyproject.toml",
+    "blob_hash": "9c8ce6ae9f1e3a6ea3a192f393864775506522bd",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "build-system": {
+        "requires": [
+          "setuptools>=42",
+          "wheel"
+        ],
+        "build-backend": "setuptools.build_meta"
+      },
+      "project": {
+        "name": "test_with_python",
+        "version": "0.1.0",
+        "description": "Test Python client for RMCP",
+        "dependencies": [
+          "fastmcp"
+        ]
+      },
+      "tool": {
+        "setuptools": {
+          "py-modules": [
+            "client",
+            "server"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/clients/Cargo.toml",
+    "blob_hash": "419a176f9fd2ee38c80a36b466cb83f593714429",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "mcp-client-examples",
+        "version": "0.1.5",
+        "edition": "2024",
+        "publish": false
+      },
+      "dependencies": {
+        "rmcp": {
+          "workspace": true,
+          "features": [
+            "client",
+            "reqwest",
+            "transport-streamable-http-client-reqwest",
+            "transport-child-process",
+            "tower",
+            "auth"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "rand": "0.10",
+        "futures": "0.3",
+        "anyhow": "1.0",
+        "url": "2.4",
+        "tower": "0.5",
+        "axum": "0.8",
+        "reqwest": "0.13.2",
+        "clap": {
+          "version": "4.0",
+          "features": [
+            "derive"
+          ]
+        }
+      },
+      "example": [
+        {
+          "name": "clients_git_stdio",
+          "path": "src/git_stdio.rs"
+        },
+        {
+          "name": "clients_streamable_http",
+          "path": "src/streamable_http.rs"
+        },
+        {
+          "name": "clients_everything_stdio",
+          "path": "src/everything_stdio.rs"
+        },
+        {
+          "name": "clients_collection",
+          "path": "src/collection.rs"
+        },
+        {
+          "name": "clients_oauth_client",
+          "path": "src/auth/oauth_client.rs"
+        },
+        {
+          "name": "clients_sampling_stdio",
+          "path": "src/sampling_stdio.rs"
+        },
+        {
+          "name": "clients_progress_client",
+          "path": "src/progress_client.rs"
+        },
+        {
+          "name": "clients_client_credentials",
+          "path": "src/auth/client_credentials.rs"
+        },
+        {
+          "name": "clients_task_stdio",
+          "path": "src/task_stdio.rs"
+        },
+        {
+          "name": "clients_subscriptions_streamhttp",
+          "path": "src/subscriptions_streamhttp.rs"
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "examples/servers/Cargo.toml",
+    "blob_hash": "bc983a1543850f2bd7f82340a646363f55c317f2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "mcp-server-examples",
+        "version": "0.1.5",
+        "edition": "2024",
+        "publish": false
+      },
+      "dependencies": {
+        "rmcp": {
+          "workspace": true,
+          "features": [
+            "server",
+            "macros",
+            "client",
+            "transport-io",
+            "transport-streamable-http-server",
+            "auth",
+            "elicitation",
+            "request-state",
+            "schemars"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "macros",
+            "rt",
+            "rt-multi-thread",
+            "io-std",
+            "signal"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "anyhow": "1.0",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter",
+            "std",
+            "fmt"
+          ]
+        },
+        "futures": "0.3",
+        "rand": {
+          "version": "0.10",
+          "features": [
+            "std"
+          ]
+        },
+        "axum": {
+          "version": "0.8",
+          "features": [
+            "macros"
+          ]
+        },
+        "schemars": "1.0",
+        "reqwest": {
+          "version": "0.13.2",
+          "features": [
+            "json"
+          ]
+        },
+        "chrono": "0.4",
+        "uuid": {
+          "version": "1.6",
+          "features": [
+            "v4",
+            "serde"
+          ]
+        },
+        "serde_urlencoded": "0.7",
+        "askama": {
+          "version": "0.16"
+        },
+        "tower-http": {
+          "version": "0.7",
+          "features": [
+            "cors"
+          ]
+        },
+        "hyper": {
+          "version": "1"
+        },
+        "hyper-util": {
+          "version": "0",
+          "features": [
+            "server"
+          ]
+        },
+        "tokio-util": {
+          "version": "0.7"
+        },
+        "url": "2.5"
+      },
+      "dev-dependencies": {
+        "tokio-stream": {
+          "version": "0.1"
+        },
+        "tokio-util": {
+          "version": "0.7",
+          "features": [
+            "codec"
+          ]
+        }
+      },
+      "example": [
+        {
+          "name": "servers_counter_stdio",
+          "path": "src/counter_stdio.rs"
+        },
+        {
+          "name": "servers_memory_stdio",
+          "path": "src/memory_stdio.rs"
+        },
+        {
+          "name": "servers_counter_streamhttp",
+          "path": "src/counter_streamhttp.rs"
+        },
+        {
+          "name": "servers_prompt_stdio",
+          "path": "src/prompt_stdio.rs"
+        },
+        {
+          "name": "counter_hyper_streamable_http",
+          "path": "src/counter_hyper_streamable_http.rs"
+        },
+        {
+          "name": "servers_sampling_stdio",
+          "path": "src/sampling_stdio.rs"
+        },
+        {
+          "name": "servers_structured_output",
+          "path": "src/structured_output.rs"
+        },
+        {
+          "name": "servers_elicitation_stdio",
+          "path": "src/elicitation_stdio.rs"
+        },
+        {
+          "name": "servers_completion_stdio",
+          "path": "src/completion_stdio.rs"
+        },
+        {
+          "name": "servers_progress_demo",
+          "path": "src/progress_demo.rs"
+        },
+        {
+          "name": "servers_simple_auth_streamhttp",
+          "path": "src/simple_auth_streamhttp.rs"
+        },
+        {
+          "name": "servers_complex_auth_streamhttp",
+          "path": "src/complex_auth_streamhttp.rs"
+        },
+        {
+          "name": "servers_cimd_auth_streamhttp",
+          "path": "src/cimd_auth_streamhttp.rs"
+        },
+        {
+          "name": "servers_calculator_stdio",
+          "path": "src/calculator_stdio.rs"
+        },
+        {
+          "name": "elicitation_enum_select",
+          "path": "src/elicitation_enum_inference.rs"
+        },
+        {
+          "name": "servers_task_stdio",
+          "path": "src/task_stdio.rs"
+        },
+        {
+          "name": "servers_mrtr",
+          "path": "src/mrtr.rs"
+        },
+        {
+          "name": "servers_subscriptions_streamhttp",
+          "path": "src/subscriptions_streamhttp.rs"
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "examples/simple-chat-client/Cargo.toml",
+    "blob_hash": "e382e63c74fc51a4ffe5cdce88bfae7ee1cc8a02",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "simple-chat-client",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "reqwest": {
+          "version": "0.13.2",
+          "features": [
+            "json"
+          ]
+        },
+        "anyhow": "1.0",
+        "thiserror": "2.0",
+        "async-trait": "0.1",
+        "futures": "0.3",
+        "toml": "1.0",
+        "rmcp": {
+          "workspace": true,
+          "features": [
+            "client",
+            "transport-child-process",
+            "transport-streamable-http-client-reqwest"
+          ]
+        },
+        "clap": {
+          "version": "4.0",
+          "features": [
+            "derive"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/transport/Cargo.toml",
+    "blob_hash": "6ffe963046a5caf64faddc52060fce55e1ef3f68",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "transport",
+        "edition": {
+          "workspace": true
+        },
+        "rust-version": {
+          "workspace": true
+        },
+        "version": {
+          "workspace": true
+        },
+        "authors": {
+          "workspace": true
+        },
+        "license": {
+          "workspace": true
+        },
+        "repository": {
+          "workspace": true
+        },
+        "description": {
+          "workspace": true
+        },
+        "keywords": {
+          "workspace": true
+        },
+        "homepage": {
+          "workspace": true
+        },
+        "categories": {
+          "workspace": true
+        },
+        "readme": {
+          "workspace": true
+        },
+        "publish": false,
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true
+            }
+          }
+        }
+      },
+      "dependencies": {
+        "rmcp": {
+          "workspace": true,
+          "features": [
+            "server",
+            "client"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "macros",
+            "rt",
+            "rt-multi-thread",
+            "io-std",
+            "net",
+            "fs",
+            "time"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "anyhow": "1.0",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter",
+            "std",
+            "fmt"
+          ]
+        },
+        "futures": "0.3",
+        "rand": {
+          "version": "0.10"
+        },
+        "schemars": {
+          "version": "1.0",
+          "optional": true
+        },
+        "hyper": {
+          "version": "1",
+          "features": [
+            "client",
+            "server",
+            "http1"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio"
+          ]
+        },
+        "tokio-tungstenite": "0.30.0",
+        "reqwest": {
+          "version": "0.13.2"
+        },
+        "pin-project-lite": "0.2"
+      },
+      "example": [
+        {
+          "name": "tcp",
+          "path": "src/tcp.rs"
+        },
+        {
+          "name": "http_upgrade",
+          "path": "src/http_upgrade.rs"
+        },
+        {
+          "name": "unix_socket",
+          "path": "src/unix_socket.rs"
+        },
+        {
+          "name": "websocket",
+          "path": "src/websocket.rs"
+        },
+        {
+          "name": "named-pipe",
+          "path": "src/named-pipe.rs"
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "examples/wasi/Cargo.toml",
+    "blob_hash": "4eb77350ba769bb7404c5ec45d8412e5034ddb33",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "wasi-mcp-example",
+        "edition": {
+          "workspace": true
+        },
+        "rust-version": {
+          "workspace": true
+        },
+        "version": {
+          "workspace": true
+        },
+        "authors": {
+          "workspace": true
+        },
+        "license": {
+          "workspace": true
+        },
+        "repository": {
+          "workspace": true
+        },
+        "description": {
+          "workspace": true
+        },
+        "keywords": {
+          "workspace": true
+        },
+        "homepage": {
+          "workspace": true
+        },
+        "categories": {
+          "workspace": true
+        },
+        "readme": {
+          "workspace": true
+        },
+        "publish": false
+      },
+      "lib": {
+        "crate-type": [
+          "cdylib"
+        ]
+      },
+      "dependencies": {
+        "wasi": {
+          "version": "0.14.2"
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "rt",
+            "io-util",
+            "sync",
+            "macros",
+            "time"
+          ]
+        },
+        "rmcp": {
+          "workspace": true,
+          "features": [
+            "server",
+            "macros"
+          ]
+        },
+        "serde": {
+          "version": "1",
+          "features": [
+            "derive"
+          ]
+        },
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter",
+            "std",
+            "fmt"
+          ]
+        },
+        "tracing": "0.1"
+      }
+    }
+  }
+]

@@ -1,0 +1,3252 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "a68aaab16a8175aa8e1ae8eb2a1a9cd04d6de44e",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "members": [
+          "axum",
+          "axum-*",
+          "examples/*"
+        ],
+        "default-members": [
+          "axum",
+          "axum-*"
+        ],
+        "exclude": [
+          "examples/async-graphql"
+        ],
+        "resolver": "2"
+      }
+    }
+  },
+  {
+    "source_path": "axum-core/Cargo.toml",
+    "blob_hash": "7ba2e5f2bbf862f90ee60cea828990668aec764f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "categories": [
+          "asynchronous",
+          "network-programming",
+          "web-programming"
+        ],
+        "description": "Core types and traits for axum",
+        "edition": "2021",
+        "rust-version": "1.57",
+        "homepage": "https://github.com/tokio-rs/axum",
+        "keywords": [
+          "http",
+          "web",
+          "framework"
+        ],
+        "license": "MIT",
+        "name": "axum-core",
+        "readme": "README.md",
+        "repository": "https://github.com/tokio-rs/axum",
+        "version": "0.4.5",
+        "metadata": {
+          "cargo-public-api-crates": {
+            "allowed": [
+              "futures_core",
+              "tower_layer",
+              "bytes",
+              "http",
+              "http_body"
+            ]
+          },
+          "docs": {
+            "rs": {
+              "all-features": true
+            }
+          }
+        }
+      },
+      "features": {
+        "tracing": [
+          "dep:tracing"
+        ],
+        "__private_docs": [
+          "dep:tower-http"
+        ]
+      },
+      "dependencies": {
+        "async-trait": "0.1.67",
+        "bytes": "1.2",
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "http": "1.0.0",
+        "http-body": "1.0.0",
+        "http-body-util": "0.1.0",
+        "mime": "0.3.16",
+        "pin-project-lite": "0.2.7",
+        "rustversion": "1.0.9",
+        "sync_wrapper": "1.0.0",
+        "tower-layer": "0.3",
+        "tower-service": "0.3",
+        "tower-http": {
+          "version": "0.6.0",
+          "optional": true,
+          "features": [
+            "limit"
+          ]
+        },
+        "tracing": {
+          "version": "0.1.37",
+          "default-features": false,
+          "optional": true
+        }
+      },
+      "dev-dependencies": {
+        "axum": {
+          "path": "../axum",
+          "version": "0.7.2"
+        },
+        "axum-extra": {
+          "path": "../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "hyper": "1.0.0",
+        "tokio": {
+          "version": "1.25.0",
+          "features": [
+            "macros"
+          ]
+        },
+        "tower-http": {
+          "version": "0.6.0",
+          "features": [
+            "limit"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "axum-extra/Cargo.toml",
+    "blob_hash": "21d34517112971d686ca540e4e525fb57af35b0c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "categories": [
+          "asynchronous",
+          "network-programming",
+          "web-programming"
+        ],
+        "description": "Extra utilities for axum",
+        "edition": "2021",
+        "rust-version": "1.66",
+        "homepage": "https://github.com/tokio-rs/axum",
+        "keywords": [
+          "http",
+          "web",
+          "framework"
+        ],
+        "license": "MIT",
+        "name": "axum-extra",
+        "readme": "README.md",
+        "repository": "https://github.com/tokio-rs/axum",
+        "version": "0.9.6",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true
+            }
+          },
+          "cargo-public-api-crates": {
+            "allowed": [
+              "axum",
+              "axum_core",
+              "axum_macros",
+              "bytes",
+              "cookie",
+              "futures_core",
+              "futures_util",
+              "headers",
+              "headers_core",
+              "http",
+              "http_body",
+              "pin_project_lite",
+              "prost",
+              "serde",
+              "tokio",
+              "tower_layer",
+              "tower_service"
+            ]
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "tracing",
+          "multipart"
+        ],
+        "async-read-body": [
+          "dep:tokio-util",
+          "tokio-util?/io",
+          "dep:tokio"
+        ],
+        "attachment": [
+          "dep:tracing"
+        ],
+        "cookie": [
+          "dep:cookie"
+        ],
+        "cookie-private": [
+          "cookie",
+          "cookie?/private"
+        ],
+        "cookie-signed": [
+          "cookie",
+          "cookie?/signed"
+        ],
+        "cookie-key-expansion": [
+          "cookie",
+          "cookie?/key-expansion"
+        ],
+        "erased-json": [
+          "dep:serde_json",
+          "dep:typed-json"
+        ],
+        "form": [
+          "dep:serde_html_form"
+        ],
+        "json-deserializer": [
+          "dep:serde_json",
+          "dep:serde_path_to_error"
+        ],
+        "json-lines": [
+          "dep:serde_json",
+          "dep:tokio-util",
+          "dep:tokio-stream",
+          "tokio-util?/io",
+          "tokio-stream?/io-util",
+          "dep:tokio"
+        ],
+        "multipart": [
+          "dep:multer",
+          "dep:fastrand"
+        ],
+        "protobuf": [
+          "dep:prost"
+        ],
+        "query": [
+          "dep:serde_html_form"
+        ],
+        "tracing": [
+          "axum-core/tracing",
+          "axum/tracing"
+        ],
+        "typed-header": [
+          "dep:headers"
+        ],
+        "typed-routing": [
+          "dep:axum-macros",
+          "dep:percent-encoding",
+          "dep:serde_html_form",
+          "dep:form_urlencoded"
+        ]
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../axum",
+          "version": "0.7.8",
+          "default-features": false,
+          "features": [
+            "original-uri"
+          ]
+        },
+        "axum-core": {
+          "path": "../axum-core",
+          "version": "0.4.5"
+        },
+        "bytes": "1.1.0",
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "http": "1.0.0",
+        "http-body": "1.0.0",
+        "http-body-util": "0.1.0",
+        "mime": "0.3",
+        "pin-project-lite": "0.2",
+        "serde": "1.0",
+        "tower": {
+          "version": "0.5.1",
+          "default-features": false,
+          "features": [
+            "util"
+          ]
+        },
+        "tower-layer": "0.3",
+        "tower-service": "0.3",
+        "axum-macros": {
+          "path": "../axum-macros",
+          "version": "0.4.2",
+          "optional": true
+        },
+        "cookie": {
+          "package": "cookie",
+          "version": "0.18.0",
+          "features": [
+            "percent-encode"
+          ],
+          "optional": true
+        },
+        "fastrand": {
+          "version": "2.1.0",
+          "optional": true
+        },
+        "form_urlencoded": {
+          "version": "1.1.0",
+          "optional": true
+        },
+        "headers": {
+          "version": "0.4.0",
+          "optional": true
+        },
+        "multer": {
+          "version": "3.0.0",
+          "optional": true
+        },
+        "percent-encoding": {
+          "version": "2.1",
+          "optional": true
+        },
+        "prost": {
+          "version": "0.12",
+          "optional": true
+        },
+        "serde_html_form": {
+          "version": "0.2.0",
+          "optional": true
+        },
+        "serde_json": {
+          "version": "1.0.71",
+          "optional": true
+        },
+        "serde_path_to_error": {
+          "version": "0.1.8",
+          "optional": true
+        },
+        "tokio": {
+          "version": "1.19",
+          "optional": true
+        },
+        "tokio-stream": {
+          "version": "0.1.9",
+          "optional": true
+        },
+        "tokio-util": {
+          "version": "0.7",
+          "optional": true
+        },
+        "tracing": {
+          "version": "0.1.37",
+          "default-features": false,
+          "optional": true
+        },
+        "typed-json": {
+          "version": "0.1.1",
+          "optional": true
+        }
+      },
+      "dev-dependencies": {
+        "axum": {
+          "path": "../axum",
+          "features": [
+            "macros"
+          ]
+        },
+        "axum-macros": {
+          "path": "../axum-macros",
+          "features": [
+            "__private"
+          ]
+        },
+        "hyper": "1.0.0",
+        "reqwest": {
+          "version": "0.12",
+          "default-features": false,
+          "features": [
+            "json",
+            "stream",
+            "multipart"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0.71",
+        "tokio": {
+          "version": "1.14",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.5.1",
+          "features": [
+            "util"
+          ]
+        },
+        "tower-http": {
+          "version": "0.6.0",
+          "features": [
+            "map-response-body",
+            "timeout"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "axum-macros/Cargo.toml",
+    "blob_hash": "8dcacfed5041ff6396e40385d802abcaa97d1b17",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "categories": [
+          "asynchronous",
+          "network-programming",
+          "web-programming"
+        ],
+        "description": "Macros for axum",
+        "edition": "2021",
+        "rust-version": "1.66",
+        "homepage": "https://github.com/tokio-rs/axum",
+        "keywords": [
+          "axum"
+        ],
+        "license": "MIT",
+        "name": "axum-macros",
+        "readme": "README.md",
+        "repository": "https://github.com/tokio-rs/axum",
+        "version": "0.4.2",
+        "metadata": {
+          "cargo-public-api-crates": {
+            "allowed": []
+          },
+          "docs": {
+            "rs": {
+              "all-features": true
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [],
+        "__private": [
+          "syn/visit-mut"
+        ]
+      },
+      "lib": {
+        "proc-macro": true
+      },
+      "dependencies": {
+        "proc-macro2": "1.0",
+        "quote": "1.0",
+        "syn": {
+          "version": "2.0",
+          "features": [
+            "full",
+            "parsing",
+            "extra-traits"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "axum": {
+          "path": "../axum",
+          "version": "0.7.2",
+          "features": [
+            "macros"
+          ]
+        },
+        "axum-extra": {
+          "path": "../axum-extra",
+          "version": "0.9.0",
+          "features": [
+            "typed-routing",
+            "cookie-private",
+            "typed-header"
+          ]
+        },
+        "rustversion": "1.0",
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "syn": {
+          "version": "2.0",
+          "features": [
+            "full",
+            "extra-traits"
+          ]
+        },
+        "tokio": {
+          "version": "1.25.0",
+          "features": [
+            "full"
+          ]
+        },
+        "trybuild": "1.0.63"
+      }
+    }
+  },
+  {
+    "source_path": "axum/Cargo.toml",
+    "blob_hash": "bc8e109f8c3dc214d68644bd32bfede34f82dff2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "axum",
+        "version": "0.7.9",
+        "categories": [
+          "asynchronous",
+          "network-programming",
+          "web-programming::http-server"
+        ],
+        "description": "Web framework that focuses on ergonomics and modularity",
+        "edition": "2021",
+        "rust-version": "1.66",
+        "homepage": "https://github.com/tokio-rs/axum",
+        "keywords": [
+          "http",
+          "web",
+          "framework"
+        ],
+        "license": "MIT",
+        "readme": "README.md",
+        "repository": "https://github.com/tokio-rs/axum",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "all-features": true
+            }
+          },
+          "playground": {
+            "features": [
+              "http1",
+              "http2",
+              "json",
+              "multipart",
+              "ws"
+            ]
+          },
+          "cargo-public-api-crates": {
+            "allowed": [
+              "axum_core",
+              "axum_macros",
+              "futures_core",
+              "futures_sink",
+              "futures_util",
+              "pin_project_lite",
+              "tower_layer",
+              "tower_service",
+              "async_trait",
+              "bytes",
+              "http",
+              "http_body",
+              "serde",
+              "tokio"
+            ]
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "form",
+          "http1",
+          "json",
+          "matched-path",
+          "original-uri",
+          "query",
+          "tokio",
+          "tower-log",
+          "tracing"
+        ],
+        "form": [
+          "dep:serde_urlencoded"
+        ],
+        "http1": [
+          "dep:hyper",
+          "hyper?/http1",
+          "hyper-util?/http1"
+        ],
+        "http2": [
+          "dep:hyper",
+          "hyper?/http2",
+          "hyper-util?/http2"
+        ],
+        "json": [
+          "dep:serde_json",
+          "dep:serde_path_to_error"
+        ],
+        "macros": [
+          "dep:axum-macros"
+        ],
+        "matched-path": [],
+        "multipart": [
+          "dep:multer"
+        ],
+        "original-uri": [],
+        "query": [
+          "dep:serde_urlencoded"
+        ],
+        "tokio": [
+          "dep:hyper-util",
+          "dep:tokio",
+          "tokio/net",
+          "tokio/rt",
+          "tower/make",
+          "tokio/macros"
+        ],
+        "tower-log": [
+          "tower/log"
+        ],
+        "tracing": [
+          "dep:tracing",
+          "axum-core/tracing"
+        ],
+        "ws": [
+          "dep:hyper",
+          "tokio",
+          "dep:tokio-tungstenite",
+          "dep:sha1",
+          "dep:base64"
+        ],
+        "__private_docs": [
+          "axum-core/__private_docs",
+          "tower/full",
+          "dep:tower-http"
+        ]
+      },
+      "dependencies": {
+        "async-trait": "0.1.67",
+        "axum-core": {
+          "path": "../axum-core",
+          "version": "0.4.5"
+        },
+        "bytes": "1.0",
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "http": "1.0.0",
+        "http-body": "1.0.0",
+        "http-body-util": "0.1.0",
+        "itoa": "1.0.5",
+        "matchit": "0.7",
+        "memchr": "2.4.1",
+        "mime": "0.3.16",
+        "percent-encoding": "2.1",
+        "pin-project-lite": "0.2.7",
+        "rustversion": "1.0.9",
+        "serde": "1.0",
+        "sync_wrapper": "1.0.0",
+        "tower": {
+          "version": "0.5.1",
+          "default-features": false,
+          "features": [
+            "util"
+          ]
+        },
+        "tower-layer": "0.3.2",
+        "tower-service": "0.3",
+        "axum-macros": {
+          "path": "../axum-macros",
+          "version": "0.4.2",
+          "optional": true
+        },
+        "base64": {
+          "version": "0.22.1",
+          "optional": true
+        },
+        "hyper": {
+          "version": "1.1.0",
+          "optional": true
+        },
+        "hyper-util": {
+          "version": "0.1.3",
+          "features": [
+            "tokio",
+            "server",
+            "service"
+          ],
+          "optional": true
+        },
+        "multer": {
+          "version": "3.0.0",
+          "optional": true
+        },
+        "serde_json": {
+          "version": "1.0",
+          "features": [
+            "raw_value"
+          ],
+          "optional": true
+        },
+        "serde_path_to_error": {
+          "version": "0.1.8",
+          "optional": true
+        },
+        "serde_urlencoded": {
+          "version": "0.7",
+          "optional": true
+        },
+        "sha1": {
+          "version": "0.10",
+          "optional": true
+        },
+        "tokio": {
+          "package": "tokio",
+          "version": "1.25.0",
+          "features": [
+            "time"
+          ],
+          "optional": true
+        },
+        "tokio-tungstenite": {
+          "version": "0.24.0",
+          "optional": true
+        },
+        "tracing": {
+          "version": "0.1",
+          "default-features": false,
+          "optional": true
+        },
+        "tower-http": {
+          "version": "0.6.0",
+          "optional": true,
+          "features": [
+            "add-extension",
+            "auth",
+            "catch-panic",
+            "compression-br",
+            "compression-deflate",
+            "compression-gzip",
+            "cors",
+            "decompression-br",
+            "decompression-deflate",
+            "decompression-gzip",
+            "follow-redirect",
+            "fs",
+            "limit",
+            "map-request-body",
+            "map-response-body",
+            "metrics",
+            "normalize-path",
+            "propagate-header",
+            "redirect",
+            "request-id",
+            "sensitive-headers",
+            "set-header",
+            "set-status",
+            "timeout",
+            "trace",
+            "util",
+            "validate-request"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "anyhow": "1.0",
+        "axum-macros": {
+          "path": "../axum-macros",
+          "version": "0.4.1",
+          "features": [
+            "__private"
+          ]
+        },
+        "quickcheck": "1.0",
+        "quickcheck_macros": "1.0",
+        "reqwest": {
+          "version": "0.12",
+          "default-features": false,
+          "features": [
+            "json",
+            "stream",
+            "multipart"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": {
+          "version": "1.0",
+          "features": [
+            "raw_value"
+          ]
+        },
+        "time": {
+          "version": "0.3",
+          "features": [
+            "serde-human-readable"
+          ]
+        },
+        "tokio": {
+          "package": "tokio",
+          "version": "1.25.0",
+          "features": [
+            "macros",
+            "rt",
+            "rt-multi-thread",
+            "net",
+            "test-util"
+          ]
+        },
+        "tokio-stream": "0.1",
+        "tokio-tungstenite": "0.24.0",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "json"
+          ]
+        },
+        "uuid": {
+          "version": "1.0",
+          "features": [
+            "serde",
+            "v4"
+          ]
+        },
+        "tower": {
+          "package": "tower",
+          "version": "0.5.1",
+          "features": [
+            "util",
+            "timeout",
+            "limit",
+            "load-shed",
+            "steer",
+            "filter"
+          ]
+        },
+        "tower-http": {
+          "version": "0.6.0",
+          "features": [
+            "add-extension",
+            "auth",
+            "catch-panic",
+            "compression-br",
+            "compression-deflate",
+            "compression-gzip",
+            "cors",
+            "decompression-br",
+            "decompression-deflate",
+            "decompression-gzip",
+            "follow-redirect",
+            "fs",
+            "limit",
+            "map-request-body",
+            "map-response-body",
+            "metrics",
+            "normalize-path",
+            "propagate-header",
+            "redirect",
+            "request-id",
+            "sensitive-headers",
+            "set-header",
+            "set-status",
+            "timeout",
+            "trace",
+            "util",
+            "validate-request"
+          ]
+        }
+      },
+      "bench": [
+        {
+          "name": "benches",
+          "harness": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "examples/anyhow-error-response/Cargo.toml",
+    "blob_hash": "0c2beb50755afdf8157da838afc8f9fa51eb4c5b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-anyhow-error-response",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "anyhow": "1.0",
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/auto-reload/Cargo.toml",
+    "blob_hash": "dad614a2b9d01518411d19144221e9ec220ea6b6",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "auto-reload",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "listenfd": "1.0.1",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/chat/Cargo.toml",
+    "blob_hash": "90d88246faa7c20122acaeb883bf211155f8a2fe",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-chat",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "ws"
+          ]
+        },
+        "futures": "0.3",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/compression/Cargo.toml",
+    "blob_hash": "d5fdcf8e7ac2349950b9ea614c379c8c63dd054c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-compression",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "serde_json": "1",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "macros",
+            "rt-multi-thread"
+          ]
+        },
+        "tower": "0.4",
+        "tower-http": {
+          "version": "0.5",
+          "features": [
+            "compression-full",
+            "decompression-full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "assert-json-diff": "2.0",
+        "brotli": "3.4",
+        "flate2": "1",
+        "http": "1",
+        "zstd": "0.13"
+      }
+    }
+  },
+  {
+    "source_path": "examples/consume-body-in-extractor-or-middleware/Cargo.toml",
+    "blob_hash": "9aeb864d6102d5f8fbe3793fe347b32d3d8582c2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-consume-body-in-extractor-or-middleware",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body-util": "0.1.0",
+        "hyper": "1.0.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": "0.4",
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "map-request-body",
+            "util"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/cors/Cargo.toml",
+    "blob_hash": "5d5d2edae5b3db719885bca70d1a3f104d376d22",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-cors",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "cors"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/customize-extractor-error/Cargo.toml",
+    "blob_hash": "8e86df21bdcd6d03925f0849a631d70901e86a1b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-customize-extractor-error",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "macros"
+          ]
+        },
+        "axum-extra": {
+          "path": "../../axum-extra"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "thiserror": "1.0",
+        "tokio": {
+          "version": "1.20",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/customize-path-rejection/Cargo.toml",
+    "blob_hash": "8f5b1e448790d987329bcbc789c56042abeca6f8",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-customize-path-rejection",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/dependency-injection/Cargo.toml",
+    "blob_hash": "1f2801b0a03012c44aed4013b9b5b82f58d80e49",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-dependency-injection",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "tracing",
+            "macros"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "uuid": {
+          "version": "1.0",
+          "features": [
+            "serde",
+            "v4"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/diesel-async-postgres/Cargo.toml",
+    "blob_hash": "d86db1516dc8799c97306e51b4d68394f7fda675",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-diesel-async-postgres",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "macros"
+          ]
+        },
+        "bb8": "0.8",
+        "diesel": "2",
+        "diesel-async": {
+          "version": "0.3",
+          "features": [
+            "postgres",
+            "bb8"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/diesel-postgres/Cargo.toml",
+    "blob_hash": "ff42a0db6842cc0c2b0b540b28ba25c5c864540a",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-diesel-postgres",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "macros"
+          ]
+        },
+        "deadpool-diesel": {
+          "version": "0.4.1",
+          "features": [
+            "postgres"
+          ]
+        },
+        "diesel": {
+          "version": "2",
+          "features": [
+            "postgres"
+          ]
+        },
+        "diesel_migrations": "2",
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/error-handling/Cargo.toml",
+    "blob_hash": "26fc3b98eef565beb5733be582179c29251b52ed",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-error-handling",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "macros"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5",
+          "features": [
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/form/Cargo.toml",
+    "blob_hash": "a1b8f0ab094229d12421348023f30500c447925b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-form",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/global-404-handler/Cargo.toml",
+    "blob_hash": "9848d9e830dd1a3e246a05feef317716fa9e24a0",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-global-404-handler",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/graceful-shutdown/Cargo.toml",
+    "blob_hash": "86dfd52763b36fe20c9bcbf5a00582d3e8430924",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-graceful-shutdown",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "tracing"
+          ]
+        },
+        "hyper": {
+          "version": "1.0",
+          "features": []
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio",
+            "server-auto",
+            "http1"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5",
+          "features": [
+            "timeout",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/handle-head-request/Cargo.toml",
+    "blob_hash": "83a8a66e258d079aac7344d990248c3226771c13",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-handle-head-request",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "http-body-util": "0.1.0",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/hello-world/Cargo.toml",
+    "blob_hash": "6fbee18a76ace20a95a6f697eff3492eae23ce34",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-hello-world",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/http-proxy/Cargo.toml",
+    "blob_hash": "6385447197d6db1a5b9ab56c8e24534694dc520d",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-http-proxy",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "hyper": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": "0.1.1",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "make",
+            "util"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/jwt/Cargo.toml",
+    "blob_hash": "b0c76c25d16192b2e6d1d17a5ae70b9494b0e0f8",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-jwt",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "jsonwebtoken": "8.0",
+        "once_cell": "1.8",
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/key-value-store/Cargo.toml",
+    "blob_hash": "c23b28d2687675b387cd4672cc329759385fbcfa",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-key-value-store",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util",
+            "timeout",
+            "load-shed",
+            "limit"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "add-extension",
+            "auth",
+            "compression-full",
+            "limit",
+            "trace"
+          ]
+        },
+        "tower-layer": "0.3.2",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/listen-multiple-addrs/Cargo.toml",
+    "blob_hash": "8940b94332bed4432b7517f7424ed08a52c3077f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "listen-multiple-addrs",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio",
+            "server-auto",
+            "http1"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/low-level-openssl/Cargo.toml",
+    "blob_hash": "c5247dec9c9ec498f62df02ca130ade810665bb0",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-low-level-openssl",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1"
+        },
+        "openssl": "0.10",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-openssl": "0.6",
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "make"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/low-level-rustls/Cargo.toml",
+    "blob_hash": "3975fcb9170080c55650c6adc43e9cca7eaae02f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-low-level-rustls",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false
+        },
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1"
+        },
+        "rustls-pemfile": "1.0.4",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-rustls": "0.24.1",
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "make"
+          ]
+        },
+        "tower-service": "0.3.2",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/multipart-form/Cargo.toml",
+    "blob_hash": "d93b9c08e831800ed2911c3179df01cb985acb08",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-multipart-form",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "multipart"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "limit",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/oauth/Cargo.toml",
+    "blob_hash": "aafa29f4dc459dee87468dc9b1d3b5a2ecb3bcc8",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-oauth",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "anyhow": "1",
+        "async-session": "3.0.0",
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "http": "1.0.0",
+        "oauth2": "4.1",
+        "reqwest": {
+          "version": "0.12",
+          "default-features": false,
+          "features": [
+            "rustls-tls",
+            "json"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/parse-body-based-on-content-type/Cargo.toml",
+    "blob_hash": "b3558db40ea255c06e0ab21244e0e5f4672e139e",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-parse-body-based-on-content-type",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/print-request-response/Cargo.toml",
+    "blob_hash": "a314b5b7fe724401f7661ec47bd6e9b7614ce3ba",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-print-request-response",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body-util": "0.1.0",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util",
+            "filter"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/prometheus-metrics/Cargo.toml",
+    "blob_hash": "a30e44365938dec9831b5a8547740407d87457e9",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-prometheus-metrics",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "metrics": {
+          "version": "0.22",
+          "default-features": false
+        },
+        "metrics-exporter-prometheus": {
+          "version": "0.13",
+          "default-features": false
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/query-params-with-empty-strings/Cargo.toml",
+    "blob_hash": "7a52e98d1ea00395c1c06ba546f995d958de6bb0",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-query-params-with-empty-strings",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body-util": "0.1.0",
+        "hyper": "1.0.0",
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/readme/Cargo.toml",
+    "blob_hash": "4a79c9bb889afd32ac9a4d2fcfeea99bba3fac6c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-readme",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "serde_json": "1.0.68",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/reqwest-response/Cargo.toml",
+    "blob_hash": "cfb91bdcc4e7098480b39c425f769bce8f4b545f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-reqwest-response",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "reqwest": {
+          "version": "0.12",
+          "features": [
+            "stream"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-stream": "0.1",
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/rest-grpc-multiplex/Cargo.toml",
+    "blob_hash": "11a6a3a2b45449fd3de17742ef721a53ab5bdc5d",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-rest-grpc-multiplex",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "futures": "0.3",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "prost": "0.11",
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tonic": {
+          "version": "0.9"
+        },
+        "tonic-reflection": "0.9",
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      },
+      "build-dependencies": {
+        "tonic-build": {
+          "version": "0.9",
+          "features": [
+            "prost"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/reverse-proxy/Cargo.toml",
+    "blob_hash": "e28165730e83a9b7c1a4b15f47a6b4297d14e969",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-reverse-proxy",
+        "version": "0.1.0",
+        "edition": "2021"
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1.1",
+          "features": [
+            "client-legacy"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/routes-and-handlers-close-together/Cargo.toml",
+    "blob_hash": "8cacbd4727d11cc5c425f0604fe68d4db9d0f14b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-routes-and-handlers-close-together",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/serve-with-hyper/Cargo.toml",
+    "blob_hash": "06f4607053b6f7e9ae275744e64371db8fa0e9cb",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-serve-with-hyper",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "hyper": {
+          "version": "1.0",
+          "features": []
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio",
+            "server-auto",
+            "http1"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/simple-router-wasm/Cargo.toml",
+    "blob_hash": "c3041e4a583337b83dcf92024e31bbf83f0abae2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-simple-router-wasm",
+        "version": "0.1.0",
+        "edition": "2018",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "default-features": false
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "default-features": false
+        },
+        "futures-executor": "0.3.21",
+        "http": "1.0.0",
+        "tower-service": "0.3.1"
+      }
+    }
+  },
+  {
+    "source_path": "examples/sqlx-postgres/Cargo.toml",
+    "blob_hash": "3bc40302edcabed766e8b4b4e651895d1e11998f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-sqlx-postgres",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "sqlx": {
+          "version": "0.7",
+          "features": [
+            "runtime-tokio-rustls",
+            "any",
+            "postgres"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/sse/Cargo.toml",
+    "blob_hash": "b2b33159feb3b4fdba7f9682d811a7b3a5e8f39b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-sse",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "futures": "0.3",
+        "headers": "0.4",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-stream": "0.1",
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "fs",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "eventsource-stream": "0.2",
+        "reqwest": {
+          "version": "0.12",
+          "features": [
+            "stream"
+          ]
+        },
+        "reqwest-eventsource": "0.5"
+      }
+    }
+  },
+  {
+    "source_path": "examples/static-file-server/Cargo.toml",
+    "blob_hash": "3f41d608166949a434f241087e403e0f2ed1b426",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-static-file-server",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-extra": {
+          "path": "../../axum-extra"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "fs",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/stream-to-file/Cargo.toml",
+    "blob_hash": "b159c871ba9f0f6208a395b61512a856a061926a",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-stream-to-file",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "multipart"
+          ]
+        },
+        "futures": "0.3",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-util": {
+          "version": "0.7",
+          "features": [
+            "io"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/templates-minijinja/Cargo.toml",
+    "blob_hash": "9b525a8c29871eb57bbbfb3dcd265826ff0b0fe5",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-templates-minijinja",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "minijinja": "1.0.11",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/templates/Cargo.toml",
+    "blob_hash": "2f5aba27913518c3f6913d2a1ca2720585257426",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-templates",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "askama": "0.11",
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/testing-websockets/Cargo.toml",
+    "blob_hash": "afe7b1846f229ee60d2bc98627ebc63d089137d4",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-testing-websockets",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "ws"
+          ]
+        },
+        "futures": "0.3",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-tungstenite": "0.23"
+      }
+    }
+  },
+  {
+    "source_path": "examples/testing/Cargo.toml",
+    "blob_hash": "00e8132f73e677eb2bafd51ea7dbb1f07df21b3d",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-testing",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body-util": "0.1.0",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "client",
+            "http1",
+            "client-legacy"
+          ]
+        },
+        "mime": "0.3",
+        "serde_json": "1.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      },
+      "dev-dependencies": {
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/tls-graceful-shutdown/Cargo.toml",
+    "blob_hash": "40e489030a67bf791961e64e9ad51cb9c324b2fd",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-tls-graceful-shutdown",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-server": {
+          "version": "0.6",
+          "features": [
+            "tls-rustls"
+          ]
+        },
+        "hyper": {
+          "version": "0.14",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/tls-rustls/Cargo.toml",
+    "blob_hash": "4c255c276347e8d049d3b7d44856f3b959c0c725",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-tls-rustls",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "axum-server": {
+          "version": "0.6",
+          "features": [
+            "tls-rustls"
+          ]
+        },
+        "tokio": {
+          "version": "1",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/todos/Cargo.toml",
+    "blob_hash": "dbd8b7125a3a42c806c653b701b5309b5df9cb59",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-todos",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util",
+            "timeout"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "add-extension",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "uuid": {
+          "version": "1.0",
+          "features": [
+            "serde",
+            "v4"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/tokio-postgres/Cargo.toml",
+    "blob_hash": "74806044ca4615c3aa8bf4f5a9dae0ed75a1f277",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-tokio-postgres",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "bb8": "0.7.1",
+        "bb8-postgres": "0.7.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-postgres": "0.7.2",
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/tokio-redis/Cargo.toml",
+    "blob_hash": "fb276849e8938850ce07614be76ad319fa34324b",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-tokio-redis",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "bb8": "0.7.1",
+        "bb8-redis": "0.14.0",
+        "redis": "0.24.0",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/tracing-aka-logging/Cargo.toml",
+    "blob_hash": "4004cd596bb7ff2435fa78921f2cc35fc29de5ce",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-tracing-aka-logging",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "tracing"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/unix-domain-socket/Cargo.toml",
+    "blob_hash": "7f157c7dcb332d6517462b3ab2bce6a75168a92c",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-unix-domain-socket",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body-util": "0.1",
+        "hyper": {
+          "version": "1.0.0",
+          "features": [
+            "full"
+          ]
+        },
+        "hyper-util": {
+          "version": "0.1",
+          "features": [
+            "tokio",
+            "server-auto",
+            "http1"
+          ]
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/validator/Cargo.toml",
+    "blob_hash": "a1adc075a8ccbcba4207fadf746bcffd54ba513f",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "edition": "2021",
+        "name": "example-validator",
+        "publish": false,
+        "version": "0.1.0"
+      },
+      "dependencies": {
+        "async-trait": "0.1.67",
+        "axum": {
+          "path": "../../axum"
+        },
+        "http-body": "1.0.0",
+        "serde": {
+          "version": "1.0",
+          "features": [
+            "derive"
+          ]
+        },
+        "thiserror": "1.0.29",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        },
+        "validator": {
+          "version": "0.14.0",
+          "features": [
+            "derive"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/versioning/Cargo.toml",
+    "blob_hash": "ac8628c3821069f86b1e7689b75565af7afd38a4",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-versioning",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum"
+        },
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      }
+    }
+  },
+  {
+    "source_path": "examples/websockets/Cargo.toml",
+    "blob_hash": "842a09a3773e6743f4ab5e698ad98c215df2e101",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "example-websockets",
+        "version": "0.1.0",
+        "edition": "2021",
+        "publish": false
+      },
+      "dependencies": {
+        "axum": {
+          "path": "../../axum",
+          "features": [
+            "ws"
+          ]
+        },
+        "axum-extra": {
+          "path": "../../axum-extra",
+          "features": [
+            "typed-header"
+          ]
+        },
+        "futures": "0.3",
+        "futures-util": {
+          "version": "0.3",
+          "default-features": false,
+          "features": [
+            "sink",
+            "std"
+          ]
+        },
+        "headers": "0.4",
+        "tokio": {
+          "version": "1.0",
+          "features": [
+            "full"
+          ]
+        },
+        "tokio-tungstenite": "0.23",
+        "tower": {
+          "version": "0.4",
+          "features": [
+            "util"
+          ]
+        },
+        "tower-http": {
+          "version": "0.5.0",
+          "features": [
+            "fs",
+            "trace"
+          ]
+        },
+        "tracing": "0.1",
+        "tracing-subscriber": {
+          "version": "0.3",
+          "features": [
+            "env-filter"
+          ]
+        }
+      },
+      "bin": [
+        {
+          "name": "example-websockets",
+          "path": "src/main.rs"
+        },
+        {
+          "name": "example-client",
+          "path": "src/client.rs"
+        }
+      ]
+    }
+  }
+]

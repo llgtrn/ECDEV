@@ -1,0 +1,85 @@
+{
+  "status": "CANDIDATE_EVIDENCE",
+  "candidates": [
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 287,
+      "line_end": 287,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// Set the event's retry timeout field (`retry:<timeout>`)."
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 291,
+      "line_end": 291,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    /// wish, such as if they implement exponential backoff."
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 296,
+      "line_end": 296,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    pub fn retry(mut self, duration: Duration) -> Event {"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 297,
+      "line_end": 297,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        if self.flags.contains(EventFlags::HAS_RETRY) {"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 298,
+      "line_end": 298,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "            panic!(\"Called `EventBuilder::retry` multiple times\");"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 300,
+      "line_end": 300,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.flags.insert(EventFlags::HAS_RETRY);"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 302,
+      "line_end": 302,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        self.buffer.extend_from_slice(b\"retry:\");"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 387,
+      "line_end": 387,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "    const HAS_RETRY: Self = Self::from_bits(0b0100);"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 572,
+      "line_end": 572,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "                        .retry(Duration::from_secs(30))"
+    },
+    {
+      "source_path": "axum/src/response/sse.rs",
+      "line_start": 596,
+      "line_end": 596,
+      "blob_hash": "b414f05725125bafe6582ae9cf2ef1d80c54c1ba",
+      "evidence_type": "LEXICAL_CANDIDATE",
+      "excerpt": "        assert_eq!(event_fields.get(\"retry\").unwrap(), \"30000\");"
+    }
+  ]
+}

@@ -10,13 +10,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: rustfmt, clippy
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: node --check apps/web/app.js
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-targets --locked -- -D warnings
       - run: cargo test --workspace --locked
@@ -38,18 +34,6 @@ jobs:
       - run: python tools/commerce/validate.py --records-only
       - run: python tools/commerce/validate.py --lifecycle-negative-cases
       - run: python tools/commerce/validate.py --inventory-negative-cases
-      - name: MCP and HTTP integration
-        env:
-          ECDEV_MAX_PROVIDER_REQUESTS_PER_DAY: '0'
-        run: |
-          cargo run --locked --package ecdev-server --bin ecdev -- server > /tmp/ecdev.log 2>&1 &
-          server=$!
-          trap 'kill "$server"' EXIT
-          for i in $(seq 1 120); do
-            if curl -fsS http://127.0.0.1:8765/health; then break; fi
-            sleep 1
-          done
-          node tests/commerce/mcp-smoke.mjs
       - name: Governance gate report
         run: |
           cargo run --manifest-path .ecdev/Cargo.toml -- extinction --root . > /tmp/extinction.txt
