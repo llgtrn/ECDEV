@@ -1,0 +1,143 @@
+{
+  "record": "rust-url-semantic-matrix",
+  "donor": "servo/rust-url",
+  "donor_commit": "d6ea13c5f8e7e6e627f6390161b3e185bda5e5ce",
+  "donor_version_read": "url 2.5.8, idna 1.1.0 (tag v2.5.8)",
+  "evidence_class": "OBSERVED_DONOR_SOURCE_READ",
+  "capabilities": [
+    {
+      "key": "url.parse-and-join",
+      "donor": "Url::parse, Url::join, ParseOptions",
+      "ecdev": "web_address.rs Url::parse and join",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.accessors-and-origin",
+      "donor": "scheme, host_str, host, domain, port, port_or_known_default, path, query, fragment, username, password, path_segments, origin, query_pairs",
+      "ecdev": "web_address.rs accessors and Origin",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.mutators",
+      "donor": "set_query, set_fragment, set_path, set_username, set_password, query_pairs_mut, path_segments_mut",
+      "ecdev": "web_address.rs mutators",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.idna-domain-to-ascii",
+      "donor": "idna::domain_to_ascii_cow and the UTS #46 processor",
+      "ecdev": "international_domain.rs domain_to_ascii over committed Unicode 18 tables",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.punycode",
+      "donor": "idna::punycode encode and decode",
+      "ecdev": "international_domain.rs punycode_encode and punycode_decode",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.percent-encoding-and-forms",
+      "donor": "percent_encoding and form_urlencoded crates",
+      "ecdev": "web_address.rs percent-encode sets and form encoding",
+      "relevance": "RELIED_ON"
+    },
+    {
+      "key": "url.idna-to-unicode",
+      "donor": "idna::domain_to_unicode, deprecated.rs",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "url.file-paths-and-slicing",
+      "donor": "to_file_path, from_file_path, Position slicing, quirks.rs setters",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "url.data-urls",
+      "donor": "data-url crate (forgiving base64, MIME parsing)",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    },
+    {
+      "key": "url.serde-and-tooling",
+      "donor": "serde support, fuzz targets, benches, debug visualiser",
+      "ecdev": "none",
+      "relevance": "NOT_ADOPTED"
+    }
+  ],
+  "file_coverage": {
+    "rule": "every FIRST_PARTY_SOURCE path in the census files.jsonl matches the first prefix below; checked by tools/commerce/validate.py --records-only",
+    "entries": [
+      {
+        "prefix": "url/src/parser.rs",
+        "capabilities": "url.parse-and-join + url.accessors-and-origin (the basic URL parser state machine)"
+      },
+      {
+        "prefix": "url/src/lib.rs",
+        "capabilities": "url.parse-and-join + url.accessors-and-origin + url.mutators + url.file-paths-and-slicing"
+      },
+      {
+        "prefix": "url/src/host.rs",
+        "capabilities": "url.parse-and-join (host parsing, IPv4 and IPv6) + url.idna-domain-to-ascii"
+      },
+      {
+        "prefix": "url/src/origin.rs",
+        "capabilities": "url.accessors-and-origin"
+      },
+      {
+        "prefix": "url/src/path_segments.rs",
+        "capabilities": "url.mutators"
+      },
+      {
+        "prefix": "url/src/quirks.rs",
+        "capabilities": "url.file-paths-and-slicing (the WHATWG IDL setters, unused)"
+      },
+      {
+        "prefix": "url/src/slicing.rs",
+        "capabilities": "url.file-paths-and-slicing"
+      },
+      {
+        "prefix": "url/fuzz/",
+        "capabilities": "url.serde-and-tooling"
+      },
+      {
+        "prefix": "url/benches/",
+        "capabilities": "url.serde-and-tooling"
+      },
+      {
+        "prefix": "idna/src/uts46.rs",
+        "capabilities": "url.idna-domain-to-ascii + url.idna-to-unicode"
+      },
+      {
+        "prefix": "idna/src/punycode.rs",
+        "capabilities": "url.punycode"
+      },
+      {
+        "prefix": "idna/src/lib.rs",
+        "capabilities": "url.idna-domain-to-ascii + url.idna-to-unicode"
+      },
+      {
+        "prefix": "idna/src/deprecated.rs",
+        "capabilities": "url.idna-to-unicode"
+      },
+      {
+        "prefix": "idna/benches/",
+        "capabilities": "url.serde-and-tooling"
+      },
+      {
+        "prefix": "percent_encoding/",
+        "capabilities": "url.percent-encoding-and-forms"
+      },
+      {
+        "prefix": "form_urlencoded/",
+        "capabilities": "url.percent-encoding-and-forms"
+      },
+      {
+        "prefix": "data-url/",
+        "capabilities": "url.data-urls"
+      }
+    ]
+  },
+  "status": "SEMANTIC_REVIEW_COMPLETE"
+}

@@ -1,7 +1,7 @@
 //! Published organization offers. No negotiated wholesale or commercial validation is implied.
+use ecdev_core::web_address::Url;
 use serde_json::{Value, json};
 use std::collections::BTreeMap;
-use url::Url;
 
 struct Source<'a> {
     base: &'a Url,

@@ -25,7 +25,7 @@ fn ascii(name: &str) -> Option<String> {
     if name.is_ascii() {
         return Some(name.to_ascii_lowercase());
     }
-    url::Url::parse(&format!("http://{name}/"))
+    crate::web_address::Url::parse(&format!("http://{name}/"))
         .ok()?
         .host_str()
         .map(str::to_string)
@@ -96,7 +96,7 @@ pub fn registrable_domain(host: &str) -> Option<String> {
 
 /// The site a URL's listing belongs to: its registrable domain, else its host (IP addresses,
 /// public suffixes used as hosts).
-pub fn site_of(url: &url::Url) -> Option<String> {
+pub fn site_of(url: &crate::web_address::Url) -> Option<String> {
     let host = url.host_str()?;
     Some(registrable_domain(host).unwrap_or_else(|| host.to_ascii_lowercase()))
 }
@@ -121,7 +121,7 @@ mod tests {
         );
         assert_eq!(registrable_domain("co.uk"), None);
         assert_eq!(registrable_domain("127.0.0.1"), None);
-        let u = url::Url::parse("http://192.0.2.7/x").unwrap();
+        let u = crate::web_address::Url::parse("http://192.0.2.7/x").unwrap();
         assert_eq!(site_of(&u).as_deref(), Some("192.0.2.7"));
         assert!(list_version().starts_with("20"));
     }

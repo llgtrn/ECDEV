@@ -49,9 +49,9 @@ pub fn assess(candidates: &mut [Value], policy: &Policy, budget_exhausted: bool)
             .as_array()
             .cloned()
             .unwrap_or_else(|| vec![c.clone()]);
-        let urls: Vec<url::Url> = rows
+        let urls: Vec<crate::web_address::Url> = rows
             .iter()
-            .filter_map(|r| url::Url::parse(r["source"].as_str()?).ok())
+            .filter_map(|r| crate::web_address::Url::parse(r["source"].as_str()?).ok())
             .collect();
         let origins: BTreeSet<_> = urls
             .iter()

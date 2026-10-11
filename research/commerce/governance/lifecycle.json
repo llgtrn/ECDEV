@@ -1,17 +1,17 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e67487f0cc4e385feb07da58ed0e6a6fa4c61a72",
+  "assessed_parent_commit": "8885a9650b86b746bbb47ce3ed8e21ee324435ec",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json",
   "donor_count": 68,
   "effective_states": {
-    "CAPABILITY_RELEVANCE_RESOLVED": 4,
+    "CAPABILITY_RELEVANCE_RESOLVED": 5,
     "CUTOVER": 1,
     "DISCOVERED": 12,
     "EXTINCT": 6,
     "PARITY_PROVEN": 1,
-    "REGISTERED": 44
+    "REGISTERED": 43
   },
   "extinct": [
     "dependency--github-com-hsivonen-encoding-rs",
@@ -6147,7 +6147,7 @@
         {
           "gate": "SOURCE_IMPORTS_ZERO",
           "pass": false,
-          "detail": "71 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
+          "detail": "73 imports: serde_json in adapter/keepa/src/client.rs; serde_json in adapter/keepa/src/history.rs; serde_json in adapter/keepa/src/lib.rs"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6298,12 +6298,12 @@
     },
     {
       "donor": "dependency--github-com-servo-rust-url",
-      "claimed": "REGISTERED",
-      "effective": "REGISTERED",
+      "claimed": "PARITY_PROVEN",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
       "exception": "",
-      "stopped_by": "CENSUSED: not decomposed into any required capability",
-      "runtime": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "stopped_by": "CUTOVER: runtime or linked edges to the donor remain",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -6312,12 +6312,83 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION",
         "basis": "read off the declared licence string; a governance policy, not a legal conclusion"
       },
-      "capabilities": [],
+      "capabilities": [
+        {
+          "key": "url.parse-and-join",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard's basic URL parser written from the specification; 754 WPT cases exact and 1.2 million generated references identical to url 2.5.8 apart from documented differences)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.accessors-and-origin",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](accessors and Origin identical to url 2.5.8 over the same corpus)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.mutators",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](set_query, set_fragment, set_path, set_username, query pairs and path segments identical to url 2.5.8 over 2800 scripted sequences)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.idna-domain-to-ascii",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](UTS #46 with CheckBidi and CheckJoiners over committed Unicode 18 tables; 600000 random hosts agree with idna 1.1.0 except hosts using code points assigned after Unicode 16)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.punycode",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](RFC 3492 encoder and decoder checked on the RFC samples and by the host corpus)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.percent-encoding-and-forms",
+          "required": true,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard's percent-encode sets and application/x-www-form-urlencoded handling identical to url 2.5.8 over the corpus)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.idna-to-unicode",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(ToUnicode display policy (which labels are safe to show) is the reference if a viewer ever shows hosts)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "url.file-paths-and-slicing",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](file URLs are refused outright; the standard's drive-letter and host quirks are not implemented)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        },
+        {
+          "key": "url.data-urls",
+          "required": false,
+          "knowledge": "REFERENCE_ONLY(forgiving base64 and MIME parsing are references if inline images or documents ever need decoding)",
+          "knowledge_status": "REFERENCE_ONLY",
+          "open": false
+        },
+        {
+          "key": "url.serde-and-tooling",
+          "required": false,
+          "knowledge": "STUDY_COMPLETE[INDEPENDENT_NATIVE](URLs travel as href strings in ECDEV records and are reparsed; the corpus tests take the fuzzers' role)",
+          "knowledge_status": "STUDY_COMPLETE",
+          "open": false
+        }
+      ],
       "gates": [
         {
           "gate": "RUNTIME_EDGES_ZERO",
-          "pass": false,
-          "detail": "2 observed: MANIFEST CARGO url in adapter/web/Cargo.toml; MANIFEST CARGO url in domain/commerce/Cargo.toml"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "BUILD_EDGES_ZERO",
@@ -6326,8 +6397,8 @@
         },
         {
           "gate": "LINKED_EDGES_ZERO",
-          "pass": true,
-          "detail": "none observed"
+          "pass": false,
+          "detail": "1 observed: LOCK CARGO url linked via reqwest 0.12.28: adapter/keepa/Cargo.toml \u2192 reqwest 0.12.28 \u2192 url 2.5.8 (in Cargo.lock)"
         },
         {
           "gate": "TEST_EDGES_ZERO",
@@ -6336,8 +6407,8 @@
         },
         {
           "gate": "SOURCE_IMPORTS_ZERO",
-          "pass": false,
-          "detail": "24 imports: url in adapter/web/src/amazon.rs; url in adapter/web/src/commerce.rs; url in adapter/web/src/lib.rs"
+          "pass": true,
+          "detail": "none observed"
         },
         {
           "gate": "RESIDENT_SOURCE_ZERO",
@@ -6346,48 +6417,48 @@
         },
         {
           "gate": "CAPABILITY_COVERAGE_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 6 required capabilities have a valid native replacement"
         },
         {
           "gate": "PARITY_PROOFS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 6 required capabilities have fresh passing parity proofs"
         },
         {
           "gate": "REGRESSION_TESTS_PASS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 6 required capabilities have fresh passing regression proofs"
         },
         {
           "gate": "CANONICAL_REPLACEMENT_EXISTS",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 6 required capabilities have an existing canonical replacement node"
         },
         {
           "gate": "TECHNOLOGY_MAPPING_FULL",
-          "pass": false,
-          "detail": "no required capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 6 required capabilities map to a capability or technology of the canonical graph"
         },
         {
           "gate": "CAPABILITY_RELEVANCE_RESOLVED",
-          "pass": false,
-          "detail": "no capability declared: the donor is not decomposed"
+          "pass": true,
+          "detail": "all 10 declared capabilities are relied on or justified not relevant to ECDEV"
         },
         {
           "gate": "KNOWLEDGE_RESOLVED",
-          "pass": false,
-          "detail": "no capability extracted: nothing is known about what the donor teaches"
+          "pass": true,
+          "detail": "all 10 declared capabilities have resolved knowledge"
         },
         {
           "gate": "CUTOVER_COMPLETED",
-          "pass": false,
-          "detail": "no cutover declared"
+          "pass": true,
+          "detail": "cutover declared"
         },
         {
           "gate": "ROLLBACK_INDEPENDENT",
           "pass": false,
-          "detail": "still depended on by: commerce (uses it), commerce.web-research (uses it)"
+          "detail": "still depended on by: commerce.keepa (uses it)"
         }
       ]
     },

@@ -20,6 +20,7 @@ pub mod xml_feed;
 pub mod yahoo_shopping;
 use ecdev_core::identifier::Uuid;
 use ecdev_core::sha256::Sha256;
+use ecdev_core::web_address::Url;
 use ecdev_core::{
     domain::{Evidence, ObservationMode},
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
@@ -34,7 +35,6 @@ use std::{
     sync::Mutex,
     time::{Duration, Instant},
 };
-use url::Url;
 pub struct Web {
     gate: Mutex<Option<Instant>>,
     robots: Mutex<robots::RobotsCache>,
@@ -252,10 +252,21 @@ pub fn redirect_target(
             && !rest.starts_with("//")
             && !scheme.contains(['/', '?', '#'])
     });
-    if !location.is_ascii() || location.contains('\\') || scheme_without_authority {
+    // "///host" is a path to some clients and a host to others, so it is refused, not resolved.
+    if !location.is_ascii()
+        || location.contains('\\')
+        || scheme_without_authority
+        || location.starts_with("///")
+    {
         return Err("INVALID_REDIRECT".into());
     }
-    let next = current.join(location).map_err(|_| "INVALID_REDIRECT")?;
+    let next = current.join(location).map_err(|e| {
+        if e == ecdev_core::web_address::ParseError::UnsupportedScheme {
+            "PUBLIC_HTTP_URL_REQUIRED"
+        } else {
+            "INVALID_REDIRECT"
+        }
+    })?;
     normalize_url(next.as_str()).map(Some)
 }
 /// The cache validators (`etag`, `last_modified`) to send to `url`: only to the URL whose response
@@ -667,7 +678,7 @@ impl Web {
         };
         let client = builder.build().map_err(|_| "HTTP_CLIENT_ERROR")?;
         let mut request = client
-            .get(u.clone())
+            .get(u.as_str())
             .header("User-Agent", "ECDEV/0.1 (+read-only research)");
         for (field, header) in [
             ("etag", "If-None-Match"),

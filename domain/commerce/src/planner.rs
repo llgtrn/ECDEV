@@ -99,11 +99,11 @@ pub fn information_gain(
             let brand_match = brand.chars().count() >= 3 && label.contains(&brand);
             let same_origin = candidate["source"]
                 .as_str()
-                .and_then(|s| url::Url::parse(s).ok())
+                .and_then(|s| crate::web_address::Url::parse(s).ok())
                 .zip(
                     lead["source"]
                         .as_str()
-                        .and_then(|s| url::Url::parse(s).ok()),
+                        .and_then(|s| crate::web_address::Url::parse(s).ok()),
                 )
                 .is_some_and(|(a, b)| a.origin() == b.origin());
             if !brand_match && !same_origin {

@@ -53,7 +53,7 @@ struct Input {
 }
 /// Whether a canonical URL's path starts with one of the operator's prefixes.
 fn path_in_scope(canonical_url: &str, prefixes: &[String]) -> bool {
-    url::Url::parse(canonical_url)
+    crate::web_address::Url::parse(canonical_url)
         .map(|u| prefixes.iter().any(|p| u.path().starts_with(p.as_str())))
         .unwrap_or(false)
 }
@@ -644,12 +644,14 @@ impl Engine {
                 std::thread::sleep(std::time::Duration::from_millis(200));
                 continue;
             };
-            let amazon_source = url::Url::parse(&source.url).ok().is_some_and(|u| {
-                matches!(
-                    u.host_str(),
-                    Some("amazon.co.jp" | "www.amazon.co.jp" | "amazon.com" | "www.amazon.com")
-                )
-            });
+            let amazon_source = crate::web_address::Url::parse(&source.url)
+                .ok()
+                .is_some_and(|u| {
+                    matches!(
+                        u.host_str(),
+                        Some("amazon.co.jp" | "www.amazon.co.jp" | "amazon.com" | "www.amazon.com")
+                    )
+                });
             let provider = if amazon_source {
                 if let Some(public) = self.providers.iter().find(|p| p.id() == "public-amazon") {
                     public

@@ -2,6 +2,7 @@
 use crate::{Web, normalize_url, robots};
 use ecdev_core::identifier::Uuid;
 use ecdev_core::sha256::Sha256;
+use ecdev_core::web_address::Url;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
@@ -10,7 +11,6 @@ use ecdev_core::{
 use scraper::Html;
 use serde_json::{Value, json};
 use std::time::Duration;
-use url::Url;
 #[derive(Default)]
 pub struct Social {
     web: Web,
@@ -552,13 +552,19 @@ fn endpoint(q: &Value) -> Result<Url, String> {
                 None => feed,
             };
             match u.host() {
-                Some(url::Host::Ipv4(ip)) if !crate::public_ip(std::net::IpAddr::V4(ip)) => {
+                Some(ecdev_core::web_address::Host::Ipv4(ip))
+                    if !crate::public_ip(std::net::IpAddr::V4(ip)) =>
+                {
                     return Err("PUBLIC_IP_REQUIRED".into());
                 }
-                Some(url::Host::Ipv6(ip)) if !crate::public_ip(std::net::IpAddr::V6(ip)) => {
+                Some(ecdev_core::web_address::Host::Ipv6(ip))
+                    if !crate::public_ip(std::net::IpAddr::V6(ip)) =>
+                {
                     return Err("PUBLIC_IP_REQUIRED".into());
                 }
-                Some(url::Host::Domain("localhost")) => return Err("PUBLIC_IP_REQUIRED".into()),
+                Some(ecdev_core::web_address::Host::Domain("localhost")) => {
+                    return Err("PUBLIC_IP_REQUIRED".into());
+                }
                 _ => {}
             }
             Ok(u)

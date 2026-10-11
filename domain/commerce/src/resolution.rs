@@ -168,7 +168,7 @@ fn key(c: &Value) -> (String, &'static str) {
     }
     let asin = p["asin"].as_str().unwrap_or("").to_ascii_uppercase();
     if asin.len() == 10 && asin.bytes().all(|b| b.is_ascii_alphanumeric()) {
-        let scope = url::Url::parse(c["source"].as_str().unwrap_or(""))
+        let scope = crate::web_address::Url::parse(c["source"].as_str().unwrap_or(""))
             .ok()
             .map(|u| match u.host_str() {
                 Some("amazon.co.jp" | "www.amazon.co.jp") => "AMAZON_JP".into(),
@@ -190,7 +190,7 @@ fn key(c: &Value) -> (String, &'static str) {
     }
     let sku = text(&p["sku"]);
     if !sku.is_empty()
-        && let Ok(url) = url::Url::parse(c["source"].as_str().unwrap_or(""))
+        && let Ok(url) = crate::web_address::Url::parse(c["source"].as_str().unwrap_or(""))
     {
         return (
             format!(
@@ -222,7 +222,7 @@ pub fn resolve(records: Vec<Value>) -> (Vec<Value>, Value) {
     let mut anchors: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     let sku_anchor = |c: &Value| {
         let sku = text(&c["product"]["sku"]);
-        let origin = url::Url::parse(c["source"].as_str().unwrap_or("")).ok()?;
+        let origin = crate::web_address::Url::parse(c["source"].as_str().unwrap_or("")).ok()?;
         (!sku.is_empty()).then(|| {
             format!(
                 "{}|{sku}|{}|{}",

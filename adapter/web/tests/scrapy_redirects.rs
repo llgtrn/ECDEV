@@ -1,10 +1,10 @@
 //! ECDEV's redirect decision against frozen decisions of the pinned Scrapy RedirectMiddleware
 //! (BSD-3-Clause, scrapy/scrapy at 54f7ed9c), on the 2,000 cases of the httpx oracle. Compared
 //! on the target with its fragment removed. Differences are classified and counted, never hidden.
+use ecdev_core::web_address::Url;
 use ecdev_web::{location_text, redirect_target};
 use serde_json::Value;
 use std::collections::BTreeMap;
-use url::Url;
 
 fn load(s: &str) -> Value {
     serde_json::from_str(s).unwrap()

@@ -1,0 +1,89 @@
+{
+  "record": "native-url-parsing",
+  "evidence_class": "DERIVED_FROM_STANDARDS_AND_DIFFERENTIALLY_PROVEN",
+  "standards": [
+    "WHATWG URL Standard (basic URL parser, host, IPv4/IPv6, percent-encode sets, origin, serialisation)",
+    "UTS #46 Unicode IDNA Compatibility Processing, Unicode 18.0.0 IdnaMappingTable",
+    "RFC 3492 Punycode",
+    "UAX #15 NFC",
+    "RFC 5893 Bidi rule and RFC 5892 ContextJ"
+  ],
+  "licence_note": "Unicode data files are used under the Unicode License v3; the web-platform-tests data is BSD-3-Clause (Copyright web-platform-tests contributors). No url, idna or ICU code or data was copied: parser, tables and algorithms were written from the standards.",
+  "modules": [
+    "domain/commerce/src/web_address.rs",
+    "domain/commerce/src/international_domain.rs"
+  ],
+  "tables": {
+    "directory": "domain/commerce/idna-tables",
+    "sha256": {
+      "bidi.bin": "3e5fc4389a2fc152d11f4183f5bfd433757deca7f73178f5c06790660b22879d",
+      "ccc.bin": "62e4e1114ee74462482ed7ee9f1565f763d1fd20dc83237a35235bb1ea2f3e17",
+      "compose.bin": "c270080d893e1aaeddb0ec12c0336c7c1e627a903803d2274d16141238c000c8",
+      "idna-map.bin": "a1a879a2f8d6cd7c5a141f780d235419702055090a02b5fbd1d3b43e76621f6e",
+      "idna-ranges.bin": "40bde5ad94592cd013e49b94cde55da9bd0f04e4b8e986b3bd8e158a21acd5eb",
+      "joining.bin": "d88614e4e273c48c10ffa406e08e0e33c1eb7aede811a023914b4659fc77fe65",
+      "marks.bin": "f1fc0f9e38733b1b66ffd5efe9c703f45e4e513d53b6629b7abc3bf5c07a397f",
+      "nfd-pool.bin": "d8d0113fbb6e1126c0d6f928eedcd2c65a95896ca7347a4b7f9e8541993c229d",
+      "nfd.bin": "4cb47d1a06e8feb7be88b9e06725b80353f9417bd4ffeee0a841d83b331288c0"
+    },
+    "generator": "One-off Python (source below) over IdnaMappingTable.txt, UnicodeData.txt, DerivedNormalizationProps.txt, DerivedBidiClass.txt and DerivedJoiningType.txt of Unicode 18.0.0, written as little-endian u32 words.",
+    "generator_source": "import re,struct,hashlib,json,os\nU='/tmp/claude-0/-home-user-ECDEV/c000280f-3151-5564-9330-dca84c370647/scratchpad/urlwork/ucd/'\nOUT='domain/commerce/idna-tables/'\ndef w(name,vals):\n    open(OUT+name,'wb').write(struct.pack('<%dI'%len(vals),*vals))\ndef rng(s):\n    a,_,b=s.partition('..'); return int(a,16),int(b or a,16)\nST={'valid':0,'ignored':1,'mapped':2,'deviation':3,'disallowed':4,'disallowed_STD3_valid':5,'disallowed_STD3_mapped':6}\nrows=[];pool=[]\nfor l in open(U+'idna-latest.txt',encoding='utf-8'):\n    l=l.split('#')[0].strip()\n    if not l: continue\n    f=[x.strip() for x in l.split(';')]\n    a,b=rng(f[0]); st=ST[f[1]]\n    mp=[int(x,16) for x in f[2].split()] if len(f)>2 and f[2] and not re.match(r'^(NV8|XV8)',f[2]) else []\n    off=len(pool); pool+=mp\n    rows.append((a,b,st,off,len(mp)))\nrows.sort()\nmerged=[]\nfor r in rows:\n    if merged and r[2] not in(2,3,6) and merged[-1][2]==r[2] and merged[-1][4]==0 and merged[-1][1]+1==r[0] and r[4]==0:\n        merged[-1]=(merged[-1][0],r[1],r[2],0,0)\n    else: merged.append(r)\nflat=[]\nfor a,b,st,off,n in merged: flat+=[a,b,(st<<24)|n,off]\nw('idna-ranges.bin',flat); w('idna-map.bin',pool)\nprint('idna ranges',len(merged),'pool',len(pool))\ngc={};ccc={};decomp={};first=None\nfor l in open(U+'UnicodeData.txt',encoding='utf-8'):\n    f=l.rstrip('\\n').split(';')\n    cp=int(f[0],16); name=f[1]\n    if name.endswith(', First>'): first=cp; continue\n    r=range(first,cp+1) if name.endswith(', Last>') else [cp]\n    first=None\n    for c in r:\n        gc[c]=f[2]\n        if f[3]!='0': ccc[c]=int(f[3])\n    if f[5] and not f[5].startswith('<'): decomp[cp]=[int(x,16) for x in f[5].split()]\ndef ranges_of(pred,universe):\n    out=[];start=prev=None\n    for c in sorted(universe):\n        if pred(c):\n            if start is None: start=prev=c\n            elif c==prev+1: prev=c\n            else: out.append((start,prev)); start=prev=c\n    if start is not None: out.append((start,prev))\n    return out\nmarks=ranges_of(lambda c:gc[c][0]=='M',gc.keys())\nw('marks.bin',[x for r in marks for x in r])\ncr=[]\nfor c in sorted(ccc):\n    if cr and cr[-1][1]+1==c and cr[-1][2]==ccc[c]: cr[-1]=(cr[-1][0],c,ccc[c])\n    else: cr.append((c,c,ccc[c]))\nw('ccc.bin',[x for r in cr for x in r])\ndef full(c):\n    if c in decomp:\n        out=[]\n        for d in decomp[c]: out+=full(d)\n        return out\n    return [c]\nfd={c:full(c) for c in decomp}\ndflat=[];dpool=[]\nfor c in sorted(fd):\n    dflat+=[c,len(dpool),len(fd[c])]; dpool+=fd[c]\nw('nfd.bin',dflat); w('nfd-pool.bin',dpool)\nexcl=set()\nfor l in open(U+'DerivedNormalizationProps.txt',encoding='utf-8'):\n    l=l.split('#')[0].strip()\n    if not l: continue\n    f=[x.strip() for x in l.split(';')]\n    if f[1]=='Full_Composition_Exclusion':\n        a,b=rng(f[0]); excl.update(range(a,b+1))\npairs=sorted((d[0],d[1],c) for c,d in decomp.items() if len(d)==2 and c not in excl)\nw('compose.bin',[x for p in pairs for x in p])\nprint('nfd',len(fd),'compose',len(pairs),'ccc ranges',len(cr),'marks',len(marks))\nBC=['L','R','AL','EN','ES','ET','AN','CS','NSM','BN','B','S','WS','ON','LRE','LRO','RLE','RLO','PDF','LRI','RLI','FSI','PDI']\nbidi=[0]*0x110000\nfor l in open(U+'DerivedBidiClass.txt',encoding='utf-8'):\n    m=re.match(r'#\\s*@missing:\\s*([0-9A-F]+)\\.\\.([0-9A-F]+);\\s*(\\w+)',l)\n    if m:\n        name=m[3]; v=BC.index({'Left_To_Right':'L','Right_To_Left':'R','Arabic_Letter':'AL','European_Terminator':'ET','Boundary_Neutral':'BN'}.get(name,name))\n        for c in range(int(m[1],16),int(m[2],16)+1): bidi[c]=v\nfor l in open(U+'DerivedBidiClass.txt',encoding='utf-8'):\n    l=l.split('#')[0].strip()\n    if not l: continue\n    f=[x.strip() for x in l.split(';')]\n    a,b=rng(f[0]); v=BC.index(f[1])\n    for c in range(a,b+1): bidi[c]=v\nbr=[]\nfor c,v in enumerate(bidi):\n    if v==0: continue\n    if br and br[-1][1]+1==c and br[-1][2]==v: br[-1]=(br[-1][0],c,v)\n    else: br.append((c,c,v))\nw('bidi.bin',[x for r in br for x in r])\nJT=['C','D','L','R','T','U']\njr=[]\nfor l in open(U+'DerivedJoiningType.txt',encoding='utf-8'):\n    l=l.split('#')[0].strip()\n    if not l: continue\n    f=[x.strip() for x in l.split(';')]\n    a,b=rng(f[0]); jr.append((a,b,JT.index(f[1])))\njr.sort(); w('joining.bin',[x for r in jr for x in r])\nprint('bidi ranges',len(br),'joining ranges',len(jr))\ntot=0;man={}\nfor f in sorted(os.listdir(OUT)):\n    b=open(OUT+f,'rb').read(); tot+=len(b); man[f]=hashlib.sha256(b).hexdigest()\nprint('total bytes',tot)\njson.dump(man,open('/tmp/idna_manifest.json','w'),indent=1)\n"
+  },
+  "conformance_data": {
+    "wpt_urltestdata": "domain/commerce/tests/fixtures/wpt-urltestdata.json",
+    "sha256": "81e85fd3c199c08ef9c34cf651b3580eeedd080316493bfaf277a6b5ff8cf652",
+    "cases": 896,
+    "result": "896 cases: 754 match the expected components exactly (including rejections), 135 are file URLs refused outright, 7 are lenient-Punycode hosts rejected on purpose",
+    "asserted_by": "domain/commerce/tests/web_address_wpt.rs"
+  },
+  "deviations_from_the_standard": [
+    {
+      "what": "file URLs",
+      "behaviour": "refused with ParseError::UnsupportedScheme; ECDEV never reads files and redirect policy maps the refusal to PUBLIC_HTTP_URL_REQUIRED"
+    },
+    {
+      "what": "lenient Punycode (IgnoreInvalidPunycode in the newest standard revision)",
+      "behaviour": "seven WPT hosts (xn--pokxncvks under three spellings, 10.0.0.xn--pokxncvks under three spellings, https://xn--/) are rejected, as the url crate rejected them; rejecting is the safe side for a fetcher"
+    }
+  ],
+  "deviations_from_the_url_crate_it_replaces": [
+    {
+      "what": "'^' in paths and credentials",
+      "behaviour": "percent-encoded as %5E, as the standard and WPT require; the url crate left it literal"
+    },
+    {
+      "what": "three or more slashes after a special base ('///host')",
+      "behaviour": "resolved as the standard says; redirect_target now refuses any Location starting '///' explicitly so the redirect policy does not depend on the parser"
+    },
+    {
+      "what": "credentials with an empty host (a://:@/)",
+      "behaviour": "failure, as the standard says; the url crate accepted"
+    },
+    {
+      "what": "backslash in non-special references",
+      "behaviour": "an ordinary character, as the standard says; the url crate treated it as a slash"
+    },
+    {
+      "what": "Unicode version",
+      "behaviour": "tables are Unicode 18.0.0; the url crate's are Unicode 16, so a host containing one of the 17810 code points assigned since is accepted natively where the url crate rejected it"
+    }
+  ],
+  "newly_assigned_code_point_ranges_17_and_18": "(0x558, 0x558), (0x58b, 0x58c), (0x5c8, 0x5c9), (0x88f, 0x88f), (0xb53, 0xb54), (0xc5c, 0xc5c), (0xcdc, 0xcdc), (0x1acf, 0x1af0), (0x208f, 0x208f), (0x209d, 0x209f), (0x20c1, 0x20c4), (0x2b96, 0x2b96), (0x2e60, 0x2e63), (0xa7ce, 0xa7cf), (0xa7d2, 0xa7d2), (0xa7d4, 0xa7d4), (0xa7dd, 0xa7dd), (0xa7e2, 0xa7e2), (0xa7f1, 0xa7f1), (0xab6c, 0xab6d), (0xfbc3, 0xfbd2), (0xfd90, 0xfd91), (0xfdc8, 0xfdce), (0x107bb, 0x107bf), (0x10940, 0x10959), (0x10ec5, 0x10ec7), (0x10ec9, 0x10eee), (0x10ef0, 0x10efb), (0x11b0a, 0x11b0a), (0x11b60, 0x11b67), (0x11db0, 0x11ddb), (0x11de0, 0x11de9), (0x11df0, 0x11df1), (0x1246f, 0x1246f), (0x12475, 0x1247f), (0x12550, 0x12686), (0x16ea0, 0x16eb8), (0x16ebb, 0x16ed3), (0x16ff2, 0x16ff6), (0x187f8, 0x187ff), (0x18cd6, 0x18cda), (0x18d09, 0x18d20), (0x18d80, 0x18df2), (0x18e00, 0x19191), (0x191a0, 0x191d2), (0x1b123, 0x1b128), (0x1b168, 0x1b168), (0x1ccfa, 0x1ccfc), (0x1ceba, 0x1ced0), (0x1ced2, 0x1ced4), (0x1cedd, 0x1cefd), (0x1d127, 0x1d128), (0x1d1eb, 0x1d1ff), (0x1d250, 0x1d281), (0x1d6a6, 0x1d6a6), (0x1db00, 0x1db1c), (0x1df1f, 0x1df24), (0x1df2b, 0x1df81), (0x1df90, 0x1df96), (0x1dfcd, 0x1dfff), (0x1e6c0, 0x1e6de), (0x1e6e0, 0x1e6f5), (0x1e6fe, 0x1e6ff), (0x1f1ae, 0x1f1ae), (0x1f6d8, 0x1f6d9), (0x1f777, 0x1f77a), (0x1f7da, 0x1f7db), (0x1f7f1, 0x1f7ff), (0x1f8d0, 0x1f8d8), (0x1fa54, 0x1fa57), (0x1fa8a, 0x1fa8e), (0x1fac8, 0x1fac8), (0x1facc, 0x1facd), (0x1fadd, 0x1fadd), (0x1faea, 0x1faeb), (0x1faef, 0x1faef), (0x1faf9, 0x1fafa), (0x1fbfa, 0x1fbfa), (0x2b73a, 0x2b73f), (0x2b81e, 0x2b81e), (0x2cea2, 0x2cead), (0x323b0, 0x33479), (0x3d000, 0x3fc3f)",
+  "differential_proof": {
+    "oracle": "url 2.5.8 (idna 1.1.0, Unicode 16) Url::parse, join, set_*, query_pairs_mut, path_segments_mut",
+    "corpus": "domain/commerce/tests/web_address_corpus (deterministic): 1.2 million generated absolute and relative references, 600000 random international hosts, 2800+ mutator scripts",
+    "result": {
+      "accepted": 685867,
+      "rejected": 462592,
+      "standard_over_url_crate_skipped": 51541,
+      "international_accepted": 132230,
+      "international_rejected": 465291,
+      "international_newer_unicode_only": 2479
+    },
+    "disagreements": "none outside the documented differences; the first runs found and fixed: a leading Punycode delimiter, '+' accepted by from_str_radix in IPv4 numbers, set_path with an empty path, the query_pairs_mut empty-query form, and path_segments_mut ignoring '.' and '..'",
+    "frozen_fixture": "domain/commerce/tests/fixtures/web-address-differential-digests.json",
+    "frozen_fixture_sha256": "38c1be2f32cef3e7f8521702c73961ac2c54ca1340432064f199b37b6af96922",
+    "post_removal_test": "domain/commerce/tests/web_address_parity.rs"
+  },
+  "closure": "the url crate is no longer a dependency of any ECDEV crate; it remains in Cargo.lock only through reqwest until the HTTP client is replaced"
+}

@@ -1,42 +1,42 @@
 {
   "authority": ".ecdev",
-  "assessed_parent_commit": "e67487f0cc4e385feb07da58ed0e6a6fa4c61a72",
+  "assessed_parent_commit": "8885a9650b86b746bbb47ce3ed8e21ee324435ec",
   "working_tree_dirty_at_assessment": true,
   "schema": "sha256:e28ae6d0ee95202725c49141db1f206335f2e7f0cafff8fd04d8078fee9efcf9",
   "source": "ecdev-gov extinction --json and conformance --json",
   "axes": "runtime adoption (donor ladder, REJECT_RUNTIME) and knowledge value (per-capability status) are independent",
   "production": {
-    "production_capabilities_required": 33,
-    "production_capabilities_native": 33,
-    "production_capabilities_proven": 33,
+    "production_capabilities_required": 39,
+    "production_capabilities_native": 39,
+    "production_capabilities_proven": 39,
     "production_capabilities_remaining": 0,
     "production_native_ratio": 1.0,
     "production_proof_ratio": 1.0
   },
   "knowledge": {
-    "known_donor_capabilities": 332,
-    "semantic_censused_capabilities": 332,
+    "known_donor_capabilities": 342,
+    "semantic_censused_capabilities": 342,
     "unreviewed_capabilities": 0,
     "capabilities_withdrawn": 0,
     "study_candidates": 40,
     "benchmark_candidates": 30,
     "algorithm_candidates": 4,
-    "reference_only": 67,
-    "study_complete_capabilities": 162,
+    "reference_only": 69,
+    "study_complete_capabilities": 170,
     "not_relevant_after_review": 29,
     "research_questions_open": 74,
-    "knowledge_coverage_ratio": 0.777108
+    "knowledge_coverage_ratio": 0.783626
   },
   "donor_coverage": {
-    "donors_knowledge_unreviewed": 38,
+    "donors_knowledge_unreviewed": 37,
     "donors_structural_census": 0,
     "donors_semantic_census": 3,
     "donors_active_study": 21,
-    "donors_study_complete": 6,
-    "donors_structurally_censused": 30,
-    "donors_semantically_censused": 17,
+    "donors_study_complete": 7,
+    "donors_structurally_censused": 31,
+    "donors_semantically_censused": 18,
     "donors_with_open_candidates": 21,
-    "donors_with_open_research": 62
+    "donors_with_open_research": 61
   },
   "denominators": {
     "production": "required capabilities of runtime-active donors only",
@@ -1047,9 +1047,9 @@
     },
     {
       "donor": "dependency--github-com-servo-rust-url",
-      "runtime": "REGISTERED",
-      "effective": "REGISTERED",
-      "knowledge": "UNREVIEWED",
+      "runtime": "CAPABILITY_RELEVANCE_RESOLVED",
+      "effective": "CAPABILITY_RELEVANCE_RESOLVED",
+      "knowledge": "STUDY_COMPLETE",
       "licence_policy": {
         "licence": "MIT OR Apache-2.0",
         "family": "PERMISSIVE",
@@ -1058,7 +1058,18 @@
         "native_reimplementation": "DERIVED_WITH_ATTRIBUTION"
       },
       "open": [],
-      "resolved": []
+      "resolved": [
+        "url.parse-and-join STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard's basic URL parser written from the specification; 754 WPT cases exact and 1.2 million generated references identical to url 2.5.8 apart from documented differences)",
+        "url.accessors-and-origin STUDY_COMPLETE[INDEPENDENT_NATIVE](accessors and Origin identical to url 2.5.8 over the same corpus)",
+        "url.mutators STUDY_COMPLETE[INDEPENDENT_NATIVE](set_query, set_fragment, set_path, set_username, query pairs and path segments identical to url 2.5.8 over 2800 scripted sequences)",
+        "url.idna-domain-to-ascii STUDY_COMPLETE[INDEPENDENT_NATIVE](UTS #46 with CheckBidi and CheckJoiners over committed Unicode 18 tables; 600000 random hosts agree with idna 1.1.0 except hosts using code points assigned after Unicode 16)",
+        "url.punycode STUDY_COMPLETE[INDEPENDENT_NATIVE](RFC 3492 encoder and decoder checked on the RFC samples and by the host corpus)",
+        "url.percent-encoding-and-forms STUDY_COMPLETE[INDEPENDENT_NATIVE](the standard's percent-encode sets and application/x-www-form-urlencoded handling identical to url 2.5.8 over the corpus)",
+        "url.idna-to-unicode REFERENCE_ONLY(ToUnicode display policy (which labels are safe to show) is the reference if a viewer ever shows hosts)",
+        "url.file-paths-and-slicing STUDY_COMPLETE[DELIBERATE_SEMANTIC_DIVERGENCE](file URLs are refused outright; the standard's drive-letter and host quirks are not implemented)",
+        "url.data-urls REFERENCE_ONLY(forgiving base64 and MIME parsing are references if inline images or documents ever need decoding)",
+        "url.serde-and-tooling STUDY_COMPLETE[INDEPENDENT_NATIVE](URLs travel as href strings in ECDEV records and are reparsed; the corpus tests take the fuzzers' role)"
+      ]
     },
     {
       "donor": "dependency--github-com-tokio-rs-axum",

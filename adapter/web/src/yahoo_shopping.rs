@@ -7,13 +7,13 @@
 
 use crate::Web;
 use ecdev_core::sha256::Sha256;
+use ecdev_core::web_address::Url;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use serde_json::{Value, json};
 use std::time::Duration;
-use url::Url;
 
 pub const ENDPOINT: &str = "https://shopping.yahooapis.jp/ShoppingWebService/V3/itemSearch";
 pub const MAX_RESULTS: u64 = 50;

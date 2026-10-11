@@ -2,11 +2,11 @@
 //! Time is supplied in Unix milliseconds so scheduling is reproducible in tests.
 use crate::identifier::Uuid;
 use crate::sha256::Sha256;
+use crate::web_address::Url;
 use rusqlite::{Connection, OptionalExtension, TransactionBehavior, params};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 use std::{collections::BTreeSet, path::Path, time::Duration};
-use url::Url;
 
 fn err(e: impl std::fmt::Display) -> String {
     e.to_string()

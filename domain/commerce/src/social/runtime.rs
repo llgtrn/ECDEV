@@ -17,7 +17,7 @@ fn source_key(source: &Value) -> String {
     if platform == "JSON_FEED" || platform == "XML_FEED" {
         let canonical = source["url"]
             .as_str()
-            .and_then(|u| url::Url::parse(u).ok())
+            .and_then(|u| crate::web_address::Url::parse(u).ok())
             .map(|mut u| {
                 u.set_fragment(None);
                 u.to_string()

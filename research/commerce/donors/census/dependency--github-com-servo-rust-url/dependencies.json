@@ -1,0 +1,475 @@
+[
+  {
+    "source_path": "Cargo.toml",
+    "blob_hash": "9ecf07c31124680e74b506a2db28facf805fc943",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "workspace": {
+        "members": [
+          "url",
+          "form_urlencoded",
+          "idna",
+          "percent_encoding",
+          "data-url",
+          "url_debug_tests"
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "data-url/Cargo.toml",
+    "blob_hash": "49f65ce3b82a0cf7b693f69ddfa1410c48da1533",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "data-url",
+        "version": "0.3.2",
+        "authors": [
+          "Simon Sapin <simon.sapin@exyr.org>"
+        ],
+        "description": "Processing of data: URL according to WHATWG’s Fetch Standard",
+        "categories": [
+          "no-std"
+        ],
+        "repository": "https://github.com/servo/rust-url",
+        "license": "MIT OR Apache-2.0",
+        "edition": "2018",
+        "autotests": false,
+        "rust-version": "1.51",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "rustdoc-args": [
+                "--generate-link-to-definition"
+              ]
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "alloc"
+        ],
+        "alloc": []
+      },
+      "dev-dependencies": {
+        "tester": "0.9",
+        "unicode-width": "=0.1.12",
+        "serde": {
+          "version": "1.0",
+          "default-features": false,
+          "features": [
+            "alloc",
+            "derive"
+          ]
+        },
+        "serde_json": "1.0"
+      },
+      "lib": {
+        "test": true
+      },
+      "test": [
+        {
+          "name": "wpt",
+          "harness": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "form_urlencoded/Cargo.toml",
+    "blob_hash": "fcc011fa06031c48cf4a7e5f5aabebd776e55536",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "form_urlencoded",
+        "version": "1.2.2",
+        "authors": [
+          "The rust-url developers"
+        ],
+        "description": "Parser and serializer for the application/x-www-form-urlencoded syntax, as used by HTML forms.",
+        "categories": [
+          "no-std"
+        ],
+        "repository": "https://github.com/servo/rust-url",
+        "license": "MIT OR Apache-2.0",
+        "edition": "2018",
+        "rust-version": "1.51",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "rustdoc-args": [
+                "--generate-link-to-definition"
+              ]
+            }
+          }
+        }
+      },
+      "lib": {
+        "test": false
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "alloc",
+          "percent-encoding/std"
+        ],
+        "alloc": [
+          "percent-encoding/alloc"
+        ]
+      },
+      "dependencies": {
+        "percent-encoding": {
+          "version": "2.3.2",
+          "default-features": false,
+          "path": "../percent_encoding"
+        }
+      }
+    }
+  },
+  {
+    "source_path": "idna/Cargo.toml",
+    "blob_hash": "fa6abf288d327788659ee71cb6ebb3a296f6510a",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "idna",
+        "version": "1.1.0",
+        "authors": [
+          "The rust-url developers"
+        ],
+        "description": "IDNA (Internationalizing Domain Names in Applications) and Punycode.",
+        "keywords": [
+          "no-std",
+          "web",
+          "http"
+        ],
+        "repository": "https://github.com/servo/rust-url/",
+        "license": "MIT OR Apache-2.0",
+        "autotests": false,
+        "edition": "2018",
+        "rust-version": "1.57",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "rustdoc-args": [
+                "--generate-link-to-definition"
+              ]
+            }
+          }
+        }
+      },
+      "lib": {
+        "doctest": false
+      },
+      "features": {
+        "default": [
+          "std",
+          "compiled_data"
+        ],
+        "std": [
+          "alloc"
+        ],
+        "alloc": [],
+        "compiled_data": [
+          "idna_adapter/compiled_data"
+        ]
+      },
+      "test": [
+        {
+          "name": "tests",
+          "harness": false
+        },
+        {
+          "name": "unit"
+        },
+        {
+          "name": "unitbis"
+        }
+      ],
+      "dev-dependencies": {
+        "assert_matches": "1.3",
+        "bencher": "0.1",
+        "tester": "0.9",
+        "serde_json": "1.0"
+      },
+      "dependencies": {
+        "utf8_iter": "1.0.4",
+        "smallvec": {
+          "version": "1.13.1",
+          "features": [
+            "const_generics"
+          ]
+        },
+        "idna_adapter": "1"
+      },
+      "bench": [
+        {
+          "name": "all",
+          "harness": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "percent_encoding/Cargo.toml",
+    "blob_hash": "562ba5f8659e2c32cebe55d1aec0525407d2d46a",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "percent-encoding",
+        "version": "2.3.2",
+        "authors": [
+          "The rust-url developers"
+        ],
+        "description": "Percent encoding and decoding",
+        "categories": [
+          "no-std"
+        ],
+        "repository": "https://github.com/servo/rust-url/",
+        "license": "MIT OR Apache-2.0",
+        "edition": "2018",
+        "rust-version": "1.51",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "rustdoc-args": [
+                "--generate-link-to-definition"
+              ]
+            }
+          }
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "alloc"
+        ],
+        "alloc": []
+      }
+    }
+  },
+  {
+    "source_path": "url/Cargo.toml",
+    "blob_hash": "eba8b4805297ad202cc40de4c7e7459817148fbc",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "url",
+        "version": "2.5.8",
+        "authors": [
+          "The rust-url developers"
+        ],
+        "description": "URL library for Rust, based on the WHATWG URL Standard",
+        "documentation": "https://docs.rs/url",
+        "repository": "https://github.com/servo/rust-url",
+        "readme": "../README.md",
+        "keywords": [
+          "url",
+          "parser"
+        ],
+        "categories": [
+          "parser-implementations",
+          "web-programming",
+          "encoding",
+          "no-std"
+        ],
+        "license": "MIT OR Apache-2.0",
+        "include": [
+          "src/**/*",
+          "LICENSE-*",
+          "README.md",
+          "tests/**"
+        ],
+        "edition": "2018",
+        "rust-version": "1.63",
+        "metadata": {
+          "docs": {
+            "rs": {
+              "features": [
+                "serde"
+              ],
+              "rustdoc-args": [
+                "--generate-link-to-definition"
+              ]
+            }
+          },
+          "playground": {
+            "features": [
+              "serde"
+            ]
+          }
+        }
+      },
+      "dev-dependencies": {
+        "serde": "1.0",
+        "serde_derive": "1.0",
+        "serde_json": "1.0",
+        "bencher": "0.1"
+      },
+      "target": {
+        "cfg(all(target_arch = \"wasm32\", target_os = \"unknown\"))": {
+          "dev-dependencies": {
+            "wasm-bindgen-test": "0.3"
+          }
+        }
+      },
+      "dependencies": {
+        "form_urlencoded": {
+          "version": "1.2.2",
+          "path": "../form_urlencoded",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "idna": {
+          "version": "1.1.0",
+          "path": "../idna",
+          "default-features": false,
+          "features": [
+            "alloc",
+            "compiled_data"
+          ]
+        },
+        "percent-encoding": {
+          "version": "2.3.2",
+          "path": "../percent_encoding",
+          "default-features": false,
+          "features": [
+            "alloc"
+          ]
+        },
+        "serde": {
+          "version": "1.0",
+          "optional": true,
+          "default-features": false
+        },
+        "serde_derive": {
+          "version": "1.0",
+          "optional": true,
+          "default-features": false
+        }
+      },
+      "features": {
+        "default": [
+          "std"
+        ],
+        "std": [
+          "idna/std",
+          "percent-encoding/std",
+          "form_urlencoded/std",
+          "serde?/std"
+        ],
+        "debugger_visualizer": [],
+        "expose_internals": [],
+        "serde": [
+          "dep:serde",
+          "dep:serde_derive"
+        ]
+      },
+      "test": [
+        {
+          "name": "url_wpt",
+          "path": "tests/wpt.rs",
+          "harness": false
+        }
+      ],
+      "bench": [
+        {
+          "name": "parse_url",
+          "path": "benches/parse_url.rs",
+          "harness": false
+        }
+      ]
+    }
+  },
+  {
+    "source_path": "url/fuzz/Cargo.toml",
+    "blob_hash": "82dbdc381df8316a0ee2878ef8a61349491f3241",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "url-fuzz",
+        "version": "0.0.1",
+        "authors": [
+          "Automatically generated"
+        ],
+        "publish": false,
+        "metadata": {
+          "cargo-fuzz": true
+        }
+      },
+      "dependencies": {
+        "libfuzzer-sys": "0.4.0",
+        "url": {
+          "path": ".."
+        }
+      },
+      "bin": [
+        {
+          "name": "parse",
+          "path": "fuzz_targets/parse.rs"
+        },
+        {
+          "name": "fuzz-url",
+          "path": "fuzz_targets/fuzz-url.rs"
+        }
+      ],
+      "workspace": {
+        "members": [
+          "."
+        ]
+      }
+    }
+  },
+  {
+    "source_path": "url_debug_tests/Cargo.toml",
+    "blob_hash": "ca9b16b81e072f723cbc2905b9df1a8c9afd5dc2",
+    "status": "PARSED",
+    "roles": [],
+    "manifest": {
+      "package": {
+        "name": "url_debug_tests",
+        "version": "0.0.0",
+        "description": "Tests for debugger visualizers defined for the url crate such as url.natvis",
+        "publish": false,
+        "rust-version": "1.60"
+      },
+      "dev-dependencies": {
+        "url": {
+          "path": "../url"
+        },
+        "debugger_test": "0.1",
+        "debugger_test_parser": "0.1"
+      },
+      "features": {
+        "debugger_visualizer": []
+      },
+      "test": [
+        {
+          "name": "debugger_visualizer",
+          "path": "tests/debugger_visualizer.rs",
+          "required-features": [
+            "debugger_visualizer"
+          ],
+          "test": false
+        }
+      ]
+    }
+  }
+]

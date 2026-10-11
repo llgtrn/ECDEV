@@ -1,8 +1,8 @@
 //! Public supplier leads, not verified quotations or factory audits.
+use ecdev_core::web_address::Url;
 use scraper::{Html, Selector};
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
-use url::Url;
 
 fn field(value: Value, evidence: Vec<Value>, status: &str) -> Value {
     json!({"value":value,"status":if value.is_null(){"UNKNOWN"}else{status},"evidence":evidence})

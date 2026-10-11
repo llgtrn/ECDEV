@@ -22,7 +22,7 @@ fn official_public_suffix_test_vectors_pass() {
         // Expected values are compared in the ASCII (punycode) form ECDEV returns.
         let got = registrable_domain(input);
         let want = expected.map(|e| {
-            url::Url::parse(&format!("http://{e}/"))
+            ecdev_core::web_address::Url::parse(&format!("http://{e}/"))
                 .map(|u| u.host_str().unwrap().to_string())
                 .unwrap_or(e)
         });

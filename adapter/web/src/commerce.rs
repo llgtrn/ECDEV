@@ -1,8 +1,8 @@
 //! Commerce metadata projections. Values remain source assertions with field locators.
+use ecdev_core::web_address::Url;
 use scraper::{Html, Selector};
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
-use url::Url;
 
 pub fn annotate(product: &mut Value, page: &str, script: usize, hash: &str) {
     let raw = product["raw_json_ld"].clone();

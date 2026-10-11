@@ -4,12 +4,14 @@ use ecdev_core::provider::{AcquireError, AcquireRequest, AcquireResult, Provider
 use serde_json::{Value, json};
 
 pub fn public_host(url: &str) -> bool {
-    url::Url::parse(url).ok().is_some_and(|u| {
-        matches!(
-            u.host_str(),
-            Some("amazon.co.jp" | "www.amazon.co.jp" | "amazon.com" | "www.amazon.com")
-        )
-    })
+    ecdev_core::web_address::Url::parse(url)
+        .ok()
+        .is_some_and(|u| {
+            matches!(
+                u.host_str(),
+                Some("amazon.co.jp" | "www.amazon.co.jp" | "amazon.com" | "www.amazon.com")
+            )
+        })
 }
 
 #[derive(Default)]
@@ -36,7 +38,7 @@ impl Provider for PublicAmazon {
             .as_str()
             .unwrap()
             .to_string();
-        let host = url::Url::parse(&source).map_err(|_| "INVALID_URL")?;
+        let host = ecdev_core::web_address::Url::parse(&source).map_err(|_| "INVALID_URL")?;
         if (request.market == "AMAZON_JP"
             && !host.host_str().unwrap_or("").ends_with("amazon.co.jp"))
             || (request.market == "AMAZON_US"
@@ -78,7 +80,8 @@ impl Provider for PublicAmazon {
             .as_str()
             .unwrap_or("")
             .to_string();
-        let parsed = url::Url::parse(&final_url).map_err(|_| "PUBLIC_AMAZON_FINAL_URL_REQUIRED")?;
+        let parsed = ecdev_core::web_address::Url::parse(&final_url)
+            .map_err(|_| "PUBLIC_AMAZON_FINAL_URL_REQUIRED")?;
         let marketplace = if matches!(parsed.host_str(), Some("amazon.co.jp" | "www.amazon.co.jp"))
         {
             "AMAZON_JP"

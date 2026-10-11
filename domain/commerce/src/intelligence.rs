@@ -140,7 +140,7 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
     let origins: BTreeSet<_> = snapshots
         .iter()
         .filter_map(|s| s["source"].as_str())
-        .filter_map(|s| url::Url::parse(s).ok())
+        .filter_map(|s| crate::web_address::Url::parse(s).ok())
         .map(|u| u.origin().ascii_serialization())
         .collect();
     for c in candidates.iter() {
@@ -166,7 +166,7 @@ pub fn enrich(candidates: &mut [Value], snapshots: &[Value]) -> Result<Value, St
             .collect();
         let listing_origins: BTreeSet<_> = pages
             .iter()
-            .filter_map(|page| url::Url::parse(page).ok())
+            .filter_map(|page| crate::web_address::Url::parse(page).ok())
             .map(|u| u.origin().ascii_serialization())
             .collect();
         let mut sellers = BTreeSet::new();

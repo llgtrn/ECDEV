@@ -11,13 +11,13 @@
 
 use crate::{Web, robots};
 use ecdev_core::sha256::Sha256;
+use ecdev_core::web_address::Url;
 use ecdev_core::{
     provider::{AcquireError, AcquireRequest, AcquireResult, Provider},
     service::timestamp,
 };
 use serde_json::{Value, json};
 use std::time::Duration;
-use url::Url;
 
 pub const BASE: &str = "https://prices.openfoodfacts.org/api/v1/";
 pub const MAX_PAGE: u64 = 50;

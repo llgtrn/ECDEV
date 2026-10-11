@@ -5,9 +5,9 @@
 //! redirect target to its public-URL policy (httpx follows credentials, credential queries and
 //! non-http schemes), and refuses a Location that clients resolve differently where httpx
 //! guesses (empty authority, scheme without authority, backslashes, invalid host or port).
+use ecdev_core::web_address::Url;
 use ecdev_web::redirect_target;
 use serde_json::Value;
-use url::Url;
 
 fn oracle() -> Value {
     serde_json::from_str(include_str!("fixtures/httpx-redirect-oracle.json")).unwrap()

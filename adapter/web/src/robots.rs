@@ -1,8 +1,8 @@
 //! Native robots evaluator, tested against the locked Reppy C++ oracle.
 //! Exact agent selection follows the reviewed donor contract. Ambiguous ties deny.
 use ecdev_core::frontier::{UrlPolicy, canonicalize};
+use ecdev_core::web_address::Url;
 use serde_json::{Value, json};
-use url::Url;
 #[derive(Debug)]
 pub struct Decision {
     pub allowed: bool,

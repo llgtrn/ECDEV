@@ -888,7 +888,7 @@ fn live_shortlist_witness(root: &Path, run: &Value) -> Option<Value> {
             let Some(source) = observation["external_source"].as_str() else {
                 continue;
             };
-            let Ok(source) = url::Url::parse(source) else {
+            let Ok(source) = crate::web_address::Url::parse(source) else {
                 continue;
             };
             if !matches!(source.scheme(), "http" | "https") || source.host_str().is_none() {

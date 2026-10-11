@@ -152,7 +152,8 @@ impl SocialPost {
         {
             return Err("INVALID_OBSERVED_SOCIAL_POST".into());
         }
-        let url = url::Url::parse(&self.source_url).map_err(|_| "INVALID_SOURCE_URL")?;
+        let url =
+            crate::web_address::Url::parse(&self.source_url).map_err(|_| "INVALID_SOURCE_URL")?;
         if !matches!(url.scheme(), "https" | "http")
             || !url.username().is_empty()
             || url.password().is_some()
