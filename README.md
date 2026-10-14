@@ -30,23 +30,34 @@ flowchart LR
 
 
 
-Rust commerce engine with a local MCP/HTTP server, TypeScript dashboard, persisted runs and a source-backed donor registry. Development takes place directly on `main`.
+Rust commerce engine with a native local MCP/HTTP server, a **plain JavaScript** dashboard (`apps/web/{app.js,index.html,style.css}` served by the Rust HTTP implementation), persisted runs and a source-backed donor registry. **Previous TypeScript-dashboard wording was superseded** by the native web-surface cutover. Development takes place directly on `main`.
 
-The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable SQLite frontier with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Research runs now use this frontier and can resume saved captures through `crawl_run_id` without reacquiring handled URLs. Six behavioral regressions include forcibly terminating a worker after lease commit. Crawlee runtime oracle parity remains pending.
+The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable frontier via the **native embedded SQL store** (`ecdev-store`, SQLite-shaped API and checksummed WAL) with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Research runs now use this frontier and can resume saved captures through `crawl_run_id` without reacquiring handled URLs. Six behavioral regressions include forcibly terminating a worker after lease commit. Crawlee runtime oracle parity remains pending.
 
 [CURRENT IMPLEMENTATION, NOT THE TARGET] ECDEV still operates as a standalone checkout with its own control plane, but this independent governance must converge into .ynventa. Its current governance — repository graph, donor lifecycle, evidence, shape validator, extinction evaluator and ECDEV repository conformance — lives in `.ecdev/` and depends on no other repository. Repository shape is checked by `tools/commerce/shape_gate.rs` using the `.ecdev` assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes.
 
+
+### Documentation corrections checked against current ECDEV source
+
+| Earlier README statement | Verified current source | Disposition |
+|---|---|---|
+| "TypeScript dashboard; npm ci/build apps/web" | `apps/web/app.js`, `apps/web/index.html`, `apps/web/style.css`; embedded `apps/server/src/web.rs` | **SUPERSEDED:** plain JavaScript web console, Rust server, no mandatory npm production build |
+| "SQLite frontier / SQLite WAL" | `substrate/storage/src/lib.rs` contains the native embedded SQL store, checksummed commit log and SQLite-like compatibility API; `domain/commerce/src/frontier.rs` imports `ecdev_store` | Keep SQL *semantics* distinct from external rusqlite dependency |
+| "Node smoke test in tests/commerce" | No tracked root `tests/` in current ECDEV HEAD; `apps/server/tests/` and Rust workspaces are present | **STALE PATH:** the old Node smoke instruction was removed from the current command list |
+| "ECDEV governance is standalone" | `.ecdev/` remains as current code; no central `.ynventa/protocol.lock` exists yet | **CURRENT GAP:** mandatory migration source, not approved architecture |
+
+The source paths and command assertions above are code-grounded at the 2026-10-14 ECDEV revision preceding structural migration; they do not imply full behavior/parity verification. Retain research-only Node/Python oracle tooling where explicitly required and pinned; do not reintroduce either as an unacknowledged production dependency. See the mandatory eight-repository migration contract near the top of this README.
+
+
 ## Run
 
-Requires Rust, Node.js and npm. From the repository root:
+The current production server is built and run with **Rust/Cargo only**. Node/npm may still be used by optional historical or research-only donor oracles; the committed web console is plain JavaScript, and there is no `apps/web/package.json` to build. From the repository root:
 
 ```sh
-npm ci --prefix apps/web
-npm run build --prefix apps/web
 cargo run --locked --package ecdev-server --bin ecdev -- server
 ```
 
-The server binds to loopback only. Dashboard: `http://127.0.0.1:8765/`; MCP: `http://127.0.0.1:8765/mcp`; health: `/health`; API: `/api/status`; events: `/events`. Set `ECDEV_PORT` to change the port. SQLite WAL and captured raw responses live in the ignored `.ecdev-data/` directory. Run from the repository root, or set `ECDEV_ROOT` to its absolute path.
+The server binds to loopback only. Dashboard: `http://127.0.0.1:8765/`; MCP: `http://127.0.0.1:8765/mcp`; health: `/health`; API: `/api/status`; events: `/events`. Set `ECDEV_PORT` to change the port. The native `ecdev-store` persists a checksummed write-ahead log and the system retains captured raw responses in ignored `.ecdev-data/` runtime state. This is **not** an active `rusqlite` dependency. Run from the repository root, or set `ECDEV_ROOT` to its absolute path.
 
 Register the running server with installed clients:
 
@@ -102,8 +113,8 @@ cargo fmt --all --check
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 cargo test --manifest-path .ecdev/Cargo.toml
-npm ci --prefix tests/commerce
-node tests/commerce/mcp-smoke.mjs
+# The previously documented tests/commerce Node smoke is not in the current tracked root.
+# Do not claim it as a current verification gate; use existing Rust tests and current oracles.
 ```
 
 The governance suite includes ECDEV self-conformance and runs in full. The smoke test requires the running server and zero configured paid budget; it makes no paid acquisition requests. Census tools require Python and pinned `tools/commerce/requirements.txt`. `expand.py` preserves reviewed seed records while acquiring the next wave. `validate.py` checks commit-level provenance; `--records-only` validates committed inventories when checkouts are absent. One-shot generators that edited declarations in the retired grammar were removed; declarations change through typed edits and `ecdev-gov`. Clones, build products and credentials are ignored by Git.
