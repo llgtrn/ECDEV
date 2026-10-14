@@ -91,11 +91,10 @@ cargo fmt --all --check
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo test --workspace --locked
 cargo test --manifest-path .ecdev/Cargo.toml
-# The previously documented tests/commerce Node smoke is not in the current tracked root.
-# Do not claim it as a current verification gate; use existing Rust tests and current oracles.
+# No tests/commerce Node smoke exists at current HEAD; the Rust test suite is authoritative.
 ```
 
-The governance suite includes ECDEV self-conformance and runs in full. The smoke test requires the running server and zero configured paid budget; it makes no paid acquisition requests. Census tools require Python and pinned `tools/commerce/requirements.txt`. `expand.py` preserves reviewed seed records while acquiring the next wave. `validate.py` checks commit-level provenance; `--records-only` validates committed inventories when checkouts are absent. One-shot generators that edited declarations in the retired grammar were removed; declarations change through typed edits and `ecdev-gov`. Clones, build products and credentials are ignored by Git.
+The governance suite includes ECDEV self-conformance. The removed `tests/commerce` Node smoke is **not** a runnable gate at current HEAD. For HTTP/MCP integration, run the currently tracked Rust server tests and explicitly document the chosen test name, the bound loopback server revision and the zero-paid-acquisition budget. Do not report an unspecified smoke-test pass or infer live-provider readiness from fixtures. Census tools require Python and pinned `tools/commerce/requirements.txt`. `expand.py` preserves reviewed seed records while acquiring the next wave. `validate.py` checks commit-level provenance; `--records-only` validates committed inventories when checkouts are absent. One-shot generators that edited declarations in the retired grammar were removed; declarations change through typed edits and `ecdev-gov`. Clones, build products and credentials are ignored by Git.
 
 Native microdata extraction matches 132 cases executed against the locked extruct parser. Nested scopes, item references, repeated properties, value tags, URL resolution and cleaned text are covered. Raw microdata graph pointers remain inspectable in candidate field evidence. Conflicting JSON-LD and microdata prices clear the combined price instead of selecting a preferred format. Extruct is a research-only oracle; full donor absorption remains unproven.
 
