@@ -1,67 +1,28 @@
 # ECDEV
 
 
-## UI ownership — one Chronica Phenotype, biological roles (owner instruction 2026-10-14)
 
-**Binding target; current-source exceptions remain unfinished migrations.** All eight Ynventa repositories share one root vocabulary, but **only Chronica/phenotype/** may own durable user-facing UI source code. The one-organism principle forbids eight parallel dashboards, studios, frontends, business-rule engines and design systems. A capability owner supplies verified native technology, typed graphs, data contracts and evidence. The biological word `Phenotype` means *observable expression*, never canonical truth; `Phenome` is the aggregation of observations; `Regulome`, `Epigenome`, `Proteome`, `Interactome` and `Metabolome` are **semantic views**, not licenses to create new roots or databases.
+## Canonical Ynventa/Chronica integration — registered Latin nomenclature
 
-**Repository-specific rule:** The CURRENT `apps/web/{app.js,index.html,style.css}` plain-JavaScript frontend is a **bounded UI migration source**. Its browser assets and routes must be moved or reused in `Chronica/phenotype/` with tests, then deleted from ECDEV along with redundant web-asset build/serve paths when consumers are cut over. Do **not** delete native Rust HTTP/MCP, parser, crawler, durable SQL store, donor or research source evidence merely because it is web-related: these are backend capabilities and migration inputs. Do not ship a second product dashboard or permanent `.ecdev` control plane. One unified UI can display ECDEV product research alongside Esellios inventory and Fi-game metrics under Chronica's authorization.
+**One Digital Holobiont.** Canonical concept names belong to [Chronica's 21-concept registry](https://github.com/llgtrn/Chronica/blob/main/.ynventa/declared/nomenclature/concepts.jsonl) (DECISION 0115). **Genora** = inherited graph/identity laws; **Codara** = typed semantic intents; **Ontogen** = lawful capability pathway composition; **Myelion** = mathematical evaluation located with native capabilities (no independent module); **Axora** = verified external bindings; **Thymora** = authority; **Porion** = pre-effect admission; **Metabion** = bounded execution; **Lineara** = evidence; **Phenora** = observable, rebuildable expression. Norl and Chronica retain their product/host identities. Generic biological words explain functions but are not competing proper names or invitations to create a new crate.
 
-**Biological function mapping:** Membrane: bounded public acquisition/provenance; Physiology: crawl frontier, data extraction, statistics; Proteome: native parsing and SQL kernels; Phenome: shared Chronica product research views; Evolution: donor absorption.
+**This checkout's contribution:** Its Rust acquisition, HTML/data parsing, native embedded-SQL storage, native MCP/HTTP and product research capabilities remain backend technologies. The current `apps/web` JavaScript dashboard is a migration source to `Chronica/phenotype`, not a standalone permanent product UI. The independent `.ecdev` evidence/registry requires **lossless identity reconciliation** into common `.ynventa`, not deletion of donor history. Product research generates evidence/candidates, not automatic sales/shortlisting.
 
-**How to comply:** Before adding frontend or an organ, look up existing Chronica capability ownership, `phenotype/chart-view`, design/rendering primitives and semantic contract. Reuse if equivalent. For truly new presentation work, assign the **only UI write lease** to Chronica. For an existing UI, perform source/caller census → independent behavior/authorization tests → move/compose into Chronica → redirect consumers → delete old frontend/build paths → eight-repository anti-duplication scan. A failed stage remains BLOCKED, never counted as merged. An HTTP API, research-only web parser or headless simulation is NOT a user interface by itself.
-
-Documentation of this target does not change current code or imply 8/8 conformance. Authoritative descriptions: [Biological Ontology](https://github.com/llgtrn/.Ynventa-/blob/main/SEMANTIC-MODEL-V1.md), [Single Phenotype Blueprint](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md), [UI ownership placement](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md).
-
-
-
-
-## Universal Ynventa source morphology — binding owner target (2026-10-14)
-
-**Owner-approved final architecture, NOT a claim of completed source migration.** All eight checkouts — **Chronica, .Ynventa-, Esellios, Fi-game, Mechatron, Atlas-Studio, Universal-Connector, ECDEV** — must use ONE root vocabulary: genome/, physiology/, organism/, membrane/, symbiosis/, phenotype/, evolution/, assays/ and .ynventa/, instantiated only where needed. The current engine still has Host/Guest grammar branching. The owner rejects that distinction as a **permanent physical layout rule**; Chronica remains the sole semantic/authority host, not a filesystem exception. ECDEV is a mandatory eighth repository; its independent .ecdev protocol must be assimilated without destroying provenance. Read the [universal Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) before a structural cutover.
-
-**Repository-specific assessment:** The independent .ecdev control plane and substrate/domain/adapter/apps tree are CURRENT migration sources, not an accepted terminal exception. Preserve native HTTP/MCP, HTML parsing, SQL store, frontier and donor extinction history. Register as mandatory eighth participant with one .ynventa protocol.
+**ONE body, MANY Phenora, ONE product-UI code owner.** All frontends, dashboards, charts, studios and operator UI eventually reside under `Chronica/phenotype/`; native algorithms and typed contracts can remain specialized capability implementations until converged. One common physical source grammar applies to all eight repositories including ECDEV; current old source roots are **migration inputs** and have no permanent architectural exemption. A README is not evidence that code migration, protocol relock, user-interface cutover or V1 completion has occurred. [Architecture](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md) · [Morphology](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) · [Concept vocabulary](https://github.com/llgtrn/.Ynventa-/blob/main/SEMANTIC-MODEL-V1.md).
 
 ```mermaid
 flowchart LR
-    subgraph LOCAL["ECDEV — CURRENT source and behavior"]
-        A["ECDEV donor/evidence import"]
-        B["identity and license reconciliation"]
-        A --> B
+    subgraph SOURCE["ECDEV — implementation/evidence source"]
+      A["Web acquisition evidence"] --> B["Native parse / store"]
     end
-    subgraph TARGET["One Holobiont grammar + one Chronica authority — TARGET"]
-        C["native code migration"]
-        D["8-of-8 conformance"]
-        C --> D
-        V{"Scoped proofs, preserved identities, valid authority?"}
-        D --> V
+    subgraph CANON["Single Chronica canonical runtime + many Phenora"]
+      C["Chronica typed capability"] --> D["Research Phenora"]
+      D --> V{"Proof and consumer cutover?"}
     end
-    B -->|"migrate only with source, caller and lineage proofs"| C
-    V -->|"PASS and all consumers migrated"| OK["Converged; retire active legacy roots"]
-    V -->|"BLOCKED"| FAIL["No success claim; exact issue and safe rollback"]
+    B -->|"Typed data, native code and verified lineage"| C
+    V -->|"passed"| OK["Admitted capability / rebuildable view"]
+    V -->|"failed"| NO["BLOCKED: no new authority, no duplicate UI"]
 ```
-
-**Status and scope:** Legacy directories, commands and architectural descriptions retained below describe a dated current-code or historical donor implementation; **they are not alternative normative grammars**. The target requires the same .ynventa declaration/evidence model for all eight, one pinned schema+engine epoch, removal of deprecated implementation roots/validators and a reproducible **8/8** conformance certificate. Nothing in this README is proof that migration, extinction or a production effect has already passed.
-
-
-
-Rust commerce engine with a native local MCP/HTTP server, a **plain JavaScript** dashboard (`apps/web/{app.js,index.html,style.css}` served by the Rust HTTP implementation), persisted runs and a source-backed donor registry. **Previous TypeScript-dashboard wording was superseded** by the native web-surface cutover. Development takes place directly on `main`.
-
-The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable frontier via the **native embedded SQL store** (`ecdev-store`, SQLite-shaped API and checksummed WAL) with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Research runs now use this frontier and can resume saved captures through `crawl_run_id` without reacquiring handled URLs. Six behavioral regressions include forcibly terminating a worker after lease commit. Crawlee runtime oracle parity remains pending.
-
-[CURRENT IMPLEMENTATION, NOT THE TARGET] ECDEV still operates as a standalone checkout with its own control plane, but this independent governance must converge into .ynventa. Its current governance — repository graph, donor lifecycle, evidence, shape validator, extinction evaluator and ECDEV repository conformance — lives in `.ecdev/` and depends on no other repository. Repository shape is checked by `tools/commerce/shape_gate.rs` using the `.ecdev` assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes.
-
-
-### Documentation corrections checked against current ECDEV source
-
-| Earlier README statement | Verified current source | Disposition |
-|---|---|---|
-| "TypeScript dashboard; npm ci/build apps/web" | `apps/web/app.js`, `apps/web/index.html`, `apps/web/style.css`; embedded `apps/server/src/web.rs` | **SUPERSEDED:** plain JavaScript web console, Rust server, no mandatory npm production build |
-| "SQLite frontier / SQLite WAL" | `substrate/storage/src/lib.rs` contains the native embedded SQL store, checksummed commit log and SQLite-like compatibility API; `domain/commerce/src/frontier.rs` imports `ecdev_store` | Keep SQL *semantics* distinct from external rusqlite dependency |
-| "Node smoke test in tests/commerce" | No tracked root `tests/` in current ECDEV HEAD; `apps/server/tests/` and Rust workspaces are present | **STALE PATH:** the old Node smoke instruction was removed from the current command list |
-| "ECDEV governance is standalone" | `.ecdev/` remains as current code; no central `.ynventa/protocol.lock` exists yet | **CURRENT GAP:** mandatory migration source, not approved architecture |
-
-The source paths and command assertions above are code-grounded at the 2026-10-14 ECDEV revision preceding structural migration; they do not imply full behavior/parity verification. Retain research-only Node/Python oracle tooling where explicitly required and pinned; do not reintroduce either as an unacknowledged production dependency. See the mandatory eight-repository migration contract near the top of this README.
 
 
 ## Run
@@ -105,7 +66,7 @@ Other provider adapters, multi-provider opportunity execution, supplier matching
 | --- | --- |
 | `domain/commerce` | Evidence types, economics, intent planner, provider boundary, durable runs |
 | `adapter/keepa`, `adapter/web`, `adapter/marketplace` | Optional Keepa IO, native public fetching/extraction, official SP-API boundary |
-| `apps/server`, `apps/web` | MCP/HTTP/events and their dashboard projections |
+| `apps/server`, `apps/web` | Native MCP/HTTP/events server (backend retained) and CURRENT source UI (`apps/web`, migrate to Chronica Phenora before deletion) |
 | `tools/commerce` | Full clone census, schemas, provenance, shape gate and governance snapshots |
 | `tests/commerce` | Independent official MCP SDK integration client |
 | `research/commerce` | Locked donor inventories, reviewed contracts and measured status |
