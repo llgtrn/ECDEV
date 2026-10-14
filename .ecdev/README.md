@@ -1,14 +1,16 @@
-# .ecdev — ECDEV governance (CURRENT LEGACY IMPLEMENTATION; OWNER-REQUIRED MIGRATION)
+# .ecdev — existing ECDEV governance source, migration pending
+
+## Evidence-bearing current ECDEV governor — migrate into one shared protocol
+
+ECDEV is the mandatory eighth checkout. Its current `.ecdev` engine and donor/knowledge/evidence records are **migration source**, not a parallel accepted governance system. Migrate identity, licensed code history, denominator, candidate evidence, adoption and extinction truth to the shared `.ynventa` model before removing the present controller. Retain all the detailed technical contracts below so the migration can be verified, rather than silently discarding source history.
+
+Use Chronica's current Latin-inspired concept names: Codara typed semantics; Ontogen pathways; Myelion mathematical evaluation with capabilities, no separate module; Thymora/Porion grants and admission; Metabion executed work; Lineara evidence; Phenora observable views. The Rust acquisition/MCP/data store remains a native capability source. Current `apps/web` must be integrated as one of MANY Phenora views under the ONE `Chronica/phenotype/` UI implementation, with consumer cutover and old frontend retirement. It may not remain a standalone dashboard.
+
+Registry: https://github.com/llgtrn/Chronica/blob/main/.ynventa/declared/nomenclature/concepts.jsonl
+Repository Protocol: https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md
 
 
-## Owner-mandated canonical migration (2026-10-14)
-
-**Final rule:** no persistent independent `.ecdev` control-plane authority; ECDEV is the required eighth repo in the central `.ynventa` schema, Work/Lease/Result and protocol lock. Do not mark it migrated merely because `.ynventa/` is created. Preserve donor/capability identity, evidence-history denominator, license decisions, registered versions, runtime-edge graph, native parity and extinction gates; deduplicate aliases carefully, prove producer and consumer migrations, and remove the independent governor only after an independently reproducible 8/8 verification. This README retains the exact current commands below for safe legacy-source inspection until the verified cutover, not as normative terminal instructions.
-
-**UI is independent of donor governance and is centralized elsewhere:** `apps/web` (plain JavaScript console currently served by native Rust HTTP) MUST converge to `Chronica/phenotype/`. No new ECDEV dashboard, CSS/HTML component or renderer may be built here. ECDEV supplies native web acquisition, SQL store, data extraction, bounded research and typed view data; Chronica renders it and governs any consequential action. UI migration and donor extinction are separate evidence-scoped state machines. [Ontology](https://github.com/llgtrn/.Ynventa-/blob/main/SEMANTIC-MODEL-V1.md) · [Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) · [UI Blueprint](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md).
-
-
-**Dated current-code description, NOT the accepted future control plane:** The owner requires ECDEV to join the same `.ynventa` protocol and universal biological source morphology as the other seven Ynventa repositories. `.ecdev` remains the **existing** governance implementation and migration source until donor identities, versions, evidence, extinctions and callers are safely mapped. Do not duplicate or delete evidence. The standalone structure currently provides: repository graph, node ownership, donor registry and
+**Current implementation, pending migration:** The checked-in governor provides: repository graph, node ownership, donor registry and
 lifecycle, evidence store, shape validator, extinction evaluator, technology/capability
 declarations and **ECDEV repository conformance**. Rust, zero dependencies, no network, no
 dependency on any other repository.
