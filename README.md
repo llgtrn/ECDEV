@@ -1,10 +1,40 @@
 # ECDEV
 
+
+## Universal Ynventa source morphology — binding owner target (2026-10-14)
+
+**Owner-approved final architecture, NOT a claim of completed source migration.** All eight checkouts — **Chronica, .Ynventa-, Esellios, Fi-game, Mechatron, Atlas-Studio, Universal-Connector, ECDEV** — must use ONE root vocabulary: genome/, physiology/, organism/, membrane/, symbiosis/, phenotype/, evolution/, assays/ and .ynventa/, instantiated only where needed. The current engine still has Host/Guest grammar branching. The owner rejects that distinction as a **permanent physical layout rule**; Chronica remains the sole semantic/authority host, not a filesystem exception. ECDEV is a mandatory eighth repository; its independent .ecdev protocol must be assimilated without destroying provenance. Read the [universal Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) before a structural cutover.
+
+**Repository-specific assessment:** The independent .ecdev control plane and substrate/domain/adapter/apps tree are CURRENT migration sources, not an accepted terminal exception. Preserve native HTTP/MCP, HTML parsing, SQL store, frontier and donor extinction history. Register as mandatory eighth participant with one .ynventa protocol.
+
+```mermaid
+flowchart LR
+    subgraph LOCAL["ECDEV — CURRENT source and behavior"]
+        A["ECDEV donor/evidence import"]
+        B["identity and license reconciliation"]
+        A --> B
+    end
+    subgraph TARGET["One Holobiont grammar + one Chronica authority — TARGET"]
+        C["native code migration"]
+        D["8-of-8 conformance"]
+        C --> D
+        V{"Scoped proofs, preserved identities, valid authority?"}
+        D --> V
+    end
+    B -->|"migrate only with source, caller and lineage proofs"| C
+    V -->|"PASS and all consumers migrated"| OK["Converged; retire active legacy roots"]
+    V -->|"BLOCKED"| FAIL["No success claim; exact issue and safe rollback"]
+```
+
+**Status and scope:** Legacy directories, commands and architectural descriptions retained below describe a dated current-code or historical donor implementation; **they are not alternative normative grammars**. The target requires the same .ynventa declaration/evidence model for all eight, one pinned schema+engine epoch, removal of deprecated implementation roots/validators and a reproducible **8/8** conformance certificate. Nothing in this README is proof that migration, extinction or a production effect has already passed.
+
+
+
 Rust commerce engine with a local MCP/HTTP server, TypeScript dashboard, persisted runs and a source-backed donor registry. Development takes place directly on `main`.
 
 The live-research wave is in progress. `domain/commerce/src/frontier.rs` implements a durable SQLite frontier with deterministic URL identity, fenced leases, crash recovery, priority, bounded retries, origin throttling and cancellation. Research runs now use this frontier and can resume saved captures through `crawl_run_id` without reacquiring handled URLs. Six behavioral regressions include forcibly terminating a worker after lease commit. Crawlee runtime oracle parity remains pending.
 
-ECDEV is a standalone repository. Its governance — repository graph, donor lifecycle, evidence, shape validator, extinction evaluator and ECDEV repository conformance — lives in `.ecdev/` and depends on no other repository. Repository shape is checked by `tools/commerce/shape_gate.rs` using the `.ecdev` assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes.
+[CURRENT IMPLEMENTATION, NOT THE TARGET] ECDEV still operates as a standalone checkout with its own control plane, but this independent governance must converge into .ynventa. Its current governance — repository graph, donor lifecycle, evidence, shape validator, extinction evaluator and ECDEV repository conformance — lives in `.ecdev/` and depends on no other repository. Repository shape is checked by `tools/commerce/shape_gate.rs` using the `.ecdev` assessor and ownership index. CI enforces canonical role roots and rejects architecture paths containing `crate` or `crates`. Cargo packages live directly in their declared graph nodes.
 
 ## Run
 
