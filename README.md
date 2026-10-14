@@ -1,6 +1,21 @@
 # ECDEV
 
 
+## UI ownership — one Chronica Phenotype, biological roles (owner instruction 2026-10-14)
+
+**Binding target; current-source exceptions remain unfinished migrations.** All eight Ynventa repositories share one root vocabulary, but **only Chronica/phenotype/** may own durable user-facing UI source code. The one-organism principle forbids eight parallel dashboards, studios, frontends, business-rule engines and design systems. A capability owner supplies verified native technology, typed graphs, data contracts and evidence. The biological word `Phenotype` means *observable expression*, never canonical truth; `Phenome` is the aggregation of observations; `Regulome`, `Epigenome`, `Proteome`, `Interactome` and `Metabolome` are **semantic views**, not licenses to create new roots or databases.
+
+**Repository-specific rule:** The CURRENT `apps/web/{app.js,index.html,style.css}` plain-JavaScript frontend is a **bounded UI migration source**. Its browser assets and routes must be moved or reused in `Chronica/phenotype/` with tests, then deleted from ECDEV along with redundant web-asset build/serve paths when consumers are cut over. Do **not** delete native Rust HTTP/MCP, parser, crawler, durable SQL store, donor or research source evidence merely because it is web-related: these are backend capabilities and migration inputs. Do not ship a second product dashboard or permanent `.ecdev` control plane. One unified UI can display ECDEV product research alongside Esellios inventory and Fi-game metrics under Chronica's authorization.
+
+**Biological function mapping:** Membrane: bounded public acquisition/provenance; Physiology: crawl frontier, data extraction, statistics; Proteome: native parsing and SQL kernels; Phenome: shared Chronica product research views; Evolution: donor absorption.
+
+**How to comply:** Before adding frontend or an organ, look up existing Chronica capability ownership, `phenotype/chart-view`, design/rendering primitives and semantic contract. Reuse if equivalent. For truly new presentation work, assign the **only UI write lease** to Chronica. For an existing UI, perform source/caller census → independent behavior/authorization tests → move/compose into Chronica → redirect consumers → delete old frontend/build paths → eight-repository anti-duplication scan. A failed stage remains BLOCKED, never counted as merged. An HTTP API, research-only web parser or headless simulation is NOT a user interface by itself.
+
+Documentation of this target does not change current code or imply 8/8 conformance. Authoritative descriptions: [Biological Ontology](https://github.com/llgtrn/.Ynventa-/blob/main/SEMANTIC-MODEL-V1.md), [Single Phenotype Blueprint](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md), [UI ownership placement](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md).
+
+
+
+
 ## Universal Ynventa source morphology — binding owner target (2026-10-14)
 
 **Owner-approved final architecture, NOT a claim of completed source migration.** All eight checkouts — **Chronica, .Ynventa-, Esellios, Fi-game, Mechatron, Atlas-Studio, Universal-Connector, ECDEV** — must use ONE root vocabulary: genome/, physiology/, organism/, membrane/, symbiosis/, phenotype/, evolution/, assays/ and .ynventa/, instantiated only where needed. The current engine still has Host/Guest grammar branching. The owner rejects that distinction as a **permanent physical layout rule**; Chronica remains the sole semantic/authority host, not a filesystem exception. ECDEV is a mandatory eighth repository; its independent .ecdev protocol must be assimilated without destroying provenance. Read the [universal Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) before a structural cutover.
