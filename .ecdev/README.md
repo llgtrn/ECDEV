@@ -1,6 +1,14 @@
-# .ecdev — ECDEV governance
+# .ecdev — ECDEV governance (CURRENT LEGACY IMPLEMENTATION; OWNER-REQUIRED MIGRATION)
 
-ECDEV's own governance authority: repository graph, node ownership, donor registry and
+
+## Owner-mandated canonical migration (2026-10-14)
+
+**Final rule:** no persistent independent `.ecdev` control-plane authority; ECDEV is the required eighth repo in the central `.ynventa` schema, Work/Lease/Result and protocol lock. Do not mark it migrated merely because `.ynventa/` is created. Preserve donor/capability identity, evidence-history denominator, license decisions, registered versions, runtime-edge graph, native parity and extinction gates; deduplicate aliases carefully, prove producer and consumer migrations, and remove the independent governor only after an independently reproducible 8/8 verification. This README retains the exact current commands below for safe legacy-source inspection until the verified cutover, not as normative terminal instructions.
+
+**UI is independent of donor governance and is centralized elsewhere:** `apps/web` (plain JavaScript console currently served by native Rust HTTP) MUST converge to `Chronica/phenotype/`. No new ECDEV dashboard, CSS/HTML component or renderer may be built here. ECDEV supplies native web acquisition, SQL store, data extraction, bounded research and typed view data; Chronica renders it and governs any consequential action. UI migration and donor extinction are separate evidence-scoped state machines. [Ontology](https://github.com/llgtrn/.Ynventa-/blob/main/SEMANTIC-MODEL-V1.md) · [Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) · [UI Blueprint](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md).
+
+
+**Dated current-code description, NOT the accepted future control plane:** The owner requires ECDEV to join the same `.ynventa` protocol and universal biological source morphology as the other seven Ynventa repositories. `.ecdev` remains the **existing** governance implementation and migration source until donor identities, versions, evidence, extinctions and callers are safely mapped. Do not duplicate or delete evidence. The standalone structure currently provides: repository graph, node ownership, donor registry and
 lifecycle, evidence store, shape validator, extinction evaluator, technology/capability
 declarations and **ECDEV repository conformance**. Rust, zero dependencies, no network, no
 dependency on any other repository.
