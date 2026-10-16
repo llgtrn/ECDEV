@@ -9,6 +9,7 @@
 //!   scaffolding cannot become architecture.
 
 pub mod pathmap;
+pub mod proposal;
 pub mod register;
 pub mod source;
 pub mod source_view;

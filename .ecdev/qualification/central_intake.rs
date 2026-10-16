@@ -357,6 +357,41 @@ fn run() -> Result<Json, String> {
         "seven_registered_sources_exclude_ecdev",
         ynventa::protocol::SHARDS.len() == 7 && ynventa::protocol::shard("ecdev").is_none(),
     )?;
+    let mapping_capture = capture::read_export_bound(
+        &root.join(".ecdev/tests/fixtures/source-capture-00dd7f0-v1.json"),
+        Some(source::migration::proposal::CAPTURE_SHA256),
+    )?;
+    let mapping = source::migration::proposal::generate(&mapping_capture)?;
+    let mapping_value = json::parse_unique(&mapping.render())?;
+    check(
+        &mut checks,
+        "all_source_mapping_hash_candidates_match_published_central_identity_rule",
+        mapping_value.items_of("global_identity_candidates").len() == 68
+            && mapping_value
+                .items_of("global_identity_candidates")
+                .iter()
+                .all(|c| {
+                    c.str("candidate_id")
+                        == Some(
+                            ynventa::graph::NodeId::of(
+                                c.str("source_namespace").unwrap_or(""),
+                                c.str("source_semantic_key").unwrap_or(""),
+                            )
+                            .to_string()
+                            .as_str(),
+                        )
+                }),
+    )?;
+    check(
+        &mut checks,
+        "mapping_proposal_inspection_remains_pending_without_target_custody",
+        json::parse(
+            &source::migration::proposal::inspect_text(&mapping_capture, &mapping.render())?
+                .render(),
+        )?
+        .str("status")
+            == Some("VALID_PENDING_PROPOSAL"),
+    )?;
     let refusal = match ynventa::assess(&root) {
         Ok(_) => return Err("custody source unexpectedly received canonical assessment".into()),
         Err(refusal) => refusal,

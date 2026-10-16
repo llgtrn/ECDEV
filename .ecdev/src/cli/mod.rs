@@ -45,6 +45,7 @@ impl Args {
             "--document",
             "--table",
             "--expect-sha256",
+            "--capture",
         ];
         let lists: [&str; 0] = [];
         let mut i = 0;
@@ -935,6 +936,32 @@ fn migrate(args: &Args) -> Out {
     let root = &args.root;
     let sub = args.positional.first().map(String::as_str).unwrap_or("");
     match sub {
+        "propose-mapping" | "inspect-proposal" => {
+            let inspect = sub == "inspect-proposal";
+            if args.positional.len() != 1 || !args.flags.is_empty() || !args.multi.is_empty()
+                || args.values.iter().any(|(key, _)| !(matches!(key.as_str(), "--from" | "--expect-sha256") || inspect && key == "--capture"))
+                || args.values_of("--from").len() != 1 || args.values_of("--expect-sha256").len() != 1
+                || (inspect && args.values_of("--capture").len() != 1) {
+                return Err("mapping proposal requires exactly --from, --expect-sha256 and (for inspection) --capture; read-only, no target admission".into());
+            }
+            let capture_path = if inspect { args.value("--capture").unwrap() } else { args.value("--from").unwrap() };
+            let capture = migration::source::read_export_bound(Path::new(capture_path), args.value("--expect-sha256"))?;
+            let report = if inspect {
+                use std::io::Read;
+                let path = Path::new(args.value("--from").unwrap());
+                let metadata = std::fs::symlink_metadata(path).map_err(|e| e.to_string())?;
+                if !metadata.is_file() || metadata.file_type().is_symlink() || metadata.len() > migration::proposal::MAX_PROPOSAL_BYTES as u64 {
+                    return Err("proposal input must be a bounded regular file, not a symlink".into());
+                }
+                let mut text = String::new();
+                std::fs::File::open(path).and_then(|file| file.take(migration::proposal::MAX_PROPOSAL_BYTES as u64 + 1).read_to_string(&mut text))
+                    .map_err(|e| e.to_string())?;
+                migration::proposal::inspect_text(&capture, &text)?
+            } else {
+                migration::proposal::generate(&capture)?
+            };
+            Ok((0, report.render()))
+        }
         "export" => {
             if args.positional.len() != 1 || args.flags.iter().any(|f| f != "--committed") || args.flags.len() > 1 || !args.values.is_empty() || !args.multi.is_empty() {
                 return Err("migrate export accepts only --root, --json and --committed; capture is read-only".into());
@@ -1298,7 +1325,7 @@ fn migrate(args: &Args) -> Out {
             }
         }
         _ => Err(
-            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry> | export [--committed] [--json] | inspect-export --from <capture> [--expect-sha256 <digest>] [--json]"
+            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry> | export [--committed] [--json] | inspect-export --from <capture> [--expect-sha256 <digest>] [--json] | propose-mapping --from <capture> --expect-sha256 <digest> [--json] | inspect-proposal --from <proposal> --capture <capture> --expect-sha256 <digest> [--json]"
                 .into(),
         ),
     }

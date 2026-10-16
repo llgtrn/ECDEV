@@ -1,0 +1,369 @@
+{
+  "format": "ecdev.source-mapping-proposal-verification.v1",
+  "observed_at_utc": "2026-10-16T20:34:38.908314+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "274bd4a4520ada4e5aa94df5ae1e1d96dac069f6",
+  "scope": "EXACT_CAPTURE_PENDING_PROPOSAL_AND_SOURCE_CUSTODY_PREREQUISITE; NO_CANONICAL_ADMISSION",
+  "code_inputs": [
+    {
+      "path": ".ecdev/README.md",
+      "sha256": "1aecbc465f3573d7d18168152d23fe4469dbc23abda069c86ee719a70baab730",
+      "bytes": 14620
+    },
+    {
+      "path": ".ecdev/qualification/central_intake.rs",
+      "sha256": "615514363ee38a6f4ae4853512cc69c5f967bd88b677fce910d7ff788d50fad8",
+      "bytes": 25127
+    },
+    {
+      "path": ".ecdev/src/cli/mod.rs",
+      "sha256": "d802f6b72128c645c982f5977b77f1d873cbf105fd49752dc53df45bb94d7404",
+      "bytes": 63933
+    },
+    {
+      "path": ".ecdev/src/migration/mod.rs",
+      "sha256": "ddc2fd33466f385c0ac06fa8785ac2de2981d9350ece84f4dcc433601b69c4ed",
+      "bytes": 6554
+    },
+    {
+      "path": ".ecdev/src/migration/proposal.rs",
+      "sha256": "7cfec6795f32430a8c199655030e89bd3d39cd13f234526d50eb2cfc4f40f492",
+      "bytes": 14595
+    },
+    {
+      "path": ".ecdev/src/protocol.rs",
+      "sha256": "1187855e9d7b4193d19bd30a498d39783aa22b65fe8648d8502745af1b05b6bc",
+      "bytes": 11249
+    },
+    {
+      "path": ".ecdev/tests/mapping_proposal.rs",
+      "sha256": "6cecdcc5652d0314fcef0592df71541d10e0e9abddb8cd3cf6f94ee0a235e5e1",
+      "bytes": 15186
+    }
+  ],
+  "capture": {
+    "path": ".ecdev/tests/fixtures/source-capture-00dd7f0-v1.json",
+    "sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+    "bytes": 3141735
+  },
+  "proposal": {
+    "path": "research/commerce/governance/source-mapping-proposal-v1.json",
+    "sha256": "f2933fd99d4e2737dd3abb4233d7d8c634409a09597c2a01783016930745b056",
+    "bytes": 3767908
+  },
+  "inspection": {
+    "format": "ecdev-source-mapping-proposal-inspection-v1",
+    "status": "VALID_PENDING_PROPOSAL",
+    "scope": "PROPOSAL_ONLY; NOT_ENROLLED",
+    "capture_sha256": "sha256:ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+    "canonical_proposal_sha256": "sha256:f2933fd99d4e2737dd3abb4233d7d8c634409a09597c2a01783016930745b056",
+    "source_nodes": 819,
+    "payloads": 590,
+    "rights_claims": 68,
+    "global_identity_candidates": 68,
+    "target_custody": null,
+    "unresolved_reasons": [
+      "TARGET_CUSTODY_PIN_NOT_PROVIDED",
+      "CANONICAL_OWNER_DECISION_NOT_BOUND"
+    ]
+  },
+  "coverage": {
+    "original_node_ids_keys_metadata_and_locators": 819,
+    "original_edges": 1112,
+    "payloads": 590,
+    "payload_raw_bytes": 1105906,
+    "payload_lanes": {
+      "declaration": 5,
+      "history": 1,
+      "evidence": 583,
+      "knowledge": 1
+    },
+    "rights_claims": 68,
+    "facts": 1861,
+    "active_evidence_records": 582,
+    "retired_evidence_records": 8,
+    "target_assignments": 0,
+    "source_semantics_preserved_exactly": true
+  },
+  "global_identity_candidates": {
+    "count": 68,
+    "scope": "SOURCE_NAMESPACE_OSS_ONLY; NO_OSS_INCLUSION_REVIEW_OR_ADOPTION; NO_TARGET_EXISTENCE_OR_RIGHTS; ORIGINAL_EC1_IDS_UNCHANGED",
+    "rule": "SHA256 length-framed ynventa.node-id.v1, source namespace, source semantic key; first16 bytes with yn1 prefix",
+    "identity_rule_reference": {
+      "engine_commit": "217fd75c53795d31fa0a2a989a04ca49bdacfa80",
+      "engine_tree": "5eb8144ee3242bded7a9de46024e015693dceda2",
+      "files": [
+        {
+          "path": "/tmp/ecdev-engine-217fd75-reference/core/graph/src/id.rs",
+          "sha256": "3f678aa78036bb058202cd4820f87c1caac6f56265827369623d54a421665c46",
+          "bytes": 3939
+        },
+        {
+          "path": "/tmp/ecdev-engine-217fd75-reference/core/protocol/src/digest.rs",
+          "sha256": "b581a510625dd2318fb11507ed58df3e74d6b81e0b62fe9c71a7b2c5758f9616",
+          "bytes": 9928
+        }
+      ]
+    },
+    "verified_against_actual_central_NodeId": true,
+    "independent_python_recomputation": true,
+    "oss_inclusion_classification": false,
+    "target_membership_or_owner_binding": false,
+    "original_ec1_ids_unchanged": true
+  },
+  "commands": [
+    "ecdev-gov migrate propose-mapping --from .ecdev/tests/fixtures/source-capture-00dd7f0-v1.json --expect-sha256 ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d --json",
+    "ecdev-gov migrate inspect-proposal --from research/commerce/governance/source-mapping-proposal-v1.json --capture .ecdev/tests/fixtures/source-capture-00dd7f0-v1.json --expect-sha256 ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d --json",
+    "python3 .ecdev/qualification/run.py --reference /tmp/ecdev-engine-217fd75-reference --objects /tmp/ecdev-engine-reference-objects --output /tmp/ecdev-mapping-central-qualified-final-20261016"
+  ],
+  "verification": {
+    "governor_tests": 218,
+    "governor_failures": 0,
+    "governor_ignored": 0,
+    "new_mapping_tests": 7,
+    "runner_boundary_tests": 6,
+    "strict_governor_and_harness_clippy": "PASS",
+    "format_and_diff_checks": "PASS",
+    "actual_cli_generation_byte_equal_committed_draft": true,
+    "actual_cli_inspection_status": "VALID_PENDING_PROPOSAL",
+    "all590_payload_bytes_equal_capture_and_base": true,
+    "negative_groups": [
+      "missing/extra/duplicate/reordered source identity and key coverage",
+      "source metadata/capture locator drift",
+      "each payload lane removal and duplicate digest or hex locator drift",
+      "history/knowledge/facts/rights/proof counts removed",
+      "candidate ID derivation/namespace/key/source/status drift",
+      "unbound target custody and non-null target assignments",
+      "self-grant/admitted/enrolled/current-rights fields",
+      "wrong capture/version/truncation/decoded duplicate JSON keys/oversize",
+      "CLI missing/duplicate required arguments and mutation flags",
+      "nonregular/symlink proposal inputs"
+    ],
+    "independent_module_and_cli_review": "APPROVED_AT_2026-10-16T20:24:43Z; bounded source preservation and Pending-only scope",
+    "independent_final_test_cli_and_central_check_review": "APPROVED_AT_2026-10-16T20:31:55Z; tests_sha256=6cecdcc5652d0314fcef0592df71541d10e0e9abddb8cd3cf6f94ee0a235e5e1; cli_sha256=d802f6b72128c645c982f5977b77f1d873cbf105fd49752dc53df45bb94d7404",
+    "root_review": "Full module review plus independent Python source/capture/identity audit",
+    "source_gates_modified": false,
+    "new_assimilation": 0,
+    "new_extinction": 0
+  },
+  "central_qualification": {
+    "status": "PASS",
+    "tests_passed": 62,
+    "tests_failed": 0,
+    "positive_and_contract_checks": 45,
+    "negative_and_differential_reader_probes": 17,
+    "engine_commit": "217fd75c53795d31fa0a2a989a04ca49bdacfa80",
+    "protocol_version": 1,
+    "compatibility_epoch": 1,
+    "schema_digest": "sha256:4e3b2d05c3970ed4fa2a06b5a2430a5289301cf1e455789c3f2f88ed0cff0abc",
+    "engine_digest": "sha256:7fc475276e0d24d42a452ddd8370df79e53129863bc84ed5c21082cf65d6915d",
+    "engine_input_binding": {
+      "tree": "5eb8144ee3242bded7a9de46024e015693dceda2",
+      "files": 6633,
+      "bytes": 159210496,
+      "status": "ALL_PINNED_BLOBS_AND_EXECUTABLE_MODES_MATCH"
+    },
+    "source_input_manifest_sha256": "198c68a00e16d85e7623fb99ec3d3e963439193293f7080c607938c48f1117ee",
+    "source_input_count": 2867,
+    "source_input_scope": "INDEX_SELECTED_WORKTREE_BYTES_PLUS_EXPLICIT_QUALIFICATION_INPUTS; COMMIT_MEMBERSHIP_NOT_ATTESTED",
+    "observed_source_head": "274bd4a4520ada4e5aa94df5ae1e1d96dac069f6",
+    "binding_trust": "LOCAL_IMMUTABLE_GIT_OBJECTS_AND_TRUSTED_FILESYSTEM; NOT_AUTHENTICATED_EXECUTION",
+    "registered_sources": 7,
+    "source_registered": false,
+    "source_lock_installed": false,
+    "compiler": "rustc 1.87.0 (17067e9ac 2025-05-09)\nbinary: rustc\ncommit-hash: 17067e9ac6d7ecb70e50f92c1944e545188d2359\ncommit-date: 2025-05-09\nhost: x86_64-unknown-linux-gnu\nrelease: 1.87.0\nLLVM version: 20.1.1\n",
+    "binary_sha256": "fad3aba754e8d44517c3110d00abeb86bf301528999a0718a6a083466ecbda81",
+    "cargo_lock_sha256": "1f66087dbe86f4c68a03dd20707f1901d6eb11a10e0811cfd8ff1a4a8199a7bf",
+    "harness_sha256": "615514363ee38a6f4ae4853512cc69c5f967bd88b677fce910d7ff788d50fad8",
+    "runner_sha256": "87034fe678d4ad78112a78f15e03e9740f31d10cda59a539aa77bdc1267f610e",
+    "contract_sha256": "8a2cdd3f7fcfe32449b63f933a1519cc6277e71ba0753aa86ef9bfbad1c8e104",
+    "fresh_capture": {
+      "sha256": "sha256:334ca765cc0d4b3e876d6e944ab45e42abde2bf444231d52e56c9717aa0a85e5",
+      "bytes": 3141735,
+      "observed_head": "274bd4a4520ada4e5aa94df5ae1e1d96dac069f6",
+      "producer_schema_claim": "sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140",
+      "files": 590,
+      "raw_bytes": 1105906,
+      "graph_nodes": 819,
+      "graph_edges": 1112,
+      "declared_nodes": 12,
+      "declared_donors": 68,
+      "declared_capabilities": 408,
+      "historical_donors": 55,
+      "historical_capabilities": 245,
+      "capability_floor_recorded": true,
+      "facts": 1861,
+      "active_evidence_records": 582,
+      "retired_evidence_records": 8,
+      "adoption_variants": {
+        "NotAdopted": 334,
+        "ReliedOn": 73,
+        "Unresolved": 1
+      },
+      "knowledge_variants": {
+        "Absorbed": 32,
+        "AlgorithmCandidate": 4,
+        "BenchmarkCandidate": 30,
+        "Divergent": 68,
+        "IndependentNative": 110,
+        "NoResearchValue": 39,
+        "ReferenceOnly": 85,
+        "StudyCandidate": 40
+      },
+      "registry_binding": "PENDING",
+      "proof_freshness": "NOT_REVERIFIED"
+    },
+    "report": {
+      "path": "/tmp/ecdev-mapping-central-qualified-final-20261016/report.json",
+      "sha256": "fa1c6b4728fabbc2a17aaa2baf43b6bf6facd8cdff218a77f28c051304485c9e",
+      "bytes": 895934
+    },
+    "captured_source": {
+      "path": "/tmp/ecdev-mapping-central-qualified-final-20261016/committed-source-capture-v1.json",
+      "sha256": "334ca765cc0d4b3e876d6e944ab45e42abde2bf444231d52e56c9717aa0a85e5",
+      "bytes": 3141735
+    }
+  },
+  "separate_source_classification": {
+    "published_commit": "274bd4a4520ada4e5aa94df5ae1e1d96dac069f6",
+    "review_ledger": {
+      "path": "research/commerce/governance/source-review-decisions-v1.json",
+      "sha256": "7190d695b3ad388df65633a66c3a4ddee0dae0cf72a354c57bf34e3dc4cb3780",
+      "bytes": 3063
+    },
+    "per_donor_handoff": {
+      "path": "research/commerce/governance/source-review-handoff-20261016.json",
+      "sha256": "ec1bb4796758ff3b68d11d2efbb462f6b34fa07c6c02b543f8da5c86084288a0",
+      "bytes": 193144
+    },
+    "reviewed_source_oss": {
+      "included": 1,
+      "unresolved": 67,
+      "total": null,
+      "verified_extinct": null,
+      "status": "PARTIALLY_RECONCILED",
+      "meaning": "Reviewed source inclusions are a partial count; global OSS total and canonical verified extinction remain UNKNOWN"
+    },
+    "mixed_cohort": {
+      "total": 68,
+      "declared_extinct": 10,
+      "effective_extinct": 10
+    },
+    "active_gate": {
+      "numerator": 10,
+      "registered_active": 48,
+      "unregistered_externals": 0,
+      "denominator": 48,
+      "pass": false,
+      "rule": "Historical registered union effective registered; exclude only legal REJECTED/SUPERSEDED; add all unregistered external participation"
+    },
+    "meaning": "Later partial source review does not rewrite the older pinned capture or grant target ownership/rights; hash candidates are not reviewed OSS inclusions"
+  },
+  "preserved_limits": {
+    "canonical_target_custody": null,
+    "required_target_contract": [
+      "exact Chronica target commit and tree",
+      "target-declared semantic keys and canonical NodeIds/artifact IDs",
+      "accountable Chronica owner decisions and custody locators",
+      "explicit identity mapping and lossless proof/rights/history bindings"
+    ],
+    "request_status": "REQUESTED_FROM_PARENT; NOT_PROVIDED_AT_VERIFICATION",
+    "canonical_source_registry_binding": "PENDING; seven central sources exclude ECDEV",
+    "source_protocol_lock": "NOT_INSTALLED_PENDING_CANONICAL_SOURCE_IDENTITY_OWNER_CONTRACT",
+    "current_copying_authorization": "UNKNOWN; no new licence inferred or granted",
+    "proof_freshness": "NOT_REVERIFIED",
+    "capture_commit_membership": "RETAINED_SOURCE_OBSERVATION_ONLY; not attested by v1 envelope",
+    "native_certification": "N01-N12/J1-J9/P0-P3 NOT_RUN; fullV1 INCOMPLETE",
+    "caller_cutover": "NOT_PERFORMED; apps/web and production research.schema.json consumers remain required",
+    "wal_paid_budgets_unknown_costs_and_effects": "SOURCE_BYTES_AND_EXISTING_CHECKS_UNCHANGED"
+  },
+  "previous_direct_central_baseline": {
+    "receipt": {
+      "path": "research/commerce/governance/central-reader-qualification-verification-20261016.json",
+      "sha256": "187b381752ca8d31c58a46667b211d1510225f0f873bc5860bb4f1e15fb0fd30",
+      "bytes": 11905
+    },
+    "direct_tests": {
+      "pinned_revision": "217fd75c53795d31fa0a2a989a04ca49bdacfa80",
+      "lib": {
+        "passed": 155,
+        "failed": 1,
+        "ignored": 0,
+        "status": "FAIL_PRESERVED",
+        "failure": "cli::object_pin::tests::a_store_inside_a_git_work_tree_is_refused_and_a_scratch_directory_is_not",
+        "observed_environment": "Both /tmp/.git and /workspace/.git sentinel directories exist; inside_git scans ancestor .git existence, including those that are not valid repositories. Original and TMPDIR-isolated runs each fail this same assertion. No engine/test edits, skips or assertion changes."
+      },
+      "dependency_transition_serial": {
+        "passed": 12,
+        "failed": 0,
+        "ignored": 1,
+        "ignored_reason": "Historical binary must be supplied explicitly"
+      },
+      "historical_reader_explicit": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "revision": "cd0f6b091f78980577e6b49c17a9b7c9eb8e20a4",
+        "binary": {
+          "path": "/tmp/ecdev-engine-ynventa",
+          "sha256": "b9ebee3ba737531b0559c272c3dfb6399324c33119e5a6769759a858b4b2aaf8",
+          "bytes": 160047920
+        },
+        "result": "Pre-v2 reader explicitly refuses outgoing receipt version2"
+      }
+    },
+    "status": "PRESERVED_OBSERVED_BASELINE; NOT_RERUN_OR_OVERRIDDEN_BY_THIS_CUSTODY_QUALIFICATION"
+  },
+  "saved_engine": {
+    "head": "d66313834c6d584b259650033bcf72f16c4e34f7",
+    "tracked_status": "CLEAN_UNCHANGED",
+    "reference_source_and_history": "READ_ONLY; outputs in separate disposable targets"
+  },
+  "logs": [
+    {
+      "path": "/tmp/ecdev-mapping-proposal-governor-final2.log",
+      "sha256": "e0c8d42e527a29eb42a3696ec67d2f8d910f273463237d750c749e9002f390ab",
+      "bytes": 18513
+    },
+    {
+      "path": "/tmp/ecdev-mapping-proposal-clippy-final2.log",
+      "sha256": "fce45be310950c5546b23b3f75737723d0688149c21e4155f1b5154ad1ddb6cb",
+      "bytes": 125
+    },
+    {
+      "path": "/tmp/ecdev-mapping-runner-tests-final.log",
+      "sha256": "065c7d15facfd20f14fb9182747be315f3349fa1d5e1a0e966047509f4bfa9b1",
+      "bytes": 104
+    },
+    {
+      "path": "/tmp/ecdev-mapping-central-qualified-final.log",
+      "sha256": "768c0071b957af88cb42948533d08ee3f9b24de3def380066f5c1e82ca5a8306",
+      "bytes": 64
+    },
+    {
+      "path": "/tmp/ecdev-mapping-central-qualified-final-20261016/cargo.log",
+      "sha256": "5c29e5ed3363210b4b64664a40ca93b2e432f844a2b8ba548a83052e91d27a37",
+      "bytes": 3472
+    },
+    {
+      "path": "/tmp/ecdev-mapping-proposal-inspection-final.json",
+      "sha256": "6c16caeb170969f9643576f7c8209e636baed65d9a6432b2fa32b5d32a061a4f",
+      "bytes": 581
+    },
+    {
+      "path": "/tmp/ecdev-mapping-proposal-independent-audit.json",
+      "sha256": "f00ee6635ef9667bebc0c3a51a368feec442d41b6d51e90f9df829d2383b33b6",
+      "bytes": 930
+    },
+    {
+      "path": "/tmp/ecdev-mapping-reconciliation-final.json",
+      "sha256": "f5b105c1549b83a10f5ac45d56a7085865d9ae5781edfcb8429527d1680a31d7",
+      "bytes": 4571123
+    }
+  ],
+  "prior_verification_attempts": {
+    "corrected_initial_test_expectations": "Existing semantics use facts, and per-file hashes are bare64; expectations corrected to actual unchanged wire format. Final digest mutation remains valid-shape drift.",
+    "strict_cli_lint": "Initial nonminimal_bool refusal fixed with equivalent allowed-key predicate; final strict lint passes",
+    "no_gates_or_assertions_weakened": true
+  }
+}
