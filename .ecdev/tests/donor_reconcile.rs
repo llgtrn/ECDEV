@@ -20,6 +20,8 @@ const REGISTRY_RECORDS: &str =
 const EXTRUCT_REVISION: &str = "dc3bf7d2209ecf421222afc90d3d2dd8c6fd23cf";
 const EXTRUCT_LEGACY_SHA: &str =
     "sha256:8d0f6f77db58eff56160eacf356c010e104a95669608d87b03db9db2a49ab8df";
+const CRAWLEE: &str = "apify--crawlee";
+const CRAWLEE_CENSUS: &str = "research/commerce/donors/census/apify--crawlee";
 
 fn checkout() -> &'static Path {
     Path::new(env!("CARGO_MANIFEST_DIR")).parent().unwrap()
@@ -75,6 +77,30 @@ fn select_reviews(r: &Repo, aliases: &[&str]) {
         reviews.retain(|review| aliases.contains(&review.str("source_alias").unwrap()));
         assert_eq!(reviews.len(), aliases.len());
     });
+    assert_selected_reviews_match_checkout(r, aliases);
+}
+
+fn assert_selected_reviews_match_checkout(r: &Repo, aliases: &[&str]) {
+    let actual =
+        json::parse_unique(&std::fs::read_to_string(checkout().join(LEDGER)).unwrap()).unwrap();
+    let selected = json::parse_unique(&r.read(LEDGER)).unwrap();
+    for key in ["format", "scope"] {
+        assert_eq!(selected.get(key), actual.get(key));
+    }
+    assert_eq!(selected.items_of("reviews").len(), aliases.len());
+    for alias in aliases {
+        let select = |ledger: &Value| {
+            ledger
+                .items_of("reviews")
+                .iter()
+                .filter(|review| review.str("source_alias") == Some(*alias))
+                .cloned()
+                .collect::<Vec<_>>()
+        };
+        let actual_review = select(&actual);
+        assert_eq!(actual_review.len(), 1);
+        assert_eq!(select(&selected), actual_review);
+    }
 }
 
 fn two_source_fixture(name: &str) -> Repo {
@@ -86,18 +112,21 @@ fn two_source_fixture(name: &str) -> Repo {
     ] {
         copy(&checkout().join(path), &r.root.join(path));
     }
-    let ledger = json::parse_unique(&r.read(LEDGER)).unwrap();
-    assert_eq!(ledger.items_of("reviews").len(), 2);
-    for alias in [PRICE, EXTRUCT] {
-        assert_eq!(
-            ledger
-                .items_of("reviews")
-                .iter()
-                .filter(|review| review.str("source_alias") == Some(alias))
-                .count(),
-            1,
-        );
+    select_reviews(&r, &[PRICE, EXTRUCT]);
+    r
+}
+
+fn three_source_fixture(name: &str) -> Repo {
+    let r = two_source_fixture(name);
+    for path in [
+        LEDGER,
+        CRAWLEE_CENSUS,
+        "research/commerce/crawlee-capability-review.json",
+        "research/commerce/frontier-source-review.json",
+    ] {
+        copy(&checkout().join(path), &r.root.join(path));
     }
+    assert_selected_reviews_match_checkout(&r, &[PRICE, EXTRUCT, CRAWLEE]);
     r
 }
 
@@ -790,6 +819,10 @@ fn two_actual_reviews_preserve_exact_extruct_identity_terms_and_captured_bytes()
     let r = two_source_fixture("reconcile-two-actual-sources");
     let before = tree(r.path());
     for (path, bytes) in &before {
+        if path == LEDGER {
+            assert_selected_reviews_match_checkout(&r, &[PRICE, EXTRUCT]);
+            continue;
+        }
         assert_eq!(
             *bytes,
             std::fs::read(checkout().join(path)).unwrap(),
@@ -1228,4 +1261,212 @@ fn second_source_conflicting_alias_or_origin_records_refuse_partial_credit() {
         .unwrap();
         refused_with(&r, field, expected);
     }
+}
+
+#[test]
+fn three_actual_reviews_classify_crawlee_without_completing_its_framework_or_lifecycle() {
+    let r = three_source_fixture("reconcile-three-actual-sources");
+    let before = tree(r.path());
+    for (path, bytes) in &before {
+        assert_eq!(
+            *bytes,
+            std::fs::read(checkout().join(path)).unwrap(),
+            "{path}"
+        );
+    }
+    let independent = json::parse_unique(&audit::run(r.path()).unwrap().render()).unwrap();
+    let first = reconcile::run(r.path()).unwrap().render();
+    assert_eq!(first, reconcile::run(r.path()).unwrap().render());
+    let value = json::parse_unique(&first).unwrap();
+    assert_eq!(value.items_of("per_donor").len(), 68);
+    assert_eq!(
+        value.at("reviewed_source_oss.included"),
+        Some(&Value::Int(3))
+    );
+    assert_eq!(
+        value.at("reviewed_source_oss.unresolved"),
+        Some(&Value::Int(65))
+    );
+    assert_eq!(value.at("reviewed_source_oss.total"), Some(&Value::Null));
+    assert_eq!(
+        value.at("reviewed_source_oss.verified_extinct"),
+        Some(&Value::Null)
+    );
+    assert_eq!(value.get("source_audit"), Some(&independent));
+    assert_eq!(value.get("new_assimilation"), Some(&Value::Int(0)));
+    assert_eq!(value.get("new_extinction"), Some(&Value::Int(0)));
+    assert_eq!(
+        value.get("lifecycle_gates_modified"),
+        Some(&Value::Bool(false))
+    );
+    assert_eq!(value.str("canonical_registry_binding"), Some("PENDING"));
+    let crawlee = row(&value, CRAWLEE);
+    for (key, expected) in [
+        ("source_id", "ec1:c90af235a2857b25e3bbeb288f16fcd4"),
+        ("origin", "https://github.com/apify/crawlee"),
+        ("review.status", "SOURCE_REVIEWED_OSS_INCLUSION"),
+        ("review.original_record_id", "#12"),
+        (
+            "review.original_provenance",
+            "research/commerce/donors/registry.json##12",
+        ),
+        (
+            "review.upstream_revision",
+            "438e3419626bd070f8984566bfb86ab9355f55d6",
+        ),
+        ("review.declared_license", "Apache-2.0"),
+        ("review.historical_license_receipt_status", "UNVERIFIED"),
+        ("review.retained_root_license.path", "LICENSE.md"),
+        (
+            "review.retained_root_license.sha256",
+            "sha256:37c9b417332af22e146d381766f284649483fb6ece17ca566584bf6adcf89135",
+        ),
+        (
+            "review.retained_root_license.blob",
+            "8effb33b6996f6db058161cfe48b01e1f614e726",
+        ),
+        ("review.canonical_registry_binding", "PENDING"),
+    ] {
+        assert_eq!(
+            crawlee.at(key).and_then(Value::as_str),
+            Some(expected),
+            "{key}"
+        );
+    }
+    for (key, expected) in [
+        ("review.inventory_files", 2992),
+        ("review.first_party_source_files", 1347),
+        ("review.retained_root_license.bytes", 11355),
+    ] {
+        assert_eq!(crawlee.at(key), Some(&Value::Int(expected)), "{key}");
+    }
+    assert!(crawlee
+        .at("review.current_copying_authorization")
+        .unwrap()
+        .as_str()
+        .unwrap()
+        .starts_with("UNKNOWN"));
+    let identity = json::parse_unique(&r.read(&format!("{CRAWLEE_CENSUS}/identity.json"))).unwrap();
+    assert_eq!(identity.str("donor_type"), Some("UNCLASSIFIED"));
+    let summary = json::parse_unique(&r.read(&format!("{CRAWLEE_CENSUS}/summary.json"))).unwrap();
+    assert_eq!(summary.str("status"), Some("CENSUS_PARTIAL"));
+    assert_eq!(summary.str("semantic_review"), Some("PENDING"));
+    assert_eq!(summary.get("source_parsed"), Some(&Value::Int(1347)));
+    let lifecycle =
+        json::parse_unique(&r.read("research/commerce/donor-lifecycle-review.json")).unwrap();
+    let history = lifecycle
+        .items_of("donors")
+        .iter()
+        .find(|d| d.str("donor_id") == Some(CRAWLEE))
+        .unwrap();
+    for key in ["full_semantic_census", "full_absorption", "extinct"] {
+        assert_eq!(history.get(key), Some(&Value::Bool(false)), "{key}");
+    }
+    let declaration = r.declaration();
+    let donor = declaration
+        .donors
+        .iter()
+        .find(|d| d.key == CRAWLEE)
+        .unwrap();
+    let remaining = donor
+        .capabilities
+        .iter()
+        .find(|c| c.key == "crawlee.remaining-crawler-framework")
+        .unwrap();
+    assert!(!remaining.required);
+    assert!(matches!(
+        &remaining.relevance,
+        ecdev_governance::declare::Relevance::Unresolved
+    ));
+    let original = r
+        .read(REGISTRY_RECORDS)
+        .lines()
+        .map(|line| json::parse_unique(line).unwrap())
+        .find(|record| record.str("id") == Some("#12"))
+        .unwrap();
+    assert_eq!(
+        content_digest(original.text("legacy").as_bytes()),
+        "sha256:c22f17e4f41bddef1b7dde643a5f4cca945fe19dd92894b6414a1c3ea39c42a6"
+    );
+    assert_eq!(tree(r.path()), before);
+
+    // The ledger is an additional classification view. The fixture deliberately
+    // contains no executable production caller and supplies no fresh proof credit.
+    select_reviews(&r, &[PRICE, EXTRUCT]);
+    let two = report(&r);
+    assert_eq!(two.at("reviewed_source_oss.included"), Some(&Value::Int(2)));
+    assert_eq!(
+        row(&two, CRAWLEE).at("review.status"),
+        Some(&Value::Str("UNRESOLVED".into()))
+    );
+    for key in [
+        "donors",
+        "mixed_declared_cohort",
+        "active_extinction_gate",
+        "audited_oss",
+    ] {
+        assert_eq!(
+            two.at(&format!("source_audit.{key}")),
+            independent.get(key),
+            "{key}"
+        );
+    }
+    for (path, bytes) in before {
+        if path != LEDGER {
+            assert_eq!(std::fs::read(r.root.join(&path)).unwrap(), bytes, "{path}");
+        }
+    }
+}
+
+#[test]
+fn crawlee_receipt_failures_refuse_the_whole_three_review_report_without_writes() {
+    for path in [
+        format!("{CRAWLEE_CENSUS}/identity.json"),
+        format!("{CRAWLEE_CENSUS}/license.json"),
+        format!("{CRAWLEE_CENSUS}/files.jsonl"),
+        format!("{CRAWLEE_CENSUS}/tree.json"),
+        format!("{CRAWLEE_CENSUS}/summary.json"),
+        "research/commerce/donor-lifecycle-review.json".into(),
+    ] {
+        let r = three_source_fixture("reconcile-third-missing");
+        r.remove(&path);
+        refused_without_writes(&r, &path);
+        let r = three_source_fixture("reconcile-third-tampered");
+        r.write(&path, &(r.read(&path) + " \n"));
+        refused_with(&r, &path, "source review sha256 mismatch");
+    }
+    let r = three_source_fixture("reconcile-third-license-rebound");
+    rebind_receipt(&r, &format!("{CRAWLEE_CENSUS}/license.json"), |license| {
+        let Value::Array(files) = field_mut(license, "files") else {
+            panic!("licence files must be an array")
+        };
+        let changed = format!("{}\nSubstituted terms.\n", files[0].text("text"));
+        *field_mut(&mut files[0], "text") = Value::Str(changed.clone());
+        *field_mut(&mut files[0], "sha256") =
+            Value::Str(content_digest(changed.as_bytes())[7..].into());
+    });
+    refused_with(
+        &r,
+        "Crawlee licence self-hash",
+        "retained license text mismatch",
+    );
+    let r = three_source_fixture("reconcile-third-summary-rebound");
+    rebind_receipt(&r, &format!("{CRAWLEE_CENSUS}/summary.json"), |summary| {
+        *field_mut(summary, "source_parsed") = Value::Int(1346);
+    });
+    refused_with(
+        &r,
+        "Crawlee parse count",
+        "review closed source census counts or parse assertions disagree",
+    );
+    let r = three_source_fixture("reconcile-third-pin-rebound");
+    rebind_receipt(&r, &format!("{CRAWLEE_CENSUS}/identity.json"), |identity| {
+        *field_mut(identity, "commit_sha") =
+            Value::Str("0000000000000000000000000000000000000000".into());
+    });
+    refused_with(
+        &r,
+        "Crawlee upstream revision",
+        "source review commit_sha mismatch",
+    );
 }

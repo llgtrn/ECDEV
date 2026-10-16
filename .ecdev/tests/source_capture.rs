@@ -3,11 +3,11 @@ mod common;
 
 use common::*;
 use ecdev_governance::compact::{self, codec::Encoder, facts, history};
-use ecdev_governance::digest::hex;
+use ecdev_governance::digest::{content_digest, hex};
 use ecdev_governance::evidence::{self, Record};
 use ecdev_governance::formats::json;
-use ecdev_governance::migration::source::{capture, Capture};
-use ecdev_governance::schema::ProofKind;
+use ecdev_governance::migration::source::{capture, read_export_bound, Capture};
+use ecdev_governance::schema::{Ecosystem, ProofKind};
 
 fn source(name: &str) -> Repo {
     let r = extinct_baseline(name);
@@ -19,13 +19,35 @@ fn source(name: &str) -> Repo {
 #[test]
 fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     let root = ecdev_governance::default_root();
+    let baseline = read_export_bound(
+        &root.join(".ecdev/tests/fixtures/source-capture-00dd7f0-v1.json"),
+        Some("ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d"),
+    )
+    .unwrap();
+    assert_eq!(baseline.files.len(), 590);
     let before = capture(&root).unwrap();
     let output = before.render().unwrap();
     let read = Capture::parse(&output).unwrap();
     assert_eq!(before, read);
     assert_eq!(read.render().unwrap(), output);
-    // The original 299-file projection plus 291 appended, freshly executed proof records.
-    assert_eq!(before.files.len(), 590);
+    // Preserve the immutable 590-payload capture. Only the donor declaration changes;
+    // the refresh appends evidence, including the two failed attempts, without replacing it.
+    assert_eq!(before.files.len(), 626);
+    let mut unchanged = 0;
+    for (path, bytes) in &baseline.files {
+        let current = read.files.get(path).unwrap();
+        if path == ".ecdev/declared/donors.rs" {
+            assert_ne!(current, bytes);
+            assert_eq!(
+                content_digest(current),
+                "sha256:a9cafe26222a0fe036c26c5bfe8bb02eaab55b82d1a553c2478d1340f714f715"
+            );
+        } else {
+            assert_eq!(current, bytes, "original payload changed: {path}");
+            unchanged += 1;
+        }
+    }
+    assert_eq!(unchanged, 589);
     for (path, bytes) in &read.files {
         assert_eq!(*bytes, std::fs::read(root.join(path)).unwrap());
     }
@@ -34,6 +56,40 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     assert_eq!(declaration.repository.id, "ecdev");
     assert_eq!(declaration.donors.len(), 68);
     assert_eq!(declaration.repository.nodes.len(), 12);
+    let mut expected = baseline.declaration().unwrap();
+    let futures = expected
+        .donors
+        .iter_mut()
+        .find(|donor| donor.key == "dependency--github-com-rust-lang-futures-rs")
+        .unwrap();
+    for name in [
+        "futures-channel",
+        "futures-core",
+        "futures-io",
+        "futures-sink",
+        "futures-task",
+        "futures-util",
+    ] {
+        futures.packages.push(ecdev_governance::declare::Package {
+            ecosystem: Ecosystem::Cargo,
+            name: name.into(),
+        });
+    }
+    let stream = futures
+        .capabilities
+        .iter_mut()
+        .find(|capability| capability.key == "futures.stream-and-sink-traits")
+        .unwrap();
+    for locator in [
+        "substrate/net/src/server.rs::streams_refuse_bytes_after_synchronized_shutdown",
+        "apps/server/tests/event_stream.rs::persisted_events_replay_reconnect_and_stop_through_the_real_app",
+    ] {
+        stream.proofs.push(proof(ProofKind::Regression, locator));
+    }
+    assert_eq!(
+        declaration, expected,
+        "only six package aliases and two proof locators change"
+    );
     let graph = ecdev_governance::graph::Graph::from_declaration(&declaration).0;
     assert_eq!(
         json::parse(&output).unwrap().get("source_graph"),
@@ -43,25 +99,82 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         .nodes
         .keys()
         .all(|id| id.to_string().starts_with("ec1:")));
-    let mut fact_ids = Vec::new();
-    let mut evidence_count = 0;
-    let mut retired_count = 0;
-    for (path, bytes) in &read.files {
-        if path.starts_with(".ecdev/knowledge/") {
-            fact_ids.extend(facts::decode(bytes).unwrap().iter().map(|f| f.id()));
-        } else if path.starts_with(".ecdev/evidence/") {
-            if compact::codec::Decoder::tag_of(bytes) == Some(evidence::RETIRED_TAG) {
-                retired_count += evidence::decode_retired(bytes).unwrap().len();
-            } else {
-                evidence_count += 1;
+    let counts = |capture: &Capture| {
+        let mut fact_ids = Vec::new();
+        let mut evidence_count = 0;
+        let mut retired_count = 0;
+        for (path, bytes) in &capture.files {
+            if path.starts_with(".ecdev/knowledge/") {
+                fact_ids.extend(facts::decode(bytes).unwrap().iter().map(|f| f.id()));
+            } else if path.starts_with(".ecdev/evidence/") {
+                if compact::codec::Decoder::tag_of(bytes) == Some(evidence::RETIRED_TAG) {
+                    retired_count += evidence::decode_retired(bytes).unwrap().len();
+                } else {
+                    evidence_count += 1;
+                }
             }
         }
-    }
+        (fact_ids, evidence_count, retired_count)
+    };
+    let (old_fact_ids, old_evidence, old_retired) = counts(&baseline);
     assert_eq!(
-        (fact_ids.len(), evidence_count, retired_count),
+        (old_fact_ids.len(), old_evidence, old_retired),
         (1861, 582, 8)
     );
+    let (fact_ids, evidence_count, retired_count) = counts(&read);
+    assert_eq!(
+        (fact_ids.len(), evidence_count, retired_count),
+        (1861, 618, 8)
+    );
+    assert_eq!(fact_ids, old_fact_ids);
     assert_eq!(fact_ids[0], "f1:001be0aa9a05870b591986296071dd26");
+    let appended: Vec<_> = read
+        .files
+        .iter()
+        .filter(|(path, _)| !baseline.files.contains_key(*path))
+        .collect();
+    assert_eq!(appended.len(), 36);
+    let mut fingerprints = String::new();
+    let mut passed = 0;
+    let mut failed = Vec::new();
+    for (path, bytes) in appended {
+        assert!(path.starts_with(".ecdev/evidence/"), "{path}");
+        assert_eq!(
+            path,
+            &format!(".ecdev/evidence/{}", evidence::address(bytes))
+        );
+        let record = Record::decode(bytes).unwrap();
+        assert_eq!(*bytes, record.encode());
+        fingerprints.push_str(&format!("{path} {}\n", content_digest(bytes)));
+        if record.passed {
+            passed += 1;
+        } else {
+            failed.push((path.as_str(), record.locator, record.kind, record.subject));
+        }
+    }
+    // Full SHA-256 binds the sorted path/raw-byte manifest of this exact append batch.
+    assert_eq!(
+        content_digest(fingerprints.as_bytes()),
+        "sha256:1d0ae8f97d4f91757b424dc7d1013089849f99da27648b919c41e6a023fe637d"
+    );
+    assert_eq!(passed, 34);
+    assert_eq!(
+        failed,
+        vec![
+            (
+                ".ecdev/evidence/506dbcaf68a1ce8754ef180090e80c68.ecg",
+                "apps/server/tests/event_stream.rs::persisted_events_replay_reconnect_and_stop_through_the_real_app".into(),
+                ProofKind::Regression,
+                "substrate.net".into(),
+            ),
+            (
+                ".ecdev/evidence/f727c3b006637021a6537eea6ddf3f94.ecg",
+                "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform".into(),
+                ProofKind::Regression,
+                "substrate.net".into(),
+            ),
+        ]
+    );
     assert_eq!(
         capture(&root).unwrap(),
         before,

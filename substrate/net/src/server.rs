@@ -85,8 +85,14 @@ enum StreamOut<'a> {
 }
 
 impl Stream<'_> {
-    /// Sends bytes now. An error means the client has gone.
+    /// Sends bytes now, unless shutdown has been observed. Write failures reach the producer.
     pub fn send(&mut self, data: &[u8]) -> io::Result<()> {
+        if self.should_stop() {
+            return Err(io::Error::new(
+                io::ErrorKind::Interrupted,
+                "server shutdown",
+            ));
+        }
         match &mut self.out {
             StreamOut::Chunked(w) => w.chunk(data),
             StreamOut::Raw(w) => {
@@ -613,6 +619,149 @@ mod tests {
         );
         stop.shutdown();
         join.join().unwrap();
+    }
+
+    #[test]
+    fn streams_refuse_bytes_after_synchronized_shutdown() {
+        use std::sync::{Mutex, mpsc};
+
+        for minor in [0, 1] {
+            let (ready_tx, ready_rx) = mpsc::channel();
+            let (resume_tx, resume_rx) = mpsc::channel();
+            let resume_rx = Arc::new(Mutex::new(resume_rx));
+            let (result_tx, result_rx) = mpsc::channel();
+            let (addr, stop, join) = start(Config::default(), move |_: &Request| {
+                let (ready_tx, resume_rx, result_tx) =
+                    (ready_tx.clone(), resume_rx.clone(), result_tx.clone());
+                Reply::Stream {
+                    status: 200,
+                    headers: Headers::new(),
+                    produce: Box::new(move |stream| {
+                        stream.send(b"before")?;
+                        ready_tx.send(()).unwrap();
+                        resume_rx
+                            .lock()
+                            .unwrap()
+                            .recv_timeout(Duration::from_secs(5))
+                            .unwrap();
+                        let result = stream.send(b"after");
+                        result_tx
+                            .send(result.as_ref().map(|_| ()).map_err(io::Error::kind))
+                            .unwrap();
+                        result
+                    }),
+                }
+            });
+            let mut client = TcpStream::connect(addr).unwrap();
+            client
+                .set_read_timeout(Some(Duration::from_secs(5)))
+                .unwrap();
+            write!(client, "GET /stream HTTP/1.{minor}\r\nHost: a\r\n\r\n").unwrap();
+            ready_rx.recv_timeout(Duration::from_secs(5)).unwrap();
+            // The producer cannot attempt its second send until shutdown is established.
+            stop.shutdown();
+            resume_tx.send(()).unwrap();
+            let result = result_rx.recv_timeout(Duration::from_secs(5)).unwrap();
+            let mut wire = String::new();
+            client.read_to_string(&mut wire).unwrap();
+            join.join().unwrap();
+            assert_eq!(result, Err(io::ErrorKind::Interrupted));
+            let (head, body) = wire.split_once("\r\n\r\n").unwrap();
+            assert!(head.starts_with(&format!("HTTP/1.{minor} 200 OK")));
+            assert_eq!(head.contains("Transfer-Encoding: chunked"), minor == 1);
+            assert_eq!(
+                body,
+                if minor == 1 {
+                    "6\r\nbefore\r\n"
+                } else {
+                    "before"
+                }
+            );
+        }
+    }
+
+    #[test]
+    fn stream_send_propagates_failed_writes_in_both_wire_formats() {
+        for chunked in [false, true] {
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let mut peer = TcpStream::connect(listener.local_addr().unwrap()).unwrap();
+            let (mut writer, _) = listener.accept().unwrap();
+            writer.shutdown(Shutdown::Write).unwrap();
+            let stop = AtomicBool::new(false);
+            let mut stream = Stream {
+                out: if chunked {
+                    StreamOut::Chunked(ChunkedWriter::new(&mut writer))
+                } else {
+                    StreamOut::Raw(&mut writer)
+                },
+                stop: &stop,
+            };
+            let error = stream.send(b"must not succeed").unwrap_err();
+            assert_ne!(error.kind(), io::ErrorKind::Interrupted);
+            let mut wire = Vec::new();
+            peer.read_to_end(&mut wire).unwrap();
+            assert!(wire.is_empty());
+        }
+    }
+
+    #[test]
+    fn stream_backpressure_reaches_the_producer_as_a_write_error() {
+        use std::sync::mpsc;
+
+        let (result_tx, result_rx) = mpsc::channel();
+        let cfg = Config {
+            write_timeout: Duration::from_millis(100),
+            ..Config::default()
+        };
+        let (addr, stop, join) = start(cfg, move |_: &Request| {
+            let result_tx = result_tx.clone();
+            Reply::Stream {
+                status: 200,
+                headers: Headers::new(),
+                produce: Box::new(move |stream| {
+                    let result = (|| {
+                        let block = vec![b'x'; 1024 * 1024];
+                        for _ in 0..64 {
+                            stream.send(&block)?;
+                        }
+                        Ok(())
+                    })();
+                    result_tx
+                        .send(result.as_ref().map(|_| ()).map_err(io::Error::kind))
+                        .unwrap();
+                    result
+                }),
+            }
+        });
+        let mut client = TcpStream::connect(addr).unwrap();
+        client
+            .set_read_timeout(Some(Duration::from_secs(5)))
+            .unwrap();
+        client
+            .write_all(b"GET /stream HTTP/1.1\r\nHost: a\r\n\r\n")
+            .unwrap();
+        // Consume only the head. The bounded producer must encounter socket backpressure.
+        let mut client = BufReader::new(client);
+        let mut line = String::new();
+        loop {
+            line.clear();
+            client.read_line(&mut line).unwrap();
+            assert!(!line.is_empty(), "response ended before its head");
+            if line == "\r\n" {
+                break;
+            }
+        }
+        let result = result_rx.recv_timeout(Duration::from_secs(5));
+        drop(client);
+        stop.shutdown();
+        join.join().unwrap();
+        assert!(
+            matches!(
+                result,
+                Ok(Err(io::ErrorKind::TimedOut | io::ErrorKind::WouldBlock))
+            ),
+            "{result:?}"
+        );
     }
 
     #[test]
