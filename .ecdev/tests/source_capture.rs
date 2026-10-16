@@ -7,7 +7,7 @@ use ecdev_governance::digest::{content_digest, hex};
 use ecdev_governance::evidence::{self, Record};
 use ecdev_governance::formats::json;
 use ecdev_governance::migration::source::{capture, read_export_bound, Capture};
-use ecdev_governance::schema::{Ecosystem, ProofKind};
+use ecdev_governance::schema::{Ecosystem, EdgeKind, ProofKind, Scope};
 
 fn source(name: &str) -> Repo {
     let r = extinct_baseline(name);
@@ -30,24 +30,33 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     let read = Capture::parse(&output).unwrap();
     assert_eq!(before, read);
     assert_eq!(read.render().unwrap(), output);
-    // Preserve the immutable 590-payload capture. Only the donor declaration changes;
-    // the refresh appends evidence, including the two failed attempts, without replacing it.
-    assert_eq!(before.files.len(), 642);
+    // Preserve the immutable 590-payload capture. Three exact declaration updates accompany
+    // append-only evidence batches, including the two preserved failed attempts.
+    assert_eq!(before.files.len(), 734);
     let mut unchanged = 0;
     for (path, bytes) in &baseline.files {
         let current = read.files.get(path).unwrap();
-        if path == ".ecdev/declared/donors.rs" {
+        let changed_digest = match path.as_str() {
+            ".ecdev/declared/donors.rs" => {
+                Some("sha256:be4adcb88fb07873e552d841538db5943b8e6cd775ee9929e713cc1909df73b2")
+            }
+            ".ecdev/declared/repository.rs" => {
+                Some("sha256:865f66227754acf95a945f681339fa892fb58c032c843d9a4d64f7048f347f20")
+            }
+            ".ecdev/declared/technologies.rs" => {
+                Some("sha256:3758d4ab8790353624999a9e39ce2e32dde394782f0501ede5b37506ae5f3ad2")
+            }
+            _ => None,
+        };
+        if let Some(digest) = changed_digest {
             assert_ne!(current, bytes);
-            assert_eq!(
-                content_digest(current),
-                "sha256:be4adcb88fb07873e552d841538db5943b8e6cd775ee9929e713cc1909df73b2"
-            );
+            assert_eq!(content_digest(current), digest, "{path}");
         } else {
             assert_eq!(current, bytes, "original payload changed: {path}");
             unchanged += 1;
         }
     }
-    assert_eq!(unchanged, 589);
+    assert_eq!(unchanged, 587);
     for (path, bytes) in &read.files {
         assert_eq!(*bytes, std::fs::read(root.join(path)).unwrap());
     }
@@ -57,6 +66,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     assert_eq!(declaration.donors.len(), 68);
     assert_eq!(declaration.repository.nodes.len(), 12);
     let mut expected = baseline.declaration().unwrap();
+    let baseline_graph = ecdev_governance::graph::Graph::from_declaration(&expected).0;
     let futures = expected
         .donors
         .iter_mut()
@@ -108,11 +118,116 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
             .proofs
             .push(proof(ProofKind::Regression, locator));
     }
+    let prior_graph = ecdev_governance::graph::Graph::from_declaration(&expected).0;
+    assert_eq!(
+        (prior_graph.nodes.len(), prior_graph.edges.len()),
+        (823, 1116)
+    );
+    expected.repository.edges.insert(
+        0,
+        ecdev_governance::declare::Edge {
+            from: "commerce.web-research".into(),
+            to: "substrate.net".into(),
+            kind: EdgeKind::DependsOn,
+            scope: Scope::Runtime,
+        },
+    );
+    let http_proofs = [
+        (
+            ProofKind::Regression,
+            "substrate/net/tests/client.rs::response_head_arrives_before_body_and_owns_the_connection",
+        ),
+        (
+            ProofKind::Regression,
+            "substrate/net/tests/client.rs::reading_the_body_does_not_restart_the_response_deadline",
+        ),
+        (
+            ProofKind::Parity,
+            "adapter/web/src/native_http.rs::direct_http_matches_retained_transport_on_recorded_wire",
+        ),
+        (
+            ProofKind::Regression,
+            "adapter/web/src/native_http.rs::direct_http_refusals_preserve_body_and_encoding_bounds",
+        ),
+        (
+            ProofKind::Regression,
+            "adapter/web/src/native_http.rs::native_http_has_no_proxy_tls_or_credential_dispatch",
+        ),
+    ];
+    let http = expected
+        .technologies
+        .iter_mut()
+        .find(|technology| technology.key == "net.http-server")
+        .unwrap();
+    for (kind, locator) in http_proofs {
+        http.proofs.push(proof(kind, locator));
+    }
     assert_eq!(
         declaration, expected,
-        "only six package aliases and four proof locators change"
+        "only six package aliases, nine proof locators and one explicit caller edge change"
     );
     let graph = ecdev_governance::graph::Graph::from_declaration(&declaration).0;
+    assert_eq!((graph.nodes.len(), graph.edges.len()), (828, 1122));
+    assert!(baseline_graph
+        .nodes
+        .keys()
+        .all(|id| graph.nodes.contains_key(id)));
+    assert!(baseline_graph.edges.is_subset(&graph.edges));
+    assert!(prior_graph
+        .nodes
+        .keys()
+        .all(|id| graph.nodes.contains_key(id)));
+    assert!(prior_graph.edges.is_subset(&graph.edges));
+    let proof_ids: std::collections::BTreeSet<_> = http_proofs
+        .iter()
+        .map(|(_, locator)| {
+            ecdev_governance::graph::NodeId::of(
+                ecdev_governance::graph::NAMESPACE,
+                &ecdev_governance::graph::proof_key("ecdev", locator),
+            )
+        })
+        .collect();
+    assert_eq!(
+        graph
+            .nodes
+            .keys()
+            .filter(|id| !prior_graph.nodes.contains_key(id))
+            .copied()
+            .collect::<std::collections::BTreeSet<_>>(),
+        proof_ids
+    );
+    let mut added_edges: std::collections::BTreeSet<_> = proof_ids
+        .iter()
+        .map(|id| ecdev_governance::graph::GEdge {
+            from: *id,
+            to: ecdev_governance::graph::NodeId::of(
+                ecdev_governance::graph::NAMESPACE,
+                &ecdev_governance::graph::technology_key("net.http-server"),
+            ),
+            kind: EdgeKind::Verifies,
+            scope: Scope::Semantic,
+        })
+        .collect();
+    added_edges.insert(ecdev_governance::graph::GEdge {
+        from: ecdev_governance::graph::NodeId::of(
+            ecdev_governance::graph::NAMESPACE,
+            "commerce.web-research",
+        ),
+        to: ecdev_governance::graph::NodeId::of(
+            ecdev_governance::graph::NAMESPACE,
+            "substrate.net",
+        ),
+        kind: EdgeKind::DependsOn,
+        scope: Scope::Runtime,
+    });
+    assert_eq!(
+        graph
+            .edges
+            .difference(&prior_graph.edges)
+            .cloned()
+            .collect::<std::collections::BTreeSet<_>>(),
+        added_edges
+    );
     assert_eq!(
         json::parse(&output).unwrap().get("source_graph"),
         Some(&json::parse(&graph.to_json().render()).unwrap())
@@ -146,7 +261,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     let (fact_ids, evidence_count, retired_count) = counts(&read);
     assert_eq!(
         (fact_ids.len(), evidence_count, retired_count),
-        (1861, 634, 8)
+        (1861, 726, 8)
     );
     assert_eq!(fact_ids, old_fact_ids);
     assert_eq!(fact_ids[0], "f1:001be0aa9a05870b591986296071dd26");
@@ -155,7 +270,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         .iter()
         .filter(|(path, _)| !baseline.files.contains_key(*path))
         .collect();
-    assert_eq!(appended.len(), 52);
+    assert_eq!(appended.len(), 144);
     let json_refresh_paths = [
         ".ecdev/evidence/1102a40959cb79534b32f23bd6ede8c2.ecg",
         ".ecdev/evidence/11a890088e480d322a21c2a8a20d7397.ecg",
@@ -174,11 +289,107 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         ".ecdev/evidence/e93b24cb10aba58e3c4613d26954f130.ecg",
         ".ecdev/evidence/f440dc4f124d62e220078be7e2ecb555.ecg",
     ];
+    let http_refresh_paths = [
+        ".ecdev/evidence/0070f180769cd84a515fdb36f62af469.ecg",
+        ".ecdev/evidence/09dedeeff2bcc6f1fe6d65536c8884fc.ecg",
+        ".ecdev/evidence/0d0d01b1f753a2acad02b3eedbd06ba7.ecg",
+        ".ecdev/evidence/10e4a0fe5d9e16796eb6f45688573a97.ecg",
+        ".ecdev/evidence/1244dedc81401813fe72c146c4d96290.ecg",
+        ".ecdev/evidence/1322fad04ed3d312d7f757e5aa54c3d8.ecg",
+        ".ecdev/evidence/1495ba87c544c4e27b7c80f805ee7436.ecg",
+        ".ecdev/evidence/1602eaa8396a2d5ac0d084e78dae4c64.ecg",
+        ".ecdev/evidence/18a0c81a0ffb57b6d3985680c665b6ff.ecg",
+        ".ecdev/evidence/1b3ecbdb225965002b1876207225ee20.ecg",
+        ".ecdev/evidence/1b47f24a56ce058d43e048475f4141c9.ecg",
+        ".ecdev/evidence/1e823ab9486566952a83dace83b4cc15.ecg",
+        ".ecdev/evidence/25c40aabcf7e18ec10935b822da7a66a.ecg",
+        ".ecdev/evidence/25c8910f334fc3e0ca494b47bc3a265c.ecg",
+        ".ecdev/evidence/25fc8ffc828f1041137ff31cff124de5.ecg",
+        ".ecdev/evidence/263cb2d1d02e10869e8c1eece3ab5eec.ecg",
+        ".ecdev/evidence/2fac0515ef5b6714f97bcbc2628eb074.ecg",
+        ".ecdev/evidence/340d57616920cca5c47a6e9f9f0cd518.ecg",
+        ".ecdev/evidence/353b316cce13640cf3d640d3ae415f0d.ecg",
+        ".ecdev/evidence/37fad176569f59579e704750814b90eb.ecg",
+        ".ecdev/evidence/386109b50a36947211ea54fcd586d74b.ecg",
+        ".ecdev/evidence/3965303d8e7b7a98c4322ee7f1fc99a6.ecg",
+        ".ecdev/evidence/396d4e8ac64fdd76670697061c891340.ecg",
+        ".ecdev/evidence/3b57df56326992464fdb609ea2a7b95a.ecg",
+        ".ecdev/evidence/42c621ab2a620f4af94b8a9a9ed1d148.ecg",
+        ".ecdev/evidence/4c476ac29e5d6b16add53f5e1927666c.ecg",
+        ".ecdev/evidence/4c49c5874e12304d0560ab307c53bb2f.ecg",
+        ".ecdev/evidence/4cc82b912946dd1175e89924d0cddd87.ecg",
+        ".ecdev/evidence/4e6c2def75330b37830014ab2d2c5f0c.ecg",
+        ".ecdev/evidence/521bb4fe463e31bb5ef8973348bdef11.ecg",
+        ".ecdev/evidence/5349b2840d8196443209d8129c992ad3.ecg",
+        ".ecdev/evidence/541504768a3b86df3dfaacb4c2ec96d1.ecg",
+        ".ecdev/evidence/56f53b0f894f4bfdd74a1f3a27035b97.ecg",
+        ".ecdev/evidence/58e08ba085911de2f9222a2837a84228.ecg",
+        ".ecdev/evidence/5974eb2105e5e7c38878e4c63037646a.ecg",
+        ".ecdev/evidence/5f9a716835ca9d89547d7ef6ca3dbe12.ecg",
+        ".ecdev/evidence/61cb68bcc5de1478caf470e9b544f87e.ecg",
+        ".ecdev/evidence/6403ebaa3499f80405f3232ebc93fb0e.ecg",
+        ".ecdev/evidence/69b22d2a780e3bc6759ccaa17b206851.ecg",
+        ".ecdev/evidence/6a1532574e6a2a654fcddef8419416d9.ecg",
+        ".ecdev/evidence/6a8f2e9535f23887a3eea0258b51030f.ecg",
+        ".ecdev/evidence/6c111982eb08cdceb9a69280a0adef59.ecg",
+        ".ecdev/evidence/6ec62c31abcafbd7a8efe39546348eb4.ecg",
+        ".ecdev/evidence/7224a38d0a4211675ad47acb63702185.ecg",
+        ".ecdev/evidence/751e2eed25ea7093160edfc210c37f48.ecg",
+        ".ecdev/evidence/7729e81bd15a7e28775c05c8c66c9d17.ecg",
+        ".ecdev/evidence/793ce298cf3520eeee8bd42b7c67c038.ecg",
+        ".ecdev/evidence/82962a432906fe6c97daf1cfd9378492.ecg",
+        ".ecdev/evidence/84b18f8eef928d0fb8d186ca19749328.ecg",
+        ".ecdev/evidence/87fbef552fd49f79f1a5642cae9f874e.ecg",
+        ".ecdev/evidence/8a06dd1a7c98bdde9a6e8a3dc2bcec1e.ecg",
+        ".ecdev/evidence/8f569c9055c0a61b56cb2bd4aa1c77a3.ecg",
+        ".ecdev/evidence/928d83ef6d090bd637171e77cb21bd49.ecg",
+        ".ecdev/evidence/9783ddc79b1d73f11b8be229b1e0114e.ecg",
+        ".ecdev/evidence/a2569e740a79777809ba704ee53c8be1.ecg",
+        ".ecdev/evidence/a4839f1d1bc96b010c005a10dab712b7.ecg",
+        ".ecdev/evidence/a5cc31abeca1ade88c8f6acc1ec32e17.ecg",
+        ".ecdev/evidence/a642e3a6ae25aba54058558a7b6f010b.ecg",
+        ".ecdev/evidence/a6a9e51e6344445edd3d6f0063ae6490.ecg",
+        ".ecdev/evidence/abfd216362c4402ae2203b78137780ca.ecg",
+        ".ecdev/evidence/b00deae6745b70822a607d805cc85e38.ecg",
+        ".ecdev/evidence/b81f0b41f24164a2fdde8c17ea50a9c7.ecg",
+        ".ecdev/evidence/b83e70e8a4871140afee3891a85adc30.ecg",
+        ".ecdev/evidence/bc0b50295a478e91a9dde30108466a79.ecg",
+        ".ecdev/evidence/bc1b1351cc02f5248b170514a34d2f56.ecg",
+        ".ecdev/evidence/c02e3eca981ae9d72397e2e62b016847.ecg",
+        ".ecdev/evidence/c0927b05bbb37880ffde348b88597ef0.ecg",
+        ".ecdev/evidence/c098956e512a1f4af4fd996606d5d215.ecg",
+        ".ecdev/evidence/c6f5818f494c8ba5dd1705d5c54bad8d.ecg",
+        ".ecdev/evidence/c93a84edcb0a584a4b533abf61bd32d5.ecg",
+        ".ecdev/evidence/c959b6aea3d236131f9f3760bf5a1cde.ecg",
+        ".ecdev/evidence/ca4f9eddb8c29825719a6006da432887.ecg",
+        ".ecdev/evidence/ccc45db0373b182ba72d0e0e6da7cfcf.ecg",
+        ".ecdev/evidence/d2052df4e1e3109fc5a8528a8586c086.ecg",
+        ".ecdev/evidence/d3399ea41c9fce7fee50508f125c823b.ecg",
+        ".ecdev/evidence/d47dbda0e59d4aab486b4cfe99a698d6.ecg",
+        ".ecdev/evidence/d4ff513885480a9a359fefcae6169d41.ecg",
+        ".ecdev/evidence/d8c4db2c311aaf350d009e7a5929980f.ecg",
+        ".ecdev/evidence/d9ae501e7785740c20b2665f867e9711.ecg",
+        ".ecdev/evidence/da6acdbe12f2190a40885a3c62361359.ecg",
+        ".ecdev/evidence/dadc4ab8378be2607826eeb83bcfc20f.ecg",
+        ".ecdev/evidence/dbe3c92ab005904ae1494aa5ea2c5fd8.ecg",
+        ".ecdev/evidence/de478586556b616cbeb18aa58809061c.ecg",
+        ".ecdev/evidence/e014cf8206d13e5301e35d42e24b7e04.ecg",
+        ".ecdev/evidence/e89e26b8adac81fd8d97ff90e42722e8.ecg",
+        ".ecdev/evidence/eb3c7bde9e2e42f53ec0833738301a41.ecg",
+        ".ecdev/evidence/eb52f7d0a7ac9d9607bc48efe2523b69.ecg",
+        ".ecdev/evidence/ef2241b0946a332d44dcd0fdbbe2575b.ecg",
+        ".ecdev/evidence/f882d82414420a6284a5de58ef5b0b78.ecg",
+        ".ecdev/evidence/fb6d4178f9db3a312be7d70a250d76a2.ecg",
+        ".ecdev/evidence/fff6cc4945977e0a7a718d9cf5cf7dbd.ecg",
+        ".ecdev/evidence/fff9ba3cfdefa822062cdadf11fbd9a2.ecg",
+    ];
     let mut fingerprints = String::new();
     let mut json_fingerprints = String::new();
+    let mut http_fingerprints = String::new();
     let mut original_count = 0;
     let mut original_passed = 0;
     let mut json_count = 0;
+    let mut http_count = 0;
     let mut passed = 0;
     let mut failed = Vec::new();
     for (path, bytes) in appended {
@@ -194,6 +405,10 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
             assert!(record.passed, "JSON refresh record failed: {path}");
             json_count += 1;
             json_fingerprints.push_str(&fingerprint);
+        } else if http_refresh_paths.contains(&path.as_str()) {
+            assert!(record.passed, "direct HTTP refresh record failed: {path}");
+            http_count += 1;
+            http_fingerprints.push_str(&fingerprint);
         } else {
             original_count += 1;
             original_passed += usize::from(record.passed);
@@ -217,7 +432,12 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         content_digest(json_fingerprints.as_bytes()),
         "sha256:6c061c9f897a5f122a4cf84e5271119cf6ddb8eb9caf0f01669cc8415cca5896"
     );
-    assert_eq!(passed, 50);
+    assert_eq!(http_count, 92);
+    assert_eq!(
+        content_digest(http_fingerprints.as_bytes()),
+        "sha256:fbb47d224dcf1ec0ff08808ad1a6d76bf50b50e61624cc20a767e9f06904caf3"
+    );
+    assert_eq!(passed, 142);
     assert_eq!(
         failed,
         vec![

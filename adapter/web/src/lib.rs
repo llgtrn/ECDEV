@@ -17,6 +17,7 @@ pub mod supplier;
 pub mod supplier_terms;
 pub mod text_decoding;
 mod text_decoding_labels;
+mod native_http;
 pub mod xml_feed;
 pub mod yahoo_shopping;
 use crate::html::{Html, Selector};
@@ -663,11 +664,24 @@ impl Web {
             }
         }
         *gate = Some(Instant::now());
+        if native_http::eligible(u, egress.is_some(), conditional, addresses.len()) {
+            return native_http::request(u, conditional, &addresses, Duration::from_secs(20));
+        }
+        Self::request_reqwest(u, conditional, egress, &addresses)
+    }
+
+    // Retained HTTPS/proxy transport; also the local differential oracle for direct HTTP.
+    fn request_reqwest(
+        u: &Url,
+        conditional: &Value,
+        egress: &Option<Egress>,
+        addresses: &[std::net::SocketAddr],
+    ) -> Result<(u16, Vec<u8>, Value), String> {
         let builder = reqwest::blocking::Client::builder()
             .timeout(Duration::from_secs(20))
             .redirect(reqwest::redirect::Policy::none());
         let builder = match egress {
-            None => builder.no_proxy().resolve_to_addrs(host, &addresses),
+            None => builder.no_proxy().resolve_to_addrs(u.host_str().ok_or("INVALID_HOST")?, addresses),
             Some(e) => {
                 let mut b = builder.proxy(
                     reqwest::Proxy::all(e.proxy.as_str())

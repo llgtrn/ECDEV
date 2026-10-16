@@ -3,7 +3,7 @@ mod common;
 
 use common::{extinct_baseline, gate};
 use ecdev_governance::declare;
-use ecdev_governance::formats::{json, toml};
+use ecdev_governance::formats::{json, toml, Value};
 use ecdev_governance::graph::{Graph, NodeId};
 use ecdev_governance::migration::{proposal, source};
 use ecdev_governance::schema::Gate;
@@ -73,12 +73,55 @@ fn package_family_is_bound_to_lock_observations_without_replacing_source_identit
     )
     .unwrap();
     assert_eq!(custody.str("donor_alias"), Some(DONOR));
-    let lock_bytes = std::fs::read(root().join("Cargo.lock")).unwrap();
+    // The custody receipt describes its immutable observed lock, not every future first-party
+    // edge. Retain those exact bytes and permit only the independently tested native Web edge.
+    let historical_bytes =
+        std::fs::read(root().join(".ecdev/tests/fixtures/cargo-lock-338a9d92625512dc.toml"))
+            .unwrap();
+    assert_eq!(
+        ecdev_governance::digest::content_digest(&historical_bytes),
+        "sha256:338a9d92625512dcc65889b31bd2fc3684eed96f12211be025f2ba19d11087b6"
+    );
     assert_eq!(
         custody.str("cargo_lock_sha256"),
-        Some(&ecdev_governance::digest::content_digest(&lock_bytes)[7..])
+        Some(&ecdev_governance::digest::content_digest(&historical_bytes)[7..])
     );
+    let historical = toml::parse(std::str::from_utf8(&historical_bytes).unwrap()).unwrap();
+    let lock_bytes = std::fs::read(root().join("Cargo.lock")).unwrap();
     let lock = toml::parse(std::str::from_utf8(&lock_bytes).unwrap()).unwrap();
+    assert_eq!(historical.items_of("package").len(), 140);
+    assert_eq!(lock.items_of("package").len(), 140);
+    let Value::Table(mut expected) = historical else {
+        panic!("lock table");
+    };
+    let Some(Value::Array(packages)) = expected.get_mut("package") else {
+        panic!("lock packages");
+    };
+    let mut updated = 0;
+    for package in packages {
+        if package.str("name") == Some("ecdev-web") {
+            assert_eq!(package.strings("dependencies"), ["ecdev-core", "reqwest"]);
+            let Value::Table(fields) = package else {
+                panic!("package table");
+            };
+            fields.insert(
+                "dependencies".into(),
+                Value::Array(
+                    ["ecdev-core", "ecdev-net", "reqwest"]
+                        .into_iter()
+                        .map(|name| Value::Str(name.into()))
+                        .collect(),
+                ),
+            );
+            updated += 1;
+        }
+    }
+    assert_eq!(updated, 1, "exactly one first-party package changes");
+    assert_eq!(
+        lock,
+        Value::Table(expected),
+        "every external package and lock field stays bound to the historical receipt"
+    );
     assert_eq!(custody.items_of("packages").len(), PACKAGES.len());
     for name in PACKAGES {
         let observed = custody

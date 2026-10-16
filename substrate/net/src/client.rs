@@ -5,7 +5,7 @@
 
 use std::{
     fmt,
-    io::{self, BufReader, Read, Write},
+    io::{self, BufRead, BufReader, Read, Write},
     net::{SocketAddr, TcpStream, ToSocketAddrs},
     sync::Arc,
     time::{Duration, Instant},
@@ -189,6 +189,48 @@ pub struct ClientResponse {
     pub body: Vec<u8>,
 }
 
+/// A received response head and its owned connection, before the body is read.
+///
+/// Dropping this value closes the connection without reading the body. Calling
+/// `read_body` keeps the original exchange deadline, including time spent holding this value.
+pub struct IncomingResponse {
+    pub status: u16,
+    pub reason: String,
+    pub minor: u8,
+    pub headers: Headers,
+    framing: http::Framing,
+    max_body: usize,
+    reader: ResponseReader,
+}
+
+impl fmt::Debug for IncomingResponse {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.debug_struct("IncomingResponse")
+            .field("status", &self.status)
+            .field("reason", &self.reason)
+            .field("minor", &self.minor)
+            .field("headers", &self.headers)
+            .finish_non_exhaustive()
+    }
+}
+
+impl IncomingResponse {
+    /// Reads the bounded body under the original exchange deadline.
+    pub fn read_body(mut self) -> Result<ClientResponse, ClientError> {
+        self.reader.check_deadline().map_err(from_io)?;
+        let body =
+            http::read_body(&mut self.reader, self.framing, self.max_body).map_err(from_http)?;
+        self.reader.check_deadline().map_err(from_io)?;
+        Ok(ClientResponse {
+            status: self.status,
+            reason: self.reason,
+            minor: self.minor,
+            headers: self.headers,
+            body,
+        })
+    }
+}
+
 #[derive(Clone)]
 pub struct ClientBuilder {
     user_agent: Option<String>,
@@ -249,6 +291,12 @@ impl ClientBuilder {
         self
     }
 
+    /// The maximum number of fields in each interim or final response head.
+    pub fn max_response_fields(mut self, n: usize) -> Self {
+        self.limits.max_fields = n;
+        self
+    }
+
     pub fn build(self) -> Client {
         Client { config: self }
     }
@@ -270,6 +318,11 @@ impl Deadline {
             }
         }
     }
+
+    fn io_left(&self) -> io::Result<Option<Duration>> {
+        self.left()
+            .map_err(|_| io::Error::new(io::ErrorKind::TimedOut, "deadline passed"))
+    }
 }
 
 /// Applies the remaining time to the socket before every read and write.
@@ -280,10 +333,7 @@ struct Bounded<'a> {
 
 impl Read for Bounded<'_> {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        let left = self
-            .deadline
-            .left()
-            .map_err(|_| io::Error::new(io::ErrorKind::TimedOut, "deadline passed"))?;
+        let left = self.deadline.io_left()?;
         self.inner.set_read_timeout(left)?;
         self.inner.read(buf)
     }
@@ -291,15 +341,56 @@ impl Read for Bounded<'_> {
 
 impl Write for Bounded<'_> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        let left = self
-            .deadline
-            .left()
-            .map_err(|_| io::Error::new(io::ErrorKind::TimedOut, "deadline passed"))?;
+        let left = self.deadline.io_left()?;
         self.inner.set_write_timeout(left)?;
         self.inner.write(buf)
     }
     fn flush(&mut self) -> io::Result<()> {
         self.inner.flush()
+    }
+}
+
+struct OwnedBounded {
+    inner: Box<dyn Connection>,
+    deadline: Deadline,
+}
+
+impl Read for OwnedBounded {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        Bounded {
+            inner: self.inner.as_mut(),
+            deadline: &self.deadline,
+        }
+        .read(buf)
+    }
+}
+
+/// Checks the deadline before buffered reads as well as reads from the socket.
+struct ResponseReader {
+    inner: BufReader<OwnedBounded>,
+}
+
+impl ResponseReader {
+    fn check_deadline(&self) -> io::Result<()> {
+        self.inner.get_ref().deadline.io_left().map(|_| ())
+    }
+}
+
+impl Read for ResponseReader {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        self.check_deadline()?;
+        self.inner.read(buf)
+    }
+}
+
+impl BufRead for ResponseReader {
+    fn fill_buf(&mut self) -> io::Result<&[u8]> {
+        self.check_deadline()?;
+        self.inner.fill_buf()
+    }
+
+    fn consume(&mut self, n: usize) {
+        self.inner.consume(n);
     }
 }
 
@@ -458,7 +549,12 @@ impl Client {
         Ok(())
     }
 
-    pub fn send(&self, req: &ClientRequest) -> Result<ClientResponse, ClientError> {
+    /// Sends a request and reads its final response head, retaining the bounded connection.
+    ///
+    /// Redirects are not followed. The head, including its framing fields, is validated before
+    /// returning. A caller that needs only status and headers can drop the response without
+    /// consuming its body; body bytes and size are checked by `read_body`.
+    pub fn send_head(&self, req: &ClientRequest) -> Result<IncomingResponse, ClientError> {
         let deadline = Deadline(self.config.timeout.map(|d| Instant::now() + d));
         let mut conn = self.open(req, &deadline)?;
         let t = &req.target;
@@ -516,13 +612,15 @@ impl Client {
             b.write_all(&wire).map_err(from_io)?;
             b.flush().map_err(from_io)?;
         }
-        let mut reader = BufReader::with_capacity(
-            32 * 1024,
-            Bounded {
-                inner: conn.as_mut(),
-                deadline: &deadline,
-            },
-        );
+        let mut reader = ResponseReader {
+            inner: BufReader::with_capacity(
+                32 * 1024,
+                OwnedBounded {
+                    inner: conn,
+                    deadline,
+                },
+            ),
+        };
         let head = loop {
             let head =
                 http::read_response_head(&mut reader, &self.config.limits).map_err(from_http)?;
@@ -539,14 +637,82 @@ impl Client {
         };
         let framing = http::response_framing(req.method == "HEAD", head.status, &head.headers)
             .map_err(from_http)?;
-        let body = http::read_body(&mut reader, framing, self.config.limits.max_body)
-            .map_err(from_http)?;
-        Ok(ClientResponse {
+        Ok(IncomingResponse {
             status: head.status,
             reason: head.reason,
             minor: head.minor,
             headers: head.headers,
-            body,
+            framing,
+            max_body: self.config.limits.max_body,
+            reader,
         })
+    }
+
+    /// Sends a request and reads the full bounded response.
+    pub fn send(&self, req: &ClientRequest) -> Result<ClientResponse, ClientError> {
+        self.send_head(req)?.read_body()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct MemoryConnection(io::Cursor<Vec<u8>>);
+
+    impl Read for MemoryConnection {
+        fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+            self.0.read(buf)
+        }
+    }
+
+    impl Write for MemoryConnection {
+        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            Ok(buf.len())
+        }
+
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    impl Connection for MemoryConnection {
+        fn set_read_timeout(&mut self, _: Option<Duration>) -> io::Result<()> {
+            Ok(())
+        }
+
+        fn set_write_timeout(&mut self, _: Option<Duration>) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    #[test]
+    fn buffered_body_bytes_cannot_be_read_after_the_original_deadline() {
+        let mut reader = ResponseReader {
+            inner: BufReader::new(OwnedBounded {
+                inner: Box::new(MemoryConnection(io::Cursor::new(b"hello".to_vec()))),
+                deadline: Deadline(Some(Instant::now() + Duration::from_secs(5))),
+            }),
+        };
+        assert_eq!(reader.fill_buf().unwrap(), b"hello");
+        reader.inner.get_mut().deadline = Deadline(Some(Instant::now()));
+        assert_eq!(reader.inner.buffer(), b"hello");
+        assert_eq!(
+            reader.fill_buf().unwrap_err().kind(),
+            io::ErrorKind::TimedOut
+        );
+        let mut headers = Headers::new();
+        headers.append("Content-Length", "5").unwrap();
+        let response = IncomingResponse {
+            status: 200,
+            reason: "OK".into(),
+            minor: 1,
+            headers,
+            framing: http::Framing::Length(5),
+            max_body: 5,
+            reader,
+        };
+        let error = response.read_body().unwrap_err();
+        assert!(error.is_timeout(), "{error}");
     }
 }

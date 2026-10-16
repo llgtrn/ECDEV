@@ -112,3 +112,15 @@ after its knowledge is learned), a declared cutover, and no node depending on th
 Generated views go to `target/ecdev-governance/` and are never truth. The census reads committed
 (indexed) content: `git add` before judging new files. Runtime data of the server lives in the
 ignored `.ecdev-data/`, never here.
+
+The 2026-10-16 bounded HTTP caller increment routes `Web::request` to `ecdev-net` only for
+credentialless HTTP with exactly one admitted public address, no operator proxy, and validator
+values whose wire whitespace is unchanged. The existing address checks and request gate run
+before dispatch. An owned response head retains framing validation, the attempt's absolute
+deadline and bounded later body consumption; valid non-200 control responses need no body read.
+HTTPS, all proxies, multi-address origins and unusual validators retain reqwest. Native framing
+also retains its documented stricter refusals; the local differential corpus does not establish
+universal compatibility. Three reqwest manifest edges and its wasm32 serde_json edge remain.
+See [the direct HTTP verification receipt](../research/commerce/governance/direct-http-cutover-verification-20261016.json)
+for executed tests, immutable evidence, exact residual transport gaps and source-capture scope.
+This creates no source-eight enrollment, whole-donor extinction or native OS completion claim.

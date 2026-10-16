@@ -6,7 +6,7 @@ use ecdev_net::{
 use std::{
     io::{Read, Write},
     net::{SocketAddr, TcpListener, TcpStream},
-    sync::{Arc, Mutex},
+    sync::{Arc, Mutex, mpsc},
     thread,
     time::{Duration, Instant},
 };
@@ -60,6 +60,136 @@ fn canned(reply: &'static [u8], linger: Duration) -> (SocketAddr, thread::JoinHa
         got
     });
     (addr, h)
+}
+
+/// Body bytes cannot arrive until the caller has observed the response head.
+fn gated_body(
+    head: &'static [u8],
+    body: &'static [u8],
+) -> (SocketAddr, mpsc::Sender<()>, thread::JoinHandle<()>) {
+    let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+    let addr = listener.local_addr().unwrap();
+    let (release, wait) = mpsc::channel();
+    let handle = thread::spawn(move || {
+        let (mut stream, _) = listener.accept().unwrap();
+        stream
+            .set_read_timeout(Some(Duration::from_secs(5)))
+            .unwrap();
+        let mut request = Vec::new();
+        let mut byte = [0];
+        while !request.ends_with(b"\r\n\r\n") {
+            stream.read_exact(&mut byte).unwrap();
+            request.push(byte[0]);
+        }
+        stream.write_all(head).unwrap();
+        stream.flush().unwrap();
+        if wait.recv_timeout(Duration::from_secs(5)).is_ok() {
+            let _ = stream.write_all(body);
+        }
+    });
+    (addr, release, handle)
+}
+
+#[test]
+fn response_head_arrives_before_body_and_owns_the_connection() {
+    let (addr, release, server) = gated_body(
+        b"HTTP/1.1 200 OK\r\nContent-Length: 5\r\nX-Observed: yes\r\n\r\n",
+        b"hello",
+    );
+    let response = {
+        let client = Client::builder().timeout(Duration::from_secs(3)).build();
+        let request = ClientRequest::new("GET", target(addr, "/head-first"));
+        client.send_head(&request).unwrap()
+    };
+    assert_eq!(response.status, 200);
+    assert_eq!(response.reason, "OK");
+    assert_eq!(response.minor, 1);
+    assert_eq!(response.headers.get("x-observed"), Some("yes"));
+    release.send(()).unwrap();
+    let response = response.read_body().unwrap();
+    assert_eq!(response.body, b"hello");
+    assert_eq!(response.headers.get("x-observed"), Some("yes"));
+    server.join().unwrap();
+}
+
+#[test]
+fn an_unused_error_body_is_not_read_but_its_head_is_validated() {
+    let (addr, release, server) = gated_body(
+        b"HTTP/1.1 503 Unavailable\r\nContent-Length: 1000000\r\nRetry-After: 7\r\n\r\n",
+        b"unused",
+    );
+    let response = Client::builder()
+        .timeout(Duration::from_secs(3))
+        .max_response_bytes(1)
+        .build()
+        .send_head(&ClientRequest::new("GET", target(addr, "/")))
+        .unwrap();
+    assert_eq!(response.status, 503);
+    assert_eq!(response.headers.get("retry-after"), Some("7"));
+    drop(response);
+    release.send(()).unwrap();
+    server.join().unwrap();
+
+    let (addr, release, server) = gated_body(
+        b"HTTP/1.1 503 Unavailable\r\nContent-Length: invalid\r\n\r\n",
+        b"unused",
+    );
+    let error = Client::builder()
+        .timeout(Duration::from_secs(3))
+        .build()
+        .send_head(&ClientRequest::new("GET", target(addr, "/")))
+        .unwrap_err();
+    assert!(format!("{error}").contains("content-length"), "{error}");
+    release.send(()).unwrap();
+    server.join().unwrap();
+}
+
+#[test]
+fn reading_the_body_does_not_restart_the_response_deadline() {
+    let (addr, release, server) =
+        gated_body(b"HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\n", b"hello");
+    let response = Client::builder()
+        .timeout(Duration::from_millis(300))
+        .build()
+        .send_head(&ClientRequest::new("GET", target(addr, "/")))
+        .unwrap();
+    // The peer still holds the body. The exchange budget expires while the caller holds its head.
+    thread::sleep(Duration::from_millis(450));
+    let error = response.read_body().unwrap_err();
+    assert!(error.is_timeout(), "{error}");
+    release.send(()).unwrap();
+    server.join().unwrap();
+}
+
+#[test]
+fn response_field_limit_applies_to_interim_and_final_heads() {
+    for reply in [
+        &b"HTTP/1.1 200 OK\r\nContent-Length: 0\r\nX-Extra: yes\r\n\r\n"[..],
+        b"HTTP/1.1 100 Continue\r\nX-One: yes\r\nX-Two: yes\r\n\r\nHTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n",
+    ] {
+        let (addr, server) = canned(reply, Duration::ZERO);
+        let error = Client::builder()
+            .timeout(Duration::from_secs(3))
+            .max_response_fields(1)
+            .build()
+            .send_head(&ClientRequest::new("GET", target(addr, "/")))
+            .unwrap_err();
+        assert!(format!("{error}").contains("header count"), "{error}");
+        server.join().unwrap();
+    }
+    let (addr, server) = canned(
+        b"HTTP/1.1 100 Continue\r\nX-One: yes\r\n\r\nHTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n",
+        Duration::ZERO,
+    );
+    let response = Client::builder()
+        .timeout(Duration::from_secs(3))
+        .max_response_fields(1)
+        .build()
+        .send(&ClientRequest::new("GET", target(addr, "/")))
+        .unwrap();
+    assert_eq!(response.status, 200);
+    assert!(response.body.is_empty());
+    server.join().unwrap();
 }
 
 #[test]
