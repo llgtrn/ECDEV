@@ -1,0 +1,143 @@
+{
+  "format": "ecdev-producer-capture-pair-contract-v1",
+  "observed_at_utc": "2026-10-16T23:46:28.385314+00:00",
+  "scope": "EXACT_READ_ONLY_PRODUCER_INPUT_SELECTION; NO_ENROLLMENT_RIGHTS_OR_TARGET_ACCEPTANCE",
+  "source_repository": "llgtrn/ECDEV",
+  "published_checkpoint": "7e3c198bc8c855db1710856b6407f4a16d3da324",
+  "producer_code_commit": "db92bf27d31409704fccd44defe342a1b2f22823",
+  "producer_source_sha256": "41cc9416ba07374c8a9307abb21347ad45ab6f5ae27eb70683e4cccf0d6b10b2",
+  "error_origin": ".ecdev/src/migration/proposal.rs::inspect_bound final whole-proposal Value equality; not the published central portable::parse_bound",
+  "consumer_callsite_limitation": "The reported engine failure argv/input tuple was not supplied. The mismatched pairs below reproduce its exact error; this does not establish which pair that engine caller used.",
+  "compatible_published_pairs": [
+    {
+      "capture": {
+        "path": ".ecdev/tests/fixtures/source-capture-00dd7f0-v1.json",
+        "sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+        "bytes": 3141735,
+        "observed_head": "00dd7f0ed2703076fb9d11d76af420c92a9a4097",
+        "recorded_source_schema": "sha256:c415576092555057bf8f9b2dae182d5d077f558f367816fddd3c1e0b4629c6e7",
+        "payloads": 590,
+        "source_nodes": 819,
+        "source_edges": 1112
+      },
+      "proposal": {
+        "path": "research/commerce/governance/source-mapping-proposal-v1.json",
+        "sha256": "f2933fd99d4e2737dd3abb4233d7d8c634409a09597c2a01783016930745b056"
+      },
+      "supported_APIs": [
+        "historical generate/inspect/inspect_text",
+        "explicit generate_bound/inspect_bound/inspect_text_bound with this exact capture pin"
+      ],
+      "actual_source_CLI_result": "VALID_PENDING_PROPOSAL"
+    },
+    {
+      "capture": {
+        "path": "research/commerce/governance/source-eight-capture-db92bf27-v1.json",
+        "sha256": "441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909",
+        "bytes": 3287998,
+        "observed_head": "db92bf27d31409704fccd44defe342a1b2f22823",
+        "recorded_source_schema": "sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140",
+        "payloads": 734,
+        "source_nodes": 828,
+        "source_edges": 1122
+      },
+      "proposal": {
+        "path": "research/commerce/governance/source-eight-mapping-db92bf27-v1.json",
+        "sha256": "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29"
+      },
+      "supported_APIs": [
+        "explicit generate_bound/inspect_bound/inspect_text_bound with this exact capture pin"
+      ],
+      "historical_APIs": "Refuse; original historical capture pin is unchanged",
+      "actual_source_CLI_result": "VALID_PENDING_PROPOSAL"
+    }
+  ],
+  "distinct_central_fixture": {
+    "capture": {
+      "path": ".ecdev/tests/fixtures/source-capture-v1.json",
+      "sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d",
+      "bytes": 3141735,
+      "observed_head": "247fffae286a5b05c8677d00fa0c0a64f49dc5df",
+      "recorded_source_schema": "sha256:5eb196ce91a5d295cfd9db12335b0d44295cd9e3d0d2e8be3bc01cbe6a54a943",
+      "payloads": 590,
+      "source_nodes": 819,
+      "source_edges": 1112
+    },
+    "equal_byte_size_to_historical_capture": true,
+    "all_payload_bytes_equal_to_historical_capture": true,
+    "different_envelope_fields": [
+      "observed_head",
+      "source_graph.schema"
+    ],
+    "compatible_with_historical_published_proposal": false,
+    "historical_APIs": "SOURCE_CAPTURE_PIN_MISMATCH",
+    "explicit_bound_generation": "Supported with its own independently supplied pin; generates a different proposal",
+    "diagnostic_generated_proposal_sha256": "1f350b9d6257e6776d9dd0102615f36dd0a3152966d04b0b5aa957be2ca1b366"
+  },
+  "reproduced_refusals": [
+    {
+      "capture_sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d",
+      "proposal_sha256": "f2933fd99d4e2737dd3abb4233d7d8c634409a09597c2a01783016930745b056",
+      "provided_capture_pin_valid": true,
+      "same_size_and_coverage_as_correct_capture": true,
+      "expected_exit": 2,
+      "error": "PROPOSAL_SOURCE_BINDING_OR_COVERAGE_DRIFT",
+      "log_sha256": "e173b17cb12b7267c5dd0deec5be726c932fa10eb0cf514fda41ce9ba0048491"
+    },
+    {
+      "capture_sha256": "fbf075f38fe07d978fecd23146089e3633c3b77f1ecd0cc42ec21d705611bed1",
+      "observed_head": "7e3c198bc8c855db1710856b6407f4a16d3da324",
+      "only_observed_head_differs_from_published_current_capture": true,
+      "proposal_sha256": "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29",
+      "provided_capture_pin_valid": true,
+      "expected_exit": 2,
+      "error": "PROPOSAL_SOURCE_BINDING_OR_COVERAGE_DRIFT",
+      "log_sha256": "e173b17cb12b7267c5dd0deec5be726c932fa10eb0cf514fda41ce9ba0048491"
+    }
+  ],
+  "consumer_requirements": [
+    "Bind the exact capture and exact proposal as one immutable pair; size, payload equality or matching node counts are insufficient.",
+    "Use the capture pin from the selected pair independently; retain its recorded observed_head and source_graph.schema instead of replacing either with current checkout or engine metadata.",
+    "Current bound APIs are additive. Historical APIs remain pinned to ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d and preserve their original output and refusal behavior.",
+    "If a new capture is required, regenerate a separately pinned proposal from it. Preserve all prior captures, proposals, ec1/f1/ECG records and proof lineage unchanged.",
+    "The separate ecdev-bounded-price-mapping-v1 is a selected one-capability sidecar. It does not replace or mutate this complete null-target source proposal and must not be passed to its inspector.",
+    "An exact source pair passing inspection establishes pending custody/coverage only. Engine source registration and bounded capability acceptance remain separate."
+  ],
+  "current_price_sidecar": {
+    "path": "research/commerce/governance/price-bounded-mapping-db92bf27-v1.json",
+    "sha256": "300591b5db1f9b156ecf5282525e5d056c79986140cffff20fcd784b2e825792",
+    "source_mapping_sha256": "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29",
+    "supported": 106,
+    "unmapped": 2831,
+    "canonical_assignment": null,
+    "accepted_owner": null,
+    "admission": "PENDING"
+  },
+  "regression_source": {
+    "path": ".ecdev/tests/producer_pairs.rs",
+    "sha256": "d90a1e8c57cf33923f51af52378e7eac57bc3eda5bff95b3b32737ec36e8d2fa",
+    "cases": [
+      "published_current_artifact_pair_matches_the_actual_caller_bound_producer",
+      "equal_size_historical_captures_with_identical_payloads_cannot_exchange_proposals",
+      "changing_only_observed_head_requires_regeneration_without_rebinding_published_evidence"
+    ]
+  },
+  "preservation": {
+    "source_guard_sha256": "73d8b65f8bbe0a934ae83fec9628deb953ac8edb440e4b3c2fbc35801015f8e3",
+    "source_guard_changed": false,
+    "runtime_producer_changed": false,
+    "historical_artifacts_changed": false,
+    "engine_source_changed": false,
+    "enrollment": "BLOCKED",
+    "rights": "UNKNOWN",
+    "source_retirement": false,
+    "verified_new_extinctions": 0,
+    "native_V1": "INCOMPLETE; N01-N12/J1-J9/P0-P3 NOT_RUN"
+  },
+  "model_selection": {
+    "new_review_worker_tool_parameter": "gpt-6.1-sol",
+    "fallback_used": false,
+    "executing_model_id_exposed": false,
+    "scope": "Requested model configuration only; no inference from self-description"
+  }
+}
