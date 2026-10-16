@@ -1,0 +1,766 @@
+{
+  "commit": "1a9c859ca5f1c27b69e99bddbbe47e1cf5496945",
+  "commit_preimage_utf8": "tree 6d8a8d3fe9d71ce97075ebf188b4e0a208a2724f\nparent b42e6282ab3b6b6a2063ce98e25a52643d27f6b0\nauthor Long Tran <tr.ng.hlongg@gmail.com> 1792187391 +0000\ncommitter Long Tran <tr.ng.hlongg@gmail.com> 1792187391 +0000\n\nExecute exact EUR hint under a fresh governed price binding\n",
+  "files": [
+    {
+      "bytes": 19358,
+      "git_blob": "7eaf0aae169f907c874b3d089a22b96a65fa44ae",
+      "mode": "100644",
+      "path": "assays/gate/fixtures/price-text/eur-1.1.0-target-handoff.json",
+      "sha256": "9657f611bee636dc08613eb3fe68511424afba764b474aed53fe1243c4a7fc20"
+    },
+    {
+      "bytes": 678681,
+      "git_blob": "7c9ca9e0c29e3808627935334b0892c9a72b01f6",
+      "mode": "100644",
+      "path": "assays/gate/fixtures/price-text/eur-1.1.0-source-case-map.jsonl",
+      "sha256": "b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d"
+    },
+    {
+      "bytes": 10330,
+      "git_blob": "a62d37aa6c0f0c3fefc404a1ac46da152011dc94",
+      "mode": "100644",
+      "path": "physiology/capability/kernels/src/price_text.rs",
+      "sha256": "9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da"
+    }
+  ],
+  "format": "ecdev-target-git-membership-witness-v1",
+  "parents": [
+    "b42e6282ab3b6b6a2063ce98e25a52643d27f6b0"
+  ],
+  "reconstruction": {
+    "api_response_serialization": "Connector-returned JSON content plus terminal LF; not HTTP wire attestation",
+    "commit_sha1_verified": true,
+    "compact_ancestor_entries": 109,
+    "compact_ancestor_tree_objects": 9,
+    "reconstructed_tree_objects": 395,
+    "recursive_tree_entries": 4235,
+    "recursive_tree_truncated": false
+  },
+  "repository": "llgtrn/Chronica",
+  "response_sha256": {
+    "commit-response.json": "be79deb6aa863dd1e3cbdd698a13ccfe84dbc4487c4ae9c60d03922cb92ae226",
+    "recursive-tree-response.json": "6160f2250b7a0f3a49d2d338f64514ac5b56fbce9d55a4a596596e04cfc31a8f"
+  },
+  "scope": "EXACT_UNSIGNED_GIT_CONTENT_AND_MEMBERSHIP_ONLY; NO_AUTHOR_AUTHENTICATION_RIGHTS_CUSTODY_ACTIVATION_OR_GOVERNED_EXECUTION",
+  "source_handoff_publication_fields": "Retained null commit/tree/status unchanged; containing commit established separately by this content-address witness",
+  "tree": "6d8a8d3fe9d71ce97075ebf188b4e0a208a2724f",
+  "tree_witness": [
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": ".gitattributes",
+          "oid": "72893726733f81767ce34fc491d58380f50f802b",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": ".gitguardian.yaml",
+          "oid": "2cd8b70e4e321c237c81df1c4540a35b0856da05",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": ".github",
+          "oid": "bb5997c95990c45329319623c558702a094698fb",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": ".gitignore",
+          "oid": "760178a3f15d9bb532cc3e954738a4817b60c8dd",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": ".ynventa",
+          "oid": "b76ee9a47a6aeba83dcb7d5386de331261258b31",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "AGENTS.md",
+          "oid": "b9c2d4cf3c7f6b982718953c2908195f98715a35",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "Cargo.lock",
+          "oid": "89007a52840bc041cc934c353e783e5a0e614292",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "Cargo.toml",
+          "oid": "9ba3731cd816cb908d555cafbfbb9a9896f3538f",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "README.md",
+          "oid": "2f95eb14f9259d8f443aaa2d62ae353e2bd139ff",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "THIRD-PARTY-NOTICES.md",
+          "oid": "7a6949f1e431b4e3f004b47026569aa910ed48f9",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "assays",
+          "oid": "97fab39a1e04d3656a532980e1e5d56629986fc4",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "axora",
+          "oid": "aaf198a50e0843838f54ab80323247b59d8fe873",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "codara",
+          "oid": "52128f2f7a3297158888f42b646ee3a7e7ef5973",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "deny.toml",
+          "oid": "8a2e3151c1164e7f43d8ef6f3b17a38f908f4874",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "evolution",
+          "oid": "30e1a5204e62f60d1cce9f8ade53d240d45ec87c",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "genora",
+          "oid": "f593951326cac03b0e086709e9ad3e87956a2727",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "lineara",
+          "oid": "e2f65504ff96bdaffd0956275d452727f099174e",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "metabion",
+          "oid": "7490e6bf79208cdb39b9ef163007a3c97813d547",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "organism",
+          "oid": "0407131e773161a8d143984777300729f9ab25b2",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "phenora",
+          "oid": "4ebe827f16f0ab853f52472d52ac9d331eb2ec2b",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "physiology",
+          "oid": "d6cac1c6384df301f286a0d62094cdcc01126a9f",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "symbion",
+          "oid": "f228e8d567c999a2b02cf0e5a802940b48e6b06b",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "tools",
+          "oid": "d195ec4327d08b215d1087bd1b738bd65bd6125a",
+          "type": "tree"
+        }
+      ],
+      "oid": "6d8a8d3fe9d71ce97075ebf188b4e0a208a2724f",
+      "path": ""
+    },
+    {
+      "entries": [
+        {
+          "mode": "040000",
+          "name": "gate",
+          "oid": "7ff443b08123f44a8e971ad696e4e6c648f07f45",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "norl",
+          "oid": "1e4d68119375f0af13b836cac78929111385b9c4",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "performance",
+          "oid": "3c46e4063f7742a3e7efb4cf9343c8cc70a7a3d8",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "simulated-partners",
+          "oid": "2039a22491378d2472a29e3667c8c214563a1aad",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "verification",
+          "oid": "d06b1713cd7f07aee7499b9f522b4c06a357729d",
+          "type": "tree"
+        }
+      ],
+      "oid": "97fab39a1e04d3656a532980e1e5d56629986fc4",
+      "path": "assays"
+    },
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": "blake3_custody.py",
+          "oid": "113b9a7e2a4c05801cb34ae4d086bc7593ec3322",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "census_proof_commands.py",
+          "oid": "ca3b2b3aa0271570a16847113f9f2a426ce6f2d4",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "fixtures",
+          "oid": "c8ccce646671d01cd54210838f4e0a325a884ff6",
+          "type": "tree"
+        },
+        {
+          "mode": "100755",
+          "name": "gate.sh",
+          "oid": "642f8703f903191c5b0e3f26ec71d23aafe4ee19",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "identity-baseline.json",
+          "oid": "0bc61564d4242aafac6af6c1714c90a2dac4a54e",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "identity_literals.py",
+          "oid": "abfa1ff59d020aed791e38afabb83ef4884129b8",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "inv16_emulate.py",
+          "oid": "9c9345c5535c5ccb4603c9fd0368a82ffb9951ae",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "move_lint.py",
+          "oid": "f872f547608cbdb846544925e898fc9ccc4cac88",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "mutate.py",
+          "oid": "f6a818c2dc15dba5ecac9283eec3b12b454ceade",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "mutations",
+          "oid": "d94b10ce57d7228ad8c547e4bfd08c5cb5f1a1ce",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "native_boot.py",
+          "oid": "1c5d1f36a2ae235f9945cd13c420b52f5cc95682",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "push.sh",
+          "oid": "5a491531014550417a938081c8247cddf061aece",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "required_concepts.py",
+          "oid": "c705892460b73f1599c656cce41fc14e68f74fd1",
+          "type": "blob"
+        },
+        {
+          "mode": "100755",
+          "name": "splice.py",
+          "oid": "d32ed07983479ba2056fcf3666ee3e0135596fb7",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "tests",
+          "oid": "be7a7262e620e82729a997c9eb06f5a01bdfbc5e",
+          "type": "tree"
+        }
+      ],
+      "oid": "7ff443b08123f44a8e971ad696e4e6c648f07f45",
+      "path": "assays/gate"
+    },
+    {
+      "entries": [
+        {
+          "mode": "040000",
+          "name": "blake3-custody",
+          "oid": "b068c419342829a5a26c70f451481257c9a8de11",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "price-text",
+          "oid": "b82dfe6fe9c763d9c4d86089d486b268eac11093",
+          "type": "tree"
+        }
+      ],
+      "oid": "c8ccce646671d01cd54210838f4e0a325a884ff6",
+      "path": "assays/gate/fixtures"
+    },
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": "c3129154-codec-vectors.json",
+          "oid": "a0eba9c3831d433119bd955dc23e47313ee3d951",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "c3129154-eur-unavailable-v1.bin",
+          "oid": "98082521284cf68b1b10483fc7f5649883d8b8fc",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "c3129154-source-case-map.jsonl",
+          "oid": "37e7b814f57d01e5514d99d184fa149f530fae57",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "c3129154-target-handoff.json",
+          "oid": "1c6346dca351ad331ea91bc28d99ff836f1a18e1",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "c3129154-usd-result-v1.bin",
+          "oid": "02c3f4a17425cc3d7658786c949b9c623e791013",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "contract.json",
+          "oid": "f38d6d733b29f5941748dbcbd20ad9446fb6652a",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "eur-1.1.0-source-case-map.jsonl",
+          "oid": "7c9ca9e0c29e3808627935334b0892c9a72b01f6",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "eur-1.1.0-target-handoff.json",
+          "oid": "7eaf0aae169f907c874b3d089a22b96a65fa44ae",
+          "type": "blob"
+        }
+      ],
+      "oid": "b82dfe6fe9c763d9c4d86089d486b268eac11093",
+      "path": "assays/gate/fixtures/price-text"
+    },
+    {
+      "entries": [
+        {
+          "mode": "040000",
+          "name": "capability",
+          "oid": "a104af4a9f0c926da5feb4cb09797e0ffb831f12",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "homeostasis",
+          "oid": "aab804497f58f839517259f325f7da510ca58349",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "host",
+          "oid": "18ea0de572edd1190d001040e0be2f8c5ff7688d",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "memory",
+          "oid": "c1f4ab309347c1bac540982bbf32040cefa1059a",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "regulation",
+          "oid": "43c318a5d718e4054b3e66a3e8a837f398252433",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "replication",
+          "oid": "9cc865ca4d8c2574279962bfba75c65d01bce56b",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "storage",
+          "oid": "2adfb0997ba7e5f6ae51b19f9f62e6931cb69c2b",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "world",
+          "oid": "56960cfe9c0134d975264e52ab031f365f8e66d7",
+          "type": "tree"
+        }
+      ],
+      "oid": "d6cac1c6384df301f286a0d62094cdcc01126a9f",
+      "path": "physiology"
+    },
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": "Cargo.toml",
+          "oid": "8e242c430742fffb6360c67d49d4b83a6f103cd9",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "kernels",
+          "oid": "01e542995049548d472d4d7a69b8995f7af48e0c",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "src",
+          "oid": "14e30afaeb2c183ac07e0d7fa555016252bd1b08",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "tests",
+          "oid": "65a10d6b3a448343368def92b87056d91a59d777",
+          "type": "tree"
+        }
+      ],
+      "oid": "a104af4a9f0c926da5feb4cb09797e0ffb831f12",
+      "path": "physiology/capability"
+    },
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": "Cargo.toml",
+          "oid": "25c0e1473c4c32e0c332a575c58b8372d02e7314",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "src",
+          "oid": "af045c464a7155820117a557f60c9fd0ddad2ca5",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "tests",
+          "oid": "f8a46f0889048603d67d1396be11ee6a3b99c8e0",
+          "type": "tree"
+        }
+      ],
+      "oid": "01e542995049548d472d4d7a69b8995f7af48e0c",
+      "path": "physiology/capability/kernels"
+    },
+    {
+      "entries": [
+        {
+          "mode": "100644",
+          "name": "aead_chacha20poly1305.rs",
+          "oid": "741e274e49d9055d56efecf0587078b715bbb4d6",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "attention.rs",
+          "oid": "4a83b3b834d7bf555e5d4b9cadee8801dc4bf1c9",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "bignum.rs",
+          "oid": "1f921b39a656a2057a32c0f40f4d4ee89cbfddfd",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "blake2.rs",
+          "oid": "5406a72a827716387b9b0b86b1d55e1c4ad6e65e",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "blake3.rs",
+          "oid": "185a4ab435d2cdedd1718fc1a54f0d1d1b03abf9",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "chacha20.rs",
+          "oid": "45cfb918101b1762d0844f80d2b947ea88be2784",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "chart",
+          "oid": "7cecc28a6f24400f7ec97cc8732197be17475e4d",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "ct.rs",
+          "oid": "a3ff0589265b249276c25a3696ed0528541d4b64",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "dataset",
+          "oid": "61ea55956a554a3834373cb954049cc1453a41c6",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "depth_controller.rs",
+          "oid": "27ce4f44911ffb7693573f6a24a3148304017aff",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "descriptive",
+          "oid": "658be7154e95e52f35db9d0e5f3f60b1d8a407db",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "element_map.rs",
+          "oid": "88104a73bafc8643d5d2340a0e052f6f9126eed4",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "evaluation",
+          "oid": "0c2af01eef86f77c80c4fb422e15b2549ed9e8ce",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "field25519.rs",
+          "oid": "00014e095609a3728d709b1dd5f53ffaf9242239",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "key_envelope.rs",
+          "oid": "7ad3cb039983f0f1e30e7e0830c1181f3426b7df",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "legacy_artifact.rs",
+          "oid": "a81433628039fc4fbe3f699b2ef0fca4250b302c",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "lib.rs",
+          "oid": "2cd83dfce3b9b9cf5b5dc56a4317a2a163d82ec8",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "ngram_corpus.rs",
+          "oid": "a56bd1d015d3338ece3b538e4ec309b0fc7cf14a",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "optimization",
+          "oid": "e9ea1382d821667881396aa39458184fb812610b",
+          "type": "tree"
+        },
+        {
+          "mode": "040000",
+          "name": "pipeline",
+          "oid": "cf14d48de2d5034417824ee9cfb22f3950806146",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "poly1305.rs",
+          "oid": "153823a59d175a6fad9717ce3f986b045d533418",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "price.rs",
+          "oid": "3444a9d4d7380c7545a14b884e8472cb6866bcbc",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "price_text.rs",
+          "oid": "a62d37aa6c0f0c3fefc404a1ac46da152011dc94",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "prompt_lookup.rs",
+          "oid": "b6b6de3de1be89ae883cedb823edba8ef82af766",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "quantity_kernels.rs",
+          "oid": "609902dd3d96ce40f2710c962f6faea58facdafc",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "regression",
+          "oid": "fef2aae64f7f9008a9d6d2a4d79753f2305ab4f0",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "shamir.rs",
+          "oid": "512c5d52a73de2a8c55bbfb998982dfa606c9f25",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "softmax.rs",
+          "oid": "402af9d0ea87387c3408f045dbfd8d5e2e6c463c",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative.rs",
+          "oid": "5c172cc1531ff5fc93be17ec4321381f48438571",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_eagle.rs",
+          "oid": "71dd78477e6256e5a544cd06d2806a0825b6965c",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_processors.rs",
+          "oid": "2c6183dd4a147055c834d90036e9ab7d63fccc34",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_race.rs",
+          "oid": "838576334cd140c543e457e432e157f195cea1fa",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_rollback.rs",
+          "oid": "462405f06d23af5187e54209fa9730cefe42c45c",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_schedule.rs",
+          "oid": "4cab5c72144ad6e9c88595582bb578487e99d7b6",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "speculative_synthetic.rs",
+          "oid": "6f6541f9bd3aca878164476288132367365a7c87",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "statistics",
+          "oid": "2c6c92dbb8d704ed83d402a36ad49ac5ce068359",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "suffix_automaton.rs",
+          "oid": "ebf1b0f9cfe77af38cc92675b80b8c9a2c995bc0",
+          "type": "blob"
+        },
+        {
+          "mode": "040000",
+          "name": "transform",
+          "oid": "164aa6d2ae0e9e54c4cfda9bfa233ea591c1a811",
+          "type": "tree"
+        },
+        {
+          "mode": "100644",
+          "name": "transit_envelope.rs",
+          "oid": "01ec284ba22654e24806e325b21878546a5f48e4",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "vocab_translator.rs",
+          "oid": "b1b46dfd06cb54f936c2371143e766c2168c4e0a",
+          "type": "blob"
+        },
+        {
+          "mode": "100644",
+          "name": "x25519.rs",
+          "oid": "9bf2461341287977b7b82b03d13cff0a60091e0c",
+          "type": "blob"
+        }
+      ],
+      "oid": "af045c464a7155820117a557f60c9fd0ddad2ca5",
+      "path": "physiology/capability/kernels/src"
+    }
+  ],
+  "unsigned_content_address_only": true,
+  "verification": {
+    "payload": null,
+    "reason": "unsigned",
+    "signature": null,
+    "verified": false,
+    "verified_at": null
+  }
+}
