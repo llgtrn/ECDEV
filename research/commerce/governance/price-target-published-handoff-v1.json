@@ -1,0 +1,2808 @@
+{
+  "scope": "IMMUTABLE_BASELINE_C312_TARGET_HANDOFF; SOURCE_SUBDOMAIN_ONLY; NO_OWNER_ACTIVATION_OR_RIGHTS",
+  "target_publication": {
+    "commit": "c312915450d6a717f9144ecdc22718afbce3dd9d",
+    "tree": "5dc0ed13ad1602bd1894ddc0904cb9f583176ce9",
+    "remote_main": "c312915450d6a717f9144ecdc22718afbce3dd9d",
+    "normal_main_push_verified": true,
+    "native_subject": "0191-bounded-derived-price-text-governed-subdomain",
+    "artifact_anchor_batch": ".ynventa/knowledge/79d274de7b59a56a41ce2b945fec0f3b.ynv",
+    "portable_registry_snapshots": {
+      "encoding": "concatenate numbered parts then base64decode/gzipdecompress to exactnewline-preserving JSONL bytes",
+      "original": {
+        "keys": [
+          "original_artifact_registry_gzip_base64_0",
+          "original_artifact_registry_gzip_base64_1",
+          "original_artifact_registry_gzip_base64_2"
+        ],
+        "sha256": "7f420bcb17f4f6793be019541688e4c55a030f017693630e74de35c19fe8c484",
+        "bytes": 329209,
+        "records": 1751
+      },
+      "current": {
+        "keys": [
+          "current_artifact_registry_gzip_base64_0",
+          "current_artifact_registry_gzip_base64_1",
+          "current_artifact_registry_gzip_base64_2"
+        ],
+        "sha256": "935db1a806304993fd73b04a4663eba930b09759919ec7e0b0834f8014829fa3",
+        "bytes": 331380,
+        "records": 1763
+      }
+    }
+  },
+  "target_binding": {
+    "capability": "commerce.price.parse-text",
+    "canonical_capability_key": "commerce.price.parse-text(input:bytes.any)->(output:bytes.any)",
+    "capability_NodeId": "cn2:964273aabb7ba94d6c4c0c421a2730d1",
+    "implementation_key": "price.parse-text.ascii.v1@1.0.0#sha256:8e2d17ec3388416689167c72c245832087d875d21f7740945d028c2500f2d7b6",
+    "implementation_NodeId": "cn2:a30dbb0aae5a7a90a653bef20568a43d",
+    "owner": {
+      "key": "capability-kernels",
+      "NodeId": "yn1:b4f8bfd63d6d8b9b31dec198026388c5",
+      "path": "physiology/capability/kernels"
+    },
+    "artifact": {
+      "id": "art1:29ae02273cb54f7f7c40e38220e20365",
+      "path": "physiology/capability/kernels/src/price_text.rs",
+      "digest": "sha256:8e2d17ec3388416689167c72c245832087d875d21f7740945d028c2500f2d7b6"
+    },
+    "caller": {
+      "key": "codara",
+      "NodeId": "yn1:1c4a8975c1bcb6ba331cfdfab6745ab6",
+      "path": "phenora/codara"
+    },
+    "activation": "CustodyUnverified; source consistency only, no binary/dependency/toolchain attestation or exclusive custody"
+  },
+  "request_result_admission": {
+    "scope": "BOUNDED_NATIVE_SOURCE_SUBDOMAIN_PREREQUISITE; NO_SOURCE_REPLACEMENT_OR_AUTHORITY",
+    "source": {
+      "repository": "llgtrn/ECDEV",
+      "implementation_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "handoff_commit": "4c7a4935bf14c62e41ff1a43d8272c3b14756130",
+      "handoff_path": "research/commerce/governance/price-public-api-source-handoff-v1.json",
+      "handoff_sha256": "8915a6b55a2eceedfd2942e494330d159158a56f4a4818dfada3af8a556b7a0f",
+      "donor": "ec1:7755f6459b7f8f22b262e2bdfe74d7b1",
+      "donor_capability": "ec1:5f41ea7edd845d3559a926b897253666",
+      "native_source_capability": "ec1:a2e3b3e884070b64d4edacda08adf6e6",
+      "technology": "ec1:e4aedb10fcd783728d5c4ab221f20132",
+      "capability_key": "extract.price-public-api",
+      "technology_key": "commerce.price-text",
+      "original_capture_sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+      "corpus_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
+      "corpus_path": "adapter/web/tests/fixtures/price-contract.json",
+      "upstream": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "rights": "Historical UNVERIFIED; current copying authorization UNKNOWN; no donor implementation/table/corpus redistributed or rights promoted"
+    },
+    "target": {
+      "capability": "commerce.price.parse-text",
+      "implementation_name": "price.parse-text.ascii.v1",
+      "version": "1.0.0",
+      "implementation_identity": "sha256 of exact price_text.rs source embedded in compiled caller; source consistency only, not binary/dependency/toolchain attestation",
+      "owner": {
+        "key": "capability-kernels",
+        "NodeId": "yn1:b4f8bfd63d6d8b9b31dec198026388c5",
+        "path": "physiology/capability/kernels"
+      },
+      "caller": {
+        "key": "codara",
+        "NodeId": "yn1:1c4a8975c1bcb6ba331cfdfab6745ab6",
+        "path": "phenora/codara",
+        "entry": "codara declarations price; codara build/run via existing Host request pathway"
+      }
+    },
+    "request": {
+      "pure": "PriceTextRequest{input:Option<&str>,currency_hint:Option<&str>,decimal_separator:Option<&str>,digit_group_separator:Option<&str>}",
+      "caller": "--payload FILE is Some(UTF8 bytes), including empty; existing IR text facts currency_hint/decimal_separator/digit_group_separator preserve optional presence. input_is_none=\"true\" with EMPTY payload represents None; absent/\"false\" represents Some; nonempty None marker or any wrong-typed selector is known unavailable. All original IR and exact payload bytes remain request-bound.",
+      "supported": "None/empty/outer ASCII-space-only; or ASCII unsigned digits, at most one dot/comma between digits, at most18 digits and6fractional digits. Hints absent/empty/$/USD remain raw tokens. Group selector absent/empty. Decimal selector absent/empty/dot/comma; explicit separator must match if present. Automatic permits only integer or1/2fractional digits. No locale, ISO inference, rounding, minor-unit or observed-money conversion.",
+      "bounds": "Source input/hint4096bytes/group64 checked; narrower targethint64/digits18/fraction6 are separate subdomain constraints. All bounds/unsupported cases are typed target unavailability, not substituted source output."
+    },
+    "output": {
+      "supported": "DerivedPrice{amount:Option<String>,currency:Option<String>,amount_text:Option<String>,amount_float:Option<f64>}; source-shaped derived decimal text/raw token/selected spelling/finite advisory float. Exact amount never derived from float.",
+      "unsupported": "16stable PriceTextUnavailable codes; known result with met=false, consumed1. Remains UNMAPPED to source outcome; neither fabricated all-null source success nor EffectUnknown.",
+      "evidence": "PriceTextResult v1 in existing <=1024-byte Lineara result1 receipt, stricter local decoder512bytes; inputSHA256, fullIRdigest, typed selectorpresence/value digest, and complete supported4fields or typedunavailability. Canonical numeric/text/float consistency verified.",
+      "read": "Actual Host::work_evidence under current resource.observe, canonical settlement/EffectRef/provider/request/lease joins, strict decode and equality to actual executed outcome before CLI display. No general filesystem or artifact access grant."
+    },
+    "admission": {
+      "assessment": "declarations prints candidate exists/provides only, no assessment, authority or grant. Host/operator must independently assess an implementation and authorize/admit work. Tests use explicit synthetic assessment[1;32] and temporary real native Worlds.",
+      "identity": "Existing full request/EffectRef/generation fences remain; fullIR+implementation+capability+kernel+payload digest bind replay, attempt clock excluded. Exact source/version gate only for the newly introduced price entries.",
+      "rights": "Current requester authentication/resource.work purpose/revocation/restrictions and resource.lease/release admission; current resource.observe separate. No widened rights, FD17 or budget.",
+      "budget": "Existing one cpu_units demand, inherited PROVISIONAL estimate, not measured parser CPU cost. Canonical allocation/envelope and consumption; refusal preserves prior evidence and leases. No storage budget inferred.",
+      "unknown": "Pending effect preserved unchanged, no retry/recomputation, refund or silent replacement; semantic unavailable remains known settled false."
+    },
+    "proof": {
+      "maintained_caller_tests": "phenora/codara/tests/e2e_price_text.rs",
+      "external_source_test": "CHRONICA_PRICE_SOURCE_CORPUS=/original/pinned/price-contract.json cargo test --locked --offline -p codara --test e2e_price_text original_pinned_source_corpus_supported_subset_executes_through_governance -- --ignored --exact --nocapture",
+      "external_data": "Test verifies unchanged full corpus SHA before external Python standard-library decoding; no donor data bundled. Supported cases alone compared through actual governed caller; remaining source cases explicitly unmapped. Exact observed counts recorded separately in native facts.",
+      "negative": "Revocation/authentication/budget/noobserve/unknown/replay allselectorpresence+payload/sourceartifact/version/wrongtypedselector/malformedresult checks; pure and actualcaller mutation specs."
+    },
+    "remaining": "Full source text/token/Unicode/grouping/free/sign/error/object heuristics and source production caller cutover/rights/exclusive custody/engine activation remain unresolved. Separate commerce.price.parse-exact locale/minor interpretation is NOT this mapping. No whole-donor parity, source retirement, canonical Money/Asset, external/device effect, physical OS or full convergence claim."
+  },
+"pinned_registered_owner_subtree_artifacts": {
+  "scope": "Exact path-prefix source ArtifactId inventories at pinned c312, not filesystem access, binary attestation or exclusive owner activation; ancestor/leaf overlap remains unqualified.",
+  "inventories": {
+    "kernel_owner": [
+      {
+        "id": "art1:006a6df2ee8e52ac5c7ecd8644fb8900",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/domain-degenerate.json",
+        "digest": "sha256:4d15a3522c9572a1d9e197fc0802b8f8c15b49486076a0a6751d3fb7aaca707c"
+      },
+      {
+        "id": "art1:0087bce6e96603085a1e1f2a310f9fe4",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/unsupported/size-area.json",
+        "digest": "sha256:665a023e02c8a13deb470f99a527318a36292da67a80e52ee5bf08641b8e6e9e"
+      },
+      {
+        "id": "art1:0093f16b14c22b11a2c3e59c30c870e2",
+        "path": "physiology/capability/kernels/src/evaluation/view.rs",
+        "digest": "sha256:37a005811a55bd92ffb1a7bf93745c7729d135091ec74b86cffa69f685441568"
+      },
+      {
+        "id": "art1:00e63c8ff08efcd349943ccfa9df8712",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/seal-policy.json",
+        "digest": "sha256:41c6dec2585964471d3bab7aa992cbb7a16a4bbbf2b6538e682a9874ac72903b"
+      },
+      {
+        "id": "art1:01295661d77ff8fb7af297d561f20dbc",
+        "path": "physiology/capability/kernels/tests/chart_support/build.rs",
+        "digest": "sha256:94e51676478b7c42eb953ddb0f8d6069448bdc51789bc6b95d9c7f77c4314988"
+      },
+      {
+        "id": "art1:01930ef12306bc562b903752537539a9",
+        "path": "physiology/capability/kernels/src/field25519.rs",
+        "digest": "sha256:49171e4157292bee4b6c37f9eba3fe6fa262abc2c6fc8efaa15e6e67c4d5d7ad"
+      },
+      {
+        "id": "art1:019398fa18a4347ce9b4fd98ee1f0100",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/line-order.json",
+        "digest": "sha256:b602567f97ebc15c10e94a30eb155ba0617730eb7d39dfc20d96b9d37df732ed"
+      },
+      {
+        "id": "art1:01ff59b38fd190cf1995ff739e1dd98d",
+        "path": "physiology/capability/kernels/src/chart/ticks.rs",
+        "digest": "sha256:c09c9f1185f343621c9728f967d6cbd25eaf360daf96804a8674188547fee7a9"
+      },
+      {
+        "id": "art1:030b5c2562045516d5355c76f4441404",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/layers.json",
+        "digest": "sha256:d33b89842933ccacd63bc02381a9e00ed5a09180c00e7bc0f7c2a0284a5750a1"
+      },
+      {
+        "id": "art1:032284f51376922b3d70f6057fa8f1dd",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c30.json",
+        "digest": "sha256:b3fb332d5a1b8a34ccec2713037d377d67b961583c2c909201312d2859cea6de"
+      },
+      {
+        "id": "art1:04c5da3e063a1637589ba31edb40a129",
+        "path": "physiology/capability/kernels/tests/chart_select.rs",
+        "digest": "sha256:181f44f74c068740ef2aa2f35da10e150be795c4f947bb66d711874aa30e3721"
+      },
+      {
+        "id": "art1:0532182eb34032f3713dbbd9dfb306ea",
+        "path": "physiology/capability/kernels/tests/absorb_security_blake2_hash_and_mac.rs",
+        "digest": "sha256:bf943bacfc28252575c3eeee3381f54c0aac1e22bb77b7e841013609be752c4a"
+      },
+      {
+        "id": "art1:062dd0ac5355ad3f5f8e5da69cfa570e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/uncertainty-method-blank.json",
+        "digest": "sha256:c6712000d6e693b7200d68103a5f9ce6844f2cc2c4ac7120e9186226272cbfb9"
+      },
+      {
+        "id": "art1:07706b82a323cc7c0c3e5eae5eb8aa9e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/claim-undecided.json",
+        "digest": "sha256:eb18795847f58472d2b486fa19ca9c2dc111b2b37fb41351d9cf474c81058825"
+      },
+      {
+        "id": "art1:07e1f442833dec80c9a51ca02ace8f8e",
+        "path": "physiology/capability/kernels/tests/transform_relations.rs",
+        "digest": "sha256:faf81b3c8f9a557a501e2bb98236bf55c0fb52b15dc2f67fad844c78d98f3168"
+      },
+      {
+        "id": "art1:0868967862cc7b137f79666f77715726",
+        "path": "physiology/capability/kernels/src/legacy_artifact.rs",
+        "digest": "sha256:1768325f073cd2de3d85ffac44ccc5481c403e30e6af4085ec3d525ac900cf17"
+      },
+      {
+        "id": "art1:092b13f75ef438147dd5ff00d53f3032",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/layers-too-many.json",
+        "digest": "sha256:e9716925305c1baf87829391db40ddb2dfb1ebf8fec5e989fec96877908decc2"
+      },
+      {
+        "id": "art1:0933362dc015e49d85a7cc19edf932a5",
+        "path": "physiology/capability/kernels/src/chart/mod.rs",
+        "digest": "sha256:618d64ec55239e06ec629ff2c534f7d56330fa7cdae6e401d6604726c00ecd1f"
+      },
+      {
+        "id": "art1:09506bd575d23c250418c8b45d678495",
+        "path": "physiology/capability/kernels/tests/myelion_spec_depth.rs",
+        "digest": "sha256:63817676cc5de2ddba9c6f6e0fee1c2b2c3ef91627e67447e2d93bedc66a5892"
+      },
+      {
+        "id": "art1:0950c48f2ade3d3402f0c40c5761bd12",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/title.json",
+        "digest": "sha256:3d2b0b95955f41cf5c8a8a434ebbb42caeb5abd683807083647b287bf9b8096c"
+      },
+      {
+        "id": "art1:0a659d61376bd5978b7741d7a75c7984",
+        "path": "physiology/capability/kernels/tests/regression_vectors.rs",
+        "digest": "sha256:2db4f8936edd2dfe36f13be0850932952f22686f8e499736ae52595c7af22feb"
+      },
+      {
+        "id": "art1:0a84dabb1c5cc4143385d77e5aa1d218",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/decimated-line.json",
+        "digest": "sha256:dd4d6de4fece44866bb3258f397f98dd7ddb63978811a4780ba6539fe24e19af"
+      },
+      {
+        "id": "art1:0ac19eb02ea7d9a5a2a010c475e8ca60",
+        "path": "physiology/capability/kernels/src/optimization/model.rs",
+        "digest": "sha256:6118936a09797d624707329d7dee713c853a0fff0a233cbf54b9b624b68cd2c6"
+      },
+      {
+        "id": "art1:0b321d8ad2bfb92bc79e77d80c0713b0",
+        "path": "physiology/capability/kernels/tests/softmax_policy.rs",
+        "digest": "sha256:17cfb21ee3bd2f29734a37878b8e77bf1f2faa637e785c3175e89d2c286f8b63"
+      },
+      {
+        "id": "art1:0b8c973ecbcb88ed824a745453181e6c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/band-no-width.json",
+        "digest": "sha256:5bacbb263011cec438c8da2414c993ac5558a156812e8db7f77b00716d233cd9"
+      },
+      {
+        "id": "art1:0bd13a46401493d75cba946e83f3f164",
+        "path": "physiology/capability/kernels/src/regression/model.rs",
+        "digest": "sha256:c7724b138547bc027daf575a6e3f1efb03b20f45cf4e7b8c7c489a0a3e0b0935"
+      },
+      {
+        "id": "art1:0d21401ad224b272485b5a7810f7ff98",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/histogram-unit-not-count.json",
+        "digest": "sha256:8f3cd1748a4c1e146c665a285f1ccd326688ca9bd6f0ec3c2ee2630c728f928c"
+      },
+      {
+        "id": "art1:0dd20433b872a33edd77293c9a5dcbe2",
+        "path": "physiology/capability/kernels/src/statistics/input.rs",
+        "digest": "sha256:2e5869b7be76c95bd561f5543bd062283e53dff0693e6dc3156a988ed60a4f2c"
+      },
+      {
+        "id": "art1:0e8aebf2a462a955c44fcd55dc560795",
+        "path": "physiology/capability/kernels/src/optimization/outcome.rs",
+        "digest": "sha256:64c44f8f802b795a0a98c3b705f73b37d2bc4c993bc9a8f90d1c2df8a0c656aa"
+      },
+      {
+        "id": "art1:0e9047f9f836dceb344705364eab5b98",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_algorithm.rs",
+        "digest": "sha256:6fbc3b55a135d1c0a89b5d5e3a76e7556e7055114c0b03ff1d8b7d2b23aca6c9"
+      },
+      {
+        "id": "art1:10a1e18882d2057fcad974bd629fb5af",
+        "path": "physiology/capability/kernels/src/evaluation/scale.rs",
+        "digest": "sha256:c9c73383ba1183aaee6237c3d12d1dc11fc6f3206efd66b51559df583666f765"
+      },
+      {
+        "id": "art1:10ba1b8ef8aa50cd9f9d0f4e585577a6",
+        "path": "physiology/capability/kernels/tests/chart_labels.rs",
+        "digest": "sha256:b4832b8ef6c33230db4cc07eeae1e956973f871e667a8235b2f799ea3d1681c0"
+      },
+      {
+        "id": "art1:111fe6b12ab1f8d24dd7a79a7661e7fa",
+        "path": "physiology/capability/kernels/src/transform/plan.rs",
+        "digest": "sha256:4054c8f7b327cba3f228fd1d87d86598ea8afe6049361361fce82b5ffb325c52"
+      },
+      {
+        "id": "art1:118a2bf53c26fbfdba7e59ee99b7a964",
+        "path": "physiology/capability/kernels/src/regression/matrix.rs",
+        "digest": "sha256:14933fb954e656b85625585f89eae76b833aa66cba60c80eae80b84ef77a1687"
+      },
+      {
+        "id": "art1:11b1ec947313a5f7f657888de787b5c0",
+        "path": "physiology/capability/kernels/tests/absorb_security_envelope_kms_key_versioning.rs",
+        "digest": "sha256:c16a3d15d74492db428bb7a15e66c38ff25719e1d7cb6abb991f6a9663c639e4"
+      },
+      {
+        "id": "art1:11d643c11b1fdfd406673af766b63144",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/index.json",
+        "digest": "sha256:28e8a931432fb66030f0c1134981c9857f5b72add8c3ceff131c94c9fcfbacf8"
+      },
+      {
+        "id": "art1:11e5aba14b88f8b27641c4dbc7941c14",
+        "path": "physiology/capability/kernels/tests/optimization_relations.rs",
+        "digest": "sha256:5daa9cdfa00446234ce7cceec4b325adb7284c99733f0c3a30dde6def95af6fb"
+      },
+      {
+        "id": "art1:12523ec02da0e946a3b4b079efd20eb2",
+        "path": "physiology/capability/kernels/src/chart/refusal.rs",
+        "digest": "sha256:a5698ca1c20b79a057a729eb7dd0fd73bcc72fa20d060affde6074d075cbd3c5"
+      },
+      {
+        "id": "art1:12ed98b332b7fb8d944470e0ace2b179",
+        "path": "physiology/capability/kernels/tests/transform_cases.rs",
+        "digest": "sha256:ff9643b242e828fe540dab75db235e85c76dc61b4dc3b2a35ac45425ba172d8d"
+      },
+      {
+        "id": "art1:14120793e731e234a2c3418ec46ed8dc",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c06.json",
+        "digest": "sha256:5dfb9905c7ea7e44b697f06f3ea587ae328ec6dbe72729e5311ef4f1b4a82e18"
+      },
+      {
+        "id": "art1:141c542892c6601830a27db22fcc9649",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/overflow.json",
+        "digest": "sha256:0c9050ba26659d376e3020abad73bda615e8e3ab2fb214c83e7328f9cb3c032c"
+      },
+      {
+        "id": "art1:156de06ac57d032441eb579f56c6d6fd",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/bars-and-a-rule.json",
+        "digest": "sha256:7430eaf53c059e2f4c7b3d2eafe93af71f0d4e0f0a232869eec92ae2882e2e1d"
+      },
+      {
+        "id": "art1:156f4514b0b9b59ca88dd0f1980c8928",
+        "path": "physiology/capability/kernels/src/chart/uncertainty.rs",
+        "digest": "sha256:ffa1b0ce898ac7bc10fcb66703f47ac3cefb349bb965082d849508b65004ee69"
+      },
+      {
+        "id": "art1:15bcbab5dc2e8e7054b88722c8fb7ec2",
+        "path": "physiology/capability/kernels/src/prompt_lookup.rs",
+        "digest": "sha256:b7392b7bf956e19ba74ea44cf981b4a7795199624b0df5edd906a01618a1d098"
+      },
+      {
+        "id": "art1:1643696242f260afb2d8ec04d10a6504",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/uncertainty.json",
+        "digest": "sha256:ef6b70b8581f06ee14eab2c07b5073a80b62bd60ba30f1f558fb4ce854560722"
+      },
+      {
+        "id": "art1:16f47d809dc1269e141653876c3c7273",
+        "path": "physiology/capability/kernels/src/optimization/mod.rs",
+        "digest": "sha256:efd5462270887abbb353453bd6fa6cf4e914d88ab3bceadc3fb584df33c88157"
+      },
+      {
+        "id": "art1:176ff75b20f649bc9e7bcd582b26f4eb",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/fixture.bin",
+        "digest": "sha256:7849d58956e964889390361eeecc99873ebcd52965e96f9b5a82e3bb278d7c95"
+      },
+      {
+        "id": "art1:17870ccddc5561e89133c9a591e6bcae",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c27.json",
+        "digest": "sha256:4ff30fe0f1a0d7191a32b9f434830cf391b98acb36f8d4f47ab2a6e779a12fb2"
+      },
+      {
+        "id": "art1:1822b51e1229d9f4e7b0edb02a7cdda2",
+        "path": "physiology/capability/kernels/tests/statistics_support/mod.rs",
+        "digest": "sha256:86bc700a28b09ceb780adbcb7caa78e4a57ced50f48059f911c3aa8d8446ff01"
+      },
+      {
+        "id": "art1:19cec362b45a1a8f752238b804042f9b",
+        "path": "physiology/capability/kernels/tests/softmax_migration_race.rs",
+        "digest": "sha256:16247b93323cfcf9d0f7f9c0c7c83c58c9bc523ce39d8852dc79e930dc53d959"
+      },
+      {
+        "id": "art1:19de963f9a53f470a8ff17299b3b85e2",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/coordinate.json",
+        "digest": "sha256:78875637f846347c003072cf5eddfc12feea377a3ca63e8f0c1d273d334e89f9"
+      },
+      {
+        "id": "art1:1b0c7c2681cf917de568bb70beac1a96",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c32.json",
+        "digest": "sha256:67e5b7691683b318e42f6a9c8b25d6619d6b043b69f6b5c57af35c8c56fe579e"
+      },
+      {
+        "id": "art1:1b35650cb9d60884b3489f27152f3fa2",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt2-report.json",
+        "digest": "sha256:7386eba5a73610eae276cc412bab7b480e0907307498b3a2a2790e4e658f1b8e"
+      },
+      {
+        "id": "art1:1b9633203ceb62ecc269d586a594f7b6",
+        "path": "physiology/capability/kernels/tests/dataset_support/mod.rs",
+        "digest": "sha256:d6b626b164de80fe708b1263d26865d493bcbd7f7c249acc129510312b89587c"
+      },
+      {
+        "id": "art1:1b971886d7c35ef5263cbee629c780e3",
+        "path": "physiology/capability/kernels/src/chart/codec.rs",
+        "digest": "sha256:c8f87919ed442badbfb2f2be3e3a3701578764055f25a0bcbc10b10275d61811"
+      },
+      {
+        "id": "art1:1b9c9349922a9838238db8fb08561b69",
+        "path": "physiology/capability/kernels/src/statistics/catalogue.rs",
+        "digest": "sha256:ced91bd60018d7e5914392ecd29641ad1064e71a81a57ad563c670df92429e26"
+      },
+      {
+        "id": "art1:1baa370e2590f0b98055b94d82229fac",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/colour-missing.json",
+        "digest": "sha256:b4f7e13b8fb6647aad32957963c19c39006878ab5fe08d606490dc3761f5bae6"
+      },
+      {
+        "id": "art1:1c9bc4fda571935d2c4c3f4de8ca819d",
+        "path": "physiology/capability/kernels/tests/rfc8439_chacha20.rs",
+        "digest": "sha256:708cb83ac6821c3fddb3cc6640320a45421be381d03e71fa4effcd02eab47119"
+      },
+      {
+        "id": "art1:1e86054d0be029eee4473cc8425b6c2c",
+        "path": "physiology/capability/kernels/tests/rfc7748_rfc8439_ct_discipline.rs",
+        "digest": "sha256:c1cc40cb102529775d231961aa4688732736b6fff820d10db18e8f0ae1e296c3"
+      },
+      {
+        "id": "art1:1ea3b15bf1c9f040971ff07ab601fb85",
+        "path": "physiology/capability/kernels/src/regression/weights.rs",
+        "digest": "sha256:7e6a6d139f03d63ebbe8a18df53756df7ecde25431638e83304241710904d539"
+      },
+      {
+        "id": "art1:1ebf777071acf23a06a866aff8ce3ba2",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/lineage-placeholder.json",
+        "digest": "sha256:74fc9185aeeb3df35e8bd9dcb0fe3310ffce14fbbc3c48c41e11cc14ef58641f"
+      },
+      {
+        "id": "art1:1f74e74cfbfcd0fde462ce7f353a11d4",
+        "path": "physiology/capability/kernels/src/dataset/mod.rs",
+        "digest": "sha256:027946135973895417ec4905158f1c1f1f9412e17cf819112035ce3f686a0fe2"
+      },
+      {
+        "id": "art1:1fbb1607252d0780b179929133458e7e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/interval-mark.json",
+        "digest": "sha256:55b0e6befb61cdc0e0fdfd76ef1fe5eb4d2d460462665cc0dbe087fac5258ab3"
+      },
+      {
+        "id": "art1:20208369723b5d7de2b4970de9c323a0",
+        "path": "physiology/capability/kernels/src/statistics/coefficients.rs",
+        "digest": "sha256:69b4fe4f139413f28c744c280d28851b2e99c498412fd7cc87b075c7e6fd4405"
+      },
+      {
+        "id": "art1:20864b7ffc72216dc1b9b6ff7a8ea2e9",
+        "path": "physiology/capability/kernels/tests/softmax_migration_translator.rs",
+        "digest": "sha256:3299df5878784bbb64308a07b46cd7fcacb36ca7ced941d7a0bc504cb3104758"
+      },
+      {
+        "id": "art1:212e092a9c6f78bb6f9af5ce4f462363",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/seeded-bootstrap.json",
+        "digest": "sha256:1b250a6f45199a2275dd745af3aeddbb2ae8c248454eef89d52df9756f863dd7"
+      },
+      {
+        "id": "art1:213d409531159e26e1aad3fd16e90e27",
+        "path": "physiology/capability/kernels/tests/attention_declared_vs_computed.rs",
+        "digest": "sha256:7b51cdd81fc57f248d194f4ed61b4d804c4141e466b8a93f63ccb1563e58b95f"
+      },
+      {
+        "id": "art1:21dc5f89c72fa4eb4cef809045feb7f9",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c13.json",
+        "digest": "sha256:6a066f1586362b9052a2ba6460328424b3b06fe1a023ad341857ce9d5037be3d"
+      },
+      {
+        "id": "art1:230414d58aec8277a9408a69e99592de",
+        "path": "physiology/capability/kernels/src/speculative_processors.rs",
+        "digest": "sha256:2ef3752628c807c30f802b941897c3db6298dafa6d42ce7c8b057ba87648f4f1"
+      },
+      {
+        "id": "art1:240aa86dede7446a2e2f17f90b8d5fbb",
+        "path": "physiology/capability/kernels/src/transform/catalogue.rs",
+        "digest": "sha256:cbf89edea4b08886b3746d58cb8362836e599923afbe2ba5c5985b3595259df8"
+      },
+      {
+        "id": "art1:26a937c9123ef42d484208cc47f56919",
+        "path": "physiology/capability/kernels/tests/envelope_trailer_binding.rs",
+        "digest": "sha256:031a2d6f9f46aaefe9539ca199dd93d299f990925fe9c8e53ec70ca6a4cf1ede"
+      },
+      {
+        "id": "art1:26bddf4b804f45daa88cc78e99ef3653",
+        "path": "physiology/capability/kernels/tests/chart_support/mod.rs",
+        "digest": "sha256:074633f889bb50dc7bd880099f3b919723b3a77ddf47217d8a912ab33926ee9b"
+      },
+      {
+        "id": "art1:26fa5675392e33ce8dac882253b13140",
+        "path": "physiology/capability/kernels/tests/descriptive_payload.rs",
+        "digest": "sha256:db91c8bac15091a1a5d20644c2aa19f64767e6f98469569d3b7939ec542a9108"
+      },
+      {
+        "id": "art1:2745cf60219fecd5ca33b1f60600b299",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/baseline-zero.json",
+        "digest": "sha256:6c6a716db7a19e691652a8a7c888c56ecd8bc25598aa5b55d3546e9de8d96789"
+      },
+      {
+        "id": "art1:27b4856f29d90f7d1c51884f37ab4b82",
+        "path": "physiology/capability/kernels/src/regression/inference.rs",
+        "digest": "sha256:4ce3fde7d3ebdc4fd72c6f496db884fe64face31f4adac39389b3083facc3217"
+      },
+      {
+        "id": "art1:28127742e69d3ba7cd5612e338bbfd45",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_text.rs",
+        "digest": "sha256:1fd530ecf220f1ca33250e40d186bdf7aa4d06ba86e8bde315391d10f8ef9cbe"
+      },
+      {
+        "id": "art1:28d3fb7d377f1bc455a54e0af621de3e",
+        "path": "physiology/capability/kernels/tests/chart_support/honest.rs",
+        "digest": "sha256:f9c2a97d31ffeef38bcb66f9c5e14e47b87a940b66b84c50939873b3925222cf"
+      },
+      {
+        "id": "art1:294ac0fb4d169db3abbc363fab7a3895",
+        "path": "physiology/capability/kernels/tests/optimization_properties.rs",
+        "digest": "sha256:178759244fcdb65afbc714ff319953299183144d1336ec7d1f4745856d4a4827"
+      },
+      {
+        "id": "art1:29ae02273cb54f7f7c40e38220e20365",
+        "path": "physiology/capability/kernels/src/price_text.rs",
+        "digest": "sha256:8e2d17ec3388416689167c72c245832087d875d21f7740945d028c2500f2d7b6"
+      },
+      {
+        "id": "art1:2a690f342e8d43fbf11271d1aa7a5cb3",
+        "path": "physiology/capability/kernels/src/optimization/catalogue.rs",
+        "digest": "sha256:e4a0999c599382d27b64ce397472919812c314e34aa3408d45c4854f3220d78b"
+      },
+      {
+        "id": "art1:2abc23560f2aad6abac68294a5c35bd9",
+        "path": "physiology/capability/kernels/tests/regression_heldout_chart.rs",
+        "digest": "sha256:617c92ad7cbd036dd8645f690b202eae1794ee88d170fe9e684945198714fe2a"
+      },
+      {
+        "id": "art1:2aeeb3e140fb241fdb3d229e8fdd7aa1",
+        "path": "physiology/capability/kernels/src/transform/payload.rs",
+        "digest": "sha256:419f37b67400d2f5df436e4c689e7aeb37a2a2f7c4480cfa37378ecf20202887"
+      },
+      {
+        "id": "art1:2c08a81775e56132ceb63b53a4238975",
+        "path": "physiology/capability/kernels/tests/dataset_select.rs",
+        "digest": "sha256:eb3a143a2171e2971f689929041d2d5d3be3a0f6ee11860dd1c3aec761cb3b17"
+      },
+      {
+        "id": "art1:2ca92d7cd0b7a15a538e75811a5bcbd1",
+        "path": "physiology/capability/kernels/tests/chart_support/json.rs",
+        "digest": "sha256:703bb7b2b37e03bcb587f9c83ec0ff5252aac8deead44fdee3b67f42d65307d2"
+      },
+      {
+        "id": "art1:2d19bde156f1f78e386a61323323c5ff",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c04.json",
+        "digest": "sha256:da060cb4d7657a87e2e9f1815b32f2d97671d604ea9d37589b1823415326ba3b"
+      },
+      {
+        "id": "art1:2dcf52b4b8fc5851d4d63839827b39b8",
+        "path": "physiology/capability/kernels/src/statistics/concordance.rs",
+        "digest": "sha256:e4a4275f94c122b3ba2165ccecf0638b7498789fe7c2fd3309aff867874d4f02"
+      },
+      {
+        "id": "art1:2e66f146241f70c530577361cd8217f8",
+        "path": "physiology/capability/kernels/src/evaluation/mod.rs",
+        "digest": "sha256:1359cabd47f87231fc634f728c84e1c90ec5ead76bedb7220b4bc61eb2d5cfba"
+      },
+      {
+        "id": "art1:2f1e969dab9957b8b31fe03ebf855648",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/schema.json",
+        "digest": "sha256:f936d7833906b28b50b2dc96634df3196d4556487d1e23a40c1ce8418af0b0e7"
+      },
+      {
+        "id": "art1:31f49da5ad9e54a137a9a31567c6562c",
+        "path": "physiology/capability/kernels/tests/transform_vectors.rs",
+        "digest": "sha256:378f0b3ee90bffcf5021418778b0acc5f250d7cbdb38d17442aa111d32758a49"
+      },
+      {
+        "id": "art1:3212d28dcdcd88394e1d891355331b8d",
+        "path": "physiology/capability/kernels/src/speculative.rs",
+        "digest": "sha256:848aad3a7cb2194e260dc7c60a11c6886414e12ab3a57f341a07ba055c9ead3b"
+      },
+      {
+        "id": "art1:32224fe9e52d11f7104a945ab55ad68f",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c11.json",
+        "digest": "sha256:c9965fa1d9ab0085e75274d82369fd3a2282296135f0fe6a0d5c6bcd3084d4b6"
+      },
+      {
+        "id": "art1:3378d423b43d28531880a7a77934475d",
+        "path": "physiology/capability/kernels/tests/price_text.rs",
+        "digest": "sha256:57ac12dce8628015c755b3c5c16449d4791c27ced0e8d00fcf9657a581dba0db"
+      },
+      {
+        "id": "art1:346197ff5ef890f13ef12cfd6a91a822",
+        "path": "physiology/capability/kernels/tests/spec_common/tree_grammar.rs",
+        "digest": "sha256:296527d1e5d3045fd6161ec82996c1d653c2aa23b16ad4d3f5e4237d3044f5f6"
+      },
+      {
+        "id": "art1:3468b51570b812053d0823112bbfeb9d",
+        "path": "physiology/capability/kernels/tests/descriptive_summary.rs",
+        "digest": "sha256:8862419a3aca45e155c93bd53ed7e8a98d53a452a157fcd28a521ff737c30eaa"
+      },
+      {
+        "id": "art1:3489589ee1ed9fb8eb4fc472fc051d1c",
+        "path": "physiology/capability/kernels/tests/ngram_match_direction.rs",
+        "digest": "sha256:b9752c185d6a0e200fe7a32b640918232b248c8e2b368f5a7cfb95b905d2ff1e"
+      },
+      {
+        "id": "art1:34e67c0d0911fecbb7616fab01516cc1",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/reduction.json",
+        "digest": "sha256:82d4a542b4abeab15a146744d69c1795ca58d2f572827e1899929497f57393b4"
+      },
+      {
+        "id": "art1:34eac546ff8b9be9a0c24bce8cdc021c",
+        "path": "physiology/capability/kernels/src/descriptive/weighted.rs",
+        "digest": "sha256:b6eb962c7594791ee23fdd2cfb93ca006077193ae187c98dab4ccb39ca06746d"
+      },
+      {
+        "id": "art1:358c8e0c26f1ad3ba659314d31512378",
+        "path": "physiology/capability/kernels/src/transform/scale.rs",
+        "digest": "sha256:b2c456e91ba922514ead08048a1ebc37420f7baf85aeff33f21ac626a8e0b856"
+      },
+      {
+        "id": "art1:365a4b25a909f3d2be118b4aeb0aa62b",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/claim-undecided-asks.json",
+        "digest": "sha256:acf418692ffad8a3dc441f0262be7606168974acf2b9abe4df6c353c3ad4d060"
+      },
+      {
+        "id": "art1:368171fec6068804ba84128ac2ef0b99",
+        "path": "physiology/capability/kernels/src/descriptive/payload.rs",
+        "digest": "sha256:b31be17f671d3e7ffabe88a74b48047b24528d59fd73ae90cd33f44a44b0cb46"
+      },
+      {
+        "id": "art1:36a6e33453008e407a1ed2bb75ff050d",
+        "path": "physiology/capability/kernels/tests/evaluation_properties.rs",
+        "digest": "sha256:0cdfab52f7aea44ff8ab4cb9b0f397c265a6e7623195caba0825ccfbdf1c3644"
+      },
+      {
+        "id": "art1:3922e997b6619696aa068ed231faebb3",
+        "path": "physiology/capability/kernels/tests/evaluation_select.rs",
+        "digest": "sha256:5a74dccf0a6856eef745ac1d18667b92f760230b1586bdff15c102a0bf72190b"
+      },
+      {
+        "id": "art1:3a10067b721c77e576647c04b512a977",
+        "path": "physiology/capability/kernels/tests/descriptive_numeric.rs",
+        "digest": "sha256:fb955ed49d7c258fe8feec8a907c5f8d83fbf9c2183756e5c49e09f971dd2743"
+      },
+      {
+        "id": "art1:3db2cd6ee3c3a8f0c01f5f9463502a81",
+        "path": "physiology/capability/kernels/tests/evaluation_time.rs",
+        "digest": "sha256:e6f9731dac47679f69f4c43a186f2db4952661b856e4880205793754052a8bd2"
+      },
+      {
+        "id": "art1:3dbe1a139633523dac06e54e322e9bcb",
+        "path": "physiology/capability/kernels/src/statistics/mod.rs",
+        "digest": "sha256:8e51d5611b675fb775853a4cba4819752218dde93c8c7fa4885bae14d2a552d3"
+      },
+      {
+        "id": "art1:3ddf51f81104f2cbab5e9e40e0b78ce4",
+        "path": "physiology/capability/kernels/tests/absorb_inference_attention_backend_dispatch.rs",
+        "digest": "sha256:3a1c6d01953e322ab98ea492a612a506288baf025221b661a4a920352aabf0f0"
+      },
+      {
+        "id": "art1:3e8dadcfc556f341eb67003ffb95c7f8",
+        "path": "physiology/capability/kernels/tests/descriptive_select.rs",
+        "digest": "sha256:0d4d7c1e15bc36152e9f7bf75ddf2643617019f1225eb36f3752e022e1d24c90"
+      },
+      {
+        "id": "art1:3fd54ccf6d86b287de3bd307584957f7",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/boxes-min-max.json",
+        "digest": "sha256:7c1e5b788685f1e9f2ebc325e904a0f5fd778f64e92dacba4bf6f1c231b8c929"
+      },
+      {
+        "id": "art1:42363c4ee49914340925c4a44e1ae235",
+        "path": "physiology/capability/kernels/tests/chart_json.rs",
+        "digest": "sha256:8e46ba4753a8b6ad174cd64008ac3e7197b235c032a91246cef57c883fd83be3"
+      },
+      {
+        "id": "art1:42b0ac16da0660f9083b5fd86db8130f",
+        "path": "physiology/capability/kernels/tests/softmax_support/mod.rs",
+        "digest": "sha256:9ad93c019225bb0d0d12039c9156c8122698cfc73f161b0c2443458e83ad978a"
+      },
+      {
+        "id": "art1:42bc4f0f25714b5aa6864e1981534010",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/claim-independence-not-assessed.json",
+        "digest": "sha256:90a9fc9d16a4a8eb426a02086614a360a8b2232257a5af4ad361f7a8484911d5"
+      },
+      {
+        "id": "art1:432094e8c7da0c6b5dcf19df867a6cba",
+        "path": "physiology/capability/kernels/src/chart/axis.rs",
+        "digest": "sha256:92ad6d3f96e286be809a5cb558cb6fb3ea2fddf7140d928491715bfdc255b607"
+      },
+      {
+        "id": "art1:452aa4a36a577690732d03316b0411c8",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c12.json",
+        "digest": "sha256:1b1fae6fe4e85d5974bcdd055f7324a90754dedded2cbd4a0fa1cd68ab4827da"
+      },
+      {
+        "id": "art1:45513ab4bd36d933e5834fe6a17c974c",
+        "path": "physiology/capability/kernels/src/softmax.rs",
+        "digest": "sha256:8224eef80f9d163ed0053ee12f864c64168c85764b19c2fdc2efce1fc1c60ac3"
+      },
+      {
+        "id": "art1:457e519d12dd9f7ef586c319a9c6be94",
+        "path": "physiology/capability/kernels/src/evaluation/rng.rs",
+        "digest": "sha256:87f8a9b04e39155f565e1c52caac9265be9dc27bf6f304a900542d1674f1430d"
+      },
+      {
+        "id": "art1:45eea0d814973ff3a0dd196ea7dd0f8d",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/log-decades.json",
+        "digest": "sha256:361006bc3397a86a1793aaba450684f6a6dd04451fa61fa35ce2d744cf18f79e"
+      },
+      {
+        "id": "art1:468ae3e5e28817c11b7004df3067086b",
+        "path": "physiology/capability/kernels/tests/regression_heldout_numeric.rs",
+        "digest": "sha256:f1a203133854450ce0eee4ed61693a2e53370f27116a67162cd85a7162b86585"
+      },
+      {
+        "id": "art1:477dc971cdb63d7bed1cc5a06328b124",
+        "path": "physiology/capability/kernels/src/transit_envelope.rs",
+        "digest": "sha256:a5136e42db380cacb3350a469cb4fd97d261545bce23f646484cadcaf05cebd1"
+      },
+      {
+        "id": "art1:48a6a34cf1f7e709bfb38b0d28e019e7",
+        "path": "physiology/capability/kernels/tests/statistics_numeric.rs",
+        "digest": "sha256:35a3d398419de4197ddcbc7e5e138804d08e96523946834375fbb9b99cb44831"
+      },
+      {
+        "id": "art1:493e517cadee6dd95ce082e337506867",
+        "path": "physiology/capability/kernels/tests/transform_properties.rs",
+        "digest": "sha256:c89f00d0de89ac658c74bb91cefe7bb59f8918f84fc92341f9830b27a25ad230"
+      },
+      {
+        "id": "art1:4a5c8d822e6e50e36478423fc348bb2a",
+        "path": "physiology/capability/kernels/tests/absorb_graphics_topological_naming_element_map.rs",
+        "digest": "sha256:a350a24382e0a0041f47490fc2180ea9c68997a1c8a8a203b751997502d7af0d"
+      },
+      {
+        "id": "art1:4a9524555b2560efead560de25b42300",
+        "path": "physiology/capability/kernels/tests/evaluation_metrics.rs",
+        "digest": "sha256:e4b76601b2e15d51fd6c017d725429c3b17f686ecaa0a4888c0bb71ded3f3fed"
+      },
+      {
+        "id": "art1:4aa25471d634e2c5b42c493dc99ee2fe",
+        "path": "physiology/capability/kernels/src/regression/payload.rs",
+        "digest": "sha256:4fc7be4abead7b9f22183621ddc2c658cf7554f463dfb8d4ca1debad497fd594"
+      },
+      {
+        "id": "art1:4ac1777eef9002929569fed393b91d3c",
+        "path": "physiology/capability/kernels/src/descriptive/result.rs",
+        "digest": "sha256:ab8c8338a078bf81c88901ab780d986b8f536d04ea83c9ecdff0f8244877533e"
+      },
+      {
+        "id": "art1:4ae75a5037ef998d1ded93421aa43c51",
+        "path": "physiology/capability/kernels/src/chart/json.rs",
+        "digest": "sha256:35dc3ef68f2a137d921dbeb36d9263b7125ee4232899b6c4d4037394fe070e18"
+      },
+      {
+        "id": "art1:4b53ca597210eb58d9e8ebd3261bd04e",
+        "path": "physiology/capability/kernels/src/blake3.rs",
+        "digest": "sha256:b908fe59848c535811be5c9e7a45840bfc0b82437abdf2f3e7dc1be627144f0a"
+      },
+      {
+        "id": "art1:4c60ac23fe6a7300339a1ad76c355af3",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c05.json",
+        "digest": "sha256:2468aebd117d177f03e6d858f11e52852507e58e8b209c856f1d470e9571e5ac"
+      },
+      {
+        "id": "art1:4cd36da363e270231d8d48a2d8480257",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt1-module.json",
+        "digest": "sha256:2e9065b2ee4c3da8e6edc65ee819993a85e7be736165d11d956183f1944dfc0d"
+      },
+      {
+        "id": "art1:4d058e934757f5819c8c814d0919372f",
+        "path": "physiology/capability/kernels/tests/identity_pins.rs",
+        "digest": "sha256:d0c15dd72c72fbc7c12ecd5c9fd0492eb43dd07ab458d533b5046a731030f7f5"
+      },
+      {
+        "id": "art1:4d94b06a49b266c8902da13eda0c2fa8",
+        "path": "physiology/capability/kernels/tests/optimization_support/mod.rs",
+        "digest": "sha256:5e1abbb73099b6c20425e6e174e4fd09bd11e2c69da3eb39d0c3d923a11aede4"
+      },
+      {
+        "id": "art1:4eaea985994e8cdd4ea1c8299ef275d1",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/PROVENANCE.txt",
+        "digest": "sha256:d05c86735306052d8a81454cf343702de32467602705509060d3e385265a377a"
+      },
+      {
+        "id": "art1:4f0e1cb863e2c758fb115817c29aa6ee",
+        "path": "physiology/capability/kernels/src/chart/label.rs",
+        "digest": "sha256:f75da82eb17be43ef0f8f8269d627acadc024b4efc747f0c0dd9ca7736ce2dfa"
+      },
+      {
+        "id": "art1:50062fab2a1db774fdd8240a5d428e76",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/claim-operand.json",
+        "digest": "sha256:fadf8fcbdef2bf24d9a4bc5f9fb107a6d6c96f696cbf1192a469e693cd8f6356"
+      },
+      {
+        "id": "art1:501205662a3125f997677c353f01d6af",
+        "path": "physiology/capability/kernels/tests/spec_common/rollback_cell.rs",
+        "digest": "sha256:a066097055d53ce0a83ab2b5abb84368b815c695c88526c78159ae43d7b09048"
+      },
+      {
+        "id": "art1:5138cbfe06ec32c87e3ee0fd84abb563",
+        "path": "physiology/capability/kernels/src/transform/fitted.rs",
+        "digest": "sha256:47e201786ab52550576f586b8525b897b00db4bc0a56bb3bcf0a3da60ee293b1"
+      },
+      {
+        "id": "art1:514c61f369c585fc2385bd3ed9e0c93d",
+        "path": "physiology/capability/kernels/tests/optimization_lp.rs",
+        "digest": "sha256:a7b7f7d906ebd774094ab790dbe01bfb9396edec799efff812d17cb7d6619438"
+      },
+      {
+        "id": "art1:517091f8298544292416ff02c70a7187",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_window.rs",
+        "digest": "sha256:850b66bfdd9aec2d284a0e3271708c308482fa378509f919e0057d3d92b839cc"
+      },
+      {
+        "id": "art1:51733a93230d61f46f67045cf7da91f9",
+        "path": "physiology/capability/kernels/src/optimization/exact.rs",
+        "digest": "sha256:b31080d53c5ade071bd176dd52c10ff2404dafced5cbf11a83e246eb5ca06827"
+      },
+      {
+        "id": "art1:519d37d46141b111287b41d574ad6dc6",
+        "path": "physiology/capability/kernels/src/transform/mod.rs",
+        "digest": "sha256:4ff929465e72b793dde0efed88a2c8aa9148103c324d748b4d81b99ac0278625"
+      },
+      {
+        "id": "art1:53efd176a690ce7ab0341c6d762d3153",
+        "path": "physiology/capability/kernels/src/speculative_eagle.rs",
+        "digest": "sha256:4a307b1b0d079b2e2d6bb6f8ce36b48d750e6210eff38e74c70fcb38b5ef3c4b"
+      },
+      {
+        "id": "art1:5403372b2964c03352cccdf19f5a48d8",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/claim-same-row.json",
+        "digest": "sha256:590fe9946b1f54c1936d0a6cf385683dd684e37d7bd6ed3c32ea7ede5b535ff7"
+      },
+      {
+        "id": "art1:542c6bb670f78a76c9a81309a99c301e",
+        "path": "physiology/capability/kernels/tests/optimization_transport.rs",
+        "digest": "sha256:dd48af08af16c45b38b4605b5e0f30c5aa43cb69d048eb1561e62148f1f1e28a"
+      },
+      {
+        "id": "art1:5a762e254587af4075db1b8f5700dd38",
+        "path": "physiology/capability/kernels/tests/pipeline_declarations.rs",
+        "digest": "sha256:e76a8f271342e30bfab24495d41af462064c1c8a64606f1fd48a501f19a9d0ac"
+      },
+      {
+        "id": "art1:5ba5206a8ed69eb8ae63b88b2965dfc7",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/lineage-no-computation.json",
+        "digest": "sha256:959ca5064c291da05a3b35d310e9be5f6670e49d0983ae2e1688b5c1b0dda10e"
+      },
+      {
+        "id": "art1:5bb11ba7479ea7a7eb67045e5a500c09",
+        "path": "physiology/capability/kernels/tests/regression_numeric.rs",
+        "digest": "sha256:8edd7e5e5fa246dae6491ceb607f9c2b03e689c56971111a99b0b376d41882de"
+      },
+      {
+        "id": "art1:5c6249ea44896fbd559a0cd1c9ecf029",
+        "path": "physiology/capability/kernels/src/chart/obligations.rs",
+        "digest": "sha256:82581a51808d04547ac20c97bef656e72451e460ff672069ea661703b198f635"
+      },
+      {
+        "id": "art1:5cf80a7925d9548e65e910a037d2ec3a",
+        "path": "physiology/capability/kernels/src/regression/predict.rs",
+        "digest": "sha256:fdce804df1464e69cdaae1fe0e17f3161b7942293bb62950e76328d55c14845c"
+      },
+      {
+        "id": "art1:5d32bb0b33c1267169ad47b8bfd928fa",
+        "path": "physiology/capability/kernels/src/chart/claim.rs",
+        "digest": "sha256:3fa93c2881662fd788fb037565f597a0b91e7597a16bd15da0c9d86fcf0ceea1"
+      },
+      {
+        "id": "art1:5dca38f74cb2258c1ef47f62ca54d1cb",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c07.json",
+        "digest": "sha256:5bcf085e7bc13a95d5b917ad74309fc686783aa2e34a33b2ee11cc7bacf96d83"
+      },
+      {
+        "id": "art1:5e1737e896a7eeeddceaf8b0eb15d012",
+        "path": "physiology/capability/kernels/src/dataset/select.rs",
+        "digest": "sha256:7094d83bea61a055b14808e0b34b696a4709814de4f968ff8cbe82a4bb791012"
+      },
+      {
+        "id": "art1:5e5eab2809cec0bba3d6dc45a94562e1",
+        "path": "physiology/capability/kernels/src/chart/layer.rs",
+        "digest": "sha256:b44013ea362daff852b9f690be390570aaa81ad62a3cbefb937445405e5bcaf1"
+      },
+      {
+        "id": "art1:5e696267f4357de7d47711f78d4e5e44",
+        "path": "physiology/capability/kernels/tests/optimization_inventory.rs",
+        "digest": "sha256:9f92190eb76ad348aac321c3f12783eb9fd03ba863b2492555f43e107d46ead6"
+      },
+      {
+        "id": "art1:5ea6d23e081b97be0c34f178e90d2431",
+        "path": "physiology/capability/kernels/src/descriptive/mod.rs",
+        "digest": "sha256:fdb874531afbbb354f1a3882300f3dc60059371911b07dd3ce72709ce50cc393"
+      },
+      {
+        "id": "art1:5ebd18188bbafc5dbe74d325c9821141",
+        "path": "physiology/capability/kernels/tests/softmax_oracle.rs",
+        "digest": "sha256:6051fc82d1152aba36221d5e67ad0ea1ab4694c1b13e1f7b9900025fcb9d3a00"
+      },
+      {
+        "id": "art1:5ed0a1b7c8c9ca288d157ad32c71c751",
+        "path": "physiology/capability/kernels/tests/statistics_select.rs",
+        "digest": "sha256:df9726918f747069a95327c5abddf579e71542955cd5777dc361ad472b508306"
+      },
+      {
+        "id": "art1:5f14382e81e38693a8b096313d2a0451",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/rules.json",
+        "digest": "sha256:29d86a455b157f2b8b801895ce149fb36bac2c738ecda750574c71bcc91e9829"
+      },
+      {
+        "id": "art1:5fd34a089fd6b66c93d0d936d694554b",
+        "path": "physiology/capability/kernels/tests/spec_block_verification.rs",
+        "digest": "sha256:4c6e7510557dd0ff8f4ae9cd1720b0eb7d06c1b9f8dd49dfa7841b882359ef85"
+      },
+      {
+        "id": "art1:5fd7c86ea28d6981f70abee8709343fa",
+        "path": "physiology/capability/kernels/src/element_map.rs",
+        "digest": "sha256:9446cdbbc95fc2135065355d99e8567d135eb1f4cce4f70992e965824c5a49ab"
+      },
+      {
+        "id": "art1:6026b4ccd9829d21f2b52bb3c287c4ac",
+        "path": "physiology/capability/kernels/tests/regression_heldout_leakage.rs",
+        "digest": "sha256:91c2b8f75a2f75ca83a28a1cbe63c0245d96cfdcbfd7742e277c1cff7ef62ae8"
+      },
+      {
+        "id": "art1:60495ad0ec5bf7363bb83201eecd4e31",
+        "path": "physiology/capability/kernels/src/speculative_rollback.rs",
+        "digest": "sha256:fddb193706127305733593d588962582bb465c52409e48b55f535dc5e18a023b"
+      },
+      {
+        "id": "art1:622dd292d4ee5d80115e0810d6eab77f",
+        "path": "physiology/capability/kernels/tests/statistics_cost.rs",
+        "digest": "sha256:2657076fe5aaf5d2238fa2af321fd58d80597296827d38023d75c6788f68eac9"
+      },
+      {
+        "id": "art1:62dfd2d050e4e4928ed208ee0e8dd1c2",
+        "path": "physiology/capability/kernels/tests/envelope_cipher_pair.rs",
+        "digest": "sha256:40be4f66785408d1ef13ebb73c429f8bba373a69ee2d8bbd697c3cb855be1d3d"
+      },
+      {
+        "id": "art1:6394371af6ec54b557ff189217cd7527",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/box-summary.json",
+        "digest": "sha256:50091906d160611a86772d5879d6bf9bff6f318fd7ce6bc6e43cb5ef8e6465bc"
+      },
+      {
+        "id": "art1:63ad1f16e3cb069bdd5b28916ea3edaf",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/line-with-a-gap.json",
+        "digest": "sha256:88bffe5b7e9f1d325cff26a2d2ae347e6608325f62743301ef38961b0853ca93"
+      },
+      {
+        "id": "art1:6473d9b2bd63151a1733828e60022d43",
+        "path": "physiology/capability/kernels/src/optimization/scheduling.rs",
+        "digest": "sha256:37bc694e5aead8881365a114f17e0d8e2423da0fc8ae4dfcc0c0ef1b7906c725"
+      },
+      {
+        "id": "art1:647bc7a46d4878b3dd3dbbeecbebf2fb",
+        "path": "physiology/capability/kernels/tests/dataset_payload.rs",
+        "digest": "sha256:15b7df3b8f2b428347908e8b79450b83269ea5b8e45f95e09bff72d40ebd3643"
+      },
+      {
+        "id": "art1:64a78bb48c63e365cba909ef901ff1c2",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c25.json",
+        "digest": "sha256:d6527e09a37bef54426b0c0d85bd8966ac1ae890062ec7cb8a6f04bdffdc6829"
+      },
+      {
+        "id": "art1:64ae7b288d399d1e7ba982fdfdeee98e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c34.json",
+        "digest": "sha256:03238ec93bbb323eaf058581e7ea2f1399db4f65c80497b6fa044512172ff8a2"
+      },
+      {
+        "id": "art1:65d93026c90f695ebe6c8a95d54c0ad1",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/histogram-dropped.json",
+        "digest": "sha256:b7a23b48cef45bb124c812857d46b91b79bfcfe5d20044f1c0b393d74b82fe11"
+      },
+      {
+        "id": "art1:6673aeaf10f95d5d75fdfad7f9546e9e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c35.json",
+        "digest": "sha256:0f344c59b1f8ecd80a21025b2bf3a39a7cb32fc2561d902a0d9d5711d1773c87"
+      },
+      {
+        "id": "art1:668461222940d072324541a44e6a5af7",
+        "path": "physiology/capability/kernels/src/statistics/table.rs",
+        "digest": "sha256:d7ca562f5596236e8f0e8cdbfc38bb300a661878761b6058963047d8ea89b500"
+      },
+      {
+        "id": "art1:67cdc59aeedfbfc06673a7e90f4730f1",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_eagle.rs",
+        "digest": "sha256:9b1e28a7e6d5e96f3800d65cda7cbcabf5b5a865618bc2ea7a7dbe22560aa870"
+      },
+      {
+        "id": "art1:684ddcbf8820e29a891a5f3313df104d",
+        "path": "physiology/capability/kernels/tests/chart_ticks.rs",
+        "digest": "sha256:180f146d5877930dcc3586ac6c42bedb68a23043c2688dad03cfbe610c6ccc64"
+      },
+      {
+        "id": "art1:6888f13077b1a586ff3505a3aea7a643",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c18.json",
+        "digest": "sha256:4f6c8de95a7de2cbcc24aef24c3f504609f991dff9b750ef5b4e29c5761c8235"
+      },
+      {
+        "id": "art1:68901d8041fe038a3d45c8c3c9be907e",
+        "path": "physiology/capability/kernels/src/dataset/table.rs",
+        "digest": "sha256:6ce9a7c3b34a18416ced5e12e80c2970d42944df682feb4b2fdbf67729eaae5e"
+      },
+      {
+        "id": "art1:68902eb8d4653b69d42fd7faba0bb4d5",
+        "path": "physiology/capability/kernels/tests/myelion_spec_seam.rs",
+        "digest": "sha256:878d6119b801cb05ea2901300379b6b83da6ec84b59fe08f85bbe54bf570ccc6"
+      },
+      {
+        "id": "art1:68952fa40394207df7f3cc3134ca19f6",
+        "path": "physiology/capability/kernels/tests/statistics_cases.rs",
+        "digest": "sha256:754d8ed6a3a3b4cc8554014f2859eb881c3ddb1ae6c3f40ea28dd5ea5873c454"
+      },
+      {
+        "id": "art1:6a0f1a92fe847b05105b568d910a5dad",
+        "path": "physiology/capability/kernels/src/vocab_translator.rs",
+        "digest": "sha256:dd34fe7e8a7c7f7ad7f2ef6ebf7bf3985244f060ecda95fe524f634c67749614"
+      },
+      {
+        "id": "art1:6a25462731c1d73decab9d300c0469ae",
+        "path": "physiology/capability/kernels/tests/evaluation_relations.rs",
+        "digest": "sha256:1dd2a04cf502845833240ddb21ec17956cc32a9f62ec8eb7bad2084d5c37db0a"
+      },
+      {
+        "id": "art1:6a6518d77ca3cbc383ae5b73442b49cf",
+        "path": "physiology/capability/kernels/src/optimization/flow.rs",
+        "digest": "sha256:e607dddb6446f6b4942d76e385d711afadfc774ea6af074988cb3db7ad591b9c"
+      },
+      {
+        "id": "art1:6ae8f1b8ccfd6a5116aac543c3ac8408",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/rule-line.json",
+        "digest": "sha256:2cf636548c982b09ef13c3de9be86695afa97e29bb6c7fc077c258e33ff9fe67"
+      },
+      {
+        "id": "art1:6b62f87072bfc4fb5b47b9a261a4c714",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c03.json",
+        "digest": "sha256:18bf728f6d75af60f954dc647d5d19e94cc37cc1da475224de02357e4cb2b037"
+      },
+      {
+        "id": "art1:6bb845e54c470ec075df8ec5a5a7f563",
+        "path": "physiology/capability/kernels/tests/spec_common/mod.rs",
+        "digest": "sha256:0b313845406c945dd01629474b6b328a8369a3bba0269d8d893c7b7f042dbc45"
+      },
+      {
+        "id": "art1:6c2d9179ea8d17e75777a20926d05f44",
+        "path": "physiology/capability/kernels/tests/chart_fixtures.rs",
+        "digest": "sha256:50216af76961e6420062ed589a1077d7270ef054907f15e9278ea4c6556f48cc"
+      },
+      {
+        "id": "art1:6cd66ce6a7073cc4870a5f15ea2f8778",
+        "path": "physiology/capability/kernels/src/descriptive/sample.rs",
+        "digest": "sha256:296339a604edc0f6d893453225b5483ef9d93e5f79fdd1a049e63c7cf8eab39d"
+      },
+      {
+        "id": "art1:6d3f2ba919c6fcca5827647af77a436c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c22.json",
+        "digest": "sha256:d2531dfcc0c873cbd19a5326d0dc960a02964d543a6ee303b6e4ab76e24f7a66"
+      },
+      {
+        "id": "art1:6d5ed16eeccf7d55252581723598ff32",
+        "path": "physiology/capability/kernels/tests/legacy_functions.rs",
+        "digest": "sha256:a97997af98d62e030ce47554b4121fa4cc1abe9ccb0a8095ecd805192793fd83"
+      },
+      {
+        "id": "art1:6de6f766d43cf981104887794b4d2962",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/size-encoding.json",
+        "digest": "sha256:dbe87ff683515a64147863810cc69c0f2d3dbb81d41d484b15351cd6399f375c"
+      },
+      {
+        "id": "art1:6e77eb43a02c2c47b6d45edf2ecfadce",
+        "path": "physiology/capability/kernels/tests/chart_uncertainty.rs",
+        "digest": "sha256:01d5311daef1f27cb1ca82d1cb5e41c5f0f35de0eda26686e741a9435bacb1a3"
+      },
+      {
+        "id": "art1:6f4577d8337a84860d6b11d3d39181ab",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/rule-line-outside-domain.json",
+        "digest": "sha256:7dc29e8a9fc17b292b48ffde3af82101340524b4a8938f1a3258fa18544e0b3e"
+      },
+      {
+        "id": "art1:70c53470cf5a5438050e76be04509c46",
+        "path": "physiology/capability/kernels/tests/dataset_leakage.rs",
+        "digest": "sha256:74fa1c21a3cf889e8ba653d1de1f4466a38d4b754d19cfb8f7dcc8811c8b6229"
+      },
+      {
+        "id": "art1:7136d1c7aa62862dc4c047c9bfb2b6e1",
+        "path": "physiology/capability/kernels/src/evaluation/provenance.rs",
+        "digest": "sha256:b7fd485ee38cba1b71a92bb60a14e9d4b0ca3c6a43f679271fd4559002ae2bfa"
+      },
+      {
+        "id": "art1:71d0e7219cdc82e5c0adb92fde310eae",
+        "path": "physiology/capability/kernels/tests/regression_heldout_payload.rs",
+        "digest": "sha256:eb4e07398a4669810764539fec2c835f141660a0e58841a94f749eadd9a8f2f7"
+      },
+      {
+        "id": "art1:727faa3c8cd2268888d169768a49d806",
+        "path": "physiology/capability/kernels/src/evaluation/baseline.rs",
+        "digest": "sha256:f784ea336b109ba1b4f5086cbaa3f2ec78d775bd7a3afb249031b4b203be6344"
+      },
+      {
+        "id": "art1:729f56a099c6cff5ee69da2b6d858233",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt3-report.json",
+        "digest": "sha256:c80c181caae777487e360b50d8a3b84d8a34e1d2bcd02497a5a5f08939720fdc"
+      },
+      {
+        "id": "art1:7388a6aef98e507d50e7228f74b3890f",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_race.rs",
+        "digest": "sha256:928f9d71b187fc70bf1636f7a7ee706389132024d2ba111492b91995353710be"
+      },
+      {
+        "id": "art1:7472b87aada40a5291cd8d1aa9dd5e79",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-comparison2.json",
+        "digest": "sha256:c68224b55bb548fa655d532fd685f503b573edd7ea90c80a7b435023b8c0f06a"
+      },
+      {
+        "id": "art1:7546981abfb629f6c7421c4faff21e35",
+        "path": "physiology/capability/kernels/tests/dataset_replay.rs",
+        "digest": "sha256:0db695a1c255e8613d59274f55b39b0812cd6f418866be3d69a5de8bc39e7908"
+      },
+      {
+        "id": "art1:7611140cab032dad4ba8205549eb123a",
+        "path": "physiology/capability/kernels/src/transform/frame.rs",
+        "digest": "sha256:8df026068991b56e8e1f2d25652a1844a05d6114f685f34fe542c0699dc4209f"
+      },
+      {
+        "id": "art1:765b1742e4f50f72b24ed183f9039977",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c37.json",
+        "digest": "sha256:df01e4ae58387c525db465f2c468f4e3336957dcdfb163de50645d0a6fe6a6e9"
+      },
+      {
+        "id": "art1:76d29fc82f41ec67695fda16f9a299ed",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c08.json",
+        "digest": "sha256:2000932f804b4128aff4894f9184afa87ac9b5450f06c732becd74d130acb404"
+      },
+      {
+        "id": "art1:77d7736f87d87f35bdcb61b34235d314",
+        "path": "physiology/capability/kernels/src/attention.rs",
+        "digest": "sha256:254c14155be97421b538cca7d45c90964acaac0cd4c348bcfa12fe39fae43dc9"
+      },
+      {
+        "id": "art1:7840b75b61fd2a0ff78e42d38cff2104",
+        "path": "physiology/capability/kernels/src/regression/heldout.rs",
+        "digest": "sha256:bd2911d1711c9b507244cd336feee6e0ef22ec34cb1d6ae772d4526e803cbf6a"
+      },
+      {
+        "id": "art1:7967f7be235c0f46b53ca57a4d302f4b",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/log-one-two-five.json",
+        "digest": "sha256:5efd1ef2fc2c6bf142126084cc1dafac89239c1a74f7eff76767a8107f7ac582"
+      },
+      {
+        "id": "art1:79c130f7c47872c60ef94e9818b4dd09",
+        "path": "physiology/capability/kernels/tests/chart_claims.rs",
+        "digest": "sha256:abfe0c897f87febcb0687b22cc335069b644cb88f0d70f19baa20f439a534ab1"
+      },
+      {
+        "id": "art1:79fef7c2112d7c42898492472563ec9c",
+        "path": "physiology/capability/kernels/src/optimization/certificate.rs",
+        "digest": "sha256:288ea4cb1a07330010a00a8c1337b2f1019317db2640bc0afbe6a5ceb474abbb"
+      },
+      {
+        "id": "art1:7af206abb55f7c15a3eef147c68b3e06",
+        "path": "physiology/capability/kernels/src/transform/result.rs",
+        "digest": "sha256:9b74689561cb1192bcf760254ba81eff5394154fee5b093449d29ffb6341591b"
+      },
+      {
+        "id": "art1:7c17ef9dcd5fcf39433d08ce7ce08992",
+        "path": "physiology/capability/kernels/tests/regression_heldout_support/mod.rs",
+        "digest": "sha256:982d838ce2fd398992bb884e65ca6c5cb05344cf725612654749f0665d93e2c7"
+      },
+      {
+        "id": "art1:7cb94f8643654d51d45110c7186ff25b",
+        "path": "physiology/capability/kernels/src/price.rs",
+        "digest": "sha256:6e85117d158d1e9e0c54af6f4e44681595a8b098d894c724ce75f6227328adb2"
+      },
+      {
+        "id": "art1:7ce4e0b34df82ae3a8478ee53b5bdc68",
+        "path": "physiology/capability/kernels/tests/chart_estimates.rs",
+        "digest": "sha256:54f373f9a45bac003624563633e8934b190df37ef09f1f8888c6a78f08271c29"
+      },
+      {
+        "id": "art1:7cf506cd96033bac828ba4c249458e21",
+        "path": "physiology/capability/kernels/src/statistics/payload.rs",
+        "digest": "sha256:ff44a6b19aa302728c54e20652f775c7c8b2dbe53ab204b6b731260898936ed6"
+      },
+      {
+        "id": "art1:7f50d02344b5a68a651949c2e4668cf3",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/colour-scale.json",
+        "digest": "sha256:69397ae83d3bb9d561a2d91c31446a0902e1e13458cf67afc3b227ce98cdbc9a"
+      },
+      {
+        "id": "art1:800599eeea4cb94c0e9e902a2e8c302a",
+        "path": "physiology/capability/kernels/tests/dataset_numeric.rs",
+        "digest": "sha256:edd4b9830e8ce828956833d752bef549932bdd9fdaeb6057dc8ef31b5d1850e6"
+      },
+      {
+        "id": "art1:80857a48845e0e52c48f5138fcb3fd57",
+        "path": "physiology/capability/kernels/src/evaluation/payload.rs",
+        "digest": "sha256:69e9e5d52472ab3d6287d5cc0fe297ce21df40fb58ca06027d952c0df6f73d76"
+      },
+      {
+        "id": "art1:80c8779b9e6210b597112c085e8b739e",
+        "path": "physiology/capability/kernels/src/regression/numeric.rs",
+        "digest": "sha256:93ff6221fd95819706130d2310d8166be770bea77dc08b37a8ff35a4edbbd940"
+      },
+      {
+        "id": "art1:810c895c61066b9b4aa32ef4cba4776a",
+        "path": "physiology/capability/kernels/src/chart/payload.rs",
+        "digest": "sha256:3f41e2e1350771ec9d2136a8c7076316e94ffb38ff676941b696eed882eff0e7"
+      },
+      {
+        "id": "art1:81ad510e34214b133d9995288004f675",
+        "path": "physiology/capability/kernels/src/quantity_kernels.rs",
+        "digest": "sha256:5d42dd95febbfb8f77f960bec9130e1e02b4353d4cb0c43211a04a6a235a4365"
+      },
+      {
+        "id": "art1:81b7ecda7552cd9b4b773b805a70bd64",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/scale-unit.json",
+        "digest": "sha256:8b08314bb25f7cdefa7bd33822835ce62e7538ee94313044130952b498148659"
+      },
+      {
+        "id": "art1:82b875aae5ff1cda065fad51ca61e8e6",
+        "path": "physiology/capability/kernels/tests/rfc7748_x25519.rs",
+        "digest": "sha256:6d0c06cf9eb06c03c4f906bdfa0cda0d07229f796f9dbde8fc56fde8b4779153"
+      },
+      {
+        "id": "art1:83c4014fcb59b28012fa3ec41bd702da",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/space-log10.json",
+        "digest": "sha256:864615f7df64ce4def87286a38899a65bc4ec05641e8db045b94011db184d525"
+      },
+      {
+        "id": "art1:846001f528b792676e82e856e2c72bc2",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/unsupported/colour-sequential.json",
+        "digest": "sha256:23b5635f72844e0f7ee5bf11da175faf3cc0e73fc54285c6bd9a0cf848a34fcf"
+      },
+      {
+        "id": "art1:8501ecd571233dd4300b1c88af8ce026",
+        "path": "physiology/capability/kernels/src/evaluation/classify.rs",
+        "digest": "sha256:ca145cc9c4c1c8e9c4162ca5249558fec512177c1a97c305a15d001c6ee5ceb0"
+      },
+      {
+        "id": "art1:8552aeb30ffd4da61ae13e49a4ca08a1",
+        "path": "physiology/capability/kernels/src/transform/common.rs",
+        "digest": "sha256:15eaf2b69b66c99966ec5e948bc4caf06e40017105ed1c0cff67720a78a6805d"
+      },
+      {
+        "id": "art1:859c88cbab7aa8f9ce8840f7bb344250",
+        "path": "physiology/capability/kernels/src/evaluation/probability.rs",
+        "digest": "sha256:847c626c86a888d17944844bc5d4088f1568590d8877719ef762c0c57a24fbfa"
+      },
+      {
+        "id": "art1:86153a2a1073384a02db0d767d2f0fe6",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c19.json",
+        "digest": "sha256:929070c7ebe620a9253a821d33e10dedd0a87c41cfb365c2d941298292c63567"
+      },
+      {
+        "id": "art1:86474216e4d62cb4004dfe9aba0a7bd3",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/unsupported/colour-categorical.json",
+        "digest": "sha256:c764fc82dbf143c5109dcc5f14902d8b399113cc89178785b85743ad99de79d5"
+      },
+      {
+        "id": "art1:86d3d6806572be08ada6f4513d99ee9f",
+        "path": "physiology/capability/kernels/tests/regression_payload.rs",
+        "digest": "sha256:29f182d973d0d87bb9b356bfe6945218f0935dd61d114eb60fd4c0e8c340ad92"
+      },
+      {
+        "id": "art1:874dc57426bfd4b7e378915a09817bc9",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/bars-negative.json",
+        "digest": "sha256:30a2447a47c77734b6e82cc489f59a78592ac4a0bcc1da6011e0d5ff396eb950"
+      },
+      {
+        "id": "art1:87b11fea1f9070cf333c73c45988c9a1",
+        "path": "physiology/capability/kernels/tests/quantity_kernels.rs",
+        "digest": "sha256:d27720b9f3bf3e479dffd6fc94086d338b70704bbb07b640e704bac27c7e0351"
+      },
+      {
+        "id": "art1:87c7368943bba212dda3a0b00a119929",
+        "path": "physiology/capability/kernels/src/optimization/simplex.rs",
+        "digest": "sha256:4514860aa2986c2be0bf3cd8e75821bdefd51cf19a688ba78a4f2775ef011eb1"
+      },
+      {
+        "id": "art1:8854dee043935f41199592ccee04c4ba",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c29.json",
+        "digest": "sha256:10faa448a96a950206681bbe3c1c4866f27af22839119d6116f098fdae915652"
+      },
+      {
+        "id": "art1:8911f353c03183d743452e5db5cd797e",
+        "path": "physiology/capability/kernels/src/evaluation/regress.rs",
+        "digest": "sha256:71a8e69ff0c292f4e0a62c4367486ad64ad917087fde0c424033be9a5b7655c7"
+      },
+      {
+        "id": "art1:8a5f69c8c0357eae7b4acc8d537ca0d8",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/rule-line-band-axis.json",
+        "digest": "sha256:d0688e2f0261758a0ff635a6713603c1d24dfa25c881f683e1e6f544d4b44655"
+      },
+      {
+        "id": "art1:8a79ab4295a01dc4a9d8de3ae79e7c73",
+        "path": "physiology/capability/kernels/tests/statistics_relations.rs",
+        "digest": "sha256:6186d8033850a65b37b04fce5da32b10e0c5d65561ae120d16fb3fea4e4483e5"
+      },
+      {
+        "id": "art1:8ad878f6a070a768ac04746173145622",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_synthetic.rs",
+        "digest": "sha256:3658128656b07b0415b12e51cbcef9b03e40787d1772f611a59be79c0f77a2d3"
+      },
+      {
+        "id": "art1:8b80a8452b77e1fa55ef1dc1c18215b1",
+        "path": "physiology/capability/kernels/src/evaluation/answer.rs",
+        "digest": "sha256:07952d1d240764d481bcaf98f672598695ec35dbe9bf659bea0410a5c63779f2"
+      },
+      {
+        "id": "art1:8bdfb827290a9986dd4fd57604f6c810",
+        "path": "physiology/capability/kernels/src/ct.rs",
+        "digest": "sha256:4fa7c4220dbc3e6d875f610f4610f05a2cbe726e14562fe073532636ec45b871"
+      },
+      {
+        "id": "art1:8c8def1cbd486c846671a30999f2e80e",
+        "path": "physiology/capability/kernels/tests/spec_common/universal.rs",
+        "digest": "sha256:50c1ea204600df4d1b777d8308e3a8e56b2af82a2e8c3f0a79094e9ae38a4fc4"
+      },
+      {
+        "id": "art1:8ce4de63d2ee547d5da2a21e3260d27c",
+        "path": "physiology/capability/kernels/src/pipeline/catalogue.rs",
+        "digest": "sha256:148be80e086464059f6f63f8081448d7ae9b8cb9ceffb46cf93a703ecb306b5b"
+      },
+      {
+        "id": "art1:8cf4ddd5954c0ab0b389a94996cd128b",
+        "path": "physiology/capability/kernels/src/descriptive/blend.rs",
+        "digest": "sha256:0cbe90adf6f0d75222fbaf36e4486d7fe6b86245dc2216f328bdb8adb1a84f22"
+      },
+      {
+        "id": "art1:8d3abd4e69519d3ea88bbc46493c6976",
+        "path": "physiology/capability/kernels/src/chart/catalogue.rs",
+        "digest": "sha256:208199962ac06279648f4a33ed76904ad74beff5d83d785e243286c6ae70d766"
+      },
+      {
+        "id": "art1:8d615c032faa95ab585556b99486f7a3",
+        "path": "physiology/capability/kernels/src/chart/encoding.rs",
+        "digest": "sha256:7d81648f88feddb9d381adb4147f7e22fe3d6c0da43ddf78e421383db8957885"
+      },
+      {
+        "id": "art1:8d8221ae9052474ae3bff95b753acb0a",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c24.json",
+        "digest": "sha256:bde023a2c8a24ed57420b04e77cdb779c905bce10615265308b4b3361734e86c"
+      },
+      {
+        "id": "art1:8da8ca75fe4b75becd96ec2f6468a06b",
+        "path": "physiology/capability/kernels/src/chart/decimal.rs",
+        "digest": "sha256:a816498d64f0d19e8e22c5041176f376d9a845be175335af5abc1d23db26e34b"
+      },
+      {
+        "id": "art1:8e2f5907bcb92071773408baadc73ddb",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-comparison3.json",
+        "digest": "sha256:1073ae8174e2b59d5ea9ac1e504464c4d55b3b00bb89fb6205bbabb767c16fc6"
+      },
+      {
+        "id": "art1:8e49d5bfc034ccb963efddb2f31c6da8",
+        "path": "physiology/capability/kernels/tests/lanec4_spec_bookkeeping.rs",
+        "digest": "sha256:d2f8aa9fb90634d9e052faf97994e6c0d20ec0845f530a30fd59d4fb5a98b02e"
+      },
+      {
+        "id": "art1:8ef62552e9295bda8bb709f4018f0dfd",
+        "path": "physiology/capability/kernels/src/bignum.rs",
+        "digest": "sha256:f1ee69860fe8b735c2d3498ef74e370104678a58bc48bb15bd23369f9880b359"
+      },
+      {
+        "id": "art1:8f59e2bd7198aafe67c5a6e0f16b1e38",
+        "path": "physiology/capability/kernels/tests/optimization_scheduling.rs",
+        "digest": "sha256:fb201aaff361324fa0684066f2f5678da2baed92d99f0f461d39ad8c062ab908"
+      },
+      {
+        "id": "art1:8f9fd0c547e5159cd7d68739a788d437",
+        "path": "physiology/capability/kernels/tests/dataset_cases.rs",
+        "digest": "sha256:be8f489f9eb85b779672fa69ca041e8dc006792b0b739a592ade4c5d569b7e31"
+      },
+      {
+        "id": "art1:9022f341f69075b31d55c5248be1d2a1",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/scatter.json",
+        "digest": "sha256:206b6a46ce57b22d65834215f2485cb25a72d7ad4da662439e65a700c711acd2"
+      },
+      {
+        "id": "art1:90fddf461207cc5dfe293d87201e737b",
+        "path": "physiology/capability/kernels/src/statistics/moments.rs",
+        "digest": "sha256:d2ed1728f32ceac0f9e4dbf99c218f9c60f61f35fab1656d79777016b04e0ce3"
+      },
+      {
+        "id": "art1:9154b0841403232e939460b8eafea59d",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/estimate-uncertainty.json",
+        "digest": "sha256:b4743d05106fb1b10b4062481f06614d64460cee6083a615b4b4ec8d673ee745"
+      },
+      {
+        "id": "art1:91e51e142781c1584b636df26399209f",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c26.json",
+        "digest": "sha256:aa0e1e62363a06898bf0151bea0034ba47242cf051ceb6563d9a14060e3e8086"
+      },
+      {
+        "id": "art1:91fb474ce05ee6ce68bbd10d3b81c3ba",
+        "path": "physiology/capability/kernels/src/evaluation/temporal.rs",
+        "digest": "sha256:0e694b3c4850c94351cbb4b5a34706ced94f8803328d767bda97c09dae9579a3"
+      },
+      {
+        "id": "art1:9225b50fff43abdb04bec0c0dd153eef",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c14.json",
+        "digest": "sha256:c48d0060f3c62182a1099d032a6d8ab97c883a90fd99a82bc4580cfe7b2e95bd"
+      },
+      {
+        "id": "art1:9306b24183d5731379573432f652b424",
+        "path": "physiology/capability/kernels/tests/transform_payload.rs",
+        "digest": "sha256:0f0a9953cd4e1f8537530e130b435d837546398dd531c124ac06df89f44d4eb2"
+      },
+      {
+        "id": "art1:93af3184c20e07c5eddeeffa3e618b6d",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c31.json",
+        "digest": "sha256:c780852eab4fd53abf63c52a98905dd73522753e50919585a72a31d01e36844d"
+      },
+      {
+        "id": "art1:9415852a237d61c6534b54168913be64",
+        "path": "physiology/capability/kernels/src/descriptive/catalogue.rs",
+        "digest": "sha256:9b12e3b087a7f241d1e2da70cd81d269f1109af26bf21ea180e65e9470bd6945"
+      },
+      {
+        "id": "art1:94c98e8e258eb585b05f620bb39831bf",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/line-estimates.json",
+        "digest": "sha256:13231c2e022b5881d2e2b8a0bf49f3fd4c653ccff42bdf3541299a26e0ff95c9"
+      },
+      {
+        "id": "art1:94d416d142e657ae6f6834b183fba640",
+        "path": "physiology/capability/kernels/tests/legacy_functions_parity.rs",
+        "digest": "sha256:c6cd37cc8b6ed85c29ddf63f3db7eea14eaf9a8e788fc76c8ddad25a259bc2ba"
+      },
+      {
+        "id": "art1:9547ebe437b7c43c55544fd9c898d138",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/awkward-text.json",
+        "digest": "sha256:839f1148bb8d9d7f9bdb1fbc5bb07b30688a364e8307a2f8526946009a6e3915"
+      },
+      {
+        "id": "art1:96e85f02397effbc906460a3e2550815",
+        "path": "physiology/capability/kernels/src/key_envelope.rs",
+        "digest": "sha256:5b84cf03390c650c4317aa4445f1f84a84bb88017dcbadf4522501ae311018b8"
+      },
+      {
+        "id": "art1:96e8e3f3cec31bbac39f01af94c9bb2a",
+        "path": "physiology/capability/kernels/tests/chart_honesty.rs",
+        "digest": "sha256:10a73d98b33a890b62a8041cf3ca0534e252869c93e164b2f325edfb81738dd6"
+      },
+      {
+        "id": "art1:96ef427ec828d5670c45193c4bc2bee9",
+        "path": "physiology/capability/kernels/src/optimization/payload.rs",
+        "digest": "sha256:49e9fd9ae46b26249dfaf2c974e41ca22b2a19b0e1c83085454297140605a093"
+      },
+      {
+        "id": "art1:972a216bb948b1534749a123783e1772",
+        "path": "physiology/capability/kernels/tests/lanec4_spec_processors.rs",
+        "digest": "sha256:84f4d1d5ed7846b0a49234cd505f4b1cb938bc1c122d4f01461af9626e58b18b"
+      },
+      {
+        "id": "art1:9761738e61cf5d5a5e0ccf0d1d7d656a",
+        "path": "physiology/capability/kernels/tests/regression_cases.rs",
+        "digest": "sha256:4dc336b852349a0a4fdab825a796a9bbb11ebc9fd711e57dfcaec5023138a082"
+      },
+      {
+        "id": "art1:98e2179a03afc4c6c4c154b2da37b4f0",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_shamir.rs",
+        "digest": "sha256:76436602ef92cb0920a2cba64ed6456e84043d99e8e5afc5041a663e99c8e28b"
+      },
+      {
+        "id": "art1:998559b9de0a2f4c087132876b63dfd5",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c38.json",
+        "digest": "sha256:eb8d32795506eda2ca71e7e6c11a49d7e345aa1b679cae18d86148257a4aa1a2"
+      },
+      {
+        "id": "art1:99c50c3831dc53747b91bbbb781f6e77",
+        "path": "physiology/capability/kernels/tests/statistics_payload.rs",
+        "digest": "sha256:3d40d9be256d550df5e32079d39d2b98dfe46b396c3d19532c9723b7e9d11751"
+      },
+      {
+        "id": "art1:99f2a36154840b2acf3d55bcb999768c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/uncertainty-n-one.json",
+        "digest": "sha256:81ca14be82a595570e4684af7b0b38821689375c7e64c36cc23dcb769d168275"
+      },
+      {
+        "id": "art1:9a5946c5bedac914109e4dbda65dff26",
+        "path": "physiology/capability/kernels/src/statistics/result.rs",
+        "digest": "sha256:c240d12d0148b2e4b108d3bc1413ed607b71dd452cee7fe799887532094ccd69"
+      },
+      {
+        "id": "art1:9a6848b1cffce674814c9d3ee0a8e95c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c20.json",
+        "digest": "sha256:57bb90f0ae718fdc8b5d7f56911ab6dcaa1638abb7894609b969270e019d4a15"
+      },
+      {
+        "id": "art1:9a97de922f334b881503458772ea5762",
+        "path": "physiology/capability/kernels/src/speculative_schedule.rs",
+        "digest": "sha256:40cc2b74ad5ba501671e079c42321259f9a9a367043d95955e4f6320fc4c08e8"
+      },
+      {
+        "id": "art1:9ab3db5d70237e9af401358d36c709b4",
+        "path": "physiology/capability/kernels/tests/descriptive_support/mod.rs",
+        "digest": "sha256:36e86fe297af34ccbd1c00fa42c6de415eee0df681f7c458dfc367c01b966bec"
+      },
+      {
+        "id": "art1:9b2723404618b6a59807951a2f53a3b8",
+        "path": "physiology/capability/kernels/tests/optimization_select.rs",
+        "digest": "sha256:06ef9c711d312c748be6ed183f2bed755167bafb2059c79dd61a5c9108e6ce79"
+      },
+      {
+        "id": "art1:9b690b9fd61796ff92736247d46c474c",
+        "path": "physiology/capability/kernels/src/chart/unit.rs",
+        "digest": "sha256:ada5c8f80bd8da79c66bddb81b05cacfdb76f34223d777ecc82e85baabd06019"
+      },
+      {
+        "id": "art1:9b6e315e5abb1634d86b1cb1b6e8964a",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/band-excludes-value.json",
+        "digest": "sha256:fbbc0da40f54f20bce3642f7af0b8b4436393113df793eb14eb71e368a123ce2"
+      },
+      {
+        "id": "art1:9c270c0a6ec42eb08297be83ee3cc844",
+        "path": "physiology/capability/kernels/tests/evaluation_splits.rs",
+        "digest": "sha256:6d0ff63f77fedf72fdaee98286c58e286a96df2bd688fb0a5783d2c110eb02fc"
+      },
+      {
+        "id": "art1:9c47d172714bca83d8fc13c526f4e05e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c15.json",
+        "digest": "sha256:89802ceb9b959dca43c51db46590659f3956e88eefbc7d95931b9211bd456535"
+      },
+      {
+        "id": "art1:9ce46fafab792dc0b979e94b7327d548",
+        "path": "physiology/capability/kernels/src/x25519.rs",
+        "digest": "sha256:0b47ff7dcc486d4218cb373a613e10ef3a45074e1fa157effcfaa4b7d7a56b5b"
+      },
+      {
+        "id": "art1:9d7c498575c6642f9e510b45800e5bb2",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt2-module.json",
+        "digest": "sha256:6c265f0459d3dfd226dc12f4724ad0d4f423a96390a7f50fab36494fbea517c0"
+      },
+      {
+        "id": "art1:9d7eac7b6c9af202a818a15e48340907",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/baseline-true-zero.json",
+        "digest": "sha256:c93b38474f030f5c33a626e9a0927ba9e50fb33486ce3b8498d9d6b2624325cb"
+      },
+      {
+        "id": "art1:9e5d6bdca49965cc6a9c610fa21bbfd7",
+        "path": "physiology/capability/kernels/tests/myelion_spec_support/mod.rs",
+        "digest": "sha256:b99754c438fe8e3c95360076252cb47c7350ff261d143e43f3f71e591996f010"
+      },
+      {
+        "id": "art1:9ee9971fbb4a50d4249dfae1a267da55",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/rules-both-axes.json",
+        "digest": "sha256:5cb5f42dd8e99160cd02905268ed05479d2d848ebc756f2bf741fbbd90ee7050"
+      },
+      {
+        "id": "art1:9f55a45d637d2a8cff646db557d7060f",
+        "path": "physiology/capability/kernels/src/regression/result.rs",
+        "digest": "sha256:3970dd9e4e961e9289aeb7de863f48a306bddd2394c5df59ebc2f2ceff69b51f"
+      },
+      {
+        "id": "art1:a1b89ff5d7a716c504ad296995bf2109",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/lineage-missing.json",
+        "digest": "sha256:b401381024992ffd9d0b57194a7284fed20e2e2477322b8cb7740b7a1c1f611b"
+      },
+      {
+        "id": "art1:a2634c37317ed62906f31e97d6d1a6d9",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c16.json",
+        "digest": "sha256:534731adc4c11af18938574555bc53c757d7699fda8d3d5cbdeb9d67cd0f97a0"
+      },
+      {
+        "id": "art1:a28c5a0b84436c9d03b5d4f591f11b0a",
+        "path": "physiology/capability/kernels/tests/transform_select.rs",
+        "digest": "sha256:54b8be6843bff2d2ce8e8aa8f165c806295ee9dbd1a17bbfddff888c6c1e5a71"
+      },
+      {
+        "id": "art1:a2b4ac4d6505d6f5cb45994f24fde746",
+        "path": "physiology/capability/kernels/tests/softmax_migration_attention.rs",
+        "digest": "sha256:1fee8a781c7c27a0b2c5ec86b21a1fb6a4a90b8b4191273f47fdb94a1e156a60"
+      },
+      {
+        "id": "art1:a2ddce8e0c3f9b57a6752291bf75065b",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/claim-contradicted.json",
+        "digest": "sha256:24a58bfde51789105fae65328a2937eeed6eeadeab9ca6d8dae322c551865182"
+      },
+      {
+        "id": "art1:a36134b4468871fee88cf289e73a481d",
+        "path": "physiology/capability/kernels/tests/chart_payload.rs",
+        "digest": "sha256:42643252b7897994dcae4dce964aab34ea527166923026f83d268a26ad28128b"
+      },
+      {
+        "id": "art1:a41ac093f5492a4eeb1f143e5d257227",
+        "path": "physiology/capability/kernels/tests/transform_numeric.rs",
+        "digest": "sha256:3953afc8571504ff6ca34327f1690c8ce412846d16a4464dcbfc78d013eedf8d"
+      },
+      {
+        "id": "art1:a44deff546862ede3acd74aa8edead78",
+        "path": "physiology/capability/kernels/tests/transform_support/mod.rs",
+        "digest": "sha256:9b7c4b368826301b1f54e67379be61e9eaa3c05d3e36734c92a24b596a74d9dc"
+      },
+      {
+        "id": "art1:a454f3ee2551c5fb1ce1a656848d76f8",
+        "path": "physiology/capability/kernels/tests/ngram_corpus_random.rs",
+        "digest": "sha256:6676ef320f1a7c694c105c5f8c3435e37be965c39568fdfe56390f17540364d4"
+      },
+      {
+        "id": "art1:a47f3b9b382066b867b7eb46fd4f4567",
+        "path": "physiology/capability/kernels/src/suffix_automaton.rs",
+        "digest": "sha256:ef4cffe584522fd77588c1ea30d133e201cca005c763ab91b6f65d821cc3c33a"
+      },
+      {
+        "id": "art1:a50a47b8d979cca4f6d3d2a585662eaf",
+        "path": "physiology/capability/kernels/tests/blake3_vectors.rs",
+        "digest": "sha256:d6a9f043300303e501547776525621826427563d2161d20f5c0e230bd74ce0b6"
+      },
+      {
+        "id": "art1:a575f4879497632ef75775fdd58d5ac9",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c00.json",
+        "digest": "sha256:dcd49942da70d0884164fb254bdfb88956c7f82705bff2d38cfbdae51d73e887"
+      },
+      {
+        "id": "art1:a5df07b8514f90a850894a4ee7adf91f",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_transit.rs",
+        "digest": "sha256:a021a75f69f72240ae7d1143f3de2ecfea8131013f77b028cb2a0bc455428ff8"
+      },
+      {
+        "id": "art1:a60fc982b4baa8105724f6afa7f37f5e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/estimate-not-available.json",
+        "digest": "sha256:594d10777fdb292c7988d0629defb09c3ba849d0187c9d4ad42f397da1d294f8"
+      },
+      {
+        "id": "art1:a69f1123f786ee07d480913f60f6455f",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/multiplier-ticks.json",
+        "digest": "sha256:bf0c148347cc160610a06ed845e8effd10b43f57f9d4dcab3201f29f48597b4f"
+      },
+      {
+        "id": "art1:a766f210c48838c6083074a81cd3342c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/resampling-seed.json",
+        "digest": "sha256:1e6207b0079586f9f053910bbc1729610c82ce69249ceade842014782e7bcb57"
+      },
+      {
+        "id": "art1:a7ab92606872fe0b9538d674257783cf",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-comparison.json",
+        "digest": "sha256:2b5a6cf6849785b3e3739f2a6cc5c95b0db52bd7cf20a3502821dc036e429968"
+      },
+      {
+        "id": "art1:a7bc8914783c9bb2c996874988ca8275",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_ngram.rs",
+        "digest": "sha256:0414799a726d7c741328413a33a4a38b60f3211718beb55f841b3c12d091121a"
+      },
+      {
+        "id": "art1:a881793bc47534bf863223abf66505a4",
+        "path": "physiology/capability/kernels/src/transform/encode.rs",
+        "digest": "sha256:261163d5f4385ba3536be4f32334a5bcfd22071bc1b0eeab2deed5c9f2a6a279"
+      },
+      {
+        "id": "art1:a882ac97fa04721a052ad38dba57fcca",
+        "path": "physiology/capability/kernels/src/transform/impute.rs",
+        "digest": "sha256:5730c66435882852042fb667811b781e048f9ce0d6392e42153c7c4ba8a17bdb"
+      },
+      {
+        "id": "art1:a8dcf278c680e218b7fdda838918af78",
+        "path": "physiology/capability/kernels/src/speculative_synthetic.rs",
+        "digest": "sha256:f1c6d64ed33dd777df9ee287d9483ccce1414a9ea9ad2e40d411b80a64744ab2"
+      },
+      {
+        "id": "art1:aa76468b5c6f9063ec896a8b315a89cb",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c02.json",
+        "digest": "sha256:ec66751b6592c99b28c78d907d5599062cf9927cda40c71dceb7a8e817cb5f49"
+      },
+      {
+        "id": "art1:ab90a51c84f29b05cdc96b746f55aaf3",
+        "path": "physiology/capability/kernels/src/regression/mod.rs",
+        "digest": "sha256:1b4958a6dca747c99e550788e1b877cb09ff4d596549dd0e6cba32c668a2891c"
+      },
+      {
+        "id": "art1:ad19cc71eb0c57b8710e7e05444bfa91",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c39.json",
+        "digest": "sha256:73b19b12f089aef92be930ec0a74d01c7536ac731ea56e3458c5462dc5182e75"
+      },
+      {
+        "id": "art1:ad2484240be00c2621ded5a4f54531a9",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c17.json",
+        "digest": "sha256:a5a5c941187081885f38db4de8e5aa2b74e30974a7e31f9894c4598c6cd57abb"
+      },
+      {
+        "id": "art1:ad2b24e0cb28e3b38d3695a2f34ec7ba",
+        "path": "physiology/capability/kernels/src/dataset/payload.rs",
+        "digest": "sha256:f7f8d85b4cf66b1e8a91bb36dfe03260edd3bbbb48718ba76941846cc712a3e8"
+      },
+      {
+        "id": "art1:ad6763bbddf91754e96e540956141715",
+        "path": "physiology/capability/kernels/src/pipeline/mod.rs",
+        "digest": "sha256:dfe2bccb978b0612aacc9ce1505783ae0e2ae04756b0f75f97b2434691e06ad4"
+      },
+      {
+        "id": "art1:ae38176721e5acf895493d9921e230ad",
+        "path": "physiology/capability/kernels/tests/regression_heldout_relations.rs",
+        "digest": "sha256:fe6bbff46c3c276b6278c0e8a8f21bf1576db60db780406a3b1fa2a1370b7ba4"
+      },
+      {
+        "id": "art1:ae92b41259f34e4f0766ab7f6a4d992b",
+        "path": "physiology/capability/kernels/src/chacha20.rs",
+        "digest": "sha256:c92160f618cb60fe7e36d7c1baa5657b299fff41fa0274f34e9bbf0c60b782c7"
+      },
+      {
+        "id": "art1:b18ebfa5d63008c04c9ad6fe80811fc9",
+        "path": "physiology/capability/kernels/src/evaluation/split.rs",
+        "digest": "sha256:22371aa77f0c51201798e8736e6e9a996271b171a85f75d2c830be68dd0c62a8"
+      },
+      {
+        "id": "art1:b1916af989a954db0714cd6122653f54",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c36.json",
+        "digest": "sha256:c114cec877329e5e1f5e7cd5c9208b900f4eca58ea057bced76101b174d06a76"
+      },
+      {
+        "id": "art1:b197467ee750f55bd6005f6069b4e053",
+        "path": "physiology/capability/kernels/tests/regression_alpha_reader.rs",
+        "digest": "sha256:251a9d914f44de68e7125c31cfdd2c04a4c50966ff6e65648199ea5eb33ae813"
+      },
+      {
+        "id": "art1:b1b7b3a770d39e2260f30894e9b2ebbd",
+        "path": "physiology/capability/kernels/src/chart/lineage.rs",
+        "digest": "sha256:f7024b9492e30d0c5e12a2cb819ecbc7132bb04a66981069baf72696c2fae9cc"
+      },
+      {
+        "id": "art1:b2201ecc7e22ae7d9c826b2a3e0c19c3",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/log-both-axes.json",
+        "digest": "sha256:69103045dcc6e9eed2f3f0320b2920c7dfa5f46e6b5652bd53c61b4c959ec438"
+      },
+      {
+        "id": "art1:b25764d138922f891c755d2ffbef3477",
+        "path": "physiology/capability/kernels/src/regression/fit.rs",
+        "digest": "sha256:4bea2dd756d8245a181c0c666fe0010ca5534daf14c56283c02cc626e73f24c5"
+      },
+      {
+        "id": "art1:b2f4910a69507590d2f7fd60fc8eb66e",
+        "path": "physiology/capability/kernels/src/depth_controller.rs",
+        "digest": "sha256:d7828f5aec36b1519fd99f509830a682bd691d0f7947bec38eee1dd8b6ceed0b"
+      },
+      {
+        "id": "art1:b55510299f05d5075044734f0c9fcd4e",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/histogram.json",
+        "digest": "sha256:cfb29b03fdc11e1f35cc14e360e5d916248e80cfb0e3ed42c046cd2dae23ee62"
+      },
+      {
+        "id": "art1:b600be7c2a7eb825d9c4a07b25fd707a",
+        "path": "physiology/capability/kernels/src/regression/heldout_payload.rs",
+        "digest": "sha256:6be51d48dbfe6ab61ae29405a44b3e16fcd22649d628c04f84c98858c666a382"
+      },
+      {
+        "id": "art1:b62e54a5c1981dedf8ef5e1270e68c58",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c01.json",
+        "digest": "sha256:f765a78e50c2b3e2ea0ece0f9275c3e85708b71910c80be662c1c3297edaae04"
+      },
+      {
+        "id": "art1:b63f2f560824611f969e12e625b41713",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/scatter-excluded.json",
+        "digest": "sha256:5c0d6e920c3e060dd274462f615a1c1cda32d402cfb345cae18b55b15fb366d3"
+      },
+      {
+        "id": "art1:b6f6716d09d2e71faafa87f0ff7e0764",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/ticks.json",
+        "digest": "sha256:5780957a652b2ed53c62685d1873a3479cbaa9640985e58ab7cd43309a54f99a"
+      },
+      {
+        "id": "art1:b703ea1ebfdaedc923a4ddc2feb49dbf",
+        "path": "physiology/capability/kernels/tests/envelope_master_group.rs",
+        "digest": "sha256:64fbbf931adb310de0db1729d5b51198feecc47763e91b4a4b48cdde1ba68408"
+      },
+      {
+        "id": "art1:b712c3a52509a5742fb345e5a19a4c30",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/log-powers.json",
+        "digest": "sha256:43ea589b37b49a10b93e0e63557c2c190b233a9edf8356b02d4b05894f323119"
+      },
+      {
+        "id": "art1:b93d41329232d057f2c1aea050dec701",
+        "path": "physiology/capability/kernels/tests/rfc7748_field25519.rs",
+        "digest": "sha256:8b46ca699e8c6aaa43e797f876531e077528a3735e2ac621e3e2cc55763e1620"
+      },
+      {
+        "id": "art1:ba9c5c28a3d05121d11f6d0f66bc100c",
+        "path": "physiology/capability/kernels/tests/optimization_payload.rs",
+        "digest": "sha256:68b57de5e72084db881f253b68f99c8cd1d98c8722341888f4553bd30cb5ab7a"
+      },
+      {
+        "id": "art1:baec5f0a6266bec330f653e35125efca",
+        "path": "physiology/capability/kernels/tests/spec_rollback_random.rs",
+        "digest": "sha256:dccbf53e9924115c732844193dd48567a32a33bf9e2da4daeadc15977320a01d"
+      },
+      {
+        "id": "art1:bb57546c9e7a337e5facb18a3f216c30",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c09.json",
+        "digest": "sha256:4ee1906dc2ca612ca0d256c20d8d8ef08aba45b3a44ceb2e84e3c1f6d23348aa"
+      },
+      {
+        "id": "art1:bc6bc62e6091da6c2d1d6ccc16336664",
+        "path": "physiology/capability/kernels/src/optimization/inventory.rs",
+        "digest": "sha256:a3865134d3e5637ebb9187f3d885a8f6fa314d9e6389400085d2db069e0dc5b0"
+      },
+      {
+        "id": "art1:bd2fd4dc6291615ec36215feea978051",
+        "path": "physiology/capability/kernels/tests/regression_heldout_replay.rs",
+        "digest": "sha256:6b49d3f2e8966e63dde4e3928b2a363decad29d236a19db26575790c9425f793"
+      },
+      {
+        "id": "art1:bf934a1667557e470e47dc0d627fbb4c",
+        "path": "physiology/capability/kernels/src/regression/baseline.rs",
+        "digest": "sha256:0dad9ce8aa03a66d34ba02d90f45694f1fa7a8cd3233b19a47c74c6364846369"
+      },
+      {
+        "id": "art1:c029922c741ce6549f8ba4102dc4e20c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/histogram.json",
+        "digest": "sha256:a8d412fa04c5dc7ce9c01c8721d0b4924d13921e0237745e67a377652ee68f0a"
+      },
+      {
+        "id": "art1:c0bdacdc97d317a68afa463455538a37",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c33.json",
+        "digest": "sha256:c65fc001555c727355eb6dd59673fc21ed9386e8bde23112160a5346b2b36143"
+      },
+      {
+        "id": "art1:c0eb8e20ca308da64463e9cff90ab6c7",
+        "path": "physiology/capability/kernels/src/chart/spec.rs",
+        "digest": "sha256:98e2dffddfbbe4bd5a7381544c21ecf4306db27ac94023ff990654e381a5377c"
+      },
+      {
+        "id": "art1:c10206d84f9dbc213b10ac9c341a071a",
+        "path": "physiology/capability/kernels/src/descriptive/summary.rs",
+        "digest": "sha256:bc50774cdf53a5f66fcc76d7479750fbda1e17a84a85342e65092cfba66d80f1"
+      },
+      {
+        "id": "art1:c2f1121333b88b0f5ad06ac5a1617f57",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/gaps-all-reasons.json",
+        "digest": "sha256:34c9b426b53a0bf18140bb776a2aed59a01bf8fee8fcdfba9c3c3536cc85be24"
+      },
+      {
+        "id": "art1:c3a216a932064342546ecc4fbeab579b",
+        "path": "physiology/capability/kernels/tests/chart_layers.rs",
+        "digest": "sha256:cdc534b626940aaef83c75642cd099d665befab191f9217bc65ff9ef93112e9f"
+      },
+      {
+        "id": "art1:c3fedaa6ce87210e058151d7241f196b",
+        "path": "physiology/capability/kernels/tests/absorb_security_bignum_montgomery_modexp.rs",
+        "digest": "sha256:ac2dd3ee64b006c17bcec5aa19cdb76c3200a5b47a92f081122c741ee28c84ae"
+      },
+      {
+        "id": "art1:c4eb87492e484a1eb82de166fea41bcf",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/bars.json",
+        "digest": "sha256:a953dc659f5885305276ab7891ca30bb842d20fb17db4407494a9ae03e4f502b"
+      },
+      {
+        "id": "art1:c51c2b2b3ba36b1e5210763685ce5565",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/title-axis-blank.json",
+        "digest": "sha256:f089b37cd93244834310366f004457a506bd1b2240b499f60899203a9d38d92a"
+      },
+      {
+        "id": "art1:c52c50d6d5e608eaa563d4337ff89649",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c10.json",
+        "digest": "sha256:b059a1da0549c09202fdbe21465316e8ed211cf600fa068b4e33a204e184a455"
+      },
+      {
+        "id": "art1:c54d870727fcad0f0fecd822c301b05c",
+        "path": "physiology/capability/kernels/tests/rfc8439_poly1305.rs",
+        "digest": "sha256:a37a95cb2ebb2267542a09ccdb6aa50d355af1c1494f335192409ed30388463a"
+      },
+      {
+        "id": "art1:c772553cac47ae48cdb33bec1056e5be",
+        "path": "physiology/capability/kernels/tests/absorb_inference_speculative_ngram_prompt_lookup.rs",
+        "digest": "sha256:895deca40e4d9b57082d04a2068a0cfe6abd3ababbf6ab1c304da795de3c0dbf"
+      },
+      {
+        "id": "art1:c823252ae922504bb6b549ff9b272bee",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c21.json",
+        "digest": "sha256:d41c35a5fb7ddff9fd30fa75287606397014777fc4b1fd0419fe913d09d0834b"
+      },
+      {
+        "id": "art1:c85ca1443e8c47d546437d06137cd1a2",
+        "path": "physiology/capability/kernels/tests/dataset_relations.rs",
+        "digest": "sha256:286b02d91f22540b92a0edf0fc1e9f0bcd1816e0e1b08d2460b5ee21e286d4f1"
+      },
+      {
+        "id": "art1:c8e6b7e5c2019cdf488d59e62e73e0bf",
+        "path": "physiology/capability/kernels/Cargo.toml",
+        "digest": "sha256:4fa42b764f32658905d0996c8e82f11713e657baa403c43c70de2ce31d6fac08"
+      },
+      {
+        "id": "art1:c9085994037b38136c3a86c2016440a0",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/scatter-observed-sd.json",
+        "digest": "sha256:23eb1a3c14cbd1f415fc7d800ab982791c996cb480d413c67924d64f90568d9c"
+      },
+      {
+        "id": "art1:c9e967f1ec04c55fa331c1eec5b522d8",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/lineage-step.json",
+        "digest": "sha256:6455568f914ecd3240626db26f301abe4898a27604e8589699134a7f19b59411"
+      },
+      {
+        "id": "art1:c9fe77c9bcb36502292967b1e796fb07",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_support/mod.rs",
+        "digest": "sha256:f4609cf36f3a4564c69d2bd7acbf34b856d8f5a31f3109306bb7966ebe7aa781"
+      },
+      {
+        "id": "art1:cb6be7a969d819d874d46a118c3bd106",
+        "path": "physiology/capability/kernels/tests/regression_heldout_cases.rs",
+        "digest": "sha256:c23fa7b7611de875a4727138ae805021652dfb8db1f36601dfda9896b3ef784f"
+      },
+      {
+        "id": "art1:cbb917bc7f3d2aac8edeaad1b30e14da",
+        "path": "physiology/capability/kernels/tests/regression_properties.rs",
+        "digest": "sha256:a737ba8934e848537dfded37d8d7fbd9ce464b55b30f6ddc192b39a58791ec0e"
+      },
+      {
+        "id": "art1:cc09e14c51a7affbcd27b5a0a221adff",
+        "path": "physiology/capability/kernels/src/speculative_race.rs",
+        "digest": "sha256:8e1b911c91c32b721e7e3836d33f58a808017173f38d9ff645952b24d26a68da"
+      },
+      {
+        "id": "art1:ccd27b9c38054470630e187943fd889c",
+        "path": "physiology/capability/kernels/src/blake2.rs",
+        "digest": "sha256:7f0f17e0ba9d8862b7c542ca08a15ad0706272fd03b38a5ed3c828d4d3774ae1"
+      },
+      {
+        "id": "art1:ce9cbe01c3a6110d86bccfc74d8f9380",
+        "path": "physiology/capability/kernels/tests/legacy_artifact.rs",
+        "digest": "sha256:944dd3c96680b9b6ee999e559c3aac9252e4cbedbf54685ab4bbc476c2856d8c"
+      },
+      {
+        "id": "art1:d05b19ca509570a58071f21d2a283cbf",
+        "path": "physiology/capability/kernels/src/statistics/rank.rs",
+        "digest": "sha256:3f1659c57f29b6f4473296dd682121c79a6a4c0566ae7df754b09270c2cdeb6f"
+      },
+      {
+        "id": "art1:d1764e924f560ffdc67d13944434820f",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/boxes.json",
+        "digest": "sha256:e6ab3233110f6666ec346755b78fce1d6297da0d6698ae94239c47de4aa3adcb"
+      },
+      {
+        "id": "art1:d2e13acc90de3fa38aa832fc4bfd2cc4",
+        "path": "physiology/capability/kernels/tests/lanec3_envelope_backup.rs",
+        "digest": "sha256:e71572542b1d9686e8ddd20ea9bd9e8db279d57d5e673c58e8305b59bba23640"
+      },
+      {
+        "id": "art1:d333edf4d39c96307fbf0f6076f778fd",
+        "path": "physiology/capability/kernels/tests/regression_relations.rs",
+        "digest": "sha256:8b8da6e6b3a34538dbc59c8e2007b268262169579c5262c11d45a026ec933636"
+      },
+      {
+        "id": "art1:d426cb3565255f2628467212414b1ae0",
+        "path": "physiology/capability/kernels/src/transform/numeric.rs",
+        "digest": "sha256:1abb266698e42d414d903c7bbd24b4ce489c7ab1e80a66c9506350be66683e3f"
+      },
+      {
+        "id": "art1:d43d0f0de1641d967d509074e340d36c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c28.json",
+        "digest": "sha256:12ed75e0ae8d661d509b7ac507a39d386607ead07a0afed98393d90376f7d6f0"
+      },
+      {
+        "id": "art1:d46475178ee62c6328a125767f6bfeb4",
+        "path": "physiology/capability/kernels/tests/regression_select.rs",
+        "digest": "sha256:250e40680f81380d3390c35c8b01a41c298f7091768c158accdf94ffce3bbfa3"
+      },
+      {
+        "id": "art1:d5fbca93739acbd82d7abd13e492863c",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/band.json",
+        "digest": "sha256:fdcc02f8249ec0f9472907ffcde98c725835f729f1856a116fb23d3a6e65cc31"
+      },
+      {
+        "id": "art1:d5fe6df62f84182cc4bbb86fa35cd6a7",
+        "path": "physiology/capability/kernels/tests/price_exact.rs",
+        "digest": "sha256:a2809ae72397c27093e1b226c111c14ee16d3fae3587abcbf4c430498db61416"
+      },
+      {
+        "id": "art1:d64d6e73fe9fb70cf58022a31e0ab578",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/cells/c23.json",
+        "digest": "sha256:5de76c7b0c89d9ce4df1bfb15dcf7812d52024dc1631c9c632c5d40baa932b0d"
+      },
+      {
+        "id": "art1:d69d450288d5ee955a47b4ebf5d11f12",
+        "path": "physiology/capability/kernels/tests/transform_leakage.rs",
+        "digest": "sha256:905a65cd4e394da6d4fa04ef1de8b5effe8397c20aa68cab812e0cf99bdeb13c"
+      },
+      {
+        "id": "art1:d7ecb01528bf56f80b2b789a8317e4b2",
+        "path": "physiology/capability/kernels/src/regression/qr.rs",
+        "digest": "sha256:82491b17a35988794bfd6a9a992ebcaa10f7acd98b41737230d1038b74e925f5"
+      },
+      {
+        "id": "art1:d88c74553a02eec4f471126892f04f42",
+        "path": "physiology/capability/kernels/src/aead_chacha20poly1305.rs",
+        "digest": "sha256:572728835a3200eef672f4a15cd05d8178082dbc65e28d99b972dc2b951d5dc3"
+      },
+      {
+        "id": "art1:da3220134cebbc3e4defe8b10c3d8e94",
+        "path": "physiology/capability/kernels/tests/lanec3_spec_ensemble.rs",
+        "digest": "sha256:f76e9c16b142e1db3bc95752a5071a840d7969090788ffae3f82d0b470fc5557"
+      },
+      {
+        "id": "art1:dafed8c5ef6df7e9ce978659eb44a6b5",
+        "path": "physiology/capability/kernels/tests/descriptive_blend.rs",
+        "digest": "sha256:15681d611de80d4ef8005de474c2c92020ba8123b5d30a486ee81faa909f2680"
+      },
+      {
+        "id": "art1:db06a483d48ef5a00c4dc62866c54a17",
+        "path": "physiology/capability/kernels/tests/absorb_inference_speculative_decoding.rs",
+        "digest": "sha256:db9b3926a4ac707acf6771e27f10c035d38ca1aa53287e4bbd8fe4f361c1bc92"
+      },
+      {
+        "id": "art1:dc14ab5a2b864de49d71ee8e322b04c4",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/colour-range.json",
+        "digest": "sha256:92cb7afdf17fbda92a97782087ad00188d07a9dbc89d8000ed0b8fea966a6ca1"
+      },
+      {
+        "id": "art1:dd76d9a440c9f7c20048cf8720fcfc7d",
+        "path": "physiology/capability/kernels/src/dataset/catalogue.rs",
+        "digest": "sha256:e7cd0f914e03b75d44edade86fbe317b3ba1cd47e3d6dcef19289e2e9fb5f2c0"
+      },
+      {
+        "id": "art1:dda7565cdffc5669f71dc7c0ddeee012",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/box-summary-no-observations.json",
+        "digest": "sha256:71178cc6ac1e8bb49867b1c1cda3126c9c08f28717e1f7152aea1989fdf317d6"
+      },
+      {
+        "id": "art1:ddd1e059f3fd14f8f2d7d0d45269a1dd",
+        "path": "physiology/capability/kernels/tests/statistics_properties.rs",
+        "digest": "sha256:03af896c47b1087b4ddce579bdfd2b7e6836f52bc18413a5736fe3db32762523"
+      },
+      {
+        "id": "art1:ded7ae78774b65a798a4aa91190faa8b",
+        "path": "physiology/capability/kernels/src/shamir.rs",
+        "digest": "sha256:f4a138318254c5c0a1a18b2398eaffeafcefcfef5a1e415ec743e150b1d07ebe"
+      },
+      {
+        "id": "art1:dff585ea3260d9c8bdfed965d177182a",
+        "path": "physiology/capability/kernels/tests/regression_support/mod.rs",
+        "digest": "sha256:1581f9c0365dd1f7c31bcd5e43f1c1c7c7e5c8e4dc2adc197ceeae42293fdbc3"
+      },
+      {
+        "id": "art1:e07e7bd01f32d25c3f30836331382981",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt1-report.json",
+        "digest": "sha256:4c66ef687d0c859aa5a01f197faa2e1d440128d60c3b4a9cd1b89aee4dcbc2e7"
+      },
+      {
+        "id": "art1:e080e109cc6b6623443da14f6e9f706f",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/unit-missing.json",
+        "digest": "sha256:9b84f88f78321c757bd6bdc30a78cfc707ddd35d1b1392ff0bffbe248244ddd6"
+      },
+      {
+        "id": "art1:e0eb49034d77a675c43ea612517f2f91",
+        "path": "physiology/capability/kernels/src/regression/catalogue.rs",
+        "digest": "sha256:61c1c355d7db22700c16720d19de46db6425908d703251e5830aae6dd87cbd36"
+      },
+      {
+        "id": "art1:e0f36c758d000dcbefd0fac923ee133a",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/two-series.json",
+        "digest": "sha256:8526efe872b3d58026639362ed678116454965815fc68c81e01d444d826861c3"
+      },
+      {
+        "id": "art1:e1b6afae3cb5562fbb6623fa5ab3a421",
+        "path": "physiology/capability/kernels/tests/chart_support/ticks_ref.rs",
+        "digest": "sha256:62a50b617a283715dcb0b666e6f52590554950e13863c655252b42f96cade37a"
+      },
+      {
+        "id": "art1:e322bc1ea3b3b1479a6359f8cbd88f58",
+        "path": "physiology/capability/kernels/src/lib.rs",
+        "digest": "sha256:93b4cddf96bf9ae11475539cc7d89d46aec78e2315605dd15ed9531753f67606"
+      },
+      {
+        "id": "art1:e40ea3682475b1c6b1bec8605b0b4565",
+        "path": "physiology/capability/kernels/tests/myelion_spec_prob.rs",
+        "digest": "sha256:56ff710d8efddf8da5bac651b1fadfda536c6a057bb799611c3b8b755fabbe5a"
+      },
+      {
+        "id": "art1:e4dbedcf48589a53a18fb2f61f7d77cb",
+        "path": "physiology/capability/kernels/tests/regression_heldout_select.rs",
+        "digest": "sha256:a9166c2dfe028e18ae707fada67a1623f89f02a6549c5fafa77d8321ea2db673"
+      },
+      {
+        "id": "art1:e4de0dec273850f0bd52075b9765d99d",
+        "path": "physiology/capability/kernels/tests/lanec4_spec_schedules.rs",
+        "digest": "sha256:399a3af35adc4f024cfa2d3c6ec1d273908b9873f25f1830df3cdd80f6b5580e"
+      },
+      {
+        "id": "art1:e525affa22d8a36646f8ca6222a7b640",
+        "path": "physiology/capability/kernels/src/ngram_corpus.rs",
+        "digest": "sha256:204472f60134a8ac16ec02a0eb6d1ff771fe0355cca3c2f2a977f6eca5549673"
+      },
+      {
+        "id": "art1:e611af108eb36926a69861aed1825b2f",
+        "path": "physiology/capability/kernels/tests/evaluation_payload.rs",
+        "digest": "sha256:93ce04da9250b3b77433838a1f1978784653e1e6daef3f23315bf3de825a71bb"
+      },
+      {
+        "id": "art1:e92ae285803343d4f4e8473048ae8f08",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/dual-axis.json",
+        "digest": "sha256:142f57ee92f3488a4f65786666359911d2a18985e0ae47568ed8be3b6326ef00"
+      },
+      {
+        "id": "art1:ebbed4767ca49e35f0173298dfc7d629",
+        "path": "physiology/capability/kernels/tests/rfc8439_aead.rs",
+        "digest": "sha256:21ceb8f6e17781311a548150305e66d52acb4e74ce9119814819e4f8ab7d9b86"
+      },
+      {
+        "id": "art1:ec65bff9f3e53c9f9b037583cefa7839",
+        "path": "physiology/capability/kernels/tests/chart_codec.rs",
+        "digest": "sha256:2e66bb0928e4d30e2f289ab6bb38dcb4f700b0333031f58c29ce19c2c6cbb357"
+      },
+      {
+        "id": "art1:ed7be1afa7aa053ff68f19abd0efac8e",
+        "path": "physiology/capability/kernels/src/optimization/structure.rs",
+        "digest": "sha256:8f1f85a1d541f60e4294b56ab0efced28742a73f96fcdbe40f31073e92dd58c8"
+      },
+      {
+        "id": "art1:edd829a7ec9ce00cb0cf48a7ac56e0ea",
+        "path": "physiology/capability/kernels/tests/evaluation_support/mod.rs",
+        "digest": "sha256:cdc7e7733f0cdaddd38158fc4595a44b5131f62741994d6dea84550488b2468a"
+      },
+      {
+        "id": "art1:f14335253bbbd858b7d4beef43ca75a3",
+        "path": "physiology/capability/kernels/src/descriptive/level.rs",
+        "digest": "sha256:758316262f00b67da30ce96ac66bf6a14553c92b36e8dc862c16a25a589bb31c"
+      },
+      {
+        "id": "art1:f26e99709440b3cdfce2c740e54de815",
+        "path": "physiology/capability/kernels/tests/optimization_certificates.rs",
+        "digest": "sha256:b61c57619c31d14aaf28cd8eefdf8210a010073b070217554c7e7a7e99e33817"
+      },
+      {
+        "id": "art1:f3c5cbf3f8d6f62d12c6dd72059230ad",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/chained-coverage.json",
+        "digest": "sha256:5c23fdc2d0920ce7704c0c2ff631d48c21bb3b0bde432d5f07c006cea344cca3"
+      },
+      {
+        "id": "art1:f460db8fa6fe276e33d9f7e69d007e45",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/gallery/offset-ticks.json",
+        "digest": "sha256:8e8f0be2c32f48a60cbc856ee96844c73a5a8e1f05d7b3edcbef37b86a5974a0"
+      },
+      {
+        "id": "art1:f46d6a5c7cf53fe35d75794ce917008f",
+        "path": "physiology/capability/kernels/tests/statistics_vectors.rs",
+        "digest": "sha256:981433fb10e8d9b41d6d13fe197165a91ac7bcb27561983556e37e67cd528004"
+      },
+      {
+        "id": "art1:f4704474b9c59fb6b0bda08815c18c86",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/outside-domain.json",
+        "digest": "sha256:39b3a39ebded656a2b1642d31db49fa95bb473005759e398070a80a5164408ba"
+      },
+      {
+        "id": "art1:f486858c69d191eba752cec2f0df5507",
+        "path": "physiology/capability/kernels/tests/chart_limits.rs",
+        "digest": "sha256:502f0988d0d55155244b9e17706957e379181a766ce8447a7b6eba47863a48b5"
+      },
+      {
+        "id": "art1:f5bf96128c4d6584ae8d8cce82ba6eb2",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/log-domain.json",
+        "digest": "sha256:e570033c62266b0bf6c6f429cb969e27a0c2628e1ae826e90dadcb6503e50c90"
+      },
+      {
+        "id": "art1:f5c7485be2a2e88ddf4761b544e8ed2a",
+        "path": "physiology/capability/kernels/src/regression/heldout_catalogue.rs",
+        "digest": "sha256:70eb1dcf8547c5d8129a04e1caec328c1b5329ef6ef9f1cb36c31fd88b593b93"
+      },
+      {
+        "id": "art1:f63d33dd5cd5077138001a532df64562",
+        "path": "physiology/capability/kernels/tests/evaluation_numeric.rs",
+        "digest": "sha256:219c918320b55db0775405a0369fddf4bb7b4bc659a012b273dd0ad998038e52"
+      },
+      {
+        "id": "art1:f65c8785b2ae27d1d49313d1a34d28cd",
+        "path": "physiology/capability/kernels/tests/transform_replay.rs",
+        "digest": "sha256:77a38892b55adad880b37e5029bca16d99390cc21b509d2794d29f49ba37d69e"
+      },
+      {
+        "id": "art1:f76d7502ebbca8ced5c8ac44cad69b79",
+        "path": "physiology/capability/kernels/src/poly1305.rs",
+        "digest": "sha256:dfccc12e75a1ca15d5c771172b86e0b2915352fc43010b9a9da7b30fd4f787de"
+      },
+      {
+        "id": "art1:f7883e802cc9d879a1ce1e1f672e59d8",
+        "path": "physiology/capability/kernels/tests/optimization_degenerate.rs",
+        "digest": "sha256:5b51fe523ad39546ae6ae794ff5cf4f185140fd24ebf9d2bbaf3a3d9465477ca"
+      },
+      {
+        "id": "art1:f88640ffc10853c5d1d9f75b872cdccc",
+        "path": "physiology/capability/kernels/tests/descriptive_quantile.rs",
+        "digest": "sha256:4f38429798a620259e10c7b39dde8a23d6012dd1d94d25b875cbbeec48924032"
+      },
+      {
+        "id": "art1:fa044a919ef44a4be4e43445318bda0a",
+        "path": "physiology/capability/kernels/tests/fixtures/chart-spec/refused/log-data.json",
+        "digest": "sha256:83a14cc10ce1cf09f36f5b2a136e01fb7cd6fc65066702fc0a6786882371442d"
+      },
+      {
+        "id": "art1:facc28a0e93faff657c9dc208a37af01",
+        "path": "physiology/capability/kernels/tests/fixtures/atlas-studio/sr1-attempt3-module.json",
+        "digest": "sha256:08bd874aee4ff4e7bb3dd402215bb29f9db5fbb721e5f8f3536b1ef8d4fdda10"
+      },
+      {
+        "id": "art1:fb5bb899cd48e5755fa1f3e52ab772cd",
+        "path": "physiology/capability/kernels/tests/evaluation_baseline.rs",
+        "digest": "sha256:5023906cb3373af510f77d5c3a50194ec50c85aad5275ae3a40cf07fbc4fd1b2"
+      },
+      {
+        "id": "art1:fba9f885e6793789e23c91e4c36641fa",
+        "path": "physiology/capability/kernels/src/descriptive/quantile.rs",
+        "digest": "sha256:780e57bd73fc35f23032acd8fe7a2e302643aa78e9dce65bd0a5f745c591774b"
+      },
+      {
+        "id": "art1:fca869498f1240d3c6479d1f8ff76482",
+        "path": "physiology/capability/kernels/src/evaluation/catalogue.rs",
+        "digest": "sha256:afd4c732d477f6e54284cee274c04d158cb4645a1390a9788d0fc978549ee28c"
+      },
+      {
+        "id": "art1:fcea324a187a711c2df88e2212de9980",
+        "path": "physiology/capability/kernels/src/dataset/assign.rs",
+        "digest": "sha256:b6b5e4b5351940866d8dfaf64cf23c92edd6f96751b6353a44186e13f7099807"
+      },
+      {
+        "id": "art1:fea62e45ca6fe11e111d43f11e59a07e",
+        "path": "physiology/capability/kernels/src/chart/limits.rs",
+        "digest": "sha256:fb4801afcf32c7c6a80acf4626a8d790a0f8976ecafc58924d0dc6a9e67d1779"
+      },
+      {
+        "id": "art1:fefcce7b3cba86c048c3044faceeadb3",
+        "path": "physiology/capability/kernels/tests/descriptive_relations.rs",
+        "digest": "sha256:bcedee562f2f7fefb75399e0e5436cf2409ee39869913ebcba55d04d860e7c77"
+      }
+    ],
+    "caller_owner": [
+      {
+        "id": "art1:016a4474be6a1f47bc3d07a27dff5b86",
+        "path": "phenora/codara/tests/fixtures/native_result/uc-recorded-trace.cdr",
+        "digest": "sha256:0da7f1c5108ca387c01e93c0a39c29f91dcc7324ab73ae6df90b69a65703d480"
+      },
+      {
+        "id": "art1:05cda2f6ea5849de67ff2c10cadd57c5",
+        "path": "phenora/codara/tests/e2e_chart.rs",
+        "digest": "sha256:144b116f146c1ac3e32889b6e3672adf06226f7e9557e03570e62ff659d27bd2"
+      },
+      {
+        "id": "art1:14d9bce417a1963eaf7e5573d13a4aad",
+        "path": "phenora/codara/tests/e2e_price_text.rs",
+        "digest": "sha256:609ae10fff2be6b0c01b844c47843d696dea52e6ca8a3b56b5cdc0ae52b9120e"
+      },
+      {
+        "id": "art1:1659f544aaec63ae9440dbcdcf131ea9",
+        "path": "phenora/codara/tests/e2e_catalogue_seal.rs",
+        "digest": "sha256:e2180564952b1d12938f904e7acdba2eecd1e6b0798845b589c030511aeed15e"
+      },
+      {
+        "id": "art1:16ffe86e21d644a206cee2993e4aa2a7",
+        "path": "phenora/codara/tests/e2e_price.rs",
+        "digest": "sha256:127e36a79fb507ac8cea385add530a65ad079ba9cd7f60d47d26bd2cdcbd4574"
+      },
+      {
+        "id": "art1:1b6efb49e7fc960c394f3fcbd1437b1c",
+        "path": "phenora/codara/src/lib.rs",
+        "digest": "sha256:696f81e06598bfe14fa70c718e3284e7cf0fc7eb4c8ad989014511fdf2e0f9b9"
+      },
+      {
+        "id": "art1:1e19e06c193181e966ccbeec9b4a2609",
+        "path": "phenora/codara/tests/e2e_statistics.rs",
+        "digest": "sha256:c539777dc2e7aaf2eb7fc3b76f201cf139d2e24f60113dc435707c65b66727e6"
+      },
+      {
+        "id": "art1:22f878fa8012a40fb444da26e0c3cd96",
+        "path": "phenora/codara/tests/e2e_slice.rs",
+        "digest": "sha256:3b7403e6c86caffe9c56dc6df3dc90782d1a8e334ed882cb32cb1b829f8bb7dd"
+      },
+      {
+        "id": "art1:2489ca4a42e2ac68edf8670c7f56a965",
+        "path": "phenora/codara/src/main.rs",
+        "digest": "sha256:f69c155d00d59b1f4efd5e70b817ad01441d29edc01e9a5247514850f849712a"
+      },
+      {
+        "id": "art1:2c38a2bf7ef8afcdee7155ff41686c8d",
+        "path": "phenora/codara/tests/binary.rs",
+        "digest": "sha256:54f12d212b7d0f8b7e1fb1da18b4d47994ae2587660e83730b9656f9a6fbda6a"
+      },
+      {
+        "id": "art1:2c6442d2327b08a85454e8d0d32ab09e",
+        "path": "phenora/codara/tests/e2e_regression.rs",
+        "digest": "sha256:cd62caa78039375a922f62d3dbc6718fb8819af79b5260b26e17ff370c40fd69"
+      },
+      {
+        "id": "art1:2e1a59c275365687df9e79c5306bb450",
+        "path": "phenora/codara/tests/support/mod.rs",
+        "digest": "sha256:64ffb038eadd22e6db4e0de2873d60da737e4c852f0762b0c78590e14f2846c4"
+      },
+      {
+        "id": "art1:2e89d4828d7f6a1892ced815ddc6771c",
+        "path": "phenora/codara/src/price_text_result.rs",
+        "digest": "sha256:d6b1e8c2b9201f6dc0e553603212ec3350b792946bde391ecf63d18a9a75cd4a"
+      },
+      {
+        "id": "art1:2f008f4b5a3d2c076f1ef2409e95ff62",
+        "path": "phenora/codara/tests/e2e_source_native_result.rs",
+        "digest": "sha256:3393e6aea1e51e0eddbb9255fe845bda4d9a0b5187dd91c845ad905d85aa0bb6"
+      },
+      {
+        "id": "art1:3f69b0fe165a585a4bda468461cff326",
+        "path": "phenora/codara/src/build.rs",
+        "digest": "sha256:b202467737e0d41082fc118801a3b8916e43f19dae4b29acb74effbadc6dab02"
+      },
+      {
+        "id": "art1:41f3dcf193d235515baceab4e07edf00",
+        "path": "phenora/codara/src/price_result.rs",
+        "digest": "sha256:0bdbce58cf92a4175e94a56d66c82173678a1fbecd3c0c6281fc9f33dba09de3"
+      },
+      {
+        "id": "art1:438d9f8883973106acdec066a33c9914",
+        "path": "phenora/codara/tests/e2e_descriptive.rs",
+        "digest": "sha256:0b612fdac6605115db5d212ed3a5317c136b9827a2e178310c7eafd2c0fffdc5"
+      },
+      {
+        "id": "art1:476a07b456d9b4a74a1ffa7b8f82e869",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/6d40a74b7ca996bf87259d5a7678a96129df238265f1988d92ae57a9b9378f08.atlasx",
+        "digest": "sha256:b0f7c01f9c45c975c8e777cdee40ced69d58085802be24d15a3ff1ff2709991f"
+      },
+      {
+        "id": "art1:4a51d663e1511b5d51abbf9848d58b69",
+        "path": "phenora/codara/tests/fixtures/native_result/atlasx-functions.cdr",
+        "digest": "sha256:ac82d797ebf78a0206d278c7c552af49b858942b0a4ee2ab64a5b72866eacfc6"
+      },
+      {
+        "id": "art1:5edb6ca4aab71434e6707628f606f929",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/86e6111beb161e9b7241cf136ad8738eed8bbd3872707d6511dbcc192d6296d2.atlasx",
+        "digest": "sha256:c7f05495d5c43608f55f3c12ca44b1f077755f337919664b4716ff44066d48ef"
+      },
+      {
+        "id": "art1:63302389956a6d345677c936cbb989dc",
+        "path": "phenora/codara/tests/host_world.rs",
+        "digest": "sha256:e2941fe653b4bcd76d6b4c3388a8999544f6ba65fffead234607a5657728316f"
+      },
+      {
+        "id": "art1:63abbc339b799535e1e8faccef81e490",
+        "path": "phenora/codara/src/cli.rs",
+        "digest": "sha256:946ab161aa7553a1b4a13705d59f2474916e0f5d08b8cb1223ec754f9e3c908c"
+      },
+      {
+        "id": "art1:640ead373a9b6854f03fd7011f6ef8a7",
+        "path": "phenora/codara/tests/e2e_optimization.rs",
+        "digest": "sha256:bb16b86045f738e49537cd83b2dc9bf56c05293f4c3f2cb548f88d2b12021a0a"
+      },
+      {
+        "id": "art1:6420e99310ae43634593b679926d7d92",
+        "path": "phenora/codara/tests/e2e_refusals.rs",
+        "digest": "sha256:2cdbc4f678a12549a3387323f2822e7ec8841d123a84f9f8bfc76f2607c1218c"
+      },
+      {
+        "id": "art1:6a62352d62d2caa6911c777ebd39487d",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/cases.json",
+        "digest": "sha256:a010d9816870679f4ba22a15a7d26f3bb2b910278ee1340bee96984e59864f2a"
+      },
+      {
+        "id": "art1:6e7fee61b289e9efab4c88385b8dd4e4",
+        "path": "phenora/codara/tests/e2e_random.rs",
+        "digest": "sha256:b56a17abc5c3c1e8b8014f8f961b10f577bfa16a02266f15eaa1ad444e57d02e"
+      },
+      {
+        "id": "art1:73320b6828dd96ed7902fcf256a1eacd",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/SOURCE-NOTICE.txt",
+        "digest": "sha256:0d84bd4a53fb56d8e5390d72154baca072a5ac62c34f0d9a5c3fdd8bb7a3f72a"
+      },
+      {
+        "id": "art1:7cda23830558287587523eab292b42df",
+        "path": "phenora/codara/tests/e2e_first_program.rs",
+        "digest": "sha256:c186f1ce57e8e21cf7d2f6329bc1214cb63d5ddde9286788060231aae9e92f6f"
+      },
+      {
+        "id": "art1:82858102d11dfe026fe1c5752008e724",
+        "path": "phenora/codara/tests/fixtures/native_result/atlasx-functions.payload",
+        "digest": "sha256:ed2f50e1254d475a92f52227174cf8a9a7cc8707d11c62fcdf87e3f9ad3c71f9"
+      },
+      {
+        "id": "art1:8459c7134efed05b9e315005da1dd18b",
+        "path": "phenora/codara/tests/fixtures/native_result/uc-LICENSE.txt",
+        "digest": "sha256:6096fa7b26ffff6188733353c4418b0ca39054356326034b23eee5a46a5f9c1a"
+      },
+      {
+        "id": "art1:88504344d451a53daedf3e12d06327b0",
+        "path": "phenora/codara/tests/e2e_authentication.rs",
+        "digest": "sha256:971aa8800872a2baaf8d35fbff1d48f0902cbaa8bce5f4193eded36439697a16"
+      },
+      {
+        "id": "art1:888d681409f1283a7a62958e2fb30f38",
+        "path": "phenora/codara/tests/e2e_pipeline.rs",
+        "digest": "sha256:689d40159d381247aa6d76978827363dfe5b8f0dc4928518c494e9d8b0f28810"
+      },
+      {
+        "id": "art1:8d5a0e47cb3bda1bee357e1fd8fd69a2",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/abf9878cac8cadb4f8f6ca76d7d55ce0958982ebfbd610e47a32720bc3aab5a2.atlasx",
+        "digest": "sha256:5ef95c28bdaf2e3b3ce25aa183bc4d4cf1d59b04d1386e95b0645f4ddbef7058"
+      },
+      {
+        "id": "art1:8f1343d3414afd1067faa13e8384e95b",
+        "path": "phenora/codara/tests/e2e_dataset.rs",
+        "digest": "sha256:f350e8978b314adbce5464c1bef227f6f8725507e3561b465288e057a38a4d98"
+      },
+      {
+        "id": "art1:921de27941aeacfb66384f31d00393f1",
+        "path": "phenora/codara/tests/e2e_native_result.rs",
+        "digest": "sha256:1d4745911bda325f161d3d25b613e1f32bdeb9fe994aac3a7487559bcf8f004f"
+      },
+      {
+        "id": "art1:9324ed7cdea11c6867133fd274a37d64",
+        "path": "phenora/codara/tests/fixtures/native_result/atlasx-functions.atlasx",
+        "digest": "sha256:7849d58956e964889390361eeecc99873ebcd52965e96f9b5a82e3bb278d7c95"
+      },
+      {
+        "id": "art1:958d7b313bb02fbbbf70af8b96ef40ec",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/408ff690f7a55dd9495c221f78ee317a63c804e84073396469283916b300d228.atlasx",
+        "digest": "sha256:e59b5e41ad474daded25ab663e4453bc295c732c76b797bf1f437ccb9d99b00e"
+      },
+      {
+        "id": "art1:95b5c7a039e4f557b1635886c2aa1097",
+        "path": "phenora/codara/Cargo.toml",
+        "digest": "sha256:5f7d8903f1a1b1dac6af2d7b0d5ab117c4b1734b58fb8ed9c76d58434fe851ce"
+      },
+      {
+        "id": "art1:982a82c69d7c972b0e399576f35f7ac5",
+        "path": "phenora/codara/tests/edges.rs",
+        "digest": "sha256:5a617c7138dd453933a577fadaea06b6e56adc3ac3c0366c96945189dda2c44f"
+      },
+      {
+        "id": "art1:985b70819e00298fa7eacf95f08560f6",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/daac7f63b875bc008059dbd2d5ffc73765817faf523d5d50945cc6b649ee2a49.atlasx",
+        "digest": "sha256:fbbe0aa1a43217c9f98b76542ad688e13b730f4ac9bcee2104ac4b7882c52a8d"
+      },
+      {
+        "id": "art1:9cbd75d95016d05cdadd68b7fe74a88e",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/bbe3e0411e32a1b51aa4f32f24ef5c1fff6519bb639bb402815c3443636567af.atlasx",
+        "digest": "sha256:2019c874885838ede90428b2c0c7372e3f630be852395424b1c7b1c809e253b6"
+      },
+      {
+        "id": "art1:9e08df4a43b5be23be3dbaa247199dbf",
+        "path": "phenora/codara/tests/cli_commands.rs",
+        "digest": "sha256:17402e337481cd24c39dd348023831afd58152db5e7a2c1c224c54c09d5c1d81"
+      },
+      {
+        "id": "art1:a59e37face4f627b727b25d1efc396e3",
+        "path": "phenora/codara/tests/fixtures/native_result/uc-reservation-cancel.trace",
+        "digest": "sha256:9e8aab35425ae39af59dcad24a5ccc3991b413734706c4b19b71caf754cf1e71"
+      },
+      {
+        "id": "art1:a5f56bd0163a5213c3cf2e3b655d50dd",
+        "path": "phenora/codara/src/plan.rs",
+        "digest": "sha256:1f432f755b193003df0de35d9a7ba15211759b07ccb39de991c43907d9f14c98"
+      },
+      {
+        "id": "art1:abec1da519b3644fde33f346ff907e73",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/codara-parity.payload",
+        "digest": "sha256:326971364e2938aebbdf929227ad2c01a26d7b8066aaade84486b808cd9fd12b"
+      },
+      {
+        "id": "art1:b508c7457e174a60de827bbdd49c1b98",
+        "path": "phenora/codara/tests/e2e_transform.rs",
+        "digest": "sha256:f95ca403587532c25705908cbb267732ca93cabe140342bd73858285dc82a0d2"
+      },
+      {
+        "id": "art1:b999f31a42eb8d57d93662491774399b",
+        "path": "phenora/codara/tests/cli_production.rs",
+        "digest": "sha256:5d73694ece45e589cd825502df0fb34bdf262a77259266880a88a8cfeba7a8fa"
+      },
+      {
+        "id": "art1:b9d78ba235258c17678ca2c9017bcdb2",
+        "path": "phenora/codara/tests/e2e_declarations.rs",
+        "digest": "sha256:55d086516324d6ccaa697f51bf278e5fe9b8133eb603f0abf1f3da3a41b07b9e"
+      },
+      {
+        "id": "art1:c0108bbe1a7ed22438614ce32b29dea3",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/f9d9a8fddec9c5ec9d0e364634a180e784b758f67ab51c9caa381020081f180e.atlasx",
+        "digest": "sha256:e6f97c54205434faa314faca0b2dea4c161f77632d4b926e3ed1d7455c238db3"
+      },
+      {
+        "id": "art1:c105298bd0a3ded0b741bd397ac3646c",
+        "path": "phenora/codara/tests/e2e_invariant.rs",
+        "digest": "sha256:131e48b51a3c050ac3c5fc6fd50dae26531f855ff0631963070196be1d7b6fa2"
+      },
+      {
+        "id": "art1:c5f85e6f91c19d913ae0c2a340c36f81",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/provenance.json",
+        "digest": "sha256:9b80d58e42a339909835531d37379e90d82a147b363b7984f26323ab6f6ee0ec"
+      },
+      {
+        "id": "art1:c69540b52b7d58e70ab0784945730336",
+        "path": "phenora/codara/tests/e2e_evaluation.rs",
+        "digest": "sha256:6379bb2af1e786a272c2f23938b82e0b46e7e73bf4dc7a67f8d6faa0e2add98b"
+      },
+      {
+        "id": "art1:cafd79c7114f3887e45c79894a313fcf",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/09da9a3f296e0b230bf15fe0f3824a8459c2ef17fa88110b2c287a4f3d7ad5ed.atlasx",
+        "digest": "sha256:0d6f7cdb8ff8c26759c562ca805cce4e9bce0179425f5c6d25459ec83a1d43db"
+      },
+      {
+        "id": "art1:ce62b6c2c648ba39a445cc9dab0fc9c6",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/af1349b9f5f9a1a6a0404dea36dcc9499bcb25c9adc112b7cc9a93cae41f3262.atlasx",
+        "digest": "sha256:452d8c4791c81a36c62aba9028b314ef49ce5180d735baf1e2e466826764dbd7"
+      },
+      {
+        "id": "art1:d030c8913ccace6faf03373750d3ec4c",
+        "path": "phenora/codara/tests/e2e_catalogue.rs",
+        "digest": "sha256:0490d7e257282d4822dbbb804ff024f97884ab1408f74281ca3adbc66c57f3b5"
+      },
+      {
+        "id": "art1:d24543e45ffb5b3fc58778cc3edf485e",
+        "path": "phenora/codara/tests/fixtures/native_result/uc-provenance.json",
+        "digest": "sha256:07dc14faaf0678b5863b5d955ac660185344678e4700aee32c8ba64b9b6a1681"
+      },
+      {
+        "id": "art1:d4f9020bb71a81bbba5b59272e892b8a",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/0b0bdd5d649420d71b7437d0ac850b672b3fefb647e9eafe4cf905a5a46db9f8.atlasx",
+        "digest": "sha256:81fecc0d2a53eae3fe434d9da99eb1bf4a4ba4f1923d2b520bd389cfd2a1e717"
+      },
+      {
+        "id": "art1:d88f0884daf48fd544a791a1cba7737d",
+        "path": "phenora/codara/tests/e2e_legacy_functions.rs",
+        "digest": "sha256:a73b64173770067be66954cd1543800caf69a802337ebcf893548e0ca995dd9d"
+      },
+      {
+        "id": "art1:d8e9f8cbba819ba9c19c7040892cefe5",
+        "path": "phenora/codara/src/declarations.rs",
+        "digest": "sha256:1f621a7b5dc12b4bed7130e769e09c85c3618671534c5f6648b8d76f5df1ad32"
+      },
+      {
+        "id": "art1:db2d8b0723fd80a900307d26221152ed",
+        "path": "phenora/codara/src/run.rs",
+        "digest": "sha256:47a50ae35415eeea343d907164ef7b1e06b03097033d18c0ff6c6ba230188795"
+      },
+      {
+        "id": "art1:de1749ba9580d0055fc82609d1c77720",
+        "path": "phenora/codara/src/host_world.rs",
+        "digest": "sha256:56df68f04de105d15d5272c94641210814135a90d98b6c4ebd66b93d67fac7e7"
+      },
+      {
+        "id": "art1:e890e37634292bfa65e8c08617f8e455",
+        "path": "phenora/codara/tests/fixtures/native_result/provenance.json",
+        "digest": "sha256:cd052fa7a9a19b9a613ed94fc911c15b71ea0a4d1e507d6324db459c226b50af"
+      },
+      {
+        "id": "art1:ee9c6c027e1b782fdada5e2c86b26fef",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/23e83671d9d8f29cf629b8437df67f007254d6231c31d1a5400bc16258da4f7a.atlasx",
+        "digest": "sha256:75bb74ef7809457981e63ba281c2e12e50fe94aa31dfb2db34b86a1f9a4d75e6"
+      },
+      {
+        "id": "art1:f164ad7a858088f67780432e1b280862",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/48fc721fbbc172e0925fa27af1671de225ba927134802998b10a1568a188652b.atlasx",
+        "digest": "sha256:83ca2b98bdfc9c968e9bc053e5498459773e9c7d9fe5d541f0c1984c6914f8ae"
+      },
+      {
+        "id": "art1:f7285f926bc838784b2a61678e168cf6",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/objects/666c0c7f063e8dd22e766861a9d663c4eb547e99688f77bdce93c2bc708956d6.atlasx",
+        "digest": "sha256:ff4e23730d97925334a08da7c9b4618dc0f93a08e6c9f2ef4b432e1471773520"
+      },
+      {
+        "id": "art1:f8c8a56e48c1b3d16f69cdfaf720392d",
+        "path": "phenora/codara/tests/fixtures/legacy_functions/codara-parity.cdr",
+        "digest": "sha256:c45c543ce64bccd3b9eb6ec48e2bba602e0ccade0f8ac000789899076cebcf47"
+      }
+    ]
+  }
+},
+    "exact_owned_source_paths_and_ArtifactIds": [
+    {
+      "id": "art1:de72b195f41d41e5ce397d372e631102",
+      "path": ".ynventa/declared/repository.rs",
+      "digest": "sha256:906c9c47b6fade06c2c570f10239551eb0dbe589eeca2cd73b2280876e815ade"
+    },
+    {
+      "id": "art1:63abbc339b799535e1e8faccef81e490",
+      "path": "phenora/codara/src/cli.rs",
+      "digest": "sha256:946ab161aa7553a1b4a13705d59f2474916e0f5d08b8cb1223ec754f9e3c908c"
+    },
+    {
+      "id": "art1:d8e9f8cbba819ba9c19c7040892cefe5",
+      "path": "phenora/codara/src/declarations.rs",
+      "digest": "sha256:1f621a7b5dc12b4bed7130e769e09c85c3618671534c5f6648b8d76f5df1ad32"
+    },
+    {
+      "id": "art1:1b6efb49e7fc960c394f3fcbd1437b1c",
+      "path": "phenora/codara/src/lib.rs",
+      "digest": "sha256:696f81e06598bfe14fa70c718e3284e7cf0fc7eb4c8ad989014511fdf2e0f9b9"
+    },
+    {
+      "id": "art1:db2d8b0723fd80a900307d26221152ed",
+      "path": "phenora/codara/src/run.rs",
+      "digest": "sha256:47a50ae35415eeea343d907164ef7b1e06b03097033d18c0ff6c6ba230188795"
+    },
+    {
+      "id": "art1:b9d78ba235258c17678ca2c9017bcdb2",
+      "path": "phenora/codara/tests/e2e_declarations.rs",
+      "digest": "sha256:55d086516324d6ccaa697f51bf278e5fe9b8133eb603f0abf1f3da3a41b07b9e"
+    },
+    {
+      "id": "art1:e322bc1ea3b3b1479a6359f8cbd88f58",
+      "path": "physiology/capability/kernels/src/lib.rs",
+      "digest": "sha256:93b4cddf96bf9ae11475539cc7d89d46aec78e2315605dd15ed9531753f67606"
+    },
+    {
+      "id": "art1:d741d230fe1111b8be018bccf7fee650",
+      "path": "assays/gate/mutations/price_exact.toml",
+      "digest": "sha256:6838ed1bc0a0fae3d73b90ebb4848f3a90c1119196cd4ca3d41e3827dc27bfa4"
+    },
+    {
+      "id": "art1:0f4e2c55678bc4c48337c165008426e4",
+      "path": "assays/gate/mutations/price_text.toml",
+      "digest": "sha256:4dac4b15dcb6247635fc73feda1ffddab0cbcb28cab96a6163eb34ff3306e251"
+    },
+    {
+      "id": "art1:34140172bbb8081221d3f2c4ef400353",
+      "path": "assays/gate/mutations/price_caller.toml",
+      "digest": "sha256:a3c4b9af52054dc28252fb3442ffe2756a5ca0ddc9c0e7fced84b7c7b440db5c"
+    },
+    {
+      "id": "art1:4cc2e4fffda98bec664ddf626144c2b3",
+      "path": "assays/gate/fixtures/price-text/contract.json",
+      "digest": "sha256:692ef518030c5ab2d0ca259f4288fc539768daf81dea605312734d3622ab45c2"
+    },
+    {
+      "id": "art1:7cb94f8643654d51d45110c7186ff25b",
+      "path": "physiology/capability/kernels/src/price.rs",
+      "digest": "sha256:6e85117d158d1e9e0c54af6f4e44681595a8b098d894c724ce75f6227328adb2"
+    },
+    {
+      "id": "art1:29ae02273cb54f7f7c40e38220e20365",
+      "path": "physiology/capability/kernels/src/price_text.rs",
+      "digest": "sha256:8e2d17ec3388416689167c72c245832087d875d21f7740945d028c2500f2d7b6"
+    },
+    {
+      "id": "art1:d5fe6df62f84182cc4bbb86fa35cd6a7",
+      "path": "physiology/capability/kernels/tests/price_exact.rs",
+      "digest": "sha256:a2809ae72397c27093e1b226c111c14ee16d3fae3587abcbf4c430498db61416"
+    },
+    {
+      "id": "art1:3378d423b43d28531880a7a77934475d",
+      "path": "physiology/capability/kernels/tests/price_text.rs",
+      "digest": "sha256:57ac12dce8628015c755b3c5c16449d4791c27ced0e8d00fcf9657a581dba0db"
+    },
+    {
+      "id": "art1:41f3dcf193d235515baceab4e07edf00",
+      "path": "phenora/codara/src/price_result.rs",
+      "digest": "sha256:0bdbce58cf92a4175e94a56d66c82173678a1fbecd3c0c6281fc9f33dba09de3"
+    },
+    {
+      "id": "art1:2e89d4828d7f6a1892ced815ddc6771c",
+      "path": "phenora/codara/src/price_text_result.rs",
+      "digest": "sha256:d6b1e8c2b9201f6dc0e553603212ec3350b792946bde391ecf63d18a9a75cd4a"
+    },
+    {
+      "id": "art1:16ffe86e21d644a206cee2993e4aa2a7",
+      "path": "phenora/codara/tests/e2e_price.rs",
+      "digest": "sha256:127e36a79fb507ac8cea385add530a65ad079ba9cd7f60d47d26bd2cdcbd4574"
+    },
+    {
+      "id": "art1:14d9bce417a1963eaf7e5573d13a4aad",
+      "path": "phenora/codara/tests/e2e_price_text.rs",
+      "digest": "sha256:609ae10fff2be6b0c01b844c47843d696dea52e6ca8a3b56b5cdc0ae52b9120e"
+    },
+    {
+      "id": "art1:09440c0867d889a33de22f5b16374d6e",
+      "path": ".ynventa/declared/v1/edges.jsonl",
+      "digest": "sha256:6dacd3426a3fa170a2805c1f6dd9c758df97196ebc089891ab0378ace7cd23ad"
+    }
+  ],
+  "published_native_evidence_batch_paths": [
+    ".ynventa/knowledge/1c79c5972e86412f3f3a382618cbbebc.ynv",
+    ".ynventa/knowledge/dd9fa69b13f1501b0997cfb0625ae8b6.ynv",
+    ".ynventa/knowledge/850fac2612a73219ab04c062b74c597a.ynv",
+    ".ynventa/knowledge/d01118275cc076ba8572a02af8481344.ynv",
+    ".ynventa/knowledge/79d274de7b59a56a41ce2b945fec0f3b.ynv",
+    ".ynventa/knowledge/e447a8ab1cc60946b958d213b59c86c6.ynv",
+    ".ynventa/knowledge/f2d85706fb1e427d558cfb7fb1d16768.ynv",
+    ".ynventa/knowledge/8959419086b12d2b04d41d42f01e9652.ynv",
+    ".ynventa/knowledge/b9ded4f1773ea13a4632ce94f717d6e6.ynv",
+    ".ynventa/knowledge/2d64fd69bc2462e51d17550ea3796481.ynv",
+    ".ynventa/knowledge/032fe325206f6f559198e569ff2d9337.ynv",
+    ".ynventa/knowledge/d25da76a7a58dea013b3de9eb55c91ab.ynv",
+    ".ynventa/knowledge/a1d73bab1ba3bb2f94719d0e73f0c09f.ynv",
+    ".ynventa/knowledge/dcf9b719644078b79f066e7e8e60f6ba.ynv",
+    ".ynventa/knowledge/8e8094599450571c82592ac9b2c3d5c0.ynv",
+    ".ynventa/knowledge/ecaa191ac23283827c61b435af49f8fd.ynv",
+    ".ynventa/knowledge/65fce853e00858169ea61d6a41704b52.ynv"
+  ],
+  "native_batch_identity_note": "These17 immutable native decision batches are evidence records, not source ArtifactIds. Decode using official bound engine subject0191; do not invent ArtifactIds or treat compressed registry bytes as execution rights.",
+  "source_case_mapping": {
+    "path": "assays/gate/fixtures/price-text/c3129154-source-case-map.jsonl",
+    "sha256": "a320f5e062cabe3c8fa36fdc214a6298d9b84769f1a37da3487ac11ec5116a93",
+    "source_corpus_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
+    "case_identity": "Zero-based array index in the exact unchanged source cases array; original identities/order retained, no historical rekey. No donor raw input/output text, token tables or fixture names are redistributed.",
+    "supported_indices": [
+      45,
+      123,
+      319,
+      349,
+      365,
+      396,
+      415,
+      435,
+      438,
+      450,
+      460,
+      463,
+      472,
+      476,
+      482,
+      487,
+      489,
+      501,
+      503,
+      509,
+      510,
+      512,
+      519,
+      526,
+      529,
+      530,
+      531,
+      538,
+      547,
+      559,
+      572,
+      575,
+      577,
+      595,
+      606,
+      607,
+      608,
+      617,
+      623,
+      627,
+      630,
+      635,
+      636,
+      640,
+      647,
+      654,
+      659,
+      666,
+      667,
+      671,
+      681,
+      682,
+      687,
+      690,
+      691,
+      699,
+      703,
+      705,
+      711,
+      713,
+      714,
+      717,
+      718,
+      723,
+      733,
+      737,
+      738,
+      749,
+      754,
+      764,
+      770,
+      795,
+      799,
+      802,
+      804,
+      806,
+      811,
+      821,
+      832,
+      836,
+      849,
+      874,
+      881,
+      896,
+      913,
+      919,
+      925,
+      926,
+      1185,
+      1186,
+      1187,
+      1190,
+      1191,
+      1192,
+      1467,
+      1473,
+      1627,
+      2170,
+      2914
+    ],
+    "supported": 99,
+    "unmapped": "Stable numeric target PriceTextUnavailable code, NOT inferred source allnull/refusal/equivalence and never transportEffectUnknown. Sourceexpected4fields remain reachable by exactcorpushash/index/projectiondigest.",
+    "total": 2937,
+    "request_digest": "SHA256 of GenoraWriter: str(chronica.price.source-request-map.v1), then input,hint,decimal_selector,group_selector each u8(0) for None or u8(1)+str(exactUTF8) for Some. Data witness only, NOT native RequestDigest/EffectRef or admission.",
+    "projection_digest": "SHA256 of GenoraWriter: str(chronica.price.source-projection-map.v1), then amount,currency,amount_text withsameOption tags, then amount_float u8(0) oru8(1)+u64(exactfiniteIEEE754bits). Applies to all4 nullable sourcefields; targetsupportedprojection mustequal sourceprojection includingfloatbits.",
+    "classification": "Actual native purePriceText parse from the pinned c312 trusted compiled kernel; all2937 requests classified and99 supported4field+floatbit comparisons verified. Existing maintainedsourceintegrationtest separatelyexecutes everySupportedrequest throughHost/realtempWorld+durableauthorizedreadback, all99PASS. LocaltestWorldjournals notexported as productionevidence, no artifactattestation.",
+    "governed_proof_batch": ".ynventa/knowledge/8959419086b12d2b04d41d42f01e9652.ynv",
+    "pure_inventory_source_sha256": "a5f677613547511a4bef9e1355c4e962337b70b2f1d865404abdbcd17ed5444a"
+  },
+  "proof": {
+    "pure_tests": 20,
+    "Codara_tests": 65,
+    "explicit_external_source_test": 1,
+    "governed_supported_source_case_four_field_comparisons": 99,
+    "source_requests_UNMAPPED": 2838,
+    "source_corpus_total": 2937,
+    "price_actual_mutants_caught": 11,
+    "Codara_library_Clippy": "PASS --no-deps -Dwarnings",
+    "census": "93 inherited findings; mechanical v1checkPASS",
+    "independent_review": "review_resumed approvedexact5dc0ed13tree/17nativevalues/2portable registries/86tests/actualmutationproofs; decoder normalization and wrong-typed-selector findingsfixed"
+  },
+  "rights_and_adoption": "SourcecopyingauthorizationUNKNOWN/historicalUNVERIFIED. Sourcecasehashes/codecorrectness do not grant copying, donorAbsorption/EXTINCT, sourcecaller retirement, exclusive custody or targetactivation. This descriptor pins c312; later sourceexpansion requires itsown implementationkey/assessment/evidence; never silently rewrite this baseline.",
+  "residence_gate_observation": {
+    "candidate": "assays/performance -> chronica/assays/performance",
+    "owner_NodeId": "yn1:1d9f482914ff8573a4ed8ff66f231321",
+    "engine_pin": "98cc0ac60225fc7a806118fdb76cac97a574ecd4",
+    "result": "REFUSED_NONCANONICAL_TARGET: chronica is not a role directory; auditprocess exits0 but ERROR finding means noadmission",
+    "proof_receipt_sha256": "bf7367a6b78c0f9b35688b7e05c112400fffd3102e10b33a5c1f46d43dc14f97",
+    "scope": "Read-only isolated exactc312snapshot officialaudit; originalbenchmarknode nofinding. No pathmove/IDrewrite/protocolbump or custodyactivation performed.6ff4preflightremainsCustodyUnverified."
+  }
+}
