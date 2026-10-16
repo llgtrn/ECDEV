@@ -1,0 +1,214 @@
+{
+  "receipt": "ecdev.portable-source-verification.v1",
+  "observed_at_utc": "2026-10-16T19:19:49.576504+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "247fffae286a5b05c8677d00fa0c0a64f49dc5df",
+  "code_and_fixture_inputs": [
+    {
+      "path": ".ecdev/README.md",
+      "sha256": "e1538bd8c63fc2ab881c794cd11933105ee243437b9f6657f95169430f1b23d4"
+    },
+    {
+      "path": ".ecdev/src/cli/mod.rs",
+      "sha256": "331f232eb3eba1597582e7068cbef3c46f418555da58a56984b67068cf2a2cb0"
+    },
+    {
+      "path": ".ecdev/src/migration/mod.rs",
+      "sha256": "5fdde27f5792659156ec12bfa13039c4e4b541a705899a491a938f10db713563"
+    },
+    {
+      "path": ".ecdev/src/migration/source.rs",
+      "sha256": "d4bb0a92a831f3a6c01660c7ea4d265cf6b7c4e4a60ac95ae92e0ae22d47cfe9"
+    },
+    {
+      "path": ".ecdev/src/migration/source_view.rs",
+      "sha256": "184caa4be0e129fd397e8a427a97dbf351a371cf906dd7e74345a32ada2b07bc"
+    },
+    {
+      "path": ".ecdev/src/protocol.rs",
+      "sha256": "9ff7a16f6225f05a9b0d6abd67646894446cde917f8aec548aca3edda9521bbd"
+    },
+    {
+      "path": ".ecdev/src/universe/identity.rs",
+      "sha256": "0dec1bf199c1699f4a7721b1710ba4e25b12ac93b076e65ddb69ff83b5c92685"
+    },
+    {
+      "path": ".ecdev/tests/fixtures/source-capture-v1.json",
+      "sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d"
+    },
+    {
+      "path": ".ecdev/tests/fixtures/source-capture-v1.meta.json",
+      "sha256": "8548a2728d6cdc6618b6716edfb34abdb492dfb9ea43361d05dd7e82e3a2f69e"
+    },
+    {
+      "path": ".ecdev/tests/source_adapter.rs",
+      "sha256": "ccc25342b2d8bb3b1cd889fc5e25fb084ade844b374d48c4af745245d725a3f5"
+    }
+  ],
+  "portable_fixture": {
+    "fixture": "source-capture-v1.json",
+    "format": "ecdev-source-capture-v1",
+    "source_commit": "247fffae286a5b05c8677d00fa0c0a64f49dc5df",
+    "source_repository": "llgtrn/ECDEV",
+    "source_capture_sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d",
+    "source_capture_bytes": 3141735,
+    "source_files": 590,
+    "original_raw_bytes": 1105906,
+    "declared_nodes": 12,
+    "declared_donors": 68,
+    "declared_capabilities": 408,
+    "active_evidence_records": 582,
+    "retired_evidence_records": 8,
+    "knowledge_facts": 1861,
+    "canonical_enrollment": "BLOCKED",
+    "claims_freshness": "NOT_REVERIFIED",
+    "capture_binding": "CAPTURED_BYTES; HEAD_OBSERVED_ONLY; NOT_ENROLLED; NOT_REVERIFIED",
+    "fixture_verification": {
+      "observed_head_matches_source_commit": true,
+      "all_captured_paths_match_pinned_git_file_set": true,
+      "every_captured_byte_matches_pinned_git_object": true,
+      "proofs_executed": false,
+      "scope": "Byte equality and source-format record counts only; no proof freshness, rights, canonical admission or native completion attestation."
+    }
+  },
+  "fixture_path": ".ecdev/tests/fixtures/source-capture-v1.json",
+  "commands": {
+    "validate_fixture": "cargo +1.87.0 run --release --manifest-path .ecdev/Cargo.toml --locked -- migrate inspect-export --from .ecdev/tests/fixtures/source-capture-v1.json --expect-sha256 c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d --json",
+    "export_committed": "cargo +1.87.0 run --release --manifest-path .ecdev/Cargo.toml --locked -- migrate export --committed --json > /tmp/ecdev-source-export-v1.json",
+    "test": "cargo +1.87.0 test --release --manifest-path .ecdev/Cargo.toml --locked"
+  },
+  "prepublication_export": {
+    "path": "/tmp/ecdev-source-export-247fffa-v1.json",
+    "sha256": "71597b9339051d3daabac2dd3349206d316647c9a26499c6736fefe54237c05d",
+    "observed_head": "247fffae286a5b05c8677d00fa0c0a64f49dc5df",
+    "raw_files_equal_pinned_fixture": true,
+    "graph_nodes_edges_equal_pinned_fixture": true,
+    "producer_schema_claim": "sha256:9cde71be4f3353d03b16b3291c7c99a1fa1a05ea13121133e48cae9fbf304ab8",
+    "binding": "OBSERVATION_ONLY; NOT_EXTERNALLY_VERIFIED; NOT_ENROLLED; NOT_REVERIFIED"
+  },
+  "verification": {
+    "governor_release_tests": {
+      "passed": 187,
+      "failed": 0,
+      "ignored": 0
+    },
+    "new_adapter_tests": {
+      "passed": 7,
+      "failed": 0
+    },
+    "strict_clippy_all_targets": "PASS",
+    "formatting_and_diff_checks": "PASS",
+    "independent_review": "APPROVED_SOURCE_ONLY_INCLUDING_SCHEMA_COMPATIBILITY_AND_EXACT_DIGEST_BINDING",
+    "product_code_changed": false,
+    "product_tests": "NOT_RERUN_IN_THIS_GOVERNOR_ONLY_SLICE; PRIOR436_PASS_RETAINED",
+    "source_state_files_changed": 0,
+    "proof_records_appended_this_slice": 0,
+    "recorded_verdicts_reverified_by_export_or_inspect": false,
+    "repository_conformance": {
+      "passed": 31,
+      "failed": 0,
+      "local_v1_gate": "FAIL",
+      "external_edges": {
+        "runtime_external_edges": 3,
+        "linked_external_edges": 4,
+        "external_technology_edges": 7
+      }
+    }
+  },
+  "observed_failure_and_resolution": {
+    "initial_full_release_run": "FAIL: portable pinned fixture rejected after CLI command schema changed",
+    "resolution": "Retain recorded producer schema digest as unverified capture metadata; strict canonical comparison still covers graph identities, nodes, edges, files and envelope fields. Optional caller-bound SHA256 validates all exact transport bytes.",
+    "v1_fixture_bytes_changed": false,
+    "final_suite": "PASS187"
+  },
+  "semantic_boundaries": {
+    "source_identity": "ecdev",
+    "source_node_ids": "ec1_PRESERVED",
+    "source_fact_ids": "f1_ECDEV_DOMAIN_PRESERVED",
+    "canonical_identity_mapping": null,
+    "norl_relevance_mapping": null,
+    "adoption": "Independent typed variant and reason; required/spec/replacement/maps_to/proofs retained",
+    "knowledge": "All nine source variants, exact text and ResearchScope retained",
+    "absorbs": "Independent original old-key list; same-donor denominator edges; never inferred from Knowledge::Absorbed",
+    "unknown_costs_rights_and_history": "Original source bytes retained; claims do not become verification",
+    "legacy_capability_floor": "UNAVAILABLE_WHEN_ONLY_TAG3_OR_TAG10",
+    "canonical_enrollment": "BLOCKED"
+  },
+  "central_coordination": {
+    "inspected_revision": "c62c26800729ed922d828ebe20c732b1e3cc4afc",
+    "ecdev_reader_blob": "d7d8c415834a163416e9f8077ef93857dd538c07",
+    "canonical_shards": 7,
+    "source_fixture_is_canonical_registry_entry": false,
+    "smallest_prerequisite_proposal_not_registration": {
+      "reader": "Strict portable v1 envelope reader into the existing lossless Snapshot, with caller-bound envelope digest and byte/record/graph parity",
+      "source_registry_binding": {
+        "origin": "llgtrn/ECDEV",
+        "source_alias": "ecdev",
+        "format": "ecdev-source-capture-v1",
+        "source_commit": "247fffae286a5b05c8677d00fa0c0a64f49dc5df",
+        "fixture_sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d",
+        "canonical_admission": "PENDING_EXPLICIT_MAPPING; NOT_IMPLIED_BY_PARSE"
+      },
+      "typed_projection": "Keep production adoption, knowledge value, absorption edges, source claims and rights distinct from Norl relevance and effective canonical states",
+      "later_admission": "Explicit ec1/source alias mapping plus rights/claims/history verification and central eight-source admission; no prefix, SHARDS, lock or scaffold changes inferred here"
+    },
+    "executed_engine_reference": "cd0f6b091f78980577e6b49c17a9b7c9eb8e20a4",
+    "execution": "Existing read-only preflight against disposable fixture projection; counts match and status BLOCKED; this is not execution of the entire c62 engine revision",
+    "engine_source_written": false
+  },
+  "progress": {
+    "local_mixed_donor_total": 68,
+    "declared_extinct": 10,
+    "current_effective_extinct": 10,
+    "active_gate": "10/48; FAIL",
+    "audited_oss_total": "UNKNOWN",
+    "audited_oss_verified_extinct": "UNKNOWN",
+    "new_assimilation": 0,
+    "new_extinction": 0,
+    "prior_proof_refresh_delta": "+6 FRESHNESS_RECOVERY_ONLY",
+    "central_deduplicated_denominator": "CENTRAL_OWNER"
+  },
+  "native_v1": {
+    "full_v1": "INCOMPLETE",
+    "N01-N12": "NOT_RUN_NATIVE_CERTIFICATION",
+    "J1-J9": "NOT_RUN_NATIVE_CERTIFICATION",
+    "P0-P3": "NOT_RUN_NATIVE_CERTIFICATION"
+  },
+  "logs": {
+    "ecdev-portable-governor-final.log": {
+      "sha256": "131add908dbc5160e2cdc07f0df5543691c7fb7dbe478303c724ebf5f73c0888",
+      "bytes": 15256,
+      "cloud_path": "/tmp/ecdev-portable-governor-final.log"
+    },
+    "ecdev-portable-clippy-final.log": {
+      "sha256": "6f44257040aaff86b78023c1f58fcb75dbcc48b62a113f18a7f4986bdb8e2e4e",
+      "bytes": 135,
+      "cloud_path": "/tmp/ecdev-portable-clippy-final.log"
+    },
+    "ecdev-portable-engine-readback.log": {
+      "sha256": "88261ed2990f8d51ce3047b3217f48a7e38e70f4d7c0398759a09024e95fef96",
+      "bytes": 734,
+      "cloud_path": "/tmp/ecdev-portable-engine-readback.log"
+    },
+    "ecdev-portable-independent-review.log": {
+      "sha256": "0b98bb88fecdf3aad18195c011ce0e68ceef85279e41c315846de53d86972c97",
+      "bytes": 184,
+      "cloud_path": "/tmp/ecdev-portable-independent-review.log"
+    },
+    "ecdev-schema-compat-independent.log": {
+      "sha256": "840e675a622e07dc8ed329ad3f446edbaf32b88ecf93e0499111c504856b0687",
+      "bytes": 222,
+      "cloud_path": "/tmp/ecdev-schema-compat-independent.log"
+    },
+    "ecdev-portable-governor-full.log": {
+      "sha256": "624387fcd722d8b23d4c95ba9efb2bcdc1101461cfb47c4a00fb3b9165b36a6f",
+      "bytes": 13735,
+      "cloud_path": "/tmp/ecdev-portable-governor-full.log"
+    },
+    "ecdev-portable-conformance.json": {
+      "sha256": "676f1a07a742bf6c5041af6c05d658b10f09ff7841fd5e94558100f03a960f76",
+      "bytes": 10970,
+      "cloud_path": "/tmp/ecdev-portable-conformance.json"
+    }
+  }
+}

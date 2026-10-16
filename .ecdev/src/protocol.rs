@@ -24,7 +24,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("graph", "the repository graph; --json, --binary <file>"),
     ("knowledge", "view [--kind <kind>] [--text] [--out <file>] | view --document <path> [--outline] (read-only; rebuilds a stored document byte for byte); extract <document or licence text>... (exactly those)"),
     ("metrics", "the metric schema and values"),
-    ("migrate", "import | map | plan | apply <wave> | universe --from <legacy registry> [--kind <KIND>] [--table <name>] [--dry-run] (lossless import into .ecdev/declared/universe/); export [--json] (read-only source capture; observed HEAD is not commit-content attestation or enrollment)"),
+    ("migrate", "import | map | plan | apply <wave> | universe --from <legacy registry> [--kind <KIND>] [--table <name>] [--dry-run] (lossless import into .ecdev/declared/universe/); export [--committed] [--json] (raw source or selected HEAD object bytes); inspect-export --from <capture> [--expect-sha256 <digest>] [--json] (portable derived source view; no commit-membership attestation, proof re-verification or enrollment)"),
     ("protocol", "print the governance schema; --schema prints the full text"),
     ("prove", "run declared proofs and record content-bound evidence"),
     ("show", "a node, capability or technology with its edges: <key>"),

@@ -34,7 +34,9 @@ pub fn global_donor_key(origin: &str) -> Option<String> {
     if s.is_empty() || s.contains(char::is_whitespace) {
         return None;
     }
-    if s.len() >= 4 && s[..4].eq_ignore_ascii_case("git+") {
+    if s.get(..4)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("git+"))
+    {
         s = &s[4..];
     }
     let lower = s.to_ascii_lowercase();

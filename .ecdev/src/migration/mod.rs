@@ -11,6 +11,7 @@
 pub mod pathmap;
 pub mod register;
 pub mod source;
+pub mod source_view;
 
 use crate::declare::Declaration;
 use crate::donors::Analysis;

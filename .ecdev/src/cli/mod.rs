@@ -44,6 +44,7 @@ impl Args {
             "--subject",
             "--document",
             "--table",
+            "--expect-sha256",
         ];
         let lists: [&str; 0] = [];
         let mut i = 0;
@@ -935,10 +936,20 @@ fn migrate(args: &Args) -> Out {
     let sub = args.positional.first().map(String::as_str).unwrap_or("");
     match sub {
         "export" => {
-            if args.positional.len() != 1 || !args.flags.is_empty() || !args.values.is_empty() || !args.multi.is_empty() {
-                return Err("migrate export accepts only --root and --json; capture is read-only".into());
+            if args.positional.len() != 1 || args.flags.iter().any(|f| f != "--committed") || args.flags.len() > 1 || !args.values.is_empty() || !args.multi.is_empty() {
+                return Err("migrate export accepts only --root, --json and --committed; capture is read-only".into());
             }
-            Ok((0, migration::source::capture(root)?.render()?))
+            let capture = if args.flag("--committed") { migration::source::capture_committed(root)? } else { migration::source::capture(root)? };
+            Ok((0, capture.render()?))
+        }
+        "inspect-export" => {
+            if args.positional.len() != 1 || !args.flags.is_empty() || !args.multi.is_empty()
+                || args.values.iter().any(|(key, _)| !matches!(key.as_str(), "--from" | "--expect-sha256"))
+                || args.values_of("--from").len() != 1 || args.values_of("--expect-sha256").len() > 1 {
+                return Err("migrate inspect-export requires one --from <capture> and optional --expect-sha256 <digest>; read-only, no assessment or enrollment".into());
+            }
+            let capture = migration::source::read_export_bound(Path::new(args.value("--from").unwrap()), args.value("--expect-sha256"))?;
+            Ok((0, migration::source_view::inspect(&capture)?.render()))
         }
         "register" => {
             // Discovered donors that participate are registered from their own package metadata.
@@ -1287,7 +1298,7 @@ fn migrate(args: &Args) -> Out {
             }
         }
         _ => Err(
-            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry> | export [--json]"
+            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry> | export [--committed] [--json] | inspect-export --from <capture> [--expect-sha256 <digest>] [--json]"
                 .into(),
         ),
     }
