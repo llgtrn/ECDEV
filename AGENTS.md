@@ -1,6 +1,6 @@
 # ECDEV campaign guidance
 
-The owner decision of 2026-10-16, 16:43:08 UTC makes this campaign documentation first. Until the owner resumes implementation, change only documentation/canonical knowledge using supported formats. Preserve pending implementation/test/schema patches and logs; never include them in documentation commits.
+The explicit owner authorization of 2026-10-16, 18:34 UTC resumes implementation until full V1, superseding the documentation-only pause of 16:43:08 UTC. Preserve the original STOP checkpoint, held patches and historical evidence. Publish each independently reviewed, tested coherent change to normal main without force push, reset or discarded work. Report exact SHAs, requirement IDs, passed/failed/NOT_RUN checks and timestamped active writer/reviewer counts. No spending, credential creation, hardware flashing or destructive deletion is authorized.
 
 Only this ECDEV checkout is writable source. The saved `.Ynventa-` engine and exact published reference snapshots are read-only. Central Blueprint/Protocol/Roadmap changes belong to the engine lane; canonical names belong to Chronica's registry. No new concept IDs or mandatory OS, AGNC or Neurora directory follows from a documentation decision.
 
