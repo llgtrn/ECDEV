@@ -2113,11 +2113,14 @@
       "capabilities_verified": 0,
       "capabilities_documented_only": 0,
       "capabilities_unknown": 0,
-      "absorption_status": "NATIVE_ABSORBED",
-      "oracle_status": "ORACLE_VERIFIED",
+      "absorption_status": "BOUNDED_NATIVE_IMPLEMENTATION",
+      "oracle_status": "HISTORICAL_BOUNDED_ORACLE_OBSERVATIONS",
       "runtime_dependency": false,
-      "extinction_status": "CUTOVER_KNOWLEDGE_OPEN",
-      "notes": [],
+      "extinction_status": "NOT_EXTINCT_KNOWLEDGE_OPEN",
+      "notes": [
+        "Current scope is the three adopted capabilities memory.name-similarity, memory.fact-supersession and extract.publication-time; this row makes no whole-donor absorption or whole-oracle claim.",
+        "Historical frozen-oracle observations, donor identity, license evidence and recorded cutover remain retained. Current proof freshness is a separate digest-bound observation in research/commerce/governance/claim-corrections.jsonl#graphiti-bounded-claim-correction-20261016. No hosted-provider, native-OS, hardware-certification or commercial qualification is inferred."
+      ],
       "remote_resolution": {
         "mechanism": "git ls-remote --symref",
         "output": "ref: refs/heads/main\tHEAD\n5d47d4d0182aa6350edeb435b734837a88ed9738\tHEAD",
@@ -2145,7 +2148,20 @@
         "license_gate": "REQUIRES_LOCKED_LICENSE_SOURCE_REVIEW"
       },
       "submodule_status": "",
-      "license_absorption_gate": "SOURCE_STUDY_ONLY_NO_PRODUCTION_COPY"
+      "license_absorption_gate": "SOURCE_STUDY_ONLY_NO_PRODUCTION_COPY",
+      "claim_correction": {
+        "receipt": "research/commerce/governance/claim-corrections.jsonl",
+        "event_id": "graphiti-bounded-claim-correction-20261016",
+        "whole_donor_absorption_claim": false,
+        "whole_donor_oracle_claim": false,
+        "native_scope": [
+          "memory.name-similarity",
+          "memory.fact-supersession",
+          "extract.publication-time"
+        ],
+        "historical_cutover_record": "research/commerce/graphiti-extinction.json",
+        "proof_freshness": "SEPARATE_DIGEST_BOUND_OBSERVATION"
+      }
     }
   ]
 }

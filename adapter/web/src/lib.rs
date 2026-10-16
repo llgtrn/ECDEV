@@ -644,6 +644,8 @@ impl Web {
         conditional: &Value,
         minimum_interval: Duration,
     ) -> Result<(u16, Vec<u8>, Value), String> {
+        // A refused egress configuration admits no network activity, including DNS.
+        let egress = self.egress.as_ref().map_err(|e| e.clone())?;
         let host = u.host_str().ok_or("INVALID_HOST")?;
         let port = u.port_or_known_default().ok_or("INVALID_PORT")?;
         let addresses: Vec<_> = (host, port)
@@ -653,7 +655,6 @@ impl Web {
         if addresses.is_empty() || addresses.iter().any(|a| !public_ip(a.ip())) {
             return Err("PRIVATE_OR_SPECIAL_ADDRESS_DENIED".into());
         }
-        let egress = self.egress.as_ref().map_err(|e| e.clone())?;
         let mut gate = self.gate.lock().map_err(|_| "FETCH_GATE_FAILED")?;
         if let Some(last) = *gate {
             let elapsed = last.elapsed();
@@ -1113,6 +1114,13 @@ mod tests {
             half.request(&u, &Value::Null, Duration::ZERO).unwrap_err(),
             "EGRESS_MISCONFIGURED_SET_BOTH_OR_NEITHER"
         );
+        let unresolved = Url::parse("https://egress-refusal.invalid/").unwrap();
+        assert_eq!(
+            half.request(&unresolved, &Value::Null, Duration::ZERO)
+                .unwrap_err(),
+            "EGRESS_MISCONFIGURED_SET_BOTH_OR_NEITHER"
+        );
+        assert!(half.gate.lock().unwrap().is_none());
         // Private targets stay refused whatever the egress mode.
         let local = Url::parse("http://127.0.0.1/").unwrap();
         assert_eq!(

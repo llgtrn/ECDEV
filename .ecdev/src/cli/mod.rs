@@ -934,6 +934,12 @@ fn migrate(args: &Args) -> Out {
     let root = &args.root;
     let sub = args.positional.first().map(String::as_str).unwrap_or("");
     match sub {
+        "export" => {
+            if args.positional.len() != 1 || !args.flags.is_empty() || !args.values.is_empty() || !args.multi.is_empty() {
+                return Err("migrate export accepts only --root and --json; capture is read-only".into());
+            }
+            Ok((0, migration::source::capture(root)?.render()?))
+        }
         "register" => {
             // Discovered donors that participate are registered from their own package metadata.
             use crate::migration::register::{cargo_home, donor_licence, locked_versions, Licence};
@@ -1281,7 +1287,7 @@ fn migrate(args: &Args) -> Out {
             }
         }
         _ => Err(
-            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry>"
+            "migrate map | plan [--write] | apply <wave> | reclaim [--dry-run] | register [--dry-run] [--cargo-home <dir>] | universe --from <registry> | export [--json]"
                 .into(),
         ),
     }

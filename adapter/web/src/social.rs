@@ -734,9 +734,9 @@ pub fn mastodon_tag(query: &str) -> Option<String> {
 /// Daily usage of a Mastodon tag as the instance reports it, oldest first. Each day starts at
 /// UTC midnight; the day containing `captured` is still open and is marked partial.
 pub fn mastodon_tag_usage(data: &Value, tag: &str, captured: u64) -> Result<Value, String> {
-    if !data["name"]
+    if data["name"]
         .as_str()
-        .is_some_and(|n| n.to_lowercase() == tag)
+        .is_none_or(|n| n.to_lowercase() != tag)
     {
         return Err("MASTODON_TAG_NAME_MISMATCH".into());
     }

@@ -10,6 +10,7 @@
 
 pub mod pathmap;
 pub mod register;
+pub mod source;
 
 use crate::declare::Declaration;
 use crate::donors::Analysis;

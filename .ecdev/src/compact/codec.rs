@@ -107,7 +107,7 @@ impl<'a> Decoder<'a> {
                 .get(self.i)
                 .ok_or_else(|| DecodeError("truncated integer".into()))?;
             self.i += 1;
-            if shift >= 64 {
+            if shift >= 64 || (shift == 63 && b > 1) {
                 return Err(DecodeError("integer overflow".into()));
             }
             v |= ((b & 0x7f) as u64) << shift;
@@ -126,10 +126,14 @@ impl<'a> Decoder<'a> {
         Ok(b)
     }
     pub fn bool(&mut self) -> R<bool> {
-        Ok(self.u8()? != 0)
+        match self.u8()? {
+            0 => Ok(false),
+            1 => Ok(true),
+            _ => Err(DecodeError("invalid boolean".into())),
+        }
     }
     pub fn length(&mut self) -> R<usize> {
-        let n = self.u64()? as usize;
+        let n = usize::try_from(self.u64()?).map_err(|_| DecodeError("length overflow".into()))?;
         if n > self.s.len() - self.i.min(self.s.len()) && n > 0 {
             // A collection count may exceed the remaining bytes only for zero-sized items,
             // which ECDEV governance never writes.
@@ -170,6 +174,27 @@ impl<'a> Decoder<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn overflowing_integers_and_non_boolean_bytes_are_rejected() {
+        let mut max = Encoder::new(7);
+        max.u64(u64::MAX);
+        assert_eq!(
+            Decoder::open(&max.finish(), 7).unwrap().u64().unwrap(),
+            u64::MAX
+        );
+        for last in [2, 127, 128, 255] {
+            let mut bytes = Encoder::new(7).finish();
+            bytes.extend_from_slice(&[128; 9]);
+            bytes.push(last);
+            assert!(Decoder::open(&bytes, 7).unwrap().u64().is_err());
+        }
+        for byte in [2, 127, 255] {
+            let mut bytes = Encoder::new(7).finish();
+            bytes.push(byte);
+            assert!(Decoder::open(&bytes, 7).unwrap().bool().is_err());
+        }
+    }
 
     #[test]
     fn roundtrip_and_rejection() {

@@ -1,7 +1,8 @@
 //! ECDEV REPOSITORY CONFORMANCE: the executable suite of ECDEV's own invariants. It measures
 //! only this repository: one governance authority (`.ecdev/`), typed declarations, a closed
 //! graph, lifecycle claims within evidence, capability relevance justified, graph-owned source,
-//! no crate buckets, no external governance dependency, deterministic output.
+//! no crate buckets, no external governance dependency, deterministic output. Source-only
+//! conformance does not establish shared-protocol enrollment.
 
 use crate::compact::facts::{fold, Fact};
 use crate::declare;
@@ -63,17 +64,108 @@ pub fn external_governance_tokens() -> Vec<String> {
     ]
 }
 
-/// Tracked files that ECDEV builds, tests, ships or runs as governance: historical research
-/// records are exempt (they describe the past, they govern nothing).
-fn governs(f: &str) -> bool {
-    !(f.starts_with("research/") || f.ends_with(".lock") || f.ends_with("package-lock.json"))
+fn executable(a: &Assessment, path: &str, text: Option<&str>) -> bool {
+    if text.is_some_and(|t| t.starts_with("#!")) {
+        return true;
+    }
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        if std::fs::metadata(a.root.join(path)).is_ok_and(|m| m.permissions().mode() & 0o111 != 0) {
+            return true;
+        }
+    }
+    [
+        ".rs", ".py", ".sh", ".bash", ".ps1", ".bat", ".js", ".mjs", ".ts", ".tsx", ".c", ".cpp",
+    ]
+    .iter()
+    .any(|suffix| path.ends_with(suffix))
+}
+
+/// Informational documents and historical records do not install an authority. Executable
+/// research files and executable/shebang documents still participate in the coupling check.
+fn governs(a: &Assessment, path: &str, text: Option<&str>) -> bool {
+    if executable(a, path, text) {
+        return true;
+    }
+    !(matches!(path, "README.md" | "AGENTS.md" | ".ecdev/README.md")
+        || (path.starts_with("research/") && !path.ends_with(".md"))
+        || path.ends_with(".lock")
+        || path.ends_with("package-lock.json"))
+}
+
+/// Pending source migration must not install a second projection or protocol control state.
+/// Filesystem metadata catches empty/untracked roots and dangling links that the Git index
+/// cannot see. This detects named control artifacts, not arbitrarily renamed embedded code.
+pub fn source_migration_violations(a: &Assessment) -> Vec<String> {
+    let shared = [".", "ynventa"].concat();
+    let mut out = Vec::new();
+    match std::fs::symlink_metadata(a.root.join(&shared)) {
+        Ok(_) => out.push(format!(
+            "{shared}: shared projection is not admitted for this source"
+        )),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+        Err(e) => out.push(format!("{shared}: cannot establish source boundary: {e}")),
+    }
+    for path in &a.files.paths {
+        let structural = path.split('/').any(|p| p.eq_ignore_ascii_case(&shared));
+        let standalone_pin =
+            path.rsplit('/').next() == Some("protocol.lock") && !path.starts_with("research/");
+        if structural || standalone_pin {
+            out.push(format!(
+                "{path}: pending source cannot install protocol control artifacts"
+            ));
+        }
+        if let Some(text) = a.files.read(path) {
+            if !governs(a, path, Some(&text)) {
+                continue;
+            }
+            for line in text.lines() {
+                let words: Vec<&str> = line
+                    .split(|c: char| c.is_whitespace() || "'\";|&(){}[],".contains(c))
+                    .filter(|s| !s.is_empty())
+                    .collect();
+                if !words.iter().any(|word| {
+                    matches!(
+                        word.rsplit('/').next().unwrap_or(word),
+                        "sh" | "bash"
+                            | "dash"
+                            | "source"
+                            | "."
+                            | "python"
+                            | "python3"
+                            | "node"
+                            | "ruby"
+                            | "perl"
+                            | "pwsh"
+                    )
+                }) {
+                    continue;
+                }
+                for doc in ["README.md", "AGENTS.md", ".ecdev/README.md"] {
+                    if words.iter().any(|word| {
+                        word.trim_start_matches("./") == doc || word.ends_with(&format!("/{doc}"))
+                    }) {
+                        out.push(format!("{path}: informational {doc} is referenced as interpreter/control input"));
+                    }
+                }
+            }
+        }
+    }
+    out.sort();
+    out.dedup();
+    out
 }
 
 /// Every tracked governing file that names an external governance system, with the token.
 pub fn external_governance_references(a: &Assessment) -> Vec<String> {
     let tokens = external_governance_tokens();
     let mut out = Vec::new();
-    for f in a.files.paths.iter().filter(|f| governs(f)) {
+    for f in &a.files.paths {
+        let text = a.files.read(f);
+        if !governs(a, f, text.as_deref()) {
+            continue;
+        }
         let lower_path = f.to_ascii_lowercase();
         if let Some(t) = tokens
             .iter()
@@ -82,7 +174,7 @@ pub fn external_governance_references(a: &Assessment) -> Vec<String> {
             out.push(format!("{f} (path names {t})"));
             continue;
         }
-        let Some(text) = a.files.read(f) else {
+        let Some(text) = text else {
             continue;
         };
         let lower = text.to_ascii_lowercase();
@@ -246,7 +338,12 @@ pub fn checks(a: &Assessment) -> Vec<Check> {
     v.push(list_check(
         "governance.no_external_authority",
         external_governance_references(a),
-        "no governing file names an external governance system, shard registry or protocol pin",
+        "no executable/configuration file couples this source to external governance; informational references grant no authority",
+    ));
+    v.push(list_check(
+        "governance.source_migration_boundary",
+        source_migration_violations(a),
+        "SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed",
     ));
     let fixed = declare::parse_repository(&declare::render_repository(&d.repository)).ok()
         == Some(d.repository.clone())

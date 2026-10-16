@@ -879,7 +879,7 @@ pub fn normalize(operation: &str, body: &Value, plan: &Value) -> Result<Value, S
                     .iter()
                     .filter(|g| g["marketplaceId"] == marketplace)
                     .flat_map(|g| g["identifiers"].as_array().cloned().unwrap_or_default())
-                    .filter_map(|i| i["identifier"].as_str().map(&norm))
+                    .filter_map(|i| i["identifier"].as_str().map(norm))
                     .chain((kind == "ASIN").then(|| asin.to_string()))
                     .filter(|s| !s.is_empty())
                     .collect();

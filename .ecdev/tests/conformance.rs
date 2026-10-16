@@ -41,8 +41,8 @@ fn a_conformant_fixture_is_short_of_v1_until_proven() {
     assert_eq!(a.donor("geo").unwrap().effective, DonorState::Extinct);
 }
 
-/// A governing file that names an external governance system (its directory, its repository,
-/// its system or its shard registry) fails conformance; historical research records do not.
+/// Executable coupling fails; informational source guidance and historical records do not
+/// install a shared projection or establish canonical enrollment.
 #[test]
 fn an_external_governance_reference_fails_conformance() {
     let r = extinct_baseline("external-authority");
@@ -60,6 +60,99 @@ fn an_external_governance_reference_fails_conformance() {
         &format!("{{\"was\": \"{}\"}}\n", tokens[0]),
     );
     assert!(check(&r.assess(), "governance.no_external_authority").pass);
+}
+
+#[test]
+fn informational_shared_governance_references_do_not_enroll_the_source() {
+    let r = extinct_baseline("source-guidance");
+    let tokens = ecdev_governance::conformance::external_governance_tokens();
+    r.write(
+        "README.md",
+        &format!("# Migration guidance\n{}\n", tokens.join(" ")),
+    );
+    let a = r.assess();
+    assert!(check(&a, "governance.no_external_authority").pass);
+    let boundary = check(&a, "governance.source_migration_boundary");
+    assert!(boundary.pass && boundary.detail.contains("ENROLLMENT_NOT_ESTABLISHED"));
+    assert_eq!(a.declaration.repository.id, "ecdev");
+    let interpreter = "sh";
+    let doc = "README.md";
+    r.write(
+        "research/observation.json",
+        &format!("{{\"observed_command\":\"{interpreter} {doc}\"}}\n"),
+    );
+    assert!(check(&r.assess(), "governance.source_migration_boundary").pass);
+    for path in [
+        ".github/workflows/gate.yml",
+        "tools/gate.sh",
+        "research/gate.py",
+        "tools/executable.md",
+    ] {
+        r.write(path, &format!("#!/usr/bin/env sh\n{}\n", tokens[0]));
+        assert!(
+            !check(&r.assess(), "governance.no_external_authority").pass,
+            "{path}"
+        );
+        r.remove(path);
+    }
+}
+
+#[test]
+fn pending_source_rejects_shadow_control_state_even_when_empty_or_untracked() {
+    let r = extinct_baseline("source-boundary");
+    let shared = ecdev_governance::conformance::external_governance_tokens()[0].clone();
+    std::fs::create_dir(r.root.join(&shared)).unwrap();
+    assert!(!check(&r.assess(), "governance.source_migration_boundary").pass);
+    r.remove(&shared);
+    for path in [
+        format!("{shared}/README.md"),
+        format!("{shared}/declared/repository.rs"),
+        format!("{shared}/src/lib.rs"),
+        "protocol.lock".into(),
+    ] {
+        r.write(&path, "captured control input");
+        assert!(
+            !check(&r.assess(), "governance.source_migration_boundary").pass,
+            "{path}"
+        );
+        if path.starts_with(&shared) {
+            r.remove(&shared);
+        } else {
+            r.remove(&path);
+        }
+    }
+    #[cfg(unix)]
+    {
+        std::os::unix::fs::symlink(r.root.join("missing"), r.root.join(&shared)).unwrap();
+        assert!(!check(&r.assess(), "governance.source_migration_boundary").pass);
+    }
+}
+
+#[test]
+fn markdown_used_as_interpreter_input_cannot_hide_governance_coupling() {
+    let r = extinct_baseline("markdown-control");
+    let token = ecdev_governance::conformance::external_governance_tokens()[1].clone();
+    r.write(
+        "tools/control.md",
+        &format!("cargo run --manifest-path ../{token}/Cargo.toml -- assess .\n"),
+    );
+    r.write("tools/gate.sh", "sh tools/control.md\n");
+    assert!(!check(&r.assess(), "governance.no_external_authority").pass);
+    r.remove("tools/control.md");
+    r.write("README.md", &format!("# informational {token}\n"));
+    for interpreter in ["sh", "bash", "source", "python3"] {
+        let command = format!("{interpreter} ./README.md");
+        r.write("tools/gate.sh", &command);
+        assert!(
+            !check(&r.assess(), "governance.source_migration_boundary").pass,
+            "{command}"
+        );
+    }
+    let interpreter = "sh";
+    let doc = "README.md";
+    r.write("tools/control.md", &format!("{interpreter} {doc}\n"));
+    r.write("tools/gate.sh", "sh tools/control.md\n");
+    assert!(!check(&r.assess(), "governance.source_migration_boundary").pass);
 }
 
 /// The repository id is ECDEV's; a second declaration set elsewhere is not an authority.

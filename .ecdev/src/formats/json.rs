@@ -9,6 +9,7 @@ pub fn parse(text: &str) -> Result<Value, String> {
     let mut p = Parser {
         s: text.as_bytes(),
         i: 0,
+        depth: 0,
     };
     p.ws();
     let v = p.value()?;
@@ -22,6 +23,7 @@ pub fn parse(text: &str) -> Result<Value, String> {
 struct Parser<'a> {
     s: &'a [u8],
     i: usize,
+    depth: usize,
 }
 
 impl Parser<'_> {
@@ -47,6 +49,15 @@ impl Parser<'_> {
         }
     }
     fn value(&mut self) -> Result<Value, String> {
+        if self.depth >= 64 {
+            return Err(self.err("JSON nesting exceeds reader budget"));
+        }
+        self.depth += 1;
+        let result = self.value_inner();
+        self.depth -= 1;
+        result
+    }
+    fn value_inner(&mut self) -> Result<Value, String> {
         match self.s.get(self.i) {
             Some(b'{') => {
                 self.i += 1;
@@ -150,14 +161,21 @@ impl Parser<'_> {
                         b'\\' => out.push(b'\\'),
                         b'u' => {
                             let mut cp = self.hex4()?;
-                            if (0xD800..0xDC00).contains(&cp)
-                                && self.s[self.i..].starts_with(b"\\u")
-                            {
+                            if (0xD800..0xDC00).contains(&cp) {
+                                if !self.s[self.i..].starts_with(b"\\u") {
+                                    return Err(self.err("missing low surrogate"));
+                                }
                                 self.i += 2;
                                 let lo = self.hex4()?;
-                                cp = 0x10000 + ((cp - 0xD800) << 10) + (lo.wrapping_sub(0xDC00));
+                                if !(0xDC00..=0xDFFF).contains(&lo) {
+                                    return Err(self.err("invalid low surrogate"));
+                                }
+                                cp = 0x10000 + ((cp - 0xD800) << 10) + (lo - 0xDC00);
+                            } else if (0xDC00..=0xDFFF).contains(&cp) {
+                                return Err(self.err("unpaired low surrogate"));
                             }
-                            let ch = char::from_u32(cp).unwrap_or('\u{FFFD}');
+                            let ch = char::from_u32(cp)
+                                .ok_or_else(|| self.err("invalid Unicode scalar"))?;
                             let mut buf = [0u8; 4];
                             out.extend_from_slice(ch.encode_utf8(&mut buf).as_bytes());
                         }
@@ -351,6 +369,37 @@ impl<T: Into<Json>> From<Vec<T>> for Json {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn json_nesting_is_bounded_before_recursive_descent() {
+        assert!(parse(&format!("{}0{}", "[".repeat(32), "]".repeat(32))).is_ok());
+        assert!(
+            parse(&format!("{}0{}", "[".repeat(10_000), "]".repeat(10_000)))
+                .unwrap_err()
+                .contains("nesting")
+        );
+    }
+
+    #[test]
+    fn unicode_surrogates_are_validated_without_overflow_or_replacement() {
+        assert_eq!(
+            parse(r#""\ud800\udc00""#).unwrap().as_str(),
+            Some("\u{10000}")
+        );
+        assert_eq!(
+            parse(r#""\udbff\udfff""#).unwrap().as_str(),
+            Some("\u{10ffff}")
+        );
+        for input in [
+            r#""\ud800\u0000""#,
+            r#""\ud800\ud800""#,
+            r#""\ud800""#,
+            r#""\udc00""#,
+        ] {
+            assert!(parse(input).is_err(), "{input}");
+        }
+        assert!(crate::migration::source::Capture::parse(r#"{"format":"\ud800\u0000"}"#).is_err());
+    }
 
     #[test]
     fn parse_and_render() {

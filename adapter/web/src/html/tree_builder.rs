@@ -934,9 +934,9 @@ impl TreeBuilder {
                     let mathml_text = e.namespace == Namespace::MathMl
                         && matches!(e.name.as_str(), "mi" | "mo" | "mn" | "ms" | "mtext");
                     let html_integration = self.html_integration_point(e);
-                    (mathml_text
-                        && matches!(&t, Token::StartTag { name, .. } if name != "mglyph" && name != "malignmark"))
-                        || (mathml_text && chars)
+                    mathml_text
+                        && (chars
+                            || matches!(&t, Token::StartTag { name, .. } if name != "mglyph" && name != "malignmark"))
                         || (e.namespace == Namespace::MathMl
                             && e.name == "annotation-xml"
                             && matches!(&t, Token::StartTag { name, .. } if name == "svg"))

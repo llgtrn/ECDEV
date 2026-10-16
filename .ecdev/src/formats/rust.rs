@@ -44,6 +44,7 @@ pub fn parse(text: &str) -> Result<Expr, ParseError> {
         s: text.as_bytes(),
         i: 0,
         line: 1,
+        depth: 0,
     };
     p.trivia()?;
     let e = p.expr()?;
@@ -58,6 +59,7 @@ struct P<'a> {
     s: &'a [u8],
     i: usize,
     line: usize,
+    depth: usize,
 }
 
 impl P<'_> {
@@ -125,6 +127,15 @@ impl P<'_> {
         Ok(String::from_utf8_lossy(&self.s[start..self.i]).into_owned())
     }
     fn expr(&mut self) -> Result<Expr, ParseError> {
+        if self.depth >= 64 {
+            return Err(self.err("declaration nesting exceeds reader budget"));
+        }
+        self.depth += 1;
+        let result = self.expr_inner();
+        self.depth -= 1;
+        result
+    }
+    fn expr_inner(&mut self) -> Result<Expr, ParseError> {
         self.trivia()?;
         let line = self.line;
         let kind = match self.peek() {
@@ -506,6 +517,17 @@ pub fn same(a: &Expr, b: &Expr) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn declaration_nesting_is_bounded_before_recursive_descent() {
+        assert!(parse(&format!("{}0{}", "[".repeat(32), "]".repeat(32))).is_ok());
+        assert!(
+            parse(&format!("{}0{}", "[".repeat(10_000), "]".repeat(10_000)))
+                .unwrap_err()
+                .message
+                .contains("nesting")
+        );
+    }
 
     #[test]
     fn roundtrip() {
