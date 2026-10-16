@@ -21,7 +21,7 @@ dependency on any other repository.
 `migrate` `prove` `protocol` `fact` `knowledge` `donor` `context` `show` `backlinks`
 `technology`; `help` lists them. The server exposes the same binary as `ecdev governance <command>`.
 
-Authoritative state (never hand-written Markdown):
+Current source governor declarations and records (not a second canonical World authority; never hand-written Markdown):
 
 - `declared/{repository,donors,migration,technologies}.rs` — typed Rust declarations checked by
   rustc and read identically at run time: nodes, edges, donors, capabilities (with `maps_to`,

@@ -14,16 +14,18 @@
 
 ```mermaid
 flowchart LR
-    subgraph SOURCE["ECDEV — implementation/evidence source"]
+    subgraph SOURCE["ECDEV: current development and migration input"]
       A["Web acquisition evidence"] --> B["Native parse / store"]
     end
-    subgraph CANON["Single Chronica canonical runtime + many Phenora"]
-      C["Chronica typed capability"] --> D["Research Phenora"]
-      D --> V{"Proof and consumer cutover?"}
+    B -. "PROPOSED migration; runtime join NOT YET PROVEN" .-> V{"Independent identity, behavior, authority and consumer proof"}
+    V -. "candidate only; evidence grants no authority" .-> C["One Chronica world: verified target binding"]
+    subgraph CANON["Required governed relationships; these dashed edges are not source integration calls"]
+      C -. "typed WorkRequest and current authority" .-> P["Thymora / Porion: pre-effect admission"]
+      P -. "sealed plan and bounds" .-> M["Metabion: bound execution"]
+      M -. "success, failure or unknown effect" .-> L["Lineara: evidence, reconciliation and canonicalization"]
+      L -. "accepted canonical event" .-> H["One history; replay-derived World"]
+      H -. "derived permitted projection" .-> F["Product research Phenora; shared UI at Chronica/phenotype"]
     end
-    B -->|"Typed data, native code and verified lineage"| C
-    V -->|"passed"| OK["Admitted capability / rebuildable view"]
-    V -->|"failed"| NO["BLOCKED: no new authority, no duplicate UI"]
 ```
 
 
@@ -112,7 +114,7 @@ A fresh JP public research run now reaches a shortlist for further research: 332
 
 Public Amazon HTML acquisition now has its own public-amazon provider and PUBLIC_AMAZON source layer, separate from OFFICIAL_SP_API and KEEPA. It enforces native robots policy and redirect host scope, preserves requested and final URLs, and records URL-derived ASIN assertions without claiming official validation. Cache and restart recovery preserve provider identity. The live Amazon JP search attempt returned HTTP 503; two native retailer/manufacturer captures still reached a further-research shortlist at zero paid cost. Amazon product extraction remains fixture verified. The official SP-API adapter now has operator-gated request/response and seller-read implementations, while credentialed live acquisition remains unvalidated; see the distinct credential-readiness report rather than treating this older public-Amazon run as evidence of official API completion. See research/commerce/public-amazon-proof.json.
 
-System status and the dashboard now show historical zero-paid shortlist evidence after verifying acquired capture hashes from two listing origins. Fixture, cached and replay runs cannot establish this status; missing or altered raw captures invalidate it. The official SDK smoke test reports its fixture scope separately. The eight requested donors have a locked-license and canonical lifecycle review; extinction is claimed only where `ecdev-gov extinction` passes every gate. See research/commerce/live-status-proof.json, research/commerce/donor-lifecycle-review.json, and the measured requirement report in research/commerce/live-wave-report.json.
+System status and the dashboard now show historical zero-paid shortlist evidence after verifying acquired capture hashes from two listing origins. Fixture, cached and replay runs cannot establish this status; missing or altered raw captures invalidate it. The recorded official SDK smoke assessment reports its historical fixture scope separately; its former Node client is absent from the current checkout and is not a runnable present gate. The eight requested donors have a locked-license and canonical lifecycle review; extinction is claimed only where `ecdev-gov extinction` passes every gate. See research/commerce/live-status-proof.json, research/commerce/donor-lifecycle-review.json, and the measured requirement report in research/commerce/live-wave-report.json.
 
 Native HTTP response failures now retain status, known request counts and Retry-After headers. Delays reach the persistent frontier and its run-scoped origin cooldown; stale-cache completion can preserve that cooldown. Seconds and three HTTP-date forms have regression coverage. A fresh live Amazon request returned HTTP 503 without Retry-After; its two requests are now counted alongside four fallback requests, with one further-research shortlist and zero paid cost. Timing remains regression evidence. Redirect-specific deferral and broader origin coordination remain pending. See research/commerce/http-retry-proof.json.
 
