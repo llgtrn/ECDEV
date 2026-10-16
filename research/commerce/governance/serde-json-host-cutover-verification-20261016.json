@@ -1,0 +1,532 @@
+{
+  "format": "ecdev-native-json-host-cutover-verification-v1",
+  "observed_at_utc": "2026-10-16T22:09:12.355046+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "08658098ff82d8107c2c1a3a5e62e161f365a29f",
+  "qualified_code_commit": "6340a7c1c41f0f73ac1bb1b452dcf40ae4ae15bf",
+  "scope": "EXISTING_SOURCE_NATIVE_JSON_CALLER_HOST_FEATURE_CUTOVER; NO_DONOR_SOURCE_COPIED_OR_TARGET_ADMISSION",
+  "candidate": {
+    "donor": "dependency--github-com-serde-rs-json",
+    "source_id": "ec1:0d491f3aff4d12b89ec3c9fb60dc15a4",
+    "capabilities": [
+      "serde_json.parse-text",
+      "serde_json.json-macro"
+    ],
+    "existing_native_replacement": "ecdev_core::json; commerce / technology/commerce.json",
+    "callers": [
+      "adapter/keepa/src/client.rs::Keepa::acquire_at",
+      "adapter/marketplace/src/transport.rs::Http::send",
+      "adapter/marketplace/src/transport.rs::Session"
+    ],
+    "finite_missing_gates_before": [
+      "unused reqwest json feature edges in two manifests",
+      "missing macro Regression declaration",
+      "fresh mandatory caller/JSON parity and regression proof bindings"
+    ],
+    "completed": [
+      "disabled both host JSON features; native HTTP bytes/body paths retained",
+      "added mandatory macro and real loopback HTTP parser regressions",
+      "29 actual scoped jobs passed; 16 unique PASS records appended"
+    ],
+    "remaining_failed_gates": [
+      {
+        "gate": "LINKED_EDGES_ZERO",
+        "pass": false,
+        "detail": "1 observed: LOCK CARGO serde_json linked via reqwest 0.12.28: adapter/keepa/Cargo.toml → reqwest 0.12.28 → serde_json 1.0.151 (in Cargo.lock)"
+      },
+      {
+        "gate": "ROLLBACK_INDEPENDENT",
+        "pass": false,
+        "detail": "still depended on by: commerce.keepa (uses it)"
+      }
+    ],
+    "all_target_eligibility": "BLOCKED: cached exact reqwest0.12.28 retains unconditional cfg(wasm32) serde_json dependency; conservative lock/rollback gates remain false",
+    "current_copying_authorization": "UNKNOWN; original source licence receipts remain UNVERIFIED; no copied donor implementation"
+  },
+  "changed_inputs": [
+    {
+      "path": ".ecdev/README.md",
+      "sha256": "aef3b5fbf52faf3865fa96d19907e373f48fda41a11a1e9b26e121284893b9ad",
+      "bytes": 20688
+    },
+    {
+      "path": ".ecdev/declared/donors.rs",
+      "sha256": "be4adcb88fb07873e552d841538db5943b8e6cd775ee9929e713cc1909df73b2",
+      "bytes": 270285
+    },
+    {
+      "path": ".ecdev/evidence/1102a40959cb79534b32f23bd6ede8c2.ecg",
+      "sha256": "1102a40959cb79534b32f23bd6ede8c2b447f1c5291a55a54200180621f2d19c",
+      "bytes": 327
+    },
+    {
+      "path": ".ecdev/evidence/11a890088e480d322a21c2a8a20d7397.ecg",
+      "sha256": "11a890088e480d322a21c2a8a20d739728b17a65ec699da091d3a061268bef16",
+      "bytes": 436
+    },
+    {
+      "path": ".ecdev/evidence/18dda8232b53a21b4a987528a21a712e.ecg",
+      "sha256": "18dda8232b53a21b4a987528a21a712e627b3b322d3345caffe98aa4e3150935",
+      "bytes": 322
+    },
+    {
+      "path": ".ecdev/evidence/1dab69108dc0960f1513c8dd83831493.ecg",
+      "sha256": "1dab69108dc0960f1513c8dd838314933febb38df2b05087da694ced602f1677",
+      "bytes": 411
+    },
+    {
+      "path": ".ecdev/evidence/266600e7fe89707dead0a096c148ef2d.ecg",
+      "sha256": "266600e7fe89707dead0a096c148ef2daab146ecd341da3162314ecfd8bff06d",
+      "bytes": 378
+    },
+    {
+      "path": ".ecdev/evidence/72510c183355b8ccf3ee7ab9e2e56510.ecg",
+      "sha256": "72510c183355b8ccf3ee7ab9e2e56510e0e4138e9c7b36bf6eb3259f7acfab02",
+      "bytes": 383
+    },
+    {
+      "path": ".ecdev/evidence/830612fdafbe40a7bac9c78db0df7a18.ecg",
+      "sha256": "830612fdafbe40a7bac9c78db0df7a18036b47d74c2ea00662f11a963cb164ec",
+      "bytes": 380
+    },
+    {
+      "path": ".ecdev/evidence/9c125781c87f8c6adcde217b5db29620.ecg",
+      "sha256": "9c125781c87f8c6adcde217b5db2962081cc778d3159ff85c6344826a73a2142",
+      "bytes": 421
+    },
+    {
+      "path": ".ecdev/evidence/a5a1214b9e6db9c382dfa974e4080723.ecg",
+      "sha256": "a5a1214b9e6db9c382dfa974e4080723bf21c520550822018cd2229f2e338b6f",
+      "bytes": 359
+    },
+    {
+      "path": ".ecdev/evidence/a847725e3a1ec34613bc00b8afd16f2a.ecg",
+      "sha256": "a847725e3a1ec34613bc00b8afd16f2a9bab835c40c21b3553be42bdd6aa37d6",
+      "bytes": 380
+    },
+    {
+      "path": ".ecdev/evidence/c55b4c559fb1fa0984015e1f9e796286.ecg",
+      "sha256": "c55b4c559fb1fa0984015e1f9e796286cc4a3365b298f877af48225b61860cae",
+      "bytes": 466
+    },
+    {
+      "path": ".ecdev/evidence/ca16a48495aa89665cf0550446bcd8ce.ecg",
+      "sha256": "ca16a48495aa89665cf0550446bcd8ce22e40e073de715597dfb8687e2a294e4",
+      "bytes": 336
+    },
+    {
+      "path": ".ecdev/evidence/cc200d8ea3340d8f7c08ab6e9bf8ef4a.ecg",
+      "sha256": "cc200d8ea3340d8f7c08ab6e9bf8ef4a37be52e6f78dcdf38be4dedce4a4158c",
+      "bytes": 368
+    },
+    {
+      "path": ".ecdev/evidence/d75450aeefcc261a0e074d6643821bca.ecg",
+      "sha256": "d75450aeefcc261a0e074d6643821bca72ba7b26ee7f886975b2871a25a3b015",
+      "bytes": 396
+    },
+    {
+      "path": ".ecdev/evidence/e93b24cb10aba58e3c4613d26954f130.ecg",
+      "sha256": "e93b24cb10aba58e3c4613d26954f1307c9ede14d6fb8c0449e2d725da336cc4",
+      "bytes": 352
+    },
+    {
+      "path": ".ecdev/evidence/f440dc4f124d62e220078be7e2ecb555.ecg",
+      "sha256": "f440dc4f124d62e220078be7e2ecb55536518623e4aaba16e40d4e8b374d2bc3",
+      "bytes": 434
+    },
+    {
+      "path": ".ecdev/tests/source_capture.rs",
+      "sha256": "d6c51090cbddf44246e60920e26fe96723a3f197ce069386249230a0d3566caa",
+      "bytes": 18694
+    },
+    {
+      "path": "adapter/keepa/Cargo.toml",
+      "sha256": "50e342a562b09a0ddc801d43cade46baa8826558f338eb9b67d7608090f1b91b",
+      "bytes": 245
+    },
+    {
+      "path": "adapter/keepa/src/client.rs",
+      "sha256": "b2aeadfd6791934dfc5a2754a42a2871df4a1491ca217e1c78483b480d689717",
+      "bytes": 21284
+    },
+    {
+      "path": "adapter/keepa/tests/native_json.rs",
+      "sha256": "0aa2bdf522bac2b54b0745855135cdde1e9f95c22446cea99cbda9f9b145419b",
+      "bytes": 2103
+    },
+    {
+      "path": "adapter/marketplace/Cargo.toml",
+      "sha256": "936851d87abfa1c58fc1a2d07b667427ad6bc4b16bc48e397b588cdfaeb365c6",
+      "bytes": 251
+    }
+  ],
+  "unchanged_controls": [
+    {
+      "path": "Cargo.lock",
+      "sha256": "338a9d92625512dcc65889b31bd2fc3684eed96f12211be025f2ba19d11087b6",
+      "bytes": 32718
+    },
+    {
+      "path": "domain/commerce/tests/json_macro.rs",
+      "sha256": "26eccdf906e8807698b2f5b235d62d626e5020bf4b048ddf045de73560f7039c",
+      "bytes": 3543
+    },
+    {
+      "path": "domain/commerce/src/json/macros.rs",
+      "sha256": "37c97e5de3268e1c0828a2624d6dec4320a2680ccbbdbeb7e16610e63fd6bc91",
+      "bytes": 5771
+    },
+    {
+      "path": "research/commerce/native-json.json",
+      "sha256": "b3cbff2436d7dc9d6e0afc74542e9008b5c0120561523956b29fd927623e8b7f",
+      "bytes": 4417
+    },
+    {
+      "path": "research/commerce/serde-json-semantic-matrix.json",
+      "sha256": "1fec9cef4c1163831c66fa6c0b3b605da2dce971aa9aad2b424a06abef89fb68",
+      "bytes": 4110
+    },
+    {
+      "path": "research/commerce/donors/census/dependency--github-com-serde-rs-json/license.json",
+      "sha256": "90b948ba8d81daa598bbaaee23f14be01b79b92e91e9e8c315e6b6b2e614d7b9",
+      "bytes": 11518
+    },
+    {
+      "path": ".ecdev/tests/fixtures/source-capture-00dd7f0-v1.json",
+      "sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+      "bytes": 3141735
+    },
+    {
+      "path": "research/commerce/governance/source-mapping-proposal-v1.json",
+      "sha256": "f2933fd99d4e2737dd3abb4233d7d8c634409a09597c2a01783016930745b056",
+      "bytes": 3767908
+    },
+    {
+      "path": "research/commerce/governance/price-text-subset-proposal-v1.json",
+      "sha256": "2e05d72ca01d42bc537bbfba8a9c03c398008e495a5abf5af6e032110923e9cf",
+      "bytes": 486686
+    },
+    {
+      "path": "research/commerce/governance/price-text-subset-verification-20261016.json",
+      "sha256": "4173e9419721eadcbdd8dbfc021816def33091c2df9d4083f35b49b164139a3d",
+      "bytes": 47850
+    }
+  ],
+  "native_host_dependency_tree": {
+    "path": "/workspace/scratch/ecdev-json-cutover-host-tree.txt",
+    "sha256": "0e285e2092f94b1862299e0df96b35de2db216d3e5b087c00a0b181c4916a466",
+    "bytes": 12202
+  },
+  "all_target_tree_attempt": {
+    "status": "NOT_RUN_TO_COMPLETION",
+    "exit_code": 101,
+    "error": {
+      "path": "/workspace/scratch/ecdev-json-cutover-all-target-tree-attempt.stderr",
+      "sha256": "c0e9e424727e9fd035dd3030b9751add753cb16ca97ac059378ded21b9bb4a6f",
+      "bytes": 226
+    },
+    "meaning": "offline cache lacks bumpalo3.20.3; no target build or whole-target closure claimed"
+  },
+  "proof_refresh": {
+    "jobs_passed": 29,
+    "jobs_failed": 0,
+    "jobs": [
+      {
+        "scope": "keepa-v2",
+        "passed": 7,
+        "failed": 0,
+        "log": {
+          "path": "/tmp/ecdev-json-cutover-prove-keepa-v2.log",
+          "sha256": "4287feb8b10deaf390ae3ffe0045e5237a9fe7a742384605ee837c4b7e23522c",
+          "bytes": 916
+        }
+      },
+      {
+        "scope": "marketplace",
+        "passed": 4,
+        "failed": 0,
+        "log": {
+          "path": "/tmp/ecdev-json-cutover-prove-marketplace.log",
+          "sha256": "6a8aeed821d4354754053f70fb4b287d572758a13bc48295000621dd3de3777e",
+          "bytes": 672
+        }
+      },
+      {
+        "scope": "json",
+        "passed": 15,
+        "failed": 0,
+        "log": {
+          "path": "/tmp/ecdev-json-cutover-prove-json.log",
+          "sha256": "0d876c560b8bdefd4f4eab28bafa06d5e8fac47068c5399a347a7619753d87ae",
+          "bytes": 2075
+        }
+      },
+      {
+        "scope": "keepa-product",
+        "passed": 3,
+        "failed": 0,
+        "log": {
+          "path": "/tmp/ecdev-json-cutover-prove-keepa-product.log",
+          "sha256": "51840cd4387cbd03b222a07a8ad7423bad7b52253d62478c6b1a563bc1e082ca",
+          "bytes": 405
+        }
+      }
+    ],
+    "new_unique_records": [
+      {
+        "path": ".ecdev/evidence/1102a40959cb79534b32f23bd6ede8c2.ecg",
+        "sha256": "1102a40959cb79534b32f23bd6ede8c2b447f1c5291a55a54200180621f2d19c",
+        "bytes": 327
+      },
+      {
+        "path": ".ecdev/evidence/11a890088e480d322a21c2a8a20d7397.ecg",
+        "sha256": "11a890088e480d322a21c2a8a20d739728b17a65ec699da091d3a061268bef16",
+        "bytes": 436
+      },
+      {
+        "path": ".ecdev/evidence/18dda8232b53a21b4a987528a21a712e.ecg",
+        "sha256": "18dda8232b53a21b4a987528a21a712e627b3b322d3345caffe98aa4e3150935",
+        "bytes": 322
+      },
+      {
+        "path": ".ecdev/evidence/1dab69108dc0960f1513c8dd83831493.ecg",
+        "sha256": "1dab69108dc0960f1513c8dd838314933febb38df2b05087da694ced602f1677",
+        "bytes": 411
+      },
+      {
+        "path": ".ecdev/evidence/266600e7fe89707dead0a096c148ef2d.ecg",
+        "sha256": "266600e7fe89707dead0a096c148ef2daab146ecd341da3162314ecfd8bff06d",
+        "bytes": 378
+      },
+      {
+        "path": ".ecdev/evidence/72510c183355b8ccf3ee7ab9e2e56510.ecg",
+        "sha256": "72510c183355b8ccf3ee7ab9e2e56510e0e4138e9c7b36bf6eb3259f7acfab02",
+        "bytes": 383
+      },
+      {
+        "path": ".ecdev/evidence/830612fdafbe40a7bac9c78db0df7a18.ecg",
+        "sha256": "830612fdafbe40a7bac9c78db0df7a18036b47d74c2ea00662f11a963cb164ec",
+        "bytes": 380
+      },
+      {
+        "path": ".ecdev/evidence/9c125781c87f8c6adcde217b5db29620.ecg",
+        "sha256": "9c125781c87f8c6adcde217b5db2962081cc778d3159ff85c6344826a73a2142",
+        "bytes": 421
+      },
+      {
+        "path": ".ecdev/evidence/a5a1214b9e6db9c382dfa974e4080723.ecg",
+        "sha256": "a5a1214b9e6db9c382dfa974e4080723bf21c520550822018cd2229f2e338b6f",
+        "bytes": 359
+      },
+      {
+        "path": ".ecdev/evidence/a847725e3a1ec34613bc00b8afd16f2a.ecg",
+        "sha256": "a847725e3a1ec34613bc00b8afd16f2a9bab835c40c21b3553be42bdd6aa37d6",
+        "bytes": 380
+      },
+      {
+        "path": ".ecdev/evidence/c55b4c559fb1fa0984015e1f9e796286.ecg",
+        "sha256": "c55b4c559fb1fa0984015e1f9e796286cc4a3365b298f877af48225b61860cae",
+        "bytes": 466
+      },
+      {
+        "path": ".ecdev/evidence/ca16a48495aa89665cf0550446bcd8ce.ecg",
+        "sha256": "ca16a48495aa89665cf0550446bcd8ce22e40e073de715597dfb8687e2a294e4",
+        "bytes": 336
+      },
+      {
+        "path": ".ecdev/evidence/cc200d8ea3340d8f7c08ab6e9bf8ef4a.ecg",
+        "sha256": "cc200d8ea3340d8f7c08ab6e9bf8ef4a37be52e6f78dcdf38be4dedce4a4158c",
+        "bytes": 368
+      },
+      {
+        "path": ".ecdev/evidence/d75450aeefcc261a0e074d6643821bca.ecg",
+        "sha256": "d75450aeefcc261a0e074d6643821bca72ba7b26ee7f886975b2871a25a3b015",
+        "bytes": 396
+      },
+      {
+        "path": ".ecdev/evidence/e93b24cb10aba58e3c4613d26954f130.ecg",
+        "sha256": "e93b24cb10aba58e3c4613d26954f1307c9ede14d6fb8c0449e2d725da336cc4",
+        "bytes": 352
+      },
+      {
+        "path": ".ecdev/evidence/f440dc4f124d62e220078be7e2ecb555.ecg",
+        "sha256": "f440dc4f124d62e220078be7e2ecb55536518623e4aaba16e40d4e8b374d2bc3",
+        "bytes": 434
+      }
+    ],
+    "all_619_prior_ecg_files_unchanged": true,
+    "new_record_verdicts": "16PASS; 13 other valid records correctly reused",
+    "original36_batch_fingerprint": "sha256:1d0ae8f97d4f91757b424dc7d1013089849f99da27648b919c41e6a023fe637d",
+    "new16_batch_fingerprint": "sha256:6c061c9f897a5f122a4cf84e5271119cf6ddb8eb9caf0f01669cc8415cca5896",
+    "old_failed_records_retained": [
+      ".ecdev/evidence/506dbcaf68a1ce8754ef180090e80c68.ecg",
+      ".ecdev/evidence/f727c3b006637021a6537eea6ddf3f94.ecg"
+    ]
+  },
+  "verification": {
+    "workspace": {
+      "passed": 442,
+      "failed": 0,
+      "log": {
+        "path": "/tmp/ecdev-json-cutover-workspace-tests.log",
+        "sha256": "c4d7eb4d47e780e704acaefdab07bfb5e6a0eabc3e7c58c7ac543755469a35b6",
+        "bytes": 44629
+      }
+    },
+    "governor": {
+      "passed": 229,
+      "failed": 0,
+      "log": {
+        "path": "/tmp/ecdev-json-cutover-v3-governor-tests.log",
+        "sha256": "d0a6512c80b34be0dd22d857cd842b27c45aa11ed1d91261660749739409a474",
+        "bytes": 19701
+      }
+    },
+    "product_lint": {
+      "path": "/tmp/ecdev-json-cutover-workspace-clippy.log",
+      "sha256": "905b2e57ee24a30758823ee6340c800ec4b22d8c13742e0381989177ac8c6cce",
+      "bytes": 614
+    },
+    "governor_lint": {
+      "path": "/tmp/ecdev-json-cutover-v3-governor-clippy.log",
+      "sha256": "f443d54d0d59c6030e3657c59f9a9a926d3e7f49493125595b47d2610b0fe4dc",
+      "bytes": 125
+    },
+    "format": {
+      "path": "/tmp/ecdev-json-cutover-fmt-final.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "source_capture_test": "strict immutable fixture, old36 batch and old2FAILs preserved; separate exact new16PASS batch bound",
+    "provider_execution": "LOOPBACK_HTTP_FIXTURES_ONLY; NO_LIVE_PROVIDER_OR_PAID_REQUEST_EXECUTED",
+    "runtime_semantics": "integer2^53+1 exact; unknown cost/effect distinct from0/false; absent/null preserved; raw bytes/hash and EXTERNAL_HISTORY separate; no new egress/retry/budget/effect grant"
+  },
+  "preserved_attempts": [
+    {
+      "path": "/tmp/ecdev-json-cutover-governor-tests.log",
+      "sha256": "d2acd6185566fe92d4a360da7a9a7d5542b189f41aa2eb4a894a0474657af979",
+      "bytes": 8677
+    },
+    {
+      "path": "/tmp/ecdev-json-cutover-final-governor-tests.log",
+      "sha256": "582f9a51ac26f3e7a3f7675d38bd198917907bef91fab15134acfce2cb1fe129",
+      "bytes": 19419
+    },
+    {
+      "path": "/tmp/ecdev-json-cutover-prove-keepa.log",
+      "sha256": "34e414b49eb060250a47de0ab21aa2d09341f764a127dc20a9bfc3a8a1f9aaa4",
+      "bytes": 70
+    }
+  ],
+  "attempt_meaning": "stale Keepa subject conformance correctly refused; exact capture626->642 expectation correctly failed; stale governor binary refused changed declarations. Current bytes were rebuilt/reproved and all229 checks passed without lowering claims or gates.",
+  "source_audit": {
+    "report": {
+      "path": "/tmp/ecdev-json-cutover-v3-reconcile.json",
+      "sha256": "27ea4f2076baaab8f7ba98a190de175b4369fc620bb51d08ffe03890b401e823",
+      "bytes": 4660470
+    },
+    "reviewed_source_oss": {
+      "included": 3,
+      "unresolved": 65,
+      "total": null,
+      "verified_extinct": null,
+      "status": "PARTIALLY_RECONCILED",
+      "meaning": "Reviewed source inclusions are a partial count; global OSS total and canonical verified extinction remain UNKNOWN"
+    },
+    "mixed_cohort": {
+      "total": 68,
+      "declared_extinct": 10,
+      "effective_extinct": 10
+    },
+    "active_gate": {
+      "numerator": 10,
+      "registered_active": 48,
+      "unregistered_externals": 0,
+      "denominator": 48,
+      "pass": false,
+      "rule": "Historical registered union effective registered; exclude only legal REJECTED/SUPERSEDED; add all unregistered external participation"
+    },
+    "unregistered_participation": [],
+    "extinction_delta": 0,
+    "assimilation_delta": 0
+  },
+  "source_capture": {
+    "payloads": 642,
+    "old626_retained": true,
+    "only_changed_old_payload": ".ecdev/declared/donors.rs: exactly two Regression appends",
+    "active_records": 634,
+    "retired_records": 8,
+    "facts": 1861,
+    "graph_nodes": 823,
+    "graph_edges": 1116,
+    "old821_ids_retained": true,
+    "new_nodes": "two existing-governor derived source proof identities; no canonical concept registration",
+    "old_graph_change": "commerce evidence list gains only two locators; all identity fields retained"
+  },
+  "central_qualification": {
+    "report": {
+      "path": "/workspace/scratch/ecdev-json-cutover-central-qualified-20261016/report.json",
+      "sha256": "67b29ecfc84a7253ff32b6ea79f0d8dc273f8ce1f63f31cdcd13e8c3da4bcf84",
+      "bytes": 917014
+    },
+    "passed": 62,
+    "failed": 0,
+    "engine_commit": "217fd75c53795d31fa0a2a989a04ca49bdacfa80",
+    "registered_sources": 7,
+    "source_registered": false,
+    "source_lock_installed": false,
+    "source_input_count": 2939,
+    "source_input_manifest_sha256": "0a5ebe8a30285c5b328e9e70cbeab5be6ca309b5c866aff4c98b3f9d4cc8efb9",
+    "source_observed_head": "6340a7c1c41f0f73ac1bb1b452dcf40ae4ae15bf",
+    "all_qualified_bytes_and_modes_match_committed_code": true,
+    "binding_trust": "LOCAL_IMMUTABLE_GIT_OBJECTS_AND_TRUSTED_FILESYSTEM; NOT_AUTHENTICATED_EXECUTION",
+    "fresh": {
+      "sha256": "sha256:44c45a1ee3c3ef4a94f4943a8231be24a86283b26e421ccad47a36d0670b47d5",
+      "bytes": 3196285,
+      "observed_head": "6340a7c1c41f0f73ac1bb1b452dcf40ae4ae15bf",
+      "producer_schema_claim": "sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140",
+      "files": 642,
+      "raw_bytes": 1126241,
+      "graph_nodes": 823,
+      "graph_edges": 1116,
+      "declared_nodes": 12,
+      "declared_donors": 68,
+      "declared_capabilities": 408,
+      "historical_donors": 55,
+      "historical_capabilities": 245,
+      "capability_floor_recorded": true,
+      "facts": 1861,
+      "active_evidence_records": 634,
+      "retired_evidence_records": 8,
+      "adoption_variants": {
+        "NotAdopted": 334,
+        "ReliedOn": 73,
+        "Unresolved": 1
+      },
+      "knowledge_variants": {
+        "Absorbed": 32,
+        "AlgorithmCandidate": 4,
+        "BenchmarkCandidate": 30,
+        "Divergent": 68,
+        "IndependentNative": 110,
+        "NoResearchValue": 39,
+        "ReferenceOnly": 85,
+        "StudyCandidate": 40
+      },
+      "registry_binding": "PENDING",
+      "proof_freshness": "NOT_REVERIFIED"
+    },
+    "receipt_excluded": "this receipt written after qualification; no self-membership attestation"
+  },
+  "independent_reviews": {
+    "code": "APPROVED22:00:24UTC and second proof declaration22:02:01UTC",
+    "records_and_documentation": "APPROVED22:05:25UTC; all16 decoded records/proof and subject digests independently verified",
+    "strict_capture_extension": "APPROVED22:07:07UTC; all old assertions retained and new batch bound"
+  },
+  "remaining": [
+    "source8/shared positive admission/current rights/build and runtime custody PENDING",
+    "serde_json whole-target LINKED/ROLLBACK false; reqwest remains in all three adapters",
+    "original819 canonical assignments remain null; price old99 qualification unchanged",
+    "N01-N12/J1-J9/P0-P3 NOT_RUN; full native V1 INCOMPLETE"
+  ]
+}
