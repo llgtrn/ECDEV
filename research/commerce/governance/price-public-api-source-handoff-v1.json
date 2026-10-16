@@ -1,0 +1,354 @@
+{
+  "format": "ecdev-price-public-api-source-handoff-v1",
+  "observed_at_utc": "2026-10-16T20:43:15.524534+00:00",
+  "source_repository": "llgtrn/ECDEV",
+  "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+  "scope": "ONE_BOUNDED_SOURCE_CAPABILITY; NO_TARGET_OWNERSHIP_OR_ADMISSION",
+  "source_identity": {
+    "donor_alias": "scrapinghub--price-parser",
+    "donor_ec1": "ec1:7755f6459b7f8f22b262e2bdfe74d7b1",
+    "capability_key": "extract.price-public-api",
+    "donor_capability_ec1": "ec1:5f41ea7edd845d3559a926b897253666",
+    "donor_capability_semantic_key": "donor-capability/ecdev/scrapinghub--price-parser/extract.price-public-api",
+    "existing_source_capability_ec1": "ec1:a2e3b3e884070b64d4edacda08adf6e6",
+    "existing_source_capability_semantic_key": "capability/extract.price-public-api",
+    "existing_source_technology_ec1": "ec1:e4aedb10fcd783728d5c4ab221f20132",
+    "existing_source_technology_semantic_key": "technology/commerce.price-text",
+    "declaration": ".ecdev/declared/donors.rs:22",
+    "original_capture_sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+    "donor_capability_capture_locator": "/source_graph/nodes/302",
+    "source_capability_capture_locator": "/source_graph/nodes/509",
+    "source_technology_capture_locator": "/source_graph/nodes/715",
+    "recorded_declaration": {
+      "key": "extract.price-public-api",
+      "source_id": "ec1:5f41ea7edd845d3559a926b897253666",
+      "required": true,
+      "spec": "research/commerce/price-public-api-oracle-report.json",
+      "replacement": "commerce.web-research",
+      "maps_to": "capability/extract.price-public-api",
+      "adoption": {
+        "variant": "ReliedOn",
+        "reason": "adapter/web/src/lib.rs interprets offer price text and currency hints via parse_price"
+      },
+      "knowledge": {
+        "variant": "Absorbed",
+        "text": "behaviour native, derived from this donor and proven by its parity proofs",
+        "scope": null
+      },
+      "absorbs": [],
+      "proofs": [
+        {
+          "kind": "PARITY",
+          "locator": "adapter/web/src/price.rs::locked_price_public_api_oracle"
+        },
+        {
+          "kind": "REGRESSION",
+          "locator": "adapter/web/src/lib.rs::formatted_price_hints_preserve_unknown_observed_money_and_raw_source"
+        }
+      ]
+    }
+  },
+  "api": {
+    "implementation": "adapter/web/src/price.rs:514",
+    "function": "parse_price",
+    "request": {
+      "input": "Option<&str>",
+      "currency_hint": "Option<&str>",
+      "decimal_separator": "Option<char>; None, dot, comma or euro separator; unsupported values collapse to unknown in this wrapper",
+      "digit_group_separator": "Option<&str>; exact substring removed before numeric text extraction"
+    },
+    "response": {
+      "amount": "nullable canonical bounded finite decimal string",
+      "currency": "nullable source/hint token spelling; not ISO identity",
+      "amount_text": "nullable selected source numeric text",
+      "amount_float": "nullable finite binary float projection; not observed money"
+    },
+    "typed_internal": "Price::try_fromstring preserves unsupported-selector AssertionError and ResourceLimit; malformed numeric text becomes absent amount. Separate DecimalAmount/Price constructor, equality and float APIs have other typed errors; the legacy parse_price wrapper returns unknown on errors.",
+    "locale": "NO_LOCALE_ARGUMENT; frozen Python3.11/Unicode14-compatible digits/word tables and heuristic separator selection, not geographic/currency disambiguation",
+    "bounds": {
+      "input_bytes": 4096,
+      "hint_bytes": 4096,
+      "group_separator_bytes": 64,
+      "commerce_numeric_exponent_magnitude": 4096,
+      "commerce_numeric_output_bytes": 8192
+    },
+    "ambiguity": [
+      "First selected number may precede the actual price",
+      "Sign may be discarded by source-text selection",
+      "A free substring may yield derived zero",
+      "Currency token spelling does not identify an ISO currency or jurisdiction",
+      "Nonfinite or resource-bound decimal projections remain unavailable. Public decimal text has no fixed currency fractional precision; observed-money conversion separately rejects excess precision without rounding."
+    ]
+  },
+  "production_caller": {
+    "entry": "adapter/web/src/lib.rs::extract at line519",
+    "caller": "adapter/web/src/lib.rs::products at line354",
+    "call": "adapter/web/src/lib.rs:383",
+    "arguments": "parse_price(Some(raw_offer_price), stated_priceCurrency.as_str(), None, None)",
+    "output_field": "products[].observed_offers[].price_text_interpretation",
+    "state": "DERIVED for string <=4096bytes, UNKNOWN over bound; absent for numeric/non-string price",
+    "used_for_observed_price": false,
+    "currency_token_is_iso_identity": false,
+    "raw_source_preserved": "raw_price retains original JSON value/number lexeme; stated currency remains separate",
+    "observed_money": "adapter/web/src/lib.rs::money at line316, using original price plus explicitly stated currency::minor_unit_digits code, nonnegative exact decimal lexeme to checked i64 minor units; no symbol inference, rounding, negative values, unsupported codes, excess fractional precision or overflow",
+    "examples": [
+      {
+        "source_price": "$12.99",
+        "stated_currency": "USD",
+        "derived_amount": "12.99",
+        "derived_currency": "$",
+        "observed_price_minor": null
+      },
+      {
+        "source_price": "free shipping",
+        "stated_currency": null,
+        "derived_amount": "0",
+        "observed_price_minor": null
+      },
+      {
+        "source_price_numeric_lexeme": "1e3",
+        "stated_currency": "USD",
+        "text_interpretation": null,
+        "observed_price_minor": 100000
+      }
+    ]
+  },
+  "source_files": [
+    {
+      "path": ".ecdev/declared/donors.rs",
+      "sha256": "3bb6a27f81c0c5e47b6a6adc986de5f5225edd9c1201f440f9f1b865d4aa945e",
+      "bytes": 269346,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": ".ecdev/declared/repository.rs",
+      "sha256": "bb4960cb7917ad6d3bf41f38e2cec2963b1a00236d31ca69fffd0c171c2dcf8c",
+      "bytes": 6578,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": ".ecdev/declared/technologies.rs",
+      "sha256": "cff69363764e1b8ac56770ea6c4c58df700822b55084fe9397becc44b531e7fd",
+      "bytes": 46941,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": "adapter/web/src/price.rs",
+      "sha256": "5aac2cf7a43e3d2fad31e233d1abdbb97d21197cf245cbc1f49d0901fecd8ec3",
+      "bytes": 38697,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": "adapter/web/src/lib.rs",
+      "sha256": "7131454a1540301f266eb5f2782ed7be76962d655624a3bef5d71532b07939f5",
+      "bytes": 65317,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": "adapter/web/src/currency.rs",
+      "sha256": "40121edd042073f2ab3e6dee8d990001ee9695752914eb4ab85321337da7a580",
+      "bytes": 2630,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    {
+      "path": "adapter/web/data/price-currency.json",
+      "sha256": "d0ca7f33de17ac8cfbc8553904d50ed2263a9303f0c59cecdb4127217720fe79",
+      "bytes": 60566,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    }
+  ],
+  "proof_corpus": [
+    {
+      "path": "adapter/web/tests/fixtures/price-contract.json",
+      "sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
+      "bytes": 1038954,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 2937,
+      "test": "adapter/web/src/price.rs::locked_price_public_api_oracle",
+      "recorded_scope": "Actual Price.fromstring and parse_price alias behavior, exact amount/currency/amount_text/amount_float; source fixtures and generated API partitions, not native parity or extinction",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-number.json",
+      "sha256": "98c6045041c276573bc8f7799e9a08dd601afa5f392cbc6f7f88af95477c0800",
+      "bytes": 179952,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 1235,
+      "test": "adapter/web/src/price.rs::locked_price_parser_numeric_oracle",
+      "recorded_scope": "Numeric format normalization including separator guessing and explicit separator overrides, exact decimal strings. Currency detection and first-price text selection are separate donor APIs, not claimed.",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-decimal-helper.json",
+      "sha256": "3c61abb215988483ef56bae032c4537adf5f51204ec873118432d08d0ae637f9",
+      "bytes": 538393,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 3974,
+      "test": "adapter/web/src/price.rs::locked_price_decimal_helper_oracle",
+      "recorded_scope": "Direct get_decimal_separator behavior; Unicode Nd, 1/2/3/4 digits, Python regex final-newline semantics, invalid suffix and last-separator selection",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-literal-helper.json",
+      "sha256": "323ab1bc39c90312f58ecb79c4401d73812198bd040cf52915b592ae607960d6",
+      "bytes": 347297,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 1576,
+      "test": "adapter/web/src/price.rs::locked_price_literal_helper_oracle",
+      "recorded_scope": "or_regex(symbols).search: literal escaping, leftmost then list order, empty union/token and Unicode spans projected to UTF-8 bytes; compiled Python pattern object methods beyond search not claimed",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-source-helpers.json",
+      "sha256": "7df15486ea4d9f3b05d681804b2d0708e596fa5416f5fe9ed62fff284df164f5",
+      "bytes": 1014165,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 9560,
+      "test": "adapter/web/src/price.rs::locked_price_source_helpers_oracle",
+      "recorded_scope": "Direct currency token spelling and text extraction; source/hint priority and dollar-code Unicode word boundaries; valid string/optional currency inputs only",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-object-contract.json",
+      "sha256": "d02a82005bdcb975cc4a4cea3dad3e76a660db8099b5fe3c84a9ec39f26fcb45",
+      "bytes": 489759,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 1119,
+      "test": "adapter/web/src/price.rs::locked_price_object_contract_oracle",
+      "recorded_scope": "Typed Decimal-or-None constructor fields, original repr and amount_float outcomes, exact scale/sign/nonfinite behavior, equality including amount_text; synthetic study inputs, no native parity yet",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    },
+    {
+      "path": "adapter/web/tests/fixtures/price-scalar-contract.json",
+      "sha256": "64586b639da383db8cce21ab19359cb7d4787831d7885355aedfbe640523f80a",
+      "bytes": 136027,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+      "cases": 1134,
+      "test": "adapter/web/src/price.rs::locked_price_typed_scalar_oracle",
+      "recorded_scope": "Direct parse_number exact Decimal text, nonfinite and malformed input outcomes, empty/None and unsupported-selector error precedence; valid typed string inputs with recorded Python decimal context",
+      "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+      "recorded_license": "BSD-3-Clause"
+    }
+  ],
+  "supporting_case_count": 21535,
+  "selected_public_api_cases": 2937,
+  "current_direct_verification": {
+    "scope": "HOSTED_CLOUD_RUST_IMPLEMENTATION_TESTS; NOT_NATIVE_OS_CERTIFICATION",
+    "compiler": "rustc1.89.0",
+    "commands": [
+      "cargo +1.89.0 test --offline --locked -p ecdev-web price",
+      "cargo +1.89.0 test --offline --locked -p ecdev-web formatted_price_hints_preserve_unknown_observed_money_and_raw_source"
+    ],
+    "price_related_tests_passed": 23,
+    "caller_regression_repeated_passed": 1,
+    "failed": 0,
+    "ignored": 0,
+    "logs": [
+      {
+        "path": "/tmp/ecdev-price-parser-current-proof.log",
+        "sha256": "ec8234e73fba61380f36912d1630ef9428d95a82a43d509285360603d0a1ce3b",
+        "bytes": 7269
+      },
+      {
+        "path": "/tmp/ecdev-price-caller-current-proof.log",
+        "sha256": "b2e28d43fa669c86162cc6f80cfc986377cad115e017ccf272a923a467cb173d",
+        "bytes": 2656
+      }
+    ]
+  },
+  "historical_proof_context": {
+    "report": {
+      "path": "research/commerce/price-public-api-oracle-report.json",
+      "sha256": "7995f697ed93a61cd0c9084d2b2c9be84bb28ea0f1b23db8ed47bc6830da8f1b",
+      "bytes": 1393,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    "recorded_caller_sha256": "541589c5b83e4a2441cc3053914d3cacfedc0dfefc9e168ef332522a97b14410",
+    "current_source_commit_caller_sha256": "7131454a1540301f266eb5f2782ed7be76962d655624a3bef5d71532b07939f5",
+    "caller_hash_relation": "DIFFERENT; original historical report preserved; current direct tests reported separately",
+    "frozen_native_parity_flags": "Original corpus native_parity=false/whole_donor_parity=false retained; direct bounded test success does not rewrite frozen source observations"
+  },
+  "rights_evidence": {
+    "upstream_commit": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "existing_declared_license": "BSD-3-Clause",
+    "original_record": {
+      "source": "research/commerce/donors/registry.json",
+      "record_id": "#21",
+      "legacy_sha256": "sha256:ffb0a8ae79ffba0ae4e60db2cfde098e10a16079fd578ece838474d688221683"
+    },
+    "retained_root_license": {
+      "path": "LICENSE",
+      "sha256": "sha256:3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5",
+      "blob": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+      "bytes": 1513
+    },
+    "retained_notice": {
+      "path": "adapter/web/tests/fixtures/price-parser-LICENSE.txt",
+      "sha256": "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5",
+      "bytes": 1513,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    "source_review_at_commit": {
+      "path": "research/commerce/governance/source-review-decisions-v1.json",
+      "sha256": "7190d695b3ad388df65633a66c3a4ddee0dae0cf72a354c57bf34e3dc4cb3780",
+      "bytes": 3063,
+      "source_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a"
+    },
+    "exact_retained_evidence": [
+      {
+        "path": "research/commerce/donors/census/scrapinghub--price-parser/identity.json",
+        "sha256": "sha256:1f899e6ea76cffb513fb6b1bf5c9ef9bd03257ed85d65c57b9789e6e052b5fdf"
+      },
+      {
+        "path": "research/commerce/donors/census/scrapinghub--price-parser/license.json",
+        "sha256": "sha256:1237eec419a94b7561e5f75cd0ce6d1d76b44b037db7afe9ce78d0495e7ff4a5"
+      },
+      {
+        "path": "research/commerce/donors/census/scrapinghub--price-parser/files.jsonl",
+        "sha256": "sha256:d6029fe21412d71f2dd57efcd8f1865ab81347485eef76fc8587252d725c222d"
+      },
+      {
+        "path": "research/commerce/donors/census/scrapinghub--price-parser/tree.json",
+        "sha256": "sha256:0a0e551f0991a31bafa80a6fcdebda9b03796493b0f40ee34b362080d462c075"
+      },
+      {
+        "path": "research/commerce/donors/census/scrapinghub--price-parser/summary.json",
+        "sha256": "sha256:f173cffd13fef3e9f92969d3fb1c023eee4c8b9b820d85dda78ffba5fb8d4945"
+      },
+      {
+        "path": "research/commerce/donor-lifecycle-review.json",
+        "sha256": "sha256:33fe116ddb497b26336b65bc28ce390cebb67bb6530cce3b01b668f8dc57c33c"
+      }
+    ],
+    "historical_license_receipt_status": "UNVERIFIED",
+    "current_copying_authorization": "UNKNOWN; not granted by source inclusion or this handoff",
+    "scope": "Retained pinned source-root terms and frozen oracle/token data; distribution/component/Unicode-data obligations require target rights review; no inferred licence or provider/data authorization"
+  },
+  "pending_target": {
+    "target_commit": null,
+    "target_tree": null,
+    "canonical_semantic_key": null,
+    "canonical_NodeId": null,
+    "owner": null,
+    "caller_mapping": null,
+    "required": [
+      "actual Chronica target custody pin",
+      "target-declared canonical semantic/artifact identity and owner",
+      "real target caller preserving request/response/locale/amount/ambiguity and unknown distinctions",
+      "target proof corpus execution and rights/copying authorization"
+    ],
+    "all_other_source_assignments": "UNCHANGED_PENDING; no blanket819-node adoption"
+  },
+  "preserved_limits": [
+    "No source identities or historical bytes rewritten",
+    "No source8 enrollment or shared lock installed",
+    "No target adoption/extinction/acceptance credit granted",
+    "N01-N12/J1-J9/P0-P3 NOT_RUN; fullV1 INCOMPLETE"
+  ]
+}
