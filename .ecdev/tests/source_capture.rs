@@ -32,7 +32,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     assert_eq!(read.render().unwrap(), output);
     // Preserve the immutable 590-payload capture. Only the donor declaration changes;
     // the refresh appends evidence, including the two failed attempts, without replacing it.
-    assert_eq!(before.files.len(), 626);
+    assert_eq!(before.files.len(), 642);
     let mut unchanged = 0;
     for (path, bytes) in &baseline.files {
         let current = read.files.get(path).unwrap();
@@ -40,7 +40,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
             assert_ne!(current, bytes);
             assert_eq!(
                 content_digest(current),
-                "sha256:a9cafe26222a0fe036c26c5bfe8bb02eaab55b82d1a553c2478d1340f714f715"
+                "sha256:be4adcb88fb07873e552d841538db5943b8e6cd775ee9929e713cc1909df73b2"
             );
         } else {
             assert_eq!(current, bytes, "original payload changed: {path}");
@@ -86,9 +86,31 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     ] {
         stream.proofs.push(proof(ProofKind::Regression, locator));
     }
+    let json = expected
+        .donors
+        .iter_mut()
+        .find(|donor| donor.key == "dependency--github-com-serde-rs-json")
+        .unwrap();
+    for (key, locator) in [
+        (
+            "serde_json.parse-text",
+            "adapter/keepa/src/client.rs::native_json_http_keeps_exact_money_raw_evidence_and_unknown_costs",
+        ),
+        (
+            "serde_json.json-macro",
+            "adapter/keepa/tests/native_json.rs::native_macro_preserves_exact_money_and_unknowns",
+        ),
+    ] {
+        json.capabilities
+            .iter_mut()
+            .find(|capability| capability.key == key)
+            .unwrap()
+            .proofs
+            .push(proof(ProofKind::Regression, locator));
+    }
     assert_eq!(
         declaration, expected,
-        "only six package aliases and two proof locators change"
+        "only six package aliases and four proof locators change"
     );
     let graph = ecdev_governance::graph::Graph::from_declaration(&declaration).0;
     assert_eq!(
@@ -124,7 +146,7 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
     let (fact_ids, evidence_count, retired_count) = counts(&read);
     assert_eq!(
         (fact_ids.len(), evidence_count, retired_count),
-        (1861, 618, 8)
+        (1861, 634, 8)
     );
     assert_eq!(fact_ids, old_fact_ids);
     assert_eq!(fact_ids[0], "f1:001be0aa9a05870b591986296071dd26");
@@ -133,8 +155,30 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         .iter()
         .filter(|(path, _)| !baseline.files.contains_key(*path))
         .collect();
-    assert_eq!(appended.len(), 36);
+    assert_eq!(appended.len(), 52);
+    let json_refresh_paths = [
+        ".ecdev/evidence/1102a40959cb79534b32f23bd6ede8c2.ecg",
+        ".ecdev/evidence/11a890088e480d322a21c2a8a20d7397.ecg",
+        ".ecdev/evidence/18dda8232b53a21b4a987528a21a712e.ecg",
+        ".ecdev/evidence/1dab69108dc0960f1513c8dd83831493.ecg",
+        ".ecdev/evidence/266600e7fe89707dead0a096c148ef2d.ecg",
+        ".ecdev/evidence/72510c183355b8ccf3ee7ab9e2e56510.ecg",
+        ".ecdev/evidence/830612fdafbe40a7bac9c78db0df7a18.ecg",
+        ".ecdev/evidence/9c125781c87f8c6adcde217b5db29620.ecg",
+        ".ecdev/evidence/a5a1214b9e6db9c382dfa974e4080723.ecg",
+        ".ecdev/evidence/a847725e3a1ec34613bc00b8afd16f2a.ecg",
+        ".ecdev/evidence/c55b4c559fb1fa0984015e1f9e796286.ecg",
+        ".ecdev/evidence/ca16a48495aa89665cf0550446bcd8ce.ecg",
+        ".ecdev/evidence/cc200d8ea3340d8f7c08ab6e9bf8ef4a.ecg",
+        ".ecdev/evidence/d75450aeefcc261a0e074d6643821bca.ecg",
+        ".ecdev/evidence/e93b24cb10aba58e3c4613d26954f130.ecg",
+        ".ecdev/evidence/f440dc4f124d62e220078be7e2ecb555.ecg",
+    ];
     let mut fingerprints = String::new();
+    let mut json_fingerprints = String::new();
+    let mut original_count = 0;
+    let mut original_passed = 0;
+    let mut json_count = 0;
     let mut passed = 0;
     let mut failed = Vec::new();
     for (path, bytes) in appended {
@@ -145,19 +189,35 @@ fn actual_source_bytes_graph_aliases_rights_and_history_roundtrip() {
         );
         let record = Record::decode(bytes).unwrap();
         assert_eq!(*bytes, record.encode());
-        fingerprints.push_str(&format!("{path} {}\n", content_digest(bytes)));
+        let fingerprint = format!("{path} {}\n", content_digest(bytes));
+        if json_refresh_paths.contains(&path.as_str()) {
+            assert!(record.passed, "JSON refresh record failed: {path}");
+            json_count += 1;
+            json_fingerprints.push_str(&fingerprint);
+        } else {
+            original_count += 1;
+            original_passed += usize::from(record.passed);
+            fingerprints.push_str(&fingerprint);
+        }
         if record.passed {
             passed += 1;
         } else {
             failed.push((path.as_str(), record.locator, record.kind, record.subject));
         }
     }
-    // Full SHA-256 binds the sorted path/raw-byte manifest of this exact append batch.
+    // Bind each exact sorted path/raw-byte batch separately, preserving both failed attempts.
+    assert_eq!(original_count, 36);
+    assert_eq!(original_passed, 34);
     assert_eq!(
         content_digest(fingerprints.as_bytes()),
         "sha256:1d0ae8f97d4f91757b424dc7d1013089849f99da27648b919c41e6a023fe637d"
     );
-    assert_eq!(passed, 34);
+    assert_eq!(json_count, 16);
+    assert_eq!(
+        content_digest(json_fingerprints.as_bytes()),
+        "sha256:6c061c9f897a5f122a4cf84e5271119cf6ddb8eb9caf0f01669cc8415cca5896"
+    );
+    assert_eq!(passed, 50);
     assert_eq!(
         failed,
         vec![

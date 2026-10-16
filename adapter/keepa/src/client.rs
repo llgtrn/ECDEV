@@ -312,6 +312,88 @@ mod tests {
         assert!(v["review_count"].is_null());
     }
     #[test]
+    fn native_json_http_keeps_exact_money_raw_evidence_and_unknown_costs() {
+        use std::{
+            io::{Read, Write},
+            net::TcpListener,
+            thread,
+            time::Duration,
+        };
+        let request = AcquireRequest {
+            run_id: "native-json-http".into(),
+            capability: "product.analyze".into(),
+            market: "AMAZON_JP".into(),
+            query: json!({"asin":"B08N5WRWNW"}),
+        };
+        // The first value cannot round-trip through binary64. The second is an unknown
+        // provider price, not zero. Both cross the real HTTP acquisition boundary.
+        for (wire_price, expected_price) in [
+            ("9007199254740993", Some(9_007_199_254_740_993i64)),
+            ("null", None),
+        ] {
+            let body = format!(
+                "{{\"timestamp\":1700000000000,\"products\":[{{\"asin\":\"B08N5WRWNW\",\"title\":\"日本 \\\"quoted\\\"\",\"lastUpdate\":7028800,\"stats\":{{\"current\":[{wire_price}]}}}}],\"tokensConsumed\":2}}"
+            );
+            let raw = body.as_bytes().to_vec();
+            let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+            let endpoint = format!("http://{}/product", listener.local_addr().unwrap());
+            let server = thread::spawn(move || {
+                let (mut stream, _) = listener.accept().unwrap();
+                stream
+                    .set_read_timeout(Some(Duration::from_secs(3)))
+                    .unwrap();
+                let mut wire = Vec::new();
+                while !wire.windows(4).any(|w| w == b"\r\n\r\n") {
+                    let mut chunk = [0; 4096];
+                    let n = stream.read(&mut chunk).unwrap();
+                    assert!(n > 0);
+                    wire.extend_from_slice(&chunk[..n]);
+                }
+                write!(
+                    stream,
+                    "HTTP/1.1 200 OK\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                    body.len()
+                )
+                .unwrap();
+                String::from_utf8(wire).unwrap()
+            });
+            let client = reqwest::blocking::Client::builder()
+                .no_proxy()
+                .timeout(Duration::from_secs(3))
+                .redirect(reqwest::redirect::Policy::none())
+                .build()
+                .unwrap();
+            let result = Keepa {
+                key: Some("mock-secret".into()),
+            }
+            .acquire_at(&request, &client, &endpoint)
+            .unwrap();
+            assert_eq!(result.result["price_minor"].as_i64(), expected_price);
+            assert_eq!(result.result["currency"], "JPY");
+            assert_eq!(result.result["title"], "日本 \"quoted\"");
+            assert_eq!(result.raw_payload, raw);
+            assert_eq!(result.observations.len(), 1);
+            let observed = &result.observations[0];
+            assert_eq!(observed.mode, ObservationMode::Live);
+            assert_eq!(observed.normalized_value, result.result);
+            assert_eq!(observed.raw_hash, format!("{:x}", Sha256::digest(&raw)));
+            assert_eq!(observed.cost_minor, None);
+            assert_eq!(
+                result.result["external_history"]["state"],
+                "EXTERNAL_HISTORY"
+            );
+            assert_eq!(result.provider_cost["request_count"], 1);
+            assert_eq!(result.provider_cost["network_calls"], 1);
+            assert!(result.provider_cost["actual_cost_minor"].is_null());
+            assert!(result.result["review_count"].is_null());
+            assert!(!result.result.to_string().contains("mock-secret"));
+            let wire = server.join().unwrap();
+            assert!(wire.starts_with("GET /product?"));
+            assert!(wire.contains("domain=5"));
+            assert!(wire.contains("asin=B08N5WRWNW"));
+        }
+    }
+    #[test]
     fn http_receipts_keep_counts_status_retry_and_secret_boundaries() {
         use std::{
             io::{Read, Write},
