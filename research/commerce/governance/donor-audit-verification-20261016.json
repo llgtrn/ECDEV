@@ -1,0 +1,139 @@
+{
+  "receipt": "ecdev.donor-audit-verification.v1",
+  "observed_at_utc": "2026-10-16T19:40:39.749513+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "14a7a9d9554f6f58f92392c7c7744b596f9806db",
+  "code_inputs": [
+    {
+      "path": ".ecdev/README.md",
+      "sha256": "f0115d5a76d80e1d51191f71d8efef0661e9a516ba44f3ac2b6490ced65a9c5e"
+    },
+    {
+      "path": ".ecdev/src/cli/mod.rs",
+      "sha256": "b0f5dacf0897076c125679b642dc8012f4736158e54c31a6421a33457065ef65"
+    },
+    {
+      "path": ".ecdev/src/donors/audit.rs",
+      "sha256": "8b75a83c02600f0d5f8fbfa3a68bc641d44617b1db11037a4875a6c087d53e7e"
+    },
+    {
+      "path": ".ecdev/src/donors/mod.rs",
+      "sha256": "adfd7fd3e5ff6da6999d15532b520e9fcc4540d393b67f225fa7ebcfbbc9198c"
+    },
+    {
+      "path": ".ecdev/src/protocol.rs",
+      "sha256": "f6dbc594167ec6e323f1ca4fc7ca4222292c6634602c87b96eaa85be6d4588bf"
+    },
+    {
+      "path": ".ecdev/tests/donor_audit.rs",
+      "sha256": "0c658a3322d83aaff012bea52595dd34248e094020445a829b6cd7214b5f4770"
+    }
+  ],
+  "report_format": "ecdev-source-donor-audit-v1",
+  "compatibility": "New descriptive report only; ecdev-source-capture-v1 and source declarations/records unchanged",
+  "command": "cargo +1.87.0 run --release --manifest-path .ecdev/Cargo.toml --locked -- donor audit --root /workspace/ECDEV --json > /tmp/ecdev-donor-audit-v1.json",
+  "reviewed_prepublication_report": {
+    "path": "/tmp/ecdev-donor-audit-v1-reviewed.json",
+    "sha256": "41e944e089c8a74108ece53f73a83b6b89f19947660e1b3b02c3e3b5cd5c8a4e",
+    "observed_head": "14a7a9d9554f6f58f92392c7c7744b596f9806db",
+    "input_manifest_sha256": "sha256:bb6af364b51ef364be2a14bc423cde5e0167ce46e41fc2c5c6d9d806ab780daa",
+    "path_count": 2852,
+    "binding_scope": "ENUMERATED_FILE_BYTES_ONLY; FILE_MODES_AND_FILESYSTEM_CONTROL_METADATA_NOT_ATTESTED",
+    "binding_complete_for_enumerated_bytes": true,
+    "uncommitted_status": "UNKNOWN_NOT_CHECKED; INDEX_SELECTED_WORKTREE_BYTES_MAY_DIFFER_FROM_HEAD",
+    "commit_content_attestation": false
+  },
+  "observations": {
+    "mixed_declared": {
+      "total": 68,
+      "declared_extinct": 10,
+      "effective_extinct": 10
+    },
+    "active_gate": {
+      "numerator": 10,
+      "registered_active": 48,
+      "unregistered_externals": 0,
+      "denominator": 48,
+      "pass": false
+    },
+    "classification_summary": {
+      "UNRESOLVED_NO_EXPLICIT_CANONICAL_KIND": 68
+    },
+    "original_imported_records": 34,
+    "existing_universe_relations": 77,
+    "dependency_participation_rows": 35,
+    "dependency_role_counts": {
+      "FOUNDATIONAL_DEPENDENCY": 14,
+      "DEVELOPMENT_DEPENDENCY": 2,
+      "RESEARCH_TOOL_DEPENDENCY": 19
+    },
+    "legacy_donor_type_counts": {
+      "TYPE_A": 9,
+      "TYPE_C": 1,
+      "OFFICIAL_PROTOCOL_MODELS_AND_GENERATED_SDK_SOURCE": 1,
+      "UNCLASSIFIED": 23
+    },
+    "legacy_role_definitions": "Original f1 facts retained: TYPE A code donor; TYPE B external provider; TYPE C reference/oracle. Not OSS inclusion decisions.",
+    "audited_oss": {
+      "status": "UNKNOWN",
+      "total": null,
+      "verified_extinct": null,
+      "reason": "No reviewed per-source OSS inclusion contract; imported kind/defaults and licences do not establish it; no cohort rows removed"
+    },
+    "no_explicit_dataset_or_learned_weight_classification": "MISSING_EVIDENCE; NOT_PROOF_OF_ABSENCE"
+  },
+  "classification_blocker": "Existing Donor lacks a reviewed source-kind/OSS-inclusion decision. Original34rows lack explicit type/kind/source_kind; import command/table and declaration defaults label OSS without that review. Native-effective EXTINCT and license claims do not establish audited OSS eligibility.",
+  "minimum_future_source_contract": "A compatible canonical reviewed inclusion/exclusion/unknown decision bound to original source ID, explicit artifact/source kind, immutable evidence and snapshot provenance; rights/current copying authorization remain separate; no local inferred decisions or narrowed denominator",
+  "verification": {
+    "governor_release_tests": 196,
+    "failed": 0,
+    "ignored": 0,
+    "new_focused_tests": 9,
+    "strict_clippy_all_targets": "PASS",
+    "format_and_diff_checks": "PASS",
+    "independent_code_review": "APPROVED_AFTER_EMPTY_PROOF_BINDING_AND_UNREADABLE_INPUT_LABEL_CORRECTIONS",
+    "test_writer_review": "ROOT_INDEPENDENTLY_REVIEWED_ALL_NINE_TESTS",
+    "proofs_executed_by_report": 0,
+    "source_state_files_changed": 0,
+    "source_state_files_byte_equal_base_commit": 590,
+    "source_lifecycle_gates_modified": false,
+    "new_assimilation": 0,
+    "new_extinction": 0
+  },
+  "preserved_uncertainties": [
+    "Audited OSS total and verified extinction UNKNOWN/null",
+    "Universe license/origin flags separate from raw claims and separate receipts",
+    "Current copying authorization not established by report",
+    "Proof PASS means retained byte-matched verdict, not execution now",
+    "Snapshot stability covers enumerated file bytes; modes/control metadata and commit membership not attested",
+    "Source report does not attest canonical enrollment",
+    "N01-N12/J1-J9/P0-P3 native certification NOT_RUN; fullV1INCOMPLETE"
+  ],
+  "logs": {
+    "ecdev-donor-audit-governor-final.log": {
+      "path": "/tmp/ecdev-donor-audit-governor-final.log",
+      "sha256": "affbd7163557b8d89761e84bf42c2446eab234d6b5c535980e4c7e7af1df7106",
+      "bytes": 16329
+    },
+    "ecdev-donor-audit-focused-final.log": {
+      "path": "/tmp/ecdev-donor-audit-focused-final.log",
+      "sha256": "a8d5776b26eee2a593a2dcce01598b232dfbbb2402df11e17b77a94136aaf772",
+      "bytes": 1145
+    },
+    "ecdev-donor-audit-clippy-final.log": {
+      "path": "/tmp/ecdev-donor-audit-clippy-final.log",
+      "sha256": "d98454649da2c44189d3722b86f1b4c86ef23dfd58a009b17397125799492a69",
+      "bytes": 135
+    },
+    "ecdev-audit-independent-empty-binding.log": {
+      "path": "/tmp/ecdev-audit-independent-empty-binding.log",
+      "sha256": "4ffb76ff101780e89218e7f8ff623b48c9e2c4777ac0554b364e2396a0d208c6",
+      "bytes": 249
+    },
+    "ecdev-audit-independent-fixed.log": {
+      "path": "/tmp/ecdev-audit-independent-fixed.log",
+      "sha256": "8dd9c25784f5d8b3b82e3ba8ac5fa7a89532bb2cf3fee1d6363f8d7a27145c1f",
+      "bytes": 237
+    }
+  }
+}

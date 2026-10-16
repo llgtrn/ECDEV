@@ -9,6 +9,8 @@
 //! A claim above the effective state is a false-green violation. Exceptional states (BLOCKED,
 //! REJECTED, SUPERSEDED) have exact guards; an illegal exception is ignored and reported.
 
+pub mod audit;
+
 use crate::census::{Census, Observation, Via};
 use crate::compact::history::History;
 use crate::declare::{Declaration, Donor, Package};
@@ -113,15 +115,26 @@ fn withdrawn_verdict(key: String) -> CapabilityVerdict {
 /// The whole-source semantic review of the donor's census: `semantic_review` of the census
 /// `summary.json` beside any `identity.json` (or a `summary.json` itself) named in its provenance.
 pub fn semantic_review(files: &Files, dn: &Donor) -> Option<String> {
-    dn.provenance.iter().find_map(|p| {
-        let summary = if p.ends_with("/summary.json") {
-            p.clone()
-        } else {
-            format!("{}/summary.json", p.strip_suffix("/identity.json")?)
-        };
+    semantic_review_paths(dn).into_iter().find_map(|summary| {
         let v = crate::formats::json::parse(&files.read(&summary)?).ok()?;
         v.str("semantic_review").map(str::to_string)
     })
+}
+
+/// The exact supplemental paths the semantic-review reader may consult, including files
+/// outside the Git index. Shared with the descriptive audit's input binding.
+pub(crate) fn semantic_review_paths(dn: &Donor) -> Vec<String> {
+    dn.provenance
+        .iter()
+        .filter_map(|p| {
+            if p.ends_with("/summary.json") {
+                Some(p.clone())
+            } else {
+                p.strip_suffix("/identity.json")
+                    .map(|s| format!("{s}/summary.json"))
+            }
+        })
+        .collect()
 }
 
 /// The knowledge state a donor's capability decisions and census coverage add up to.
