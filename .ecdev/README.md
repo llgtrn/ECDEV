@@ -1,5 +1,9 @@
 # .ecdev — existing ECDEV governance source, migration pending
 
+The **2026-10-16, 16:43:08 UTC** owner decision pauses implementation, test-code and schema changes for documentation-first convergence toward full native V1. Preserve pending patches and evidence. Linux/cloud tests establish development behavior only; V1 requires independent boot and operation on certified hardware without a mandatory Linux/Windows runtime, all nine journeys and P0–P3, deterministic protection/scheduling/recovery independent of cognition, real Norl/Neurora inference, and governed assimilation, continuity and reproduction. See the [root scope and gap record](../README.md#owner-scope-full-native-v1-documentation-first).
+
+Current executable admission remains blocked. The inspected central engine `cd0f6b091f78980577e6b49c17a9b7c9eb8e20a4` registers seven shards, refuses `.ecdev` as a canonical assessment, and lacks a lossless mapping for separate adoption, knowledge and absorption semantics. Local conformance also rejects this repository's existing integration documentation. Documentation cannot enroll this source or waive that gate. Keep `ec1`, source fact identities, ECG bytes, aliases, rights, denominators, claims and proof lineage until a verified shared contract and caller cutover exist.
+
 ## Evidence-bearing current ECDEV governor — migrate into one shared protocol
 
 ECDEV is the mandatory eighth checkout. Its current `.ecdev` engine and donor/knowledge/evidence records are **migration source**, not a parallel accepted governance system. Migrate identity, licensed code history, denominator, candidate evidence, adoption and extinction truth to the shared `.ynventa` model before removing the present controller. Retain all the detailed technical contracts below so the migration can be verified, rather than silently discarding source history.

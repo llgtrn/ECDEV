@@ -1,12 +1,25 @@
 # ECDEV
 
+## Owner scope: full native V1, documentation first
 
+The owner decision of **2026-10-16, 16:43:08 UTC** requires the full **Chronica Digital Intelligence Holobiont OS** in V1: independent boot and operation on one certified hardware target, without a mandatory Linux/Windows kernel or runtime. Linux serves development, bootstrap and tests. All nine journeys and P0–P3 remain in V1. Earlier hosted/delegated/native stages describe development evidence; they do not defer native closure beyond V1. Hardware certification and native closure are not established by this repository.
 
-**Reference:** [Chronica's registered 21-concept function/architecture atlas](https://github.com/llgtrn/.Ynventa-/blob/main/NOMENCLATURE-ARCHITECTURE-ATLAS.md) explains every current Latin-inspired concept, its exact boundaries and implementation status; the authority is still Chronica's canonical nomenclature registry, not this README.
+Deterministic protection, scheduling, boot and recovery must operate independently of cognition. Real Norl/Neurora weights and native inference, governed assimilation, continuity and reproduction remain required. Offspring have distinct organism identities within the same canonical World. Neurora is owner-approved item 26, with its canonical registry update pending; AGNC remains required architecture within it. This decision creates no new concept identity or mandatory OS/AGNC/Neurora folder.
+
+| Required V1 outcome | Current ECDEV evidence and remaining gap |
+|---|---|
+| Independent boot and operation on certified hardware | Current Rust server and storage use hosted OS networking/files. No certified native boot, protection, scheduling, driver or recovery closure is attested here. |
+| One World, authority and history with hosted Norl | ECDEV retains its evidence-bearing `.ecdev` source controller. The inspected engine at `cd0f6b091f78980577e6b49c17a9b7c9eb8e20a4` has seven canonical shards and blocks ECDEV admission; the intended eight-source convergence is incomplete. |
+| Governed cognition, assimilation, continuity and reproduction | Acquisition candidates, captured observations, replay and donor records are useful inputs. They do not attest native inference, sovereign authority, assimilation completion or reproduction. |
+| Native closure, parity, rights, callers and evidence | Every gate remains mandatory. Hosted/cloud tests are development evidence; fixture, replay, live, unknown-effect and unknown-cost states retain their separate meanings. |
+
+Implementation, test-code and schema changes are paused. Pending implementation is preserved outside documentation commits. The central [Blueprint](https://github.com/llgtrn/.Ynventa-/blob/main/BLUEPRINT-V1.md), [Roadmap](https://github.com/llgtrn/.Ynventa-/blob/main/UPGRADE-ROADMAP-V1.md) and [Repository Protocol](https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md) carry cross-repository architecture; this section records the later owner scope and this checkout's gaps pending their coordinated update.
+
+**Reference:** [Chronica's function/architecture atlas](https://github.com/llgtrn/.Ynventa-/blob/main/NOMENCLATURE-ARCHITECTURE-ATLAS.md) explains concept boundaries and implementation status; the authority is Chronica's canonical nomenclature registry, not this README.
 
 ## Canonical Ynventa/Chronica integration — registered Latin nomenclature
 
-**One Digital Holobiont.** Canonical concept names belong to [Chronica's 21-concept registry](https://github.com/llgtrn/Chronica/blob/main/.ynventa/declared/nomenclature/concepts.jsonl) (DECISION 0115). **Genora** = inherited graph/identity laws; **Codara** = typed semantic intents; **Ontogen** = lawful capability pathway composition; **Myelion** = mathematical evaluation located with native capabilities (no independent module); **Axora** = verified external bindings; **Thymora** = authority; **Porion** = pre-effect admission; **Metabion** = bounded execution; **Lineara** = evidence; **Phenora** = observable, rebuildable expression. Norl and Chronica retain their product/host identities. Generic biological words explain functions but are not competing proper names or invitations to create a new crate.
+**One Digital Holobiont.** Canonical concept names belong to [Chronica's concept registry](https://github.com/llgtrn/Chronica/blob/main/.ynventa/declared/nomenclature/concepts.jsonl) (DECISION 0115 and subsequent owner decisions). **Genora** = inherited graph/identity laws; **Codara** = typed semantic intents; **Ontogen** = lawful capability pathway composition; **Myelion** = mathematical evaluation located with native capabilities (no independent module); **Axora** = verified external bindings; **Thymora** = authority; **Porion** = pre-effect admission; **Metabion** = bounded execution; **Lineara** = evidence; **Phenora** = observable, rebuildable expression. Norl and Chronica retain their product/host identities. Generic biological words explain functions but are not competing proper names or invitations to create a new crate.
 
 **This checkout's contribution:** Its Rust acquisition, HTML/data parsing, native embedded-SQL storage, native MCP/HTTP and product research capabilities remain backend technologies. The current `apps/web` JavaScript dashboard is a migration source to `Chronica/phenotype`, not a standalone permanent product UI. The independent `.ecdev` evidence/registry requires **lossless identity reconciliation** into common `.ynventa`, not deletion of donor history. Product research generates evidence and candidates, including a policy-selected shortlist for further research where the captured evidence supports it; it does not establish commercial qualification, demand, expected profit or authority to purchase.
 
@@ -31,7 +44,7 @@ flowchart LR
 
 ## Run
 
-The current native server implementation is built and run with **Rust/Cargo only**. This executable entrypoint does not establish production-proven Chronica integration. Node/npm may still be used by optional historical or research-only donor oracles; the committed web console is plain JavaScript, and there is no `apps/web/package.json` to build. From the repository root:
+The current hosted server implementation is built and run with **Rust/Cargo only**. Here, native parsing/storage describes first-party capability implementations; it does not establish native OS closure or production-proven Chronica integration. Node/npm may still be used by optional historical or research-only donor oracles; the committed web console is plain JavaScript, and there is no `apps/web/package.json` to build. From the repository root:
 
 ```sh
 cargo run --locked --package ecdev-server --bin ecdev -- server
