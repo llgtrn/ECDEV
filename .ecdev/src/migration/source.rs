@@ -151,7 +151,9 @@ pub fn read_export(path: &Path) -> Result<Capture, String> {
 /// Bind exact envelope bytes to a registry digest obtained independently by the caller.
 /// Successful integrity validation still does not establish Git membership or admission.
 pub fn read_export_bound(path: &Path, expected_sha256: Option<&str>) -> Result<Capture, String> {
-    if expected_sha256.is_some_and(|hash| hash.len() != 64 || unhex(hash).is_none()) {
+    if expected_sha256
+        .is_some_and(|hash| hash.len() != 64 || !hash.bytes().all(|b| b.is_ascii_hexdigit()))
+    {
         return Err("expected source export SHA-256 must be 64 hex digits".into());
     }
     let meta = std::fs::metadata(path).map_err(|e| format!("{}: {e}", path.display()))?;

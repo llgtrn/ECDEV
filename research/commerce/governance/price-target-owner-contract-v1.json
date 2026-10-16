@@ -1,0 +1,604 @@
+{
+  "classification": "TARGET_OWNED_EXISTING_OWNER_AND_BOUNDED_MAPPING_REFERENCE; NOT_ENGINE_ENROLLMENT_SCHEMA_OR_RUNTIME_ADMISSION",
+  "target_repository_pin": {
+    "repository": "llgtrn/Chronica",
+    "ref": "refs/heads/main",
+    "commit": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+    "tree": "2965cd433ee1f744775b8cc885dc7cbab3efb6fb",
+    "pin_role": "Already published implementation/caller source checkpoint. This response is published separately; no circular self-commit embedded."
+  },
+  "target": {
+    "repository": "llgtrn/Chronica",
+    "commit": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+    "tree": "2965cd433ee1f744775b8cc885dc7cbab3efb6fb",
+    "existing_canonical_owner": {
+      "key": "capability-kernels",
+      "NodeId": "yn1:b4f8bfd63d6d8b9b31dec198026388c5",
+      "path": "physiology/capability/kernels"
+    },
+    "capability": "commerce.price.parse-text",
+    "canonical_capability_key": "commerce.price.parse-text(input:bytes.any)->(output:bytes.any)",
+    "capability_NodeId": "cn2:964273aabb7ba94d6c4c0c421a2730d1",
+    "implementation_key": "price.parse-text.ascii.v1@1.1.0#sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+    "implementation_NodeId": "cn2:64c339cb2b639c152c053cc3f88e4cf0",
+    "source_artifact": {
+      "id": "art1:29ae02273cb54f7f7c40e38220e20365",
+      "path": "physiology/capability/kernels/src/price_text.rs",
+      "digest": "sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da"
+    },
+    "maintained_caller": {
+      "key": "codara",
+      "NodeId": "yn1:1c4a8975c1bcb6ba331cfdfab6745ab6",
+      "path": "phenora/codara",
+      "entry": "codara declarations price; codara build/run via existing Host request pathway"
+    },
+    "identity_evidence": "Existing published target declaration/runtime factory and prior productionAPI-derived identities; no identity invention or new source assignment"
+  },
+  "owner_statement": "Chronica identifies its EXISTING ACTIVE capability-kernels node as the actual canonical owner of commerce.price.parse-text, with the existing Codara caller and 1.1.0 implementation shown here. This is target-owned input for the first bounded ECDEV candidate, not acceptance of its entire source capability, rights transfer, exclusive custody, execution authority or source retirement.",
+  "source": {
+    "observed_published_commit": "00c50c86fcace013288cbf40552e9423fb748595",
+    "repository": "llgtrn/ECDEV",
+    "implementation_commit": "5ce3a6282d47eac78300617eed6b02f9c2fd0e0a",
+    "handoff_commit": "4c7a4935bf14c62e41ff1a43d8272c3b14756130",
+    "handoff_path": "research/commerce/governance/price-public-api-source-handoff-v1.json",
+    "handoff_sha256": "8915a6b55a2eceedfd2942e494330d159158a56f4a4818dfada3af8a556b7a0f",
+    "donor": "ec1:7755f6459b7f8f22b262e2bdfe74d7b1",
+    "donor_capability": "ec1:5f41ea7edd845d3559a926b897253666",
+    "native_source_capability": "ec1:a2e3b3e884070b64d4edacda08adf6e6",
+    "technology": "ec1:e4aedb10fcd783728d5c4ab221f20132",
+    "capability_key": "extract.price-public-api",
+    "technology_key": "commerce.price-text",
+    "original_capture_sha256": "ef930f0e26aab701ef384f9992d0b32abf3d101ac5bcb842ffa4d045bdce9a1d",
+    "corpus_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
+    "corpus_path": "adapter/web/tests/fixtures/price-contract.json",
+    "upstream": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+    "rights": "Historical UNVERIFIED; current copying authorization UNKNOWN; no donor implementation/table/corpus redistributed or rights promoted",
+    "observed_published_tree": "830000af7fb42d1236cca908b5ee15875d9da461"
+  },
+  "exact_input_output_and_admission": {
+    "request": {
+      "pure": "PriceTextRequest{input:Option<&str>,currency_hint:Option<&str>,decimal_separator:Option<&str>,digit_group_separator:Option<&str>}",
+      "caller": "--payload FILE is Some(UTF8 bytes), including empty; existing IR text facts currency_hint/decimal_separator/digit_group_separator preserve optional presence. input_is_none=\"true\" with EMPTY payload represents None; absent/\"false\" represents Some; nonempty None marker or any wrong-typed selector is known unavailable. All original IR and exact payload bytes remain request-bound.",
+      "supported": "None/empty/outer ASCII-space-only; or ASCII unsigned digits, at most one dot/comma between digits, at most18 digits and6fractional digits. Hints absent/empty/$/USD/EUR remain raw tokens. Group selector absent/empty. Decimal selector absent/empty/dot/comma; explicit separator must match if present. Automatic permits only integer or1/2fractional digits. No locale, ISO inference, rounding, minor-unit or observed-money conversion.",
+      "bounds": "Source input/hint4096bytes/group64 checked; narrower targethint64/digits18/fraction6 are separate subdomain constraints. All bounds/unsupported cases are typed target unavailability, not substituted source output."
+    },
+    "output": {
+      "supported": "DerivedPrice{amount:Option<String>,currency:Option<String>,amount_text:Option<String>,amount_float:Option<f64>}; source-shaped derived decimal text/raw token/selected spelling/finite advisory float. Exact amount never derived from float.",
+      "unsupported": "16stable PriceTextUnavailable codes; known result with met=false, consumed1. Remains UNMAPPED to source outcome; neither fabricated all-null source success nor EffectUnknown.",
+      "evidence": "PriceTextResult v1 in existing <=1024-byte Lineara result1 receipt, stricter local decoder512bytes; inputSHA256, fullIRdigest, typed selectorpresence/value digest, and complete supported4fields or typedunavailability. Canonical numeric/text/float consistency verified.",
+      "read": "Actual Host::work_evidence under current resource.observe, canonical settlement/EffectRef/provider/request/lease joins, strict decode and equality to actual executed outcome before CLI display. No general filesystem or artifact access grant."
+    },
+    "admission": {
+      "assessment": "declarations prints candidate exists/provides only, no assessment, authority or grant. Host/operator must independently assess an implementation and authorize/admit work. Tests use explicit synthetic assessment[1;32] and temporary real native Worlds.",
+      "identity": "Existing full request/EffectRef/generation fences remain; fullIR+implementation+capability+kernel+payload digest bind replay, attempt clock excluded. Exact source/version gate only for the newly introduced price entries.",
+      "rights": "Current requester authentication/resource.work purpose/revocation/restrictions and resource.lease/release admission; current resource.observe separate. No widened rights, FD17 or budget.",
+      "budget": "Existing one cpu_units demand, inherited PROVISIONAL estimate, not measured parser CPU cost. Canonical allocation/envelope and consumption; refusal preserves prior evidence and leases. No storage budget inferred.",
+      "unknown": "Pending effect preserved unchanged, no retry/recomputation, refund or silent replacement; semantic unavailable remains known settled false."
+    },
+    "request_binding": "Preserve fullIR, originalpayloadbytes and every selector Option presence/value including missing/empty/input_is_none spelling; original semanticrequest/fullEffectRef fences remain distinct from portablecasehashes"
+  },
+  "bounded_coverage": {
+    "case_map": {
+      "path": "assays/gate/fixtures/price-text/eur-1.1.0-source-case-map.jsonl",
+      "sha256": "b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d"
+    },
+    "total": 2937,
+    "supported": 106,
+    "unmapped": 2831,
+    "source_corpus_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce",
+    "new_indices": [
+      117,
+      212,
+      409,
+      855,
+      1188,
+      1193,
+      1849
+    ],
+    "history": "Existing99@1.0.0 historicaldescriptor/outcomes remainunchanged;1.1.0 requires separateimplementationassessment. No rewrite/recompute/relabelhistoricalrequests.",
+    "kind": "Fourderivednullablefields including exactfloatbits, rawcurrencytokens notISOidentity/Money. Alloutsidecases UNMAPPED, targetunavailability is knownfalse result notsourceallnullsuccess orEffectUnknown.",
+    "scope_limits": "Specific source capability subdomain only; source819nodeassignments remainunchanged. No wholecapability/fullDonorparity/extinction/othercurrencyparsermapping"
+  },
+  "caller_evidence": {
+    "target_source_pin": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+    "maintained_test": "phenora/codara/tests/e2e_price_text.rs::original_pinned_source_corpus_supported_subset_executes_through_governance",
+    "actual_run": "At the target source checkpoint, all106 supported source cases executed through the existing governed Codara\u2192Host admission/budget/Metabion/Lineara path with fourfield andfloatbit comparison;2831remainUNMAPPED.22currentgovernedregressionsincludingauthentication/revocation/budget/observation/replay/unknownsPASS. Not a newly installed ECDEV productioncaller.",
+    "actual_case_run_stdout": "\nrunning 1 test\nPINNED_SOURCE_SUBDOMAIN: 106 governed four-field comparisons PASS; 2831 requests UNMAPPED; no whole-source parity or copying authorization\ntest original_pinned_source_corpus_supported_subset_executes_through_governance ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 2.58s\n\n",
+    "actual_run_receipts": [
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "world",
+          "-p",
+          "host",
+          "--lib",
+          "--tests",
+          "--",
+          "--test-threads=1"
+        ],
+        "exit": 0,
+        "stdout_sha256": "b17cfd7957cde11bf451692cdc76c4cf0cc8876925b5fad7aa42415394f460ea",
+        "stderr_sha256": "4a41e1a3ee91e8bfa68ebcf49e23cbcd162ce0148f0068812c5fde615538149f"
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "codara",
+          "--test",
+          "e2e_native_result",
+          "--test",
+          "e2e_source_native_result",
+          "--test",
+          "e2e_price_text"
+        ],
+        "exit": 0,
+        "stdout_sha256": "8e68dfd5aaf1c440b066c15413652d96b432540cee60b92975a57fd3cd2876d4",
+        "stderr_sha256": "69cccce66a478f1949b7d67594cff9479954ca39e135bea593e4122df2e0287c"
+      },
+      {
+        "argv": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--offline",
+          "-p",
+          "world",
+          "-p",
+          "host",
+          "--lib",
+          "--no-deps",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d804b0b7b576a7c2d42560ecd703a48f07e41a6f695e330cf6d53fc092b91326"
+      },
+      {
+        "argv": [
+          "python3",
+          "assays/gate/mutate.py",
+          "--batch",
+          "assays/gate/mutations/mixed_host_projection.toml"
+        ],
+        "exit": 0,
+        "stdout_sha256": "d0f5c4181edc91f68a5c6a818964bc428e8529f43d787375805dfc7b86fe763e",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "host",
+          "--test",
+          "mixed_world",
+          "--lib",
+          "--",
+          "--test-threads=1"
+        ],
+        "exit": 0,
+        "stdout_sha256": "9eebbcfdf83e0939ba2ed477058e3eb49871f2ad920506c8299bdf87dfcff11f",
+        "stderr_sha256": "0b695d23bfaec4114dd48c7a5354704c1175f562d55a0430e0061fd91c5c2ae0"
+      },
+      {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "-p",
+          "codara",
+          "--test",
+          "e2e_price_text",
+          "original_pinned_source_corpus_supported_subset_executes_through_governance",
+          "--",
+          "--ignored",
+          "--exact",
+          "--nocapture"
+        ],
+        "exit": 0,
+        "stdout_sha256": "9ca1b79636bf1be381964c1fb95848d180d26992ecf09b45e37219b420d69c66",
+        "stderr_sha256": "78ead87d4bab1cfae65b74f91c572812399e50f6976540d0315fc3fc22065458"
+      }
+    ],
+    "compiled_declarations_read": {
+      "argv": [
+        "/workspace/scratch/chronica-integration-target/debug/codara",
+        "declarations",
+        "price"
+      ],
+      "exit": 0,
+      "binary_sha256": "4a4f9879e556a12140bda13c3c7856e237658ae0ff79c3795d99caa7d1574f32",
+      "stdout_sha256": "c3bc5d9e94e60706035536b6d881228a4c80b23025ae9f55b28197a68fcaa9ef",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "binding": "Compiled price declarations match pinned source/version; no general binary/dependency/runtime/custody attestation and no grant.",
+      "price_text_rows": [
+        "exists capability:commerce.price.parse-text(input:bytes.any)->(output:bytes.any)",
+        "exists implementation:price.parse-text.ascii.v1@1.1.0#sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+        "relate provides implementation:price.parse-text.ascii.v1@1.1.0#sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da capability:commerce.price.parse-text(input:bytes.any)->(output:bytes.any)"
+      ]
+    },
+    "existing_data_references": {
+      "target_handoff": {
+        "path": "assays/gate/fixtures/price-text/eur-1.1.0-target-handoff.json",
+        "sha256": "9657f611bee636dc08613eb3fe68511424afba764b474aed53fe1243c4a7fc20"
+      },
+      "pure_and_governed": "Existing published Chronica106-sourcecase maintainedcaller proof via e2e_price_text.rs::original_pinned_source_corpus_supported_subset_executes_through_governance and current resource.observe durableevidencereadback; not rerun by thisstudy. Source00c independentlyrecords106pure/data comparisons only, no governedcaller locallyrun.",
+      "source_eur_verification": {
+        "path": "research/commerce/governance/price-eur-subset-verification-20261016.json",
+        "sha256": "a9b0ad48259567cf8e8cf40626478ea4c717c5e7063bb971b6a7ddef4c8c40b1"
+      },
+      "handoff_pin_precision": "Existing handoff publication.commit/tree null and UNCOMMITTED text are retainedhistoricalobservations; targetcontract may separately pinactual published d7commit/tree above without rewritingoldbytes."
+    }
+  },
+  "pinned_target_inputs": {
+    ".ynventa/declared/repository.rs": {
+      "sha256": "906c9c47b6fade06c2c570f10239551eb0dbe589eeca2cd73b2280876e815ade",
+      "git_blob": "510f1885637c9730624844c16ffb0c40dabbeaa1"
+    },
+    ".ynventa/protocol.lock": {
+      "sha256": "babd4abf13cff3ba7fbc3974bf1e515dcedf49a11bdcc42702094cf9f2c67ec9",
+      "git_blob": "76ffde85ff61ababb47ea2536ee6dadc626f88a4"
+    },
+    "evolution/census/registry/declared.toml": {
+      "sha256": "0e9bd7e2f30280ba542fd20534bf41b0b4b116a98eba5095da7a53ae0440e812",
+      "git_blob": "bef2aa039fc6e330360ea321c65f65eb4548c99d"
+    },
+    "assays/gate/fixtures/price-text/contract.json": {
+      "sha256": "6d122df009bce0f088fe01bf434f46fd60ec10f4128ab768ac303e8b3b4ba411",
+      "git_blob": "f38d6d733b29f5941748dbcbd20ad9446fb6652a"
+    },
+    "assays/gate/fixtures/price-text/eur-1.1.0-target-handoff.json": {
+      "sha256": "9657f611bee636dc08613eb3fe68511424afba764b474aed53fe1243c4a7fc20",
+      "git_blob": "7eaf0aae169f907c874b3d089a22b96a65fa44ae"
+    },
+    "assays/gate/fixtures/price-text/eur-1.1.0-source-case-map.jsonl": {
+      "sha256": "b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d",
+      "git_blob": "7c9ca9e0c29e3808627935334b0892c9a72b01f6"
+    },
+    "physiology/capability/kernels/src/price_text.rs": {
+      "sha256": "9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+      "git_blob": "a62d37aa6c0f0c3fefc404a1ac46da152011dc94"
+    },
+    "phenora/codara/src/declarations.rs": {
+      "sha256": "29c944645fbb91a0680e167413a876c9f9f4c6401f1d10ddee055057d9e4e804",
+      "git_blob": "91fc7c201ca74ce1997af5ae1983a7ee19e1fd6c"
+    },
+    "phenora/codara/src/price_text_result.rs": {
+      "sha256": "2ee394bbca54d26c032bee49b49b3feda3e3fd7db2452354218520a23343802f",
+      "git_blob": "948861d16dda541b85ad87e73bc45da76110ce1d"
+    },
+    "phenora/codara/src/run.rs": {
+      "sha256": "47a50ae35415eeea343d907164ef7b1e06b03097033d18c0ff6c6ba230188795",
+      "git_blob": "6f6cb85eab67a2d11e09e4a61efc8a109e24b4e3"
+    },
+    "phenora/codara/tests/e2e_price_text.rs": {
+      "sha256": "35b0976ad11f4668e6bd2a570baa68ed24bdd14db93d9597ce7cfc5b70100231",
+      "git_blob": "d23e9921d6d8747a80261eab519f216b2edb237f"
+    }
+  },
+  "independent_ownership_readback": {
+    "classification": "EXACT_PUBLISHED_TARGET_SOURCE_OWNERSHIP_AND_IDENTITY_CONSISTENCY_ONLY",
+    "preparedAt": "2026-10-16T23:16:36.701726+00:00",
+    "source": {
+      "repository": "llgtrn/Chronica",
+      "commit": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+      "tree": "2965cd433ee1f744775b8cc885dc7cbab3efb6fb",
+      "custody": "Git objects and external exact detached d7 snapshot; live dirty worktree/15 held untracked facts excluded",
+      "lock": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:885e964325073cdddbb66151ebda7d8ca383f1ee8e58c184ef2973867f7a02e1\nengine_digest sha256:d78d859567ce4069a1de19bc9a51ad5ce0a8794ad56929f2182e231c9dce9578\ncompatibility_epoch 1\n"
+    },
+    "bound_graph": {
+      "engine_commit": "98cc0ac60225fc7a806118fdb76cac97a574ecd4",
+      "argv": [
+        "ynventa",
+        "graph",
+        "--root",
+        "EXACT_DETACHED_d7c54f7",
+        "--json"
+      ],
+      "exit": 0,
+      "raw_graph_sha256": "7944186ee5efdea90768897600e99b62cedfdc6b90de10f7ebf6a87b9323b463",
+      "owner_node": {
+        "id": "yn1:b4f8bfd63d6d8b9b31dec198026388c5",
+        "namespace": "chronica",
+        "semantic_key": "capability-kernels",
+        "kind": "PHYSIOLOGY",
+        "concept": "SUBSYSTEM",
+        "uri": "ynv://chronica/capability-kernels",
+        "name": "physiology/capability/kernels",
+        "repository": "chronica",
+        "canonical_path": "physiology/capability/kernels",
+        "path": "physiology/capability/kernels",
+        "capabilities": [
+          "commerce.price.parse-exact",
+          "commerce.price.parse-text",
+          "digest.blake3-256-verify"
+        ],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "WRAPPER",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      "caller_node": {
+        "id": "yn1:1c4a8975c1bcb6ba331cfdfab6745ab6",
+        "namespace": "chronica",
+        "semantic_key": "codara",
+        "kind": "PHENOTYPE",
+        "concept": "SUBSYSTEM",
+        "uri": "ynv://chronica/codara",
+        "name": "phenora/codara",
+        "repository": "chronica",
+        "canonical_path": "phenora/codara",
+        "path": "phenora/codara",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "NATIVE",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      "caller_owner_edges": [
+        {
+          "from": "yn1:1c4a8975c1bcb6ba331cfdfab6745ab6",
+          "to": "yn1:b4f8bfd63d6d8b9b31dec198026388c5",
+          "kind": "DEPENDS_ON",
+          "scope": "RUNTIME",
+          "from_key": "codara",
+          "to_key": "capability-kernels"
+        }
+      ],
+      "interpretation": "Graph capabilities/provides and native_status are source declarations/derived labels; they do not establish assessment or runtime authority."
+    },
+    "existing_cn2_identity_checks": {
+      "capability_key": "commerce.price.parse-text(input:bytes.any)->(output:bytes.any)",
+      "capability_id": "cn2:964273aabb7ba94d6c4c0c421a2730d1",
+      "implementation_key": "price.parse-text.ascii.v1@1.1.0#sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+      "implementation_id": "cn2:64c339cb2b639c152c053cc3f88e4cf0",
+      "price_source_sha256": "9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+      "algorithm": "Existing genora/graph NodeId::of_key/of_parts: SHA256 domain chronica.node-id.v2 NUL, then kind.wire, authority chronica, namespace kind.wire, local key; each field u64 little-endian byte length; first16 digest bytes, cn2 prefix.",
+      "origin_of_inputs": "Existing price_implementation helper embeds exact price_text.rs bytes with include_bytes and version1.1.0; price_lines spells exact bytes.any input/output contract; all keys/IDs already committed in EUR handoff.",
+      "validation": "PASS independently reproduced both EXISTING IDs with Python hashlib and compared exact committed handoff; no compiled declaration helper/Cargo executed and no new IDs issued.",
+      "identity_scope": "cn2 capability/implementation identities are distinct from yn1 source owner/caller graph identities; no namespace equivalence inferred."
+    },
+    "existing_artifact_identity": {
+      "entry": {
+        "id": "art1:29ae02273cb54f7f7c40e38220e20365",
+        "path": "physiology/capability/kernels/src/price_text.rs",
+        "digest": "sha256:9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da"
+      },
+      "carrier": {
+        "path": ".ynventa/migration/residence-artifacts/022902a1b5631439cc36cf7dbeabf258b0d636e730ccdf46248554a1bbeda06e.jsonl",
+        "blob": "d582b722a6de1de003dc638aa6b55668506c6d53",
+        "sha256": "022902a1b5631439cc36cf7dbeabf258b0d636e730ccdf46248554a1bbeda06e",
+        "bytes": 333553
+      },
+      "carrier_rows": 1774,
+      "qualification": "ID found in committed1774 historical carrier, exact current price source bytes match retained digest; original birth/full global custody/freshness not independently certified and ID never reissued."
+    },
+    "actual_caller_source_join": {
+      "declarations": "phenora/codara/src/declarations.rs::price_lines/price_implementation generate exists/provides candidate words only; no assessment/grant.",
+      "source_gate": "phenora/codara/src/run.rs::ProgramWork::new compares selected price implementation key with helper exact source/version; mismatch is refused.",
+      "runtime_kernel": "physiology/capability/kernels/src/price_text.rs::kernel_spec binds commerce.price.parse-text to price.parse-text.ascii.v1 as ExecutionClass::Pure.",
+      "request_binding": "ProgramWork::request_binding includes price domain, full IR digest, implementation/capability IDs, kernel name and SHA256 exact carry payload.",
+      "real_flow": "phenora/codara/src/cli.rs builds ProgramWork at723/1541; compares price_text_result with Host::work_evidence current observe at1583 before display; Cargo actual capability-kernels dependency retained.",
+      "execution": "SOURCE INSPECTION ONLY; no parser/CLI/Host run or admission performed."
+    },
+    "publication_metadata": {
+      "path": "assays/gate/fixtures/price-text/eur-1.1.0-target-handoff.json",
+      "blob": "7eaf0aae169f907c874b3d089a22b96a65fa44ae",
+      "sha256": "9657f611bee636dc08613eb3fe68511424afba764b474aed53fe1243c4a7fc20",
+      "bytes": 19358
+    },
+    "source_pins": [
+      {
+        "path": ".ynventa/declared/repository.rs",
+        "blob": "510f1885637c9730624844c16ffb0c40dabbeaa1",
+        "sha256": "906c9c47b6fade06c2c570f10239551eb0dbe589eeca2cd73b2280876e815ade",
+        "bytes": 75376
+      },
+      {
+        "path": ".ynventa/protocol.lock",
+        "blob": "76ffde85ff61ababb47ea2536ee6dadc626f88a4",
+        "sha256": "babd4abf13cff3ba7fbc3974bf1e515dcedf49a11bdcc42702094cf9f2c67ec9",
+        "bytes": 310
+      },
+      {
+        "path": "physiology/capability/kernels/src/price_text.rs",
+        "blob": "a62d37aa6c0f0c3fefc404a1ac46da152011dc94",
+        "sha256": "9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+        "bytes": 10330
+      },
+      {
+        "path": "physiology/capability/kernels/Cargo.toml",
+        "blob": "25c0e1473c4c32e0c332a575c58b8372d02e7314",
+        "sha256": "4fa42b764f32658905d0996c8e82f11713e657baa403c43c70de2ce31d6fac08",
+        "bytes": 1580
+      },
+      {
+        "path": "phenora/codara/Cargo.toml",
+        "blob": "a15a884b6e4c1dfa6cd89d42e39b49e5de370038",
+        "sha256": "5f7d8903f1a1b1dac6af2d7b0d5ab117c4b1734b58fb8ed9c76d58434fe851ce",
+        "bytes": 1708
+      },
+      {
+        "path": "phenora/codara/src/declarations.rs",
+        "blob": "91fc7c201ca74ce1997af5ae1983a7ee19e1fd6c",
+        "sha256": "29c944645fbb91a0680e167413a876c9f9f4c6401f1d10ddee055057d9e4e804",
+        "bytes": 6902
+      },
+      {
+        "path": "phenora/codara/src/run.rs",
+        "blob": "6f6cb85eab67a2d11e09e4a61efc8a109e24b4e3",
+        "sha256": "47a50ae35415eeea343d907164ef7b1e06b03097033d18c0ff6c6ba230188795",
+        "bytes": 91738
+      },
+      {
+        "path": "phenora/codara/src/cli.rs",
+        "blob": "c172099114b53cd65953878ebe0af630997c9606",
+        "sha256": "946ab161aa7553a1b4a13705d59f2474916e0f5d08b8cb1223ec754f9e3c908c",
+        "bytes": 95242
+      },
+      {
+        "path": "genora/graph/src/node.rs",
+        "blob": "7edbbd8c3990ff958ad47e67b491b839671d5ac6",
+        "sha256": "1dc8dddaba4583d75bd9a920c8733e28fdff30b4f4b2f8eedf327dfff51e5ddb",
+        "bytes": 86444
+      },
+      {
+        "path": "genora/graph/src/node_key.rs",
+        "blob": "81b0d4510593867cb7820342deed1df9d8f2bda5",
+        "sha256": "c76fc609c9a2feefee7599ed259d44464481d131bf77b56ccba8065f79e0013d",
+        "bytes": 16957
+      },
+      {
+        "path": "genora/graph/src/capability_graph.rs",
+        "blob": "b824a0ea82c1c5ebe0888a8ebb12b29b87d58fb9",
+        "sha256": "f3c1db2f607a83cad3fdf9f8f9349634394dcabd56502941c6504d5c0a7375e3",
+        "bytes": 49735
+      }
+    ],
+    "limits": [
+      "No runtime resource/holding binding, requester authentication, current purpose/revocation/authority, budget admission, assessment or exclusive artifact custody was inferred.",
+      "Source-side ECDEV mapping/rights and immutable history preservation require their independent source-owner contract; this target evidence does not adopt a donor or source parser.",
+      "Source SHA consistency is not binary/toolchain/dependency attestation, current execution proof, source semantic coverage or full convergence.",
+      "Bounded derived price output is not observed money, ISO inference, locale interpretation or general source replacement.",
+      "Historical license status UNVERIFIED/current copying authorization UNKNOWN remains as committed handoff; no donor code/table/corpus copied by this task."
+    ],
+    "no_edits_sync_relock_Cargo_device_ops": true
+  },
+  "source_producer_dependency": {
+    "source_repository": "llgtrn/ECDEV",
+    "commit": "00c50c86fcace013288cbf40552e9423fb748595",
+    "tree": "830000af7fb42d1236cca908b5ee15875d9da461",
+    "file": ".ecdev/src/migration/proposal.rs",
+    "git_blob": "9b626248d33208150e42d66fa9f19fb25347e2e4",
+    "sha256": "7cfec6795f32430a8c199655030e89bd3d39cd13f234526d50eb2cfc4f40f492",
+    "exact_blocker": "Generator sets proposed_target=null at165 and target_custody=null at245. Validator rejects nonnull values at262/274 with TARGET_CUSTODY_REQUIRED. No supported positive enrollment input format exists at this source pin. This separate target reference does NOT make that validator accept a mapping.",
+    "read_only_primary_receipt": {
+      "scope": "READ_ONLY_DEPENDENCY_RECEIPT_NOT_NEW_SOURCE_SCHEMA",
+      "source_repository": "llgtrn/ECDEV",
+      "commit": "00c50c86fcace013288cbf40552e9423fb748595",
+      "tree": "830000af7fb42d1236cca908b5ee15875d9da461",
+      "proposal_producer": {
+        "path": ".ecdev/src/migration/proposal.rs",
+        "git_blob": "9b626248d33208150e42d66fa9f19fb25347e2e4",
+        "sha256": "7cfec6795f32430a8c199655030e89bd3d39cd13f234526d50eb2cfc4f40f492",
+        "bytes": 14595,
+        "locators": [
+          {
+            "line": 165,
+            "source": ".with(\"proposed_target\", Json::Null)"
+          },
+          {
+            "line": 245,
+            "source": ".with(\"target_custody\", Json::Null)"
+          },
+          {
+            "line": 262,
+            "source": "if field(proposal, \"target_custody\")? != &Value::Null {"
+          },
+          {
+            "line": 274,
+            "source": "if field(mapping, \"proposed_target\")? != &Value::Null {"
+          }
+        ],
+        "reject_response": "TARGET_CUSTODY_REQUIRED",
+        "generation": "target_custody and all819 proposed_target are null",
+        "positive_format": "ABSENT_IN_INSPECTED_PUBLISHED_PRODUCER; owner-coordinated contract/consumer required"
+      },
+      "source_subset_qualification_producer": {
+        "path": ".ecdev/qualification/price_eur.py",
+        "git_blob": "4621cd6e23bbd866451dc742895813e72150c315",
+        "sha256": "d624d5596c8da53fd7be74335b923b4d728c83ec61034d1b79edba2da817d198",
+        "bytes": 20086
+      },
+      "source_qualification_engine_harness": {
+        "path": ".ecdev/qualification/central_intake.rs",
+        "git_blob": "2290b356f9cb18970b598468f4401c9f02f61b12",
+        "sha256": "615514363ee38a6f4ae4853512cc69c5f967bd88b677fce910d7ff788d50fad8",
+        "bytes": 25127
+      },
+      "source_subset_verification": {
+        "path": "research/commerce/governance/price-eur-subset-verification-20261016.json",
+        "git_blob": "bfcc48398723a812de1dcde76f6e73054559d826",
+        "sha256": "a9b0ad48259567cf8e8cf40626478ea4c717c5e7063bb971b6a7ddef4c8c40b1",
+        "bytes": 25374
+      },
+      "source_subset_status": "106 supported /2831 unmapped; canonical_assignment and accepted_owner null, runtimeadmissionpending/sourcecallerfalse; exactcandidateIDs retained; old99notrebound",
+      "target_reference": {
+        "commit": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+        "tree": "2965cd433ee1f744775b8cc885dc7cbab3efb6fb",
+        "case_map_path": "assays/gate/fixtures/price-text/eur-1.1.0-source-case-map.jsonl",
+        "case_map_sha256": "b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d"
+      },
+      "coordination": "Existing declaredChronicaowner/IDs/API/subset canbereferenced. Doesnotestablish positiveECDEVsourceenrollment,sharedlock,custody,rights,currentauthority orproductioncalleradmission. No furtherfetch/tests needed."
+    },
+    "required_coordination": "Source producer and central engine owners must publish an explicit positive BOUNDED-subdomain mapping/custody format and consumer with negative tests, source8 registration/sharedlock compatibility and independent custody qualification. Do not stuff this subset into an all-source assignment or bypass null-only validator."
+  },
+  "status_dimensions": {
+    "target_declared_owner": "EXISTS_AS_PINNED",
+    "target_subdomain_implementation": "PUBLISHED_BOUNDED_1.1.0",
+    "source_canonical_assignment": null,
+    "source_accepted_owner": null,
+    "source_adapter_cutover": false,
+    "source_copying_authorization": "UNKNOWN",
+    "current_external_runtime_admission": "NOT_ESTABLISHED",
+    "exclusive_execution_custody": "NOT_ESTABLISHED",
+    "engine_positive_enrollment": "NO_SUPPORTED_SCHEMA_FOUND"
+  },
+  "remaining_conditions": [
+    {
+      "owner": "source producer + central engine",
+      "gap": "Source proposal generator emits target_custody=null and all819proposed_target=null; inspector explicitly rejects either nonnull with TARGET_CUSTODY_REQUIRED. Need owner-coordinated publishedpositivegrammar + consumption + executableacceptance; targetJSON alone cannot makecurrentproduceracceptmapping.",
+      "locators": [
+        ".ecdev/src/migration/proposal.rs:165",
+        ".ecdev/src/migration/proposal.rs:245",
+        ".ecdev/src/migration/proposal.rs:262",
+        ".ecdev/src/migration/proposal.rs:274"
+      ]
+    },
+    {
+      "owner": "central source-enrollment owner",
+      "gap": "Inspectedsource qualification binds engine217fd75c53795d31fa0a2a989a04ca49bdacfa80 registering7 and excludingECDEV; source8 and sharedprotocol.lock notinstalled. Targetcurrentlock schema885e9643/engined78d8595 differs fromsourcequalification schema4e3b2d05/engine7fc47527; no crosspincompatibilityinferred. Exactcontract/source8registration plus boundmatchinglock required."
+    },
+    {
+      "owner": "target authority/operator + source caller",
+      "gap": "Authenticate actualrequester and mapresource/tenantpurpose/expiry/revocation/restrictions; independentlyassess exact1.1.0implementation; existingresource.work/lease/release and separately resource.observe admission +1provisionalcpu_units allocation required. No broadtoken or sourcepayload/ownerfield grantsrights."
+    },
+    {
+      "owner": "source actual productioncaller owner",
+      "gap": "No sourceparse_price\u2192Chronica actualcallerroute installed/qualified. Preserveall4Optionselectors/originalpayload/fullrequest/EffectRef/provideraudience/evidencejoin and typedunavailable versusEffectUnknown. Pendingunknown cannotresend/refund/recompute/replaceevidence. ExistingtargettemporaryWorldtests are notsourcecallerorproductioncustody."
+    },
+    {
+      "owner": "rights/evidence owner",
+      "gap": "SourcehistoricalUNVERIFIED/currentcopyingUNKNOWN remains; independentlyauthoredtargetcode/sourcecasehashes do notgrant donorcode/table/corpusredistribution, sourceabsorption/retirement/exclusivecustody. No donorrawvalues copiedinthisrecommendation."
+    }
+  ],
+  "preservation": "Existing source IDs, native cap/implementation/owner/caller/ArtifactIds and all sourcecaseindices remain unchanged. Old99@1.0.0 descriptor/results and prior handoff nullpublication fields remain historical bytes. This current contract supplies already published target commit/tree separately. Source proposed_target/target_custody remain untouched; no repository besides Chronica edited.",
+  "no_grant": {
+    "authority": false,
+    "accepted_obligations": 0,
+    "rights_assessed": false,
+    "all_source_capability_admitted": false,
+    "source_enrollment_completed": false,
+    "exclusive_execution_custody": "NOT_ESTABLISHED",
+    "current_external_runtime_admission": "NOT_ESTABLISHED",
+    "native_V1_acceptance": false,
+    "verified_new_OSS_extinctions": 0
+  }
+}

@@ -956,9 +956,9 @@ fn migrate(args: &Args) -> Out {
                 let mut text = String::new();
                 std::fs::File::open(path).and_then(|file| file.take(migration::proposal::MAX_PROPOSAL_BYTES as u64 + 1).read_to_string(&mut text))
                     .map_err(|e| e.to_string())?;
-                migration::proposal::inspect_text(&capture, &text)?
+                migration::proposal::inspect_text_bound(&capture, &text, args.value("--expect-sha256").unwrap())?
             } else {
-                migration::proposal::generate(&capture)?
+                migration::proposal::generate_bound(&capture, args.value("--expect-sha256").unwrap())?
             };
             Ok((0, report.render()))
         }

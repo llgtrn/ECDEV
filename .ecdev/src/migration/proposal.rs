@@ -132,9 +132,19 @@ fn lane(path: &str) -> Result<usize, String> {
 /// Produce a deterministic draft for the explicitly pinned caller artifact. Every
 /// locator indexes that capture's canonical envelope, not a reconstructed checkout.
 pub fn generate(capture: &Capture) -> Result<Json, String> {
+    generate_bound(capture, CAPTURE_SHA256)
+}
+
+/// Produce a pending draft for the exact canonical capture bytes selected by the caller.
+/// The digest is integrity input, not a source registration, target owner or rights grant.
+pub fn generate_bound(capture: &Capture, expected_sha256: &str) -> Result<Json, String> {
+    if expected_sha256.len() != 64 || !expected_sha256.bytes().all(|byte| byte.is_ascii_hexdigit())
+    {
+        return Err("SOURCE_CAPTURE_PIN_INVALID".into());
+    }
     let bytes = capture.render()?;
     let digest = content_digest(bytes.as_bytes());
-    if digest != format!("sha256:{CAPTURE_SHA256}") {
+    if !digest[7..].eq_ignore_ascii_case(expected_sha256) {
         return Err("SOURCE_CAPTURE_PIN_MISMATCH".into());
     }
     let envelope = json::parse_unique(&bytes)?;
@@ -256,7 +266,17 @@ pub fn generate(capture: &Capture) -> Result<Json, String> {
 /// Wire callers must use `json::parse_unique`: a Value cannot retain duplicate-key
 /// provenance after a permissive legacy parse has already discarded it.
 pub fn inspect(capture: &Capture, proposal: &Value) -> Result<Json, String> {
-    let generated = generate(capture)?;
+    inspect_bound(capture, proposal, CAPTURE_SHA256)
+}
+
+/// Check a proposal against caller-selected capture bytes, never its self-asserted binding.
+/// Exact nested equality preserves pending ownership, rights and original source metadata.
+pub fn inspect_bound(
+    capture: &Capture,
+    proposal: &Value,
+    expected_sha256: &str,
+) -> Result<Json, String> {
+    let generated = generate_bound(capture, expected_sha256)?;
     let expected = json::parse_unique(&generated.render())?;
     closed(proposal, &ROOT_FIELDS)?;
     if field(proposal, "target_custody")? != &Value::Null {
@@ -348,7 +368,10 @@ pub fn inspect(capture: &Capture, proposal: &Value) -> Result<Json, String> {
         .with("format", "ecdev-source-mapping-proposal-inspection-v1")
         .with("status", "VALID_PENDING_PROPOSAL")
         .with("scope", SCOPE)
-        .with("capture_sha256", format!("sha256:{CAPTURE_SHA256}"))
+        .with(
+            "capture_sha256",
+            text(field(&expected, "capture_binding")?, "sha256")?,
+        )
         .with(
             "canonical_proposal_sha256",
             content_digest(generated.render().as_bytes()),
@@ -364,9 +387,18 @@ pub fn inspect(capture: &Capture, proposal: &Value) -> Result<Json, String> {
 /// Bounded portable-text entrypoint. Duplicate decoded keys are refused before
 /// conversion to a value tree can discard their original occurrence.
 pub fn inspect_text(capture: &Capture, proposal: &str) -> Result<Json, String> {
+    inspect_text_bound(capture, proposal, CAPTURE_SHA256)
+}
+
+/// Strict bounded portable-text checker with an independently supplied capture digest.
+pub fn inspect_text_bound(
+    capture: &Capture,
+    proposal: &str,
+    expected_sha256: &str,
+) -> Result<Json, String> {
     if proposal.len() > MAX_PROPOSAL_BYTES {
         return Err("PROPOSAL_READER_BUDGET_EXCEEDED".into());
     }
     let value = json::parse_unique(proposal).map_err(|e| format!("PROPOSAL_JSON: {e}"))?;
-    inspect(capture, &value)
+    inspect_bound(capture, &value, expected_sha256)
 }
