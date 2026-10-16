@@ -88,7 +88,7 @@ fn string_text(rng: &mut Rng) -> String {
     let n = rng.below(6);
     let mut s = String::from("\"");
     for _ in 0..n {
-        s.push_str(*rng.pick(pieces));
+        s.push_str(rng.pick::<&str>(pieces));
     }
     s.push('"');
     s
@@ -189,9 +189,9 @@ pub fn generated() -> Vec<Vec<u8>> {
     (0..GENERATED)
         .map(|_| {
             let mut s = String::new();
-            s.push_str(*rng.pick(WS));
+            s.push_str(rng.pick::<&str>(WS));
             value_text(&mut rng, 0, &mut s);
-            s.push_str(*rng.pick(WS));
+            s.push_str(rng.pick::<&str>(WS));
             s.into_bytes()
         })
         .collect()
