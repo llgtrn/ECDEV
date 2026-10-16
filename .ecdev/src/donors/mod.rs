@@ -10,6 +10,7 @@
 //! REJECTED, SUPERSEDED) have exact guards; an illegal exception is ignored and reported.
 
 pub mod audit;
+pub mod reconcile;
 
 use crate::census::{Census, Observation, Via};
 use crate::compact::history::History;

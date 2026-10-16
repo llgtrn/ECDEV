@@ -6,10 +6,21 @@ use super::Value;
 use std::collections::BTreeMap;
 
 pub fn parse(text: &str) -> Result<Value, String> {
+    read(text, false)
+}
+
+/// New review contracts refuse duplicate decoded keys. Legacy readers retain their
+/// historical parsing semantics; this does not reinterpret stored source records.
+pub fn parse_unique(text: &str) -> Result<Value, String> {
+    read(text, true)
+}
+
+fn read(text: &str, unique_keys: bool) -> Result<Value, String> {
     let mut p = Parser {
         s: text.as_bytes(),
         i: 0,
         depth: 0,
+        unique_keys,
     };
     p.ws();
     let v = p.value()?;
@@ -24,6 +35,7 @@ struct Parser<'a> {
     s: &'a [u8],
     i: usize,
     depth: usize,
+    unique_keys: bool,
 }
 
 impl Parser<'_> {
@@ -77,7 +89,9 @@ impl Parser<'_> {
                     self.i += 1;
                     self.ws();
                     let v = self.value()?;
-                    map.insert(k, v);
+                    if map.insert(k, v).is_some() && self.unique_keys {
+                        return Err(self.err("duplicate decoded JSON key"));
+                    }
                     self.ws();
                     match self.s.get(self.i) {
                         Some(b',') => self.i += 1,

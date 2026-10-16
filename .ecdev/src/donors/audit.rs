@@ -200,7 +200,7 @@ fn observed(rows: &[Observation]) -> Json {
     )
 }
 
-fn foreign(value: &Value) -> Json {
+pub(crate) fn foreign(value: &Value) -> Json {
     match value {
         Value::Null => Json::Null,
         Value::Bool(v) => Json::Bool(*v),
@@ -268,7 +268,7 @@ fn classification(records: &[&Record], additional_kinds: &BTreeSet<UniverseKind>
     };
     Json::obj().with("status", state).with("explicit_kind_claims", kinds.iter().map(|k| k.wire()).collect::<Vec<_>>())
         .with("evidence", evidence).with("audited_oss_inclusion", Json::Null)
-        .with("blocker", "No versioned reviewed OSS-inclusion/rights decision exists in the current donor schema; importer defaults and role/model/tool/data descriptors are not that decision")
+        .with("blocker", "Raw imported/provenance claims only; separate source-review ledgers are not evaluated by this audit. Use donor reconcile for bound reviews and remaining evidence gaps.")
 }
 
 fn source_descriptors(a: &Assessment) -> Json {
@@ -519,7 +519,7 @@ fn project(a: &Assessment, universe: &Universe, snapshot: &Snapshot) -> Result<J
                                 (!relation.is_some_and(|r| r.license_verified))
                                     .then_some("UNIVERSE_OBSERVED_LICENSE_FLAG_NOT_SET; REVIEW_SEPARATE_LICENSE_RECEIPTS"),
                                 Some("CURRENT_COPYING_AUTHORIZATION_NOT_ESTABLISHED_BY_REPORT"),
-                                Some("REVIEWED_OSS_INCLUSION_CONTRACT_MISSING"),
+                                Some("REVIEWED_OSS_INCLUSION_NOT_EVALUATED_BY_RAW_AUDIT; USE_DONOR_RECONCILE"),
                             ]
                             .into_iter()
                             .flatten()
@@ -579,7 +579,7 @@ fn project(a: &Assessment, universe: &Universe, snapshot: &Snapshot) -> Result<J
             .with("rule", "Historical registered union effective registered; exclude only legal REJECTED/SUPERSEDED; add all unregistered external participation"))
         .with("classification_summary", Json::Object(states.into_iter().map(|(k,v)| (k,Json::from(v))).collect()))
         .with("audited_oss", Json::obj().with("status", "UNKNOWN").with("total", Json::Null).with("verified_extinct", Json::Null)
-            .with("reason", "No reviewed per-source OSS inclusion contract; imported kind/defaults and licences do not establish it; no cohort rows removed"))
+            .with("reason", "Raw audit does not evaluate separate source-inclusion reviews; imported kind/defaults and licences alone do not establish audited eligibility. Use donor reconcile; no cohort rows removed."))
         .with("donors", donors).with("participation_descriptors", source_descriptors(a))
         .with("universe_record_evidence", universe.records().map(|(s,r)| Json::obj()
             .with("universe_file", &s.file).with("source", &s.source).with("source_digest", &s.digest)

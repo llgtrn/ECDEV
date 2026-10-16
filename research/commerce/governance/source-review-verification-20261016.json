@@ -1,0 +1,350 @@
+{
+  "format": "ecdev.source-review-verification.v1",
+  "observed_at_utc": "2026-10-16T20:19:41.579591+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "00dd7f0ed2703076fb9d11d76af420c92a9a4097",
+  "command": "cargo +1.87.0 run --release --manifest-path .ecdev/Cargo.toml --locked -- donor reconcile --root /workspace/ECDEV --json",
+  "code_inputs": [
+    {
+      "path": ".ecdev/README.md",
+      "sha256": "b9f5702899f26d890b0738c5ae8184b51c10b56e140b7465b5e0acf609692e40",
+      "bytes": 13294
+    },
+    {
+      "path": ".ecdev/src/cli/mod.rs",
+      "sha256": "93f22fe92757cde8bac4a132bbbc9e2f79512d84c237a525ad66d2115c86cfc4",
+      "bytes": 61866
+    },
+    {
+      "path": ".ecdev/src/donors/audit.rs",
+      "sha256": "9e61419ad1c5ddb5dd72228e18325d2abc0a10ccad7335d2f4106b830af6b90f",
+      "bytes": 29042
+    },
+    {
+      "path": ".ecdev/src/donors/mod.rs",
+      "sha256": "e86c3e3ac388c5f751e961122bb225f3c4e4743bb398efaa6fc79a3a31a2daa6",
+      "bytes": 34113
+    },
+    {
+      "path": ".ecdev/src/donors/reconcile.rs",
+      "sha256": "54fddfbaf5edf63618d22be7c97eeaae8757e6c28aaec816fa44e9bebf21b1f6",
+      "bytes": 28880
+    },
+    {
+      "path": ".ecdev/src/formats/json.rs",
+      "sha256": "7bf34e4adabf30d0f3c0e335a51d89d2f04d7af481126ecc9540779c03fe7a65",
+      "bytes": 14402
+    },
+    {
+      "path": ".ecdev/src/protocol.rs",
+      "sha256": "cc0de26cc434a5ef66b35878d08cd8e38f1578532c76494f78e6ccc0f3fa4730",
+      "bytes": 11044
+    },
+    {
+      "path": ".ecdev/tests/donor_reconcile.rs",
+      "sha256": "65d5f6750a48177142db041149863260e57e1e4555747c8afc23a673dc4904b7",
+      "bytes": 23002
+    },
+    {
+      "path": "research/commerce/governance/source-review-decisions-v1.json",
+      "sha256": "7190d695b3ad388df65633a66c3a4ddee0dae0cf72a354c57bf34e3dc4cb3780",
+      "bytes": 3063
+    }
+  ],
+  "review_ledger": {
+    "path": "research/commerce/governance/source-review-decisions-v1.json",
+    "sha256": "7190d695b3ad388df65633a66c3a4ddee0dae0cf72a354c57bf34e3dc4cb3780",
+    "bytes": 3063
+  },
+  "handoff": {
+    "path": "research/commerce/governance/source-review-handoff-20261016.json",
+    "sha256": "ec1bb4796758ff3b68d11d2efbb462f6b34fa07c6c02b543f8da5c86084288a0",
+    "bytes": 193144
+  },
+  "reviewed_prepublication_report": {
+    "path": "/tmp/ecdev-donor-reconciliation-reviewed-ready.json",
+    "sha256": "cfc6220ec0665ebfb1aa83b2b7f6d4aea6037d0328ea5f8a6b875504bb5556f0",
+    "bytes": 4569651
+  },
+  "source_snapshot": {
+    "observed_head": "00dd7f0ed2703076fb9d11d76af420c92a9a4097",
+    "input_manifest_sha256": "sha256:f46ce5e946940b6cf2c9281e2121aa4b25473e51618fb938433bfb5d509623f3",
+    "input_paths": 2861,
+    "path_selection_from_index": true,
+    "binding": "WORKTREE_BYTES_PLUS_SUPPLEMENTAL_STATE_AND_CENSUS_INPUTS; HEAD_OBSERVED_ONLY",
+    "commit_content_match": "UNKNOWN_NOT_ATTESTED",
+    "uncommitted_inputs_status": "UNKNOWN_NOT_CHECKED; INDEX_SELECTED_WORKTREE_BYTES_MAY_DIFFER_FROM_HEAD",
+    "stability_scope": "ENUMERATED_FILE_BYTES_ONLY; FILE_MODES_AND_FILESYSTEM_CONTROL_METADATA_NOT_ATTESTED",
+    "stable_before_after_assessment": true,
+    "binding_complete": true,
+    "binding_gaps": []
+  },
+  "reviewed_source_oss": {
+    "included": 1,
+    "unresolved": 67,
+    "total": null,
+    "verified_extinct": null,
+    "status": "PARTIALLY_RECONCILED",
+    "meaning": "Reviewed source inclusions are a partial count; global OSS total and canonical verified extinction remain UNKNOWN"
+  },
+  "mixed_cohort": {
+    "total": 68,
+    "declared_extinct": 10,
+    "effective_extinct": 10
+  },
+  "active_gate": {
+    "numerator": 10,
+    "registered_active": 48,
+    "unregistered_externals": 0,
+    "denominator": 48,
+    "pass": false,
+    "rule": "Historical registered union effective registered; exclude only legal REJECTED/SUPERSEDED; add all unregistered external participation"
+  },
+  "resolved_source_cohort": [
+    {
+      "source_alias": "scrapinghub--price-parser",
+      "source_id": "ec1:7755f6459b7f8f22b262e2bdfe74d7b1",
+      "origin": "https://github.com/scrapinghub/price-parser",
+      "observed_global_candidate": "github.com/scrapinghub/price-parser",
+      "review": {
+        "status": "SOURCE_REVIEWED_OSS_INCLUSION",
+        "reason_codes": [],
+        "source_kind": "OSS_REPOSITORY",
+        "oss_inclusion": true,
+        "basis": "REVIEWED_RETAINED_SOFTWARE_SOURCE_AND_DECLARED_ROOT_TERMS",
+        "upstream_revision": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+        "global_origin": "github.com/scrapinghub/price-parser",
+        "original_record_id": "#21",
+        "original_provenance": "research/commerce/donors/registry.json##21",
+        "retained_root_license": {
+          "blob": "3abd521a848af08953dd575c7cf41ca8aa4eac3a",
+          "bytes": 1513,
+          "path": "LICENSE",
+          "sha256": "sha256:3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+        },
+        "declared_license": "BSD-3-Clause",
+        "historical_license_receipt_status": "UNVERIFIED",
+        "retained_terms": "EXISTING_DECLARED_TERMS_WITH_REVIEWED_CAPTURED_BYTES; NO_INFERRED_LICENSE",
+        "first_party_source_files": 3,
+        "inventory_files": 16,
+        "current_copying_authorization": "UNKNOWN; NOT_GRANTED_BY_SOURCE_REVIEW",
+        "upstream_commit_membership": "RETAINED_RECEIPT_ASSERTION; NOT_FRESHLY_ATTESTED",
+        "canonical_registry_binding": "PENDING",
+        "limitations": [
+          "Original census license status UNVERIFIED is retained verbatim; this new review identifies existing declared BSD-3-Clause terms against retained root text, without inferring a new license.",
+          "Reviewed source-kind inclusion applies to this pinned software repository, not dependencies, provider services, data or models.",
+          "Upstream tree membership and current origin authenticity remain retained receipt assertions, not a fresh upstream verification.",
+          "Root terms do not grant copying authorization or settle component/distribution obligations.",
+          "No canonical ownership, target adoption, current proof freshness, enrollment or acceptance credit follows."
+        ]
+      },
+      "unresolved_evidence_reasons": [],
+      "existing_provenance": [
+        "research/commerce/donors/census/scrapinghub--price-parser/identity.json",
+        "research/commerce/price-parser-capability-review.json",
+        "research/commerce/price-parser-exclusions.json",
+        "research/commerce/price-parser-extinction.json"
+      ],
+      "selected_identity_receipts": [
+        "research/commerce/donors/census/scrapinghub--price-parser/identity.json"
+      ],
+      "available_source_fields": [
+        {
+          "identity_path": "research/commerce/donors/census/scrapinghub--price-parser/identity.json",
+          "recorded_upstream_revision": "64e213a46a40473ba4f8aa3b249917fdc64d8a16",
+          "recorded_repository_url": "https://github.com/scrapinghub/price-parser",
+          "recorded_donor_type": "UNCLASSIFIED",
+          "recorded_license_label": "BSD-3-Clause",
+          "recorded_license_paths": [
+            "LICENSE"
+          ],
+          "recorded_license_hashes": [
+            "3b017dd7265380c41490112a1ffe70579300ce2b1deb3a37013b61ece99036c5"
+          ],
+          "original_license_receipt_status": "UNVERIFIED",
+          "custody": "RETAINED_SOURCE_ASSERTIONS; REVIEW_REQUIRED; NO_CURRENT_AUTHORIZATION"
+        }
+      ],
+      "original_registry_candidates": [
+        {
+          "original_record_id": "#21",
+          "source": "research/commerce/donors/registry.json",
+          "current_imported_global": "github.com/scrapinghub/price-parser",
+          "explicit_repository_url": "https://github.com/scrapinghub/price-parser",
+          "reason": "EXISTING_IMPORTED_ORIGIN; NOT_FRESH_AUTHENTICATION"
+        }
+      ],
+      "fields_required_for_source_review": [
+        "original source_alias and ec1 source_id",
+        "exact original record source/id and legacy digest",
+        "explicit source kind/inclusion decision and evidence basis",
+        "exact existing origin, upstream revision and inventory closure",
+        "retained license bytes/paths/hashes and existing declared terms, without inferred licences",
+        "all evidence file digests, component exclusions and custody limitations"
+      ],
+      "separate_required_bindings": [
+        "Current rights/copying authorization",
+        "Canonical owner/identity and target custody",
+        "Target adoption/knowledge/absorption and current ECG verification",
+        "Authorized acceptance producer and native platform qualification"
+      ],
+      "native_effective_state": "EXTINCT",
+      "active_gate_member": true,
+      "native_stopped_by": ""
+    }
+  ],
+  "reason_counts": {
+    "REVIEWED_SOURCE_CLASSIFICATION_DECISION_NOT_BOUND": 67,
+    "LICENSE_TEXT_NOT_RETAINED_IN_SELECTED_RECEIPT; HASH_CUSTODY_MAY_EXIST_ELSEWHERE": 1,
+    "NO_LICENSE_ARTIFACT_SELECTED_IN_CENSUS_RECEIPT": 2,
+    "CENSUS_IDENTITY_NOT_SELECTED_IN_DECLARED_PROVENANCE; OTHER_PROVENANCE_UNREVIEWED": 23
+  },
+  "original_importer_origin_gaps": [
+    {
+      "source_alias": "666ghj--BettaFish",
+      "source_id": "ec1:92be80fcd146ea934f2317a1a0c9e0d1",
+      "original_record": {
+        "original_record_id": "#26",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/666ghj/BettaFish",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "666ghj--MiroFish",
+      "source_id": "ec1:2712df28e4a7d8df052875afbae2749e",
+      "original_record": {
+        "original_record_id": "#27",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/666ghj/MiroFish",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "NanmiCoder--MediaCrawler",
+      "source_id": "ec1:152b44cbc7ce35a4e2bb97c6b975a613",
+      "original_record": {
+        "original_record_id": "#32",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/NanmiCoder/MediaCrawler",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "Shiva-74--viral-trend-agent",
+      "source_id": "ec1:4e2de018b5bbc47f838b929ab9c64c7e",
+      "original_record": {
+        "original_record_id": "#30",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/Shiva-74/viral-trend-agent",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "VladUZH--harken",
+      "source_id": "ec1:2c4d4554c3613e77383e81477f7fbafe",
+      "original_record": {
+        "original_record_id": "#29",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/VladUZH/harken",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "sansan0--TrendRadar",
+      "source_id": "ec1:83fcaf2ca6727a08a60f218cd98fbe99",
+      "original_record": {
+        "original_record_id": "#28",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/sansan0/TrendRadar",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "t4niha--Trend-Finder",
+      "source_id": "ec1:4312a7b95a0fbc6c307ea7e6269f0116",
+      "original_record": {
+        "original_record_id": "#31",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/t4niha/Trend-Finder",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "getzep--zep",
+      "source_id": "ec1:c4d5994a778cfd2963cb5a32765ff717",
+      "original_record": {
+        "original_record_id": "#33",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/getzep/zep",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    },
+    {
+      "source_alias": "getzep--graphiti",
+      "source_id": "ec1:3ca7c63b1dd17181050e80257de15d55",
+      "original_record": {
+        "original_record_id": "#34",
+        "source": "research/commerce/donors/registry.json",
+        "current_imported_global": null,
+        "explicit_repository_url": "https://github.com/getzep/graphiti",
+        "reason": "IMPORTER_ORIGIN_FIELDS_OMIT_REPOSITORY_URL; EXPLICIT_SOURCE_MAPPING_NEEDED"
+      }
+    }
+  ],
+  "verification": {
+    "full_governor_tests": 211,
+    "failed": 0,
+    "ignored": 0,
+    "new_focused_tests": 15,
+    "post_label_clarification_focused_tests": 24,
+    "strict_clippy_all_targets": "PASS",
+    "format_and_diff_checks": "PASS",
+    "independent_code_review": "APPROVED; reconcile54fddfbaf5edf63618d22be7c97eeaae8757e6c28aaec816fa44e9bebf21b1f6",
+    "root_independent_test_review": "PASS; all15 test functions",
+    "independent_licence_byte_review": "1513bytes SHA256 and Gitblob independently recomputed against retained source evidence",
+    "immutable_source_state_files_byte_equal_base": 590,
+    "legacy_parse_semantics": "UNCHANGED; strict parse_unique is additive",
+    "lifecycle_gates_changed": false,
+    "new_assimilation": 0,
+    "new_extinction": 0
+  },
+  "preserved_limits": [
+    "Original #21/ec1/global source identifiers, raw legacy registry bytes and six original receipt bytes unchanged",
+    "Original licence receipt status UNVERIFIED remains unchanged; no new or inferred licence is added",
+    "Retained source-kind/terms review is not fresh upstream Git membership or current copying authorization",
+    "All68donors retained; reviewed1/unresolved67 are a partial source count, not audited OSS total or new extinction",
+    "Canonical ownership/enrollment/target acceptance remain PENDING; no shared lock created",
+    "N01-N12/J1-J9/P0-P3 NOT_RUN; fullV1 INCOMPLETE"
+  ],
+  "logs": [
+    {
+      "path": "/tmp/ecdev-donor-reconciliation-governor-final.log",
+      "sha256": "3818ce077f05652ac8a7bb51abda8213483e287c0c5c884cc3b816ab187b660c",
+      "bytes": 17702
+    },
+    {
+      "path": "/tmp/ecdev-donor-reconciliation-focused-final.log",
+      "sha256": "723496894feb5b90c9ba828828ac2bb755412da59185024856ee3f52df7d0be0",
+      "bytes": 2572
+    },
+    {
+      "path": "/tmp/ecdev-donor-reconciliation-clippy-final.log",
+      "sha256": "a6b0adf1c40ccd8b0c7828c36973109d1e73d52d6938e9bc2722fdf62c6f8669",
+      "bytes": 125
+    },
+    {
+      "path": "/tmp/ecdev-donor-reconciliation-reviewed-final.log",
+      "sha256": "ee3746d31c7e12fd795dbd68397a6588e3b9ca7bd29d9f0b61b1d1bb46ac6096",
+      "bytes": 239
+    }
+  ]
+}

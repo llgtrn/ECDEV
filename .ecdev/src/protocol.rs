@@ -17,7 +17,7 @@ pub const COMMANDS: &[(&str, &str)] = &[
     ("census", "observe foreign participation; --record appends a history batch"),
     ("compact", "fold history, knowledge and evidence; write the view; --extract-docs, --extract-legacy, --prune-docs"),
     ("conformance", "run ECDEV repository conformance against --root"),
-    ("donor", "summary | audit [--json]: the donor universe (known universe by kind, lifecycle layers, identity and verification gaps); an unreconciled legacy registry is NOT RECONCILED, never 0"),
+    ("donor", "summary | audit | reconcile [--json]: the donor universe (known universe by kind, lifecycle layers, identity and verification gaps); an unreconciled legacy registry is NOT RECONCILED, never 0"),
     ("context", "agent context for the repository, with current milestones and decisions"),
     ("extinction", "extinction gates per donor (why is a donor not extinct?)"),
     ("fact", "typed knowledge facts: add | supersede <kind> <subject> <key> <value> --provenance <p>...; list [--kind <kind>] [--subject <prefix>]"),

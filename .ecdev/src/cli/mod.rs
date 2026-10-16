@@ -1380,20 +1380,25 @@ fn donor_cmd(args: &Args) -> Out {
         .first()
         .map(String::as_str)
         .unwrap_or("summary");
-    if sub == "audit" {
+    if matches!(sub, "audit" | "reconcile") {
         if args.positional.len() != 1
             || !args.flags.is_empty()
             || !args.values.is_empty()
             || !args.multi.is_empty()
         {
-            return Err(
-                "donor audit accepts only --root and --json; descriptive read-only report".into(),
-            );
+            return Err(format!(
+                "donor {sub} accepts only --root and --json; read-only source report"
+            ));
         }
-        return Ok((0, crate::donors::audit::run(&args.root)?.render()));
+        let report = if sub == "audit" {
+            crate::donors::audit::run(&args.root)?
+        } else {
+            crate::donors::reconcile::run(&args.root)?
+        };
+        return Ok((0, report.render()));
     }
     if sub != "summary" {
-        return Err("donor summary | audit [--json]".into());
+        return Err("donor summary | audit | reconcile [--json]".into());
     }
     let a = assess(&args.root)?;
     let rows = vec![crate::universe::summary::Row::of(&a)];
