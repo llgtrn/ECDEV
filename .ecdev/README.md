@@ -124,3 +124,24 @@ universal compatibility. Three reqwest manifest edges and its wasm32 serde_json 
 See [the direct HTTP verification receipt](../research/commerce/governance/direct-http-cutover-verification-20261016.json)
 for executed tests, immutable evidence, exact residual transport gaps and source-capture scope.
 This creates no source-eight enrollment, whole-donor extinction or native OS completion claim.
+
+The existing selected-price custody reader can verify the portable selected-source snapshot
+without a live source checkout or Git executable:
+
+```sh
+python3 -B .ecdev/qualification/price_custody.py \
+  --inspect-source-package research/commerce/governance/price-source-package-c973d76b-v1.json \
+  --expect-package-sha256 be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd \
+  --expect-source-commit c973d76bda8476142dd64116b60877942ccb24d5 \
+  --expect-source-tree 1020e7ebdc85befdd0e6ee4d73e4417779228f2c \
+  --expect-rights-sha256 c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410
+```
+
+Obtain those pins independently of the received package. The reader checks 86 committed
+paths through 19 Git trees: 83 selected materials, including the retained notices, and the
+three exact rights/witness/prerequisite documents. It consumes the original four source
+bindings and all six open obligations and returns `CUTOVER_BLOCKED`. Historical and current
+source versions remain separate. The full 734-file capture and proposal are outside this
+selected snapshot; central readers still need their original inputs and a portable-proof
+adapter before they can adopt this handoff. Operational rights, exclusive custody, source-eight
+enrollment and the production switch remain unqualified.

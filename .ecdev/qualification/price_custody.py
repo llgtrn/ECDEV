@@ -369,17 +369,91 @@ def cutover_readiness(raw, expected_witness_sha256, root=ROOT, *, expected_repor
             "positive_target_qualification_supported": False, "target_authority_validator": None}
 
 
+def inspect_source_package(raw, expected_package_sha256, *, expected_source_commit,
+                           expected_source_tree, expected_rights_sha256):
+    """Consume pinned original custody evidence offline; leave every target gate open.
+
+    Package membership does not regenerate historical proofs or establish current
+    execution custody. No source checkout, Git operation or runtime is consulted.
+    """
+    import price_source_package as package
+
+    inspection, evidence = package.inspect_package_evidence(
+        raw, expected_package_sha256, expected_source_commit=expected_source_commit,
+        expected_source_tree=expected_source_tree, expected_rights_sha256=expected_rights_sha256)
+    witness = candidate.strict_json(evidence[package.WITNESS_PATH])
+    contract = candidate.strict_json(evidence[package.PREREQUISITE_PATH])
+    rights = candidate.strict_json(evidence[package.RIGHTS_PATH])
+    same(witness["parity_cutover_prerequisites"], contract,
+         "original witness and prerequisite contract differ")
+    same({row["role"]: row["binding"] for row in witness["selected_nodes"]},
+         rights["selected_source_bindings"], "original source bindings differ from published rights")
+    same({row["role"]: row["capture_index"] for row in witness["selected_nodes"]},
+         SELECTED, "original four-node selection differs")
+    same(witness["status"], source_status(), "original witness source status changed")
+    same(contract["status"], source_status(), "original prerequisite source status changed")
+    obligations = contract["obligations"]
+    if ([row["key"] for row in obligations] != ["target_execution", "exclusive_custody", "authority",
+                                              "unknown_effect", "rights_and_enrollment", "production_cutover"]
+            or any(row["evidence"] is not None or not row["requires"] for row in obligations)
+            or contract["target_execution"] != "NOT_RUN"
+            or contract["target_authority_validator"] is not None
+            or contract["positive_target_qualification_supported"] is not False):
+        raise ValueError("original target obligations must remain open without evidence or authority")
+    return {"format": "ecdev-price-cutover-readiness-v1", "status": "CUTOVER_BLOCKED",
+            "source_package_inspection": inspection,
+            "verification_scope": "PORTABLE_MEMBERSHIP_AND_ORIGINAL_PINNED_SOURCE_EVIDENCE_ONLY",
+            "source_checkout_consulted": False, "source_witness_regenerated": False,
+            "original_evidence": {path: {"sha256": cohort.digest(data), "bytes": len(data)}
+                                  for path, data in evidence.items()},
+            "historical_source": copy.deepcopy(witness["historical_source"]),
+            "fixed_current_source": copy.deepcopy(witness["fixed_current_source"]),
+            "caller_version_separation": copy.deepcopy(witness["caller_version_separation"]),
+            "selected_source_bindings": copy.deepcopy(rights["selected_source_bindings"]),
+            "selected_nodes": len(witness["selected_nodes"]),
+            "incident_edges": len(witness["incident_edges"]),
+            "context_nodes": len(witness["adjacent_context_nodes"]),
+            "context_nodes_adopted": 0, "all828_admitted_mappings": 0,
+            "production_obligations_closed": 0,
+            "missing_target_evidence": [row["key"] for row in obligations],
+            "target_owned_obligations": copy.deepcopy(obligations),
+            "parity_cutover_prerequisites": copy.deepcopy(contract),
+            "target_execution": "NOT_RUN", "target_exclusive_custody": None, "Host_admission": None,
+            "current_rights": None, "canonical_enrollment": "BLOCKED", "source_adapter_cutover": False,
+            "positive_target_qualification_supported": False, "target_authority_validator": None,
+            "source_status": source_status()}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
-    parser.add_argument("--source-root", type=Path, default=ROOT)
-    parser.add_argument("--expect-report-sha256", required=True)
-    parser.add_argument("--expect-readiness-sha256", required=True)
+    parser.add_argument("--source-root", type=Path, default=ROOT,
+                        help="source checkout for legacy modes; ignored for offline package inspection")
+    parser.add_argument("--expect-report-sha256")
+    parser.add_argument("--expect-readiness-sha256")
     parser.add_argument("--inspect-witness", type=Path)
     parser.add_argument("--expect-witness-sha256")
     operation = parser.add_mutually_exclusive_group()
     operation.add_argument("--contract", action="store_true")
     operation.add_argument("--check-cutover", action="store_true")
+    operation.add_argument("--inspect-source-package", type=Path)
+    parser.add_argument("--expect-package-sha256")
+    parser.add_argument("--expect-source-commit")
+    parser.add_argument("--expect-source-tree")
+    parser.add_argument("--expect-rights-sha256")
     args = parser.parse_args()
+    package_pins = (args.expect_package_sha256, args.expect_source_commit,
+                    args.expect_source_tree, args.expect_rights_sha256)
+    if args.inspect_source_package is not None:
+        if any(pin is None for pin in package_pins):
+            parser.error("package inspection requires independent package SHA-256, source commit, source tree and rights SHA-256")
+        if any(value is not None for value in (args.inspect_witness, args.expect_witness_sha256,
+                                               args.expect_report_sha256, args.expect_readiness_sha256)):
+            parser.error("package inspection cannot be mixed with legacy witness, report or readiness arguments")
+    else:
+        if any(pin is not None for pin in package_pins):
+            parser.error("package pins require --inspect-source-package")
+        if args.expect_report_sha256 is None or args.expect_readiness_sha256 is None:
+            parser.error("--expect-report-sha256 and --expect-readiness-sha256 are required")
     if bool(args.inspect_witness) != bool(args.expect_witness_sha256):
         parser.error("witness input and independent witness SHA-256 are required together")
     if args.check_cutover and not args.inspect_witness:
@@ -389,7 +463,14 @@ def main():
     kwargs = {"expected_report_sha256": args.expect_report_sha256,
               "expected_readiness_sha256": args.expect_readiness_sha256}
     try:
-        if args.inspect_witness:
+        if args.inspect_source_package is not None:
+            import price_source_package as package
+
+            raw = package.regular(args.inspect_source_package, package.MAX_PACKAGE_BYTES)
+            result = inspect_source_package(
+                raw, args.expect_package_sha256, expected_source_commit=args.expect_source_commit,
+                expected_source_tree=args.expect_source_tree, expected_rights_sha256=args.expect_rights_sha256)
+        elif args.inspect_witness:
             raw = candidate.regular(args.inspect_witness)
             inspect = cutover_readiness if args.check_cutover else inspect_witness
             result = inspect(raw, args.expect_witness_sha256, args.source_root, **kwargs)

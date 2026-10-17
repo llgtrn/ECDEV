@@ -1,0 +1,730 @@
+{
+  "format": "ecdev-readonly-current-target-enrollment-reference-sections-v1",
+  "scope": "Bounded source/contract sections only; no source execution or maintained-source writes; exact full fetched UTF-8 bodies independently hashed in memory before retaining sections.",
+  "hash_method": "SHA-1 of Git blob header + exact UTF-8 bytes; raw SHA-256; exact path/OID matched published recursive tree. No replacement characters observed in these21 text files.",
+  "references": [
+    {
+      "key": "file0",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "phenora/codara/src/cli.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/phenora/codara/src/cli.rs",
+      "bytes": 107028,
+      "sha256": "f73f7fd691c6d2661e4dbc4821c11880023273450847ae0941c685c7ff7402f0",
+      "git_blob_sha1": "9cb27396104be689721c1045d1afc4496f86062d",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "phenora/codara/src/cli.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9cb27396104be689721c1045d1afc4496f86062d",
+        "size": 107028,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/9cb27396104be689721c1045d1afc4496f86062d"
+      },
+      "sections": [
+        {
+          "first": 459,
+          "last": 584,
+          "content": "/// The fixed native provider's operator door is separate from source-program commands: it reads\n/// no capsule and accepts no caller-supplied time, target implementation or assessment.\nfn price_provider_command(args: &[String]) -> Outcome {\n    use capability::binding::CandidateBinding;\n    use host::{ProviderReplacement, ProviderReplacementError};\n    use world::resource::ResourceId;\n\n    let mut values = std::collections::BTreeMap::new();\n    let mut expect_empty = false;\n    let mut words = args.iter();\n    while let Some(flag) = words.next() {\n        if flag == \"--expect-empty\" {\n            if expect_empty {\n                return failure(\"codara: price-provider: duplicate --expect-empty\\n\".to_owned());\n            }\n            expect_empty = true;\n            continue;\n        }\n        if !matches!(\n            flag.as_str(),\n            \"--data\"\n                | \"--resource\"\n                | \"--holding\"\n                | \"--expected-provider\"\n                | \"--expected-version\"\n                | \"--token\"\n        ) {\n            return failure(\"codara: price-provider: unsupported argument; only data, resource, Holding, expected binding and credential are accepted\\n\".to_owned());\n        }\n        let Some(value) = words.next() else {\n            return failure(format!(\"codara: price-provider: {flag} needs a value\\n\"));\n        };\n        if values.insert(flag.as_str(), value.as_str()).is_some() {\n            return failure(format!(\"codara: price-provider: duplicate {flag}\\n\"));\n        }\n    }\n    let Some(data) = values.get(\"--data\") else {\n        return failure(\"codara: price-provider needs --data DIR\\n\".to_owned());\n    };\n    let on = match values\n        .get(\"--resource\")\n        .and_then(|v| ResourceId::try_from(*v).ok())\n    {\n        Some(on) => on,\n        None => {\n            return failure(\n                \"codara: price-provider needs an existing --resource identifier\\n\".to_owned(),\n            )\n        }\n    };\n    let holding = match values\n        .get(\"--holding\")\n        .and_then(|v| HoldingId::try_from(*v).ok())\n    {\n        Some(holding) => holding,\n        None => {\n            return failure(\n                \"codara: price-provider needs an existing --holding identifier\\n\".to_owned(),\n            )\n        }\n    };\n    let expected = match (expect_empty, values.get(\"--expected-provider\"), values.get(\"--expected-version\")) {\n        (true, None, None) => None,\n        (false, Some(provider), Some(version)) if !provider.is_empty() && !version.is_empty() => Some(CandidateBinding {\n            provider: (*provider).to_owned(), version: (*version).to_owned(),\n        }),\n        _ => return failure(\"codara: price-provider needs exactly --expect-empty or both --expected-provider and --expected-version\\n\".to_owned()),\n    };\n    let token = values\n        .get(\"--token\")\n        .map(|v| Presented::new(*v))\n        .or_else(|| std::env::var(TOKEN_VARIABLE).ok().map(Presented::new));\n    let Some(token) = token else {\n        let mut report = Report::new();\n        report.line(\"provider enrollment refused: effective current credential required\");\n        return report.end(exit::NOT_AUTHENTICATED);\n    };\n    let mut directory = match Directory::open(data) {\n        Ok(directory) => directory,\n        Err(_) => {\n            return failure(\n                \"codara: price-provider: runtime directory could not be opened\\n\".to_owned(),\n            )\n        }\n    };\n    // Opening can wait for another process. Sample the trusted clock afterwards, never a\n    // capsule's historical valid time, a --time value or a fallback timestamp of zero.\n    let at = match std::time::SystemTime::now()\n        .duration_since(std::time::UNIX_EPOCH)\n        .ok()\n        .and_then(|d| i64::try_from(d.as_millis()).ok())\n        .map(Timestamp)\n    {\n        Some(at) => at,\n        None => return failure(\"codara: price-provider: current clock unavailable\\n\".to_owned()),\n    };\n    let mut report = Report::new();\n    report.line(\"codara price-provider\");\n    let who = match directory.host.authenticate(token.token(), at) {\n        Ok(who) => who,\n        Err(_) => {\n            report.line(\"provider enrollment refused: effective current credential required\");\n            return report.end(exit::NOT_AUTHENTICATED);\n        }\n    };\n    match directory.replace_price_text_provider(&who, &on, &holding, expected.as_ref(), at) {\n        Ok(status) => {\n            let status = match status {\n                ProviderReplacement::Current => \"current singleton\",\n                ProviderReplacement::AlreadyCurrent => \"already current singleton\",\n            };\n            report.line(format_args!(\"price provider: {status} at t{}; resource {}; Holding {}; provider kernel:{}; version 1\", at.0, on, holding, capability_kernels::price_text::PRICE_TEXT_KERNEL));\n            report.line(\"binding is technical availability; execution still requires current authority, admission, budget and validated evidence\");\n            report.end(exit::OK)\n        }\n        Err(ProviderReplacementError::KnownRefusal(_)) => {\n            report.line(\"price provider refused: current credential scope, authority, Holding, expected binding and compiled implementation evidence must all hold\");\n            report.end(exit::NOT_ADMITTED)\n        }\n        Err(ProviderReplacementError::UnknownOrIncomplete(stage)) => {\n            report.line(format_args!(\"price provider outcome unknown or incomplete at {stage:?}; this runtime handle is being dropped; reopen the runtime and inspect current binding before a separate operator decision\"));\n            drop(directory);\n            report.end(exit::NOT_ACHIEVED)\n        }\n    }\n}"
+        },
+        {
+          "first": 1685,
+          "last": 1704,
+          "content": "    // AUTHENTICATION: the principal the capsule runs as is a name until it is proved. This is the\n    // one place the command line opens the host for a run and knows who the run is for, so it is\n    // asked here, before the world is read and before anything is requested; a capsule that names\n    // no principal is refused further on, by the run, before anything is requested either.\n    if let Some(requester) = capsule.ir().requester() {\n        let presented = invocation.token.as_ref().map(Presented::token);\n        match run::authenticate_requester(&mut *world.host, requester, presented, setting.clock) {\n            Ok(Some(proven)) => report.line(format_args!(\n                \"stage authentication: ok: the credential proves {proven} (authentication grants nothing: authority and admission are asked next)\"\n            )),\n            Ok(None) => {}\n            Err(refusal) => {\n                report.line(format_args!(\n                    \"stage authentication: refused: {refusal}; nothing was verified, nothing was requested\"\n                ));\n                report.line(format_args!(\"ir digest: {}\", capsule.semantic_digest()));\n                return report.end(exit::NOT_AUTHENTICATED);\n            }\n        }\n    }"
+        },
+        {
+          "first": 1788,
+          "last": 1825,
+          "content": "                // Use the resource and request key the host actually executed, and authority now,\n                // rather than the program's historical reading or a predicted placement.\n                let Some(requester) = capsule.ir().requester() else {\n                    continue;\n                };\n                let read = match (&invocation.holding, holding_input.as_ref()) {\n                    (Some(holding), Some(input)) => host.work_evidence_in_holding(\n                        requester,\n                        &step.resource,\n                        holding,\n                        &step.lease,\n                        &step.provider,\n                        input,\n                        &step.work,\n                        setting.clock,\n                    ),\n                    _ => host.work_evidence(requester, &step.resource, &step.work, setting.clock),\n                };\n                let observed = match read {\n                    // A requester without observation rights retains the original execution\n                    // report; receiving a verification result requires its own existing right.\n                    Err(HostError::Unauthorized { .. }) => continue,\n                    other => other.ok().flatten(),\n                };\n                let saved_bytes = observed.and_then(|evidence| match evidence.proof {\n                    lineara::record::EvidenceProof::ProviderAck(receipt) => {\n                        if invocation.holding.is_some() {\n                            lineara::work_receipt::decode_in_holding(&receipt)\n                                .ok()\n                                .and_then(|saved| {\n                                    report.line(format_args!(\"holding binding: persisted canonical evidence; holding {}; requester {}; resource {}\", saved.holding, saved.requester, saved.resource));\n                                    saved.result\n                                })\n                        } else {\n                            lineara::work_receipt::result(&receipt).ok().flatten()\n                        }\n                    }\n                    lineara::record::EvidenceProof::Unobserved => None,"
+        }
+      ]
+    },
+    {
+      "key": "file1",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "phenora/codara/src/host_world.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/phenora/codara/src/host_world.rs",
+      "bytes": 12858,
+      "sha256": "3b42e9491e94f78d84f5e1deb5d21d876028f23679c0fad94f9c2f151fc03d96",
+      "git_blob_sha1": "d454475c83dfd08fe7b163d949c12eb5b946acb7",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "phenora/codara/src/host_world.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d454475c83dfd08fe7b163d949c12eb5b946acb7",
+        "size": 12858,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/d454475c83dfd08fe7b163d949c12eb5b946acb7"
+      },
+      "sections": [
+        {
+          "first": 41,
+          "last": 95,
+          "content": "/// A data directory opened for a command: the host, which holds the directory lock until it\n/// drops, and the capability graph the directory's declarations fold to, copied out so that the\n/// host can be borrowed mutably (a run writes to it) while the graph is read. The directory\n/// declares its graph through the host's door (`Host::declare_graph`) and in no other way; what\n/// it holds is declared, never observed, and says so in [`Directory::origin`].\npub struct Directory {\n    pub host: Host,\n    pub graph: GraphView,\n    /// Where the graph came from, as every output that depends on it says it.\n    pub origin: String,\n}\n\nimpl Directory {\n    /// Enrolls the compiled bounded price-text provider through the existing authenticated Host door.\n    /// `at` must be the caller's trusted current clock; graph declarations and assessments remain\n    /// independent operator inputs. This does not grant execution authority or attest the artifact.\n    pub fn replace_price_text_provider(\n        &mut self,\n        who: &PrincipalId,\n        on: &ResourceId,\n        holding: &HoldingId,\n        expected: Option<&capability::binding::CandidateBinding>,\n        at: Timestamp,\n    ) -> Result<host::ProviderReplacement, host::ProviderReplacementError> {\n        use capability::binding::CandidateBinding;\n        use capability_kernels::price_text::{PRICE_TEXT_CAPABILITY, PRICE_TEXT_KERNEL};\n        use genora_graph::capability_graph::Contract;\n        use genora_graph::TransactionTime;\n        let implementation = crate::declarations::price_implementation(PRICE_TEXT_KERNEL)\n            .expect(\"fixed compiled price-text implementation\");\n        let operation: Contract =\n            format!(\"{PRICE_TEXT_CAPABILITY}(input:bytes.any)->(output:bytes.any)\")\n                .parse()\n                .expect(\"fixed price-text semantic contract\");\n        let current = self.host.graph().as_of(at, TransactionTime::LATEST);\n        if current.node(implementation.id()).is_none()\n            || !current.is_fact(implementation.id())\n            || !current.is_fact(operation.id())\n            || !current\n                .providers_of(operation.id())\n                .contains(&implementation.id())\n            || !current.is_available(implementation.id())\n        {\n            return Err(host::ProviderReplacementError::KnownRefusal(HostError::Rejected(\n            \"the compiled price-text implementation lacks current independent VerifiedEvidence for its exact semantic operation\".to_owned(),\n        )));\n        }\n        let target = CandidateBinding {\n            provider: format!(\"kernel:{PRICE_TEXT_KERNEL}\"),\n            version: \"1\".to_owned(),\n        };\n        self.host\n            .replace_work_provider_in_holding(who, on, holding, expected, &target, at)\n    }\n"
+        }
+      ]
+    },
+    {
+      "key": "file2",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "physiology/host/src/lib.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/physiology/host/src/lib.rs",
+      "bytes": 238047,
+      "sha256": "6ef7d4a24981deffd976a4c49219786ca7292744d90f94357c643eaad6ebc417",
+      "git_blob_sha1": "c8b6f04672247ad45f4cfc032b6a1d9687510546",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "physiology/host/src/lib.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c8b6f04672247ad45f4cfc032b6a1d9687510546",
+        "size": 238047,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/c8b6f04672247ad45f4cfc032b6a1d9687510546"
+      },
+      "sections": [
+        {
+          "first": 532,
+          "last": 583,
+          "content": "/// What the durable stores record for this request's effect. This is not admission, proof of\n/// canonicalization, or permission to retry. In particular, a run without a pending effect does\n/// not prove that an effect was ever emitted or acknowledged.\n#[derive(Debug, Clone, PartialEq, Eq)]\npub enum RequestObservation {\n    /// No durable Host WorkRun was found. This does not prove that a legacy provider never\n    /// acted: providers without a native input binding historically ran before that snapshot.\n    NotStarted,\n    PendingUnknown {\n        effect: EffectRef,\n    },\n    PendingEvidenced {\n        effect: EffectRef,\n    },\n    NoPendingEffect {\n        effect: EffectRef,\n    },\n}\n\n/// Reads a request's recorded disposition without calling a provider, canonicalizing, or\n/// acknowledging anything. The caller already holds the raw spine stores; this does not grant\n/// observation rights over another resource. An unbound legacy run cannot be attributed to the\n/// supplied request. The existing [`resume_request`] retains its separate legacy recovery rules.\npub fn observe_request<R: WorkRunStore, S: EvidenceStore>(\n    runs: &R,\n    evidence: &S,\n    run_id: &WorkRunId,\n    request: &RequestDigest,\n) -> Result<RequestObservation, HostError> {\n    let Some(run) = runs.restore(run_id).map_err(storage)? else {\n        return Ok(RequestObservation::NotStarted);\n    };\n    if run.request() != Some(request) {\n        return Err(HostError::RequestKeyReused(format!(\n            \"{run_id} is not bound to this request\"\n        )));\n    }\n    let effect = run.effect_ref(EFFECT);\n    if !run.pending_effect_ids().contains(&EFFECT) {\n        return Ok(RequestObservation::NoPendingEffect { effect });\n    }\n    let observed = evidence.get(&effect).map_err(storage)?;\n    if observed.as_ref().is_some_and(|held| held.effect != effect) {\n        return Err(HostError::Rejected(format!(\n            \"{run_id}: evidence names another effect\"\n        )));\n    }\n    Ok(match observed.map(|held| held.proof) {\n        Some(EvidenceProof::ProviderAck(_)) => RequestObservation::PendingEvidenced { effect },\n        Some(EvidenceProof::Unobserved) | None => RequestObservation::PendingUnknown { effect },\n    })\n}"
+        },
+        {
+          "first": 910,
+          "last": 934,
+          "content": "/// A current local binding check, not an attestation of a historical operation.\n#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub enum ProviderReplacement {\n    Current,\n    AlreadyCurrent,\n}\n\n/// Where a binding write stopped with an uncertain or incomplete outcome.\n#[derive(Debug, Clone, Copy, PartialEq, Eq)]\npub enum ProviderReplacementStage {\n    RetirePrevious,\n    DeclareTarget,\n    ReadBack,\n}\n\n#[derive(Debug)]\npub enum ProviderReplacementError {\n    KnownRefusal(HostError),\n    UnknownOrIncomplete(ProviderReplacementStage),\n}\n\nimpl From<HostError> for ProviderReplacementError {\n    fn from(error: HostError) -> Self {\n        Self::KnownRefusal(error)\n    }"
+        },
+        {
+          "first": 1718,
+          "last": 1745,
+          "content": "    /// terminating only the drain acts of the termination pass, and once it is terminated none\n    /// does (`host::presence`). Every public `&mut self` method but `authenticate` (which\n    /// changes only this session) calls it first (checked by the registry app's replica test,\n    /// which scans this file).\n    pub fn writable(&self) -> Result<(), HostError> {\n        self.writable_directory()?;\n        self.door_open()\n    }\n\n    /// Refuses a write on a read-only replica, or outside the office of an elected member: what\n    /// the directory itself allows, whatever the organism's presence is.\n    fn writable_directory(&self) -> Result<(), HostError> {\n        if self.binding_write_uncertain {\n            return Err(HostError::Rejected(\n                \"binding state is uncertain; reopen before any act\".into(),\n            ));\n        }\n        if let Some(leader) = &self.replica_of {\n            return Err(HostError::ReadOnlyReplica(leader.clone()));\n        }\n        // A write here outside office would be acknowledged at local durability and could be\n        // replaced as an uncommitted suffix by the next leader: it goes through the node.\n        if self.elected_member && self.office.is_none() {\n            return Err(HostError::Rejected(\n                \"this directory is a member of an elected cluster: only its leader writes, \\\n                 through its node (`node-request`)\"\n                    .into(),\n            ));"
+        },
+        {
+          "first": 2843,
+          "last": 2969,
+          "content": "    /// Replaces this Holding's current local resource.work candidate. No authority, budget,\n    /// assessment or source-side custody is created. Separate durable appends are not atomic.\n    /// On uncertainty the Host closes its write door until reopened; recovery is a fresh act.\n    /// Singleton status holds only at `at`; scheduled future facts can change it. Existing\n    /// binding records contain no actor or operation record. Global unclassified or unknown\n    /// runs conservatively refuse this transition; nothing is inferred from zero pending.\n    pub fn replace_work_provider_in_holding(\n        &mut self,\n        who: &PrincipalId,\n        on: &ResourceId,\n        holding: &HoldingId,\n        expected: Option<&CandidateBinding>,\n        target: &CandidateBinding,\n        at: Timestamp,\n    ) -> Result<ProviderReplacement, ProviderReplacementError> {\n        self.writable()?;\n        let session = self.session.as_ref().ok_or(HostError::Unauthenticated)?;\n        if &session.principal != who {\n            return Err(HostError::Unauthenticated.into());\n        }\n        let credential = self\n            .credentials\n            .info(&session.accessor)\n            .map_err(storage)?\n            .ok_or(HostError::Unauthenticated)?;\n        if &credential.principal != who\n            || !credential.valid_at(at)\n            || !credential.allows(\"capability.declare\")\n        {\n            return Err(HostError::Unauthenticated.into());\n        }\n        self.require(who, \"capability.declare\", on, at)?;\n        if self.holding_at(on, at)?.as_ref() != Some(holding) {\n            return Err(HostError::Rejected(\n                \"provider replacement requires the current canonical Holding\".into(),\n            )\n            .into());\n        }\n        if target.provider.trim().is_empty() || target.version.trim().is_empty() {\n            return Err(HostError::Invalid(\n                \"provider replacement requires a nonempty provider and version\".into(),\n            )\n            .into());\n        }\n        let act = action(\"resource.work\")?;\n        let current = self\n            .capability\n            .candidates_at(on, &act, at)\n            .map_err(storage)?;\n        let matches = match expected {\n            None => current.is_empty(),\n            Some(old) => current.as_slice() == std::slice::from_ref(old),\n        };\n        if !matches {\n            return Err(HostError::Rejected(\n                \"provider replacement expected binding differs from the current local state\".into(),\n            )\n            .into());\n        }\n        self.guard_work_provider_replacement(on, at)?;\n        if let Some(old) = expected {\n            if old == target {\n                return Ok(ProviderReplacement::AlreadyCurrent);\n            }\n            if old.provider == target.provider {\n                return Err(HostError::Rejected(\n                    \"provider replacement cannot change a version under the same provider\".into(),\n                )\n                .into());\n            }\n            if self\n                .record_binding_retirement(&BindingRetirement::new(\n                    on.clone(),\n                    act.clone(),\n                    &old.provider,\n                    at,\n                ))\n                .is_err()\n            {\n                return Err(ProviderReplacementError::UnknownOrIncomplete(\n                    ProviderReplacementStage::RetirePrevious,\n                ));\n            }\n        }\n        if self\n            .record_binding_declaration(\n                &BindingDeclaration::new(on.clone(), act.clone(), target.clone()).since(at),\n            )\n            .is_err()\n        {\n            return Err(ProviderReplacementError::UnknownOrIncomplete(\n                ProviderReplacementStage::DeclareTarget,\n            ));\n        }\n        match self.capability.candidates_at(on, &act, at) {\n            Ok(actual) if actual.as_slice() == std::slice::from_ref(target) => {\n                Ok(ProviderReplacement::Current)\n            }\n            _ => {\n                self.binding_write_uncertain = true;\n                Err(ProviderReplacementError::UnknownOrIncomplete(\n                    ProviderReplacementStage::ReadBack,\n                ))\n            }\n        }\n    }\n\n    fn record_binding_declaration(\n        &mut self,\n        declaration: &BindingDeclaration,\n    ) -> Result<(), capability::resolution::CapabilityStoreError> {\n        let outcome = self.capability.declare(declaration);\n        if outcome.is_err() {\n            self.binding_write_uncertain = true;\n        }\n        outcome\n    }\n\n    fn record_binding_retirement(\n        &mut self,\n        retirement: &BindingRetirement,\n    ) -> Result<(), capability::resolution::CapabilityStoreError> {\n        let outcome = self.capability.retire(retirement);\n        if outcome.is_err() {\n            self.binding_write_uncertain = true;\n        }\n        outcome"
+        }
+      ]
+    },
+    {
+      "key": "file3",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "metabion/src/native_store.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/metabion/src/native_store.rs",
+      "bytes": 19562,
+      "sha256": "0becab2ca3f7a190c19f8cb175ec11a8450c7b7200a52088810fb4ff67d87052",
+      "git_blob_sha1": "08cfee6204ef6b33d3e8d538870ccf5a3b1d75a8",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "metabion/src/native_store.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "08cfee6204ef6b33d3e8d538870ccf5a3b1d75a8",
+        "size": 19562,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/08cfee6204ef6b33d3e8d538870ccf5a3b1d75a8"
+      },
+      "sections": [
+        {
+          "first": 145,
+          "last": 183,
+          "content": "\nimpl NativeWorkRunStore {\n    pub fn open(path: impl AsRef<Path>) -> Result<Self, WorkRunLogError> {\n        let (log, recovery) = RecordLog::open(path, MAGIC).map_err(WorkRunLogError::Log)?;\n        let mut current = HashMap::new();\n        for (index, bytes) in recovery.records.iter().enumerate() {\n            let run = decode(bytes).map_err(|error| WorkRunLogError::Record { index, error })?;\n            current.insert(run.id().clone(), run);\n        }\n        Ok(Self { log, current })\n    }\n\n    /// Every current snapshot, including unbound and pending runs, in unspecified order.\n    /// This is a read-only view of the latest durable snapshot for each id; it neither\n    /// attributes a run to a resource nor treats missing request provenance as quiescence.\n    pub fn current_runs(&self) -> impl Iterator<Item = &WorkRun> {\n        self.current.values()\n    }\n}\n\nimpl WorkRunStore for NativeWorkRunStore {\n    fn snapshot(&mut self, run: &WorkRun) -> Result<(), WorkRunStoreError> {\n        if let Some(stored) = self.current.get(run.id()) {\n            if run.current_generation() < stored.current_generation() {\n                return Err(WorkRunStoreError::Stale(format!(\n                    \"{} is at generation {:?}; a snapshot of {:?} is stale\",\n                    run.id(),\n                    stored.current_generation(),\n                    run.current_generation()\n                )));\n            }\n            check_request(stored, run)?;\n        }\n        self.log\n            .append(&encode(run))\n            .map_err(|e| WorkRunStoreError::from(WorkRunLogError::Log(e)))?;\n        self.current.insert(run.id().clone(), run.clone());\n        Ok(())\n    }"
+        },
+        {
+          "first": 210,
+          "last": 282,
+          "content": "        let mut ids: Vec<u64> = run\n            .pending_effect_ids()\n            .into_iter()\n            .map(|id| id.0)\n            .collect();\n        ids.sort_unstable();\n        ids\n    }\n\n    #[test]\n    fn current_run_inventory_preserves_latest_unknown_fields_across_reopen_without_writes() {\n        type InventoryRow = (String, u64, Option<[u8; 32]>, Vec<u64>);\n        fn inventory(store: &NativeWorkRunStore) -> Vec<InventoryRow> {\n            let mut rows: Vec<_> = store\n                .current_runs()\n                .map(|run| {\n                    (\n                        run.id().as_str().to_owned(),\n                        run.current_generation().0,\n                        run.request().map(|request| request.0),\n                        sorted_ids(run),\n                    )\n                })\n                .collect();\n            rows.sort();\n            rows\n        }\n\n        let p = path(\"inventory\");\n        let expected = vec![\n            (\"bound\".to_owned(), 1, Some([17; 32]), vec![3, 9]),\n            (\"settled\".to_owned(), 0, Some([23; 32]), vec![]),\n            (\"unbound\".to_owned(), 7, None, vec![2, 8]),\n        ];\n        {\n            let mut store = NativeWorkRunStore::open(&p).unwrap();\n            let empty_bytes = std::fs::read(&p).unwrap();\n            assert!(inventory(&store).is_empty());\n            assert_eq!(std::fs::read(&p).unwrap(), empty_bytes);\n\n            let mut bound = WorkRun::new(id(\"bound\")).for_request(RequestDigest([17; 32]));\n            bound.record_effect_emitted(EffectId(1));\n            store.snapshot(&bound).unwrap();\n            bound.record_effect_acknowledged(EffectId(1));\n            bound.begin_retry().unwrap();\n            bound.record_effect_emitted(EffectId(9));\n            bound.record_effect_emitted(EffectId(3));\n            store.snapshot(&bound).unwrap();\n            let unbound = WorkRun::from_parts(\n                id(\"unbound\"),\n                genora_primitives::Generation(7),\n                [EffectId(8), EffectId(2)],\n            );\n            store.snapshot(&unbound).unwrap();\n            let settled = WorkRun::new(id(\"settled\")).for_request(RequestDigest([23; 32]));\n            store.snapshot(&settled).unwrap();\n            let bytes = std::fs::read(&p).unwrap();\n            assert_eq!(inventory(&store), expected);\n            assert_eq!(inventory(&store), expected);\n            assert_eq!(std::fs::read(&p).unwrap(), bytes);\n        }\n        let bytes = std::fs::read(&p).unwrap();\n        let store = NativeWorkRunStore::open(&p).unwrap();\n        assert_eq!(inventory(&store), expected);\n        for run in store.current_runs() {\n            let restored = store.restore(run.id()).unwrap().unwrap();\n            assert_eq!(restored.current_generation(), run.current_generation());\n            assert_eq!(restored.request(), run.request());\n            assert_eq!(sorted_ids(&restored), sorted_ids(run));\n        }\n        assert_eq!(std::fs::read(&p).unwrap(), bytes);\n    }\n"
+        }
+      ]
+    },
+    {
+      "key": "file4",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "core/semantic/src/schema.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/core/semantic/src/schema.rs",
+      "bytes": 52049,
+      "sha256": "713729b1096ec1126fefdbff3c7bb19a302f75ba8b06f58f9d951018aa90ed67",
+      "git_blob_sha1": "ce772c9c303ce05152b839a0738a7db595406345",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "core/semantic/src/schema.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "ce772c9c303ce05152b839a0738a7db595406345",
+        "size": 52049,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/ce772c9c303ce05152b839a0738a7db595406345"
+      },
+      "sections": [
+        {
+          "first": 642,
+          "last": 700,
+          "content": "/// A physical shard of Chronica. The set is closed: these are the only repositories of the\n/// ecosystem. Norl, the product, is not one of them: it is the whole Digital Holobiont, hosted by\n/// the `chronica` shard, its cognitive ecology under `organism` (see\n/// `schema::NORL_HOST_SHARD`, `schema::ECOLOGY_ROOT`). `domain` prefixes the semantic keys the importer proposes for a shard's legacy\n/// nodes (keys are Chronica-wide; the prefix is semantic, never the repository name).\npub struct Shard {\n    pub id: &'static str,\n    pub origin: &'static str,\n    pub domain: &'static str,\n}\n\npub const SHARDS: &[Shard] = &[\n    Shard {\n        id: \"ynventa\",\n        origin: \"llgtrn/.Ynventa-\",\n        domain: \"\",\n    },\n    Shard {\n        id: \"chronica\",\n        origin: \"llgtrn/Chronica\",\n        domain: \"\",\n    },\n    Shard {\n        id: \"atlas-studio\",\n        origin: \"llgtrn/Atlas-Studio\",\n        domain: \"compiler\",\n    },\n    Shard {\n        id: \"universal-connector\",\n        origin: \"llgtrn/Universal-Connector\",\n        domain: \"connector\",\n    },\n    Shard {\n        id: \"esellios\",\n        origin: \"llgtrn/Esellios\",\n        domain: \"commerce\",\n    },\n    Shard {\n        id: \"fi-game\",\n        origin: \"llgtrn/Fi-game\",\n        domain: \"finance\",\n    },\n    Shard {\n        id: \"mechatron\",\n        origin: \"llgtrn/Mechatron\",\n        domain: \"machine\",\n    },\n];\n\npub fn shard(id: &str) -> Option<&'static Shard> {\n    SHARDS.iter().find(|s| s.id == id)\n}\n\n/// The canonical shard of an origin (`llgtrn/Chronica`, any case).\npub fn shard_of_origin(origin: &str) -> Option<&'static Shard> {\n    SHARDS\n        .iter()\n        .find(|s| s.origin.eq_ignore_ascii_case(origin))\n}"
+        }
+      ]
+    },
+    {
+      "key": "file5",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/protocol.lock",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/protocol.lock",
+      "bytes": 310,
+      "sha256": "e224853d5b232d52bd1095f3a5fc4ed0a561b819e443142d246ad2145ba1777e",
+      "git_blob_sha1": "aca88921cba51f55eac308feee33f262055c03f7",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/protocol.lock",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "aca88921cba51f55eac308feee33f262055c03f7",
+        "size": 310,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/aca88921cba51f55eac308feee33f262055c03f7"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 6,
+          "content": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:62097f560261c62826939a2561101d197b638cab8127d170bf75a69fbdcd6d3d\nengine_digest sha256:3588d4d935f486cfd825367102ef7280ca199408b3a89313d27eb8d403543120\ncompatibility_epoch 1\n"
+        }
+      ]
+    },
+    {
+      "key": "file6",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": ".ynventa/protocol.lock",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/.ynventa/protocol.lock",
+      "bytes": 310,
+      "sha256": "e224853d5b232d52bd1095f3a5fc4ed0a561b819e443142d246ad2145ba1777e",
+      "git_blob_sha1": "aca88921cba51f55eac308feee33f262055c03f7",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/protocol.lock",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "aca88921cba51f55eac308feee33f262055c03f7",
+        "size": 310,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/aca88921cba51f55eac308feee33f262055c03f7"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 6,
+          "content": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:62097f560261c62826939a2561101d197b638cab8127d170bf75a69fbdcd6d3d\nengine_digest sha256:3588d4d935f486cfd825367102ef7280ca199408b3a89313d27eb8d403543120\ncompatibility_epoch 1\n"
+        }
+      ]
+    },
+    {
+      "key": "target-allocation",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "physiology/host/src/allocation.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/physiology/host/src/allocation.rs",
+      "bytes": 129418,
+      "sha256": "3bb7e12cfb572b23375a50f1ddeae6c53d4e12a0c98eb6d39c7acac33cefc007",
+      "git_blob_sha1": "26cfd0bb3c1ee96d27cfb64c78ef3a712bbfe864",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "physiology/host/src/allocation.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "26cfd0bb3c1ee96d27cfb64c78ef3a712bbfe864",
+        "size": 129418,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/26cfd0bb3c1ee96d27cfb64c78ef3a712bbfe864"
+      },
+      "sections": [
+        {
+          "first": 1293,
+          "last": 1422,
+          "content": "    /// Classifies exact native keys privately. Absence of pending effects alone proves nothing.\n    pub(super) fn guard_work_provider_replacement(\n        &self,\n        on: &ResourceId,\n        at: Timestamp,\n    ) -> Result<(), HostError> {\n        let refusal =\n            || HostError::Rejected(\"provider replacement requires known local quiescence\".into());\n        if self\n            .runs\n            .current_runs()\n            .any(|run| run.request().is_none() || run.pending_effect_count() != 0)\n        {\n            return Err(refusal());\n        }\n        // Unlike materialize/show, this restore never publishes checkpoints or indexes.\n        let reducers = crate::native_world_reducers().map_err(|_| refusal())?;\n        let world = self\n            .checkpoints\n            .restore_or_rebuild_from_log(&self.world_log, &reducers)\n            .map_err(|_| refusal())?;\n        let mut known = std::collections::HashSet::new();\n        let mut target_exists = false;\n        for entity in world.entities() {\n            let Some((state, _)) = state_of(Some(entity)).map_err(|_| refusal())? else {\n                continue;\n            };\n            let target = state.id() == on;\n            target_exists |= target;\n            for (lease, held) in state.leases() {\n                let probe = ResourceChange::Released {\n                    lease: lease.clone(),\n                };\n                self.guard_holding_work_lease_change(state.id(), &probe)\n                    .map_err(|_| refusal())?;\n                self.guard_source_import_lease_change(state.id(), &probe)\n                    .map_err(|_| refusal())?;\n                if target\n                    && (held.end() > at\n                        || held.running.is_some()\n                        || held\n                            .settled\n                            .as_ref()\n                            .is_none_or(|s| !s.consumption_known || s.completed.is_none()))\n                {\n                    return Err(refusal());\n                }\n                for key in [\n                    holding_work_key(state.id(), lease),\n                    crate::source_observation::source_import_key(state.id(), lease),\n                ] {\n                    let id = WorkRunId::try_from(key.as_str()).map_err(|_| refusal())?;\n                    if let Some(run) = self.runs.restore(&id).map_err(|_| refusal())? {\n                        // Both exact-key guards above checked the current generation/request\n                        // against the corresponding canonical known receipt and settlement.\n                        if run.request().is_some() {\n                            known.insert(id);\n                        }\n                    }\n                }\n            }\n        }\n        // Configuring a resource already creates native validation WorkRuns. Only the exact\n        // built-in receipt plus canonical application closes those; arbitrary provider text\n        // and zero pending do not. The old receipt grammar supports INITIAL only.\n        for run in self\n            .runs\n            .current_runs()\n            .filter(|run| !known.contains(run.id()))\n        {\n            if run.current_generation() != genora_primitives::Generation::INITIAL {\n                return Err(refusal());\n            }\n            let effect = run.effect_ref(EFFECT);\n            let Some(evidence) =\n                EvidenceStore::get(&self.evidence, &effect).map_err(|_| refusal())?\n            else {\n                return Err(refusal());\n            };\n            if evidence.effect != effect {\n                return Err(refusal());\n            }\n            let EvidenceProof::ProviderAck(receipt) = evidence.proof else {\n                return Err(refusal());\n            };\n            let canonical = lineara::canonicalization::idempotency_key(run.id(), EFFECT);\n            let mut validated = false;\n            for entity in world.entities() {\n                let Some((state, _)) = state_of(Some(entity)).map_err(|_| refusal())? else {\n                    continue;\n                };\n                let Some(revision) = self\n                    .world\n                    .applied(state.id().as_str(), &canonical)\n                    .map_err(|_| refusal())?\n                else {\n                    continue;\n                };\n                let Some(previous) = revision.0.checked_sub(1) else {\n                    return Err(refusal());\n                };\n                let actual_event = self\n                    .world\n                    .replay(state.id().as_str())\n                    .map_err(|_| refusal())?\n                    .into_iter()\n                    .find(|(r, _)| *r == revision);\n                if actual_event.is_none() {\n                    return Err(refusal());\n                }\n                let expected = format!(\n                    \"{} validated effect {} on {} at revision {}\",\n                    crate::WORLD_PROVIDER,\n                    effect,\n                    state.id(),\n                    previous\n                );\n                if receipt == expected {\n                    validated = true;\n                    break;\n                }\n            }\n            if !validated {\n                return Err(refusal());\n            }\n        }\n        if !target_exists {\n            return Err(refusal());\n        }\n        Ok(())"
+        },
+        {
+          "first": 1782,
+          "last": 1824,
+          "content": "        if let Some(report) = evidenced {\n            if let Some(outcome) = resume_request(\n                &mut self.runs,\n                &mut self.evidence,\n                &run_id,\n                &request,\n                settle(&report),\n                Target {\n                    world: &mut self.world,\n                    entity: on.as_str(),\n                    expected: head,\n                    to_event: |e| e,\n                },\n            )? {\n                return Ok(WorkDone {\n                    outcome: outcome.into(),\n                    report,\n                });\n            }\n        }\n        // Native work with no durable observed outcome cannot authorize its own retry. Keep\n        // pending work unknown, even though this particular kernel is pure and deterministic.\n        if binding.is_some() && previous.is_some() {\n            return Err(HostError::Rejected(format!(\n                \"{key}: work outcome remains unknown; native work was not re-executed\"\n            )));\n        }\n        let selected = self.admit(who, &action(\"resource.work\")?, on, key, at, checks)?;\n        if expected_version.is_some_and(|version| selected.binding().version != version) {\n            return Err(HostError::Rejected(\n                \"source import provider version differs from the request\".into(),\n            ));\n        }\n        if binding.is_some() {\n            let mut begun = GovernedWorkRun::begin_for(run_id.clone(), selected.clone(), request);\n            begun.run_mut().record_effect_emitted(EFFECT);\n            self.runs.snapshot(begun.run()).map_err(storage)?;\n        }\n        let report = work\n            .perform(&effect, lease, &held)\n            .map_err(|e| HostError::Rejected(format!(\"{provider}: {e}\")))?;\n        let receipt = encode(work, &receipt_target, &report)?;\n        let mut settlement = Settlement {"
+        },
+        {
+          "first": 1853,
+          "last": 1883,
+          "content": "    /// Reads an observed work outcome only after it is canonical on `on`. Current observation\n    /// rights are required, including for historical work; a request key alone reveals nothing.\n    /// Pending, unobserved or partly unknown outcomes return None and never authorize execution.\n    pub fn work_evidence(\n        &self,\n        who: &PrincipalId,\n        on: &ResourceId,\n        key: &str,\n        at: Timestamp,\n    ) -> Result<Option<Evidence>, HostError> {\n        self.require(who, \"resource.observe\", on, at)?;\n        let effect = Self::evidence_of(key)?;\n        let canonical_key = lineara::canonicalization::idempotency_key(&effect.work_run, EFFECT);\n        let Some(revision) = self\n            .world\n            .applied(on.as_str(), &canonical_key)\n            .map_err(storage)?\n        else {\n            return Ok(None);\n        };\n        let Some(evidence) = EvidenceStore::get(&self.evidence, &effect).map_err(storage)? else {\n            return Ok(None);\n        };\n        let EvidenceProof::ProviderAck(receipt) = &evidence.proof else {\n            return Ok(None);\n        };\n        let Some(report) = reported(receipt).filter(WorkReport::is_known) else {\n            return Ok(None);\n        };\n        let event = self\n            .world"
+        },
+        {
+          "first": 2479,
+          "last": 2505,
+          "content": "    fn replacement_unknown_or_orphan_never_becomes_known_from_zero_pending() {\n        use metabion::work_run::WorkRun;\n        for (bound, pending) in [(false, false), (true, false), (true, true)] {\n            let mut site = Site::new();\n            replacement_token(&mut site, None, None);\n            let mut run = WorkRun::new(WorkRunId::try_from(\"private-other-holding-run\").unwrap());\n            if bound {\n                run = run.for_request(RequestDigest::of(&[b\"private-other-holding-input\"]));\n            }\n            if pending {\n                run.record_effect_emitted(crate::EFFECT);\n            }\n            site.host.runs.snapshot(&run).unwrap();\n            let before = replacement_files(&site.dir);\n            let result = replace(\n                &mut site,\n                Some(&replacement_binding(PROVIDER)),\n                &replacement_binding(\"target-native-price\"),\n                20,\n            );\n            let text = format!(\"{result:?}\");\n            replacement_known_refusal(result);\n            assert!(text.contains(\"known local quiescence\"));\n            assert!(!text.contains(\"private-other\"));\n            assert_eq!(replacement_files(&site.dir), before);\n        }\n    }"
+        },
+        {
+          "first": 2598,
+          "last": 2665,
+          "content": "    fn replacement_real_synced_fault_closes_all_acts_until_reopen_and_fresh_enrollment() {\n        for skip in [0, 1] {\n            let mut site = Site::new();\n            let issued = replacement_token(&mut site, None, None);\n            let old = replacement_binding(PROVIDER);\n            let new = replacement_binding(\"target-native-price\");\n            storage::faults::arm(\"record_log.append.synced\", skip);\n            let answer = replace(&mut site, Some(&old), &new, 20);\n            let fired = storage::faults::fired();\n            storage::faults::disarm();\n            assert!(fired);\n            let expected_stage = if skip == 0 {\n                crate::ProviderReplacementStage::RetirePrevious\n            } else {\n                crate::ProviderReplacementStage::DeclareTarget\n            };\n            assert!(\n                matches!(answer,Err(crate::ProviderReplacementError::UnknownOrIncomplete(stage)) if stage==expected_stage)\n            );\n            assert!(site.host.writable_directory().is_err());\n            assert!(site.host.writable().is_err());\n            assert!(site\n                .host\n                .bind_provider(\n                    &principal(\"root\").unwrap(),\n                    &resource(\"cpu\").unwrap(),\n                    &action(\"resource.work\").unwrap(),\n                    PROVIDER,\n                    Timestamp(21)\n                )\n                .is_err());\n            assert!(site\n                .host\n                .declare_holding(\n                    &principal(\"root\").unwrap(),\n                    &resource(\"cpu\").unwrap(),\n                    &HoldingId::try_from(\"escape\").unwrap(),\n                    Timestamp(21)\n                )\n                .is_err());\n            site.reopen();\n            site.host\n                .authenticate(&issued.token, Timestamp(21))\n                .unwrap();\n            let actual = site\n                .host\n                .capability\n                .candidates_at(\n                    &resource(\"cpu\").unwrap(),\n                    &action(\"resource.work\").unwrap(),\n                    Timestamp(21),\n                )\n                .unwrap();\n            if skip == 0 {\n                assert!(actual.is_empty());\n                assert_eq!(\n                    replace(&mut site, None, &new, 21).unwrap(),\n                    crate::ProviderReplacement::Current\n                );\n            } else {\n                assert_eq!(actual, vec![new.clone()]);\n                assert_eq!(\n                    replace(&mut site, Some(&new), &new, 21).unwrap(),\n                    crate::ProviderReplacement::AlreadyCurrent\n                );\n            }\n        }\n    }"
+        },
+        {
+          "first": 2668,
+          "last": 2700,
+          "content": "    fn replacement_zero_pending_unknown_settlement_is_not_quiescence() {\n        for (consumed, completed) in [(None, None), (Some(0), None), (None, Some(false))] {\n            let mut site = Site::new();\n            site.lease(\"settled-unknown\");\n            let on = resource(\"cpu\").unwrap();\n            let (_, revision) = site.host.world.current(&on).unwrap();\n            // A real canonical recovery-state fixture, not a report of executed work.\n            site.host\n                .world\n                .append(\n                    on.as_str(),\n                    revision,\n                    \"unknown-settlement-fixture\",\n                    ResourceEvent {\n                        occurred_at: Timestamp(12),\n                        change: ResourceChange::LeaseSettled {\n                            lease: \"settled-unknown\".into(),\n                            parameter: Parameter::try_from(\"cpu_units\").unwrap(),\n                            consumed,\n                            completed,\n                        },\n                    },\n                )\n                .unwrap();\n            assert!(site\n                .host\n                .runs\n                .current_runs()\n                .all(|run| run.pending_effect_count() == 0));\n            replacement_token(&mut site, None, None);\n            let before = replacement_files(&site.dir);\n            replacement_known_refusal(replace(\n                &mut site,"
+        }
+      ]
+    },
+    {
+      "key": "target-tests",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "phenora/codara/tests/e2e_price_text.rs",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/phenora/codara/tests/e2e_price_text.rs",
+      "bytes": 78761,
+      "sha256": "c3e61a2f83d2e4e0038e8f256c586c6772320968ccad2b1ae8a0ed028e5988b8",
+      "git_blob_sha1": "c9d78a8521698198d42cbe52eaaf526737a60f5c",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "phenora/codara/tests/e2e_price_text.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c9d78a8521698198d42cbe52eaaf526737a60f5c",
+        "size": 78761,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/c9d78a8521698198d42cbe52eaaf526737a60f5c"
+      },
+      "sections": [
+        {
+          "first": 1116,
+          "last": 1166,
+          "content": "    println!(\"PINNED_SOURCE_SUBDOMAIN: {admitted} governed four-field comparisons PASS; {unmapped} requests UNMAPPED; no whole-source parity or copying authorization\");\n}\n// ECDEV362 selected-four references are provenance only. These are real temporary TEST Worlds,\n// not source acceptance, production authority, copying rights or exclusive execution custody.\nfn ecdev_original_payload(boundary: bool) -> Vec<u8> {\n    let root =\n        std::env::var_os(\"CHRONICA_ECDEV362_SOURCE\").expect(\"exact external ECDEV362 source data\");\n    let script = r#\"import pathlib,json,hashlib,sys\np=pathlib.Path(sys.argv[1])/'research/commerce/governance/price-source-parity-cutover-prerequisites-v1.json'; b=p.read_bytes(); assert hashlib.sha256(b).hexdigest()=='6b2a1a93dfe79a503999650826b0d93c6442b022f77380a6738216a515974560'; c=json.loads(b)\nif sys.argv[2]=='true':\n r=next(v for v in c['source_boundary_records'] if v['name']=='$12.99'); assert r['source_observed']['product_price_status']=='UNKNOWN'; out=r['raw_price'].encode()\nelse:\n r=next(v for v in c['vectors'] if v['index']==45); out=bytes.fromhex(r['payload_utf8_hex']); assert hashlib.sha256(out).hexdigest()=='59e19706d51d39f66711c2653cd7eb1291c94d9b55eb14bda74ce4dc636d015a'\nsys.stdout.buffer.write(out)\n\"#;\n    let out = std::process::Command::new(\"python3\")\n        .arg(\"-c\")\n        .arg(script)\n        .arg(root)\n        .arg(boundary.to_string())\n        .output()\n        .unwrap();\n    assert!(\n        out.status.success(),\n        \"{}\",\n        String::from_utf8_lossy(&out.stderr)\n    );\n    out.stdout\n}\n\n#[test]\nfn ecdev_selected_four_metadata_preserves_original_null_obligations_and_no_enrollment() {\n    let bytes = include_bytes!(\n        \"../../../assays/gate/fixtures/ecdev-selected-bindings/selected-four-36265383.json\"\n    );\n    assert_eq!(\n        hex(&sha256(bytes)),\n        \"06bf05e79b2d36b404f677dc47c4b39f6be18abe287f9348225edc86e4c231cf\"\n    );\n    let text = std::str::from_utf8(bytes).unwrap();\n    for field in [\n        \"target_execution\",\n        \"exclusive_custody\",\n        \"authority\",\n        \"unknown_effect\",\n        \"rights_and_enrollment\",\n        \"production_cutover\",\n    ] {\n        assert!(\n            text.contains(&format!(\"\\\"{field}\\\": null\")),\n            \"original obligation {field} must remain null\""
+        },
+        {
+          "first": 1367,
+          "last": 1375,
+          "content": "    assert_eq!(reopened.leases(&cpu()).unwrap(), leases);\n}\n\n#[test]\n#[ignore = \"requires exact externally supplied ECDEV362 source oracles; no donor implementation or production Host\"]\nfn ecdev_selected_four_ordered_99_web_and_seven_api_only_use_current_holding_caller() {\n    let root = std::env::var_os(\"CHRONICA_ECDEV362_SOURCE\")\n        .expect(\"exact ECDEV362 immutable source export\");\n    let metadata = Path::new(env!(\"CARGO_MANIFEST_DIR\"))"
+        },
+        {
+          "first": 1465,
+          "last": 1471,
+          "content": "}\n\n#[test]\n#[ignore = \"requires exact external ECDEV362 source payloads; authorized temporary TEST Host only\"]\nfn ecdev_selected_four_current_authority_and_holding_refusals_write_no_logs() {\n    for dimension in [\"authentication\", \"Holding\", \"Authorized\"] {\n        let f = ecdev_price_host("
+        },
+        {
+          "first": 1560,
+          "last": 1570,
+          "content": "    }\n}\n\n#[test]\n#[ignore = \"requires exact external ECDEV362 source payloads; authorized temporary TEST Host only\"]\nfn ecdev_selected_four_budget_refusal_preserves_receipt_and_known_unavailable_is_not_unknown() {\n    let f = ecdev_price_host(\"ecdev362-budget\", &[(\"currency_hint\", \"$\")], true);\n    ecdev_assert_case(\n        &f,\n        &ecdev_original_payload(false),\n        \"ecdev362-first\","
+        },
+        {
+          "first": 1618,
+          "last": 1630,
+          "content": "    );\n}\n\n#[test]\n#[ignore = \"requires exact external ECDEV362 source payloads; authorized temporary TEST Host only\"]\nfn ecdev_selected_four_pending_holding_effect_stays_unknown_after_reopen_without_reexecution() {\n    let f = ecdev_price_host(\"ecdev362-unknown\", &[(\"currency_hint\", \"$\")], true);\n    let cap = Capsule::from_bytes(&std::fs::read(&f.cap).unwrap()).unwrap();\n    let mut host = Host::open(&f.dir.0).unwrap();\n    host.authenticate(&f.token, holding_now()).unwrap();\n    let snap = host\n        .graph()\n        .as_of(at(100), genora_graph::TransactionTime::LATEST);"
+        },
+        {
+          "first": 1768,
+          "last": 1797,
+          "content": "#[test]\nfn price_provider_authenticated_enrollment_and_env_credential_reopen_without_extra_append() {\n    let f = price_provider_fixture(\"price-provider-enroll\", None);\n    let output = std::process::Command::new(env!(\"CARGO_BIN_EXE_codara\"))\n        .args(price_provider_args(&f, None, None))\n        .env(codara::cli::TOKEN_VARIABLE, &f.owner_token)\n        .output()\n        .unwrap();\n    assert!(\n        output.status.success(),\n        \"{}{}\",\n        String::from_utf8_lossy(&output.stdout),\n        String::from_utf8_lossy(&output.stderr)\n    );\n    assert!(String::from_utf8_lossy(&output.stdout).contains(\"current singleton at t\"));\n    assert!(!String::from_utf8_lossy(&output.stdout).contains(&f.owner_token));\n    price_provider_assert_current(&f);\n    let before = ecdev_logs(&f.dir.0);\n    let again = execute(&price_provider_args(\n        &f,\n        Some(&format!(\"kernel:{PRICE_TEXT_KERNEL}\")),\n        Some(&f.owner_token),\n    ));\n    assert_eq!(again.exit, exit::OK, \"{}{}\", again.stdout, again.stderr);\n    assert!(again.stdout.contains(\"already current singleton at t\"));\n    assert_eq!(ecdev_logs(&f.dir.0), before);\n    price_provider_assert_current(&f);\n}\n#[test]\nfn price_provider_handoff_governs_actual_price_budget_evidence_and_old_provider_refusal() {"
+        },
+        {
+          "first": 1857,
+          "last": 1909,
+          "content": "    let ran = ecdev_run(&f, b\"12.99\", \"price-provider-current\");\n    assert_eq!(ran.exit, exit::OK, \"{}{}\", ran.stdout, ran.stderr);\n    assert!(ran.stdout.contains(\"the credential proves agent\"));\n    assert!(ran\n        .stdout\n        .contains(\"derived price text result: persisted canonical evidence\"));\n    let host = Host::open(&f.dir.0).unwrap();\n    let (evidence, _) = ecdev_evidence(&host, &f, b\"12.99\", \"price-provider-current\");\n    let EvidenceProof::ProviderAck(receipt) = &evidence.proof else {\n        panic!(\"canonical native result\");\n    };\n    let bound = lineara::work_receipt::decode_in_holding(receipt).unwrap();\n    assert_eq!(bound.target.provider, format!(\"kernel:{PRICE_TEXT_KERNEL}\"));\n    let result = PriceTextResult::from_bytes(bound.result.as_deref().unwrap()).unwrap();\n    assert_eq!(result.input_sha256, sha256(b\"12.99\"));\n    let price = result.outcome.as_ref().unwrap();\n    assert_eq!(price.amount.as_deref(), Some(\"12.99\"));\n    assert_eq!(price.currency.as_deref(), Some(\"USD\"));\n    assert_eq!(price.amount_text.as_deref(), Some(\"12.99\"));\n    assert_eq!(\n        price.amount_float.map(f64::to_bits),\n        Some(12.99_f64.to_bits())\n    );\n    drop(host);\n    let before = ecdev_logs(&f.dir.0);\n    let reopened = Host::open(&f.dir.0).unwrap();\n    assert_eq!(\n        ecdev_evidence(&reopened, &f, b\"12.99\", \"price-provider-current\").0,\n        evidence\n    );\n    drop(reopened);\n    assert_eq!(\n        ecdev_logs(&f.dir.0),\n        before,\n        \"reading immutable evidence must not execute again\"\n    );\n    let refused = ecdev_run(&f, b\"14.00\", \"price-provider-over-budget\");\n    assert_eq!(\n        refused.exit,\n        exit::NOT_ADMITTED,\n        \"{}{}\",\n        refused.stdout,\n        refused.stderr\n    );\n    assert!(refused.stdout.contains(\"Allocation\"));\n    let reopened = Host::open(&f.dir.0).unwrap();\n    assert!(!reopened\n        .has_evidence(\"price-provider-over-budget.0.work\")\n        .unwrap());\n    assert_eq!(\n        ecdev_evidence(&reopened, &f, b\"12.99\", \"price-provider-current\").0,\n        evidence\n    );"
+        },
+        {
+          "first": 1989,
+          "last": 1995,
+          "content": "}\n#[test]\nfn price_provider_requires_exact_current_compiled_semantic_operation_evidence() {\n    for dimension in [\"degraded\", \"revoked\", \"Provides\", \"compiled\"] {\n        let f = price_provider_fixture(&format!(\"price-provider-graph-{dimension}\"), None);\n        let mut host = Host::open(&f.dir.0).unwrap();\n        let now = holding_now();"
+        },
+        {
+          "first": 2025,
+          "last": 2030,
+          "content": "#[test]\nfn price_provider_bridge_reads_canonical_host_graph_instead_of_forged_or_stale_cache() {\n    let f = price_provider_fixture(\"price-provider-cached-verified\", None);\n    let mut directory = codara::host_world::Directory::open(&f.dir.0).unwrap();\n    let now = holding_now();\n    directory.host.authenticate(&f.owner_token, now).unwrap();"
+        },
+        {
+          "first": 2089,
+          "last": 2108,
+          "content": "#[test]\nfn price_provider_rejects_time_capsule_target_and_ambiguous_expectation_arguments() {\n    let f = price_provider_fixture(\"price-provider-arguments\", None);\n    for extra in [\n        vec![\"--time\", \"0\"],\n        vec![\"--known\", \"0\"],\n        vec![\"--target\", \"other\"],\n        vec![\"capsule.chgc\"],\n        vec![\"--expected-provider\", \"other\", \"--expected-version\", \"1\"],\n        vec![\"--expect-empty\"],\n    ] {\n        let mut args = price_provider_args(&f, None, Some(&f.owner_token));\n        args.extend(extra.into_iter().map(str::to_owned));\n        let before = ecdev_logs(&f.dir.0);\n        let out = execute(&args);\n        assert_eq!(out.exit, exit::USAGE, \"{}{}\", out.stdout, out.stderr);\n        assert_eq!(ecdev_logs(&f.dir.0), before);\n    }\n}\n"
+        }
+      ]
+    },
+    {
+      "key": "central-authority-request",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/authority-request.json",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/migration/qualification/ecdev-106-0ccbd426/authority-request.json",
+      "bytes": 4626,
+      "sha256": "52c624cbeaae003f2694b023eaafb6f356bbc6df5c1ea14bb2cc92f146026b46",
+      "git_blob_sha1": "0ffe6c7ccbf905ac2b133b57d0aa68b9bf48898e",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/authority-request.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "0ffe6c7ccbf905ac2b133b57d0aa68b9bf48898e",
+        "size": 4626,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/0ffe6c7ccbf905ac2b133b57d0aa68b9bf48898e"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 2,
+          "content": "{\"authority_handoff\":{\"accepted_shared_protocol_lock\":null,\"canonical_authority_acceptance\":null,\"canonical_source_identity_mapping\":null,\"canonical_source_owner\":null,\"effective_source_authority\":\".ecdev\",\"effective_state\":\"SOURCE_ONLY\",\"handoff_effective\":false,\"new_ui_requested\":false,\"new_world_requested\":false,\"projection_installed\":false,\"requested_destination\":\"EXISTING_SINGLE_CANONICAL_WORLD_AUTHORITY_AND_HISTORY\",\"source_guard_sha256\":\"73d8b65f8bbe0a934ae83fec9628deb953ac8edb440e4b3c2fbc35801015f8e3\",\"source_lock_installed\":false},\"bounded_price_request\":{\"accepted_owner\":null,\"admission\":\"PENDING\",\"authority\":null,\"authority_grants\":[],\"canonical_assignment\":null,\"copying_authorization\":\"UNKNOWN\",\"current_rights\":null,\"existing_target_owner_reference\":{\"NodeId\":\"yn1:b4f8bfd63d6d8b9b31dec198026388c5\",\"key\":\"capability-kernels\",\"path\":\"physiology/capability/kernels\"},\"manifest_artifact\":\"supported_manifest\",\"original_source_bindings\":{\"donor_capability\":{\"capture_locator\":\"/source_graph/nodes/306\",\"mapping_locator\":\"/node_mappings/306\",\"source_id\":\"ec1:5f41ea7edd845d3559a926b897253666\",\"source_namespace\":\"ecdev\",\"source_semantic_key\":\"donor-capability/ecdev/scrapinghub--price-parser/extract.price-public-api\"},\"source_caller\":{\"capture_locator\":\"/source_graph/nodes/503\",\"mapping_locator\":\"/node_mappings/503\",\"source_id\":\"ec1:9f15a2f5552ad0fc567975074fc9d86f\",\"source_namespace\":\"ecdev\",\"source_semantic_key\":\"commerce.web-research\"},\"source_capability\":{\"capture_locator\":\"/source_graph/nodes/513\",\"mapping_locator\":\"/node_mappings/513\",\"source_id\":\"ec1:a2e3b3e884070b64d4edacda08adf6e6\",\"source_namespace\":\"ecdev\",\"source_semantic_key\":\"capability/extract.price-public-api\"},\"source_technology\":{\"capture_locator\":\"/source_graph/nodes/723\",\"mapping_locator\":\"/node_mappings/723\",\"source_id\":\"ec1:e4aedb10fcd783728d5c4ab221f20132\",\"source_namespace\":\"ecdev\",\"source_semantic_key\":\"technology/commerce.price-text\"}},\"sidecar_artifact\":\"price_sidecar\",\"source_adapter_cutover\":false,\"supported\":106,\"target_reference_meaning\":\"EXISTING_BOUNDED_CAPABILITY_REFERENCE; NOT_WHOLE_SOURCE_OWNER\",\"total\":2937,\"unmapped\":2831,\"whole_source_owner\":null},\"cohort\":{\"artifacts\":{\"capture\":{\"bytes\":3287998,\"path\":\"research/commerce/governance/source-eight-capture-db92bf27-v1.json\",\"sha256\":\"441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909\"},\"price_sidecar\":{\"bytes\":127961,\"path\":\"research/commerce/governance/price-bounded-mapping-db92bf27-v1.json\",\"sha256\":\"300591b5db1f9b156ecf5282525e5d056c79986140cffff20fcd784b2e825792\"},\"proposal\":{\"bytes\":3861270,\"path\":\"research/commerce/governance/source-eight-mapping-db92bf27-v1.json\",\"sha256\":\"d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29\"},\"source_membership\":{\"bytes\":847672,\"path\":\"research/commerce/governance/source-eight-membership-db92bf27-v1.json\",\"sha256\":\"d366bf0716df9455b6782c22c6157b5c38c543786bed4c4519a85796bfaf94cd\"},\"supported_manifest\":{\"bytes\":4051,\"path\":\"research/commerce/governance/price-supported-106-manifest-db92bf27-v1.tsv\",\"sha256\":\"451f0bb1a2f3acd3879ddc2945c14e74447ec6ac70dfd5ebf374d086c8f353dc\"}},\"format\":\"ecdev-source-price-cohort-v1\",\"sha256\":\"f7b2d7b57115402e26818e76aa765674703001d48105712feb4116097d690d66\"},\"format\":\"ecdev-source-identity-authority-request-v1\",\"qualification_limits\":{\"canonical_source_graph_independently_rebuilt\":false,\"central_registry_decision\":\"NOT_SUPPLIED_BY_INSPECTED_PUBLISHED_CONTRACTS\",\"current_source_or_target_caller_admission\":\"NOT_ESTABLISHED\",\"full_native_ui_asset_closure\":\"NOT_ESTABLISHED\",\"native_v1\":\"INCOMPLETE\",\"source_retirement\":false},\"registry_request\":{\"domain\":null,\"id\":\"ecdev\",\"origin\":\"llgtrn/ECDEV\",\"status\":\"DOMAIN_AND_CANONICAL_BINDING_REQUIRE_CENTRAL_DECISION\"},\"scope\":\"SOURCE_OWNED_REQUEST_ONLY; NOT_AN_ACCEPTED_CANONICAL_CONTRACT\",\"source_identity\":{\"captured_commit\":\"db92bf27d31409704fccd44defe342a1b2f22823\",\"captured_tree\":\"ec88cd6c52fadf3c638bed0eb7b790096eab8617\",\"commit_membership\":{\"artifact\":\"source_membership\",\"captured_payloads\":734,\"committed_inputs\":3053,\"history_completeness\":\"NOT_ATTESTED\",\"scope\":\"ALL_INDEX_SELECTED_INPUTS_MATCH_COMMITTED_BLOBS_AND_WORKTREE; LOCAL_GIT_CUSTODY_ONLY\",\"uncaptured_inputs\":2319},\"historical_aliases\":{\"artifact\":\"proposal\",\"count\":68,\"locator\":\"/rights_claims\",\"rewritten\":false},\"namespace\":\"ecdev\",\"origin\":\"llgtrn/ECDEV\",\"original_node_ids\":{\"artifact\":\"proposal\",\"codec\":\"ec1\",\"count\":828,\"locator\":\"/node_mappings\",\"remap_performed\":false},\"original_records\":{\"artifact\":\"capture\",\"codecs\":[\"f1\",\"ECG\"],\"count\":734,\"locator\":\"/files\",\"rewritten\":false},\"source_id\":\"ecdev\"}}\n"
+        }
+      ]
+    },
+    {
+      "key": "central-identity-request",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/chronica-identity-ack-request.json",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/migration/qualification/ecdev-106-0ccbd426/chronica-identity-ack-request.json",
+      "bytes": 3900,
+      "sha256": "9cdc97418a43a334556b1aa031cbc631d039032f47f83a1b7144da612be70e82",
+      "git_blob_sha1": "19e1df99ee3c599074af94b646adc60545607cd6",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/chronica-identity-ack-request.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "19e1df99ee3c599074af94b646adc60545607cd6",
+        "size": 3900,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/19e1df99ee3c599074af94b646adc60545607cd6"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 72,
+          "content": "{\n  \"format\": \"ynventa.ecdev-target-identity-ack-request.transport.v1\",\n  \"classification\": \"REQUEST_ONLY_NO_CANONICAL_ACCEPTANCE\",\n  \"audience\": \"Chronica target owner/reviewer\",\n  \"source_publication\": {\n    \"repository\": \"llgtrn/ECDEV\",\n    \"commit\": \"0ccbd426a7bfbb3582f2bf7fce468656bcc9786a\",\n    \"tree\": \"1dcb2f431983db709635b397766cfe7b3e20ebe5\"\n  },\n  \"original_capture\": {\n    \"commit\": \"db92bf27d31409704fccd44defe342a1b2f22823\",\n    \"tree\": \"ec88cd6c52fadf3c638bed0eb7b790096eab8617\",\n    \"original_ec1_f1_ECG_ids_preserved\": true\n  },\n  \"source_request\": {\n    \"path\": \"research/commerce/governance/source-eight-identity-authority-request-db92bf27-v1.json\",\n    \"sha256\": \"52c624cbeaae003f2694b023eaafb6f356bbc6df5c1ea14bb2cc92f146026b46\",\n    \"status\": \"SOURCE_ONLY; SOURCE_OWNED_REQUEST_ONLY; NOT_AN_ACCEPTED_CANONICAL_CONTRACT\",\n    \"handoff_effective\": false\n  },\n  \"cohort\": {\n    \"path\": \"research/commerce/governance/source-price-cohort-db92bf27-v1.json\",\n    \"sha256\": \"f7b2d7b57115402e26818e76aa765674703001d48105712feb4116097d690d66\",\n    \"manifest_sha256\": \"451f0bb1a2f3acd3879ddc2945c14e74447ec6ac70dfd5ebf374d086c8f353dc\",\n    \"manifest_bytes\": 4051,\n    \"total\": 2937,\n    \"supported\": 106,\n    \"unmapped\": 2831\n  },\n  \"bounded_target_references_to_confirm_or_correct\": {\n    \"owner\": {\n      \"key\": \"capability-kernels\",\n      \"id\": \"yn1:b4f8bfd63d6d8b9b31dec198026388c5\",\n      \"path\": \"physiology/capability/kernels\"\n    },\n    \"capability\": \"cn2:964273aabb7ba94d6c4c0c421a2730d1\",\n    \"implementation\": \"cn2:64c339cb2b639c152c053cc3f88e4cf0\",\n    \"caller\": {\n      \"key\": \"codara\",\n      \"id\": \"yn1:1c4a8975c1bcb6ba331cfdfab6745ab6\",\n      \"path\": \"phenora/codara\"\n    },\n    \"implementation_source_sha256\": \"9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da\",\n    \"case_map_sha256\": \"b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d\"\n  },\n  \"requested_target_owned_receipt\": [\n    \"Pin actual Chronica commit/tree/path/blob/raw-hash and exact source/cohort artifacts.\",\n    \"Affirm or correct bounded owner/capability/implementation/caller IDs and source/case-map binding, preserving original identities.\",\n    \"Supply concrete target-owned mappings/custody/context within the already established Chronica ownership intent, or state which implementation evidence remains absent.\",\n    \"Distinguish bounded SOURCE_ONLY evidence acknowledgment from completed identity mapping, custody, registry qualification, Host authority context, rights, admission or retirement.\"\n  ],\n  \"source_guard_remains\": \"SOURCE_ONLY\",\n  \"ack_received\": false,\n  \"delivery\": \"Published transport for parent/Chronica routing; no direct cloud-thread send tool is exposed in this environment.\",\n  \"existing_owner_intent\": \"Chronica canonical ownership is already established by owner intent; NO_NEW_ARCHITECTURAL_DECISION_OR_PERMISSION_REQUIRED.\",\n  \"concrete_contract_evidence_still_required\": [\n    \"Target-owned concrete mappings preserving original ec1/f1/ECG identities, aliases, history and provenance.\",\n    \"Custody witnesses and exact source/target binding for the captured cohort, separate from reference consistency.\",\n    \"Qualified canonical registry domain/key prefix and source projection/shared-lock contract across the coordinated eight-source closure.\",\n    \"Actual Host authority context and effective handoff implementation; bounded capability-kernels/codara references do not instantiate source-wide custody or authority.\"\n  ],\n  \"parent_relayed_chronica_evidence_ack\": {\n    \"status\": \"BOUNDED_SOURCE_ONLY_EVIDENCE_ACK_ONLY\",\n    \"five_matching_artifacts_and_4051_byte_manifest\": true,\n    \"actual106_cases_executed_by_chronica_review\": false,\n    \"source_mappings_count_still_null\": 828,\n    \"custody_still_null\": true,\n    \"receipt_commit_path_not_supplied_in_this_relay\": true\n  },\n  \"concrete_target_mapping_and_custody_reference\": null\n}\n"
+        }
+      ]
+    },
+    {
+      "key": "central-published-contracts",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/source-enrollment-published-contracts-20261017.json",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/migration/qualification/ecdev-106-0ccbd426/source-enrollment-published-contracts-20261017.json",
+      "bytes": 6976,
+      "sha256": "912bdd15bcb59a2ee046c71bf5957070372036b5e79509f298ee25660140c015",
+      "git_blob_sha1": "d7e4fa96906da1e9f4236ef20ec0de7a20dc3de5",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/migration/qualification/ecdev-106-0ccbd426/source-enrollment-published-contracts-20261017.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "d7e4fa96906da1e9f4236ef20ec0de7a20dc3de5",
+        "size": 6976,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/d7e4fa96906da1e9f4236ef20ec0de7a20dc3de5"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 12,
+          "content": "{\n  \"format\": \"ecdev-source-enrollment-published-contract-observation-v1\",\n  \"observed_at_utc\": \"2026-10-17T01:52:09.396587+00:00\",\n  \"scope\": \"READ_ONLY_PUBLISHED_CONTRACT_READBACK; NO_ACCEPTED_SOURCE_ENROLLMENT_OR_RUNTIME_AUTHORITY\",\n  \"engine\": {\n    \"repository\": \"llgtrn/.Ynventa-\",\n    \"commit\": \"b987c16b7ef99b9f73ce0d891439e226216beef7\",\n    \"tree\": \"98b5436a8a6752f0108abf3984089cc3a1c4dd27\",\n    \"files\": [\n      {\n        \"path\": \"core/semantic/src/schema.rs\",\n        \"blob\": \"ce772c9c303ce05152b839a0738a7db595406345\""
+        },
+        {
+          "first": 145,
+          "last": 160,
+          "content": "    \"Bind one accepted schema/engine/protocol/epoch across exact eight-source ordinary assessment/capsule closure; found checkout success is insufficient\"\n  ],\n  \"remaining_runtime_and_rights\": [\n    \"real source production caller, full selector/payload/EffectRef joins and unknown effects\",\n    \"independent canonical graph and full native/UI/asset closure\",\n    \"current rights and runtime admission; source retirement not performed\"\n  ],\n  \"independent_readback\": {\n    \"agent\": \"sol_admission_contract_review\",\n    \"tool_model_parameter\": \"gpt-6.1-sol\",\n    \"executing_model_id_exposed\": false,\n    \"maintained_source_writes\": false,\n    \"source_or_target_execution\": \"NOT_RUN\"\n  }\n}\n"
+        }
+      ]
+    },
+    {
+      "key": "central-witness-qualification",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/migration/qualification/ecdev-source-witness-36265383/qualification.json",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/migration/qualification/ecdev-source-witness-36265383/qualification.json",
+      "bytes": 5662,
+      "sha256": "5d569d6af1a2a22da448e3c4ca9ed67bb3f541e606e69ca21cca650d38c4bacd",
+      "git_blob_sha1": "74fa28c64e9cf67a62d7fa6d19049e415a4f25c4",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/migration/qualification/ecdev-source-witness-36265383/qualification.json",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "74fa28c64e9cf67a62d7fa6d19049e415a4f25c4",
+        "size": 5662,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/74fa28c64e9cf67a62d7fa6d19049e415a4f25c4"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 8,
+          "content": "{\n  \"classification\": \"SOURCE_WITNESS_STATIC_INTAKE_NOT_TARGET_CUSTODY_ACCEPTANCE\",\n  \"source_commit\": \"36265383228654f725ed6307d8a69f8d569f36d0\",\n  \"source_tree\": \"b0a275c165b621e6399384b6494a161d7c6d108f\",\n  \"transports\": {\n    \"source-828-responsibility-candidates-db92bf27-v1.json\": {\n      \"transport\": \"source-828-responsibility-candidates-db92bf27-v1.json.gz.b64\",\n      \"encoding\": \"gzip+base64\","
+        },
+        {
+          "first": 56,
+          "last": 92,
+          "content": "    \"historical_tree_memberships\": 3053,\n    \"embedded_material_versions\": 71,\n    \"accepted_targets\": 0,\n    \"source_pending_targets_null\": 828,\n    \"source_target_custody\": null,\n    \"source_guard\": \"SOURCE_ONLY\",\n    \"api_partition\": {\n      \"qualified\": 106,\n      \"unmapped\": 2831,\n      \"total\": 2937\n    },\n    \"web_vectors\": 99,\n    \"API_only_exclusions\": 7,\n    \"boundary_vectors\": 20,\n    \"historical_and_current_byte_records_kept_separate\": true,\n    \"original_frozen_capture_or_proposal_changed\": false\n  },\n  \"fixed_comparison\": {\n    \"historical_commit\": \"db92bf27d31409704fccd44defe342a1b2f22823\",\n    \"current_commit\": \"60b43d97a0013fea9497ae91215027ba1a9de43e\",\n    \"current_is_publication_HEAD\": false,\n    \"historical_Web_caller_sha256\": \"d7f005b5a5fdc637346cf90700d23f0558704d0f30cfea171a451bfaa6fa05e4\",\n    \"fixed_current_Web_caller_sha256\": \"34539b4835e6a66bd2d091de1f7c7f6f543e7200b8c5920660cfdb5562a9e944\",\n    \"whole_web_dependency_runtime_closure\": \"NOT_ESTABLISHED\"\n  },\n  \"selected_nodes\": [\n    {\n      \"index\": 306,\n      \"key\": \"donor-capability/ecdev/scrapinghub--price-parser/extract.price-public-api\",\n      \"role\": \"donor capability\"\n    },\n    {\n      \"index\": 503,\n      \"key\": \"commerce.web-research\",\n      \"role\": \"source Web caller\"\n    },\n    {"
+        },
+        {
+          "first": 105,
+          "last": 135,
+          "content": "    \"exclusive_custody\": null,\n    \"authority\": null,\n    \"unknown_effect\": null,\n    \"rights_and_enrollment\": null,\n    \"production_cutover\": null\n  },\n  \"target_authority_validator\": null,\n  \"target_execution\": \"NOT_RUN\",\n  \"target_acceptance\": \"NOT_ESTABLISHED; source bytes/provenance alone cannot close target-specific context\",\n  \"source_reported_only\": {\n    \"Python_tests\": 55,\n    \"Rust_tests\": 14,\n    \"Web_assertions\": 2122,\n    \"rerun_here\": false\n  },\n  \"remaining_contract\": [\n    \"Actual maintained target caller/implementation/binary/dependency bindings and governed execution/parity of all99vectors; exclusions/boundaries retained.\",\n    \"Published target custody-consumer acceptance and genuine exclusive execution custody preserving source lineage, history and incident edges.\",\n    \"Authenticated actual Host/Principal, independent implementation assessment, current Resource/Holding/lease/admission/rights and fullIR/payload/selector/provider/effect/outcome joins.\",\n    \"Canonical strict receipt readback and unknown-effect handling: no resend/recompute/refund based on unknown.\",\n    \"Current rights, explicit accepted mappings and qualified registry/enrollment with real target authority validator.\",\n    \"Production caller route and I/O only after preceding gates; original106/2831partition preserved.\"\n  ],\n  \"structural_registry\": \"CurrentcentralSHARDS7 unchanged; ecdev/commerce remains proposed/uninstalled, no accepted mapping supplied\",\n  \"shared_wire_schema_changed\": false,\n  \"FD17_allowlist_budget_changed\": false,\n  \"runtime_or_device_effects\": false,\n  \"automatic_cutover_or_extinction\": false,\n  \"no_new_architecture_permission_gap\": true\n}\n"
+        }
+      ]
+    },
+    {
+      "key": "central-cli",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "apps/cli/src/migration/ecdev.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/apps/cli/src/migration/ecdev.rs",
+      "bytes": 19175,
+      "sha256": "df60bf8f9f422419b0b59238f12aa71e788145a5efb981d7dd11a1a37b103597",
+      "git_blob_sha1": "c7c895acfe1d30a8a5a172b1d364f2f7d6d82977",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "apps/cli/src/migration/ecdev.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c7c895acfe1d30a8a5a172b1d364f2f7d6d82977",
+        "size": 19175,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/c7c895acfe1d30a8a5a172b1d364f2f7d6d82977"
+      },
+      "sections": [
+        {
+          "first": 120,
+          "last": 143,
+          "content": "    }\n\n    pub fn report(&self) -> String {\n        let denominator = self\n            .known_capabilities()\n            .map(|c| c.len().to_string())\n            .unwrap_or_else(|| \"unavailable (legacy history has no capability floor)\".into());\n        format!(\n            \"ECDEV migration preflight (read-only; no canonical mapping or writes)\\nSource claims and recorded verdicts are retained, not reverified or admitted.\\nCounts describe supplied source records; repository-history completeness is not attested.\\nsource repository: {}\\nsource files: {}; nodes: {}; donors: {}; historical donors: {}\\ndeclared capabilities: {}; historical capabilities: {}; knowledge denominator: {}\\nknowledge facts: {}; evidence records: {}; retired evidence records: {}\\nBLOCKED: canonical identity/enrollment mapping, separate adoption/knowledge/absorbs semantics, ECG history/evidence verification and rights/claim mapping require explicit lossless contracts; no SHARDS, prefix, conformance or lock change is implied\\n\",\n            self.repository_id, self.files.len(), self.node_keys.len(), self.donor_keys.len(), self.history_donors.len(), self.declared_capabilities.len(), self.history_capabilities.len(), denominator, self.facts.len(), self.evidence_records, self.retired_evidence_records,\n        )\n    }\n}\n\nfn field<'a>(e: &'a Expr, name: &str) -> Result<&'a Expr, String> {\n    if let Kind::Struct(_, fields) = &e.kind {\n        return fields\n            .iter()\n            .find(|(k, _)| k == name)\n            .map(|(_, v)| v)\n            .ok_or_else(|| format!(\"missing ECDEV field {name}\"));\n    }\n    Err(format!(\"expected ECDEV struct for {name}\"))\n}"
+        }
+      ]
+    },
+    {
+      "key": "central-target-consumer",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "apps/cli/src/migration/ecdev/bounded/target.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/apps/cli/src/migration/ecdev/bounded/target.rs",
+      "bytes": 23541,
+      "sha256": "cbc26f583c6c5003482c0783c19926140522762dd000dc6a77f838aa12383489",
+      "git_blob_sha1": "b6fc8716eaf7e823ee82976b53a91439ed7abddf",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "apps/cli/src/migration/ecdev/bounded/target.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "b6fc8716eaf7e823ee82976b53a91439ed7abddf",
+        "size": 23541,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/b6fc8716eaf7e823ee82976b53a91439ed7abddf"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 40,
+          "content": "//! Bounded local Git membership of an independently pinned target reference.\n//! This reads objects only: no checkout, source execution, remote/ref resolution or grant.\n\nuse crate::declare::{self, Node, Repository};\nuse crate::digest::content_digest;\nuse crate::formats::{json, Value};\nuse crate::graph::NodeId;\nuse crate::migration::dependency::local_git;\nuse crate::migration::residence::{Expect, Witness};\nuse crate::schema::{self, NodeKind, NodeLifecycle};\nuse std::collections::{BTreeMap, BTreeSet};\nuse std::path::Path;\n\nconst MAX_BLOB: usize = 16 << 20;\nconst MAX_TOTAL: usize = 64 << 20;\nconst DECLARATION: &str = \".ynventa/declared/repository.rs\";\nconst CLASS: &str = \"TARGET_OWNED_EXISTING_OWNER_AND_BOUNDED_MAPPING_REFERENCE; NOT_ENGINE_ENROLLMENT_SCHEMA_OR_RUNTIME_ADMISSION\";\n\n/// Construction proves finite object membership and declared consistency only. Channels and\n/// digests are caller-supplied associations, not authenticated publication or execution custody.\n#[derive(Debug)]\npub struct TargetReference {\n    publication: Expect,\n    implementation: Expect,\n    contract: Vec<u8>,\n    contract_digest: String,\n    inputs: BTreeMap<String, Vec<u8>>,\n    case_map_path: String,\n}\n\n/// Membership of the finite captured governance files, not a whole-source migration proof.\n#[derive(Debug)]\npub struct SourceReference {\n    pin: Expect,\n    capture_digest: String,\n    captured_files: usize,\n    captured_bytes: usize,\n    committed_files: usize,\n}\nimpl SourceReference {"
+        },
+        {
+          "first": 59,
+          "last": 101,
+          "content": "    pub fn source_graph_independently_rebuilt(&self) -> bool {\n        false\n    }\n    pub fn authority(&self) -> bool {\n        false\n    }\n    pub fn enrollment_credit(&self) -> usize {\n        0\n    }\n}\n\nimpl TargetReference {\n    pub fn publication(&self) -> &Expect {\n        &self.publication\n    }\n    pub fn implementation(&self) -> &Expect {\n        &self.implementation\n    }\n    pub fn contract_bytes(&self) -> &[u8] {\n        &self.contract\n    }\n    /// Raw SHA-256 hex, as required by the independently bound JSON reader.\n    pub fn contract_sha256(&self) -> &str {\n        &self.contract_digest[7..]\n    }\n    pub fn case_map_bytes(&self) -> &[u8] {\n        &self.inputs[&self.case_map_path]\n    }\n    pub fn pinned_inputs(&self) -> &BTreeMap<String, Vec<u8>> {\n        &self.inputs\n    }\n    pub fn authority(&self) -> bool {\n        false\n    }\n    pub fn enrollment_credit(&self) -> usize {\n        0\n    }\n    pub fn execution_performed(&self) -> bool {\n        false\n    }\n    pub fn artifact_identity_status(&self) -> &'static str {\n        \"PINNED_OWNER_REFERENCE_ONLY; NOT_RECONCILED_WITH_ARTIFACT_REGISTRY\"\n    }"
+        },
+        {
+          "first": 133,
+          "last": 156,
+          "content": "fn pin(root: &Path, e: &Expect) -> Result<(), String> {\n    require(\n        hex(&e.commit, 40) && hex(&e.tree, 40),\n        \"full lowercase commit/tree pins required\",\n    )?;\n    require(\n        e.channel == \"refs/heads/main\",\n        \"expected channel must be the supported main association\",\n    )?;\n    let bytes = local_git(root, &[\"cat-file\", \"commit\", &e.commit], 1 << 20)?;\n    let header = std::str::from_utf8(&bytes)\n        .map_err(|_| \"TARGET_REFERENCE: non-UTF8 commit\")?\n        .split_once(\"\\n\\n\")\n        .ok_or(\"TARGET_REFERENCE: missing commit headers\")?\n        .0;\n    let trees: Vec<_> = header\n        .lines()\n        .filter_map(|s| s.strip_prefix(\"tree \"))\n        .collect();\n    require(trees == [e.tree.as_str()], \"commit/tree mismatch\")?;\n    require(\n        local_git(root, &[\"cat-file\", \"-t\", &e.tree], 128)? == b\"tree\\n\",\n        \"pin is not a tree\",\n    )"
+        },
+        {
+          "first": 196,
+          "last": 218,
+          "content": "fn blob(\n    root: &Path,\n    entries: &BTreeMap<String, Entry>,\n    path: &str,\n    expected: &str,\n) -> Result<Vec<u8>, String> {\n    require(\n        normal(path) && hex(expected, 64),\n        \"invalid bound path or raw SHA-256\",\n    )?;\n    let entry = entries\n        .get(path)\n        .ok_or_else(|| format!(\"TARGET_REFERENCE: absent pinned input {path}\"))?;\n    require(\n        matches!(entry.mode.as_str(), \"100644\" | \"100755\"),\n        \"pinned input must be a regular blob\",\n    )?;\n    let bytes = local_git(root, &[\"cat-file\", \"blob\", &entry.oid], MAX_BLOB)?;\n    require(\n        &content_digest(&bytes)[7..] == expected,\n        \"pinned input SHA-256 mismatch\",\n    )?;\n    Ok(bytes)"
+        },
+        {
+          "first": 252,
+          "last": 310,
+          "content": "/// Independently supplied publication and implementation pins are deliberately separate.\n/// `contract.path` is the actual Chronica publication path, not ECDEV's local copied path.\n/// Reads every input that the published owner reference pins, retaining exact raw bytes.\npub fn qualify_local_git(\n    root: &Path,\n    publication: &Expect,\n    implementation: &Expect,\n    contract: &Witness,\n) -> Result<TargetReference, String> {\n    pin(root, publication)?;\n    pin(root, implementation)?;\n    let published = inventory(root, &publication.commit)?;\n    let raw = blob(root, &published, &contract.path, &contract.sha256)?;\n    let parsed = json::parse_unique(\n        std::str::from_utf8(&raw).map_err(|_| \"TARGET_REFERENCE: contract is not UTF-8\")?,\n    )?;\n    require(\n        text(&parsed, \"classification\")? == CLASS,\n        \"unsupported target reference classification\",\n    )?;\n    let reference = field(&parsed, \"target_repository_pin\")?;\n    let target = field(&parsed, \"target\")?;\n    for v in [reference, target] {\n        require(\n            text(v, \"repository\")? == \"llgtrn/Chronica\"\n                && text(v, \"commit\")? == implementation.commit\n                && text(v, \"tree\")? == implementation.tree,\n            \"independent implementation pin differs from reference\",\n        )?;\n    }\n    require(\n        text(reference, \"ref\")? == implementation.channel,\n        \"reference channel association differs\",\n    )?;\n    let entries = inventory(root, &implementation.commit)?;\n    let inputs = field(&parsed, \"pinned_target_inputs\")?\n        .table()\n        .ok_or(\"TARGET_REFERENCE: input table required\")?;\n    require(\n        !inputs.is_empty() && inputs.len() <= 128,\n        \"input table exceeds bound or is empty\",\n    )?;\n    let mut retained = BTreeMap::new();\n    let mut total = 0usize;\n    for (path, expected) in inputs {\n        let bytes = blob(root, &entries, path, text(expected, \"sha256\")?)?;\n        require(\n            entries[path].oid == text(expected, \"git_blob\")?,\n            \"input Git blob mismatch\",\n        )?;\n        total = total\n            .checked_add(bytes.len())\n            .ok_or(\"TARGET_REFERENCE: input size overflow\")?;\n        require(total <= MAX_TOTAL, \"total input bound exceeded\")?;\n        retained.insert(path.clone(), bytes);\n    }\n    let declaration = retained\n        .get(DECLARATION)\n        .ok_or(\"TARGET_REFERENCE: exact owner declaration required\")?;"
+        },
+        {
+          "first": 343,
+          "last": 434,
+          "content": "    let artifact = field(target, \"source_artifact\")?;\n    let path = text(artifact, \"path\")?;\n    require(\n        path.starts_with(&format!(\"{}/\", owner.path)),\n        \"implementation is outside its existing owner\",\n    )?;\n    let claims: Vec<_> = repo\n        .nodes\n        .iter()\n        .filter(|n| {\n            schema::is_physical(n.kind)\n                && !n.path.is_empty()\n                && (path == n.path || path.starts_with(&format!(\"{}/\", n.path)))\n        })\n        .collect();\n    let depth = claims.iter().map(|n| n.path.len()).max();\n    let deepest: Vec<_> = claims\n        .into_iter()\n        .filter(|n| Some(n.path.len()) == depth)\n        .collect();\n    require(\n        deepest.len() == 1 && deepest[0].key == owner.key,\n        \"implementation has a different or ambiguous physical owner\",\n    )?;\n    let source = retained\n        .get(path)\n        .ok_or(\"TARGET_REFERENCE: pinned implementation input missing\")?;\n    require(\n        content_digest(source) == text(artifact, \"digest\")?,\n        \"implementation source digest mismatch\",\n    )?;\n    let map = field(field(&parsed, \"bounded_coverage\")?, \"case_map\")?;\n    let case_map_path = text(map, \"path\")?.to_string();\n    let bytes = retained\n        .get(&case_map_path)\n        .ok_or(\"TARGET_REFERENCE: pinned case-map input missing\")?;\n    require(\n        &content_digest(bytes)[7..] == text(map, \"sha256\")?,\n        \"case-map digest mismatch\",\n    )?;\n    Ok(TargetReference {\n        publication: publication.clone(),\n        implementation: implementation.clone(),\n        contract_digest: content_digest(&raw),\n        contract: raw,\n        inputs: retained,\n        case_map_path,\n    })\n}\n\n/// Verify the complete *supplied capture* against independently selected immutable source\n/// objects. Uncaptured native code, UI/assets and the producer graph remain visible limits.\n/// This does not parse source dialect as canonical declarations or install a registry entry.\npub fn qualify_source_local_git(\n    root: &Path,\n    expected: &Expect,\n    checked: &super::Checked,\n) -> Result<SourceReference, String> {\n    pin(root, expected)?;\n    let source = &checked.source().source;\n    require(\n        source.source_repository == \"llgtrn/ECDEV\"\n            && source.source_id == \"ecdev\"\n            && source.observed_head == expected.commit,\n        \"source capture differs from independently selected source commit\",\n    )?;\n    let entries = inventory(root, &expected.commit)?;\n    let mut total = 0usize;\n    for (path, file) in &source.snapshot.files {\n        require(path == &file.path, \"captured source path identity differs\")?;\n        let digest = file\n            .digest\n            .strip_prefix(\"sha256:\")\n            .ok_or(\"TARGET_REFERENCE: source file digest has no domain\")?;\n        let bytes = blob(root, &entries, path, digest)?;\n        require(\n            bytes == file.bytes,\n            \"captured source bytes differ from pinned commit\",\n        )?;\n        total = total\n            .checked_add(bytes.len())\n            .ok_or(\"TARGET_REFERENCE: source size overflow\")?;\n        require(total <= MAX_TOTAL, \"captured source byte bound exceeded\")?;\n    }\n    Ok(SourceReference {\n        pin: expected.clone(),\n        capture_digest: source.envelope_digest.clone(),\n        captured_files: source.snapshot.files.len(),\n        captured_bytes: total,\n        committed_files: entries.len(),\n    })\n}"
+        },
+        {
+          "first": 517,
+          "last": 635,
+          "content": "    #[test]\n    #[ignore = \"explicit local immutable Chronica objects required; no target execution\"]\n    fn published_target_objects_supply_reference_only_and_refuse_wrong_pins() {\n        let root = std::env::var_os(\"ECDEV_CHRONICA_OBJECTS\").expect(\"ECDEV_CHRONICA_OBJECTS\");\n        let root = Path::new(&root);\n        let publication = Expect {\n            commit: \"4b5e163042c621702d7700b53087351f40fe192f\".into(),\n            tree: \"eb8977bc40ac8384f53449ece1b75af4b993ada0\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        let implementation = Expect {\n            commit: \"d7c54f7ec836da6a8459f8a3786964ea7c674866\".into(),\n            tree: \"2965cd433ee1f744775b8cc885dc7cbab3efb6fb\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        let witness = Witness {\n            path: \"assays/gate/fixtures/price-text/d7c54f7e-owner-contract.json\".into(),\n            sha256: \"42c4eed4729032882cde433280431cec8887f829f3f522f109bc93b6079e4285\".into(),\n        };\n        let checked = qualify_local_git(root, &publication, &implementation, &witness).unwrap();\n        assert_eq!(checked.pinned_inputs().len(), 11);\n        assert!(!checked.authority());\n        assert!(!checked.execution_performed());\n        assert_eq!(checked.enrollment_credit(), 0);\n        let mut wrong = implementation.clone();\n        wrong.tree = publication.tree.clone();\n        assert!(qualify_local_git(root, &publication, &wrong, &witness).is_err());\n        let mut wrong = witness.clone();\n        wrong.sha256 = \"0\".repeat(64);\n        assert!(qualify_local_git(root, &publication, &implementation, &wrong).is_err());\n        let mut wrong = witness;\n        wrong.path = \".ynventa/protocol.lock\".into();\n        assert!(qualify_local_git(root, &publication, &implementation, &wrong).is_err());\n    }\n    #[test]\n    #[ignore = \"explicit immutable ECDEV/Chronica objects and bounded artifacts required\"]\n    fn published_source_and_target_membership_compose_without_enrollment_or_execution() {\n        use super::super::{BoundBytes, Inputs};\n        let target_root =\n            std::env::var_os(\"ECDEV_CHRONICA_OBJECTS\").expect(\"ECDEV_CHRONICA_OBJECTS\");\n        let source_root = std::env::var_os(\"ECDEV_SOURCE_OBJECTS\").expect(\"ECDEV_SOURCE_OBJECTS\");\n        let dir =\n            std::env::var_os(\"YNVENTA_ECDEV_BOUNDED_INPUTS\").expect(\"YNVENTA_ECDEV_BOUNDED_INPUTS\");\n        let read = |name| std::fs::read(Path::new(&dir).join(name)).unwrap();\n        let capture = read(\"capture.json\");\n        let proposal = read(\"proposal.json\");\n        let candidate = read(\"mapping.json\");\n        let owner = read(\"owner.json\");\n        let map = read(\"case-map.jsonl\");\n        let manifest = read(\"manifest.tsv\");\n        let publication = Expect {\n            commit: \"4b5e163042c621702d7700b53087351f40fe192f\".into(),\n            tree: \"eb8977bc40ac8384f53449ece1b75af4b993ada0\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        let implementation = Expect {\n            commit: \"d7c54f7ec836da6a8459f8a3786964ea7c674866\".into(),\n            tree: \"2965cd433ee1f744775b8cc885dc7cbab3efb6fb\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        let witness = Witness {\n            path: \"assays/gate/fixtures/price-text/d7c54f7e-owner-contract.json\".into(),\n            sha256: \"42c4eed4729032882cde433280431cec8887f829f3f522f109bc93b6079e4285\".into(),\n        };\n        let target = qualify_local_git(\n            Path::new(&target_root),\n            &publication,\n            &implementation,\n            &witness,\n        )\n        .unwrap();\n        let inputs = Inputs {\n            capture: BoundBytes {\n                bytes: &capture,\n                sha256: \"441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909\",\n            },\n            proposal: BoundBytes {\n                bytes: &proposal,\n                sha256: \"d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29\",\n            },\n            candidate: BoundBytes {\n                bytes: &candidate,\n                sha256: \"300591b5db1f9b156ecf5282525e5d056c79986140cffff20fcd784b2e825792\",\n            },\n            owner_contract: BoundBytes {\n                bytes: &owner,\n                sha256: &witness.sha256,\n            },\n            all106_name_manifest: Some(BoundBytes {\n                bytes: &manifest,\n                sha256: super::super::ALL_MANIFEST,\n            }),\n            case_map: Some(BoundBytes {\n                bytes: &map,\n                sha256: \"b8caf5500745de277cfb9d011722b05e884a0e8e76671e0e849756720f8cd16d\",\n            }),\n        };\n        let checked = super::super::qualify_with_target(inputs, &target).unwrap();\n        let expected = Expect {\n            commit: \"db92bf27d31409704fccd44defe342a1b2f22823\".into(),\n            tree: \"ec88cd6c52fadf3c638bed0eb7b790096eab8617\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        let source =\n            qualify_source_local_git(Path::new(&source_root), &expected, &checked).unwrap();\n        assert_eq!(source.captured_files(), 734);\n        assert!(source.uncaptured_files() > 0);\n        assert!(!source.source_graph_independently_rebuilt());\n        assert_eq!(source.enrollment_credit(), 0);\n        assert!(!source.authority());\n        assert_eq!(checked.report().enrollment_credit(), 0);\n        let wrong = Expect {\n            commit: \"00c50c86fcace013288cbf40552e9423fb748595\".into(),\n            tree: \"830000af7fb42d1236cca908b5ee15875d9da461\".into(),\n            channel: \"refs/heads/main\".into(),\n        };\n        assert!(qualify_source_local_git(Path::new(&source_root), &wrong, &checked).is_err());\n    }\n}"
+        }
+      ]
+    },
+    {
+      "key": "central-portable",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "apps/cli/src/migration/ecdev/portable.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/apps/cli/src/migration/ecdev/portable.rs",
+      "bytes": 29499,
+      "sha256": "0e49e42707598070c18cebe9cf8594f5f8a737f3688f92f7142531a4bc597a0d",
+      "git_blob_sha1": "8844dce84d26c7700e90aa73ddf8c86ef885ecc6",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "apps/cli/src/migration/ecdev/portable.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "8844dce84d26c7700e90aa73ddf8c86ef885ecc6",
+        "size": 29499,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/8844dce84d26c7700e90aa73ddf8c86ef885ecc6"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 53,
+          "content": "//! Digest-bound intake of ECDEV's existing portable v1 source capture. No source execution,\n//! canonical identity conversion, admission or proof freshness follows from successful parsing.\nuse super::{from_files, Snapshot, SourceFile, MAX_FILE, MAX_FILES, MAX_TOTAL};\nuse crate::digest::{content_digest, unhex};\nuse crate::formats::{json, Value};\nuse std::collections::{BTreeMap, BTreeSet};\nuse std::io::Read;\nuse std::path::Path;\n\npub const FORMAT: &str = \"ecdev-source-capture-v1\";\nconst BINDING: &str = \"CAPTURED_BYTES; HEAD_OBSERVED_ONLY; NOT_ENROLLED; NOT_REVERIFIED\";\npub const MAX_EXPORT: usize = MAX_TOTAL * 3;\n\n/// A native source identifier and its original source metadata, never a Ynventa node.\n#[derive(Clone, Debug, PartialEq)]\npub struct SourceNode {\n    pub id: String,\n    pub namespace: String,\n    pub semantic_key: String,\n    pub metadata: Value,\n}\n#[derive(Clone, Debug, PartialEq)]\npub struct SourceEdge {\n    pub from: String,\n    pub to: String,\n    pub kind: String,\n    pub scope: String,\n}\n#[derive(Clone, Debug, PartialEq)]\npub struct SourceGraph {\n    /// Recorded producer claim. It never selects this reader or proves current compatibility.\n    pub schema_claim: String,\n    pub nodes: Vec<SourceNode>,\n    pub edges: Vec<SourceEdge>,\n    pub original: Value,\n}\n#[derive(Clone, Copy, Debug, PartialEq, Eq)]\npub enum RegistryBinding {\n    /// No canonical source registry entry or ec1 -> yn1 mapping is installed by this reader.\n    Pending,\n}\n#[derive(Clone, Debug, PartialEq)]\npub struct SourceProjection {\n    pub envelope_digest: String,\n    pub original_bytes: Vec<u8>,\n    pub source_repository: String,\n    pub source_id: String,\n    /// Observation only. The v1 envelope includes no independently verified Git membership proof.\n    pub observed_head: String,\n    pub source_graph: SourceGraph,\n    pub snapshot: Snapshot,\n    pub registry_binding: RegistryBinding,\n}"
+        }
+      ]
+    },
+    {
+      "key": "target-price-mutation",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "assays/gate/mutations/price_provider.toml",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/assays/gate/mutations/price_provider.toml",
+      "bytes": 1876,
+      "sha256": "f86070f961fb810cf956f00e59bf8a4bda85dd6972c30e5a32430b6bf1bd5d3a",
+      "git_blob_sha1": "baefd74b09ff4299175ac9fd337b7d85261238a8",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "assays/gate/mutations/price_provider.toml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "baefd74b09ff4299175ac9fd337b7d85261238a8",
+        "size": 1876,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/baefd74b09ff4299175ac9fd337b7d85261238a8"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 29,
+          "content": "# Executable negative controls for current local price-provider enrollment.\n[[mutation]]\nname = \"Price provider: an authenticated credential remains usable after current expiry\"\nfile = \"physiology/host/src/lib.rs\"\nold = '|| !credential.valid_at(at)'\nnew = '|| (!credential.valid_at(at) && false)'\ntest = \"cargo test -q --offline --locked -p host --lib allocation::holding_work_tests::replacement_revalidates_session_revocation_expiry_scope_and_identity -- --exact\"\n\n[[mutation]]\nname = \"Price provider: released or expired work without a known settlement is treated as quiescent\"\nfile = \"physiology/host/src/allocation.rs\"\nold = '.settled.as_ref().is_none_or(|s| !s.consumption_known || s.completed.is_none())'\nnew = '.settled.as_ref().is_some_and(|s| !s.consumption_known || s.completed.is_none())'\ntest = \"cargo test -q --offline --locked -p host --lib allocation::holding_work_tests::replacement_requires_explicit_known_settlement_even_after_release_or_expiry -- --exact\"\n\n[[mutation]]\nname = \"Price provider: later acts continue after an uncertain binding append\"\nfile = \"physiology/host/src/lib.rs\"\nold = 'if self.binding_write_uncertain {'\nnew = 'if self.binding_write_uncertain && false {'\ntest = \"cargo test -q --offline --locked -p host --features storage/faults --lib allocation::holding_work_tests::replacement_real_synced_fault_closes_all_acts_until_reopen_and_fresh_enrollment -- --exact\"\n\n[[mutation]]\nname = \"Price provider: bridge trusts a forged or stale public graph cache instead of the canonical Host\"\nfile = \"phenora/codara/src/host_world.rs\"\nold = 'let current = self.host.graph().as_of(at, TransactionTime::LATEST);'\nnew = 'let current = self.graph.as_of(at, TransactionTime::LATEST);'\ntest = \"cargo test -q --offline --locked -p codara --test e2e_price_text price_provider_bridge_reads_canonical_host_graph_instead_of_forged_or_stale_cache -- --exact\"\n"
+        }
+      ]
+    },
+    {
+      "key": "target-census",
+      "repository": "llgtrn/Chronica",
+      "commit": "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1",
+      "path": "evolution/census/registry/declared.toml",
+      "url": "https://github.com/llgtrn/Chronica/blob/6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1/evolution/census/registry/declared.toml",
+      "bytes": 116597,
+      "sha256": "03a731554d83645dd2d3fb95344df873619e2ee58c52635680dc6d0bfeeb91b0",
+      "git_blob_sha1": "561fb9dec900c5bc47add2d6adf3b5d2023599e5",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "evolution/census/registry/declared.toml",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "561fb9dec900c5bc47add2d6adf3b5d2023599e5",
+        "size": 116597,
+        "url": "https://api.github.com/repos/llgtrn/Chronica/git/blobs/561fb9dec900c5bc47add2d6adf3b5d2023599e5"
+      },
+      "sections": [
+        {
+          "first": 2640,
+          "last": 2688,
+          "content": "[[proof]]\nmodule = \"evidence::work_receipt\"\nproperty = \"durability\"\nevidence = [\n    \"evidence::work_receipt::preserved_result_survives_restart_and_refuses_rewriting\",\n]\n\n[[proof]]\nmodule = \"host::allocation\"\nproperty = \"authority\"\nevidence = [\n    \"host#test:work_result::work_result_requires_scoped_current_observation_rights\",\n    \"host#test:work_result::revoked_observation_rights_cannot_read_a_historical_work_result\",\n    \"host#test:work_result::an_observer_cannot_use_another_resource_to_read_a_work_key\",\n    \"codara#test:e2e_native_result::a_grant_revoked_since_the_capsules_reading_cannot_authorize_native_execution\",\n    \"codara#test:e2e_source_native_result::the_source_callers_without_current_authority_cannot_change_the_target\",\n    \"node#test:work_result::the_node_refuses_result_observation_without_authority\",\n    \"node#test:work_result::the_node_refuses_historical_results_after_observation_right_is_revoked\",\n]\n\n[[proof]]\nmodule = \"host::allocation\"\nproperty = \"idempotency\"\nevidence = [\n    \"host#test:work_result::a_reused_work_key_on_another_lease_or_resource_cannot_change_history\",\n    \"codara#test:e2e_native_result::the_caller_reads_the_exact_verification_after_reopening_and_a_retry_never_recomputes\",\n    \"codara#test:e2e_native_result::direct_native_resume_returns_durable_report_and_refuses_payload_or_claim_rebinding\",\n]\n\n[[proof]]\nmodule = \"host::allocation\"\nproperty = \"recovery\"\nevidence = [\n    \"host#test:work_result::known_legacy_work_result_survives_restart_without_inventing_result_bytes\",\n    \"host#test:work_result::unknown_work_outcomes_remain_unobservable_after_restart\",\n    \"codara#test:e2e_native_result::the_caller_reads_the_exact_verification_after_reopening_and_a_retry_never_recomputes\",\n    \"codara#test:e2e_native_result::a_wrong_claim_is_a_durable_known_false_result\",\n    \"codara#test:e2e_native_result::a_real_kernel_refusal_preserves_the_bound_pending_prefix_and_never_reexecutes_after_reopen\",\n    \"codara#test:e2e_source_native_result::the_unchanged_pinned_source_programs_verify_their_payloads_and_persist_exact_results\",\n    \"node#test:work_result::the_node_observes_the_same_known_result_in_separate_processes\",\n    \"node#test:work_result::the_node_preserves_unknown_outcomes_after_reopening\",\n]\n\n[[proof]]\nmodule = \"host::allocation\"\nproperty = \"integrity\"\nevidence = [\n    \"codara#test:e2e_source_native_result::the_source_callers_without_cpu_budget_are_refused_by_allocation_without_changing_the_target\",\n]"
+        }
+      ]
+    },
+    {
+      "key": "central-proposal",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "apps/cli/src/migration/ecdev/proposal.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/apps/cli/src/migration/ecdev/proposal.rs",
+      "bytes": 37254,
+      "sha256": "02a75d344bab7ca96719637189bb660404850124f9171dd8c35438000c2c1584",
+      "git_blob_sha1": "6285260e9d1dfc52c0f72878e7b7e42f64dda82a",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "apps/cli/src/migration/ecdev/proposal.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "6285260e9d1dfc52c0f72878e7b7e42f64dda82a",
+        "size": 37254,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/6285260e9d1dfc52c0f72878e7b7e42f64dda82a"
+      },
+      "sections": [
+        {
+          "first": 457,
+          "last": 510,
+          "content": "/// decoded ordering/coverage and all source-derived claims must match the existing contract.\n/// The producer currently defines only null target objects. A real independently supplied\n/// owner pin does not authorize this reader to invent the absent positive-target wire schema.\npub fn inspect_bound(\n    capture_bytes: &[u8],\n    capture_sha256: &str,\n    proposal_bytes: &[u8],\n    proposal_sha256: &str,\n) -> Result<CheckedProposal, String> {\n    if proposal_bytes.len() > MAX_PROPOSAL_BYTES {\n        return Err(\"PROPOSAL_READER_BUDGET_EXCEEDED\".into());\n    }\n    if proposal_sha256.len() != 64 || !proposal_sha256.bytes().all(|b| b.is_ascii_hexdigit()) {\n        return Err(\"expected proposal SHA256 must be 64 hex digits\".into());\n    }\n    let digest = content_digest(proposal_bytes);\n    if !digest[7..].eq_ignore_ascii_case(proposal_sha256) {\n        return Err(\"PROPOSAL_DIGEST_MISMATCH\".into());\n    }\n    let text = std::str::from_utf8(proposal_bytes).map_err(|e| e.to_string())?;\n    let proposal = json::parse(text)?;\n    super::super::dependency::unique_json_keys(text)?;\n    let source = portable::parse_bound(capture_bytes, capture_sha256)?;\n    if get(&proposal, \"target_custody\")? != &Value::Null\n        || array(&proposal, \"node_mappings\")?\n            .iter()\n            .any(|m| m.get(\"proposed_target\") != Some(&Value::Null))\n    {\n        return Err(\"UNSUPPORTED_TARGET_CONTRACT: v1 producer defines only null targets; coordinate positive producer fields and independent owner/custody before enrollment\".into());\n    }\n    let expected = json::parse(&expected_pending(&source)?.render())?;\n    if proposal != expected {\n        return Err(\"PROPOSAL_SOURCE_BINDING_OR_COVERAGE_DRIFT\".into());\n    }\n    let report = Report {\n        capture_digest: source.envelope_digest.clone(),\n        proposal_digest: digest,\n        source_nodes: source.source_graph.nodes.len(),\n        payloads: source.snapshot.files.len(),\n        rights_claims: source.snapshot.donor_keys.len(),\n        global_identity_candidates: source\n            .source_graph\n            .nodes\n            .iter()\n            .filter(|n| n.namespace == \"oss\")\n            .count(),\n        enrollment_credit: 0,\n        grammar_conformance: Assessment::NotAssessed,\n        migration_readiness: Assessment::Blocked,\n        native_caller_integration: Assessment::NotRun,\n        source_retirement: Assessment::NotQualified,\n        unresolved_reasons: REASONS.iter().map(|v| v.to_string()).collect(),\n    };\n    Ok(CheckedProposal {"
+        }
+      ]
+    },
+    {
+      "key": "central-bounded",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": "apps/cli/src/migration/ecdev/bounded.rs",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/apps/cli/src/migration/ecdev/bounded.rs",
+      "bytes": 69882,
+      "sha256": "a513af1dc8db56f19591ce62feee6c2f7f46203a7a1aa768d1fa788f03738068",
+      "git_blob_sha1": "9ccf5667adb00f76566d65e04559636a426bde45",
+      "verified": true,
+      "published_tree_entry": {
+        "path": "apps/cli/src/migration/ecdev/bounded.rs",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "9ccf5667adb00f76566d65e04559636a426bde45",
+        "size": 69882,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/9ccf5667adb00f76566d65e04559636a426bde45"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 40,
+          "content": "//! Read-only qualification of the published bounded price reference. This consumes a\n//! separate format; it never relaxes the complete pending source proposal contract.\n//! Successful reference checks confer no enrollment, rights, runtime or retirement credit.\npub mod target;\n\nuse super::proposal::{self, CheckedProposal};\nuse crate::digest::content_digest;\nuse crate::formats::{json, Value};\nuse std::collections::BTreeSet;\n\npub const FORMAT: &str = \"ecdev-bounded-price-mapping-v1\";\nconst MAX_BYTES: usize = 16 * 1024 * 1024;\nconst NEW: [usize; 7] = [117, 212, 409, 855, 1188, 1193, 1849];\nconst SELECTORS: [&str; 4] = [\n    \"input\",\n    \"currency_hint\",\n    \"decimal_separator\",\n    \"digit_group_separator\",\n];\nconst NEW_MANIFEST: &str = \"5beaf6ab248dde7a3c42e6ef1b177c64e8c3af481561e5dd2d76aa2d893d342e\";\nconst ALL_MANIFEST: &str = \"451f0bb1a2f3acd3879ddc2945c14e74447ec6ac70dfd5ebf374d086c8f353dc\";\nconst OLD_MANIFEST: &str = \"d5794485dd05bcb51e79fcc5af2a0ea6a1a915800a829ee0211cd3df985df29f\";\n\n/// Every expected digest is supplied independently by the caller, never read from the\n/// artifact being qualified. A digest is transport integrity, not authenticated custody.\n#[derive(Clone, Copy, Debug)]\npub struct BoundBytes<'a> {\n    pub bytes: &'a [u8],\n    pub sha256: &'a str,\n}\n#[derive(Clone, Copy, Debug)]\npub struct Inputs<'a> {\n    pub capture: BoundBytes<'a>,\n    pub proposal: BoundBytes<'a>,\n    pub candidate: BoundBytes<'a>,\n    pub owner_contract: BoundBytes<'a>,\n    pub case_map: Option<BoundBytes<'a>>,\n    /// Independent raw index/name metadata; never grants execution or enrollment.\n    pub all106_name_manifest: Option<BoundBytes<'a>>,\n}"
+        },
+        {
+          "first": 991,
+          "last": 1048,
+          "content": "/// Validate the bounded reference against independently supplied complete source and owner\n/// inputs. This function executes no source program and does not authenticate Git custody.\npub fn inspect_bound(inputs: Inputs<'_>) -> Result<Checked, String> {\n    let source = proposal::inspect_bound(\n        inputs.capture.bytes,\n        inputs.capture.sha256,\n        inputs.proposal.bytes,\n        inputs.proposal.sha256,\n    )?;\n    let (v, digest) = parse(inputs.candidate)?;\n    let (owner, owner_digest) = parse(inputs.owner_contract)?;\n    object(\n        &v,\n        &[\n            \"format\",\n            \"scope\",\n            \"source_mapping\",\n            \"source_bindings\",\n            \"source_caller\",\n            \"node_mappings\",\n            \"target_contract\",\n            \"target_custody\",\n            \"target_owner_statement\",\n            \"declared_owner_verification\",\n            \"owner_membership_artifact\",\n            \"target_contract_status_dimensions\",\n            \"target_reported_caller_evidence\",\n            \"coverage\",\n            \"old99\",\n            \"new_candidates\",\n            \"historical_subset_publication\",\n            \"exact_input_output_and_admission\",\n            \"canonical_assignment\",\n            \"accepted_owner\",\n            \"authority\",\n            \"authority_grants\",\n            \"copying_authorization\",\n            \"current_rights\",\n            \"build_assessment\",\n            \"binary_attestation\",\n            \"world_admission\",\n            \"admission\",\n            \"source_adapter_cutover\",\n            \"governed_caller_locally_run\",\n            \"source8_registry\",\n        ],\n    )?;\n    text(&v, \"format\", FORMAT)?;\n    text(\n        &v,\n        \"scope\",\n        \"PROPOSED_106_CASE_SUBDOMAIN_ONLY; NO_CANONICAL_ASSIGNMENT_OR_ADMISSION\",\n    )?;\n    pending(&v)?;\n    if source.source.source_graph.nodes.len() != 828 || source.source.snapshot.files.len() != 734 {\n        return Err(fail(\n            \"bounded version requires complete 734-file/828-node current source\",\n        ));"
+        },
+        {
+          "first": 1082,
+          "last": 1144,
+          "content": "    source_bindings(&v, &source, &owner)?;\n    target_copies(&v, &owner, &owner_digest)?;\n    historical(&v, &owner)?;\n    let coverage = coverage(&v, &owner, inputs.case_map)?;\n    let all106_name_manifest = qualify_manifest(&v, inputs.all106_name_manifest)?;\n    let mut missing_inputs = Vec::new();\n    if inputs.all106_name_manifest.is_none() {\n        missing_inputs\n            .push(\"INDEPENDENTLY_BOUND_FROZEN_MANIFEST_REQUIRED_FOR_ALL106_NAME_MANIFEST\".into());\n    }\n    if inputs.case_map.is_none() {\n        missing_inputs.push(\"INDEPENDENTLY_BOUND_TARGET_CASE_MAP_REQUIRED_FOR_COVERAGE\".into());\n    }\n    Ok(Checked {\n        source,\n        original_candidate_bytes: inputs.candidate.bytes.to_vec(),\n        original_owner_contract_bytes: inputs.owner_contract.bytes.to_vec(),\n        original_case_map_bytes: inputs.case_map.map(|m| m.bytes.to_vec()),\n        original_all106_name_manifest_bytes: inputs.all106_name_manifest.map(|m| m.bytes.to_vec()),\n        candidate: v,\n        owner_contract: owner,\n        report: Report {\n            candidate_sha256: digest,\n            target_contract_sha256: owner_digest,\n            coverage,\n            all106_name_manifest,\n            missing_inputs,\n        },\n    })\n}\n\n/// Compose byte-level reference checks with the separately constructed immutable Git\n/// membership witness. The caller must supply exactly the same contract and case-map bytes.\npub fn qualify_with_target(\n    inputs: Inputs<'_>,\n    target: &target::TargetReference,\n) -> Result<Checked, String> {\n    if inputs.owner_contract.bytes != target.contract_bytes()\n        || !inputs\n            .owner_contract\n            .sha256\n            .eq_ignore_ascii_case(target.contract_sha256())\n        || inputs\n            .case_map\n            .is_none_or(|m| m.bytes != target.case_map_bytes())\n    {\n        return Err(fail(\n            \"independent target reference differs from supplied inputs\",\n        ));\n    }\n    let checked = inspect_bound(inputs)?;\n    let contract = get(checked.candidate(), \"target_contract\")?;\n    text(contract, \"publication_commit\", &target.publication().commit)?;\n    text(contract, \"publication_tree\", &target.publication().tree)?;\n    // Implementation pin is separately verified by target::qualify_local_git; it is\n    // deliberately distinct from the contract's publication commit/tree.\n    let proposed = get(\n        &array(checked.candidate(), \"node_mappings\")?[0],\n        \"proposed_target\",\n    )?;\n    text(proposed, \"commit\", &target.implementation().commit)?;\n    text(proposed, \"tree\", &target.implementation().tree)?;\n    Ok(checked)"
+        }
+      ]
+    },
+    {
+      "key": "central-registry-contract",
+      "repository": "llgtrn/.Ynventa-",
+      "commit": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+      "path": ".ynventa/migration/qualification/ecdev-registry-69b0b986/qualification-contract.md",
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51/.ynventa/migration/qualification/ecdev-registry-69b0b986/qualification-contract.md",
+      "bytes": 14071,
+      "sha256": "6c30a9c457158485c0679ace3817c0ca2ae1ceaa999bf8e80a3b85dabae71e9c",
+      "git_blob_sha1": "c4ae5bce9f0b19584e74846cd1d78c86dae1e23b",
+      "verified": true,
+      "published_tree_entry": {
+        "path": ".ynventa/migration/qualification/ecdev-registry-69b0b986/qualification-contract.md",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "c4ae5bce9f0b19584e74846cd1d78c86dae1e23b",
+        "size": 14071,
+        "url": "https://api.github.com/repos/llgtrn/.Ynventa-/git/blobs/c4ae5bce9f0b19584e74846cd1d78c86dae1e23b"
+      },
+      "sections": [
+        {
+          "first": 1,
+          "last": 51,
+          "content": "# ECDEV registry/domain qualification analysis\n\nRead-only at central main `69b0b9868fecce5c9b8ff2360c6d7db4300fb60c`. No repository edits or Cargo/source execution. Exact supporting blobs/raw hashes and source artifact provenance are in `evidence.json`.\n\n## Concrete invariants and coupling\n\n`core/semantic/src/schema.rs:642–647` defines SHARDS as physical sources of Chronica, not independent sovereign domains. Its domain is a semantic prefix for legacy importer proposals, never a repository-name prefix. Current rows at 653–689 are empty for Ynventa/Chronica, compiler for Atlas, connector for UC, commerce for Esellios, finance for Fi-game, machine for Mechatron. `shard(id)` is an exact ID lookup; `shard_of_origin` at 696–700 compares the complete owner/repository string with ASCII case-insensitivity. It does not normalize arbitrary URLs, trim whitespace or verify forge ownership. Atlas `git_origin` at 77–98 separately extracts owner/repository through `oss_key`; do not conflate remote parsing with registry origin comparison. Preserve original origin bytes and bind normalized comparison separately. Blank/foreign or ID/origin mismatches must be refused by the new qualifier, not assigned a fallback identity.\n\nAll direct Shard.domain value uses found in core/apps/substrate reduce to Atlas importer lookup at `apps/cli/src/migration/atlas/mod.rs:242` and schema serialization at `apps/cli/src/protocol.rs:286–290`. Importer `qualify` at 197–201 concatenates domain.local. `node_for` at 148–177 handles ambiguous local proposals via path-derived fallback and a per-import `taken` set; it does not compare other source graphs. Ynventa projection keys instead become ynventa.<shard>. Existing declarations are not globally rewritten when the registry domain changes. Scaffold at 33–37 and importer at 216–220 explicitly refuse ECDEV before inference/write, including forced registration; adding a row cannot authorize this lossy path.\n\nNo executable uniqueness requirement for domain strings was found. Two existing empty domains already refute universal domain uniqueness. Sharing commerce is structurally representable and consistent with semantics; it is not proof that all resulting keys/owners are collision-free. A new automatic uniqueness restriction would be new policy rather than reuse of an existing invariant. Conversely, choosing a novel repository-name prefix solely to avoid collisions violates the semantic intent and can rekey source meanings.\n\nA registry row changes rendered protocol schema text, therefore schema digest and exact engine binding/locks/snapshots and coordinated consumer interpretation. Capsule carries shard/origin and schema/engine binding (`substrate/linker/src/capsule.rs:52–58,150–151`), not a separately enforced domain ownership partition. Workspace at `apps/cli/src/cli/mod.rs:2041+` and scheduling at `apps/cli/src/schedule/mod.rs:77` enumerate registered shards; linker missing-source denominator at `substrate/linker/src/linker.rs:333` likewise changes. Seven-source assertions such as `apps/cli/tests/organism.rs:1167+` and protocol schema count assertions require deliberate updates and actual checks. These are already authorized engineering tasks, not reasons to seek a new architecture decision.\n\nCanonical identity is H(namespace, semantic_key), with namespaces chronica/oss/external, never repository (`apps/cli/src/conformance/mod.rs:229–235`). Linker refuses unknown shards, schema mismatch and duplicate shards; same-schema engine skew is currently a SUBSYSTEM_SKEW warning (line 326), not a universal hard refusal. It also detects two physical/technology owners of the same Chronica identity (`substrate/linker/src/linker.rs:295–360`). Shared domains neither create a second identity namespace nor permit two physical owners. Existing absorption domain routing is its own rule set (`substrate/extinction/src/absorption.rs:145–210`); it does not derive permission from SHARDS.domain.\n\n## Exact ECDEV candidate and available inputs\n\nIdentity candidate is the source-requested `id=ecdev`, `origin=llgtrn/ECDEV`; the domain is currently null. Do not invent a different source ID, namespace prefix or origin. Registration under chronica would misidentify the physical source and duplicate an existing registry row; Chronica is its canonical authority, not its source ID.\n\nExact source publication is `0ccbd426a7bfbb3582f2bf7fce468656bcc9786a`; retained capture is `db92bf27d31409704fccd44defe342a1b2f22823`, tree `ec88cd6c52fadf3c638bed0eb7b790096eab8617`. Capture raw SHA256 is `441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909`, proposal `d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29`. The packet’s exact publication pins are preserved in main qualification `ecdev-106-0ccbd426`; `evidence.json` includes the existing intake artifact inventory, whose earlier custody revision 12863945 is historical rather than a claim that capture HEAD changed.\n\nThere are 828 source nodes: 760 ecdev and 68 oss. Semantic areas are donor-capability 408, proof 230, github 68, capability 62, technology 47, commerce 7, substrate 2, governance/research/repository/tools one each. These counts are static decoded capture observations. Concrete physical keys include commerce.keepa, commerce.web, commerce.server, commerce.marketplace, commerce.web-research, commerce.json-derive, commerce, substrate.storage, substrate.net, governance, research.commerce, repository/ecdev and tools.commerce. Source keys already include capability/extract.price-public-api, technology/commerce.price-text and donor-capability/ecdev/scrapinghub--price-parser/extract.price-public-api. Blindly prefixing every key with commerce or ecdev changes established source identities and doubles existing semantic qualification.\n\nCandidate domains to evaluate rather than silently select: shared commerce is the strongest semantic candidate for commerce legacy nodes, but cannot cover every source meaning or authorize global prefix application; empty preserves unqualified importer proposals but also has no collision guarantee and supplies no semantic mapping; a new ecdev repository-name prefix is not justified. A concrete accepted target mapping can preserve every original ec1 key while naming independently accepted Chronica canonical keys, without applying SHARDS.domain as a translation. Full eight-source collision measurement remains NOT_RUN in this analysis: textual area similarity is neither identity equality nor a complete collision check.\n\nCurrent v1 proposal has 828 null proposed_target rows and null target_custody. `proposal.rs:457–490` intentionally accepts only this pending wire shape and refuses invented positive target objects. The source authority request has null canonical acceptance/owner/mapping/shared lock and ineffective SOURCE_ONLY handoff. The 106/2831 price partition and the existing capability-kernels reference are bounded metadata/capability evidence, not 828-node whole-source custody. Source membership reports 3053 committed selected inputs, 734 captured and 2319 uncaptured; it explicitly does not attest complete repository history.\n\nChronica canonical ownership is already authorized: current Repository Protocol §40.9 at line 2516 explicitly says so and identifies the concrete missing handoff fields. The supplied owner instruction is authorization even if a historical machine fact cannot be decoded. Static byte inspection of committed knowledge `678aca497ef226774b0fc530fa978967.ynv` retains the e7bb328e Blueprint source snapshot explicitly requiring ECDEV and one Chronica graph/authority (doc:BLUEPRINT-V1.md#L1209-L1210); `f098ba2ce70c78ea0cfbef5f0c4271ca.ynv` likewise retains the one-world provider interpretation. Historical `8c776f7bb4717f5e2b0e92f5f4d2a8e0.ynv` says ECDEV excluded under the 2026-10-07 directive; preserve that superseded evidence rather than treating it as current authorization. No standalone current target acceptance record was decoded; cached Chronica main pin is recorded in evidence.json. That readout limitation is not an approval blocker. Concrete independently supplied mapping/custody/Host witnesses remain missing execution inputs.\n\n## Proposed bounded qualification contract\n\nImplement a sibling `ecdev/registry.rs` under the existing `migration::ecdev` module, reusing portable and proposal readers; no new generic framework and no change to the existing pending-only parser contract. Suggested API is read-only `qualify_registry(inputs) -> RegistryQualificationReport`; no install/relock/write/admit side effects. If serialized, give it a distinct explicit format version with closed fields/unknown-key rejection rather than adding positive fields to pending v1.\n\nBounded inputs:\n\n1. RegistryCandidate {exact id, origin, semantic domain, source publication commit/tree, provenance}; parsed null domain remains Missing, never default empty. Explicit empty is distinguished from absent and requires stated semantics.\n2. BoundCapture and BoundPendingProposal with exact caller-bound raw bytes/hash; producer publication membership witness binds every selected captured file/blob and identifies missing complete-history scope. Preserve all original ec1/f1/ECG bytes, IDs, aliases, restrictions and UNKNOWNs.\n3. CanonicalMappingSet keyed by every source node ID plus original namespace/key/kind/locators. Each row has an explicit disposition: preserve-source-only, canonical-reference, or proposed-owned-target. No null row can count as mapped. Canonical rows name namespace/key/derived NodeId/kind/path/actual physical owner and collision disposition; keep source-to-target correspondence without overwriting source identity. OSS candidate dedup remains distinct from donor inclusion/adoption and rights.\n4. Independently supplied TargetCustody witness bound to exact target commit/tree, declaration blobs and actual target keys/paths/IDs, and target-owned mapping acceptance naming the complete mapping digest/source pair. An echoed source accepted=true field is no witness. Established owner intent authorizes preparing this evidence; its absence is a transport/verification task, not an architectural veto.\n5. Pinned current ecosystem graph/declaration/capsule set and their locks, including shared schema/engine expectations. Measure every resulting canonical identity and physical owner against all linked sources; explicit references may share identity, incompatible kind/meaning or multiple owners refuse. Unknown/missing sources keep collision coverage Partial.\n6. Separately supplied actual Host authority context for any proposed effective handoff: exact authoritative target, principal/action/resource/purpose, current policy/grant scope/expiry/revocation, source-to-target mapping digest and accepted runtime admission witness. No source file, registry row, custody proof, or signed-looking boolean supplies this context. Read-only structural qualification can return Qualified while this distinct gate remains NotRun/NotQualified.\n\nOutput has independent gates: registry_structural_validity, semantic_domain_binding, source_custody, mapping_coverage, global_collision_coverage, target_mapping_acceptance, shared_protocol_compatibility, Host_authority_handoff, caller_integration and retirement. Each carries Qualified/Refused/Missing/NotRun, exact input digests, enumerated reasons and measured numerator/denominator; never one aggregate source-selected accepted flag. A structurally valid candidate grants no enrollment/readiness/admission/extinction credit. Only separately authorized installation after all applicable prerequisites may add SHARDS and refresh exact shared bindings; that step still does not prove production callers or retirement.\n\nReuse existing guards: raw SHA256 and byte ceilings, unique_json_keys, portable::parse_bound, proposal::inspect_bound pending coverage equality, source path traversal/regular-file checks and preserved payloads; NodeId::of and graph conflict/linker ownership checks; exact shard_of_origin comparison; protocol Lock/schema/engine checks; existing retained-residence/custody mechanisms only where their actual node kinds/scope apply. Source-observer OWNER bindings apply to registered Test/Assay only and cannot instantiate ECDEV production ownership. Avoid allowing generic scaffold/import to consume .ecdev.\n\nMeaningful required negatives and their distinct reasons: blank/whitespace/foreign origin, URL masquerading as exact canonical origin, source ID/origin mismatch (ORIGIN_BINDING); duplicate exact ID and ASCII-case duplicate origin (REGISTRY_COLLISION); malformed/control/path-like domain and explicit null (DOMAIN_INVALID/MISSING); shared domain with no overlap is a positive control, while overlapping canonical key with incompatible meaning/kind or second owner refuses (CANONICAL_COLLISION). Identical reference identity with one owner is a positive control. Reject source-wide prefix rekeying, changed ec1 IDs/bytes/alias loss (SOURCE_IDENTITY_DRIFT); missing/null/duplicate mapping rows and omitted edges/rights/history payloads (COVERAGE_INCOMPLETE); stale target pin/mapping digest, nonexistent target and source-chosen acceptance flags (TARGET_CUSTODY/ACCEPTANCE_UNBOUND); missing current ecosystem member (COLLISION_COVERAGE_PARTIAL); stale shared locks and mixed readers (PROTOCOL_INCOMPATIBLE); fake/expired/wrong-action Host context (HANDOFF_NOT_QUALIFIED). Preserve historical failures/UNKNOWN values rather than promoting them through registry validity.\n\nTrue current missing inputs are exact target-owned mapping set and acceptance, target custody, semantic-domain qualification with complete collision measurement, shared binding evidence and actual Host handoff context. Building the qualifier, preparing concrete mappings from already accepted ownership, measuring collisions, producing receipts and coordinating changed schema consumers are authorized engineering work. No new blanket permission, new World/UI owner, donor rights, production source/type admission or retirement follows from this report.\n"
+        }
+      ]
+    }
+  ],
+  "protocol_doc": {
+    "key": "central-protocol-section",
+    "repository_full_name": "llgtrn/.Ynventa-",
+    "path": "REPOSITORY-PROTOCOL-V1.md",
+    "ref": "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51",
+    "start_line": 2470,
+    "end_line": 2570,
+    "blob": "56b773b4fce9a4c2da23f4a7f70b6061491f0629",
+    "sections": [
+      {
+        "first": 2518,
+        "last": 2518,
+        "content": "The [ECDEV target-owned identity request](.ynventa/migration/qualification/ecdev-106-0ccbd426/chronica-identity-ack-request.json) is a separate handoff. Exact source manifest/cohort/request artifacts are pinned at `0ccbd426a7bfbb3582f2bf7fce468656bcc9786a`, while historical capture identity stays `db92bf27…`. The manifest contains 106 ordered index/name pairs but 95 distinct names; index identity cannot be discarded. Its 106/2831 partition is data consistency, not independently executed native parity. The source's authority request remains SOURCE_ONLY with ineffective handoff, null canonical acceptance/mapping/owner and no assigned registry domain/key prefix. Chronica canonical ownership is already established by owner intent; no new architectural decision or permission is required. The remaining implementation contract must supply concrete target-owned mappings, custody witnesses, qualified registry/domain bindings and actual Host authority context, preserving original ec1/f1/ECG identities and all unresolved rights/admission/cutover scope. An existing capability-kernels/codara reference cannot instantiate whole-source custody or authority. The parent relays only a bounded SOURCE_ONLY evidence ACK for five matching artifacts and the manifest: no actual 106-case execution, and 828 mappings/custody remain null. Source gate 10/48 FAIL and extinction 0 remain source-reported and were not rerun here."
+      },
+      {
+        "first": 2532,
+        "last": 2544,
+        "content": "## 40.11 Whole-source registry/domain and mapping qualification\n\nThe [complete registry/mapping census](.ynventa/migration/qualification/ecdev-registry-69b0b986/README.md) retains 828 source nodes and 1122 edges: 408 donor-capabilities, 62 capabilities, 230 proofs, 68 donors, 47 technologies, 12 declared physical nodes and one source repository root. All 828 proposed targets and target custody remain null. Its 734 captured files/payloads, 1861 separate f1 facts and 2319 uncaptured committed inputs remain separate lanes. Four bounded price references and 68 source hash candidates are not accepted mappings or semantic equivalence. Full UI/assets/runtime/history closure remains unestablished.\n\n`SHARDS.domain` is a legacy-import proposal prefix, not an identity namespace or authority partition. Shared `commerce` is a structurally representable engineering candidate for source ID `ecdev`, origin `llgtrn/ECDEV`; it is not installed. Domain uniqueness is not an existing registry requirement. A blanket commerce/ecdev prefix transformation would alter original keys and cannot qualify source identity. Explicit target mappings, target-owned membership/custody and all-source collision coverage are needed before a registry row can qualify; null source fields are not accepted by the pending-v1 reader. The new [direct registry tests](apps/cli/tests/ecdev_registry_qualification.rs) exercise this exact 828-node cohort, repaired-hash positive/rights/history/identity claims and 734-file CLI refusal/lock preservation. They do not define or accept a new positive wire format.\n\nChronica ownership is already established; no new architectural permission is required. Concrete target joins remain missing: current identity/authority, resource ownership and Holding, lease/current-authority state, qualified caller/selector/payload/effect and outcome context. The proposed 106-case mapping supplies none of those ECDEV-specific Host bindings. Existing source claims/history/rights remain preserved and unpromoted. The registry remains seven entries and no complete eight-source compatibility, admission or retirement is claimed.\n\n## 40.12 Installed read-only consumer and unresolved census-root correspondence\n\nThe exact [e27c0238 installation qualification](.ynventa/migration/qualification/ecdev-installed-e27c0238/README.md) binds ECDEV’s committed bounded ACK at `60b43d97a0013fea9497ae91215027ba1a9de43e` to the full 102414-byte patch SHA256 `2e4e4baa84cbe4b28c8763bc348c7e6f5dabdf569eac1965ffc4ee1391cb528e`. Actual main compiled schema remains `sha256:999fe2c05ff287ee61f7a5488493dc0a61bad969467b86f67781a471014b5d01`; engine is `sha256:e27c0238b617939563ef24b0a24058ebe406b84850fecfff08617bf636f316f7`, protocol/epoch 1. All six installed after-files match the reviewed candidate. Actual-main libraries, artifact/registry opt-ins, ECDEV migration integration, Clippy, formatting and compiled lock/snapshot checks pass. This installs inspection code and does not enroll the ECDEV source or supply runtime rights.\n\nThe source’s committed Web verification is separately scoped: actual public source function on synthetic offline inputs, 99 Web-shaped qualified cases plus 20 boundaries/2122 assertions, 34 Python tests and 31 source conformance checks. Seven API-qualified cases are excluded from that Web subset. These are source-reported executions, not root reruns, a deployed target caller or admission. The source’s 10/48 gate still fails; canonical verified-extinction total remains unknown and verified-extinction delta is zero. The original captured db92 identity, all null mappings/custody and SOURCE_ONLY guard remain unchanged."
+      }
+    ],
+    "full_blob_hash_independently_recomputed": false
+  }
+}

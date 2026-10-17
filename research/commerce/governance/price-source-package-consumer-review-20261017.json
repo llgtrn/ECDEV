@@ -1,0 +1,144 @@
+{
+  "format": "ecdev-portable-source-package-and-existing-custody-consumer-independent-code-review-v1",
+  "observed_at_utc": "2026-10-17 10:59:31 UTC",
+  "reviewer": "sol_current_target_enrollment",
+  "decision": "PASS_WITH_NO_BLOCKING_FINDING_IN_BOUNDED_SOURCE_ONLY_SCOPE",
+  "findings": [],
+  "frozen_inputs": {
+    "price_source_package.py": {
+      "bytes": 25508,
+      "sha256": "a6ff5b3486d3243aaf9fe7beb4b568d5535062fabb6369cd0cecbaf575a943e3"
+    },
+    "test_price_source_package.py": {
+      "bytes": 22652,
+      "sha256": "d54f8649a9f15136dc8246370756306bbd565a830d5d51be578533e2d39f7ef9"
+    },
+    "price_custody.py": {
+      "sha256": "029bad061cddca583397f558fc070a64611c186d6bea0ea521fa4a65253d2cd1"
+    },
+    "test_price_custody_package.py": {
+      "sha256": "4c004c9ca44851a628a33dca2f889f93fb81a2fcdd37afa5bd16cc027873a2fa"
+    },
+    "package": {
+      "path": "/workspace/scratch/sol-portable-source-package-20261017/selected-source-package.json",
+      "bytes": 14277535,
+      "sha256": "be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd",
+      "source_commit": "c973d76bda8476142dd64116b60877942ccb24d5",
+      "source_tree": "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+      "rights_sha256": "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410"
+    }
+  },
+  "reviewed_behavior": [
+    {
+      "file": ".ecdev/qualification/price_source_package.py",
+      "lines": [
+        55,
+        125
+      ],
+      "result": "PASS",
+      "reason": "Independent lowercase SHA256/commit/tree pins; exact dict fields; bool/string/float rejected as byte counts; duplicate decoded JSON keys, nonfinite numbers, JSON depth/node/byte limits; safe UTF8 path components and no traversal/backslash/control/drive paths."
+    },
+    {
+      "file": ".ecdev/qualification/price_source_package.py",
+      "lines": [
+        133,
+        218
+      ],
+      "result": "PASS",
+      "reason": "Raw commit/tree/blob object SHA1 recomputed with Git object header; exact lowercase hex/byte length; raw trees parse NUL+20byte OID records, allowed modes, unique names and canonical Git directory sorting; traversal permits directory ancestors and regular blob leaf only; explicit recorded mode matches anchored tree."
+    },
+    {
+      "file": ".ecdev/qualification/price_source_package.py",
+      "lines": [
+        221,
+        300
+      ],
+      "result": "PASS",
+      "reason": "Entire package SHA pinned before parse; canonical JSON bytes and exact source authority status; independently anchored commit->tree; exact83 selected materials+3fixed evidence pins; per-file/aggregate limits; full path/mode/blob ancestry through19trees and exact used tree set; fixed evidence binds original306/503/513/723 and original prerequisites; parser returns original3 evidence bytes only."
+    },
+    {
+      "file": ".ecdev/qualification/price_source_package.py",
+      "lines": [
+        345,
+        462
+      ],
+      "result": "PASS",
+      "reason": "Exporter verifies selected raw bytes and user executable mode against published tree, then rereads all86 paths/byte+mode before completion. Git reader disables replacements/lazy fetch/network/hooks/global config/fsmonitor and reads raw commit/tree objects only. Export not executed by this reviewer; code and retained writer tests reviewed."
+    },
+    {
+      "file": ".ecdev/qualification/price_custody.py",
+      "lines": [
+        372,
+        424
+      ],
+      "result": "PASS",
+      "reason": "Existing source custody reader invokes a single complete package verification; consumes exact original rights/witness/prerequisite raw bytes, checks original four-node indices/status, exact6 obligation keys with NULL evidence/NOT_RUN validator, retains99vectors and all legacy source version separation; returns CUTOVER_BLOCKED with0accepted/adopted/mapped/closed and no authority/custody/rights/enrollment."
+    },
+    {
+      "file": ".ecdev/qualification/price_custody.py",
+      "lines": [
+        427,
+        485
+      ],
+      "result": "PASS",
+      "reason": "Existing CLI receives a concrete --inspect-source-package route; all4 independent package/source/tree/rights pins required; legacy witness/report/readiness flags cannot be mixed; package pins without package mode refuse; all original legacy modes continue to require both independent report+readiness pins before any branch; existing witness/check-cutover pair rules preserved."
+    },
+    {
+      "files": [
+        ".ecdev/qualification/test_price_source_package.py",
+        ".ecdev/qualification/test_price_custody_package.py"
+      ],
+      "result": "PASS_REVIEWED_NOT_RERUN",
+      "reason": "22 new package tests cover current83/raw86 ancestry, notice/BOM preservation, repaired-hash controls, path/mode/types/budgets, source export byte/mode drift/recheck, noGit disjoint inspector, output refusal and pins.9 bridge tests cover real existing reader/CLI, independent pins, all6OPEN, source version/99vector preservation, no source regeneration and legacy pin/mixed flag refusals."
+    }
+  ],
+  "independent_supporting_execution": {
+    "scope": "Custom source-only offline parser probes, not full tests and not target/runtime/native harness.",
+    "script": "/workspace/scratch/sol-package-independent-probes-20261017.py",
+    "results": "/workspace/scratch/sol-package-independent-probes-20261017.json",
+    "raw_membership_reconstruction": {
+      "method": "Independent stdlib parser defined before importing reviewed implementation. SHA1(header+raw) for commit/19trees/86blobs; traverse every selected path; SHA256+raw lengths; exact83 published material metadata; BOM notice preserved.",
+      "members": 86,
+      "trees": 19,
+      "materials": 83,
+      "material_bytes": 4147289,
+      "status": "PASS"
+    },
+    "bridge_api_probe": {
+      "status": "PASS",
+      "checks": "Original99 vectors and6NULL obligations remain; mocked package.git_object/subprocess.run/custody.immutable.git/build_witness/candidate.regular raise on use. Baseline returned CUTOVER_BLOCKED without invoking any mocked execution/source checkout path."
+    },
+    "rehashed_outer_package_mutations": {
+      "total": 7,
+      "refused": 7,
+      "cases": [
+        "missing independently anchored root tree",
+        "substituted regular executable leaf mode",
+        "bool replacing0closed obligations",
+        "sorted valid but dangling extra tree",
+        "string replacing material byte count",
+        "changed evidence with corrected inner and outer hashes",
+        "escaped duplicate JSON key with recomputed outer digest"
+      ]
+    },
+    "frozen_source_and_package_unchanged_before_after": true
+  },
+  "source_consumer_adoption": {
+    "actual": "Existing price_custody.py::inspect_source_package API and existing CLI --inspect-source-package consume this exact portable package today within source-owned read-only scope.",
+    "exact_material_boundary": "83 selected materials totaling4147289 bytes +3original evidence documents +raw commit/19ancestor trees proving86selected paths atc973d76b. No packaged material is executed.",
+    "central_adoption": "NOT_IMPLEMENTED; no central package/raw-tree-proof reader. Current central local-Git qualifiers cannot consume package bytes or its proof JSON.",
+    "not_present": "This package does NOT include the complete3287998-byte capture,3861270-byte proposal,734capture payload corpus, bounded mapping/owner/case-map/manifest input bundle. It cannot feed existing central bounded::Inputs.",
+    "correction_to_prior_reference_report": "Prior report existing_consumer_adoption.new_package_value described a theoretical package exposing complete central input files. That is not this concrete package and must not be read as a delivery/adoption claim. Existing source custody reader adoption is the concrete result."
+  },
+  "remaining_limits": [
+    "All6 production obligations remainOPEN; exclusive execution custody/real Host authority/current production rights/native or production execution/full8-source enrollment/real caller cutover remain unproved.",
+    "Git membership concerns only83selectedmaterials+3evidence docs under independently pinned currentcommit/tree; original historical witness content is preserved and not regenerated or newly independently executed.",
+    "Standalone package inspector needs only stdlib and pins; existing custody bridge still imports its maintained local source reader modules but reads no source checkout data or Git during package inspection.",
+    "No maintained-source edits/commits, full test suite, target tests/runtime, Chronica native harness, Fi-game source qualification, Esellios operation, other repository clone, credential creation, spend or local browser by this reviewer."
+  ],
+  "writer_reported_validation": {
+    "package": "22PASS +RuffPASS at10:57:02UTC, frozen sha-summary.json inspected",
+    "consumer": "9newtestsPASS+RuffPASS reported by writer at freeze; legacy13 ongoing at review start; parent owns final aggregate execution",
+    "independently_rerun_by_reviewer": false
+  }
+}
