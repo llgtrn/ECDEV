@@ -1,0 +1,1163 @@
+{
+  "format": "ecdev-same-family-native-http-verification-v1",
+  "observed_at_utc": "2026-10-17T00:04:42.810331+00:00",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "4ee5f6dcec280c25e55f88eba97ea76d01cee1e1",
+  "qualified_code_commit": "499a307495340c815425983aa9fccef367c0d888",
+  "qualified_code_tree": "6ae60dc58fddffade7035efd9caa9101be89dd63",
+  "scope": "BOUNDED_EXISTING_NATIVE_CALLER_EXTENSION; SAME_IP_FAMILY_PINNED_ADDRESSES; NO_DONOR_CODE_COPIED",
+  "execution": {
+    "shell": "GNU bash 5.2.37",
+    "source_root": "/workspace/ECDEV",
+    "origin": "https://github.com/llgtrn/ECDEV.git",
+    "branch": "main",
+    "exclusive_writable_source": "llgtrn/ECDEV",
+    "saved_engine_head": "d66313834c6d584b259650033bcf72f16c4e34f7",
+    "saved_engine_tracked_source_clean": true,
+    "qualified_engine_reference_read_only": "/tmp/ecdev-engine-217fd75-reference",
+    "disposable_builds_only": true,
+    "paid_provider_or_device_operations": "NOT_RUN",
+    "new_credentials_created": false,
+    "active_writers": 1,
+    "active_reviewers": 0
+  },
+  "caller": {
+    "entrypoint": "adapter/web/src/lib.rs::Web::request",
+    "production_change": "Eligibility takes the exact admitted address slice instead of a count; any nonempty wholly IPv4 or wholly IPv6 slice may use existing native HTTP. No connector algorithm changed.",
+    "unchanged_guards": [
+      "Resolve once; reject empty or any nonpublic address before politeness gate and dispatch",
+      "Preserve admitted order and addresses; no second DNS or environment proxy",
+      "Direct credentialless HTTP only; unchanged validator whitespace",
+      "One TCP success ends address fallback; no backend fallback after ambiguous send/read effects",
+      "20s absolute deadline per allowed attempt retained through address fallback, response head and body; connect-only retry remains at most once",
+      "Existing status/control-head handling, 100 fields, 4MiB body bound, encoding and native strict framing checks"
+    ],
+    "retained_reqwest": [
+      "HTTPS",
+      "all configured proxies and trust configuration",
+      "mixed IPv4/IPv6 address-family racing",
+      "credential-bearing URLs",
+      "whitespace-sensitive validators"
+    ],
+    "timing_scope": "DNS and politeness precede the backend timer; at most one known-connect retry starts its own attempt budget. No DNS/gate/retry-total20s guarantee.",
+    "no_replay_proof": "Each backend sends exactly one GET when the first address reads the full request then closes; second address receives zero TCP connections.",
+    "limitations": [
+      "IPv6 differential uses an actual ::1 listener and duplicate endpoints; distinct-IPv6 refusal-to-success NOT_RUN",
+      "Blackholed-connect timing, longer address lists and all-address failure/retry sequence NOT_RUN",
+      "Universal retry/error parity remains unproven: native retains last TCP error, hyper-util retains first; timeout/connect classifications differ",
+      "Inherited stricter native CRLF/framing limits intentionally refuse some hyper-accepted messages",
+      "No injected public-DNS production dispatch integration; direct lower-boundary loopback tests are paired with the unchanged production public-address guard"
+    ]
+  },
+  "validation": {
+    "native_http_module": {
+      "passed": 14,
+      "failed": 0,
+      "ignored": 0,
+      "filtered": 100,
+      "compiler": "1.89.0",
+      "command": "cargo +1.89.0 test -p ecdev-web --lib native_http::tests --offline",
+      "evidence": "Explicit Sol-selected writer direct tool output; changed declared cases also have independently executed content-bound ECG records"
+    },
+    "python_qualification": {
+      "passed": 94,
+      "failed": 0
+    },
+    "current_mapping": {
+      "passed": 4,
+      "failed": 0
+    },
+    "current_mapping_cli": {
+      "passed": 1,
+      "failed": 0
+    },
+    "retained_producer_pairs": {
+      "passed": 3,
+      "failed": 0
+    },
+    "conformance": {
+      "passed": 31,
+      "failed": 0
+    },
+    "product_clippy": "PASS; ecdev-web all targets, warnings denied, Rust1.89.0",
+    "ruff": "PASS; changed qualification Python files",
+    "format": {
+      "native_http": "PASS; Rust1.89.0, edition2024",
+      "governor": "PASS; Rust1.87.0",
+      "workspace": "FAIL_BASELINE_UNCHANGED; two formatting issues in lib.rs (module order and retained builder chain); current diagnostics equal exact HEAD baseline diagnostics"
+    },
+    "proof_refresh": {
+      "jobs_passed": 77,
+      "jobs_failed": 0,
+      "new_unique_ECG_records": 77,
+      "subjects": 6,
+      "pending_declared_proofs_after_refresh": 0,
+      "method": "Standard evidence::CargoRunner, named passing-test output required, current proof and subject digest rechecked before each Store::write; prior records retained",
+      "runner_source": {
+        "path": "/workspace/scratch/ecdev-same-family-proof-helper-20261016/src/main.rs",
+        "sha256": "09f240311ff33887e68844e40e6c9d282cc8409e8f183616a199663415c6ca64",
+        "bytes": 1944
+      }
+    },
+    "full_workspace455_suite": "NOT_RERUN; prior baseline retained at bccfa07eb4a5dff1b8ef517373f8ac97b218436b; scoped caller, affected bound proofs and current reader checks executed",
+    "logs": {
+      "python": {
+        "path": "/workspace/scratch/ecdev-same-family-python-final-20261016.log",
+        "sha256": "cdb7179ca32817dc1f3ae92bde402f5a3be933af22727c0bba3519e5c389b26f",
+        "bytes": 194
+      },
+      "product_clippy": {
+        "path": "/workspace/scratch/ecdev-same-family-clippy-20261016.log",
+        "sha256": "74414879197fcf4fec17423570893231c89d63235087b47916c6ed1c45ef3e31",
+        "bytes": 133
+      },
+      "current_mapping": {
+        "path": "/workspace/scratch/ecdev-same-family-current-mapping-final-20261017.log",
+        "sha256": "c8873ae847d53abca559b05a411b8923b1c0308d5de750c81817c182e7eb50a2",
+        "bytes": 1038
+      },
+      "retained_producer_pairs": {
+        "path": "/workspace/scratch/ecdev-same-family-producer-pairs-20261016.log",
+        "sha256": "ac95de3c88d23238fc50fb33d78ac16c020851d623a7c46b00960e6c0596d2b4",
+        "bytes": 640
+      },
+      "conformance": {
+        "path": "/workspace/scratch/ecdev-same-family-conformance-20261017.json",
+        "sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+        "bytes": 10972
+      },
+      "metrics": {
+        "path": "/workspace/scratch/ecdev-same-family-metrics-20261017.json",
+        "sha256": "e9236084c25e0141881c629415c679410c47519a8a6c12ede3c85dc693a7d5a9",
+        "bytes": 3140
+      },
+      "proof_refresh": {
+        "path": "/workspace/scratch/ecdev-same-family-proof-refresh-20261016.jsonl",
+        "sha256": "74115b608ef08622329d2e720c74856c47de959a7ffe795c2c5b91a66793a59c",
+        "bytes": 30978
+      },
+      "final_proof_plan": {
+        "path": "/workspace/scratch/ecdev-same-family-final-proof-plan-20261017.json",
+        "sha256": "e71bfeb5b3b0be96e6d725d1595f4a5669e31053607a96ec80e99593dc22758c",
+        "bytes": 39
+      },
+      "governor_format": {
+        "path": "/workspace/scratch/ecdev-same-family-governor-format-20261016.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "baseline_product_format": {
+        "path": "/workspace/scratch/ecdev-same-family-baseline-format-20261016.log",
+        "sha256": "e6abac287594f982b2a46081b8a50c317fb56ea58337af5f024b1b78d0202345",
+        "bytes": 1050
+      },
+      "current_product_format": {
+        "path": "/workspace/scratch/ecdev-same-family-current-format-20261016.log",
+        "sha256": "34a3ce137211c194e6f46ceb2d04a2c4cffe592ea4769e4728a0c328f30b1dd0",
+        "bytes": 984
+      }
+    }
+  },
+  "qualification": {
+    "status": "PASS",
+    "base_custody_checks": 62,
+    "candidate_checks": 8,
+    "source_commit": "499a307495340c815425983aa9fccef367c0d888",
+    "source_tree": "6ae60dc58fddffade7035efd9caa9101be89dd63",
+    "complete_selected_committed_inputs": 3139,
+    "all_input_blobs_modes_and_worktree_rechecked_after_execution": true,
+    "engine_contract": {
+      "format": "ecdev-central-reader-contract-v1",
+      "engine_repository": "llgtrn/.Ynventa-",
+      "engine_commit": "217fd75c53795d31fa0a2a989a04ca49bdacfa80",
+      "engine_tree": "5eb8144ee3242bded7a9de46024e015693dceda2",
+      "protocol_version": 1,
+      "compatibility_epoch": 1,
+      "schema_digest": "sha256:4e3b2d05c3970ed4fa2a06b5a2430a5289301cf1e455789c3f2f88ed0cff0abc",
+      "engine_digest": "sha256:7fc475276e0d24d42a452ddd8370df79e53129863bc84ed5c21082cf65d6915d",
+      "portable_format": "ecdev-source-capture-v1",
+      "fixture_sha256": "c751083d31323cf190a687452233277459d84967a6d5daf04bffb830f03c654d",
+      "qualification_scope": "READ_ONLY_SOURCE_CUSTODY_INTEROPERABILITY",
+      "canonical_registry_binding": "PENDING",
+      "source_protocol_lock": "NOT_INSTALLED_PENDING_CANONICAL_SOURCE_CONTRACT",
+      "rights_admission_and_full_v1_acceptance": "UNKNOWN",
+      "assay_receipt_v2": "SEPARATE_OUTGOING_DEPENDENCY_TRANSITION; NOT_AN_ECG_OR_ACCEPTANCE_UPGRADE",
+      "references": [
+        "REPOSITORY-PROTOCOL-V1.md#401-ecdev-portable-source-intake",
+        "REPOSITORY-PROTOCOL-V1.md#402-outgoing-assay-transition"
+      ]
+    },
+    "engine_input_binding": {
+      "tree": "5eb8144ee3242bded7a9de46024e015693dceda2",
+      "files": 6633,
+      "bytes": 159210496,
+      "status": "ALL_PINNED_BLOBS_AND_EXECUTABLE_MODES_MATCH"
+    },
+    "base_report": {
+      "path": "/workspace/scratch/ecdev-same-family-source8-qualification-20261017/report.json",
+      "sha256": "35df75c06655f2931fd2c1dd657f5d6ac73abdb7ed9f5d40bc4704ab76186957",
+      "bytes": 974849
+    },
+    "wrapped_report": {
+      "path": "/workspace/scratch/ecdev-same-family-source8-qualification-20261017/source-eight-qualification-report-v1.json",
+      "sha256": "f7120c4b4a67199e15ae7eb9223c3a695ff6c6ef6a4498ec7a947ecb9436b9ce",
+      "bytes": 1942457
+    },
+    "fresh": {
+      "sha256": "sha256:3d0f10ea3b2a3d985c77da8887c63d256552c096e5d79dfd5a668ea96f22f33a",
+      "bytes": 3367871,
+      "observed_head": "499a307495340c815425983aa9fccef367c0d888",
+      "producer_schema_claim": "sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140",
+      "files": 811,
+      "raw_bytes": 1190428,
+      "graph_nodes": 834,
+      "graph_edges": 1128,
+      "declared_nodes": 12,
+      "declared_donors": 68,
+      "declared_capabilities": 408,
+      "historical_donors": 55,
+      "historical_capabilities": 245,
+      "capability_floor_recorded": true,
+      "facts": 1861,
+      "active_evidence_records": 803,
+      "retired_evidence_records": 8,
+      "adoption_variants": {
+        "NotAdopted": 334,
+        "ReliedOn": 73,
+        "Unresolved": 1
+      },
+      "knowledge_variants": {
+        "Absorbed": 32,
+        "AlgorithmCandidate": 4,
+        "BenchmarkCandidate": 30,
+        "Divergent": 68,
+        "IndependentNative": 110,
+        "NoResearchValue": 39,
+        "ReferenceOnly": 85,
+        "StudyCandidate": 40
+      },
+      "registry_binding": "PENDING",
+      "proof_freshness": "NOT_REVERIFIED"
+    },
+    "candidate_report": {
+      "format": "ecdev-source-eight-candidate-v1",
+      "status": "PASS",
+      "source_id": "ecdev",
+      "source_repository": "llgtrn/ECDEV",
+      "scope": "CURRENT_SOURCE_MAPPING_AND_CUSTODY_CANDIDATE; NO_ENROLLMENT_OR_CAPABILITY_ADMISSION",
+      "capture_sha256": "sha256:3d0f10ea3b2a3d985c77da8887c63d256552c096e5d79dfd5a668ea96f22f33a",
+      "mapping_sha256": "sha256:b6270a56c1188c5fdbf855f205425ef185dcb16df7b402123a7cd84b99426544",
+      "inspection_sha256": "sha256:233a68a06656dfc18e42a5a8e8af3a11c1d5645676fb03653a50641ee76197f5",
+      "source_nodes": 834,
+      "payloads": 811,
+      "facts": 1861,
+      "rights_claims": 68,
+      "canonical_enrollment": "BLOCKED",
+      "registry_binding": "PENDING",
+      "registered_sources": 7,
+      "source_registered": false,
+      "source_lock_installed": false,
+      "current_rights_authorization": null,
+      "target_mapping": null,
+      "target_custody": null,
+      "proposed_target": null,
+      "tests_passed": 8,
+      "tests_failed": 0,
+      "checks": [
+        {
+          "name": "caller_bound_current_mapping_roundtrip",
+          "pass": true
+        },
+        {
+          "name": "all_source_node_ids_and_metadata_preserved",
+          "pass": true
+        },
+        {
+          "name": "all_four_payload_lanes_match_central_bytes",
+          "pass": true
+        },
+        {
+          "name": "all_rights_and_foreign_semantics_preserved",
+          "pass": true
+        },
+        {
+          "name": "current_global_hash_candidates_match_published_rule",
+          "pass": true
+        },
+        {
+          "name": "stale_capture_pin_refused",
+          "pass": true
+        },
+        {
+          "name": "target_self_grant_refused",
+          "pass": true
+        },
+        {
+          "name": "matching_protocol_lock_does_not_enroll_source",
+          "pass": true
+        }
+      ],
+      "ordinary_assessment_refusal": "ECDEV migration preflight (read-only; no canonical mapping or writes)\nSource claims and recorded verdicts are retained, not reverified or admitted.\nCounts describe supplied source records; repository-history completeness is not attested.\nsource repository: ecdev\nsource files: 811; nodes: 12; donors: 68; historical donors: 55\ndeclared capabilities: 408; historical capabilities: 245; knowledge denominator: 408\nknowledge facts: 1861; evidence records: 803; retired evidence records: 8\nBLOCKED: canonical identity/enrollment mapping, separate adoption/knowledge/absorbs semantics, ECG history/evidence verification and rights/claim mapping require explicit lossless contracts; no SHARDS, prefix, conformance or lock change is implied\n",
+      "negative_matching_lock_fixture_refusal": "ECDEV migration preflight (read-only; no canonical mapping or writes)\nSource claims and recorded verdicts are retained, not reverified or admitted.\nCounts describe supplied source records; repository-history completeness is not attested.\nsource repository: ecdev\nsource files: 811; nodes: 12; donors: 68; historical donors: 55\ndeclared capabilities: 408; historical capabilities: 245; knowledge denominator: 408\nknowledge facts: 1861; evidence records: 803; retired evidence records: 8\nBLOCKED: canonical identity/enrollment mapping, separate adoption/knowledge/absorbs semantics, ECG history/evidence verification and rights/claim mapping require explicit lossless contracts; no SHARDS, prefix, conformance or lock change is implied\n",
+      "current_engine_lock_diagnostic_only": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:4e3b2d05c3970ed4fa2a06b5a2430a5289301cf1e455789c3f2f88ed0cff0abc\nengine_digest sha256:7fc475276e0d24d42a452ddd8370df79e53129863bc84ed5c21082cf65d6915d\ncompatibility_epoch 1\n",
+      "candidate_registry_expectation": {
+        "current_registered_source_ids": [
+          "ynventa",
+          "chronica",
+          "atlas-studio",
+          "universal-connector",
+          "esellios",
+          "fi-game",
+          "mechatron"
+        ],
+        "required_closed_source_ids": [
+          "atlas-studio",
+          "chronica",
+          "ecdev",
+          "esellios",
+          "fi-game",
+          "mechatron",
+          "universal-connector",
+          "ynventa"
+        ],
+        "source_id": "ecdev",
+        "source_repository": "llgtrn/ECDEV",
+        "canonical_source_owner": null,
+        "registry_entry_accepted": false,
+        "new_common_lock": null
+      },
+      "source_grammar": "Portable ecdev-source-capture-v1 and caller-bound mapping accepted; canonical declaration/identity/codec adapter absent",
+      "migration_readiness": "All four original lanes retained; commit membership independently checked by runner; owner and target bindings unresolved",
+      "actual_native_integration": "Separate source caller proofs; not reverified or admitted by this custody candidate",
+      "source_retirement": "Not performed; executable .ecdev authority and source data remain in place",
+      "required_engine_changes": [
+        "Explicit lossless ECDEV source admission adapter and qualified authority handoff; preserve ec1/f1/ECG as original source identities and records",
+        "Authorized target/owner mappings and rights distinct from source registration and bounded capability admission",
+        "Eighth canonical registry entry plus a new verified schema/engine/protocol/epoch lock contract for all eight consumers",
+        "Ordinary assessment and capsule production for admitted source; exact eight-source identity and lock closure, not found-checkout success",
+        "Protective source-only refusal remains until the qualified handoff is accepted; portable Pending must remain distinct from enrollment"
+      ]
+    },
+    "binding_trust": "LOCAL_IMMUTABLE_GIT_OBJECTS_AND_TRUSTED_FILESYSTEM; NOT_AUTHENTICATED_EXECUTION"
+  },
+  "published_current_pair": {
+    "committed-source-capture-v1.json": {
+      "path": "research/commerce/governance/source-eight-capture-499a3074-v1.json",
+      "sha256": "3d0f10ea3b2a3d985c77da8887c63d256552c096e5d79dfd5a668ea96f22f33a",
+      "bytes": 3367871
+    },
+    "source-eight-mapping-candidate-v1.json": {
+      "path": "research/commerce/governance/source-eight-mapping-499a3074-v1.json",
+      "sha256": "b6270a56c1188c5fdbf855f205425ef185dcb16df7b402123a7cd84b99426544",
+      "bytes": 3913736
+    },
+    "source-eight-mapping-inspection-v1.json": {
+      "path": "research/commerce/governance/source-eight-mapping-499a3074-inspection-v1.json",
+      "sha256": "233a68a06656dfc18e42a5a8e8af3a11c1d5645676fb03653a50641ee76197f5",
+      "bytes": 581
+    },
+    "source-eight-git-membership-v1.json": {
+      "path": "research/commerce/governance/source-eight-membership-499a3074-v1.json",
+      "sha256": "b9cb4a3d243d41b8fb968c764d394c9c422ea788c065563541d89c221e1f4dc3",
+      "bytes": 870878
+    }
+  },
+  "source_preservation": {
+    "prior_payload_files": 734,
+    "current_payload_files": 811,
+    "changed_prior_payloads": [
+      ".ecdev/declared/technologies.rs"
+    ],
+    "all_prior_history_evidence_knowledge_bytes_unchanged": true,
+    "prior_graph_nodes": 828,
+    "current_graph_nodes": 834,
+    "all_prior_node_ids_retained": true,
+    "changed_prior_node_metadata_ids": [
+      "ec1:14911fdcd599f9bf940a71b198624206"
+    ],
+    "new_nodes": [
+      {
+        "id": "ec1:4e2e3291a38e5424966c052a9072e681",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_origin_close_never_replays_or_connects_second_address",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_origin_close_never_replays_or_connects_second_address",
+        "name": "adapter/web/src/native_http.rs::same_family_origin_close_never_replays_or_connects_second_address",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      {
+        "id": "ec1:7393a5e069891120277166d30aba6e02",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_actual_ipv6_pinned_transport_matches_retained",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_actual_ipv6_pinned_transport_matches_retained",
+        "name": "adapter/web/src/native_http.rs::same_family_actual_ipv6_pinned_transport_matches_retained",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      {
+        "id": "ec1:b30d8a87cc947685da0e5bda869b8a95",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_fallback_holding_head_does_not_renew_body_deadline",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_fallback_holding_head_does_not_renew_body_deadline",
+        "name": "adapter/web/src/native_http.rs::same_family_fallback_holding_head_does_not_renew_body_deadline",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      {
+        "id": "ec1:b8430549d9fb08de7e5bd1dabe217acd",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_refusal_then_success_matches_retained_pinned_transport",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_refusal_then_success_matches_retained_pinned_transport",
+        "name": "adapter/web/src/native_http.rs::same_family_refusal_then_success_matches_retained_pinned_transport",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      {
+        "id": "ec1:eda0c908b2a6d4fd04f81ef5caf10399",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_first_success_never_connects_second_address",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_first_success_never_connects_second_address",
+        "name": "adapter/web/src/native_http.rs::same_family_first_success_never_connects_second_address",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      },
+      {
+        "id": "ec1:f1279a3b72e54d32cf614b4e3e077d26",
+        "namespace": "ecdev",
+        "semantic_key": "proof/ecdev/adapter/web/src/native_http.rs::same_family_fallback_keeps_one_absolute_deadline_for_head_and_body",
+        "kind": "PROOF",
+        "concept": "EVIDENCE",
+        "uri": "ecdev://graph/ecdev/proof/ecdev/adapter/web/src/native_http/rs::same_family_fallback_keeps_one_absolute_deadline_for_head_and_body",
+        "name": "adapter/web/src/native_http.rs::same_family_fallback_keeps_one_absolute_deadline_for_head_and_body",
+        "repository": "ecdev",
+        "canonical_path": "",
+        "path": "",
+        "capabilities": [],
+        "inputs": [],
+        "outputs": [],
+        "lifecycle": "ACTIVE",
+        "native_status": "ABSTRACT",
+        "evidence": [],
+        "donor_lineage": []
+      }
+    ],
+    "prior_graph_edges": 1122,
+    "current_graph_edges": 1128,
+    "all_prior_edges_retained": true,
+    "new_proof_records": [
+      {
+        "path": ".ecdev/evidence/03fe82932c4a8b1dfa475face2dc4393.ecg",
+        "sha256": "03fe82932c4a8b1dfa475face2dc43932310fd2a23e0d4fb4d4a0582e91caca4",
+        "bytes": 415
+      },
+      {
+        "path": ".ecdev/evidence/06f474c427947c695e32563d8f31d350.ecg",
+        "sha256": "06f474c427947c695e32563d8f31d3503c90181caf72dec804b2cb5a56244b78",
+        "bytes": 312
+      },
+      {
+        "path": ".ecdev/evidence/13e805949b90e1030647c3ad8591c572.ecg",
+        "sha256": "13e805949b90e1030647c3ad8591c572f5af448dc5623ab14e831819faaa2c12",
+        "bytes": 399
+      },
+      {
+        "path": ".ecdev/evidence/142f79ec4f4322f75ea7a10dfd8f7a8a.ecg",
+        "sha256": "142f79ec4f4322f75ea7a10dfd8f7a8a2c0baa3505892d29a6ab7acc43cbe3aa",
+        "bytes": 385
+      },
+      {
+        "path": ".ecdev/evidence/152f2ef6c52b42478ec8fc3ee7ece264.ecg",
+        "sha256": "152f2ef6c52b42478ec8fc3ee7ece264cd5c864e293a4ebec77754527b54de8d",
+        "bytes": 429
+      },
+      {
+        "path": ".ecdev/evidence/1d3cfeef6940cea19ccba74f71182f2e.ecg",
+        "sha256": "1d3cfeef6940cea19ccba74f71182f2e0fca1aaa840695ec07f9f5db8be368ae",
+        "bytes": 362
+      },
+      {
+        "path": ".ecdev/evidence/1d468de962aaaaa305c6d91a70100019.ecg",
+        "sha256": "1d468de962aaaaa305c6d91a701000191e8b5b9d8d48a70be2fb6829f2985981",
+        "bytes": 362
+      },
+      {
+        "path": ".ecdev/evidence/1d55338189a09bdc0ea5dbb23f33ac33.ecg",
+        "sha256": "1d55338189a09bdc0ea5dbb23f33ac3340583a2e1a299f902807e5bb6684ae84",
+        "bytes": 325
+      },
+      {
+        "path": ".ecdev/evidence/2339d52b63de997f28c4c04b7aa1bf0f.ecg",
+        "sha256": "2339d52b63de997f28c4c04b7aa1bf0f8e4759e10f9fb1a324ceead896bfa963",
+        "bytes": 368
+      },
+      {
+        "path": ".ecdev/evidence/256e302c11aa461a28b7b95ec493237f.ecg",
+        "sha256": "256e302c11aa461a28b7b95ec493237f5f8481c364d53d1fa1b21ab076ec900e",
+        "bytes": 424
+      },
+      {
+        "path": ".ecdev/evidence/2d74adcbf62e76a4bcf8256284ea7170.ecg",
+        "sha256": "2d74adcbf62e76a4bcf8256284ea7170b61e9945a6bf3a9414bdad70abc71ec2",
+        "bytes": 333
+      },
+      {
+        "path": ".ecdev/evidence/2eeb0c623d46e9c666aa40fc619d6e0c.ecg",
+        "sha256": "2eeb0c623d46e9c666aa40fc619d6e0c1ebc6d77ae6f409abf1b7cf3df690c70",
+        "bytes": 404
+      },
+      {
+        "path": ".ecdev/evidence/2f9e894a7a7a540213701a2d055a7018.ecg",
+        "sha256": "2f9e894a7a7a540213701a2d055a70182084094710f92bbfed6354ed58e2cfaa",
+        "bytes": 369
+      },
+      {
+        "path": ".ecdev/evidence/30d5fef672d9a7ca254c54d59cddf76f.ecg",
+        "sha256": "30d5fef672d9a7ca254c54d59cddf76fd62c2d3304929a1bb45592b36c82a817",
+        "bytes": 375
+      },
+      {
+        "path": ".ecdev/evidence/335c1a1ccfe995bdd7670ff1fb96f596.ecg",
+        "sha256": "335c1a1ccfe995bdd7670ff1fb96f59676d578c2358ee9592e693d8c864cb398",
+        "bytes": 350
+      },
+      {
+        "path": ".ecdev/evidence/35a810d41e813e2424dcba4c9c1398e7.ecg",
+        "sha256": "35a810d41e813e2424dcba4c9c1398e7d343150ff48f10683ed28a5037ae47a1",
+        "bytes": 341
+      },
+      {
+        "path": ".ecdev/evidence/35b92b9d64c97f5e3e743de9f24851d5.ecg",
+        "sha256": "35b92b9d64c97f5e3e743de9f24851d5e693398403a32404cc987369ff0b0a3d",
+        "bytes": 394
+      },
+      {
+        "path": ".ecdev/evidence/389b90cecd137d9ab056951c00e83b36.ecg",
+        "sha256": "389b90cecd137d9ab056951c00e83b364ed4f5a12d5424ff16442fed2caecf4d",
+        "bytes": 427
+      },
+      {
+        "path": ".ecdev/evidence/3a0aa002ef9b71d3f02df7ad8373b1bd.ecg",
+        "sha256": "3a0aa002ef9b71d3f02df7ad8373b1bd84638d0fdd1bb4c6ffca2e695c9dce71",
+        "bytes": 339
+      },
+      {
+        "path": ".ecdev/evidence/40028dd167cd9e3b4d2c0974f2284e06.ecg",
+        "sha256": "40028dd167cd9e3b4d2c0974f2284e06d26b037c08daaba2d4c3f45d368b7d2b",
+        "bytes": 320
+      },
+      {
+        "path": ".ecdev/evidence/460a80a6a31f72ff0e3d0b80cceb7740.ecg",
+        "sha256": "460a80a6a31f72ff0e3d0b80cceb77404b97777c3206262a3a57791db5c5f053",
+        "bytes": 342
+      },
+      {
+        "path": ".ecdev/evidence/463c593d4058389be1ad7c4ef1696034.ecg",
+        "sha256": "463c593d4058389be1ad7c4ef169603499fc3bb676cff203e8b4dda67468cfab",
+        "bytes": 417
+      },
+      {
+        "path": ".ecdev/evidence/465933974ffc6dfe9a499b4da2506ed0.ecg",
+        "sha256": "465933974ffc6dfe9a499b4da2506ed0b99b2626e41d0e3561a2ecf898fcf9f5",
+        "bytes": 392
+      },
+      {
+        "path": ".ecdev/evidence/487550b15dd612303f6905b386ea69ab.ecg",
+        "sha256": "487550b15dd612303f6905b386ea69abdf61b6be130b20b85457354f596d203d",
+        "bytes": 377
+      },
+      {
+        "path": ".ecdev/evidence/4c304ebacfed06e16da434d520001a78.ecg",
+        "sha256": "4c304ebacfed06e16da434d520001a788a553716d0b751628eeaec33fe39544a",
+        "bytes": 407
+      },
+      {
+        "path": ".ecdev/evidence/4ed2bb167065e1a15c7414466fce59fc.ecg",
+        "sha256": "4ed2bb167065e1a15c7414466fce59fc24af01d3247dea64e283cec04a90cd8e",
+        "bytes": 319
+      },
+      {
+        "path": ".ecdev/evidence/543e4715c402575572a9c3d3bb5e5b24.ecg",
+        "sha256": "543e4715c402575572a9c3d3bb5e5b245109a9adea0dd259bbe80d07ce0265f9",
+        "bytes": 343
+      },
+      {
+        "path": ".ecdev/evidence/55c98395af49a044567b5c588e192550.ecg",
+        "sha256": "55c98395af49a044567b5c588e19255013cd914d754027087d780abe55b46216",
+        "bytes": 376
+      },
+      {
+        "path": ".ecdev/evidence/564af26ad36b137d28bb7bad2683dc22.ecg",
+        "sha256": "564af26ad36b137d28bb7bad2683dc22d86e53283671c9504e55dffb13ac5035",
+        "bytes": 377
+      },
+      {
+        "path": ".ecdev/evidence/5d524879700545122cf38a6f5e170873.ecg",
+        "sha256": "5d524879700545122cf38a6f5e1708734c4fa5455afc95ea45a63f7a707c3adb",
+        "bytes": 331
+      },
+      {
+        "path": ".ecdev/evidence/5d75980f57d4c9c7da15048334d40367.ecg",
+        "sha256": "5d75980f57d4c9c7da15048334d40367b8ab93a1f3774f7ae52045905fa150a2",
+        "bytes": 346
+      },
+      {
+        "path": ".ecdev/evidence/5d7fa03350c08a8e34c1c84d51f1a8b4.ecg",
+        "sha256": "5d7fa03350c08a8e34c1c84d51f1a8b4a1f7499fb97b60db33ef80919ce52f2d",
+        "bytes": 390
+      },
+      {
+        "path": ".ecdev/evidence/699ba1b76cd8bb8c60190661a62daf96.ecg",
+        "sha256": "699ba1b76cd8bb8c60190661a62daf962e67878138799ab45a62b1dd3b524d72",
+        "bytes": 362
+      },
+      {
+        "path": ".ecdev/evidence/7132f86844a2017f964872b350818f1e.ecg",
+        "sha256": "7132f86844a2017f964872b350818f1e355dd0ea912e4653b4a09e0b36bbcfab",
+        "bytes": 362
+      },
+      {
+        "path": ".ecdev/evidence/73cba11558b19490c62cc6ee24b319e6.ecg",
+        "sha256": "73cba11558b19490c62cc6ee24b319e6121a8b2eea4cd749b1441314caecc9d7",
+        "bytes": 417
+      },
+      {
+        "path": ".ecdev/evidence/75dcb61e21e44cf665ddae926626ef2e.ecg",
+        "sha256": "75dcb61e21e44cf665ddae926626ef2e66a8b539901d216372cfe9689c53d351",
+        "bytes": 373
+      },
+      {
+        "path": ".ecdev/evidence/79373d1bbb26bbfe98a0632be8264273.ecg",
+        "sha256": "79373d1bbb26bbfe98a0632be82642737f738bcd1a06ebfe03e41de192212d49",
+        "bytes": 319
+      },
+      {
+        "path": ".ecdev/evidence/7f8d9dc692516cccb3139525d44ffb36.ecg",
+        "sha256": "7f8d9dc692516cccb3139525d44ffb367f256c9f5f59bb87b260f10030b4e78d",
+        "bytes": 417
+      },
+      {
+        "path": ".ecdev/evidence/7ffa41e72ffe159f99bbc82d91f66705.ecg",
+        "sha256": "7ffa41e72ffe159f99bbc82d91f66705ee425627716630dd402682f2053cc890",
+        "bytes": 386
+      },
+      {
+        "path": ".ecdev/evidence/8574b9dc776eaba0eb15b3db56ed622d.ecg",
+        "sha256": "8574b9dc776eaba0eb15b3db56ed622d83611b011cded20b5cc9f6b87b5324a0",
+        "bytes": 346
+      },
+      {
+        "path": ".ecdev/evidence/890ef9a32976cc6f20df1b367156f905.ecg",
+        "sha256": "890ef9a32976cc6f20df1b367156f9053c67e8c942494ed85c42b9070a5f73c0",
+        "bytes": 409
+      },
+      {
+        "path": ".ecdev/evidence/89b5af8ee4ec0fb75edfe8d2527ca30d.ecg",
+        "sha256": "89b5af8ee4ec0fb75edfe8d2527ca30d86bc292f0a6356c1e8aa9bf5492baa3f",
+        "bytes": 341
+      },
+      {
+        "path": ".ecdev/evidence/8ae93887882e8fbf8fb128b0e0934b2a.ecg",
+        "sha256": "8ae93887882e8fbf8fb128b0e0934b2a5e6feee9a34b6d7861876f209feb6f56",
+        "bytes": 341
+      },
+      {
+        "path": ".ecdev/evidence/906ea6c315716dd3061ce20c62737f04.ecg",
+        "sha256": "906ea6c315716dd3061ce20c62737f047c16a6a4ea3158b7f024d1bcbae4cb53",
+        "bytes": 409
+      },
+      {
+        "path": ".ecdev/evidence/918c4c10610cfb1bcc9b546c2aa150f4.ecg",
+        "sha256": "918c4c10610cfb1bcc9b546c2aa150f4d01b14ea134ba21739c8860a51cce2a7",
+        "bytes": 408
+      },
+      {
+        "path": ".ecdev/evidence/9354424bc6417d5d5ef6cee24773252a.ecg",
+        "sha256": "9354424bc6417d5d5ef6cee24773252ad9e6403416b335186d19dda94434e12d",
+        "bytes": 360
+      },
+      {
+        "path": ".ecdev/evidence/9376fc62e1c2b615d0788e06fd81ba6f.ecg",
+        "sha256": "9376fc62e1c2b615d0788e06fd81ba6f8d4c25974cd567e918786ccd9fc20d38",
+        "bytes": 408
+      },
+      {
+        "path": ".ecdev/evidence/975204e7f3155a446a229b349e58a862.ecg",
+        "sha256": "975204e7f3155a446a229b349e58a862a6be2bc0ab20658174e487693f6639a7",
+        "bytes": 418
+      },
+      {
+        "path": ".ecdev/evidence/9bde575c75b5cf4c12a923132353dbb6.ecg",
+        "sha256": "9bde575c75b5cf4c12a923132353dbb6c96122e5da245fa7fb721f2a5ff92284",
+        "bytes": 344
+      },
+      {
+        "path": ".ecdev/evidence/9de992e86293e7717c1a8853c32fa709.ecg",
+        "sha256": "9de992e86293e7717c1a8853c32fa7096f55f0864b7acec4bd789a1584eda45a",
+        "bytes": 350
+      },
+      {
+        "path": ".ecdev/evidence/a07c0e62b8326af33d249788f84284d9.ecg",
+        "sha256": "a07c0e62b8326af33d249788f84284d9cd0971b3503e31b64eabd2210e8049f1",
+        "bytes": 375
+      },
+      {
+        "path": ".ecdev/evidence/a3b589968a32232a52350b218fb5595e.ecg",
+        "sha256": "a3b589968a32232a52350b218fb5595ec822333328d1ea5f9914183343aafd83",
+        "bytes": 350
+      },
+      {
+        "path": ".ecdev/evidence/a86fd52d3408ba2ec943db0ab1e092a7.ecg",
+        "sha256": "a86fd52d3408ba2ec943db0ab1e092a767c2efa10f9da9c9cd15aca6030778db",
+        "bytes": 322
+      },
+      {
+        "path": ".ecdev/evidence/abbefa511d5e83b1d3e748ee65266012.ecg",
+        "sha256": "abbefa511d5e83b1d3e748ee65266012723e250a67f363159b250128acd0c7ee",
+        "bytes": 413
+      },
+      {
+        "path": ".ecdev/evidence/ae14cf27db03776eb6428c70fa8a284b.ecg",
+        "sha256": "ae14cf27db03776eb6428c70fa8a284bc849ec2d838ed2dfea9efa199d4f16e0",
+        "bytes": 410
+      },
+      {
+        "path": ".ecdev/evidence/ae67341398b25d7dfe80c6bb462d11bc.ecg",
+        "sha256": "ae67341398b25d7dfe80c6bb462d11bc12452bd8fbae2f29f6ad171f1f14d8e1",
+        "bytes": 413
+      },
+      {
+        "path": ".ecdev/evidence/b2ffcffe2f25ed63b3d4346133a1ca5e.ecg",
+        "sha256": "b2ffcffe2f25ed63b3d4346133a1ca5e5392fbe9cd681799cf01fd273deb1cd5",
+        "bytes": 348
+      },
+      {
+        "path": ".ecdev/evidence/b40ce818bb15ecb4de0caa09ee387781.ecg",
+        "sha256": "b40ce818bb15ecb4de0caa09ee3877810efbd075d04b05529313dbe5c9fc164f",
+        "bytes": 352
+      },
+      {
+        "path": ".ecdev/evidence/b5fc49f9e12b00af50d010b2bc0b979f.ecg",
+        "sha256": "b5fc49f9e12b00af50d010b2bc0b979f7e22d0aa455540e0161d37218e107716",
+        "bytes": 319
+      },
+      {
+        "path": ".ecdev/evidence/bf88cfdf51fdb7ed64a780f7b42e66a7.ecg",
+        "sha256": "bf88cfdf51fdb7ed64a780f7b42e66a7c5a1788696013e82941e6b903e896890",
+        "bytes": 377
+      },
+      {
+        "path": ".ecdev/evidence/c206d34e5b608447c88a6bc560aaa57d.ecg",
+        "sha256": "c206d34e5b608447c88a6bc560aaa57dba640e35c1fc086213248531ea53fd07",
+        "bytes": 414
+      },
+      {
+        "path": ".ecdev/evidence/c448d4238603e88c2968bc2d48a6c202.ecg",
+        "sha256": "c448d4238603e88c2968bc2d48a6c2024d0d3cee16f45a40b3c68884b4e31edd",
+        "bytes": 350
+      },
+      {
+        "path": ".ecdev/evidence/cae92f20b31e4fc52878a0795ea00e41.ecg",
+        "sha256": "cae92f20b31e4fc52878a0795ea00e411c3777d237a782e4cd183af6a1236bbf",
+        "bytes": 381
+      },
+      {
+        "path": ".ecdev/evidence/cd13383b93f5b2f53ea379a6b669d373.ecg",
+        "sha256": "cd13383b93f5b2f53ea379a6b669d3737ac49c252ef20119f5e3ee70351e5ace",
+        "bytes": 395
+      },
+      {
+        "path": ".ecdev/evidence/cef87188ec1ef8e2a7cc2efd4cd1566d.ecg",
+        "sha256": "cef87188ec1ef8e2a7cc2efd4cd1566d65804217ad5e67efd83932ecd723dafd",
+        "bytes": 337
+      },
+      {
+        "path": ".ecdev/evidence/d101c772874e954962ca8d1e547b0c73.ecg",
+        "sha256": "d101c772874e954962ca8d1e547b0c7359d278bc5ace618e7a13247a6c548d44",
+        "bytes": 326
+      },
+      {
+        "path": ".ecdev/evidence/d5e32a16d66868408b8ad3bfb088bb88.ecg",
+        "sha256": "d5e32a16d66868408b8ad3bfb088bb88553dcce2853bea6411e1d872fb95b159",
+        "bytes": 433
+      },
+      {
+        "path": ".ecdev/evidence/d9aa1a466fd13cba81995275c792a8b6.ecg",
+        "sha256": "d9aa1a466fd13cba81995275c792a8b6bde5128e3f3c2bd8367ac66277c2b18e",
+        "bytes": 395
+      },
+      {
+        "path": ".ecdev/evidence/e4355cf70e9b5d2956bda120d6f3533c.ecg",
+        "sha256": "e4355cf70e9b5d2956bda120d6f3533cdf81b01c9c640268082108915884b72d",
+        "bytes": 398
+      },
+      {
+        "path": ".ecdev/evidence/e88f072d20c649cb0127ef676d582a3f.ecg",
+        "sha256": "e88f072d20c649cb0127ef676d582a3ff6f9b435afbce15fab6dd44fa96a9a92",
+        "bytes": 385
+      },
+      {
+        "path": ".ecdev/evidence/e9799357521c1fba652af280f575b8ec.ecg",
+        "sha256": "e9799357521c1fba652af280f575b8ecfed2e4f419562130556d2266b02ae1cf",
+        "bytes": 386
+      },
+      {
+        "path": ".ecdev/evidence/eb939b3fce7aa603fa05928f820f7632.ecg",
+        "sha256": "eb939b3fce7aa603fa05928f820f76329baac4f6d86681475c917f2fa4a1db16",
+        "bytes": 375
+      },
+      {
+        "path": ".ecdev/evidence/ec9c72fdc8a3a167c4bee258e055ed4a.ecg",
+        "sha256": "ec9c72fdc8a3a167c4bee258e055ed4a8d5ba37f299583657de1a8b715f78e7b",
+        "bytes": 367
+      },
+      {
+        "path": ".ecdev/evidence/ed634bc529f21389c79f6224b492ac32.ecg",
+        "sha256": "ed634bc529f21389c79f6224b492ac328bc1dafbae683d8e2471572ffcf3f2e6",
+        "bytes": 364
+      },
+      {
+        "path": ".ecdev/evidence/eea330c76b06af01c1abe830cc6e1baf.ecg",
+        "sha256": "eea330c76b06af01c1abe830cc6e1baf91666203050195626b9f9fd6d718c817",
+        "bytes": 341
+      },
+      {
+        "path": ".ecdev/evidence/f5331aa281fc0c475920cd9c8e964928.ecg",
+        "sha256": "f5331aa281fc0c475920cd9c8e96492861018d94b51b893bdea060f81746cedc",
+        "bytes": 345
+      },
+      {
+        "path": ".ecdev/evidence/fce5ba1b95896f395bba381ebbad5628.ecg",
+        "sha256": "fce5ba1b95896f395bba381ebbad5628a3d5961d66ce165c36b4da1718adc8aa",
+        "bytes": 394
+      }
+    ],
+    "source_guard": {
+      "path": ".ecdev/src/conformance/mod.rs",
+      "sha256": "73d8b65f8bbe0a934ae83fec9628deb953ac8edb440e4b3c2fbc35801015f8e3",
+      "bytes": 25211
+    },
+    "source_guard_changed": false,
+    "runtime_migration_producer_changed": false,
+    "historical_published_artifacts": [
+      {
+        "path": "research/commerce/governance/source-eight-capture-db92bf27-v1.json",
+        "sha256": "441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909",
+        "bytes": 3287998
+      },
+      {
+        "path": "research/commerce/governance/source-eight-mapping-db92bf27-v1.json",
+        "sha256": "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29",
+        "bytes": 3861270
+      },
+      {
+        "path": "research/commerce/governance/price-bounded-mapping-db92bf27-v1.json",
+        "sha256": "300591b5db1f9b156ecf5282525e5d056c79986140cffff20fcd784b2e825792",
+        "bytes": 127961
+      },
+      {
+        "path": "research/commerce/governance/producer-capture-pair-contract-v1.json",
+        "sha256": "adc7c9ae17fee1d3019eea2363363085a498e3bfe60209415e96ae30fe7995d5",
+        "bytes": 7535
+      },
+      {
+        "path": "research/commerce/governance/source-eight-price-qualification-verification-20261016.json",
+        "sha256": "577eb69747934e13a83285611094fcde5a2c8d4d7ba664da31c0404c77a445bc",
+        "bytes": 33906
+      }
+    ],
+    "ECDEVDB1_paid_budget_schema_UI_contract_changes": false
+  },
+  "qualification_inventory_maintenance": {
+    "capture_membership": "Exact caller-bound committed four-lane inventory replaces frozen734 cardinality; all path/byte/digest/unique/complete/HEAD/pin checks retained. Positive735 append and omitted/rebound/same-count-swap negatives pass.",
+    "current_mapping_tests": "Exact current snapshot811/834/1128/803/8, same identity and custody assertions. CLI maps cardinality of its exact pinned serialized capture.",
+    "price_fixture": "Actual source CLI regenerates441fa612 capture -> d499b6b7 mapping exactly; fixed historical734/828 price profile retained. No binding to fresh3d0f10ea/b6270a56 pair is inferred."
+  },
+  "price_sidecar": {
+    "capture_sha256": "441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909",
+    "mapping_sha256": "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29",
+    "bounded_mapping_sha256": "300591b5db1f9b156ecf5282525e5d056c79986140cffff20fcd784b2e825792",
+    "supported": 106,
+    "unmapped": 2831,
+    "total": 2937,
+    "new_candidates": 7,
+    "old99": "UNCHANGED; NOT_REBOUND",
+    "fresh_pair_price_qualification": "NOT_RUN; retained bounded price model deliberately refuses unqualified new capture profile",
+    "canonical_assignment": null,
+    "accepted_owner": null,
+    "authority": null,
+    "admission": "PENDING",
+    "source_caller_cutover": false
+  },
+  "governance": {
+    "source_gate": {
+      "numerator": 10,
+      "denominator": 48,
+      "pass": false
+    },
+    "runtime_external_edges": 3,
+    "linked_external_edges": 10,
+    "external_technology_edges": 8,
+    "reqwest_manifest_edges": 3,
+    "reqwest_import_files": 3,
+    "canonical_verified_extinct_total": null,
+    "global_oss_total": null,
+    "new_assimilation": 0,
+    "new_extinction": 0,
+    "source_registration": "BLOCKED",
+    "source_retirement": false,
+    "rights_authorization": null,
+    "source_v1_gates": [
+      {
+        "metric": "extinction_ratio",
+        "required": "1.000000",
+        "actual": "0.208333",
+        "pass": false
+      },
+      {
+        "metric": "runtime_external_edges",
+        "required": "0",
+        "actual": "3",
+        "pass": false
+      },
+      {
+        "metric": "build_external_edges",
+        "required": "0",
+        "actual": "0",
+        "pass": true
+      },
+      {
+        "metric": "linked_external_edges",
+        "required": "0",
+        "actual": "10",
+        "pass": false
+      },
+      {
+        "metric": "external_technology_edges",
+        "required": "0",
+        "actual": "8",
+        "pass": false
+      },
+      {
+        "metric": "production_native_ratio",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "production_proof_ratio",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "repository_shape_conformance",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "documents_over_budget",
+        "required": "0",
+        "actual": "0",
+        "pass": true
+      },
+      {
+        "metric": "ecdev_repository_conformance",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      }
+    ]
+  },
+  "central_engine_blocker": {
+    "qualified_reference_registry_sources": 7,
+    "source_registered": false,
+    "source_lock_installed": false,
+    "required_engine_changes": [
+      "Explicit lossless ECDEV source admission adapter and qualified authority handoff; preserve ec1/f1/ECG as original source identities and records",
+      "Authorized target/owner mappings and rights distinct from source registration and bounded capability admission",
+      "Eighth canonical registry entry plus a new verified schema/engine/protocol/epoch lock contract for all eight consumers",
+      "Ordinary assessment and capsule production for admitted source; exact eight-source identity and lock closure, not found-checkout success",
+      "Protective source-only refusal remains until the qualified handoff is accepted; portable Pending must remain distinct from enrollment"
+    ],
+    "reported_producer_drift": "Matching retained pair PASS; mismatch reproductions and exact-pair contract preserved in producer-capture-pair-contract-v1.json. Actual reported engine caller argv/input tuple not supplied; its root cause remains unconfirmed.",
+    "new_current_pair_rule": "Use the supplied3d0f10ea capture with b6270a56 proposal as one immutable pair. Do not combine either with retained price sidecar or replace observed_head with later publication HEAD."
+  },
+  "remaining_native_dependencies": [
+    "qualified production TLS connector, certificate/hostname validation and trust policy",
+    "HTTPS proxies/CONNECT credentials and trust",
+    "mixed-family racing and complete error/retry/effect qualification",
+    "paid Keepa/marketplace form/query/auth and response-head/body semantics",
+    "whole reqwest platform dependency closure, including wasm32 serde_json",
+    "donor semantics, rights, source acceptance and verified cutover"
+  ],
+  "independent_reviews": [
+    {
+      "agent": "sol_same_family_review",
+      "result": "ELIGIBLE_CANDIDATE; preimplementation static review",
+      "tests": "NOT_RUN"
+    },
+    {
+      "agent": "sol_same_family_final_review",
+      "result": "CLEAN_BOUNDED_RECOMMENDATION; production diff and all14test bodies reviewed",
+      "tests": "No independent rerun"
+    },
+    {
+      "agent": "sol_inventory_review",
+      "result": "CLEAN; qualification, proof declarations and final snapshot/CLI diff reviewed",
+      "tests": "6 focused Capture tests PASS"
+    }
+  ],
+  "model_selection": {
+    "new_writer_and_reviewer_tool_parameter": "gpt-6.1-sol",
+    "fallback_used": false,
+    "executing_model_id_exposed": false,
+    "scope": "Requested tool configuration only; no inference from self-description"
+  },
+  "iterations": [
+    {
+      "kind": "test_compile",
+      "result": "Initial writer bind tuple type typo corrected before14/14 pass"
+    },
+    {
+      "kind": "stale_governor_binary",
+      "result": "Initial qualification75tests+2setUpClasserrors due compiled/runtime declaration mismatch; rebuilt governor and94/94passed",
+      "log": {
+        "path": "/workspace/scratch/ecdev-same-family-python-20261016.log",
+        "sha256": "c190e49b9c4ef0cd31a59df7fef4de4ead691637a088901c1960ffe53498c9e9",
+        "bytes": 3167
+      }
+    },
+    {
+      "kind": "snapshot_assertion",
+      "result": "Initial current mapping3pass/1fail at old828/1122 graph count; updated to observed834/1128 and5current+CLIpass",
+      "log": {
+        "path": "/workspace/scratch/ecdev-same-family-current-mapping-20261017.log",
+        "sha256": "0f35e13a734f8e887ce20632fc66941e3352e2538d1deb77e47b1640f98f92ec",
+        "bytes": 1287
+      }
+    }
+  ],
+  "native_v1": {
+    "status": "INCOMPLETE",
+    "requirements": {
+      "N01": "NOT_RUN",
+      "N02": "NOT_RUN",
+      "N03": "NOT_RUN",
+      "N04": "NOT_RUN",
+      "N05": "NOT_RUN",
+      "N06": "NOT_RUN",
+      "N07": "NOT_RUN",
+      "N08": "NOT_RUN",
+      "N09": "NOT_RUN",
+      "N10": "NOT_RUN",
+      "N11": "NOT_RUN",
+      "N12": "NOT_RUN",
+      "J1": "NOT_RUN",
+      "J2": "NOT_RUN",
+      "J3": "NOT_RUN",
+      "J4": "NOT_RUN",
+      "J5": "NOT_RUN",
+      "J6": "NOT_RUN",
+      "J7": "NOT_RUN",
+      "J8": "NOT_RUN",
+      "J9": "NOT_RUN",
+      "P0": "NOT_RUN",
+      "P1": "NOT_RUN",
+      "P2": "NOT_RUN",
+      "P3": "NOT_RUN"
+    }
+  },
+  "changed_code_inputs": [
+    {
+      "path": ".ecdev/declared/technologies.rs",
+      "sha256": "f365310c8592f2f0e4f083712698afa2e8df79b9d302ad90eb462278756275f9",
+      "bytes": 48490
+    },
+    {
+      "path": ".ecdev/qualification/run_candidate.py",
+      "sha256": "512bbb45afe90d9434d082611f34f5b15061722e2dbf757367263fafe184d4ef",
+      "bytes": 22409
+    },
+    {
+      "path": ".ecdev/qualification/test_price_candidate.py",
+      "sha256": "80dae5fbaa9dd1ffd84a90cb3b904160ad6b601d5906f4b9b87fad169d440070",
+      "bytes": 26313
+    },
+    {
+      "path": ".ecdev/qualification/test_run_candidate.py",
+      "sha256": "35e7e5b94010588c12a571fab8aea8af23e0f57ef24d48befe9335fd7ff6d30a",
+      "bytes": 22358
+    },
+    {
+      "path": ".ecdev/tests/current_mapping.rs",
+      "sha256": "33914f269d6baa0388b9576aaec9754eecc682a5c3c4479db83fc1f94d985e7d",
+      "bytes": 13423
+    },
+    {
+      "path": ".ecdev/tests/current_mapping_cli.rs",
+      "sha256": "b4a9bdca4016a19a5d062f31904dbdcb3c4ef70325320441b6e553f220d24296",
+      "bytes": 2691
+    },
+    {
+      "path": "adapter/web/src/lib.rs",
+      "sha256": "34539b4835e6a66bd2d091de1f7c7f6f543e7200b8c5920660cfdb5562a9e944",
+      "bytes": 65909
+    },
+    {
+      "path": "adapter/web/src/native_http.rs",
+      "sha256": "a5520099c9caf732ab9da72a1f218518c4b9f38333465f39a508f2252c3d1b1e",
+      "bytes": 28658
+    }
+  ]
+}
