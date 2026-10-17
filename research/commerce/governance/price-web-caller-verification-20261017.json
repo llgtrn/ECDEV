@@ -1,0 +1,806 @@
+{
+  "format": "ecdev-price-web-caller-verification-v1",
+  "observed_at_utc": "2026-10-17T02:16:20Z",
+  "repository": "llgtrn/ECDEV",
+  "base_commit": "0ccbd426a7bfbb3582f2bf7fce468656bcc9786a",
+  "qualified_preparation_commit": "45690f2ca789ca89023280be4cac7d94a3d2c098",
+  "qualified_preparation_tree": "b6e386c2a0ada79bf2f97c8dc54636859600903e",
+  "remote_main_after_preparation_push": "45690f2ca789ca89023280be4cac7d94a3d2c098",
+  "remote_verified_at_utc": "2026-10-17T02:14:07Z",
+  "scope": "C2-C5 SOURCE PREREQUISITE: actual public source function on synthetic offline inputs and validated proposed target request data; no deployed source/target caller or admission.",
+  "execution": {
+    "shell": "GNU bash5.2.37",
+    "source_root": "/workspace/ECDEV",
+    "origin": "https://github.com/llgtrn/ECDEV.git",
+    "branch": "main",
+    "exclusive_writable_source": "llgtrn/ECDEV",
+    "saved_engine_head": "d66313834c6d584b259650033bcf72f16c4e34f7",
+    "saved_engine_tracked_clean": true,
+    "other_repositories_cloned": false,
+    "new_credentials_created": false,
+    "paid_provider_or_device_operations": "NOT_RUN",
+    "active_writers_at_receipt_creation": 1,
+    "active_reviewers_at_receipt_creation": 0
+  },
+  "deliverables": [
+    {
+      "path": ".ecdev/qualification/price_web_caller.rs",
+      "sha256": "d3be9466118b5debf37f23a3797f17ebcc818b4c214f220a589b893f3721b5c5",
+      "bytes": 22918
+    },
+    {
+      "path": ".ecdev/qualification/price_caller_readiness.py",
+      "sha256": "db22dfd066a753f25e012119227138ffd651059e20f39ba8c21d81d300fcdd33",
+      "bytes": 20112
+    },
+    {
+      "path": ".ecdev/qualification/test_price_caller_readiness.py",
+      "sha256": "c3c449e9ba55061232f811f5d7d73115beb97a596fec6f9c77473baa29763d81",
+      "bytes": 11681
+    },
+    {
+      "path": "research/commerce/governance/price-web-caller-acceptance-v1.json",
+      "sha256": "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186",
+      "bytes": 150680
+    },
+    {
+      "path": "research/commerce/governance/price-web-caller-readiness-v1.json",
+      "sha256": "7b2ca2b6d93cb4effe2b8c37808b6b087b86c4213516532299a22f0daa96091d",
+      "bytes": 71080
+    },
+    {
+      "path": "research/commerce/governance/price-web-caller-review-20261017.json",
+      "sha256": "3af88b1566d8af8b4e8ae82a457c7cdbafc1fb64627de17474180acab3861c48",
+      "bytes": 4591
+    },
+    {
+      "path": "research/commerce/governance/price-web-caller-scope-review-20261017.json",
+      "sha256": "7ce156936036992dd2f2e07d368df121a0ab258051fe511d6acce250abfd424a",
+      "bytes": 5100
+    },
+    {
+      "path": "research/commerce/governance/source-manifest-consumer-e27c0238-ack-20261017.json",
+      "sha256": "bb0db7643703853fd556dd409c78bcdf4d6e93270b5bd9e622748acc197df3ff",
+      "bytes": 13219
+    }
+  ],
+  "caller_evidence": {
+    "entry": "ecdev_web::extract -> products -> price::parse_price",
+    "execution_mode": "OFFLINE_SYNTHETIC_JSON_LD_ACTUAL_SOURCE_CALLER",
+    "counts": {
+      "api_qualified": 106,
+      "api_unmapped": 2831,
+      "corpus_total": 2937,
+      "negative_cases": 20,
+      "non_web_shape": 227,
+      "qualified_web_excluded": 7,
+      "web_new_qualified": 5,
+      "web_old_qualified": 94,
+      "web_qualified": 99,
+      "web_shape": 2710,
+      "web_unmapped": 2611
+    },
+    "runtime_assertions_passed": 2122,
+    "source_result_fields": [
+      "amount",
+      "currency",
+      "amount_text",
+      "amount_float"
+    ],
+    "finite_advisory_float_comparison": "Exact IEEE754bits; nullable and original inputs/hints preserved",
+    "observed_money": "Independently checked against original source raw offer; derived price text is never observation authority",
+    "exclusions": [
+      409,
+      1185,
+      1186,
+      1187,
+      1188,
+      1467,
+      1473
+    ],
+    "source_web_99_identity": "94 prior plus5 EUR; distinct from historical old99",
+    "non_web_shape_accounting": {
+      "total": 227,
+      "API_qualified_excluded": 7,
+      "API_unmapped": 220
+    },
+    "seven_API_additions": [
+      117,
+      212,
+      409,
+      855,
+      1188,
+      1193,
+      1849
+    ],
+    "five_Web_additions": [
+      117,
+      212,
+      855,
+      1193,
+      1849
+    ],
+    "negative_cases": [
+      "null_price",
+      "boolean_price",
+      "array_price",
+      "object_price",
+      "missing_price",
+      "numeric_lexeme_2980.0000000000001",
+      "numeric_lexeme_0.29000000000000001",
+      "numeric_lexeme_9007199254740993.0",
+      "numeric_lexeme_2.98e+3",
+      "numeric_lexeme_2.9e-1",
+      "$12.99",
+      "free shipping",
+      "hint_absent",
+      "hint_null",
+      "hint_nonstring",
+      "hint_empty_string",
+      "hint_currency_string",
+      "empty_string_price_and_hint",
+      "unicode_and_embedded_closing_script",
+      "price_over_4096_bytes"
+    ],
+    "target_execution_performed": false,
+    "target_acceptance_established": false
+  },
+  "reproduction": {
+    "standalone_manifest_path": "/workspace/scratch/sol-web-caller-harness-20261017/Cargo.toml",
+    "standalone_manifest_contents": "[workspace]\n\n[package]\nname = \"ecdev-price-web-caller-acceptance\"\nversion = \"0.0.0\"\nedition = \"2021\"\n\n[[bin]]\nname = \"price-web-caller\"\npath = \"/workspace/ECDEV/.ecdev/qualification/price_web_caller.rs\"\n\n[dependencies]\necdev_core = { package = \"ecdev-core\", path = \"/workspace/ECDEV/domain/commerce\" }\necdev_web = { package = \"ecdev-web\", path = \"/workspace/ECDEV/adapter/web\" }\n",
+    "root_direct_toolchain_clippy_run_records": [
+      {
+        "argv": [
+          "/tmp/ecdev-cargo/bin/rustc",
+          "+1.89.0",
+          "--version",
+          "--verbose"
+        ],
+        "exit": 0,
+        "stdout_sha256": "48cee7c7fa47e58de4f15a9bebf677bf7ad098f625aedfe1f7b827a97e3797c7",
+        "stdout_bytes": 196,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0,
+        "retained_stderr": "",
+        "retained_stdout": "rustc 1.89.0 (29483883e 2025-08-04)\nbinary: rustc\ncommit-hash: 29483883eed69d5fb4db01964cdf2af4d86e9cb2\ncommit-date: 2025-08-04\nhost: x86_64-unknown-linux-gnu\nrelease: 1.89.0\nLLVM version: 20.1.7\n"
+      },
+      {
+        "argv": [
+          "/tmp/ecdev-cargo/bin/cargo",
+          "+1.89.0",
+          "clippy",
+          "--offline",
+          "--locked",
+          "--all-targets",
+          "--no-deps",
+          "--manifest-path",
+          "/workspace/scratch/sol-web-caller-harness-20261017/Cargo.toml",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stderr_sha256": "35092330fd651af29dbae83ebfbed71285a0b4bd5b4786f6c6823715af175b10",
+        "stderr_bytes": 179,
+        "retained_stderr": "    Checking ecdev-price-web-caller-acceptance v0.0.0 (/workspace/scratch/sol-web-caller-harness-20261017)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.30s\n"
+      },
+      {
+        "argv": [
+          "/tmp/ecdev-cargo/bin/cargo",
+          "+1.89.0",
+          "run",
+          "--offline",
+          "--locked",
+          "--manifest-path",
+          "/workspace/scratch/sol-web-caller-harness-20261017/Cargo.toml",
+          "--bin",
+          "price-web-caller",
+          "--",
+          "/workspace/ECDEV"
+        ],
+        "exit": 0,
+        "stdout_sha256": "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186",
+        "stdout_bytes": 150680,
+        "stderr_sha256": "cda51c513bcffa05026f0bea0425ea336760de5e8818949cbc14f9ce8bd2109d",
+        "stderr_bytes": 160,
+        "retained_stderr": "    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.09s\n     Running `/tmp/ecdev-stream-closure-target/debug/price-web-caller /workspace/ECDEV`\n"
+      },
+      {
+        "executed_binary": "/tmp/ecdev-stream-closure-target/debug/price-web-caller",
+        "sha256": "b3815c2658bd0e2bfa9e49b196bed9fe545359b4a18c21c547e4f3d4da909f30",
+        "bytes": 76593096
+      }
+    ],
+    "build_output_directory": "/tmp/ecdev-stream-closure-target",
+    "runtime_binary_trust": "Local execution only; toolchain/sysroot and execution custody are not authenticated. Public source function was exercised, not a deployed server or native target."
+  },
+  "validation": {
+    "python_tests": {
+      "passed": 34,
+      "failed": 0,
+      "manifest": 11,
+      "frozen_cohort": 11,
+      "new_caller_readiness": 12,
+      "raw_log": {
+        "path": "/workspace/scratch/ecdev-price-caller-final-validation-20261017/python-tests.stderr",
+        "sha256": "5f90866ae7ad340d00c3b0a6869f225d9cade7cb9fbe9ad9ce26bc041a0c1a1b",
+        "bytes": 6564
+      },
+      "retained_raw_log": "test_actual_106_manifest_matches_published_pin_and_exact_original_names (test_price_manifest.RetainedPriceManifest.test_actual_106_manifest_matches_published_pin_and_exact_original_names) ... ok\ntest_all_2937_original_cases_and_raw_corpus_sidecar_case_map_bytes_unchanged (test_price_manifest.RetainedPriceManifest.test_all_2937_original_cases_and_raw_corpus_sidecar_case_map_bytes_unchanged) ... ok\ntest_any_corpus_byte_or_case_change_rejected_including_unselected_fields (test_price_manifest.RetainedPriceManifest.test_any_corpus_byte_or_case_change_rejected_including_unselected_fields) ... ok\ntest_bounded_bytes_required (test_price_manifest.RetainedPriceManifest.test_bounded_bytes_required) ... ok\ntest_caller_must_supply_the_exact_fixed_sidecar_pin (test_price_manifest.RetainedPriceManifest.test_caller_must_supply_the_exact_fixed_sidecar_pin) ... ok\ntest_cli_rejects_edited_inspection_and_nonregular_or_linked_inputs (test_price_manifest.RetainedPriceManifest.test_cli_rejects_edited_inspection_and_nonregular_or_linked_inputs) ... ok\ntest_cli_requires_independent_pin_and_emits_exact_artifact_or_inspection (test_price_manifest.RetainedPriceManifest.test_cli_requires_independent_pin_and_emits_exact_artifact_or_inspection) ... ok\ntest_exact_seven_added_and_all_original_99_preserved (test_price_manifest.RetainedPriceManifest.test_exact_seven_added_and_all_original_99_preserved) ... ok\ntest_manifest_framing_index_name_order_and_duplicate_mutations_rejected (test_price_manifest.RetainedPriceManifest.test_manifest_framing_index_name_order_and_duplicate_mutations_rejected) ... ok\ntest_sidecar_cohort_edits_and_authority_self_grants_cannot_be_caller_rebound (test_price_manifest.RetainedPriceManifest.test_sidecar_cohort_edits_and_authority_self_grants_cannot_be_caller_rebound) ... ok\ntest_source_proposal_or_fresh_capture_cannot_replace_retained_bounded_sidecar (test_price_manifest.RetainedPriceManifest.test_source_proposal_or_fresh_capture_cannot_replace_retained_bounded_sidecar) ... ok\ntest_all_2831_original_unmapped_rows_and_99_plus_seven_are_bound (test_price_cohort.ExactPriceCohort.test_all_2831_original_unmapped_rows_and_99_plus_seven_are_bound) ... ok\ntest_authority_identity_and_typed_boolean_mutations_refuse_even_with_new_cohort_pin (test_price_cohort.ExactPriceCohort.test_authority_identity_and_typed_boolean_mutations_refuse_even_with_new_cohort_pin) ... ok\ntest_caller_cohort_pin_is_required_and_full_document_is_checked (test_price_cohort.ExactPriceCohort.test_caller_cohort_pin_is_required_and_full_document_is_checked) ... ok\ntest_cli_builds_and_inspects_source_request_and_rejects_mixed_operations (test_price_cohort.ExactPriceCohort.test_cli_builds_and_inspects_source_request_and_rejects_mixed_operations) ... ok\ntest_cli_requires_every_pin_emits_exact_bytes_and_inspects_without_writes (test_price_cohort.ExactPriceCohort.test_cli_requires_every_pin_emits_exact_bytes_and_inspects_without_writes) ... ok\ntest_edited_unmapped_code_original_fields_and_target_reference_cannot_be_rebound (test_price_cohort.ExactPriceCohort.test_edited_unmapped_code_original_fields_and_target_reference_cannot_be_rebound) ... ok\ntest_exact_snapshot_membership_and_pending_proposal_roundtrip (test_price_cohort.ExactPriceCohort.test_exact_snapshot_membership_and_pending_proposal_roundtrip) ... ok\ntest_handoff_does_not_accept_invented_domain_owner_lock_or_authority (test_price_cohort.ExactPriceCohort.test_handoff_does_not_accept_invented_domain_owner_lock_or_authority) ... ok\ntest_handoff_request_populates_only_source_owned_identity_and_membership (test_price_cohort.ExactPriceCohort.test_handoff_request_populates_only_source_owned_identity_and_membership) ... ok\ntest_missing_extra_changed_and_independently_wrong_artifact_pins_refuse (test_price_cohort.ExactPriceCohort.test_missing_extra_changed_and_independently_wrong_artifact_pins_refuse) ... ok\ntest_new_811_capture_and_proposal_cannot_use_the_old_price_sidecar (test_price_cohort.ExactPriceCohort.test_new_811_capture_and_proposal_cannot_use_the_old_price_sidecar) ... ok\ntest_boundary_money_resource_result_exact_lexeme_and_original_inputs_refuse_forgery (test_price_caller_readiness.SourceCallerReadiness.test_boundary_money_resource_result_exact_lexeme_and_original_inputs_refuse_forgery) ... ok\ntest_caller_pin_is_independent_mandatory_and_cannot_be_stale (test_price_caller_readiness.SourceCallerReadiness.test_caller_pin_is_independent_mandatory_and_cannot_be_stale) ... ok\ntest_cli_has_read_only_pinned_build_and_inspection (test_price_caller_readiness.SourceCallerReadiness.test_cli_has_read_only_pinned_build_and_inspection) ... ok\ntest_denominator_shrink_and_false_execution_claims_are_refused_after_rebinding (test_price_caller_readiness.SourceCallerReadiness.test_denominator_shrink_and_false_execution_claims_are_refused_after_rebinding) ... ok\ntest_empty_input_is_some_empty_and_none_input_cases_remain_excluded (test_price_caller_readiness.SourceCallerReadiness.test_empty_input_is_some_empty_and_none_input_cases_remain_excluded) ... ok\ntest_excluded_case_extra_authority_fields_cannot_be_copied_to_export (test_price_caller_readiness.SourceCallerReadiness.test_excluded_case_extra_authority_fields_cannot_be_copied_to_export) ... ok\ntest_four_field_result_cannot_export_an_extra_field_after_report_rebinding (test_price_caller_readiness.SourceCallerReadiness.test_four_field_result_cannot_export_an_extra_field_after_report_rebinding) ... ok\ntest_missing_duplicate_or_reordered_original_case_and_exclusion_refuse (test_price_caller_readiness.SourceCallerReadiness.test_missing_duplicate_or_reordered_original_case_and_exclusion_refuse) ... ok\ntest_numeric_precision_nonstring_skip_empty_hint_and_resource_unknown_remain (test_price_caller_readiness.SourceCallerReadiness.test_numeric_precision_nonstring_skip_empty_hint_and_resource_unknown_remain) ... ok\ntest_raw_input_hint_presence_four_fields_float_and_observed_money_refuse_drift (test_price_caller_readiness.SourceCallerReadiness.test_raw_input_hint_presence_four_fields_float_and_observed_money_refuse_drift) ... ok\ntest_real_source_caller_cohort_has_distinct_complete_denominators (test_price_caller_readiness.SourceCallerReadiness.test_real_source_caller_cohort_has_distinct_complete_denominators) ... ok\ntest_request_data_cannot_invent_effect_rights_budget_owner_or_cutover (test_price_caller_readiness.SourceCallerReadiness.test_request_data_cannot_invent_effect_rights_budget_owner_or_cutover) ... ok\n\n----------------------------------------------------------------------\nRan 34 tests in 9.387s\n\nOK\n"
+    },
+    "final_commands": [
+      {
+        "name": "readiness-build",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "/workspace/ECDEV/.ecdev/qualification/price_caller_readiness.py",
+          "--report",
+          "/workspace/ECDEV/research/commerce/governance/price-web-caller-acceptance-v1.json",
+          "--expect-report-sha256",
+          "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "7b2ca2b6d93cb4effe2b8c37808b6b087b86c4213516532299a22f0daa96091d",
+        "stdout_bytes": 71080,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "python-tests",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_price_manifest",
+          "test_price_cohort",
+          "test_price_caller_readiness"
+        ],
+        "cwd": "/workspace/ECDEV/.ecdev/qualification",
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stderr_sha256": "5f90866ae7ad340d00c3b0a6869f225d9cade7cb9fbe9ad9ce26bc041a0c1a1b",
+        "stderr_bytes": 6564
+      },
+      {
+        "name": "python-lint",
+        "argv": [
+          "/tmp/ecdev-python-lint-tools/bin/ruff",
+          "check",
+          "--no-cache",
+          ".ecdev/qualification/price_caller_readiness.py",
+          ".ecdev/qualification/test_price_caller_readiness.py"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "stdout_bytes": 19,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "conformance",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "conformance",
+          "--root",
+          "/workspace/ECDEV",
+          "--json"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+        "stdout_bytes": 10972,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "diff-check",
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "readiness-inspect",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "/workspace/ECDEV/.ecdev/qualification/price_caller_readiness.py",
+          "--report",
+          "/workspace/ECDEV/research/commerce/governance/price-web-caller-acceptance-v1.json",
+          "--expect-report-sha256",
+          "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186",
+          "--inspect-readiness",
+          "/workspace/ECDEV/research/commerce/governance/price-web-caller-readiness-v1.json",
+          "--expect-readiness-sha256",
+          "7b2ca2b6d93cb4effe2b8c37808b6b087b86c4213516532299a22f0daa96091d"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "30c4ef229eb91bca76cf07eb598a7c8b3f8428d28f0180a14cccd7f3f2b9383c",
+        "stdout_bytes": 371,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      }
+    ],
+    "strict_clippy": "PASS; Rust1.89 offline/locked, all-targets, no-deps, -Dwarnings on external harness manifest",
+    "ruff": "PASS;2 newPythonfiles, --no-cache",
+    "conformance": {
+      "passed": 31,
+      "failed": 0,
+      "report": {
+        "path": "/workspace/scratch/ecdev-price-caller-final-validation-20261017/conformance.stdout",
+        "sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+        "bytes": 10972
+      },
+      "checks": [
+        {
+          "id": "governance.single_authority",
+          "pass": true,
+          "detail": ".ecdev/declared holds the complete declaration set of repository `ecdev`"
+        },
+        {
+          "id": "governance.no_external_authority",
+          "pass": true,
+          "detail": "no executable/configuration file couples this source to external governance; informational references grant no authority"
+        },
+        {
+          "id": "governance.source_migration_boundary",
+          "pass": true,
+          "detail": "SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed"
+        },
+        {
+          "id": "declarations.typed_roundtrip",
+          "pass": true,
+          "detail": "declarations render and re-read identically"
+        },
+        {
+          "id": "graph.schema",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "graph.identity",
+          "pass": true,
+          "detail": "every id = H(ecdev | oss | external, semantic_key)"
+        },
+        {
+          "id": "graph.roundtrip",
+          "pass": true,
+          "detail": "834 nodes, 1136 edges, 204532 bytes"
+        },
+        {
+          "id": "lifecycle.claims_within_evidence",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "lifecycle.lineage_and_proofs",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "lifecycle.relevance_justified",
+          "pass": true,
+          "detail": "every resolved capability relevance agrees with `required` and cites its review"
+        },
+        {
+          "id": "knowledge.irrelevance_admissible",
+          "pass": true,
+          "detail": "no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)"
+        },
+        {
+          "id": "knowledge.denominator_preserved",
+          "pass": true,
+          "detail": "every capability known to an earlier census is still declared or absorbed; nothing left the knowledge denominator"
+        },
+        {
+          "id": "licence.derivation_admissible",
+          "pass": true,
+          "detail": "no capability is DERIVED_NATIVE from a donor whose licence allows only clean-room reimplementation"
+        },
+        {
+          "id": "repository.builds_alone",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "structure.compatible_root",
+          "pass": true,
+          "detail": "canonical roles, full .ecdev/declared set, no non-canonical code root, no crate buckets"
+        },
+        {
+          "id": "shape.graph_owned_source",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "lifecycle.exceptions_legal",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "lifecycle.no_vanished_donor",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "donors.every_external_registered",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "state.integrity",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "universe.lossless_identity",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "migration.shims_expire",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "migration.waves_consistent",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "metrics.schema",
+          "pass": true,
+          "detail": "98 metrics in schema order"
+        },
+        {
+          "id": "governance.zero_dependency",
+          "pass": true,
+          "detail": "manifest dependency-free: true; foreign references from .ecdev: 0"
+        },
+        {
+          "id": "generated.untracked",
+          "pass": true,
+          "detail": "none"
+        },
+        {
+          "id": "output.deterministic",
+          "pass": true,
+          "detail": "metrics, graph bytes and findings are identical on re-assessment"
+        },
+        {
+          "id": "probe.identity_survives_moves",
+          "pass": true,
+          "detail": "ec1:f2c95589852bedd0b739cde20566392a"
+        },
+        {
+          "id": "probe.no_false_extinction",
+          "pass": true,
+          "detail": "one BUILD edge blocks EXTINCT"
+        },
+        {
+          "id": "probe.compaction",
+          "pass": true,
+          "detail": "fold is order-independent; newer supersedes"
+        },
+        {
+          "id": "probe.migration_pathmap",
+          "pass": true,
+          "detail": "core = { path = \"../../core\" }"
+        }
+      ]
+    },
+    "harness_CLI_checks": [
+      {
+        "name": "actual_source_caller",
+        "exit_code": 0,
+        "stdout_sha256": "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "missing_source_root",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: usage: price-web-caller SOURCE_ROOT\n"
+      },
+      {
+        "name": "extra_argument",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: usage: price-web-caller SOURCE_ROOT\n"
+      },
+      {
+        "name": "relative_source_root",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: SOURCE_ROOT must be absolute\n"
+      },
+      {
+        "name": "missing_source_root_path",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: /workspace/scratch/sol-web-caller-harness-20261017/missing: No such file or directory (os error 2)\n"
+      },
+      {
+        "name": "symlink_input",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: symlink denied: /workspace/scratch/sol-web-caller-harness-20261017/symlink_input/adapter/web/tests/fixtures/price-contract.json\n"
+      },
+      {
+        "name": "oversize_regular_input",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: bounded regular file required: /workspace/scratch/sol-web-caller-harness-20261017/oversize_regular_input/adapter/web/tests/fixtures/price-contract.json\n"
+      },
+      {
+        "name": "changed_frozen_digest",
+        "exit_code": 1,
+        "stdout_bytes": 0,
+        "stderr": "price-web-caller: frozen input digest mismatch: adapter/web/tests/fixtures/price-contract.json: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a\n"
+      }
+    ],
+    "committed_membership": {
+      "inputs": 3160,
+      "all_blobs_modes_and_worktree_match": true,
+      "manifest_sha256": "106edda6a1d9b87731dc84258f47edc87f3aa5ccdbe29189ec0040222c675420",
+      "report": {
+        "path": "/workspace/scratch/ecdev-price-caller-committed-membership-20261017.json",
+        "sha256": "9ccafaddf03edc5b4327815e9e15bb6045df38f8a39918b515285abfac873308",
+        "bytes": 718693
+      },
+      "trust": "LOCAL_IMMUTABLE_GIT_OBJECTS_AND_TRUSTED_FILESYSTEM; NOT_AUTHENTICATED_EXECUTION"
+    },
+    "initial_iterations": {
+      "first_helper_smoke": "Refused a count shape missing negative_cases; corrected expected full count20 before successful tests. Initial process output available in tool transcript only.",
+      "independent_findings": [
+        "Extra result-field injection accepted before strict four-key validation",
+        "Boundary original input, observed money, exact numeric lexeme and full result incompletely bound",
+        "Excluded-row extra authority fields copied before strict full row schema"
+      ],
+      "status": "All3 fixed and independently re-reviewed before publication; five independent mutations refused."
+    },
+    "full_product_and_unchanged_governor_suites": "NOT_RERUN; no preexisting source changed. Scoped source caller execution, new inspectors, existing22 frozen-cohort tests and conformance checked.",
+    "whole_workspace_formatting": "NOT_RUN; prior two adapter/web/src/lib.rs formatting issues remain explicitly observed; no formatting success inferred.",
+    "engine_candidate_and_Chronica_runtime": "NOT_RUN in this source container"
+  },
+  "preservation": {
+    "prior_tracked_files": 3153,
+    "changed_prior_tracked_files": [],
+    "preparation_new_files": 7,
+    "source_guard": {
+      "path": ".ecdev/src/conformance/mod.rs",
+      "sha256": "73d8b65f8bbe0a934ae83fec9628deb953ac8edb440e4b3c2fbc35801015f8e3",
+      "bytes": 25211
+    },
+    "source_guard_changed": false,
+    "product_source_changed": false,
+    "production_schema_UI_WAL_paid_budget_unknown_effects": "UNCHANGED; no preexisting tracked file changed",
+    "original_ec1_f1_ECG_encoded_identity_history_bytes": "UNCHANGED",
+    "new_dependency_or_Cargo_lock_change": false,
+    "engine_tracked_source_changed": false,
+    "source_proof_subjects": "Caller/lib.rs,price.rs,corpus and frozen sidecar byte pins unchanged; no refreshed proof grant invented",
+    "untracked_target_symlink": "PRESERVED; target -> /tmp/ecdev-observer-target",
+    "history_completeness": "NOT_ATTESTED"
+  },
+  "frozen_source_profile": {
+    "cohort": {
+      "path": "research/commerce/governance/source-price-cohort-db92bf27-v1.json",
+      "sha256": "f7b2d7b57115402e26818e76aa765674703001d48105712feb4116097d690d66",
+      "bytes": 6958
+    },
+    "source_request": {
+      "path": "research/commerce/governance/source-eight-identity-authority-request-db92bf27-v1.json",
+      "sha256": "52c624cbeaae003f2694b023eaafb6f356bbc6df5c1ea14bb2cc92f146026b46",
+      "bytes": 4626
+    },
+    "capture_commit": "db92bf27d31409704fccd44defe342a1b2f22823",
+    "capture_tree": "ec88cd6c52fadf3c638bed0eb7b790096eab8617",
+    "files": 734,
+    "nodes": 828,
+    "edges": 1122,
+    "nonnull_full_source_mappings": 0,
+    "target_custody": null,
+    "newer_811_834_profile_cross_paired": false,
+    "separate_full_API_qualified": 106,
+    "separate_full_API_unmapped": 2831
+  },
+  "engine_manifest_ACK": {
+    "deliverable": {
+      "path": "research/commerce/governance/source-manifest-consumer-e27c0238-ack-20261017.json",
+      "sha256": "bb0db7643703853fd556dd409c78bcdf4d6e93270b5bd9e622748acc197df3ff",
+      "bytes": 13219
+    },
+    "status": "BOUNDED_SOURCE_COMPATIBILITY_ACK; UNAPPLIED_REFERENCE_ONLY",
+    "engine_review_commit": "69b0b9868fecce5c9b8ff2360c6d7db4300fb60c",
+    "candidate_binding": {
+      "actual_compiled_lock_snapshot_checks": "PASS; root also invoked final candidate binary for both checks",
+      "compatibility_epoch": 1,
+      "engine_digest": "sha256:e27c0238b617939563ef24b0a24058ebe406b84850fecfff08617bf636f316f7",
+      "protocol_version": 1,
+      "schema_digest": "sha256:999fe2c05ff287ee61f7a5488493dc0a61bad969467b86f67781a471014b5d01"
+    },
+    "candidate_binding_provenance": "Published engine evidence; not recomputed in source container",
+    "existing_owner_intent": "Canonical Chronica ownership already established; no new architectural decision or permission requested. Original null accepted-owner/request fields await concrete implementation witnesses.",
+    "remaining_concrete_blockers": [
+      "Apply/publish the coordinated reviewed consumer as its own accepted engine implementation; metadata publication alone is unapplied.",
+      "Target-owned lossless source/canonical mappings and custody witnesses retaining source identities/history/rights.",
+      "Central source registry domain/key-prefix qualification and concrete actual Host authority context/effective handoff.",
+      "Coordinated shared eight-source lock/projection; actual source caller/rights/parity/unknown-effect and cutover evidence."
+    ],
+    "Symbion_or_composition_assessment_transfer": false
+  },
+  "requirements": {
+    "C2": "Synthetic offline public source function executed; target native production admission NOT_RUN",
+    "C3": "Source report inputs locally verified; target exact-revision execution NOT_RUN",
+    "C4": "Source caller cutover NOT_PERFORMED; all unmapped and excluded cases preserved",
+    "C5": "Target owner/runtime authority admission NOT_ESTABLISHED"
+  },
+  "readiness_status": {
+    "accepted_owner": null,
+    "admission": "PENDING",
+    "authority": null,
+    "authority_grants": [],
+    "canonical_assignment": null,
+    "canonical_enrollment": "BLOCKED",
+    "current_rights": null,
+    "native_v1": "INCOMPLETE",
+    "source_adapter_cutover": false,
+    "source_authority": "SOURCE_ONLY",
+    "source_retirement": false,
+    "target_governed_caller_locally_run": false,
+    "world_admission": null
+  },
+  "governance": {
+    "source_gate": {
+      "numerator": 10,
+      "denominator": 48,
+      "pass": false
+    },
+    "runtime_external_edges": 3,
+    "linked_external_edges": 10,
+    "external_technology_edges": 8,
+    "canonical_verified_extinct_total": null,
+    "global_OSS_total": null,
+    "new_assimilation": 0,
+    "verified_extinction_delta": 0,
+    "source_v1_gates": [
+      {
+        "metric": "extinction_ratio",
+        "required": "1.000000",
+        "actual": "0.208333",
+        "pass": false
+      },
+      {
+        "metric": "runtime_external_edges",
+        "required": "0",
+        "actual": "3",
+        "pass": false
+      },
+      {
+        "metric": "build_external_edges",
+        "required": "0",
+        "actual": "0",
+        "pass": true
+      },
+      {
+        "metric": "linked_external_edges",
+        "required": "0",
+        "actual": "10",
+        "pass": false
+      },
+      {
+        "metric": "external_technology_edges",
+        "required": "0",
+        "actual": "8",
+        "pass": false
+      },
+      {
+        "metric": "production_native_ratio",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "production_proof_ratio",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "repository_shape_conformance",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      },
+      {
+        "metric": "documents_over_budget",
+        "required": "0",
+        "actual": "0",
+        "pass": true
+      },
+      {
+        "metric": "ecdev_repository_conformance",
+        "required": "1.000000",
+        "actual": "1.000000",
+        "pass": true
+      }
+    ]
+  },
+  "independent_reviews": [
+    {
+      "agent": "sol_price_caller_scope_review",
+      "scope": "Source census plus exact published Blueprint/Codara caller/selector/rights evidence",
+      "result": "PASS; source prerequisite selected; no target execution"
+    },
+    {
+      "agent": "sol_caller_acceptance_review",
+      "result": "PASS;3 findingsclosed,5 mutationsrefused,finalartifact and12 logdigests matched",
+      "deliverable": {
+        "path": "research/commerce/governance/price-web-caller-review-20261017.json",
+        "sha256": "3af88b1566d8af8b4e8ae82a457c7cdbafc1fb64627de17474180acab3861c48",
+        "bytes": 4591
+      }
+    },
+    {
+      "agent": "sol_admission_contract_review",
+      "result": "BOUNDED SOURCE COMPATIBILITY ACK RECOMMENDED; actualpatch + originalsourcebytes independently inspected",
+      "review": {
+        "path": "/workspace/scratch/sol-ecdev-manifest-ack-review-20261017.json",
+        "sha256": "d526cdacee785d75ecf4a44ef5a3c5d705790e6e89f63d2e35a9d8b63cdbf6b1",
+        "bytes": 8717
+      }
+    }
+  ],
+  "model_selection": {
+    "new_worker_tool_parameter": "gpt-6.1-sol",
+    "fallback_used": false,
+    "executing_model_id_exposed": false,
+    "scope": "Explicit tool configuration, not an executing-model attestation"
+  },
+  "native_v1": {
+    "status": "INCOMPLETE",
+    "requirements": {
+      "N01": "NOT_RUN",
+      "N02": "NOT_RUN",
+      "N03": "NOT_RUN",
+      "N04": "NOT_RUN",
+      "N05": "NOT_RUN",
+      "N06": "NOT_RUN",
+      "N07": "NOT_RUN",
+      "N08": "NOT_RUN",
+      "N09": "NOT_RUN",
+      "N10": "NOT_RUN",
+      "N11": "NOT_RUN",
+      "N12": "NOT_RUN",
+      "J1": "NOT_RUN",
+      "J2": "NOT_RUN",
+      "J3": "NOT_RUN",
+      "J4": "NOT_RUN",
+      "J5": "NOT_RUN",
+      "J6": "NOT_RUN",
+      "J7": "NOT_RUN",
+      "J8": "NOT_RUN",
+      "J9": "NOT_RUN",
+      "P0": "NOT_RUN",
+      "P1": "NOT_RUN",
+      "P2": "NOT_RUN",
+      "P3": "NOT_RUN"
+    }
+  }
+}
