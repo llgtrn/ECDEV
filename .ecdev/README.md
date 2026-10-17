@@ -169,3 +169,14 @@ CLI evidence and local exact original evidence bytes. It reports fresh central e
 It performs no target execution, source export, Git call, witness rebuild or lock installation.
 All six production obligations remain open and cutover remains false. The earlier full-capture
 contract and its qualification profile remain unchanged.
+
+Fresh central execution is recorded separately in
+[`selected-central-fresh-validation-20261017.json`](../research/commerce/governance/selected-central-fresh-validation-20261017.json).
+An unchanged, read-only archive of central commit `a095975b937bf4ef03073ced77949a407b750a7e`
+was built offline with Rust 1.87; the rebuilt executable has SHA-256
+`99f2ed97093b33a4ae50a0825b42c1fc34147c72f298c4b91e670cf9d275047e`, distinct from the
+published binary. Actual `inspect-selected` acceptance and 34 refusal cases passed against
+the original package. The accepted 876 summary bytes match the published CLI receipt.
+This separate qualification leaves the recorded adapter interface unchanged. The current CLI
+does not expose raw evidence payloads, so central evidence-byte equivalence remains
+`NOT_ESTABLISHED`; all six production obligations remain open and cutover remains false.
