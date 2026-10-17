@@ -1,0 +1,105 @@
+{
+  "approved_code_sha256": {
+    ".ecdev/qualification/price_target_evidence.py": "720dfc9f4cecdc92141946d2967f726850bea4c91a2acc6a79cf4e3ad9ce3d04",
+    ".ecdev/qualification/test_price_target_evidence.py": "35794bcd378a015d5b6015610cccbe3c7e791f35702199e528707251ec68b370"
+  },
+  "assessment": {
+    "bytes": 309462,
+    "path": "/workspace/scratch/sol-price-target-evidence-20261017/assessment.json",
+    "production_status": {
+      "authority_granted": false,
+      "canonical_enrollment": "BLOCKED",
+      "current_rights": null,
+      "exclusive_custody": null,
+      "production_qualification_established": false,
+      "source_adapter_cutover": false,
+      "status": "CUTOVER_BLOCKED"
+    },
+    "sha256": "e9dde97447cfa7b7533198152048ff305b418a72e5b39b7f4a16f1ebfa630bd0",
+    "status": "TEST_EVIDENCE_RECONCILED_ONLY"
+  },
+  "findings": [],
+  "format": "ecdev-price-target-evidence-code-independent-review-v1",
+  "frozen_target_report": {
+    "bytes": 474084,
+    "git_blob": "7ffe9500526f30a4927b2090a6f799ceb3d946cd",
+    "path": "research/commerce/governance/price-target-test-only-outcomes-053e8a8f-v1.json",
+    "sha256": "f9fa2abeb82d39cb707f6249197e6ec115639953de1db472b50827d82d4696a4"
+  },
+  "full_suite_rerun": false,
+  "independent_mutation_checks": [
+    {
+      "mutation": "effect_changed_with_valid_checksum",
+      "reason": "temporary-world receipt context differs",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "generation_changed_with_valid_checksum",
+      "reason": "temporary-world receipt context differs",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "known_unavailable_changed_code8_to16",
+      "reason": "boundary must be known UnsupportedSyntax code 8, not unknown",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "amount_text_changed_with_valid_checksum",
+      "reason": "original source result field differs",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "Some_empty_changed_to_None_same_payload_bytes",
+      "reason": "original selector Option commitment differs",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "production_authority_grant",
+      "reason": "test-only evidence assessment, exact integers, receipts or authority limits changed",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "claim_all20_boundaries_executed",
+      "reason": "test-only evidence assessment, exact integers, receipts or authority limits changed",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "u64MAX_rounded_to_float",
+      "reason": "test-only evidence assessment, exact integers, receipts or authority limits changed",
+      "result": "REFUSED"
+    }
+  ],
+  "limits": [
+    "Temporary test evidence only; synthetic assessments/credentials/grants do not establish production authority, current rights or exact-implementation attestation.",
+    "Only one of20 source boundaries executed; the remaining19 are not asserted as target executions.",
+    "Full IR/capsule bytes are not exported; inspector joins digests but does not reconstruct IR.",
+    "Tested dirty cc99 binary/lock provenance is distinct from final053 publication; no exact published-revision binary attestation.",
+    "Strict and no-deps Clippy remain BLOCKED; lint-filtered exit0 remains a diagnostic, not strictPASS.",
+    "Pending unknown test uses a seeded NativeWorkRunStore fault-state; no real crash or production effect claim.",
+    "Lower-level decode helpers are applied within exact frozen-report/source reconciliation; integrity hashes are not authorship or authority proofs.",
+    "All six production obligations remain OPEN; original source status and evidence fields remain unchanged."
+  ],
+  "primary_contract_review": {
+    "exact_finished_frames": true,
+    "known_unavailable_codes": "Published1..16 recognized; only executed boundary requires8",
+    "lowercase_hex_and_integrity_domain": true,
+    "numeric_result_nullable_and_finite_bits": true,
+    "receipt_wire_version": 1,
+    "request_context_joins": "payload,IR,implementation,capability,kernel,requester,resource,Holding,lease,EffectRef,generation",
+    "result_wire_version": 1,
+    "source_expected_fields_reconciled": true,
+    "wire_authority_spelling": "Derived explicitly from fixed pinned receipt wire data; no source control import or foreign runtime call"
+  },
+  "read_only_checks": [
+    "Read both complete new modules and compared receipt/result/domain/framing logic with published053 primary codecs and independently authored decoder",
+    "Rebuilt assessment once and matched all309462 bytes and approved e9dde974 SHA",
+    "Independent decoder rechecked all109 original frames and full sourceoracle fields/IEEEbits",
+    "Confirmed106 ordered cases,3 controls,14 immutable source members,106 source-derived selector commitments, exact u64MAX and all native/Holding/lease-fence request joins",
+    "Confirmed source8OBSERVED/91UNKNOWN, original20-boundary preservation with only1 executed, allsix original evidenceNULL and allproductionobligationsOPEN",
+    "Reviewed11scoped-test PASS and RuffPASS logs; unchanged full suite and target runtime not rerun"
+  ],
+  "reviewed_at_utc": "2026-10-17T07:05:42.309486+00:00",
+  "source_files_modified": false,
+  "status": "PASS; NO_BLOCKING_FINDINGS",
+  "target_runtime_executed_by_reviewer": false
+}
