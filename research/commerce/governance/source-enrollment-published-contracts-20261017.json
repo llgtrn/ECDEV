@@ -1,0 +1,159 @@
+{
+  "format": "ecdev-source-enrollment-published-contract-observation-v1",
+  "observed_at_utc": "2026-10-17T01:52:09.396587+00:00",
+  "scope": "READ_ONLY_PUBLISHED_CONTRACT_READBACK; NO_ACCEPTED_SOURCE_ENROLLMENT_OR_RUNTIME_AUTHORITY",
+  "engine": {
+    "repository": "llgtrn/.Ynventa-",
+    "commit": "b987c16b7ef99b9f73ce0d891439e226216beef7",
+    "tree": "98b5436a8a6752f0108abf3984089cc3a1c4dd27",
+    "files": [
+      {
+        "path": "core/semantic/src/schema.rs",
+        "blob": "ce772c9c303ce05152b839a0738a7db595406345"
+      },
+      {
+        "path": "apps/cli/src/migration/ecdev.rs",
+        "blob": "2d4d6adc1d17ce0551ce1a12316d25ebd1038ce9"
+      },
+      {
+        "path": "apps/cli/src/migration/ecdev/portable.rs",
+        "blob": "8844dce84d26c7700e90aa73ddf8c86ef885ecc6"
+      },
+      {
+        "path": "apps/cli/src/migration/ecdev/proposal.rs",
+        "blob": "6285260e9d1dfc52c0f72878e7b7e42f64dda82a"
+      },
+      {
+        "path": "REPOSITORY-PROTOCOL-V1.md",
+        "blob": "faa2fa1509202fac35bd75bf501bb40d1bf42326"
+      }
+    ],
+    "registry": {
+      "count": 7,
+      "source_registered": false,
+      "entry_fields": [
+        "id",
+        "origin",
+        "domain"
+      ],
+      "accepted_ecdev_domain": null,
+      "accepted_canonical_identity_mapping": null,
+      "accepted_source_authority_handoff": null
+    },
+    "pending_proposal_consumer": {
+      "path": "apps/cli/src/migration/ecdev/proposal.rs",
+      "API": "inspect_bound(capture_bytes,capture_sha256,proposal_bytes,proposal_sha256)",
+      "positive_whole_source_assignments": "REFUSED; target_custody and all proposed_target must be null",
+      "locators": "lines480-485 at pinned commit"
+    },
+    "preserved_positive_review": {
+      "publication_commit": "b987c16b7ef99b9f73ce0d891439e226216beef7",
+      "directory": ".ynventa/migration/reviews/ecdev-bounded-8f419a94",
+      "review": {
+        "path": "review.json",
+        "git_blob": "8a2fc0aa7089c8ac5706d0c4ccd2affc4eb10923",
+        "sha256": "43880b3a38e2f15399a6eefe6b255f4c81cc746ed08da85c729a4ed626531b17",
+        "bytes": 3956
+      },
+      "README": {
+        "path": "README.md",
+        "git_blob": "4720c1be002cb4c23478de12b4a58cb7b238834a",
+        "sha256": "b93761dfdcd2623abf028cb8fe3d00bf2332212fb009910eb36cb2d9c0942e23",
+        "bytes": 3268
+      },
+      "patch": {
+        "path": "proposed.patch.b64",
+        "git_blob": "8a9ad4531137bf16ed32154c557dc99b40ae5a4c",
+        "decoded_sha256": "8f419a9424916772f71e592a12036fe06fb837a3952de5a6391f7dbf06fe3fa3",
+        "decoded_bytes": 86656
+      },
+      "installed": false,
+      "inputs": [
+        "capture",
+        "proposal",
+        "candidate",
+        "owner_contract",
+        "case_map:Option<BoundBytes>"
+      ],
+      "manifest_parameter_present": false,
+      "manifest_qualification": "all106_name_manifest() always NotQualified; PINNED_CORPUS_OR_CASE_NAME_MANIFEST_REQUIRED_FOR_ALL106_NAME_MANIFEST appended",
+      "bound_source_profile": {
+        "payloads": 734,
+        "source_nodes": 828,
+        "source_indices": [
+          306,
+          503,
+          513,
+          723
+        ]
+      },
+      "execution_scope": "STATIC_REVIEW_ONLY_HERE; published test counts are reports, not locally executed or enrollment credit"
+    }
+  },
+  "target": {
+    "repository": "llgtrn/Chronica",
+    "commit": "d1e3c143c9a842523c2d27560ef9343912add827",
+    "tree": "f809219273ed32c56153a1d69174a8dde6493d5e",
+    "owner_contract": {
+      "path": "assays/gate/fixtures/price-text/d7c54f7e-owner-contract.json",
+      "git_blob": "89e449e57d4ad1ba5ee45c9d3c0f98e7af012455",
+      "publication_commit": "4b5e163042c621702d7700b53087351f40fe192f",
+      "publication_tree": "eb8977bc40ac8384f53449ece1b75af4b993ada0",
+      "implementation_commit": "d7c54f7ec836da6a8459f8a3786964ea7c674866",
+      "implementation_tree": "2965cd433ee1f744775b8cc885dc7cbab3efb6fb",
+      "sha256": "42c4eed4729032882cde433280431cec8887f829f3f522f109bc93b6079e4285",
+      "bytes": 34409
+    },
+    "price_contract": {
+      "path": "assays/gate/fixtures/price-text/contract.json",
+      "git_blob": "f38d6d733b29f5941748dbcbd20ad9446fb6652a",
+      "publication_commit": "1a9c859ca5f1c27b69e99bddbbe47e1cf5496945",
+      "publication_tree": "6d8a8d3fe9d71ce97075ebf188b4e0a208a2724f",
+      "sha256": "6d122df009bce0f088fe01bf434f46fd60ec10f4128ab768ac303e8b3b4ba411",
+      "bytes": 7770
+    },
+    "reference_meaning": "Existing bounded capability owner and caller only; no whole-source owner, assignment, rights, source enrollment or runtime acceptance"
+  },
+  "committed_lock_readback": {
+    "engine": {
+      "blob": "e6f28ba9853f670a62cb65818d9461906d62f89b",
+      "schema_digest": "sha256:31eb0180ea32fe56b53806d7f64ff17dcd1a579c5edfde926964b94d79ef085e",
+      "engine_digest": "sha256:00e75c9ba394f1754a8dba51c2d3a216d56f827e0e974613ec586ccc0380138e"
+    },
+    "target": {
+      "blob": "76ffde85ff61ababb47ea2536ee6dadc626f88a4",
+      "schema_digest": "sha256:885e964325073cdddbb66151ebda7d8ca383f1ee8e58c184ef2973867f7a02e1",
+      "engine_digest": "sha256:d78d859567ce4069a1de19bc9a51ad5ce0a8794ad56929f2182e231c9dce9578"
+    },
+    "equal": false,
+    "fresh_fingerprint_computed_here": false,
+    "shared_lock_compatibility": "NOT_ESTABLISHED"
+  },
+  "source_supplied_now": {
+    "cohort": "source-price-cohort-db92bf27-v1.json",
+    "identity_authority_request": "source-eight-identity-authority-request-db92bf27-v1.json",
+    "manifest": "price-supported-106-manifest-db92bf27-v1.tsv",
+    "manifest_sha256": "451f0bb1a2f3acd3879ddc2945c14e74447ec6ac70dfd5ebf374d086c8f353dc",
+    "manifest_bytes": 4051,
+    "supported": 106,
+    "unmapped": 2831
+  },
+  "exact_remaining_central_actions": [
+    "Add an independently pinned supported-name manifest input and verify exact451f manifest bytes against the complete106-case partition; existing unapplied API cannot consume it",
+    "Publish/accept the ecdev source identity/origin/domain and lossless original identity/history/rights mapping; source-owned request supplies identity/origin/commit/tree/cohort while central choices remain null",
+    "Qualify the authority handoff before installing any shared projection or lock; retain the SOURCE_ONLY guard until acceptance",
+    "Bind one accepted schema/engine/protocol/epoch across exact eight-source ordinary assessment/capsule closure; found checkout success is insufficient"
+  ],
+  "remaining_runtime_and_rights": [
+    "real source production caller, full selector/payload/EffectRef joins and unknown effects",
+    "independent canonical graph and full native/UI/asset closure",
+    "current rights and runtime admission; source retirement not performed"
+  ],
+  "independent_readback": {
+    "agent": "sol_admission_contract_review",
+    "tool_model_parameter": "gpt-6.1-sol",
+    "executing_model_id_exposed": false,
+    "maintained_source_writes": false,
+    "source_or_target_execution": "NOT_RUN"
+  }
+}
