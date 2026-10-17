@@ -1,0 +1,113 @@
+{
+  "classification": "READ_ONLY_SOURCE_CALLER_SCOPE_RECOMMENDATION; REQUEST_STAGE_ONLY_NO_TARGET_EXECUTION_OR_ADMISSION",
+  "source": {
+    "repository": "llgtrn/ECDEV",
+    "commit": "0ccbd426a7bfbb3582f2bf7fce468656bcc9786a",
+    "caller": "adapter/web/src/lib.rs:355-425",
+    "call": "parse_price(Some(raw), offer.priceCurrency.as_str(), None, None)",
+    "declaration": ".ecdev/declared/donors.rs:22",
+    "corpus_sha256": "3729e24b33e660f6155ccca4ef5e8b199de4b2cab1e7b517cf403f930157d3ce"
+  },
+  "target": {
+    "repository": "llgtrn/Chronica",
+    "commit": "d1e3c143c9a842523c2d27560ef9343912add827",
+    "tree": "f809219273ed32c56153a1d69174a8dde6493d5e",
+    "kernel_sha256": "9c7d227ff74d7bf75679458c8b3f3cceac0e091378e3d4f96182f8ae504c13da",
+    "caller_chain": [
+      "phenora/codara/src/main.rs:16",
+      "phenora/codara/src/cli.rs:1554",
+      "phenora/codara/src/run.rs:1854",
+      "physiology/capability/kernels/src/price_text.rs:128"
+    ],
+    "test": "phenora/codara/tests/e2e_price_text.rs:566",
+    "external_corpus_test_ignored_by_default": true,
+    "target_execution_in_this_review": "NOT_RUN"
+  },
+  "blueprint": {
+    "repository": "llgtrn/.Ynventa-",
+    "commit": "b987c16b7ef99b9f73ce0d891439e226216beef7",
+    "tree": "98b5436a8a6752f0108abf3984089cc3a1c4dd27",
+    "path": "BLUEPRINT-V1.md",
+    "blob": "9f698547d8ca27fe4b32857108cff4c15e7f6836",
+    "sha256": "2392aba635bb0500b22fc26eb9a76f82e7a08279c84b429776093d46f1b86b70",
+    "requirements": [
+      {
+        "id": "C2",
+        "line": 2077,
+        "meaning": "Native owner with provenance, no cross-repo dependency, production caller"
+      },
+      {
+        "id": "C3",
+        "line": 2078,
+        "meaning": "Fresh executed attested parity/differential evidence at exact revision"
+      },
+      {
+        "id": "C4",
+        "line": 2079,
+        "meaning": "All consumer edges migrated before retirement"
+      },
+      {
+        "id": "C5",
+        "line": 2080,
+        "meaning": "Target authority admits owner for consumers"
+      }
+    ],
+    "clauses": [
+      28,
+      1930,
+      1941,
+      1958,
+      1962,
+      1964
+    ]
+  },
+  "finite_scope": {
+    "corpus_total": 2937,
+    "api_1_0_qualified": 99,
+    "api_1_1_qualified": 106,
+    "api_1_1_unmapped": 2831,
+    "actual_web_shape": 2710,
+    "not_web_shape": 227,
+    "web_and_api_1_1": 99,
+    "web_shape_target_unmapped": 2611,
+    "old_web_qualified": 94,
+    "new_web_qualified": [
+      117,
+      212,
+      855,
+      1193,
+      1849
+    ],
+    "excluded_api_qualified": [
+      409,
+      1185,
+      1186,
+      1187,
+      1188,
+      1467,
+      1473
+    ],
+    "empty_string_included": [
+      1190,
+      1191,
+      1192,
+      1193
+    ]
+  },
+  "acceptance_recommendation": [
+    "Freeze all 2937 identities and the 106 API/2831 unmapped prior claim; evaluate source Web subset separately as 99/2710 and preserve 227 nonshape accounting.",
+    "For each of 99 compare actual public Web::extract output four nullable fields and exact finite float bits to unchanged corpus, retain raw JSON price and stated currency separately; derived result must not drive observed money.",
+    "Stage target request only with original UTF8 payload, Some input, exactly preserved currency hint Option, absent decimal/group selectors and absent input_is_none; bind full IR, implementation/capability/kernel/payload and eventual EffectRef identities.",
+    "Use missing/null/numeric/bool/object/array price as no-interpretation caller negatives; empty string must remain Some and interpreted. Retain meaningful supported-domain refusal negatives for free text/sign/grouping/non-ASCII/unsupported token/overbounds, without substituting all-null success.",
+    "Preserve known nullable output, known target unavailable, and pending unknown as three distinct states; no retry/refund/recompute on pending unknown.",
+    "Target qualification still requires current authentication, resource.work/lease/release, separate resource.observe, fresh exact1.1.0 assessment and inherited provisional one cpu_units allocation. Existing temporary synthetic World assays do not grant production authority."
+  ],
+  "remaining_blockers": [
+    "No installed ECDEV-to-Chronica runtime sourcecaller route or sourceconsumer cutover.",
+    "Current source proposal still emits null target_custody/proposed_target and rejects nonnull at proposal.rs:282-295; no positive enrollment inferred.",
+    "Historical rights UNVERIFIED and copying authorization UNKNOWN; no code/table/corpus redistribution or retirement credit.",
+    "No current external operator authority, exactimplementation assessment, exclusive custody or positive engine enrollment established.",
+    "This static review and new source-side harness can justify readiness request only, not new target governedexecution/native OS completion."
+  ],
+  "reference_custody": "Exact fetched source/blueprint bytes saved only in this scratch directory; git hash-object verified against fetched blob IDs. No maintained source edit, target test run, credential, HTTP acquisition or paid effect."
+}

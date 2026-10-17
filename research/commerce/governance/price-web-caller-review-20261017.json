@@ -1,0 +1,116 @@
+{
+  "approved_code_sha256": {
+    ".ecdev/qualification/price_caller_readiness.py": "db22dfd066a753f25e012119227138ffd651059e20f39ba8c21d81d300fcdd33",
+    ".ecdev/qualification/price_web_caller.rs": "d3be9466118b5debf37f23a3797f17ebcc818b4c214f220a589b893f3721b5c5",
+    ".ecdev/qualification/test_price_caller_readiness.py": "c3c449e9ba55061232f811f5d7d73115beb97a596fec6f9c77473baa29763d81"
+  },
+  "closed_findings": [
+    {
+      "closure": "Exact original four-field keyset required",
+      "finding": "Extra derived-result fields exported",
+      "id": "F1"
+    },
+    {
+      "closure": "All twenty exact boundary rows independently specified, including literal spelling, observed money and UNKNOWN null results",
+      "finding": "Incomplete boundary input/outcome validation",
+      "id": "F2"
+    },
+    {
+      "closure": "Exact independently constructed excluded rows required",
+      "finding": "Excluded-row authority injection exported",
+      "id": "F3"
+    }
+  ],
+  "final_log_readback": {
+    "CLI_build": "PASS; byte-identical readiness artifact",
+    "CLI_inspect": "PASS; TARGET_ADMISSION_PENDING",
+    "commands": 6,
+    "commands_path": "/workspace/scratch/ecdev-price-caller-final-validation-20261017/commands.json",
+    "commands_sha256": "76777a6de92dc2662bf59e7a2752652974695f9ed0c63535182532546abe2095",
+    "conformance_checks": "31 PASS",
+    "diff_check": "PASS",
+    "log_digests_and_lengths_verified": 12,
+    "python_tests": "34 PASS (11 manifest + 11 cohort + 12 readiness)",
+    "ruff": "PASS",
+    "unchanged_full_tests_rerun_by_reviewer": false
+  },
+  "format": "ecdev-price-caller-independent-final-review-v1",
+  "independent_mutation_checks": [
+    {
+      "mutation": "extra_result_field",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "forged_negative_observed_money",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "oversize_nonnull_result",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "changed_equal_value_numeric_lexeme",
+      "result": "REFUSED"
+    },
+    {
+      "mutation": "excluded_acceptance_authority_EffectRef_injection",
+      "result": "REFUSED"
+    }
+  ],
+  "limits": [
+    "Synthetic offline public source function executed only; no deployed source caller demonstrated.",
+    "No target governed execution, native production admission, consumer cutover, retirement, canonical enrollment or native OS closure established.",
+    "Full IR, EffectRef, authentication, allocation and current rights remain unresolved; C2-C5 remain open.",
+    "Review verifies local source and recorded evidence; it is not authenticated toolchain or runtime attestation."
+  ],
+  "readiness_artifact": {
+    "counts": {
+      "api_qualified": 106,
+      "api_unmapped": 2831,
+      "corpus_total": 2937,
+      "negative_cases": 20,
+      "non_web_shape": 227,
+      "qualified_web_excluded": 7,
+      "web_new_qualified": 5,
+      "web_old_qualified": 94,
+      "web_qualified": 99,
+      "web_shape": 2710,
+      "web_unmapped": 2611
+    },
+    "excluded_API_case_count": 7,
+    "path": "research/commerce/governance/price-web-caller-readiness-v1.json",
+    "proposed_request_count": 99,
+    "remaining_requirements": {
+      "C2": "Synthetic offline public source function executed; target native production admission NOT_RUN",
+      "C3": "Source report inputs locally verified; target exact-revision execution NOT_RUN",
+      "C4": "Source caller cutover NOT_PERFORMED; all unmapped and excluded cases preserved",
+      "C5": "Target owner/runtime authority admission NOT_ESTABLISHED"
+    },
+    "sha256": "7b2ca2b6d93cb4effe2b8c37808b6b087b86c4213516532299a22f0daa96091d",
+    "size_bytes": 71080,
+    "status": {
+      "accepted_owner": null,
+      "admission": "PENDING",
+      "authority": null,
+      "authority_grants": [],
+      "canonical_assignment": null,
+      "canonical_enrollment": "BLOCKED",
+      "current_rights": null,
+      "native_v1": "INCOMPLETE",
+      "source_adapter_cutover": false,
+      "source_authority": "SOURCE_ONLY",
+      "source_retirement": false,
+      "target_governed_caller_locally_run": false,
+      "world_admission": null
+    }
+  },
+  "remaining_blocking_findings": [],
+  "review_mode": "SOURCE_AND_EVIDENCE_READ_ONLY; ONLY_THIS_REVIEW_JSON_WRITTEN",
+  "reviewed_at_utc": "2026-10-17T02:13:50.660252+00:00",
+  "source_report": {
+    "path": "research/commerce/governance/price-web-caller-acceptance-v1.json",
+    "sha256": "4a3c8b319133463772fae4a169a1d3e3ef68381404ed6d9debf6dcbdf3c86186",
+    "size_bytes": 150680
+  },
+  "status": "PASS; NO_REMAINING_BLOCKING_FINDINGS"
+}
