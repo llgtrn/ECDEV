@@ -142,6 +142,30 @@ paths through 19 Git trees: 83 selected materials, including the retained notice
 three exact rights/witness/prerequisite documents. It consumes the original four source
 bindings and all six open obligations and returns `CUTOVER_BLOCKED`. Historical and current
 source versions remain separate. The full 734-file capture and proposal are outside this
-selected snapshot; central readers still need their original inputs and a portable-proof
-adapter before they can adopt this handoff. Operational rights, exclusive custody, source-eight
-enrollment and the production switch remain unqualified.
+selected snapshot. The full-source central readers retain their original inputs; selected
+inspection uses a separate source-only interface. Operational rights, exclusive custody,
+source-eight enrollment and the production switch remain unqualified.
+
+The selected-package interoperability adapter compares the published central CLI qualification
+packet at `a095975b937bf4ef03073ced77949a407b750a7e` with the existing source reader:
+
+```sh
+python3 -B .ecdev/qualification/selected_package_interop.py \
+  --profile research/commerce/governance/central-selected-package-contract-a095975b-v1.json \
+  --packet-dir research/commerce/governance/central-selected-package-a095975b \
+  --package research/commerce/governance/price-source-package-c973d76b-v1.json \
+  --expect-profile-sha256 470d0ea604e0e39a8490d70963e0495506ef25b260464534c9df5199319816d2 \
+  --expect-central-commit a095975b937bf4ef03073ced77949a407b750a7e \
+  --expect-central-tree 08b4df18c97ccdc29d0bb9d02c121192c4a09840 \
+  --expect-package-sha256 be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd \
+  --expect-source-commit c973d76bda8476142dd64116b60877942ccb24d5 \
+  --expect-source-tree 1020e7ebdc85befdd0e6ee4d73e4417779228f2c \
+  --expect-rights-sha256 c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410
+```
+
+Obtain the profile and publication pins independently. This mode verifies recorded central
+CLI evidence and local exact original evidence bytes. It reports fresh central execution as
+`NOT_RUN` and central evidence-byte equivalence as `NOT_ESTABLISHED`: the CLI emits a summary.
+It performs no target execution, source export, Git call, witness rebuild or lock installation.
+All six production obligations remain open and cutover remains false. The earlier full-capture
+contract and its qualification profile remain unchanged.
