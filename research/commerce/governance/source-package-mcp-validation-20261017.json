@@ -1,0 +1,759 @@
+{
+  "observed_at_utc": "2026-10-17T11:22:49.073309+00:00",
+  "purpose": "Consolidated actual source package/custody consumer and MCP caller execution evidence; source-only preparation and bounded correctness fix.",
+  "exclusive_source": {
+    "origin": "https://github.com/llgtrn/ECDEV.git",
+    "branch": "main",
+    "shell": "/usr/bin/bash 5.2.37",
+    "recovered_base": "c973d76bda8476142dd64116b60877942ccb24d5",
+    "recovered_tree": "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+    "mcp_base_and_published_package": "eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861",
+    "package_published_tree": "07b162f2ded8e0b37e50417608539775ead3d517",
+    "mcp_publication": "Containing commit; not yet minted at evidence preparation",
+    "new_credentials": false,
+    "other_source_clones": false,
+    "runtime_dependencies_added": false,
+    "disposable_build_target": "/tmp/ecdev-stream-closure-target -> /workspace/scratch/ecdev-disposable-builds/ecdev-stream-closure-target"
+  },
+  "recovery": {
+    "observed_at_utc": "2026-10-17T10:51:35.583844+00:00",
+    "source_commit": "c973d76bda8476142dd64116b60877942ccb24d5",
+    "source_tree": "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+    "files": 3244,
+    "membership_sha256": "911c2b2813886c1122367272e1ddfb0ab55245cbb796dea1bae4632a5f971cfe",
+    "manifest_sha256": "4d1cfc38e59a3353b5572803f4ef594587710b19ba77ab77467052846220c0cc",
+    "all_prior_committed_bytes_and_modes_match": true,
+    "tracked_worktree": "CLEAN",
+    "untracked": "target -> /tmp/ecdev-observer-target; PRESERVED",
+    "active_old_writer_build_processes": 0,
+    "held_patches": [
+      {
+        "path": "/workspace/scratch/ECDEV-stop-20261016T164505Z/tracked-code.patch",
+        "bytes": 8293,
+        "sha256": "0cde2279093670b57f6d02ef0eed19bda5eeb90c8095f9f50641742d3c2fe44e",
+        "action": "PRESERVED; NOT_APPLIED_OR_EXECUTED"
+      },
+      {
+        "path": "/workspace/scratch/sol-admission-contract-review-20261017/engine-positive.patch.b64",
+        "bytes": 117065,
+        "sha256": "8147a9798993c264c562a17ecbbe1feed577e44507a5dede8a832d531523e0ee",
+        "action": "PRESERVED; NOT_APPLIED_OR_EXECUTED"
+      }
+    ],
+    "workspace_agent_files": [],
+    "screened_operations": "NOT_EXECUTED; NOT_REPRODUCED",
+    "exclusive_writable_maintained_source": "llgtrn/ECDEV",
+    "saved_engine": "READ_ONLY_UNCHANGEDd66313834c6d584b259650033bcf72f16c4e34f7"
+  },
+  "latest_resume": {
+    "observed_at_utc": "2026-10-17 11:19:30 UTC",
+    "fetched_main": "eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861",
+    "mcp_candidate_unchanged": true,
+    "previous_cargo_rustc_proof_processes": 0,
+    "unknown_commands_restarted": false,
+    "prior_proof_commands_replayed": false,
+    "completed_saved_proof_results": "rmcp8/8 and axum8/8 exit0, completed before resume; original logs and independent review recovered"
+  },
+  "package_publication": {
+    "observed_at_utc": "2026-10-17T11:04:21.514355+00:00",
+    "commit": "eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861",
+    "tree": "07b162f2ded8e0b37e50417608539775ead3d517",
+    "files": 3255,
+    "manifest_sha256": "66e2713f7261237fdf5b2496c1676ffc1da66c6cd049c5a8b29ef8dd9623624a",
+    "membership_sha256": "f29c065b6b5d474ed02ec7dce722ea2ea5b98bb0b1215d0534e3f694fc40bfe1",
+    "membership_path": "/workspace/scratch/ecdev-source-package-preparation-membership-20261017.json",
+    "remote_verified": true,
+    "worktree_bytes_and_modes_match": true
+  },
+  "package": {
+    "path": "research/commerce/governance/price-source-package-c973d76b-v1.json",
+    "sha256": "be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd",
+    "bytes": 14277535,
+    "materials": 83,
+    "evidence_members": 3,
+    "git_trees": 19,
+    "git_blob_members": 86,
+    "all83_materials_still_byte_identical": true,
+    "actual_existing_consumer": ".ecdev/qualification/price_custody.py::inspect_source_package and --inspect-source-package",
+    "independent_required_pins": [
+      "package SHA256",
+      "source commit",
+      "source tree",
+      "rights SHA256"
+    ],
+    "source_custody_readiness": "CUTOVER_BLOCKED;99 original selected vectors,6 original NULL obligations preserved",
+    "central_portable_package_consumer": "MISSING; current central qualifiers consume original envelopes or actual local Git objects",
+    "full734capture_or_mapping_included": false,
+    "production_acceptance": false
+  },
+  "python_validation": {
+    "total_passed": 107,
+    "new_package_tests": 22,
+    "new_existing_consumer_tests": 9,
+    "prior_tests": 76,
+    "commands": [
+      {
+        "name": "tests",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "test_price_manifest",
+          "test_price_cohort",
+          "test_price_caller_readiness",
+          "test_source_responsibility",
+          "test_price_custody",
+          "test_price_target_evidence",
+          "test_price_selected_switch",
+          "test_price_source_package",
+          "test_price_custody_package"
+        ],
+        "cwd": "/workspace/ECDEV/.ecdev/qualification",
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stderr_sha256": "48373bf4be5de2b075df37d3412679643574173fb32b008c2b4a6f636093a7aa",
+        "stderr_bytes": 20529
+      },
+      {
+        "name": "ruff",
+        "argv": [
+          "/tmp/ecdev-python-lint-tools/bin/ruff",
+          "check",
+          "--no-cache",
+          ".ecdev/qualification/price_custody.py",
+          ".ecdev/qualification/price_source_package.py",
+          ".ecdev/qualification/test_price_source_package.py",
+          ".ecdev/qualification/test_price_custody_package.py"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+        "stdout_bytes": 19,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "diff-check",
+        "argv": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      }
+    ],
+    "test_log": {
+      "path": "/workspace/scratch/ecdev-source-package-root-validation-20261017/tests.stderr",
+      "bytes": 20529,
+      "sha256": "48373bf4be5de2b075df37d3412679643574173fb32b008c2b4a6f636093a7aa",
+      "utf8": "test_actual_106_manifest_matches_published_pin_and_exact_original_names (test_price_manifest.RetainedPriceManifest.test_actual_106_manifest_matches_published_pin_and_exact_original_names) ... ok\ntest_all_2937_original_cases_and_raw_corpus_sidecar_case_map_bytes_unchanged (test_price_manifest.RetainedPriceManifest.test_all_2937_original_cases_and_raw_corpus_sidecar_case_map_bytes_unchanged) ... ok\ntest_any_corpus_byte_or_case_change_rejected_including_unselected_fields (test_price_manifest.RetainedPriceManifest.test_any_corpus_byte_or_case_change_rejected_including_unselected_fields) ... ok\ntest_bounded_bytes_required (test_price_manifest.RetainedPriceManifest.test_bounded_bytes_required) ... ok\ntest_caller_must_supply_the_exact_fixed_sidecar_pin (test_price_manifest.RetainedPriceManifest.test_caller_must_supply_the_exact_fixed_sidecar_pin) ... ok\ntest_cli_rejects_edited_inspection_and_nonregular_or_linked_inputs (test_price_manifest.RetainedPriceManifest.test_cli_rejects_edited_inspection_and_nonregular_or_linked_inputs) ... ok\ntest_cli_requires_independent_pin_and_emits_exact_artifact_or_inspection (test_price_manifest.RetainedPriceManifest.test_cli_requires_independent_pin_and_emits_exact_artifact_or_inspection) ... ok\ntest_exact_seven_added_and_all_original_99_preserved (test_price_manifest.RetainedPriceManifest.test_exact_seven_added_and_all_original_99_preserved) ... ok\ntest_manifest_framing_index_name_order_and_duplicate_mutations_rejected (test_price_manifest.RetainedPriceManifest.test_manifest_framing_index_name_order_and_duplicate_mutations_rejected) ... ok\ntest_sidecar_cohort_edits_and_authority_self_grants_cannot_be_caller_rebound (test_price_manifest.RetainedPriceManifest.test_sidecar_cohort_edits_and_authority_self_grants_cannot_be_caller_rebound) ... ok\ntest_source_proposal_or_fresh_capture_cannot_replace_retained_bounded_sidecar (test_price_manifest.RetainedPriceManifest.test_source_proposal_or_fresh_capture_cannot_replace_retained_bounded_sidecar) ... ok\ntest_all_2831_original_unmapped_rows_and_99_plus_seven_are_bound (test_price_cohort.ExactPriceCohort.test_all_2831_original_unmapped_rows_and_99_plus_seven_are_bound) ... ok\ntest_authority_identity_and_typed_boolean_mutations_refuse_even_with_new_cohort_pin (test_price_cohort.ExactPriceCohort.test_authority_identity_and_typed_boolean_mutations_refuse_even_with_new_cohort_pin) ... ok\ntest_caller_cohort_pin_is_required_and_full_document_is_checked (test_price_cohort.ExactPriceCohort.test_caller_cohort_pin_is_required_and_full_document_is_checked) ... ok\ntest_cli_builds_and_inspects_source_request_and_rejects_mixed_operations (test_price_cohort.ExactPriceCohort.test_cli_builds_and_inspects_source_request_and_rejects_mixed_operations) ... ok\ntest_cli_requires_every_pin_emits_exact_bytes_and_inspects_without_writes (test_price_cohort.ExactPriceCohort.test_cli_requires_every_pin_emits_exact_bytes_and_inspects_without_writes) ... ok\ntest_edited_unmapped_code_original_fields_and_target_reference_cannot_be_rebound (test_price_cohort.ExactPriceCohort.test_edited_unmapped_code_original_fields_and_target_reference_cannot_be_rebound) ... ok\ntest_exact_snapshot_membership_and_pending_proposal_roundtrip (test_price_cohort.ExactPriceCohort.test_exact_snapshot_membership_and_pending_proposal_roundtrip) ... ok\ntest_handoff_does_not_accept_invented_domain_owner_lock_or_authority (test_price_cohort.ExactPriceCohort.test_handoff_does_not_accept_invented_domain_owner_lock_or_authority) ... ok\ntest_handoff_request_populates_only_source_owned_identity_and_membership (test_price_cohort.ExactPriceCohort.test_handoff_request_populates_only_source_owned_identity_and_membership) ... ok\ntest_missing_extra_changed_and_independently_wrong_artifact_pins_refuse (test_price_cohort.ExactPriceCohort.test_missing_extra_changed_and_independently_wrong_artifact_pins_refuse) ... ok\ntest_new_811_capture_and_proposal_cannot_use_the_old_price_sidecar (test_price_cohort.ExactPriceCohort.test_new_811_capture_and_proposal_cannot_use_the_old_price_sidecar) ... ok\ntest_boundary_money_resource_result_exact_lexeme_and_original_inputs_refuse_forgery (test_price_caller_readiness.SourceCallerReadiness.test_boundary_money_resource_result_exact_lexeme_and_original_inputs_refuse_forgery) ... ok\ntest_caller_pin_is_independent_mandatory_and_cannot_be_stale (test_price_caller_readiness.SourceCallerReadiness.test_caller_pin_is_independent_mandatory_and_cannot_be_stale) ... ok\ntest_cli_has_read_only_pinned_build_and_inspection (test_price_caller_readiness.SourceCallerReadiness.test_cli_has_read_only_pinned_build_and_inspection) ... ok\ntest_denominator_shrink_and_false_execution_claims_are_refused_after_rebinding (test_price_caller_readiness.SourceCallerReadiness.test_denominator_shrink_and_false_execution_claims_are_refused_after_rebinding) ... ok\ntest_empty_input_is_some_empty_and_none_input_cases_remain_excluded (test_price_caller_readiness.SourceCallerReadiness.test_empty_input_is_some_empty_and_none_input_cases_remain_excluded) ... ok\ntest_excluded_case_extra_authority_fields_cannot_be_copied_to_export (test_price_caller_readiness.SourceCallerReadiness.test_excluded_case_extra_authority_fields_cannot_be_copied_to_export) ... ok\ntest_four_field_result_cannot_export_an_extra_field_after_report_rebinding (test_price_caller_readiness.SourceCallerReadiness.test_four_field_result_cannot_export_an_extra_field_after_report_rebinding) ... ok\ntest_missing_duplicate_or_reordered_original_case_and_exclusion_refuse (test_price_caller_readiness.SourceCallerReadiness.test_missing_duplicate_or_reordered_original_case_and_exclusion_refuse) ... ok\ntest_numeric_precision_nonstring_skip_empty_hint_and_resource_unknown_remain (test_price_caller_readiness.SourceCallerReadiness.test_numeric_precision_nonstring_skip_empty_hint_and_resource_unknown_remain) ... ok\ntest_raw_input_hint_presence_four_fields_float_and_observed_money_refuse_drift (test_price_caller_readiness.SourceCallerReadiness.test_raw_input_hint_presence_four_fields_float_and_observed_money_refuse_drift) ... ok\ntest_real_source_caller_cohort_has_distinct_complete_denominators (test_price_caller_readiness.SourceCallerReadiness.test_real_source_caller_cohort_has_distinct_complete_denominators) ... ok\ntest_request_data_cannot_invent_effect_rights_budget_owner_or_cutover (test_price_caller_readiness.SourceCallerReadiness.test_request_data_cannot_invent_effect_rights_budget_owner_or_cutover) ... ok\ntest_cli_build_and_read_only_inspection_require_paired_pin (test_source_responsibility.SourceResponsibilities.test_cli_build_and_read_only_inspection_require_paired_pin) ... ok\ntest_cohorts_are_complete_disjoint_with_shared_and_location_only_limits (test_source_responsibility.SourceResponsibilities.test_cohorts_are_complete_disjoint_with_shared_and_location_only_limits) ... ok\ntest_complete_original_identity_metadata_edges_and_payloads_are_retained (test_source_responsibility.SourceResponsibilities.test_complete_original_identity_metadata_edges_and_payloads_are_retained) ... ok\ntest_inspection_pin_is_independent_and_stale_bytes_fail (test_source_responsibility.SourceResponsibilities.test_inspection_pin_is_independent_and_stale_bytes_fail) ... ok\ntest_only_original_four_price_slices_receive_bounded_reference_proposals (test_source_responsibility.SourceResponsibilities.test_only_original_four_price_slices_receive_bounded_reference_proposals) ... ok\ntest_primary_source_validation_rejects_identity_lineage_payload_and_rights_changes (test_source_responsibility.SourceResponsibilities.test_primary_source_validation_rejects_identity_lineage_payload_and_rights_changes) ... ok\ntest_published_facets_cover_source_routes_without_assigning_mixed_families (test_source_responsibility.SourceResponsibilities.test_published_facets_cover_source_routes_without_assigning_mixed_families) ... ok\ntest_rebound_output_cannot_assign_owner_custody_authority_or_expand_price_scope (test_source_responsibility.SourceResponsibilities.test_rebound_output_cannot_assign_owner_custody_authority_or_expand_price_scope) ... ok\ntest_authority_custody_enrollment_and_current_rights_self_grants_are_refused (test_price_custody.SourceCustody.test_authority_custody_enrollment_and_current_rights_self_grants_are_refused) ... ok\ntest_bounded_reader_refuses_symlink_and_oversize_regular_inputs (test_price_custody.SourceCustody.test_bounded_reader_refuses_symlink_and_oversize_regular_inputs) ... ok\ntest_cli_inspects_and_reports_blocked_without_modifying_inputs (test_price_custody.SourceCustody.test_cli_inspects_and_reports_blocked_without_modifying_inputs) ... ok\ntest_closed_material_list_keeps_full_corpus_as_external_exact_reference (test_price_custody.SourceCustody.test_closed_material_list_keeps_full_corpus_as_external_exact_reference) ... ok\ntest_contract_contains_actual_vectors_exclusions_and_source_boundaries (test_price_custody.SourceCustody.test_contract_contains_actual_vectors_exclusions_and_source_boundaries) ... ok\ntest_historical_caller_proofs_cannot_be_rebound_to_current_source (test_price_custody.SourceCustody.test_historical_caller_proofs_cannot_be_rebound_to_current_source) ... ok\ntest_immutable_tree_and_current_material_drift_are_refused_without_editing_source (test_price_custody.SourceCustody.test_immutable_tree_and_current_material_drift_are_refused_without_editing_source) ... ok\ntest_independent_witness_report_and_readiness_pins_are_mandatory (test_price_custody.SourceCustody.test_independent_witness_report_and_readiness_pins_are_mandatory) ... ok\ntest_material_bytes_have_both_exact_git_identities_and_original_payloads (test_price_custody.SourceCustody.test_material_bytes_have_both_exact_git_identities_and_original_payloads) ... ok\ntest_roundtrip_binds_four_original_ids_and_every_incident_edge (test_price_custody.SourceCustody.test_roundtrip_binds_four_original_ids_and_every_incident_edge) ... ok\ntest_self_pinned_blob_hex_id_metadata_edge_proof_and_rights_drift_are_refused (test_price_custody.SourceCustody.test_self_pinned_blob_hex_id_metadata_edge_proof_and_rights_drift_are_refused) ... ok\ntest_shifted_cohort_option_presence_or_results_are_refused (test_price_custody.SourceCustody.test_shifted_cohort_option_presence_or_results_are_refused) ... ok\ntest_source_readiness_refuses_missing_target_execution_custody_authority_and_unknown_effect_evidence (test_price_custody.SourceCustody.test_source_readiness_refuses_missing_target_execution_custody_authority_and_unknown_effect_evidence) ... ok\ntest_all_command_hashes_initial_failures_and_lint_blockers_are_preserved (test_price_target_evidence.TargetEvidence.test_all_command_hashes_initial_failures_and_lint_blockers_are_preserved) ... ok\ntest_cli_roundtrip_outputs_only_test_assessment_and_does_not_rewrite_inputs (test_price_target_evidence.TargetEvidence.test_cli_roundtrip_outputs_only_test_assessment_and_does_not_rewrite_inputs) ... ok\ntest_drop_order_index_and_original_selector_drift_are_refused (test_price_target_evidence.TargetEvidence.test_drop_order_index_and_original_selector_drift_are_refused) ... ok\ntest_exact_u64_sentinel_and_only_one_boundary_remain_typed_known_unavailable (test_price_target_evidence.TargetEvidence.test_exact_u64_sentinel_and_only_one_boundary_remain_typed_known_unavailable) ... ok\ntest_float_bits_mutation_with_new_checksum_and_matching_stdout_is_refused (test_price_target_evidence.TargetEvidence.test_float_bits_mutation_with_new_checksum_and_matching_stdout_is_refused) ... ok\ntest_full_regeneration_reconciles_actual_source_files_and_109_frames (test_price_target_evidence.TargetEvidence.test_full_regeneration_reconciles_actual_source_files_and_109_frames) ... ok\ntest_independent_fixed_pins_and_all_selected_source_members_are_required (test_price_target_evidence.TargetEvidence.test_independent_fixed_pins_and_all_selected_source_members_are_required) ... ok\ntest_original_options_four_fields_and_float_bits_are_all_exact (test_price_target_evidence.TargetEvidence.test_original_options_four_fields_and_float_bits_are_all_exact) ... ok\ntest_original_status_and_all_production_obligations_remain_open (test_price_target_evidence.TargetEvidence.test_original_status_and_all_production_obligations_remain_open) ... ok\ntest_receipt_checksum_case_bounds_version_tags_and_trailing_bytes_are_refused (test_price_target_evidence.TargetEvidence.test_receipt_checksum_case_bounds_version_tags_and_trailing_bytes_are_refused) ... ok\ntest_receipt_context_native_request_and_ir_joins_are_required (test_price_target_evidence.TargetEvidence.test_receipt_context_native_request_and_ir_joins_are_required) ... ok\ntest_cli_build_and_inspection_do_not_change_input_files (test_price_selected_switch.SelectedCallerSwitch.test_cli_build_and_inspection_do_not_change_input_files) ... ok\ntest_exact_tuple_allowlist_preserves_all99_source_identities_and_duplicates (test_price_selected_switch.SelectedCallerSwitch.test_exact_tuple_allowlist_preserves_all99_source_identities_and_duplicates) ... ok\ntest_hint_none_and_some_empty_do_not_collapse (test_price_selected_switch.SelectedCallerSwitch.test_hint_none_and_some_empty_do_not_collapse) ... ok\ntest_independent_input_and_contract_pins_are_required (test_price_selected_switch.SelectedCallerSwitch.test_independent_input_and_contract_pins_are_required) ... ok\ntest_preview_is_local_for_eligible_some_empty_and_unsupported_source_offers (test_price_selected_switch.SelectedCallerSwitch.test_preview_is_local_for_eligible_some_empty_and_unsupported_source_offers) ... ok\ntest_rebound_contract_cannot_expand_scope_or_close_any_gate (test_price_selected_switch.SelectedCallerSwitch.test_rebound_contract_cannot_expand_scope_or_close_any_gate) ... ok\ntest_self_granted_production_acceptance_is_rejected (test_price_selected_switch.SelectedCallerSwitch.test_self_granted_production_acceptance_is_rejected) ... ok\ntest_six_production_gates_open_despite_test_success_and_source_copyright_closures (test_price_selected_switch.SelectedCallerSwitch.test_six_production_gates_open_despite_test_success_and_source_copyright_closures) ... ok\ntest_source_caller_chain_and_schema_UI_consumers_are_byte_bound (test_price_selected_switch.SelectedCallerSwitch.test_source_caller_chain_and_schema_UI_consumers_are_byte_bound) ... ok\ntest_true_money_observations_and_known_unknown_effect_states_remain_distinct (test_price_selected_switch.SelectedCallerSwitch.test_true_money_observations_and_known_unknown_effect_states_remain_distinct) ... ok\ntest_all_independent_pins_are_required_even_with_recomputed_package_hash (test_price_source_package.PortableSelectedSourcePackage.test_all_independent_pins_are_required_even_with_recomputed_package_hash) ... ok\ntest_bool_float_negative_and_over_budget_counts_and_bad_hex_fail (test_price_source_package.PortableSelectedSourcePackage.test_bool_float_negative_and_over_budget_counts_and_bad_hex_fail) ... ok\ntest_builder_rechecks_all86_paths_and_refuses_mid_export_byte_or_mode_changes (test_price_source_package.PortableSelectedSourcePackage.test_builder_rechecks_all86_paths_and_refuses_mid_export_byte_or_mode_changes) ... ok\ntest_builder_refuses_changed_material_and_evidence_without_source_writes (test_price_source_package.PortableSelectedSourcePackage.test_builder_refuses_changed_material_and_evidence_without_source_writes) ... ok\ntest_builder_refuses_worktree_executable_mode_drift_for_material_and_evidence (test_price_source_package.PortableSelectedSourcePackage.test_builder_refuses_worktree_executable_mode_drift_for_material_and_evidence) ... ok\ntest_cli_requires_pins_and_required_pins_are_labeled_untrusted (test_price_source_package.PortableSelectedSourcePackage.test_cli_requires_pins_and_required_pins_are_labeled_untrusted) ... ok\ntest_exact83_files_and86_memberships_preserve_independent_pins (test_price_source_package.PortableSelectedSourcePackage.test_exact83_files_and86_memberships_preserve_independent_pins) ... ok\ntest_existing_output_is_never_overwritten_and_symlinks_are_refused (test_price_source_package.PortableSelectedSourcePackage.test_existing_output_is_never_overwritten_and_symlinks_are_refused) ... ok\ntest_existing_readers_can_access_only_verified_original_evidence_bytes (test_price_source_package.PortableSelectedSourcePackage.test_existing_readers_can_access_only_verified_original_evidence_bytes) ... ok\ntest_export_is_repeatable_and_reads_source_only (test_price_source_package.PortableSelectedSourcePackage.test_export_is_repeatable_and_reads_source_only) ... ok\ntest_git_reader_disables_replacements_fetch_hooks_and_external_config (test_price_source_package.PortableSelectedSourcePackage.test_git_reader_disables_replacements_fetch_hooks_and_external_config) ... ok\ntest_history_and_current_rights_cannot_be_upgraded (test_price_source_package.PortableSelectedSourcePackage.test_history_and_current_rights_cannot_be_upgraded) ... ok\ntest_immutable_evidence_cannot_be_replaced_with_new_self_pins (test_price_source_package.PortableSelectedSourcePackage.test_immutable_evidence_cannot_be_replaced_with_new_self_pins) ... ok\ntest_inspector_has_no_git_checkout_root_or_other_module_dependency (test_price_source_package.PortableSelectedSourcePackage.test_inspector_has_no_git_checkout_root_or_other_module_dependency) ... ok\ntest_material_and_notice_rehashes_do_not_bypass_published83_pins (test_price_source_package.PortableSelectedSourcePackage.test_material_and_notice_rehashes_do_not_bypass_published83_pins) ... ok\ntest_missing_extra_duplicate_unsorted_and_dangling_records_fail (test_price_source_package.PortableSelectedSourcePackage.test_missing_extra_duplicate_unsorted_and_dangling_records_fail) ... ok\ntest_mutated_commit_cannot_replace_the_independent_commit_anchor (test_price_source_package.PortableSelectedSourcePackage.test_mutated_commit_cannot_replace_the_independent_commit_anchor) ... ok\ntest_mutated_raw_tree_path_mode_and_blob_cannot_reanchor_membership (test_price_source_package.PortableSelectedSourcePackage.test_mutated_raw_tree_path_mode_and_blob_cannot_reanchor_membership) ... ok\ntest_notices_are_exact_including_bom_and_all_conditions (test_price_source_package.PortableSelectedSourcePackage.test_notices_are_exact_including_bom_and_all_conditions) ... ok\ntest_raw_tree_parser_rejects_ambiguous_or_dangerous_structure (test_price_source_package.PortableSelectedSourcePackage.test_raw_tree_parser_rejects_ambiguous_or_dangerous_structure) ... ok\ntest_strict_json_duplicate_nonfinite_trailing_and_depth_node_limits (test_price_source_package.PortableSelectedSourcePackage.test_strict_json_duplicate_nonfinite_trailing_and_depth_node_limits) ... ok\ntest_unsafe_paths_and_nonregular_modes_fail (test_price_source_package.PortableSelectedSourcePackage.test_unsafe_paths_and_nonregular_modes_fail) ... ok\ntest_all_four_independent_pins_are_required_and_checked (test_price_custody_package.CustodyPackageConsumer.test_all_four_independent_pins_are_required_and_checked) ... ok\ntest_api_needs_no_checkout_files_git_or_old_witness_regeneration (test_price_custody_package.CustodyPackageConsumer.test_api_needs_no_checkout_files_git_or_old_witness_regeneration) ... ok\ntest_cli_refuses_mixed_legacy_arguments_and_extraneous_package_pins (test_price_custody_package.CustodyPackageConsumer.test_cli_refuses_mixed_legacy_arguments_and_extraneous_package_pins) ... ok\ntest_consumes_exact_original_contract_and_keeps_every_obligation_open (test_price_custody_package.CustodyPackageConsumer.test_consumes_exact_original_contract_and_keeps_every_obligation_open) ... ok\ntest_existing_cli_runs_in_disjoint_directory_without_git_or_source_root (test_price_custody_package.CustodyPackageConsumer.test_existing_cli_runs_in_disjoint_directory_without_git_or_source_root) ... ok\ntest_legacy_modes_still_require_both_report_and_readiness_pins (test_price_custody_package.CustodyPackageConsumer.test_legacy_modes_still_require_both_report_and_readiness_pins) ... ok\ntest_membership_and_original_source_versions_are_kept_distinct (test_price_custody_package.CustodyPackageConsumer.test_membership_and_original_source_versions_are_kept_distinct) ... ok\ntest_rehashed_original_evidence_cannot_supply_fake_target_evidence (test_price_custody_package.CustodyPackageConsumer.test_rehashed_original_evidence_cannot_supply_fake_target_evidence) ... ok\ntest_truncated_tampered_and_self_granted_packages_are_refused (test_price_custody_package.CustodyPackageConsumer.test_truncated_tampered_and_self_granted_packages_are_refused) ... ok\n\n----------------------------------------------------------------------\nRan 107 tests in 146.083s\n\nOK\n"
+    },
+    "ruff": "PASS4files",
+    "root_actual_cli_commands": [
+      {
+        "name": "source-export",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "/workspace/ECDEV/.ecdev/qualification/price_source_package.py",
+          "export",
+          "--source-root",
+          "/workspace/ECDEV",
+          "--expect-source-commit",
+          "c973d76bda8476142dd64116b60877942ccb24d5",
+          "--expect-source-tree",
+          "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+          "--expect-rights-sha256",
+          "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410",
+          "--output",
+          "/workspace/ECDEV/research/commerce/governance/price-source-package-c973d76b-v1.json"
+        ],
+        "cwd": "/workspace/ECDEV",
+        "exit": 0,
+        "stdout_sha256": "d14029c0123df3af3023519f06c6d1d9713e25e4bf6168ffee70a260952dee8c",
+        "stdout_bytes": 299,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "standalone-offline-inspect",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-I",
+          "-B",
+          "/workspace/ECDEV/.ecdev/qualification/price_source_package.py",
+          "inspect",
+          "--package",
+          "/workspace/ECDEV/research/commerce/governance/price-source-package-c973d76b-v1.json",
+          "--expect-package-sha256",
+          "be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd",
+          "--expect-source-commit",
+          "c973d76bda8476142dd64116b60877942ccb24d5",
+          "--expect-source-tree",
+          "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+          "--expect-rights-sha256",
+          "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410"
+        ],
+        "cwd": "/workspace/scratch/ecdev-source-package-root-build-20261017",
+        "exit": 0,
+        "stdout_sha256": "239952341c98ce3d01f62e24ed7ec9ac6b6521d3ee28107534f7ccd0896a6b1a",
+        "stdout_bytes": 3410,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0,
+        "PATH": "/nonexistent/ecdev-offline-no-git"
+      },
+      {
+        "name": "existing-custody-offline-consumer",
+        "argv": [
+          "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+          "-B",
+          "/workspace/ECDEV/.ecdev/qualification/price_custody.py",
+          "--inspect-source-package",
+          "/workspace/ECDEV/research/commerce/governance/price-source-package-c973d76b-v1.json",
+          "--expect-package-sha256",
+          "be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd",
+          "--expect-source-commit",
+          "c973d76bda8476142dd64116b60877942ccb24d5",
+          "--expect-source-tree",
+          "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+          "--expect-rights-sha256",
+          "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410",
+          "--source-root",
+          "/nonexistent/ecdev-unavailable-source"
+        ],
+        "cwd": "/workspace/scratch/ecdev-source-package-root-build-20261017",
+        "exit": 0,
+        "stdout_sha256": "fb41b80df227e49461e8c6d0f1d0616f2f3e3be3a3ba650dffaeb705a46529ac",
+        "stdout_bytes": 162690,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0,
+        "PATH": "/nonexistent/ecdev-offline-no-git"
+      }
+    ],
+    "bounded_independent_review_paths": [
+      "research/commerce/governance/price-source-package-consumer-review-20261017.json",
+      "research/commerce/governance/price-source-package-independent-probes-20261017.json",
+      "research/commerce/governance/price-source-package-publication-review-20261017.json"
+    ]
+  },
+  "mcp": {
+    "scope": "Supplied non-object request params returns correlated INVALID_PARAMS(-32602) after existing request-ID validation and before method dispatch",
+    "shared_production_callers": [
+      "apps/server/src/lib.rs::stdio -> Mcp::handle_text",
+      "apps/server/src/web.rs::mcp -> Mcp::handle_text"
+    ],
+    "source_path": "apps/server/src/mcp.rs",
+    "source_sha256": "95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+    "runtime_guard_added_lines": 11,
+    "new_tests": 3,
+    "malformed_controls": 80,
+    "full_protocol_certification": false,
+    "writer_execution": {
+      "timestamp_utc": "2026-10-17T11:08:05.270133+00:00",
+      "base_commit": "eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861",
+      "source_path": "apps/server/src/mcp.rs",
+      "before_sha256": "3ef37c5a9105159523af793765c9d2c0cdd7f1a73a2e6c5bcb45e193264d20b0",
+      "final_sha256": "95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+      "source_bytes": 18497,
+      "phase": "FROZEN_PENDING_INDEPENDENT_PARENT_REVIEW",
+      "implemented_behavior": "Supplied nonobject top-level request params produces INVALID_PARAMS -32602 with same valid request ID before dispatch. Omitted/object params, existing notification/clientresponse/id validation and batches retained.",
+      "runtime_guard_inserted_lines": 11,
+      "new_tests": 3,
+      "malformed_requests_checked": 80,
+      "red": {
+        "exit_code": 101,
+        "passed": 1,
+        "failed": 2,
+        "actual_failure": "ping params=null returned success result {} instead of -32602",
+        "unchanged_handler": true
+      },
+      "green": {
+        "exit_code": 0,
+        "passed": 7,
+        "failed": 0,
+        "new_tests": 3,
+        "existing_tests": 4
+      },
+      "rustfmt": "PASS",
+      "clippy_D_warnings": "PASS",
+      "diff_check": "PASS",
+      "commands": {
+        "red": "env PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup CARGO_TARGET_DIR=/tmp/ecdev-stream-closure-target CARGO_INCREMENTAL=0 /tmp/ecdev-cargo/bin/cargo test --offline --locked -p ecdev-server --lib mcp::tests::request_params_ -- --nocapture",
+        "green": "env PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup CARGO_TARGET_DIR=/tmp/ecdev-stream-closure-target CARGO_INCREMENTAL=0 /tmp/ecdev-cargo/bin/cargo test --offline --locked -p ecdev-server --lib mcp::tests:: -- --nocapture",
+        "clippy": "env PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup CARGO_TARGET_DIR=/tmp/ecdev-stream-closure-target CARGO_INCREMENTAL=0 /tmp/ecdev-cargo/bin/cargo clippy --offline --locked -p ecdev-server --lib -- -D warnings",
+        "rustfmt": "env PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup /tmp/ecdev-cargo/bin/rustfmt --edition 2024 --check apps/server/src/mcp.rs",
+        "diffcheck": "git diff --check -- apps/server/src/mcp.rs"
+      },
+      "files": [
+        {
+          "name": "before-mcp.rs",
+          "bytes": 13011,
+          "sha256": "3ef37c5a9105159523af793765c9d2c0cdd7f1a73a2e6c5bcb45e193264d20b0"
+        },
+        {
+          "name": "red-tests-only-mcp.rs",
+          "bytes": 17809,
+          "sha256": "c282e751f7263e777481c0f944f54c0c951d00c34dd26fe9a3a1bc51b82f97fd"
+        },
+        {
+          "name": "final-mcp.rs",
+          "bytes": 18497,
+          "sha256": "95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae"
+        },
+        {
+          "name": "red.log",
+          "bytes": 1592,
+          "sha256": "676668edbdd5563391b0e2fed3f0825fc348f4721af77bb92f8a1086a673f1ec"
+        },
+        {
+          "name": "green-mcp.log",
+          "bytes": 1003,
+          "sha256": "3096dc99851b9153dbff1f0717aa61655706778dcd7d2e662dbd9fce3fbddd67"
+        },
+        {
+          "name": "clippy.log",
+          "bytes": 136,
+          "sha256": "181217678108856b69f96ce7ddf5b03063fc67490b4ec5a4ebbf9ea607cc2d64"
+        },
+        {
+          "name": "rustfmt.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "maintained_scope": [
+        "apps/server/src/mcp.rs"
+      ],
+      "not_run": [
+        "target execution",
+        "native qualification",
+        "Python tests (prior phase107 PASS parent-owned)",
+        "conformance and proof refresh (parent-owned)"
+      ],
+      "proof_refresh_candidates": [
+        "apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids",
+        "apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only",
+        "apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise",
+        "apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes",
+        "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+        "apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request"
+      ],
+      "declared_proof_coverage": "Existing envelope_errors_are_json_rpc_errors_with_the_right_ids now asserts malformed ping params:null preserves id31 and returns INVALID_PARAMS; declarations unchanged.",
+      "valid_omission_object_matrix_methods": [
+        "ping",
+        "tools/list",
+        "resources/list",
+        "resources/templates/list"
+      ],
+      "final_scope_adjustment": "Removed only initialize row from valid omission/object matrix; malformed initialize coverage and existing revision test unchanged."
+    },
+    "logs": [
+      {
+        "path": "/workspace/scratch/sol-mcp-params-caller-20261017/red.log",
+        "bytes": 1592,
+        "sha256": "676668edbdd5563391b0e2fed3f0825fc348f4721af77bb92f8a1086a673f1ec",
+        "utf8": "   Compiling ecdev-keepa v0.1.0 (/workspace/ECDEV/adapter/keepa)\n   Compiling ecdev-marketplace v0.1.0 (/workspace/ECDEV/adapter/marketplace)\n   Compiling ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 4.46s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_server-2f5c58250181717d)\n\nrunning 3 tests\n\nthread 'mcp::tests::request_params_nonobjects_are_rejected_with_request_ids_before_dispatch' panicked at apps/server/src/mcp.rs:234:21:\nassertion `left == right` failed: ping params=null: {\"id\":31,\"jsonrpc\":\"2.0\",\"result\":{}}\n  left: Null\n right: -32602\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n\nthread 'mcp::tests::request_params_mixed_batches_keep_notifications_and_client_responses_silent' panicked at apps/server/src/mcp.rs:295:9:\nassertion `left == right` failed\n  left: Null\n right: -32602\ntest mcp::tests::request_params_nonobjects_are_rejected_with_request_ids_before_dispatch ... FAILED\ntest mcp::tests::request_params_mixed_batches_keep_notifications_and_client_responses_silent ... FAILED\ntest mcp::tests::request_params_omission_and_objects_keep_parameterless_results ... ok\n\nfailures:\n\nfailures:\n    mcp::tests::request_params_mixed_batches_keep_notifications_and_client_responses_silent\n    mcp::tests::request_params_nonobjects_are_rejected_with_request_ids_before_dispatch\n\ntest result: FAILED. 1 passed; 2 failed; 0 ignored; 0 measured; 37 filtered out; finished in 0.02s\n\nerror: test failed, to rerun pass `-p ecdev-server --lib`\n"
+      },
+      {
+        "path": "/workspace/scratch/sol-mcp-params-caller-20261017/green-mcp.log",
+        "bytes": 1003,
+        "sha256": "3096dc99851b9153dbff1f0717aa61655706778dcd7d2e662dbd9fce3fbddd67",
+        "utf8": "   Compiling ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.64s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_server-2f5c58250181717d)\n\nrunning 7 tests\ntest mcp::tests::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only ... ok\ntest mcp::tests::envelope_errors_are_json_rpc_errors_with_the_right_ids ... ok\ntest mcp::tests::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise ... ok\ntest mcp::tests::request_params_mixed_batches_keep_notifications_and_client_responses_silent ... ok\ntest mcp::tests::request_params_nonobjects_are_rejected_with_request_ids_before_dispatch ... ok\ntest mcp::tests::tools_and_resources_follow_the_specification_shapes ... ok\ntest mcp::tests::request_params_omission_and_objects_keep_parameterless_results ... ok\n\ntest result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 33 filtered out; finished in 0.02s\n\n"
+      },
+      {
+        "path": "/workspace/scratch/sol-mcp-params-caller-20261017/clippy.log",
+        "bytes": 136,
+        "sha256": "181217678108856b69f96ce7ddf5b03063fc67490b4ec5a4ebbf9ea607cc2d64",
+        "utf8": "    Checking ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.28s\n"
+      },
+      {
+        "path": "/workspace/scratch/sol-mcp-params-caller-20261017/rustfmt.log",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      }
+    ],
+    "code_review_path": "research/commerce/governance/mcp-request-params-independent-review-20261017.json"
+  },
+  "proof_refresh": {
+    "donor_rmcp_executions": 8,
+    "donor_axum_executions": 8,
+    "technology_commerce_server_executions": 4,
+    "total_actual_executions": 20,
+    "new_records": 19,
+    "deduplication": "Same PARITY console/API/HTTP proof and commerce.server node subject repeated in both donor batches; distinct technology/commerce.server subject preserved.",
+    "commands": [
+      {
+        "name": "rmcp",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-modelcontextprotocol-rust-sdk"
+        ],
+        "exit": 0,
+        "stdout_sha256": "6eb5a5d4b3cb796669feaae198a0dd6ab199ef7ff8737438b861047f0155cb1c",
+        "stdout_bytes": 1147,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "name": "axum",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-tokio-rs-axum"
+        ],
+        "exit": 0,
+        "stdout_sha256": "403dc5558b570bf4eac7fad78b4e9e4bd65e13c5dcd69cabc5e84a78c744dba6",
+        "stdout_bytes": 1086,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      },
+      {
+        "timestamp_utc": "2026-10-17T11:20:44.607516+00:00",
+        "name": "server-technology",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.server"
+        ],
+        "exit": 0,
+        "stdout_sha256": "8dbffae9f44821984366051cdbd4911c03db5974ccf6aa69bce55806c0124d5a",
+        "stdout_bytes": 574,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_bytes": 0
+      }
+    ],
+    "logs": [
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/rmcp.stdout",
+        "bytes": 1147,
+        "sha256": "6eb5a5d4b3cb796669feaae198a0dd6ab199ef7ff8737438b861047f0155cb1c",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/d593b2ceb6d3202059e5c5d754d5745e.ecg\n[x] apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes -> .ecdev/evidence/76095b93e67422b18ed31c03b6aaaf79.ecg\n[x] apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request -> .ecdev/evidence/52c981bae649c56c8ec647508763bbd6.ecg\n[x] apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids -> .ecdev/evidence/ee28d8e85b18111b4af1f0b0888bc24f.ecg\n[x] apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise -> .ecdev/evidence/b18a06893fbc16a4b132d6d2d5825e25.ecg\n[x] apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status -> .ecdev/evidence/369cc3394d8996c9137feaa2a8d72e35.ecg\n[x] apps/server/src/web.rs::the_session_table_is_bounded -> .ecdev/evidence/eb91e605a0d9bb8a460bef8063bfb13c.ecg\n[x] apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only -> .ecdev/evidence/660214d3bec2e2a8297a6233ece13c58.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/rmcp.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/axum.stdout",
+        "bytes": 1086,
+        "sha256": "403dc5558b570bf4eac7fad78b4e9e4bd65e13c5dcd69cabc5e84a78c744dba6",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/d593b2ceb6d3202059e5c5d754d5745e.ecg\n[x] apps/server/src/web.rs::routes_methods_and_paths_answer_with_the_right_status -> .ecdev/evidence/b7d0a0843ba94825706b6085cdea6601.ecg\n[x] apps/server/src/web.rs::percent_decoding_and_query_lookup_are_strict -> .ecdev/evidence/e651aeb04eecc70a039f621176baa42a.ecg\n[x] substrate/net/src/server.rs::streams_are_chunked_and_end_the_connection -> .ecdev/evidence/39b9a55e7f6b3ae06809dfc9ad192b27.ecg\n[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/20cf9e5aeb74c0abd0423656a813a3d3.ecg\n[x] apps/server/src/web.rs::only_the_loopback_host_and_its_own_origin_are_served -> .ecdev/evidence/12004f00e0b9b62244b934117ce52f53.ecg\n[x] substrate/net/src/server.rs::requests_are_served_and_connections_persist -> .ecdev/evidence/5640787836db5fcc80d36c9eeebe9a80.ecg\n[x] substrate/net/src/server.rs::many_clients_are_served_at_once_and_excess_is_refused -> .ecdev/evidence/a7992dcd9b416aa6b4c86e569750bece.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/axum.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/server-technology.stdout",
+        "bytes": 574,
+        "sha256": "8dbffae9f44821984366051cdbd4911c03db5974ccf6aa69bce55806c0124d5a",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/2701fd20712f58c0187a3eaf086c087b.ecg\n[x] apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request -> .ecdev/evidence/d42f3686aa100097fd4f64480cf1a876.ecg\n[x] apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids -> .ecdev/evidence/7896b017c1aff10eb68fbd9463dd814d.ecg\n[x] apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status -> .ecdev/evidence/87b827c57faf8f563d0358fd945d8730.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-mcp-caller-proof-refresh-20261017/server-technology.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      }
+    ],
+    "reviews": [
+      "research/commerce/governance/mcp-request-params-proof-review-20261017.json",
+      "research/commerce/governance/mcp-request-params-technology-proof-review-20261017.json"
+    ],
+    "original_ECG_history": "853 original ECG,1history,1knowledge preserved unchanged; declarations5 unchanged; no prune/compact/rewritten evidence"
+  },
+  "gates": {
+    "recovered_baseline": "31/31 conformancePASS; source V1 incomplete",
+    "introduced_staleness_before_refresh": {
+      "name": "before-proof-refresh",
+      "argv": [
+        "/tmp/ecdev-source-light-target/release/ecdev-gov",
+        "conformance",
+        "--json"
+      ],
+      "exit": 1,
+      "stdout_sha256": "0fcc451e15643257a14e3fd95610ef5fc94a66800f45c7fec07bd66ace12428d",
+      "stdout_bytes": 12754,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 0,
+      "failed_checks": [
+        {
+          "id": "lifecycle.claims_within_evidence",
+          "pass": false,
+          "detail": "4: CLAIM_EXCEEDS_EVIDENCE dependency--github-com-modelcontextprotocol-rust-sdk; CLAIM_EXCEEDS_EVIDENCE dependency--github-com-tokio-rs-axum; EXTINCTION_WITHOUT_PARITY dependency--github-com-modelcontextprotocol-rust-sdk; EXTINCTION_WITHOUT_PARITY dependency--github-com-tokio-rs-axum"
+        }
+      ],
+      "error_findings": [
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-modelcontextprotocol-rust-sdk",
+          "detail": "claims EXTINCT but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: rmcp.server-handler, rmcp.json-rpc-and-model, rmcp.streamable-http-transport, rmcp.stdio-transport"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-tokio-rs-axum",
+          "detail": "claims EXTINCT but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: axum.routing-and-handlers, axum.extractors-and-responses, axum.sse, axum.middleware, axum.serve"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "dependency--github-com-modelcontextprotocol-rust-sdk",
+          "detail": "claims EXTINCT without native replacements with fresh passing parity proofs for: rmcp.server-handler, rmcp.json-rpc-and-model, rmcp.streamable-http-transport, rmcp.stdio-transport"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "dependency--github-com-tokio-rs-axum",
+          "detail": "claims EXTINCT without native replacements with fresh passing parity proofs for: axum.routing-and-handlers, axum.extractors-and-responses, axum.sse, axum.middleware, axum.serve"
+        }
+      ]
+    },
+    "intermediate_donor_refresh": {
+      "timestamp_utc": "2026-10-17T11:20:09.529437+00:00",
+      "argv": [
+        "/tmp/ecdev-source-light-target/release/ecdev-gov",
+        "conformance",
+        "--json"
+      ],
+      "exit": 0,
+      "stdout_bytes": 10972,
+      "stdout_sha256": "b6f0c174fed22201af04433d6070f24bb8a473bac51747283e77ca52fbb51250",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "checks": 31,
+      "passed_checks": 31,
+      "failed_checks": []
+    },
+    "intermediate_explained_delta": "31/31 checksPASS but technologies_proven26→25 because original technology canonical-source subject became stale; four actual declared commerce.server proofs refreshed subsequently",
+    "after_all_refresh": {
+      "timestamp_utc": "2026-10-17T11:21:26.624859+00:00",
+      "argv": [
+        "/tmp/ecdev-source-light-target/release/ecdev-gov",
+        "conformance",
+        "--json"
+      ],
+      "exit": 0,
+      "stdout_bytes": 10972,
+      "stdout_sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "checks": 31,
+      "passed_checks": 31,
+      "metrics_exact_baseline_match": true,
+      "v1_gate_exact_baseline_match": true,
+      "metric_diff": {}
+    },
+    "final_conformance_log": {
+      "path": "/workspace/scratch/ecdev-mcp-caller-root-validation-20261017/after-all-proof-refresh.stdout",
+      "bytes": 10972,
+      "sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+      "utf8": "{\n  \"schema\": \"sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140\",\n  \"suite\": \"ECDEV REPOSITORY CONFORMANCE\",\n  \"governance_version\": 1,\n  \"repository\": \"ecdev\",\n  \"origin\": \"llgtrn/ECDEV\",\n  \"checks\": [\n    {\n      \"id\": \"governance.single_authority\",\n      \"pass\": true,\n      \"detail\": \".ecdev/declared holds the complete declaration set of repository `ecdev`\"\n    },\n    {\n      \"id\": \"governance.no_external_authority\",\n      \"pass\": true,\n      \"detail\": \"no executable/configuration file couples this source to external governance; informational references grant no authority\"\n    },\n    {\n      \"id\": \"governance.source_migration_boundary\",\n      \"pass\": true,\n      \"detail\": \"SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed\"\n    },\n    {\n      \"id\": \"declarations.typed_roundtrip\",\n      \"pass\": true,\n      \"detail\": \"declarations render and re-read identically\"\n    },\n    {\n      \"id\": \"graph.schema\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"graph.identity\",\n      \"pass\": true,\n      \"detail\": \"every id = H(ecdev | oss | external, semantic_key)\"\n    },\n    {\n      \"id\": \"graph.roundtrip\",\n      \"pass\": true,\n      \"detail\": \"834 nodes, 1136 edges, 204532 bytes\"\n    },\n    {\n      \"id\": \"lifecycle.claims_within_evidence\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.lineage_and_proofs\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.relevance_justified\",\n      \"pass\": true,\n      \"detail\": \"every resolved capability relevance agrees with `required` and cites its review\"\n    },\n    {\n      \"id\": \"knowledge.irrelevance_admissible\",\n      \"pass\": true,\n      \"detail\": \"no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)\"\n    },\n    {\n      \"id\": \"knowledge.denominator_preserved\",\n      \"pass\": true,\n      \"detail\": \"every capability known to an earlier census is still declared or absorbed; nothing left the knowledge denominator\"\n    },\n    {\n      \"id\": \"licence.derivation_admissible\",\n      \"pass\": true,\n      \"detail\": \"no capability is DERIVED_NATIVE from a donor whose licence allows only clean-room reimplementation\"\n    },\n    {\n      \"id\": \"repository.builds_alone\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"structure.compatible_root\",\n      \"pass\": true,\n      \"detail\": \"canonical roles, full .ecdev/declared set, no non-canonical code root, no crate buckets\"\n    },\n    {\n      \"id\": \"shape.graph_owned_source\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.exceptions_legal\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.no_vanished_donor\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"donors.every_external_registered\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"state.integrity\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"universe.lossless_identity\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"migration.shims_expire\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"migration.waves_consistent\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"metrics.schema\",\n      \"pass\": true,\n      \"detail\": \"98 metrics in schema order\"\n    },\n    {\n      \"id\": \"governance.zero_dependency\",\n      \"pass\": true,\n      \"detail\": \"manifest dependency-free: true; foreign references from .ecdev: 0\"\n    },\n    {\n      \"id\": \"generated.untracked\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"output.deterministic\",\n      \"pass\": true,\n      \"detail\": \"metrics, graph bytes and findings are identical on re-assessment\"\n    },\n    {\n      \"id\": \"probe.identity_survives_moves\",\n      \"pass\": true,\n      \"detail\": \"ec1:f2c95589852bedd0b739cde20566392a\"\n    },\n    {\n      \"id\": \"probe.no_false_extinction\",\n      \"pass\": true,\n      \"detail\": \"one BUILD edge blocks EXTINCT\"\n    },\n    {\n      \"id\": \"probe.compaction\",\n      \"pass\": true,\n      \"detail\": \"fold is order-independent; newer supersedes\"\n    },\n    {\n      \"id\": \"probe.migration_pathmap\",\n      \"pass\": true,\n      \"detail\": \"core = { path = \\\"../../core\\\" }\"\n    }\n  ],\n  \"metrics\": {\n    \"schema\": \"sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140\",\n    \"donors_discovered\": 68,\n    \"donors_registered\": 56,\n    \"donors_censused\": 21,\n    \"donors_specified\": 21,\n    \"donors_native_shadow\": 21,\n    \"donors_parity_proven\": 21,\n    \"donors_cutover\": 11,\n    \"donors_extinct\": 10,\n    \"donors_blocked\": 0,\n    \"donors_rejected\": 8,\n    \"donors_superseded\": 0,\n    \"donors_active\": 48,\n    \"production_capabilities_required\": 73,\n    \"production_capabilities_native\": 73,\n    \"production_capabilities_proven\": 73,\n    \"production_capabilities_remaining\": 0,\n    \"known_donor_capabilities\": 408,\n    \"unreviewed_capabilities\": 0,\n    \"capabilities_withdrawn\": 0,\n    \"semantic_censused_capabilities\": 408,\n    \"study_candidates\": 40,\n    \"benchmark_candidates\": 30,\n    \"algorithm_candidates\": 4,\n    \"reference_only\": 85,\n    \"study_complete_capabilities\": 210,\n    \"not_relevant_after_review\": 39,\n    \"research_questions_open\": 74,\n    \"knowledge_coverage_ratio\": 0.818627,\n    \"donors_knowledge_unreviewed\": 29,\n    \"donors_structural_census\": 0,\n    \"donors_semantic_census\": 3,\n    \"donors_active_study\": 21,\n    \"donors_study_complete\": 15,\n    \"donors_with_open_research\": 53,\n    \"donors_structurally_censused\": 39,\n    \"donors_semantically_censused\": 26,\n    \"donors_with_open_candidates\": 21,\n    \"technologies_total\": 47,\n    \"technologies_native\": 29,\n    \"technologies_proven\": 26,\n    \"technologies_canonical\": 0,\n    \"runtime_external_edges\": 3,\n    \"build_external_edges\": 0,\n    \"linked_external_edges\": 10,\n    \"test_external_edges\": 0,\n    \"external_technology_edges\": 8,\n    \"external_closure_packages\": 132,\n    \"canonical_nodes_total\": 12,\n    \"canonical_nodes_conformant\": 12,\n    \"legacy_nodes_remaining\": 0,\n    \"unmapped_nodes\": 0,\n    \"documents_total\": 3,\n    \"documents_over_budget\": 0,\n    \"repository_shape_conformance\": 1.000000,\n    \"ecdev_repository_conformance\": 1.000000,\n    \"production_native_ratio\": 1.000000,\n    \"production_proof_ratio\": 1.000000,\n    \"technology_native_ratio\": 0.617021,\n    \"extinction_ratio\": 0.208333,\n    \"donors_technology_mapped\": 21,\n    \"donors_relevance_resolved\": 20,\n    \"orphan_capabilities\": 0,\n    \"orphan_technologies\": 0,\n    \"sharing_shared_implementation\": 0,\n    \"sharing_independent_implementation\": 0,\n    \"sharing_domain_specialization\": 1,\n    \"sharing_shared_concept\": 0,\n    \"sharing_unrelated_duplicate\": 0,\n    \"donors_native_targeted\": 21,\n    \"known_universe_total\": 77,\n    \"known_oss_repositories\": 77,\n    \"known_information_sources\": 0,\n    \"known_official_authorities\": 0,\n    \"known_protocol_specs\": 0,\n    \"known_academic_references\": 0,\n    \"known_benchmarks\": 0,\n    \"known_datasets\": 0,\n    \"known_simulators\": 0,\n    \"known_standards\": 0,\n    \"known_reference_architectures\": 0,\n    \"known_papers\": 0,\n    \"registered_universe_total\": 68,\n    \"unique_global_donors\": 68,\n    \"repository_donor_references\": 68,\n    \"selected_for_census\": 48,\n    \"censused\": 21,\n    \"technology_mapped\": 21,\n    \"native_targeted\": 21,\n    \"native_shadow\": 21,\n    \"parity_proven\": 21,\n    \"cutover\": 11,\n    \"extinct\": 10,\n    \"unknown_identity\": 9,\n    \"unverified_origin\": 43,\n    \"unverified_license\": 68,\n    \"unresolved_relevance\": 21,\n    \"ambiguous_donor_identities\": 0,\n    \"universe_sources_unreconciled\": 0\n  },\n  \"v1_gate\": [\n    {\n      \"metric\": \"extinction_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"0.208333\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"runtime_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"3\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"build_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"0\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"linked_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"10\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"external_technology_edges\",\n      \"required\": \"0\",\n      \"actual\": \"8\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"production_native_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"production_proof_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"repository_shape_conformance\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"documents_over_budget\",\n      \"required\": \"0\",\n      \"actual\": \"0\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"ecdev_repository_conformance\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    }\n  ],\n  \"findings\": [\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"VladUZH--harken\",\n      \"detail\": \"claims REGISTERED but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"amzn--selling-partner-api-models\",\n      \"detail\": \"claims REGISTERED but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"apify--crawlee\",\n      \"detail\": \"claims REGISTERED but evidence supports PARITY_PROVEN; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-rust-lang-futures-rs\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-serde-rs-json\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-serde-rs-serde\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-servo-rust-url\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-tokio-rs-tokio\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    }\n  ]\n}\n"
+    },
+    "baseline_metrics_restored_exactly": true,
+    "baseline_V1_gate_restored_exactly": true,
+    "failed_V1_metrics": [
+      {
+        "metric": "extinction_ratio",
+        "required": "1.000000",
+        "actual": "0.208333",
+        "pass": false
+      },
+      {
+        "metric": "runtime_external_edges",
+        "required": "0",
+        "actual": "3",
+        "pass": false
+      },
+      {
+        "metric": "linked_external_edges",
+        "required": "0",
+        "actual": "10",
+        "pass": false
+      },
+      {
+        "metric": "external_technology_edges",
+        "required": "0",
+        "actual": "8",
+        "pass": false
+      }
+    ],
+    "full_V1": "INCOMPLETE",
+    "new_assimilation": 0,
+    "new_verified_extinction": 0,
+    "global_audited_OSS_total": null,
+    "global_canonical_verified_extinct_total": null,
+    "native_N_J_P": "N01-N12,J1-J9,P0-P3 all25 NOT_RUN",
+    "whole_workspace_format": "NOT_RUN; two prior adapter/web/src/lib.rs formatting issues preserved; scoped MCP rustfmtPASS",
+    "target_fresh_tests_clippy": "NOT_RUN here; earlier published lint repair326c710 is the reference, oldcc99 failure is historical"
+  },
+  "preservation": {
+    "timestamp_utc": "2026-10-17T11:21:27.144143+00:00",
+    "index_files": 3276,
+    "all_indexed_worktree_bytes_and_modes_match": true,
+    "membership_sha256": "d6eb3f1f342af4e2561572852ee1d5d651928a4de99f24eaf82d4bffe06851e0",
+    "membership_path": "/workspace/scratch/ecdev-mcp-caller-root-validation-20261017/prepublication-membership.json",
+    "prior3244files_changed": [
+      "M\t.ecdev/README.md",
+      "M\t.ecdev/qualification/price_custody.py",
+      "M\tapps/server/src/mcp.rs"
+    ],
+    "original_history_and_declarations_unchanged": true,
+    "new_ecg": 19,
+    "target_symlink": "/tmp/ecdev-observer-target",
+    "engine_head": "d66313834c6d584b259650033bcf72f16c4e34f7",
+    "engine_tracked_clean": true
+  },
+  "upstream_final_readback": {
+    "observed_at_utc": "2026-10-17 11:21:42 UTC",
+    "publications": [
+      {
+        "repository": "llgtrn/Chronica",
+        "commit": "b9505cb2bf00f829fa200282070860d0fbfed720",
+        "tree": "e9e105ec3429963db9c0b60dc689e817d47f308d",
+        "parent": [
+          "6d6a61dbf9f2e57b5150463a35bebef1ed93d7c1"
+        ],
+        "message": "Fix checkpoint frame limits and bound recovery reads\n\nAccept the existing 64 MiB checkpoint body plus its 12-byte frame. Stop\nreading after the maximum frame and one sentinel byte, preserving CHCP v2\nencoding, canonical-log fallback and the prior generation on refusal.\n\nValidate the real maximum round trip without replay, oversize refusal,\nbounded reads and canonical fallback. Retain three targeted mutations.\nHosted storage: 214 passed, 5 existing ignored; all three mutations caught.\nExisting checkpoint byte, golden restore and temporary-name pins pass.\n\nRefresh the 33 stale hosted proof locators affected by the storage closure\nthrough 37 real subject executions. Preserve all 793 historical records;\nall 34 current currency checks and 33 protocol checks pass afterward.",
+        "url": "https://github.com/llgtrn/Chronica/commit/b9505cb2bf00f829fa200282070860d0fbfed720",
+        "changed_files": [
+          {
+            "path": "assays/gate/mutations/storage.toml",
+            "status": "modified"
+          },
+          {
+            "path": "physiology/storage/src/checkpoint.rs",
+            "status": "modified"
+          }
+        ],
+        "qualification": "Read-only branch, parent and changed-path readback; commit message test claims are upstream assertions, no local target execution.",
+        "changed_files_count": 39
+      },
+      {
+        "repository": "llgtrn/.Ynventa-",
+        "commit": "36e6211b450cd469a584ac3ace2e739b1fb41747",
+        "tree": "7902d2a08505a2b7fe262cadf8fac35a86696906",
+        "parent": [
+          "0ffe3c6a77936a65aa92978a9fdde3a9dd48fd51"
+        ],
+        "message": "Serialize absorption append transactions without stale takeover",
+        "url": "https://github.com/llgtrn/.Ynventa-/commit/36e6211b450cd469a584ac3ace2e739b1fb41747",
+        "changed_files": [
+          {
+            "path": ".ynventa/protocol.lock",
+            "status": "modified"
+          },
+          {
+            "path": "CODING-PROTOCOL-V1.md",
+            "status": "modified"
+          },
+          {
+            "path": "REPOSITORY-PROTOCOL-V1.md",
+            "status": "modified"
+          },
+          {
+            "path": "substrate/extinction/src/absorption.rs",
+            "status": "modified"
+          },
+          {
+            "path": "substrate/extinction/src/absorption/append_tests.rs",
+            "status": "added"
+          },
+          {
+            "path": "substrate/extinction/src/census/store.rs",
+            "status": "modified"
+          }
+        ],
+        "qualification": "Read-only branch, parent and changed-path readback; commit message test claims are upstream assertions, no local target execution.",
+        "changed_files_count": 50
+      }
+    ],
+    "locks": {
+      "engine": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:62097f560261c62826939a2561101d197b638cab8127d170bf75a69fbdcd6d3d\nengine_digest sha256:2040bb6e0e0d57690ccc3f9dabd0e271dc459d5f6628369f986b423a15660a95\ncompatibility_epoch 1\n",
+      "chronica": "# Ynventa protocol lock. Written by `ynventa protocol --lock`; checked by `ynventa conformance`.\nprotocol_version 1\nschema_digest sha256:62097f560261c62826939a2561101d197b638cab8127d170bf75a69fbdcd6d3d\nengine_digest sha256:3588d4d935f486cfd825367102ef7280ca199408b3a89313d27eb8d403543120\ncompatibility_epoch 1\n"
+    },
+    "locks_byte_equal": false,
+    "central_enrollment_prerequisites": {
+      "url": "https://github.com/llgtrn/.Ynventa-/blob/36e6211b450cd469a584ac3ace2e739b1fb41747/.ynventa/migration/qualification/absorption-append-0ffe3c6a/ecdev-enrollment-prerequisites.json",
+      "observed_at_utc": "2026-10-17T10:50:28.140329+00:00",
+      "missing_joins": [
+        {
+          "type": "concrete_input_and_target_implementation",
+          "join": "Exact source828-node mapping dispositions and independently target-owned membership/custody/acceptance for each claimed canonical association; all original ec1/f1/ECG/source metadata/history/rights and unresolved nodes retained",
+          "state": "828 proposed targets remain null; source membership/selected material are evidence, not acceptance"
+        },
+        {
+          "type": "coordinated_contract",
+          "join": "Positive whole-source mapping wire and current shared registry/schema/engine binding across all8 consumers before SHARDS/shared-lock installation",
+          "state": "Seven registry entries; no installed ECDEV canonical lock; old equal engine/target readback does not establish full8 closure"
+        },
+        {
+          "type": "target_execution_and_operational_context",
+          "join": "Actual production caller/binary/dependency/implementation/capability binding, exclusive execution custody, authenticated Host/Principal/Resource/Holding/lease/current admission, full IR/payload/selectors/provider/EffectRef/outcome context, strict receipt readback, current rights/enrollment and final qualified caller route",
+          "state": "Six original production obligation evidence values remain null/OPEN; source validator null and switch disabled"
+        },
+        {
+          "type": "owner_scope_choice",
+          "join": "Exact semantic-domain/key-prefix, complete accepted mapping/collision disposition and operational authorization scoped to exact inputs",
+          "state": "Chronica canonical ownership is already authorized; no new architecture permission needed. Selected decisions/evidence cannot be fabricated from bounded owner references."
+        }
+      ],
+      "remaining_blocker": "No independent new central bug candidate established; concrete target-owned acceptance, mapping and operational execution joins remain missing. These cannot be replaced by source self-assignment or new diagnostic flags.",
+      "temporal_scope": "Published central discovery originally observed against c973d76b/0ffe; not a new acceptance. Source offline consumer eb86998 is later source-side only."
+    },
+    "coordination": {
+      "target_thread": "01a143b9-feae-74f2-a54f-1ae4fd794030",
+      "sent": false,
+      "reason": "No cloud thread send/read API available in current tool metadata.",
+      "prepared_message": "Source published selected portable package and actual offline custody consumer at eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861. Package SHA256 be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd; 83materials+3evidence/19trees for c973d76b/tree1020, not full734 capture. Existing source price_custody.py consumes it with independent pins/noGit and retains6OPEN/falsecutover; central target/source qualifiers still need actual localGit or explicit authenticated package admission. Latest readback central36e6211/Chronica b9505cb2 retains7registry/noecdev; source/custody/mapping admission joins unchanged by inspected commit paths. Locks now differ: schema62097 same, engine current2040bb6e vs Chronica3588d4d9. Do not infer synchronized compiled8-source admission. Complete lossless828 mapping and authentic target-owned acceptance/Host rights/current custody remain required, no source selfassignment. MCP source guard and fresh rmcp/axum/commerce.server proofs are independent source correctness work, no enrollment/extinction delta. Screened native/Fi-game/Esellios operations not run or rerouted."
+    }
+  },
+  "unresolved_source_convergence": {
+    "complete_source_identities": 828,
+    "admitted_mappings": 0,
+    "registry_entries": 7,
+    "ecdev_enrolled": false,
+    "accepted_domain_or_key_prefix": null,
+    "target_owned_mapping_custody_acceptance": "MISSING",
+    "operational_Host_authority_rights_admission": "MISSING",
+    "all_six_original_production_obligations": "OPEN",
+    "source_adapter_cutover": false,
+    "native_import_budget_gap": "Existing PumpObservationWork128KiB input/16KiBphase/320KiBenvelope does not fit3.28MBcapture,3.86MBproposal or847672-byte membership; no automatic increase",
+    "frozen_profile": "734files/828nodes/106 supported API; distinct from newer811/834 profile",
+    "current_shared_protocol_installation": "NOT_ESTABLISHED; latest engine and Chronica engine digests differ",
+    "source_governor": "Legacy .ecdev remains active evidence/tooling; no rename or positive canonical enrollment claim"
+  },
+  "screening": {
+    "Chronica_native_harness": "NOT_EXECUTED_OR_REPRODUCED",
+    "Fi_game_qualification": "NOT_EXECUTED_OR_REPRODUCED",
+    "Esellios_operation": "NOT_EXECUTED_OR_REPRODUCED",
+    "alternative_route_or_rephrasing": false,
+    "provider_authorization": "STILL_PENDING"
+  },
+  "reviews_and_models": {
+    "source_writer_workers": "Explicit GPT6.1Sol only",
+    "independent_review_workers": "Explicit GPT6.1Sol only",
+    "root_runtime_model_attestation": "Not exposed by executor; no model-ID attestation claimed",
+    "active_counts_at_preparation": {
+      "source_writers": 1,
+      "reviewers": 0
+    },
+    "receipt_independent_review": "Pending bounded read-only reviewer before publication"
+  },
+  "publication_policy": "Normal main only; commit and nonforce push after final bounded review and staged31/31 gate; verify exact remoteSHA. No approval or production authority inferred."
+}

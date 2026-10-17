@@ -1,0 +1,205 @@
+{
+  "format": "ecdev-mcp-request-params-object-caller-independent-review-v1",
+  "observed_at_utc": "2026-10-17 11:09:29 UTC",
+  "decision": "PASS_NO_BLOCKING_FINDINGS_IN_BOUNDED_CHANGE",
+  "findings": [],
+  "scope": "Read-only review of exact frozen source diff, retained logs, primary schemas and existing declared proof coverage; no source/test/module/target execution.",
+  "source": {
+    "base_commit": "eb86998dc76bf0b3fba7a96cdbe3c5bdedffb861",
+    "path": "apps/server/src/mcp.rs",
+    "before_sha256": "3ef37c5a9105159523af793765c9d2c0cdd7f1a73a2e6c5bcb45e193264d20b0",
+    "after_sha256": "95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+    "after_bytes": 18497,
+    "after_git_blob": "1ef93927eb89d8a907bef3b592b5b0832253fb8c",
+    "source_and_final_snapshot_exactly_equal": true,
+    "source_mtime_utc": "2026-10-17T11:07:53.353183+00:00",
+    "review_tool_clock_used": true
+  },
+  "primary_requirements": [
+    {
+      "url": "https://modelcontextprotocol.io/specification/2025-06-18/basic",
+      "section": "Messages/Requests and Responses",
+      "readback": "Optional Request.params is a dictionary/object; responses preserve corresponding request IDs. Notification recipients send no response."
+    },
+    {
+      "url": "https://modelcontextprotocol.io/specification/2025-03-26/basic",
+      "section": "Messages/Requests, Responses, Notifications and Batching",
+      "readback": "Same optional object-shaped request parameters and corresponding response ID requirement. Optional request params permits omission; receiving batches is supported in this revision."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/modelcontextprotocol/modelcontextprotocol/main/schema/2024-11-05/schema.ts",
+      "lines": [
+        [
+          16,
+          27
+        ],
+        [
+          73,
+          78
+        ],
+        [
+          134,
+          144
+        ],
+        [
+          242,
+          248
+        ],
+        [
+          274,
+          283
+        ],
+        [
+          296,
+          311
+        ]
+      ],
+      "readback": "Request.params is optional object shape; INVALID_PARAMS=-32602. InitializeRequest overrides this with required protocolVersion/capabilities/clientInfo; ping and listed paginated requests retain optional parameters."
+    },
+    {
+      "url": "https://www.jsonrpc.org/specification",
+      "section": "4.1,4.2,5.1",
+      "readback": "JSON-RPC itself permits object or positional-array parameters; MCP's schema is narrower. Invalid method parameters use -32602, known request IDs correlate response, notifications remain silent."
+    }
+  ],
+  "code_review": [
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        63,
+        98
+      ],
+      "status": "PASS",
+      "reason": "Supplied params tested with is_some_and(!is_object) after the existing valid ID check and before dispatch. Null, bool, number, string and array all reject with INVALID_PARAMS and id.clone(); absent params follows original fallback and object params original dispatch."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        63,
+        80
+      ],
+      "status": "PASS",
+      "reason": "Notification and client result/error response branches precede new guard and remain byte-identical; no notifications dispatched and no replies introduced. Invalid ID precedence remains INVALID_REQUEST with null response ID."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        103,
+        132
+      ],
+      "status": "PASS",
+      "reason": "Batch parsing/response filtering unchanged. New guard applies to each request member through existing handle; mixed batches preserve replies only for requests and silent-only batches return none."
+    },
+    {
+      "path": "apps/server/src/lib.rs",
+      "lines": [
+        58,
+        75
+      ],
+      "status": "PASS_STATIC_CALLER_TRACE",
+      "reason": "Actual standard-input loop calls Mcp::handle_text; same changed handler used for line requests."
+    },
+    {
+      "path": "apps/server/src/web.rs",
+      "lines": [
+        153,
+        217
+      ],
+      "status": "PASS_STATIC_CALLER_TRACE",
+      "reason": "Actual MCP HTTP POST route delegates to same Mcp::handle_text after existing transport/session processing. No HTTP transport/session code changed."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        216,
+        255
+      ],
+      "status": "PASS_TEST_REVIEW",
+      "reason": "5served method names x8nonobject shapes x2valid ID kinds=80malformed controls, checks correlated IDs/error/noresult/message and unchanged engine runs."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        257,
+        285
+      ],
+      "status": "PASS_TEST_REVIEW",
+      "reason": "Four methods ping/tools-list/resources-list/templates-list preserve omitted vs empty object vs metadata object result. Initialize row removed from this valid omission matrix, matching required InitializeRequest shape."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        288,
+        333
+      ],
+      "status": "PASS_TEST_REVIEW",
+      "reason": "Mixed batch includes bad/valid requests, silent notification/client response, malformed initialize, all-silent batch and invalid-ID precedence; unchanged run inventory asserted."
+    },
+    {
+      "path": "apps/server/src/mcp.rs",
+      "lines": [
+        336,
+        361
+      ],
+      "status": "PASS_EXISTING_DECLARED_PROOF_COVERAGE",
+      "reason": "Existing declared envelope_errors test includes new malformed ping params:null/id31 assertion for INVALID_PARAMS. Original logical proof locator preserved; no donor declaration edit needed."
+    }
+  ],
+  "saved_execution_evidence": {
+    "owner": "worker/root executed; reviewer inspected files only",
+    "summary": {
+      "path": "/workspace/scratch/sol-mcp-params-caller-20261017/summary.json",
+      "sha256": "f73a7491f138ef840a3ec1da7d81d244f9fdd7bf52a3a33d24584ce2112e21cc",
+      "timestamp_utc": "2026-10-17T11:08:05.270133+00:00"
+    },
+    "red": {
+      "path": "/workspace/scratch/sol-mcp-params-caller-20261017/red.log",
+      "sha256": "676668edbdd5563391b0e2fed3f0825fc348f4721af77bb92f8a1086a673f1ec",
+      "result": "1PASS2FAIL, exit101; unchanged production handler returned success for ping params:null and mixed invalidparams batch."
+    },
+    "green": {
+      "path": "/workspace/scratch/sol-mcp-params-caller-20261017/green-mcp.log",
+      "sha256": "3096dc99851b9153dbff1f0717aa61655706778dcd7d2e662dbd9fce3fbddd67",
+      "result": "7PASS0FAIL0ignored,3new+4existing",
+      "mtime_utc": "2026-10-17T11:07:57.145145+00:00",
+      "after_final_source_mtime": true
+    },
+    "clippy": {
+      "path": "/workspace/scratch/sol-mcp-params-caller-20261017/clippy.log",
+      "sha256": "181217678108856b69f96ce7ddf5b03063fc67490b4ec5a4ebbf9ea607cc2d64",
+      "result": "PASS scoped ecdev-server library -Dwarnings",
+      "mtime_utc": "2026-10-17T11:07:59.661119+00:00"
+    },
+    "rustfmt": {
+      "path": "/workspace/scratch/sol-mcp-params-caller-20261017/rustfmt.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "result": "PASS scoped source file"
+    },
+    "proof_refresh": "Pending parent-owned actual declared8rmcp+7axum jobs and final conformance. No current proof PASS minted by code review."
+  },
+  "declaration_preservation": {
+    "path": ".ecdev/declared/donors.rs",
+    "sha256": "be4adcb88fb07873e552d841538db5943b8e6cd775ee9929e713cc1909df73b2",
+    "modified": false,
+    "donor_key": "dependency--github-com-modelcontextprotocol-rust-sdk",
+    "bounded_capability": "rmcp.json-rpc-and-model",
+    "existing_locator": "apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids",
+    "meaning": "Original proof identity stays; existing proof now exercises nonobject-param error behavior. Physical source change correctly makes former evidence stale until actual refresh.",
+    "price_package_material": "Entire unchanged donors.rs remains part of earlier83material snapshot; no mutation of this historical selection or its source rights pins."
+  },
+  "limits": [
+    "Fix is one request envelope params-shape constraint only; no full MCP conformance, numeric-ID policy, initialize-required-field validation, handshake sequencing, auth, transport/session bookkeeping or broad protocol validation claim.",
+    "Existing initialized HTTP session bookkeeping can precede shared handler dispatch; unchanged here. Before-dispatch rejection does not mean before all transport processing.",
+    "Valid object params remain unchanged including method-specific interpretation and existing extra-key behavior.",
+    "MCP2025-06-18 batching differences, ID integer/session reuse rules and lifecycle requirements remain distinct from the preserved legacy batch implementation.",
+    "No target/native runtime, screened Chronica harness, Fi-game qualification, Esellios operation, other repository, browser, credential or spend used."
+  ],
+  "review_execution": {
+    "maintained_writes": false,
+    "commits": false,
+    "source_or_module_execution": false,
+    "tests": "NOT_RUN",
+    "target_execution": "NOT_RUN",
+    "artifact_writes": "This scratch review JSON only"
+  }
+}

@@ -79,6 +79,16 @@ impl Mcp {
                         "an id is a string or a number",
                     ));
                 }
+                if object
+                    .get("params")
+                    .is_some_and(|params| !params.is_object())
+                {
+                    return Reply::Response(error(
+                        id.clone(),
+                        INVALID_PARAMS,
+                        "params must be an object",
+                    ));
+                }
                 let params = object.get("params").cloned().unwrap_or(Value::Null);
                 Reply::Response(match self.dispatch(method, &params) {
                     Ok(v) => result(id.clone(), v),
@@ -203,6 +213,126 @@ mod tests {
     }
 
     #[test]
+    fn request_params_nonobjects_are_rejected_with_request_ids_before_dispatch() {
+        let m = mcp();
+        let runs = m.engine.runs().unwrap();
+        for method in [
+            "ping",
+            "tools/list",
+            "resources/list",
+            "resources/templates/list",
+            "initialize",
+        ] {
+            for params in [
+                Value::Null,
+                json!(false),
+                json!(true),
+                json!(7),
+                json!(1.5),
+                json!("params"),
+                json!([]),
+                json!([{}]),
+            ] {
+                for id in [json!(31), json!("request-params")] {
+                    let reply = ask(
+                        &m,
+                        &json!({"jsonrpc":"2.0","id":id,"method":method,"params":params})
+                            .to_string(),
+                    );
+                    assert_eq!(reply["jsonrpc"], "2.0");
+                    assert_eq!(reply["id"], id, "{method} params={params}: {reply}");
+                    assert_eq!(
+                        reply["error"]["code"], INVALID_PARAMS,
+                        "{method} params={params}: {reply}"
+                    );
+                    assert!(reply.get("result").is_none(), "{reply}");
+                    assert!(reply["error"]["message"].is_string());
+                }
+            }
+        }
+        assert_eq!(m.engine.runs().unwrap(), runs);
+    }
+
+    #[test]
+    fn request_params_omission_and_objects_keep_parameterless_results() {
+        let m = mcp();
+        for (method, result_field) in [
+            ("ping", None),
+            ("tools/list", Some("tools")),
+            ("resources/list", Some("resources")),
+            ("resources/templates/list", Some("resourceTemplates")),
+        ] {
+            let omitted = ask(
+                &m,
+                &json!({"jsonrpc":"2.0","id":"valid","method":method}).to_string(),
+            );
+            assert!(omitted["result"].is_object(), "{omitted}");
+            assert!(omitted.get("error").is_none(), "{omitted}");
+            if let Some(field) = result_field {
+                assert!(omitted["result"].get(field).is_some(), "{omitted}");
+            } else {
+                assert_eq!(omitted["result"], json!({}));
+            }
+            for params in [json!({}), json!({"_meta":{"progressToken":"valid"}})] {
+                let provided = ask(
+                    &m,
+                    &json!({"jsonrpc":"2.0","id":"valid","method":method,"params":params})
+                        .to_string(),
+                );
+                assert_eq!(provided, omitted, "{method} params={params}");
+            }
+        }
+    }
+
+    #[test]
+    fn request_params_mixed_batches_keep_notifications_and_client_responses_silent() {
+        let m = mcp();
+        let runs = m.engine.runs().unwrap();
+        let batch = ask(
+            &m,
+            &json!([
+                {"jsonrpc":"2.0","id":"bad","method":"ping","params":[]},
+                {"jsonrpc":"2.0","method":"tools/call","params":null},
+                {"jsonrpc":"2.0","id":2,"method":"ping"},
+                {"jsonrpc":"2.0","id":99,"result":{},"params":false},
+                {"jsonrpc":"2.0","id":3,"method":"resources/list","params":{}},
+                {"jsonrpc":"2.0","method":"initialize","params":"bad"},
+                {"jsonrpc":"2.0","id":4,"method":"initialize","params":true}
+            ])
+            .to_string(),
+        );
+        let replies = batch.as_array().unwrap();
+        assert_eq!(replies.len(), 4, "{batch}");
+        assert_eq!(replies[0]["id"], "bad");
+        assert_eq!(replies[0]["error"]["code"], INVALID_PARAMS);
+        assert!(replies[0].get("result").is_none());
+        assert_eq!(replies[1], json!({"jsonrpc":"2.0","id":2,"result":{}}));
+        assert_eq!(replies[2]["id"], 3);
+        assert_eq!(replies[2]["result"]["resources"], json!([]));
+        assert_eq!(replies[3]["id"], 4);
+        assert_eq!(replies[3]["error"]["code"], INVALID_PARAMS);
+        assert!(replies[3].get("result").is_none());
+        assert!(
+            m.handle_text(
+                &json!([
+                    {"jsonrpc":"2.0","method":"ping","params":null},
+                    {"jsonrpc":"2.0","method":"tools/call","params":[]},
+                    {"jsonrpc":"2.0","id":99,"error":{"code":-1},"params":false}
+                ])
+                .to_string()
+            )
+            .is_none()
+        );
+        let invalid_id = ask(
+            &m,
+            r#"{"jsonrpc":"2.0","id":false,"method":"ping","params":null}"#,
+        );
+        assert_eq!(invalid_id["error"]["code"], INVALID_REQUEST);
+        assert!(invalid_id["id"].is_null());
+        assert_eq!(m.engine.runs().unwrap(), runs);
+    }
+
+    #[test]
     fn envelope_errors_are_json_rpc_errors_with_the_right_ids() {
         let m = mcp();
         assert_eq!(ask(&m, "{nope")["error"]["code"], PARSE_ERROR);
@@ -216,6 +346,17 @@ mod tests {
         let bad_id = ask(&m, r#"{"jsonrpc":"2.0","id":{"a":1},"method":"ping"}"#);
         assert_eq!(bad_id["error"]["code"], INVALID_REQUEST);
         assert!(bad_id["id"].is_null());
+        let bad_params = ask(
+            &m,
+            r#"{"jsonrpc":"2.0","id":31,"method":"ping","params":null}"#,
+        );
+        assert_eq!(
+            (
+                bad_params["error"]["code"].clone(),
+                bad_params["id"].clone()
+            ),
+            (json!(INVALID_PARAMS), json!(31))
+        );
         assert_eq!(
             ask(&m, r#"{"jsonrpc":"2.0","id":1}"#)["error"]["code"],
             INVALID_REQUEST
