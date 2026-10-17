@@ -1,0 +1,72 @@
+{
+  "command": [
+    "ynventa",
+    "migrate",
+    "inspect-selected",
+    "--root",
+    "<input directory>",
+    "--file",
+    "<original package filename>",
+    "--sha256",
+    "be31c8f8067af13502194f81d2642e0eddd184f1856f3b96b64066227a9716bd",
+    "--commit",
+    "c973d76bda8476142dd64116b60877942ccb24d5",
+    "--tree",
+    "1020e7ebdc85befdd0e6ee4d73e4417779228f2c",
+    "--rights-sha256",
+    "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410",
+    "--evidence",
+    "<one exact path from allowed_evidence>"
+  ],
+  "allowed_evidence": [
+    {
+      "path": "research/commerce/governance/price-selected-source-custody-db92bf27-v1.json",
+      "bytes": 2694156,
+      "sha256": "e6f58d934cc1b55d949dc925f83510f5361432f64a3b5620424da3a01bc8d2b0"
+    },
+    {
+      "path": "research/commerce/governance/price-selected-source-rights-provenance-v1.json",
+      "bytes": 46314,
+      "sha256": "c3bfc1ccf9a84d950cd3cf663f6f2062c2470b22515ab877ed6b1563d9cd6410"
+    },
+    {
+      "path": "research/commerce/governance/price-source-parity-cutover-prerequisites-v1.json",
+      "bytes": 152286,
+      "sha256": "6b2a1a93dfe79a503999650826b0d93c6442b022f77380a6738216a515974560"
+    }
+  ],
+  "success": {
+    "exit": 0,
+    "stdout": "One original immutable payload, exact bytes including its existing final newline/spacing; no JSON wrapper or additional newline.",
+    "maximum_stdout_bytes": 4194304,
+    "stderr": "empty in validated successful process tests"
+  },
+  "refusal": {
+    "exit": 2,
+    "stdout": "Diagnostic text only; consumer must reject every nonzero exit.",
+    "conditions": [
+      "unknown/material/aliased/traversal/absolute/empty evidence selector",
+      "duplicate selector or required input value",
+      "--json with --evidence",
+      "wrong package, commit, tree or rights pin",
+      "unrelated corrupt material or invalid full package membership",
+      "self-granted authority/admission/status",
+      "grant, output or other nonselected options"
+    ]
+  },
+  "compatibility": {
+    "without_selector": "Original text summary; --json gives byte-identical original JSON summary.",
+    "global_help": "Existing --help/-h short-circuit remains; returns help, never evidence. Consumer should use the exact normal invocation without help.",
+    "global_root": "Existing global --root parsing unchanged; relative file resolves under it.",
+    "existing_main_guard": "Compiled/runtime declaration disagreement can independently exit3 before command execution.",
+    "schema": "sha256:62097f560261c62826939a2561101d197b638cab8127d170bf75a69fbdcd6d3d",
+    "protocol": 1,
+    "epoch": 1,
+    "frozen_COMMANDS": "unchanged"
+  },
+  "consumer_acceptance": "Check process exit, exact expected length, independent SHA256 and equality to retained original bytes before calling a readback equivalent. Do not infer current rights/authority/acceptance from payload contents.",
+  "scope": "SOURCE_ONLY byte readback. accepted0,enrollment0,authorityfalse,NO_GRANT,cutoverfalse,retirementfalse,all6OPEN,nulltargetcustody/Host/currentrights. Native Pump/wire/FD17 limits unchanged; raw CLI output is not native runtime admission.",
+  "library": "Existing SelectedPackage::evidence_bytes(path) API remains unchanged; CLI copies that original validated array only after full read_bound.",
+  "verification": "Explicitly executed apps/cli/tests/ecdev_selected_readback.rs authentic-package process tests; final logs and binary identity are in commands.json/transport.json.",
+  "publication": "Resolve this contract and transport.json at the same containing main Git commit; exact postpush verification is recorded outside the immutable commit."
+}

@@ -177,6 +177,31 @@ was built offline with Rust 1.87; the rebuilt executable has SHA-256
 `99f2ed97093b33a4ae50a0825b42c1fc34147c72f298c4b91e670cf9d275047e`, distinct from the
 published binary. Actual `inspect-selected` acceptance and 34 refusal cases passed against
 the original package. The accepted 876 summary bytes match the published CLI receipt.
-This separate qualification leaves the recorded adapter interface unchanged. The current CLI
-does not expose raw evidence payloads, so central evidence-byte equivalence remains
-`NOT_ESTABLISHED`; all six production obligations remain open and cutover remains false.
+This separate qualification leaves the recorded adapter interface unchanged. That pinned
+`a095975b` CLI does not expose raw evidence payloads, so its receipt leaves central
+evidence-byte equivalence `NOT_ESTABLISHED`; all six production obligations remain open
+and cutover remains false.
+
+The additive selector is published separately at central commit
+`89c52dc75565c46b7d52dc44663339846fd9b2a5`, tree
+`574605562a20caac17fcd0c467dd79ee547c793e`. Its retained
+[`interoperability.json`](../research/commerce/governance/central-selected-readback-89c52dc7/interoperability.json)
+defines the exact three `--evidence` paths and original lengths/hashes;
+[`transport.json`](../research/commerce/governance/central-selected-readback-89c52dc7/transport.json)
+records the published binary separately from any rebuilt qualification executable.
+Use the same four independent package/commit/tree/rights pins. A selector invocation omits
+`--json` and captures stdout as bytes, with the process exit and stderr retained.
+
+`qualification/selected_evidence_readback.py::inspect_readback` accepts the original package,
+four independent pins, and exactly three response records keyed by those canonical paths.
+Each record has exactly `exit`, `stdout`, and `stderr`; only integer exit zero, empty bytes
+stderr, and bounded bytes stdout with the exact expected length, SHA-256 and original payload
+bytes are accepted. The function verifies source membership through the unchanged custody
+reader and performs no filesystem, Git, network or subprocess operations. The caller must
+independently bind the central source and executable identity; response data alone cannot do so.
+
+[`selected-central-raw-validation-20261017.json`](../research/commerce/governance/selected-central-raw-validation-20261017.json)
+records actual isolated `89c52dc7` CLI readback and refusal checks, and the source consumer's
+comparison of all three original payloads without reserialization. This establishes only
+those source evidence bytes. The recorded adapter, original full-capture contract, source
+locks, six open production obligations, and false cutover remain unchanged.
