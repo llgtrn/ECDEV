@@ -61,7 +61,7 @@ fn reject(value: &Value) {
 #[test]
 fn current_capture_maps_all_source_nodes_payloads_rights_and_records_without_admission() {
     let c = current();
-    assert_eq!(c.capture.files.len(), 734);
+    assert_eq!(c.capture.files.len(), 811);
     assert_ne!(c.digest, proposal::CAPTURE_SHA256);
     assert_eq!(
         proposal::generate_bound(&c.capture, &c.digest)
@@ -105,9 +105,9 @@ fn current_capture_maps_all_source_nodes_payloads_rights_and_records_without_adm
     );
     let nodes = envelope.at("source_graph.nodes").unwrap().items();
     let edges = envelope.at("source_graph.edges").unwrap().items();
-    assert_eq!((nodes.len(), edges.len()), (828, 1122));
+    assert_eq!((nodes.len(), edges.len()), (834, 1128));
     let mappings = c.value.items_of("node_mappings");
-    assert_eq!(mappings.len(), 828);
+    assert_eq!(mappings.len(), 834);
     let mut mapped_ids = BTreeSet::new();
     for (index, (mapping, node)) in mappings.iter().zip(nodes).enumerate() {
         assert_eq!(mapping.get("source_metadata"), Some(node));
@@ -129,7 +129,7 @@ fn current_capture_maps_all_source_nodes_payloads_rights_and_records_without_adm
         .into_iter()
         .flat_map(|lane| c.value.at(&format!("payloads.{lane}")).unwrap().items())
         .collect();
-    assert_eq!(payloads.len(), 734);
+    assert_eq!(payloads.len(), 811);
     let mut mapped_paths = BTreeSet::new();
     for payload in payloads {
         let path = payload.str("source_path").unwrap();
@@ -201,7 +201,7 @@ fn current_capture_maps_all_source_nodes_payloads_rights_and_records_without_adm
     }
     assert_eq!(
         semantics.get("active_evidence_records"),
-        Some(&Value::Int(726))
+        Some(&Value::Int(803))
     );
     assert_eq!(
         semantics.get("retired_evidence_records"),

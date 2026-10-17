@@ -24,7 +24,11 @@ fn current_capture_cli_binds_the_caller_digest_without_installing_authority() {
     ]);
     assert_eq!(code, 0, "{proposal}");
     let value = json::parse_unique(&proposal).unwrap();
-    assert_eq!(value.items_of("node_mappings").len(), 828);
+    let source_nodes = json::parse_unique(&raw).unwrap();
+    assert_eq!(
+        value.items_of("node_mappings").len(),
+        source_nodes.at("source_graph.nodes").unwrap().items().len()
+    );
     assert_eq!(
         value.get("target_custody"),
         Some(&ecdev_governance::formats::Value::Null)

@@ -176,6 +176,28 @@ class Capture(unittest.TestCase):
     def test_all_734_payloads_are_individually_bound(self):
         self.assertEqual(self.verify(), self.capture)
 
+    def test_appended_committed_evidence_requires_its_exact_captured_bytes(self):
+        path, content = ".ecdev/evidence/appended.ecg", b"new content-bound proof"
+        self.committed[path] = content
+        self.capture["files"].append({"path": path, "sha256": runner.digest(content), "hex": content.hex()})
+        self.assertEqual(len(self.capture["files"]), 735)
+        self.assertEqual(self.verify(), self.capture)
+        self.capture["files"][-1]["hex"] = b"rebound".hex()
+        self.capture["files"][-1]["sha256"] = runner.digest(b"rebound")
+        with self.assertRaisesRegex(ValueError, "differs from committed"):
+            self.verify()
+
+    def test_same_count_payload_swap_and_omitted_original_are_refused_after_append(self):
+        path, content = ".ecdev/evidence/appended.ecg", b"new content-bound proof"
+        self.committed[path] = content
+        appended = {"path": path, "sha256": runner.digest(content), "hex": content.hex()}
+        for replacement in (appended, self.capture["files"][0]):
+            changed = copy.deepcopy(self.capture)
+            changed["files"].append(appended)
+            changed["files"][1] = replacement
+            with self.subTest(path=replacement["path"]), self.assertRaises(ValueError):
+                self.verify(changed)
+
     def test_no_omitted_extra_duplicate_or_uncommitted_payload(self):
         for mutation in ("missing", "extra", "duplicate", "uncommitted"):
             changed = copy.deepcopy(self.capture)

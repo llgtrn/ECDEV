@@ -38,12 +38,18 @@ def producer_mapping(helper):
             raise ValueError("producer output exceeds candidate input budget")
         return result.stdout
 
-    raw = execute(["migrate", "export"])
-    with tempfile.TemporaryDirectory() as temporary:
-        path = Path(temporary, "capture.json")
-        path.write_bytes(raw)
-        return execute(["migrate", "propose-mapping", "--from", str(path),
-                        "--expect-sha256", hashlib.sha256(raw).hexdigest()])
+    # This candidate qualifies the retained published pair, including its observed HEAD.
+    # New evidence records belong to a new capture and cannot silently rebind that pair.
+    path = ROOT / "research/commerce/governance/source-eight-capture-db92bf27-v1.json"
+    raw = helper.regular(path)
+    capture_digest = "441fa612fdb5e9a2dd468a7da87730ff0ec53d6fcaa4b014337bcac393b1a909"
+    if hashlib.sha256(raw).hexdigest() != capture_digest:
+        raise ValueError("retained producer capture digest mismatch")
+    mapping = execute(["migrate", "propose-mapping", "--from", str(path),
+                       "--expect-sha256", capture_digest])
+    if helper.digest(mapping) != "d499b6b7f5d01cfc4f1a9083faeca057f2a3d9511d070c3f7e101eee590e6f29":
+        raise ValueError("retained producer mapping digest mismatch")
+    return mapping
 
 
 class PendingPriceCandidate(unittest.TestCase):
@@ -63,7 +69,7 @@ class PendingPriceCandidate(unittest.TestCase):
                                            self.mapping_hash if pin is None else pin,
                                            self.owner if owner is None else owner, ROOT)
 
-    def test_actual_current_mapping_binds_the_existing_source_price_identities(self):
+    def test_actual_retained_mapping_binds_the_existing_source_price_identities(self):
         candidate = self.candidate
         self.assertEqual(candidate["source_mapping"]["source_nodes"], 828)
         self.assertEqual(candidate["source_mapping"]["sha256"], self.mapping_hash)

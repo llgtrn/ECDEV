@@ -226,12 +226,12 @@ def capture_membership(data, expected_digest, head, committed):
             or capture.get("observed_head") != head):
         raise ValueError("capture source identity or observed HEAD mismatch")
     files = capture.get("files")
-    if not isinstance(files, list) or len(files) != 734:
-        raise ValueError("current candidate must preserve all 734 captured payloads")
-    seen = set()
     expected_paths = {path for path in committed
                       if any(path.startswith(f".ecdev/{lane}/")
                              for lane in ("declared", "history", "evidence", "knowledge"))}
+    if not isinstance(files, list) or len(files) != len(expected_paths):
+        raise ValueError("capture does not enumerate the complete committed source payload lanes")
+    seen = set()
     for row in files:
         if not isinstance(row, dict) or set(row) != {"path", "sha256", "hex"}:
             raise ValueError("invalid captured payload")

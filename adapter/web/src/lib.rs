@@ -664,7 +664,7 @@ impl Web {
             }
         }
         *gate = Some(Instant::now());
-        if native_http::eligible(u, egress.is_some(), conditional, addresses.len()) {
+        if native_http::eligible(u, egress.is_some(), conditional, &addresses) {
             return native_http::request(u, conditional, &addresses, Duration::from_secs(20));
         }
         Self::request_reqwest(u, conditional, egress, &addresses)
