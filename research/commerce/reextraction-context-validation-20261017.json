@@ -1,0 +1,2672 @@
+{
+  "observed_at_utc": "2026-10-17T11:39:12.597121+00:00",
+  "problem": "research_reextract collapsed distinct sources and extraction interpretations with identical raw capture bytes because it deduplicated only (run_id,raw_hash).",
+  "result": "Deduplicate the exact seven-field capture context; two fixture URLs with identical HTML retain both capture records and separate source series. Repeated observations/run IDs remain deduplicated; source provenance and recorded decoding inputs stay intact.",
+  "source": {
+    "repository": "llgtrn/ECDEV",
+    "branch": "main",
+    "base_commit": "2076d554d404d8f3ef9ad0eea883ebba99ca0fda",
+    "base_tree": "e3d8fd84a3225e873103e2d414009ed5f8498e70",
+    "modified_source": "domain/commerce/src/research.rs",
+    "modified_source_sha256": "435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46",
+    "new_integration_test": "apps/server/tests/reextract_context.rs",
+    "new_integration_test_sha256": "4c7aa1bbd9527dd11b41a2e7ca6ae87347e36ab6836f8d746b9d83a25b66719a",
+    "server_library_restored_sha256": "ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+    "server_library_equals_base": true,
+    "maintained_request_route": "Engine::call(\"ecdev.research.reextract\",{\"run_ids\":[run,run]}) -> Engine::research_reextract -> capturing Provider::reextract",
+    "actual_Web_reextract_context": "Recorded final_url/source and document_decoding recipe; all provider-defined normalized fields preserved in key",
+    "deduplication_fields": [
+      "requested_run_id",
+      "raw_hash",
+      "provider",
+      "source_type",
+      "external_source",
+      "retrieved_at",
+      "normalized_value"
+    ],
+    "identity_encoding": "Unambiguous native compact JSON array; object map ordering is deterministic; observation IDs intentionally do not multiply identical captures",
+    "runtime_dependencies_added": false,
+    "new_canonical_capabilities_or_identities": false
+  },
+  "actual_regression": {
+    "baseline": "Actual maintained Web provider, two offline fixture URLs, identical HTML; persisted observations2 but old reextract captured1 instead of2; exit101. Production research.rs still original51256f39b6c75516b1f2fe4bbf379fd9db2b23a14af5daa7f680d26f8dc1d3fe at RED.",
+    "original_red": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/red.log",
+      "bytes": 876,
+      "sha256": "d4f0f02e2a66a10c82169290fd243e12cc0a1460e783ba5fc78368a713bd2394",
+      "utf8": "   Compiling ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.49s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_server-2f5c58250181717d)\n\nrunning 1 test\n\nthread 'research_tests::stored_captures_reextract_into_typed_series_without_network' panicked at apps/server/src/lib.rs:1816:9:\nassertion `left == right` failed\n  left: 1\n right: 2\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\ntest research_tests::stored_captures_reextract_into_typed_series_without_network ... FAILED\n\nfailures:\n\nfailures:\n    research_tests::stored_captures_reextract_into_typed_series_without_network\n\ntest result: FAILED. 0 passed; 1 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.90s\n\nerror: test failed, to rerun pass `-p ecdev-server --lib`\n"
+    },
+    "first_green_same_assertions": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/green.log",
+      "bytes": 718,
+      "sha256": "1acfd93cafef3f76ed7fbabc1ef618ce52969f06a8df00fc6e5b8fb0e685a4ab",
+      "utf8": "   Compiling ecdev-core v0.1.0 (/workspace/ECDEV/domain/commerce)\n   Compiling ecdev-keepa v0.1.0 (/workspace/ECDEV/adapter/keepa)\n   Compiling ecdev-web v0.1.0 (/workspace/ECDEV/adapter/web)\n   Compiling ecdev-marketplace v0.1.0 (/workspace/ECDEV/adapter/marketplace)\n   Compiling ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 12.09s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_server-2f5c58250181717d)\n\nrunning 1 test\ntest research_tests::stored_captures_reextract_into_typed_series_without_network ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.91s\n\n"
+    },
+    "final_integration": "Dedicated integration test retains all two-source assertions, uses actual request route, asserts FIXTURE acquisition/network_calls0, reextract networkNONE,2captures,onepricepoint per source and no duplication for repeatedrunID.",
+    "final_integration_log": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/adaptation/integration.log",
+      "bytes": 439,
+      "sha256": "440059d0ab6b4e6bf541f88474351640c5b5c89e724ad83d6310c352425f0c9e",
+      "utf8": "   Compiling ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 3.09s\n     Running tests/reextract_context.rs (/tmp/ecdev-stream-closure-target/debug/deps/reextract_context-faa6c2cfdb8b01e0)\n\nrunning 1 test\ntest identical_web_capture_bytes_preserve_each_source_context ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.88s\n\n"
+    },
+    "internal_context_controls": "Six interpretations sharing bytes independently vary provider,type,source,time,full recorded recipe; a second logical observation ID and repeated run input collapse only exact context. Existing drift/unsupported provider/empty-run and altered raw capture tests retained.",
+    "core_research_log": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/core-research.log",
+      "bytes": 1219,
+      "sha256": "bd92f68dcbb2c8fa3582d7dee3482649b6ab74f5a24ceb69ccfd83fa10bf2a06",
+      "utf8": "   Compiling ecdev-core v0.1.0 (/workspace/ECDEV/domain/commerce)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 10.75s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_core-f317932214e82b62)\n\nrunning 8 tests\ntest research::budget_storage_tests::access_diagnostics_classify_each_call_from_recorded_facts ... ok\ntest research::budget_storage_tests::fetch_cache_is_bounded_and_keeps_what_still_has_value ... ok\ntest research::budget_storage_tests::budget_reservations_are_durable_and_zero_denies_io ... ok\ntest research::budget_storage_tests::reextraction_preserves_context_for_identical_capture_bytes ... ok\ntest research::budget_storage_tests::response_retry_after_reaches_durable_frontier_and_known_request_accounting ... ok\ntest research::budget_storage_tests::public_research_mode_comes_from_known_io_not_failed_intent ... ok\ntest research::budget_storage_tests::reextraction_reports_where_the_current_extractor_disagrees_with_the_record ... ok\ntest research::budget_storage_tests::an_operator_scope_admits_only_matching_paths_and_reports_what_it_skipped ... ok\n\ntest result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 124 filtered out; finished in 5.65s\n\n"
+    },
+    "core_research_passed": 8,
+    "server_stored_capture_log": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/server-stored-captures.log",
+      "bytes": 384,
+      "sha256": "1c2a38f31ea001593fb381be241dd28d659c2a86488585451be0fa46ff557ebd",
+      "utf8": "    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.07s\n     Running unittests src/lib.rs (/tmp/ecdev-stream-closure-target/debug/deps/ecdev_server-2f5c58250181717d)\n\nrunning 1 test\ntest research_tests::stored_captures_reextract_into_typed_series_without_network ... ok\n\ntest result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 39 filtered out; finished in 0.71s\n\n"
+    },
+    "final_integration_passed": 1
+  },
+  "format_and_lint": {
+    "final_scoped_rustfmt": "PASSresearch.rs+newintegrationtest; bound server lib restored without reformatting",
+    "final_rustfmt_log": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/adaptation/rustfmt-check.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "utf8": ""
+    },
+    "strict_Clippy": "PASS -p ecdev-core -p ecdev-server --all-targets --no-deps -- -D warnings, --offline --locked",
+    "final_Clippy_log": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/adaptation/clippy.log",
+      "bytes": 613,
+      "sha256": "a821c5e745bbb822800b03c5e5e6b691c5f6a5d9a87d766832f30107a18d5c84",
+      "utf8": "   Compiling ecdev-json-derive v0.1.0 (/workspace/ECDEV/domain/json-derive)\n    Checking ecdev-store v0.1.0 (/workspace/ECDEV/substrate/storage)\n    Checking ecdev-net v0.1.0 (/workspace/ECDEV/substrate/net)\n    Checking ecdev-core v0.1.0 (/workspace/ECDEV/domain/commerce)\n    Checking ecdev-marketplace v0.1.0 (/workspace/ECDEV/adapter/marketplace)\n    Checking ecdev-keepa v0.1.0 (/workspace/ECDEV/adapter/keepa)\n    Checking ecdev-web v0.1.0 (/workspace/ECDEV/adapter/web)\n    Checking ecdev-server v0.1.0 (/workspace/ECDEV/apps/server)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 7.67s\n"
+    },
+    "initial_commands": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/commands.txt",
+      "bytes": 1617,
+      "sha256": "7d081551cbb9373e6aa7f972eec651846a479a9e72012a13a766121f32454d15",
+      "utf8": "Working directory: /workspace/ECDEV\nBuild environment: PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup CARGO_TARGET_DIR=/tmp/ecdev-stream-closure-target CARGO_INCREMENTAL=0 RUSTUP_AUTO_INSTALL=0\n\nred.log / red.exit:\ncargo test --locked --offline -p ecdev-server --lib stored_captures_reextract_into_typed_series_without_network -- --nocapture\nTest-only regression added; production research.rs exactly original SHA256 from original-sha256.txt. Actual assertion failed: left 1, right 2; exit 101.\n\nrustfmt.log / rustfmt.exit:\nrustfmt --edition 2024 domain/commerce/src/research.rs apps/server/src/lib.rs\n\ngreen.log / green.exit:\ncargo test --locked --offline -p ecdev-server --lib stored_captures_reextract_into_typed_series_without_network -- --nocapture\n\ncore-research.log / core-research.exit:\ncargo test --locked --offline -p ecdev-core --lib research:: -- --nocapture\n\nserver-stored-captures.log / server-stored-captures.exit:\ncargo test --locked --offline -p ecdev-server --lib stored_capture -- --nocapture\n\nclippy.log / clippy.exit:\ncargo clippy --locked --offline -p ecdev-core -p ecdev-server --all-targets --no-deps -- -D warnings\n\nrustfmt-check.log / rustfmt-check.exit:\nrustfmt --check --edition 2024 domain/commerce/src/research.rs apps/server/src/lib.rs\n\nScope: ECDEV source-only offline hosted tests. No screened Chronica native harness, Fi-game qualification, Esellios operation, source caller cutover, production execution, credentials, spending, or external service IO. Production obligations remain OPEN and 828 source identities remain preserved.\n"
+    },
+    "adapted_commands": {
+      "path": "/workspace/scratch/sol-reextract-source-context-20261017/adaptation/commands.txt",
+      "bytes": 1886,
+      "sha256": "e89a67606eabb10106961b0a10860884c620737c5c42917b1497d2298707b1a3",
+      "utf8": "Working directory: /workspace/ECDEV\nEnvironment: PATH=/tmp/ecdev-cargo/bin:/usr/bin:/bin CARGO_HOME=/tmp/ecdev-cargo RUSTUP_HOME=/tmp/ecdev-rustup CARGO_TARGET_DIR=/tmp/ecdev-stream-closure-target CARGO_INCREMENTAL=0 RUSTUP_AUTO_INSTALL=0\n\nBefore adaptation: candidate source snapshots, SHA256 and index/worktree patches retained in this directory. Original snapshots and prior RED/GREEN logs remain in parent directory unchanged.\n\nrustfmt.log / rustfmt.exit:\nrustfmt --edition 2024 domain/commerce/src/research.rs apps/server/tests/reextract_context.rs\n\nRestoration verification:\ncmp apps/server/src/lib.rs /workspace/scratch/sol-reextract-source-context-20261017/original/server-lib.rs\nPASS. Original apps/server/src/lib.rs SHA256 ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f restored by removing only the moved regression block; no reset/checkout/staging.\nresearch.rs SHA256 remains 435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46.\n\nintegration.log / integration.exit:\ncargo test --locked --offline -p ecdev-server --test reextract_context -- --nocapture\n\nclippy.log / clippy.exit:\ncargo clippy --locked --offline -p ecdev-core -p ecdev-server --all-targets --no-deps -- -D warnings\n\nrustfmt-check.log / rustfmt-check.exit:\nrustfmt --check --edition 2024 domain/commerce/src/research.rs apps/server/tests/reextract_context.rs\n\nPrior actual RED remains the server library test with identical Web fixture assertions against original unchanged production research_reextract: expected 2 captures, actual 1. This adaptation moves that regression to an integration test and covers Engine::call; no additional RED execution or production rollback occurred.\n\nNo guard pin, package/declaration/schema/history/proof-record edits. Existing proof executions and candidate ECG retained. No screened operations, credentials, spending or source caller cutover.\n"
+    },
+    "diff_check": "PASS",
+    "whole_workspace_format": "NOT_RUN; prior two adapter/web/src/lib.rs formatting issues remain"
+  },
+  "preserved_price_guard": {
+    "introduced_failure": "Initial regression was placed in apps/server/src/lib.rs, which is one of five fixed-source byte-bound caller paths. Existing test_price_selected_switch setup refused changed bytes;0tests/exit5. Guard left intact; assertions moved to dedicated integration test and bound library restored exactly.",
+    "retained_failure_command": {
+      "observed_at_utc": "2026-10-17T11:33:15.195562+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_price_selected_switch"
+      ],
+      "exit": 5,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 1208,
+      "stderr_sha256": "37d043530fea660cc2ef2e82494939bc4c9e4ae67a5f2f500dbb242d4e9c07e5",
+      "reason": "apps/server/src/lib.rs is one of five byte-bound source caller paths; only its tests changed, preserve six OPEN obligations and disabled cutover despite this new source revision"
+    },
+    "retained_failure_log": {
+      "path": "/workspace/scratch/ecdev-reextract-root-20261017/price-switch-negative.stderr",
+      "bytes": 1208,
+      "sha256": "37d043530fea660cc2ef2e82494939bc4c9e4ae67a5f2f500dbb242d4e9c07e5",
+      "utf8": "setUpClass (test_price_selected_switch.SelectedCallerSwitch) ... ERROR\n\n======================================================================\nERROR: setUpClass (test_price_selected_switch.SelectedCallerSwitch)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/workspace/ECDEV/.ecdev/qualification/test_price_selected_switch.py\", line 20, in setUpClass\n    cls.value = switch.build_contract(**PINS)\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ECDEV/.ecdev/qualification/price_selected_switch.py\", line 95, in build_contract\n    caller_files = [custody.committed_file(root, entries, path, include_hex=False, worktree=True)\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/ECDEV/.ecdev/qualification/price_custody.py\", line 87, in committed_file\n    raise ValueError(\"current selected bytes or mode differ from fixed current commit: \" + path)\nValueError: current selected bytes or mode differ from fixed current commit: apps/server/src/lib.rs\n\n----------------------------------------------------------------------\nRan 0 tests in 2.341s\n\nFAILED (errors=1)\n"
+    },
+    "final_command": {
+      "observed_at_utc": "2026-10-17T11:36:35.775056+00:00",
+      "argv": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_price_selected_switch"
+      ],
+      "exit": 0,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 1956,
+      "stderr_sha256": "44278891606bd0767847b653ce0e2c40bfd25bf40c455b4630e3098b9afa1249",
+      "bound_server_source_restored_to_base": true,
+      "guard_pins_changed": false
+    },
+    "final_log": {
+      "path": "/workspace/scratch/ecdev-reextract-root-20261017/price-switch-final.stderr",
+      "bytes": 1956,
+      "sha256": "44278891606bd0767847b653ce0e2c40bfd25bf40c455b4630e3098b9afa1249",
+      "utf8": "test_cli_build_and_inspection_do_not_change_input_files (test_price_selected_switch.SelectedCallerSwitch.test_cli_build_and_inspection_do_not_change_input_files) ... ok\ntest_exact_tuple_allowlist_preserves_all99_source_identities_and_duplicates (test_price_selected_switch.SelectedCallerSwitch.test_exact_tuple_allowlist_preserves_all99_source_identities_and_duplicates) ... ok\ntest_hint_none_and_some_empty_do_not_collapse (test_price_selected_switch.SelectedCallerSwitch.test_hint_none_and_some_empty_do_not_collapse) ... ok\ntest_independent_input_and_contract_pins_are_required (test_price_selected_switch.SelectedCallerSwitch.test_independent_input_and_contract_pins_are_required) ... ok\ntest_preview_is_local_for_eligible_some_empty_and_unsupported_source_offers (test_price_selected_switch.SelectedCallerSwitch.test_preview_is_local_for_eligible_some_empty_and_unsupported_source_offers) ... ok\ntest_rebound_contract_cannot_expand_scope_or_close_any_gate (test_price_selected_switch.SelectedCallerSwitch.test_rebound_contract_cannot_expand_scope_or_close_any_gate) ... ok\ntest_self_granted_production_acceptance_is_rejected (test_price_selected_switch.SelectedCallerSwitch.test_self_granted_production_acceptance_is_rejected) ... ok\ntest_six_production_gates_open_despite_test_success_and_source_copyright_closures (test_price_selected_switch.SelectedCallerSwitch.test_six_production_gates_open_despite_test_success_and_source_copyright_closures) ... ok\ntest_source_caller_chain_and_schema_UI_consumers_are_byte_bound (test_price_selected_switch.SelectedCallerSwitch.test_source_caller_chain_and_schema_UI_consumers_are_byte_bound) ... ok\ntest_true_money_observations_and_known_unknown_effect_states_remain_distinct (test_price_selected_switch.SelectedCallerSwitch.test_true_money_observations_and_known_unknown_effect_states_remain_distinct) ... ok\n\n----------------------------------------------------------------------\nRan 10 tests in 49.531s\n\nOK\n"
+    },
+    "final_passed_tests": 10,
+    "all5_caller_files_unchanged": true,
+    "all83_selected_package_materials_unchanged": true,
+    "pins_or_validators_weakened": false,
+    "historical_package_regenerated": false,
+    "six_production_obligations": "OPEN",
+    "source_adapter_cutover": false
+  },
+  "proof_refresh": {
+    "governor": "/tmp/ecdev-source-light-target/release/ecdev-gov; unchanged source governor/declarations",
+    "first_candidate_executions": 112,
+    "first_candidate_new_ECG": 78,
+    "test_relocation_executions": 25,
+    "test_relocation_new_ECG": 19,
+    "total_actual_executions": 137,
+    "total_new_ECG": 97,
+    "history_policy": "Append only. All first78 content-bound records remain, including those whose candidate source no longer matches final source. Current proof selection still requires exact final proof/subject digests; stale intermediate records earn no current credit. No prune/compact/deletion/rebinding.",
+    "initial_owner_granularity_review": {
+      "scratch_path": "/workspace/scratch/sol-reextract-review-20261017/baseline-proof-review.json",
+      "sha256": "2f35542c3708ec03f4c692890b970e3af6245a1a72d341dfbf3db0c59e2f929a",
+      "decision": null,
+      "summary": {
+        "baseline_ecg_files": 872,
+        "full_owner_jobs_sum": 112,
+        "full_owner_global_unique_jobs": 107,
+        "required_global_unique_jobs": 78,
+        "extra_global_unique_jobs": 29,
+        "extra_per_owner_job_count": 30,
+        "extra_baseline_verdicts": {
+          "PASS": 29
+        },
+        "all_full_baseline_verdicts": {
+          "PASS": 107
+        }
+      },
+      "retained_details": "Independently checked original declarations, byte-bound source and existing ECG records; final independent review checks the same counts and final bindings."
+    },
+    "initial_scope": {
+      "scratch_path": "/workspace/scratch/sol-reextract-review-20261017/scope.json",
+      "sha256": "2e825d30fda15a006371a5ce5c78769969c0c7dd042f1acf5cd1845ef2f04b50",
+      "decision": null,
+      "summary": {
+        "donor_owners": 10,
+        "technology_owners": 11,
+        "required_jobs": 82,
+        "full_owner_prove_jobs": 112,
+        "donor_jobs": 59,
+        "technology_jobs": 23,
+        "global_unique_required_jobs": 78,
+        "unique_required_test_locators": 71,
+        "required_jobs_by_subject": {
+          "commerce": 40,
+          "commerce.server": 15,
+          "technology/commerce.evidence-decisions": 1,
+          "technology/commerce.fetch-cache-ttl": 2,
+          "technology/commerce.http-retry": 2,
+          "technology/commerce.official-marketplace": 1,
+          "technology/commerce.page-product": 1,
+          "technology/commerce.public-amazon": 1,
+          "technology/commerce.server": 4,
+          "technology/commerce.social-domain": 1,
+          "technology/commerce.storage": 6,
+          "technology/commerce.supplier-leads": 1,
+          "technology/commerce.zero-paid-research": 3
+        }
+      },
+      "retained_details": "Independently checked original declarations, byte-bound source and existing ECG records; final independent review checks the same counts and final bindings."
+    },
+    "relocation_minimal_stale_plan": {
+      "scratch_path": "/workspace/scratch/sol-reextract-review-20261017/adapted-current-stale-plan.json",
+      "sha256": "61023f2b84297a3c22a17dd78056b2f64461cb7c334066f8d3b234178ed530c6",
+      "decision": null,
+      "summary": {
+        "current_ecg_files": 950,
+        "full_owner_global_unique_jobs": 107,
+        "verdicts": {
+          "PASS": 88,
+          "STALE_OR_UNRECORDED": 19
+        },
+        "stale_unique_jobs": 19
+      },
+      "retained_details": "Independently checked original declarations, byte-bound source and existing ECG records; final independent review checks the same counts and final bindings."
+    },
+    "commands": [
+      {
+        "owner": "VladUZH--harken",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "VladUZH--harken"
+        ],
+        "started_at_utc": "2026-10-17T11:32:13.723167+00:00",
+        "completed_at_utc": "2026-10-17T11:32:22.395887+00:00",
+        "exit": 0,
+        "stdout_bytes": 528,
+        "stdout_sha256": "15cf18eebb90f780791982f50a187cea66a9de29475ed85d1b771281ab4d7ffa",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 4,
+        "expected_full_owner_jobs": 4
+      },
+      {
+        "owner": "apify--crawlee",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "apify--crawlee"
+        ],
+        "started_at_utc": "2026-10-17T11:32:22.396205+00:00",
+        "completed_at_utc": "2026-10-17T11:32:23.603060+00:00",
+        "exit": 0,
+        "stdout_bytes": 555,
+        "stdout_sha256": "3b468f9b25e992e37f2862075decebdc47f30b020698349f3a5a90354098cda8",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 4,
+        "expected_full_owner_jobs": 4
+      },
+      {
+        "owner": "commerce.evidence-decisions",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.evidence-decisions"
+        ],
+        "started_at_utc": "2026-10-17T11:32:23.603308+00:00",
+        "completed_at_utc": "2026-10-17T11:32:23.872977+00:00",
+        "exit": 0,
+        "stdout_bytes": 312,
+        "stdout_sha256": "fec5c323bd69ae0465330e76a10c6dfe06901dbabf2957fe06db489c913d988b",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "commerce.fetch-cache-ttl",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.fetch-cache-ttl"
+        ],
+        "started_at_utc": "2026-10-17T11:32:23.873251+00:00",
+        "completed_at_utc": "2026-10-17T11:32:24.600698+00:00",
+        "exit": 0,
+        "stdout_bytes": 273,
+        "stdout_sha256": "d755cc60d2a63509e4984c5d3e98cd003898088c104a415ea545510166d38937",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "commerce.http-retry",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.http-retry"
+        ],
+        "started_at_utc": "2026-10-17T11:32:24.600980+00:00",
+        "completed_at_utc": "2026-10-17T11:32:24.710805+00:00",
+        "exit": 0,
+        "stdout_bytes": 326,
+        "stdout_sha256": "c09bc9d93ae3043f10a2d8ffd41164dc6af72a1e197e77c0eb6af05787ee89d6",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "commerce.official-marketplace",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.official-marketplace"
+        ],
+        "started_at_utc": "2026-10-17T11:32:24.711128+00:00",
+        "completed_at_utc": "2026-10-17T11:32:28.312264+00:00",
+        "exit": 0,
+        "stdout_bytes": 1904,
+        "stdout_sha256": "81aa22730bdf7557f39b9bc482778cd026fd181b0ec539670681b876e28fb8dd",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 12,
+        "expected_full_owner_jobs": 12
+      },
+      {
+        "owner": "commerce.page-product",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.page-product"
+        ],
+        "started_at_utc": "2026-10-17T11:32:28.312555+00:00",
+        "completed_at_utc": "2026-10-17T11:32:28.932237+00:00",
+        "exit": 0,
+        "stdout_bytes": 926,
+        "stdout_sha256": "13c4a35c4b1e131fe56a3b3446b4ffa06af2d59c1854f251cbb49f4ec19817de",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 6,
+        "expected_full_owner_jobs": 6
+      },
+      {
+        "owner": "commerce.public-amazon",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.public-amazon"
+        ],
+        "started_at_utc": "2026-10-17T11:32:28.932538+00:00",
+        "completed_at_utc": "2026-10-17T11:32:29.177500+00:00",
+        "exit": 0,
+        "stdout_bytes": 324,
+        "stdout_sha256": "db871345e87a18f165e850a23a90c98c0c38ba4d7aa23244f64dfb4de9a74ed4",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "commerce.server",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.server"
+        ],
+        "started_at_utc": "2026-10-17T11:32:29.177800+00:00",
+        "completed_at_utc": "2026-10-17T11:32:33.249978+00:00",
+        "exit": 0,
+        "stdout_bytes": 574,
+        "stdout_sha256": "caca939987c501b24398810731d95f31c23afbcf08748cec727b3cc46261b8f3",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 4,
+        "expected_full_owner_jobs": 4
+      },
+      {
+        "owner": "commerce.social-domain",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.social-domain"
+        ],
+        "started_at_utc": "2026-10-17T11:32:33.250274+00:00",
+        "completed_at_utc": "2026-10-17T11:32:33.706372+00:00",
+        "exit": 0,
+        "stdout_bytes": 743,
+        "stdout_sha256": "567b921c9f33b777966bf08f2ce17a454e35cf4a8000e7fabd6da69732418e98",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 5,
+        "expected_full_owner_jobs": 5
+      },
+      {
+        "owner": "commerce.storage",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.storage"
+        ],
+        "started_at_utc": "2026-10-17T11:32:33.706880+00:00",
+        "completed_at_utc": "2026-10-17T11:32:34.306237+00:00",
+        "exit": 0,
+        "stdout_bytes": 885,
+        "stdout_sha256": "60c1296659e4b3edcaebc9913345a4fb6fdfe47f9ec67ea8912e0f0acd55f572",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 6,
+        "expected_full_owner_jobs": 6
+      },
+      {
+        "owner": "commerce.supplier-leads",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.supplier-leads"
+        ],
+        "started_at_utc": "2026-10-17T11:32:34.306564+00:00",
+        "completed_at_utc": "2026-10-17T11:32:34.791424+00:00",
+        "exit": 0,
+        "stdout_bytes": 760,
+        "stdout_sha256": "ea12f3420e3f18ca26a91ea14c8793bb5ad385c62b55078a1e6a8d12c930e341",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 5,
+        "expected_full_owner_jobs": 5
+      },
+      {
+        "owner": "commerce.zero-paid-research",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.zero-paid-research"
+        ],
+        "started_at_utc": "2026-10-17T11:32:34.791759+00:00",
+        "completed_at_utc": "2026-10-17T11:32:35.483809+00:00",
+        "exit": 0,
+        "stdout_bytes": 401,
+        "stdout_sha256": "569fab00cd036c97165382d3b0e594deb3c0a1f166bb27c6c4ab4b2594e1d492",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 3,
+        "expected_full_owner_jobs": 3
+      },
+      {
+        "owner": "dependency--github-com-modelcontextprotocol-rust-sdk",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-modelcontextprotocol-rust-sdk"
+        ],
+        "started_at_utc": "2026-10-17T11:32:35.484435+00:00",
+        "completed_at_utc": "2026-10-17T11:32:36.634623+00:00",
+        "exit": 0,
+        "stdout_bytes": 1147,
+        "stdout_sha256": "896140b05a42e3fc5604a53b3ed01ddc37542cd44965f9af834dd80a51e46630",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 8,
+        "expected_full_owner_jobs": 8
+      },
+      {
+        "owner": "dependency--github-com-rustcrypto-hashes",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-rustcrypto-hashes"
+        ],
+        "started_at_utc": "2026-10-17T11:32:36.635106+00:00",
+        "completed_at_utc": "2026-10-17T11:32:37.908105+00:00",
+        "exit": 0,
+        "stdout_bytes": 263,
+        "stdout_sha256": "4c263eb20033cea034cb93ff8ff4215ca1944b734d2e626388c4c8725f421005",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "dependency--github-com-serde-rs-json",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-serde-rs-json"
+        ],
+        "started_at_utc": "2026-10-17T11:32:37.908832+00:00",
+        "completed_at_utc": "2026-10-17T11:32:47.637172+00:00",
+        "exit": 0,
+        "stdout_bytes": 2075,
+        "stdout_sha256": "0cdf9bb9f3f43ac6d803d371c26a94b35755db81d5860544b3dd32cc279d8f97",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 15,
+        "expected_full_owner_jobs": 15
+      },
+      {
+        "owner": "dependency--github-com-serde-rs-serde",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-serde-rs-serde"
+        ],
+        "started_at_utc": "2026-10-17T11:32:47.638263+00:00",
+        "completed_at_utc": "2026-10-17T11:32:49.798996+00:00",
+        "exit": 0,
+        "stdout_bytes": 413,
+        "stdout_sha256": "eda952c48df83ee71c74125684fbf90c1a71f86e74227ce20d3d73c20c21e820",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 3,
+        "expected_full_owner_jobs": 3
+      },
+      {
+        "owner": "dependency--github-com-servo-rust-url",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-servo-rust-url"
+        ],
+        "started_at_utc": "2026-10-17T11:32:49.799757+00:00",
+        "completed_at_utc": "2026-10-17T11:33:19.459555+00:00",
+        "exit": 0,
+        "stdout_bytes": 1521,
+        "stdout_sha256": "754091a55248ea0dd629b6464c37fd8a35ed07c7dcda5e36dee3e08ad1cd14bb",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 10,
+        "expected_full_owner_jobs": 10
+      },
+      {
+        "owner": "dependency--github-com-tokio-rs-axum",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-tokio-rs-axum"
+        ],
+        "started_at_utc": "2026-10-17T11:33:19.459956+00:00",
+        "completed_at_utc": "2026-10-17T11:33:21.267595+00:00",
+        "exit": 0,
+        "stdout_bytes": 1086,
+        "stdout_sha256": "c06ccd5e3b6a97dd340316960569065c83e0d634eb980ff8dca0acbfd0452021",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 8,
+        "expected_full_owner_jobs": 8
+      },
+      {
+        "owner": "getzep--graphiti",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "getzep--graphiti"
+        ],
+        "started_at_utc": "2026-10-17T11:33:21.268010+00:00",
+        "completed_at_utc": "2026-10-17T11:33:24.420643+00:00",
+        "exit": 0,
+        "stdout_bytes": 935,
+        "stdout_sha256": "c2a89016149f4451b6161715e3f9da79afaf99b1ee4477eb938a2c80f47b70ba",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 7,
+        "expected_full_owner_jobs": 7
+      },
+      {
+        "owner": "tkem--cachetools",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "tkem--cachetools"
+        ],
+        "started_at_utc": "2026-10-17T11:33:24.421103+00:00",
+        "completed_at_utc": "2026-10-17T11:33:24.593892+00:00",
+        "exit": 0,
+        "stdout_bytes": 273,
+        "stdout_sha256": "45b3972ef41ee51317b055c1120c7bed81589ab0cfa356231979e23ce254f012",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 2,
+        "expected_full_owner_jobs": 2
+      },
+      {
+        "owner": "commerce.storage",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.storage"
+        ],
+        "started_at_utc": "2026-10-17T11:36:41.207494+00:00",
+        "completed_at_utc": "2026-10-17T11:36:45.378668+00:00",
+        "exit": 0,
+        "stdout_bytes": 885,
+        "stdout_sha256": "88b41e98e9e40ae36a1ac809898f0e1a70ac3736c84ec4d60823343a189decc8",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 6,
+        "expected_full_owner_jobs": 6
+      },
+      {
+        "owner": "commerce.zero-paid-research",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "commerce.zero-paid-research"
+        ],
+        "started_at_utc": "2026-10-17T11:36:45.378880+00:00",
+        "completed_at_utc": "2026-10-17T11:36:46.080083+00:00",
+        "exit": 0,
+        "stdout_bytes": 401,
+        "stdout_sha256": "64ee8bd9efe9eab8bfb6cc3b4d029cb4bafe73ad8b7b42a2069f0d0557621bb7",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 3,
+        "expected_full_owner_jobs": 3
+      },
+      {
+        "owner": "dependency--github-com-modelcontextprotocol-rust-sdk",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-modelcontextprotocol-rust-sdk"
+        ],
+        "started_at_utc": "2026-10-17T11:36:46.080371+00:00",
+        "completed_at_utc": "2026-10-17T11:36:48.159241+00:00",
+        "exit": 0,
+        "stdout_bytes": 1147,
+        "stdout_sha256": "7ed5659180f6f3e96758419b56b266bdee359c207faf85dab8cf66c93895b368",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 8,
+        "expected_full_owner_jobs": 8
+      },
+      {
+        "owner": "dependency--github-com-tokio-rs-axum",
+        "argv": [
+          "/tmp/ecdev-source-light-target/release/ecdev-gov",
+          "prove",
+          "dependency--github-com-tokio-rs-axum"
+        ],
+        "started_at_utc": "2026-10-17T11:36:48.159506+00:00",
+        "completed_at_utc": "2026-10-17T11:36:49.886408+00:00",
+        "exit": 0,
+        "stdout_bytes": 1086,
+        "stdout_sha256": "3df21f94925502873c97dcb6bd1fbbdc97e76691415665789ad904594977be0c",
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "actual_rows": 8,
+        "expected_full_owner_jobs": 8
+      }
+    ],
+    "logs": [
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/VladUZH--harken.stdout",
+        "bytes": 528,
+        "sha256": "15cf18eebb90f780791982f50a187cea66a9de29475ed85d1b771281ab4d7ffa",
+        "utf8": "[x] adapter/web/tests/harken_sources.rs::harken_hn_and_bluesky_normalisation_oracle -> .ecdev/evidence/dfe1c67f7ff919c23eb47ebac29d2c42.ecg\n[x] adapter/web/src/social.rs::dates_and_hostile_payloads -> .ecdev/evidence/e575b7882da2eb42433fcb3f4e9581b7.ecg\n[x] domain/commerce/src/social.rs::independent_social_donor_oracles -> .ecdev/evidence/7189bd05d36d9c1637aa9f6058b456be.ecg\n[x] domain/commerce/tests/social.rs::volume_spike_and_sentiment_drop_follow_harken_thresholds -> .ecdev/evidence/eb277b1f550546dd13cd24da53df7f50.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/VladUZH--harken.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/apify--crawlee.stdout",
+        "bytes": 555,
+        "sha256": "3b468f9b25e992e37f2862075decebdc47f30b020698349f3a5a90354098cda8",
+        "utf8": "[x] domain/commerce/tests/frontier.rs::locked_crawlee_queue_oracle -> .ecdev/evidence/7f13ea0464e9f3f5a2b1071f37cbdbeb.ecg\n[x] domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication -> .ecdev/evidence/af1165297a4e45aae77a86509a720892.ecg\n[x] domain/commerce/tests/frontier.rs::reclaim_is_fenced_and_cannot_evade_retry_exhaustion -> .ecdev/evidence/7b43b227107edeef9b5651cc5dcc34b4.ecg\n[x] domain/commerce/tests/frontier.rs::retries_obey_backoff_retry_after_and_exhaustion -> .ecdev/evidence/32d2067c984662198a74ca6ef50b9a75.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/apify--crawlee.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.evidence-decisions.stdout",
+        "bytes": 312,
+        "sha256": "fec5c323bd69ae0465330e76a10c6dfe06901dbabf2957fe06db489c913d988b",
+        "utf8": "[x] domain/commerce/src/decision.rs::selection_keeps_unknown_profit_and_distinguishes_exhaustion_from_rejection -> .ecdev/evidence/27947e3d65a6abb47cee67ff8a93c131.ecg\n[x] apps/server/src/lib.rs::multi_origin_identifier_evidence_reaches_research_shortlist -> .ecdev/evidence/94e3c188b7a07694fd9b46c674116144.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.evidence-decisions.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.fetch-cache-ttl.stdout",
+        "bytes": 273,
+        "sha256": "d755cc60d2a63509e4984c5d3e98cd003898088c104a415ea545510166d38937",
+        "utf8": "[x] domain/commerce/tests/cachetools_ttl.rs::cachetools_ttl_freshness_oracle -> .ecdev/evidence/c0297bd559ebfefcbad1179790f9713f.ecg\n[x] domain/commerce/tests/cachetools_ttl.rs::freshness_and_stale_window_regressions -> .ecdev/evidence/c0df0bcf9232008a233e3044f39de5e8.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.fetch-cache-ttl.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.http-retry.stdout",
+        "bytes": 326,
+        "sha256": "c09bc9d93ae3043f10a2d8ffd41164dc6af72a1e197e77c0eb6af05787ee89d6",
+        "utf8": "[x] domain/commerce/src/provider.rs::retry_after_formats_preserve_not_before_and_reject_invalid_dates -> .ecdev/evidence/ade6986270f4bc01041fab44bbd7d7c1.ecg\n[x] domain/commerce/src/research.rs::response_retry_after_reaches_durable_frontier_and_known_request_accounting -> .ecdev/evidence/7088d0f9df4e471a2bdc2424accf06e3.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.http-retry.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.official-marketplace.stdout",
+        "bytes": 1904,
+        "sha256": "81aa22730bdf7557f39b9bc482778cd026fd181b0ec539670681b876e28fb8dd",
+        "utf8": "[x] adapter/marketplace/src/lib.rs::locked_official_model_examples_preserve_unknowns_and_estimated_fees -> .ecdev/evidence/4359fc9e82201352c7120b2c5871a2f3.ecg\n[x] adapter/marketplace/src/lib.rs::official_region_identity_and_fee_assumptions_cannot_be_substituted -> .ecdev/evidence/2ef338a8fb77bf2aab04b4af5b8a8cfa.ecg\n[x] adapter/marketplace/src/lib.rs::lwa_refresh_and_expiry_contract_never_uses_grantless_or_expired_tokens -> .ecdev/evidence/8b93d8315ad0d39dd9b8a419d43fb58b.ecg\n[x] adapter/marketplace/src/lib.rs::official_fixture_errors_keep_rate_headers_and_never_establish_live_io -> .ecdev/evidence/95ab1c61c1ae5dbf384b37ac2c4761bf.ecg\n[x] apps/server/src/lib.rs::official_product_fixture_isolated_from_public_keepa_and_historical_corruption -> .ecdev/evidence/457982e8ba0a5cbe71881eca3360dac1.ecg\n[x] adapter/marketplace/src/transport.rs::official_http_refresh_reuse_expiry_and_secret_exclusion -> .ecdev/evidence/30bc8d72ff4cd9f280d60e09efd917e0.ecg\n[x] adapter/marketplace/src/transport.rs::official_http_throttle_preserves_receipt_and_denies_early_retry -> .ecdev/evidence/770a2d183ae4c7c7910443d6b98c893b.ecg\n[x] adapter/marketplace/src/transport.rs::official_http_lwa_failure_budget_and_redirect_never_retry -> .ecdev/evidence/0bc0ae1e0bbe7983b921f877a90125c6.ecg\n[x] adapter/marketplace/src/transport.rs::official_http_body_bound_keeps_known_receipt -> .ecdev/evidence/0ca16ea715fbf07b0147880846fb23b8.ecg\n[x] adapter/marketplace/src/transport.rs::official_http_fee_post_preserves_explicit_assumptions -> .ecdev/evidence/dd72840c7b385e46cb7f6ee7239f1466.ecg\n[x] adapter/marketplace/src/transport.rs::official_unknown_transport_outcome_never_invents_zero_or_live -> .ecdev/evidence/de4924b6542b7741176a0539257ddad6.ecg\n[x] domain/commerce/src/marketplace/runtime.rs::official_authorized_transport_still_requires_core_budget_before_io -> .ecdev/evidence/c7fcc2bf2196cb3a768628a9832cedd8.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.official-marketplace.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.page-product.stdout",
+        "bytes": 926,
+        "sha256": "13c4a35c4b1e131fe56a3b3446b4ffa06af2d59c1854f251cbb49f4ec19817de",
+        "utf8": "[x] adapter/web/src/page_product.rs::standalone_meta_and_cross_format_conflicts_are_explicit -> .ecdev/evidence/716a803a921493f4edccc4bc3891ea82.ecg\n[x] adapter/web/src/page_product.rs::named_metadata_preserves_repeated_claims_conflicts_and_exact_locators -> .ecdev/evidence/8b9f255f5b07d087cc33457540fe8062.ecg\n[x] adapter/web/src/page_product.rs::document_title_fallback_requires_single_product_and_remains_derived -> .ecdev/evidence/65bc92806379b796e766ec8bd03f79fd.ecg\n[x] adapter/web/src/page_product.rs::ambiguous_page_association_and_article_do_not_create_prices -> .ecdev/evidence/b639a75df4785e44d4555ef98df69fa6.ecg\n[x] adapter/web/src/page_product.rs::breadcrumb_and_shipping_fields_resolve_to_source_assertions -> .ecdev/evidence/5b08c2e84497a42ec72ec59574eeacee.ecg\n[x] apps/server/src/lib.rs::open_graph_products_reach_candidates_with_inspectable_unknowns -> .ecdev/evidence/2a24e2c38e1c8d9125fcda1b35dcd42e.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.page-product.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.public-amazon.stdout",
+        "bytes": 324,
+        "sha256": "db871345e87a18f165e850a23a90c98c0c38ba4d7aa23244f64dfb4de9a74ed4",
+        "utf8": "[x] adapter/web/src/amazon.rs::public_documents_have_their_own_provider_and_never_impersonate_official_data -> .ecdev/evidence/7132a68501138fc7d64fccbc3d45f220.ecg\n[x] apps/server/src/lib.rs::public_amazon_blocked_route_preserves_provider_identity_and_public_fallback -> .ecdev/evidence/e93468830a63cd1990e0520e95b38f80.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.public-amazon.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.server.stdout",
+        "bytes": 574,
+        "sha256": "caca939987c501b24398810731d95f31c23afbcf08748cec727b3cc46261b8f3",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/2810991906af901ba58c88b64a302967.ecg\n[x] apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request -> .ecdev/evidence/59c62b547b5aaadf4142b30f56d61c6b.ecg\n[x] apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids -> .ecdev/evidence/2189a71a0b290b540e8d6bf35ad31717.ecg\n[x] apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status -> .ecdev/evidence/6de3b1b041a7657225b5694311dcbede.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.server.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.social-domain.stdout",
+        "bytes": 743,
+        "sha256": "567b921c9f33b777966bf08f2ce17a454e35cf4a8000e7fabd6da69732418e98",
+        "utf8": "[x] domain/commerce/tests/social.rs::simulated_and_untrusted_states_cannot_be_observations -> .ecdev/evidence/aa88e1ad2b416412597425ab52aec9ff.ecg\n[x] domain/commerce/tests/social.rs::entity_identity_is_conservative -> .ecdev/evidence/0e1746e0578ee13f35fba8457697c3ba.ecg\n[x] apps/server/src/lib.rs::social_snapshot_mcp_projection_and_scenario_isolation -> .ecdev/evidence/f7dd46f111a65763996048c8c11e5ac9.ecg\n[x] domain/commerce/tests/social.rs::cached_captures_require_original_bytes_and_never_establish_live_acquisition -> .ecdev/evidence/60be8b0c6943cf202a3dcdf44fe39647.ecg\n[x] domain/commerce/tests/social.rs::social_live_capture_requires_http_witness_and_preserves_unknown_counts -> .ecdev/evidence/743820983522020f4c65bf3ee0965a2e.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.social-domain.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.storage.stdout",
+        "bytes": 885,
+        "sha256": "60c1296659e4b3edcaebc9913345a4fb6fdfe47f9ec67ea8912e0f0acd55f572",
+        "utf8": "[x] domain/commerce/src/service.rs::durable_runs_replay_without_network -> .ecdev/evidence/daa316e902db65f898bfa30acbe325a4.ecg\n[x] domain/commerce/src/capture.rs::captures_require_matching_bytes_in_the_declared_source_boundary -> .ecdev/evidence/ddfe12ce3c8754818eb34773ec1df7c5.ecg\n[x] apps/server/src/lib.rs::corrupted_commerce_captures_cannot_be_replayed_compared_or_cached -> .ecdev/evidence/e1d61c27101ab2dbb5260eda57b094fd.ecg\n[x] domain/commerce/src/service.rs::live_status_requires_network_witnesses_and_capture_hashes -> .ecdev/evidence/a13dacb7dc3402c4d0cc982fe8a6aeb2.ecg\n[x] domain/commerce/src/service.rs::paid_product_failure_modes_counts_and_budget_are_durable -> .ecdev/evidence/1db2117170591b4326dc57ad09c139ec.ecg\n[x] domain/commerce/src/research.rs::public_research_mode_comes_from_known_io_not_failed_intent -> .ecdev/evidence/3909eeaaf4ee927db1d1d305c81c0621.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.storage.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.supplier-leads.stdout",
+        "bytes": 760,
+        "sha256": "ea12f3420e3f18ca26a91ea14c8793bb5ad385c62b55078a1e6a8d12c930e341",
+        "utf8": "[x] adapter/web/src/supplier.rs::public_claims_never_become_wholesale_prices_or_factory_facts -> .ecdev/evidence/ae14cf27db03776eb6428c70fa8a284b.ecg\n[x] adapter/web/src/supplier_terms.rs::explicit_supplier_offers_preserve_terms_and_source_pointers -> .ecdev/evidence/c206d34e5b608447c88a6bc560aaa57d.ecg\n[x] adapter/web/src/supplier_terms.rs::offers_and_organizations_do_not_mix_prices_or_unverified_origins -> .ecdev/evidence/256e302c11aa461a28b7b95ec493237f.ecg\n[x] adapter/web/src/supplier_terms.rs::microdata_supplier_offers_retain_original_graph_locators -> .ecdev/evidence/918c4c10610cfb1bcc9b546c2aa150f4.ecg\n[x] apps/server/src/lib.rs::supplier_offer_terms_persist_without_becoming_product_cost -> .ecdev/evidence/1287622e3a24ba46b9b8e8fd003c98d0.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.supplier-leads.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.zero-paid-research.stdout",
+        "bytes": 401,
+        "sha256": "569fab00cd036c97165382d3b0e594deb3c0a1f166bb27c6c4ab4b2594e1d492",
+        "utf8": "[x] apps/server/src/lib.rs::zero_paid_research_e2e -> .ecdev/evidence/257b430ff6795c2ae4b20a45ddafacfe.ecg\n[x] apps/server/src/lib.rs::supplier_research_plans_public_follow_up_without_invented_terms -> .ecdev/evidence/33035e670cd027933e782567789ca187.ecg\n[x] apps/server/src/lib.rs::microdata_products_and_cross_format_conflicts_retain_evidence -> .ecdev/evidence/5361e843e9ba87439ebe4eed25713737.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/commerce.zero-paid-research.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-modelcontextprotocol-rust-sdk.stdout",
+        "bytes": 1147,
+        "sha256": "896140b05a42e3fc5604a53b3ed01ddc37542cd44965f9af834dd80a51e46630",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/46e8a7805a034299f47e60ff49ae792f.ecg\n[x] apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes -> .ecdev/evidence/f9805dba3ec9b943c80f12dcf5c3a438.ecg\n[x] apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request -> .ecdev/evidence/cfd16e794f7ce172f85617d13e6f0ee7.ecg\n[x] apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids -> .ecdev/evidence/9adaac335d36dc0ecede5a186cf391be.ecg\n[x] apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise -> .ecdev/evidence/7c8ed8dce68b7c4428b476aeab01bc45.ecg\n[x] apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status -> .ecdev/evidence/b73850f3c9c51acdc66adc41ea2a9734.ecg\n[x] apps/server/src/web.rs::the_session_table_is_bounded -> .ecdev/evidence/eee97e9e69b335ebf3d50ea0627129bb.ecg\n[x] apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only -> .ecdev/evidence/62433159238d1d627f02e02621f90c67.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-modelcontextprotocol-rust-sdk.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-rustcrypto-hashes.stdout",
+        "bytes": 263,
+        "sha256": "4c263eb20033cea034cb93ff8ff4215ca1944b734d2e626388c4c8725f421005",
+        "utf8": "[x] domain/commerce/tests/sha256_parity.rs::native_digests_reproduce_the_frozen_sha2_digest_of_digests -> .ecdev/evidence/ed016435be8a6d8a010f54a1ab1e70e5.ecg\n[x] domain/commerce/src/sha256.rs::fips_vectors -> .ecdev/evidence/09cc7d4fa27de6cf6ca1bcecaab1d0b6.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-rustcrypto-hashes.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-serde-rs-json.stdout",
+        "bytes": 2075,
+        "sha256": "0cdf9bb9f3f43ac6d803d371c26a94b35755db81d5860544b3dd32cc279d8f97",
+        "utf8": "[x] domain/commerce/tests/json_parity.rs::the_jsontestsuite_reproduces_the_frozen_results -> .ecdev/evidence/57303426eaddaa97e809e5a33d57b4f0.ecg\n[x] domain/commerce/tests/json_parity.rs::generated_documents_reproduce_the_frozen_results -> .ecdev/evidence/0f03489c1656dbf91c82c8ba6dfa44e4.ecg\n[x] domain/commerce/src/json/mod.rs::values_index_compare_and_convert -> .ecdev/evidence/1765341d5a04475cdfe4a88bd9800996.ecg\n[x] domain/commerce/tests/json_parity.rs::floats_print_as_the_frozen_text -> .ecdev/evidence/48b23d303fc5b51f2e22dcd325b130c9.ecg\n[x] domain/commerce/src/json/number.rs::floats_print_as_the_shortest_round_trip_text -> .ecdev/evidence/2c8d14219598993a1c8641f822d64167.ecg\n[x] domain/commerce/src/json/number.rs::numbers_keep_their_text_and_convert_exactly -> .ecdev/evidence/903ed91a367d9a6d7db1bfb0674d5633.ecg\n[x] domain/commerce/tests/json_parity.rs::mutated_documents_reproduce_the_frozen_results -> .ecdev/evidence/efa1ef6eda30d0e3a674b4cda5ac7da5.ecg\n[x] domain/commerce/tests/json_parity.rs::nesting_limit_reproduces_the_frozen_results -> .ecdev/evidence/3ac30905ac7c86f04157a722c5614ae1.ecg\n[x] domain/commerce/src/json/mod.rs::errors_say_what_and_where -> .ecdev/evidence/5c1250c677887ab160f0142af96708db.ecg\n[x] adapter/keepa/src/client.rs::native_json_http_keeps_exact_money_raw_evidence_and_unknown_costs -> .ecdev/evidence/94e853a7c6f860976661829e8812f6e1.ecg\n[x] domain/commerce/src/json/mod.rs::text_round_trips_and_pretty_prints -> .ecdev/evidence/423dcb3ddd4120894d201016b8b724d0.ecg\n[x] domain/commerce/tests/json_parity.rs::derived_types_reproduce_the_frozen_serde_results -> .ecdev/evidence/3a82df6bb13049644fc0a46f88c4539c.ecg\n[x] domain/commerce/src/json/mod.rs::typed_decoding_reports_the_field -> .ecdev/evidence/35e3b36f6a80501392ad4dc9068a9f13.ecg\n[x] domain/commerce/tests/json_macro.rs::macro_invocations_build_the_frozen_values -> .ecdev/evidence/72afaac328fb6dc87969c67b2c74336f.ecg\n[x] adapter/keepa/tests/native_json.rs::native_macro_preserves_exact_money_and_unknowns -> .ecdev/evidence/78c3451630c031c3b4d4df5a9dcc1496.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-serde-rs-json.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-serde-rs-serde.stdout",
+        "bytes": 413,
+        "sha256": "eda952c48df83ee71c74125684fbf90c1a71f86e74227ce20d3d73c20c21e820",
+        "utf8": "[x] domain/commerce/tests/json_parity.rs::derived_types_reproduce_the_frozen_serde_results -> .ecdev/evidence/3a82df6bb13049644fc0a46f88c4539c.ecg\n[x] domain/commerce/src/json/mod.rs::typed_decoding_reports_the_field -> .ecdev/evidence/35e3b36f6a80501392ad4dc9068a9f13.ecg\n[x] domain/commerce/src/json/number.rs::numbers_keep_their_text_and_convert_exactly -> .ecdev/evidence/903ed91a367d9a6d7db1bfb0674d5633.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-serde-rs-serde.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-servo-rust-url.stdout",
+        "bytes": 1521,
+        "sha256": "754091a55248ea0dd629b6464c37fd8a35ed07c7dcda5e36dee3e08ad1cd14bb",
+        "utf8": "[x] domain/commerce/tests/web_address_wpt.rs::native_urls_match_the_web_platform_tests_except_the_documented_refusals -> .ecdev/evidence/a54d7ee9e1e15bde4c806048391dcb93.ecg\n[x] domain/commerce/tests/web_address_parity.rs::reference_cases_reproduce_the_frozen_digest -> .ecdev/evidence/7ece499f43ebd8fb9db1f4b6718c99b4.ecg\n[x] domain/commerce/src/web_address.rs::relative_references_resolve_as_the_standard_says -> .ecdev/evidence/9d870b80c1a607032eef28e9a9ebe66d.ecg\n[x] domain/commerce/src/web_address.rs::origins_compare_by_scheme_host_and_effective_port -> .ecdev/evidence/85f57ccb90d0008df050f018a6fc8e9c.ecg\n[x] domain/commerce/tests/web_address_parity.rs::mutator_scenarios_reproduce_the_frozen_digest -> .ecdev/evidence/fb24d7902247c7d420d623d6c9f51914.ecg\n[x] domain/commerce/src/web_address.rs::query_pairs_decode_and_encode_as_forms -> .ecdev/evidence/7f5bbbfa1bd2ac7314d2c0ad1a31b14f.ecg\n[x] domain/commerce/tests/web_address_parity.rs::international_hosts_reproduce_the_frozen_digest -> .ecdev/evidence/9bd2dd7a30f95e3fa02e17af6eb266dd.ecg\n[x] domain/commerce/src/web_address.rs::international_hosts_become_punycode_and_refuse_confusables_the_standard_refuses -> .ecdev/evidence/e818bf4518ea127256e9a2b984b96e79.ecg\n[x] domain/commerce/src/international_domain.rs::punycode_matches_the_rfc_3492_samples -> .ecdev/evidence/6035281059b443f705531ca473bc279b.ecg\n[x] domain/commerce/src/web_address.rs::credentials_and_backslashes_cannot_disguise_the_host -> .ecdev/evidence/b525d7f6108c9b4484f6e574c27fcab5.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-servo-rust-url.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-tokio-rs-axum.stdout",
+        "bytes": 1086,
+        "sha256": "c06ccd5e3b6a97dd340316960569065c83e0d634eb980ff8dca0acbfd0452021",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/46e8a7805a034299f47e60ff49ae792f.ecg\n[x] apps/server/src/web.rs::routes_methods_and_paths_answer_with_the_right_status -> .ecdev/evidence/054dde674b0b12dde67867f3b255146f.ecg\n[x] apps/server/src/web.rs::percent_decoding_and_query_lookup_are_strict -> .ecdev/evidence/b56682143fd273315e0424ccfc336c98.ecg\n[x] substrate/net/src/server.rs::streams_are_chunked_and_end_the_connection -> .ecdev/evidence/7eacf42429462b512cb84a195b834f22.ecg\n[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/024682b75a8cadbd4fc8cf5edddc07a0.ecg\n[x] apps/server/src/web.rs::only_the_loopback_host_and_its_own_origin_are_served -> .ecdev/evidence/1a8e1bbd525a111dbe9d5edec4525d56.ecg\n[x] substrate/net/src/server.rs::requests_are_served_and_connections_persist -> .ecdev/evidence/ba55c006a3d2b9b2b7e4825cda454e9a.ecg\n[x] substrate/net/src/server.rs::many_clients_are_served_at_once_and_excess_is_refused -> .ecdev/evidence/4f6b7753cb2425cb9c4fc0b9accfc4a3.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/dependency--github-com-tokio-rs-axum.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/getzep--graphiti.stdout",
+        "bytes": 935,
+        "sha256": "c2a89016149f4451b6161715e3f9da79afaf99b1ee4477eb938a2c80f47b70ba",
+        "utf8": "[x] domain/commerce/tests/graphiti_memory.rs::graphiti_name_resolution_oracle_with_deterministic_ties -> .ecdev/evidence/078eb8d464d43fc4bc1d874901f3962d.ecg\n[x] domain/commerce/tests/graphiti_memory.rs::memory_semantics_regressions -> .ecdev/evidence/7c68f1e340bb5ef2ea80df04e6ac16cf.ecg\n[x] domain/commerce/src/resolution.rs::near_duplicate_titles_are_uncertain_links_never_merges -> .ecdev/evidence/5adf4b54883bc43a423d0420c885d027.ecg\n[x] domain/commerce/tests/graphiti_memory.rs::graphiti_fact_invalidation_oracle -> .ecdev/evidence/e38cea15d9c494e1183af74b2274ad14.ecg\n[x] domain/commerce/src/monitor.rs::watch_restart_fencing_and_changes_persist -> .ecdev/evidence/3361d95685991b19c52077a3528db9d4.ecg\n[x] adapter/web/src/social.rs::graphiti_timezone_oracle -> .ecdev/evidence/ed3a225df8008edd296e2bfd6c922818.ecg\n[x] adapter/web/src/social.rs::dates_and_hostile_payloads -> .ecdev/evidence/e575b7882da2eb42433fcb3f4e9581b7.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/getzep--graphiti.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/tkem--cachetools.stdout",
+        "bytes": 273,
+        "sha256": "45b3972ef41ee51317b055c1120c7bed81589ab0cfa356231979e23ce254f012",
+        "utf8": "[x] domain/commerce/tests/cachetools_ttl.rs::cachetools_ttl_freshness_oracle -> .ecdev/evidence/ae9805e44b62baa0ac6c94d8e0909cb7.ecg\n[x] domain/commerce/tests/cachetools_ttl.rs::freshness_and_stale_window_regressions -> .ecdev/evidence/bc22e87da8c8f197350fab03b581f63b.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/tkem--cachetools.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-commerce.storage.stdout",
+        "bytes": 885,
+        "sha256": "88b41e98e9e40ae36a1ac809898f0e1a70ac3736c84ec4d60823343a189decc8",
+        "utf8": "[x] domain/commerce/src/service.rs::durable_runs_replay_without_network -> .ecdev/evidence/daa316e902db65f898bfa30acbe325a4.ecg\n[x] domain/commerce/src/capture.rs::captures_require_matching_bytes_in_the_declared_source_boundary -> .ecdev/evidence/ddfe12ce3c8754818eb34773ec1df7c5.ecg\n[x] apps/server/src/lib.rs::corrupted_commerce_captures_cannot_be_replayed_compared_or_cached -> .ecdev/evidence/36772165132461a05e37e3d22c12a41d.ecg\n[x] domain/commerce/src/service.rs::live_status_requires_network_witnesses_and_capture_hashes -> .ecdev/evidence/a13dacb7dc3402c4d0cc982fe8a6aeb2.ecg\n[x] domain/commerce/src/service.rs::paid_product_failure_modes_counts_and_budget_are_durable -> .ecdev/evidence/1db2117170591b4326dc57ad09c139ec.ecg\n[x] domain/commerce/src/research.rs::public_research_mode_comes_from_known_io_not_failed_intent -> .ecdev/evidence/3909eeaaf4ee927db1d1d305c81c0621.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-commerce.storage.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-commerce.zero-paid-research.stdout",
+        "bytes": 401,
+        "sha256": "64ee8bd9efe9eab8bfb6cc3b4d029cb4bafe73ad8b7b42a2069f0d0557621bb7",
+        "utf8": "[x] apps/server/src/lib.rs::zero_paid_research_e2e -> .ecdev/evidence/77fd572639411584349de09d8bddd6ba.ecg\n[x] apps/server/src/lib.rs::supplier_research_plans_public_follow_up_without_invented_terms -> .ecdev/evidence/f794f18cc7814e4d4b9b15cd446d5aea.ecg\n[x] apps/server/src/lib.rs::microdata_products_and_cross_format_conflicts_retain_evidence -> .ecdev/evidence/6bb8da01b64f44a0f3d5115af571a793.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-commerce.zero-paid-research.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-dependency--github-com-modelcontextprotocol-rust-sdk.stdout",
+        "bytes": 1147,
+        "sha256": "7ed5659180f6f3e96758419b56b266bdee359c207faf85dab8cf66c93895b368",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/2b3011e81993ea2ffc29fb597e58ae3e.ecg\n[x] apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes -> .ecdev/evidence/f799e85dd18633b3527bdd1d05ee6578.ecg\n[x] apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request -> .ecdev/evidence/f7d4fa74f6b2c3a5bb4e58eaff1c9f99.ecg\n[x] apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids -> .ecdev/evidence/6327e06916763e2f9c582e9d11a2ecf4.ecg\n[x] apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise -> .ecdev/evidence/e5d440cd479b365f794a426e520a5fd9.ecg\n[x] apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status -> .ecdev/evidence/63c0d10b9b59c32cf254f8b5bf6edb10.ecg\n[x] apps/server/src/web.rs::the_session_table_is_bounded -> .ecdev/evidence/0bc2b222c707df110faed390eb04a92a.ecg\n[x] apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only -> .ecdev/evidence/95ed504669efc9236b56400ef82810c4.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-dependency--github-com-modelcontextprotocol-rust-sdk.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-dependency--github-com-tokio-rs-axum.stdout",
+        "bytes": 1086,
+        "sha256": "3df21f94925502873c97dcb6bd1fbbdc97e76691415665789ad904594977be0c",
+        "utf8": "[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/2b3011e81993ea2ffc29fb597e58ae3e.ecg\n[x] apps/server/src/web.rs::routes_methods_and_paths_answer_with_the_right_status -> .ecdev/evidence/4221b5e1622d8da429cbcb79898d96ec.ecg\n[x] apps/server/src/web.rs::percent_decoding_and_query_lookup_are_strict -> .ecdev/evidence/97b50c5d4687d066e0568d035fbfa781.ecg\n[x] substrate/net/src/server.rs::streams_are_chunked_and_end_the_connection -> .ecdev/evidence/a26dc1bb660663f55ddd6e7ea1a57f5a.ecg\n[x] apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform -> .ecdev/evidence/6b8ace3a6bd50780311c16653b72631b.ecg\n[x] apps/server/src/web.rs::only_the_loopback_host_and_its_own_origin_are_served -> .ecdev/evidence/30bc532b041f505cace1c964a54abfc1.ecg\n[x] substrate/net/src/server.rs::requests_are_served_and_connections_persist -> .ecdev/evidence/0144787be0cb26c076d8a6f803bacc44.ecg\n[x] substrate/net/src/server.rs::many_clients_are_served_at_once_and_excess_is_refused -> .ecdev/evidence/b746e2fddb773a2010d839bf8f4aab1b.ecg\n"
+      },
+      {
+        "path": "/workspace/scratch/ecdev-reextract-root-20261017/final-dependency--github-com-tokio-rs-axum.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "utf8": ""
+      }
+    ],
+    "all_original_ECG_preserved": 872,
+    "all_original_governance_history_knowledge_declarations": "UNCHANGED",
+    "final_independent_digest_review": "Separate final independent review binds this receipt and source/proof records before publication",
+    "final_independent_proof_review": {
+      "format": "independent-readonly-reextract-final-proof-review-v1",
+      "observed_at_utc": "2026-10-17T11:38:26.937351+00:00",
+      "base": "2076d554d404d8f3ef9ad0eea883ebba99ca0fda",
+      "decision": "PASS_NO_BLOCKING_FINDINGS_IN_BOUNDED_IMPLEMENTATION_AND_PROOF_REFRESH",
+      "findings": [],
+      "method": "Standalone stdlib original declaration parser and ECG1/tag2 LEB128 decoder; SHA256 content address and proof/subject hashes; current index path universe; independent retained intermediate-source digest reconstruction; original Git blob comparisons; saved command/log readback. No project source/module/test/proof/build execution or maintained writes.",
+      "source_pins": {
+        "domain/commerce/src/research.rs": "435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46",
+        "apps/server/src/lib.rs": "ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+        "apps/server/tests/reextract_context.rs": "4c7aa1bbd9527dd11b41a2e7ca6ae87347e36ab6836f8d746b9d83a25b66719a"
+      },
+      "summary": {
+        "original_ecg_preserved": 872,
+        "first_phase_new_ecg": 78,
+        "final_phase_new_ecg": 19,
+        "new_ecg_total": 97,
+        "current_new_ecg": 68,
+        "intermediate_historical_new_ecg": 29,
+        "total_ecg": 969,
+        "full_owner_unique_final_pass_tuples": 107,
+        "actual_saved_proof_executions": 137,
+        "all_new_records_content_addressed_and_passing": true,
+        "all_first78_match_retained_intermediate_sources": true,
+        "all_final19_match_final_sources": true,
+        "only_expected_two_source_files_plus97_append_only_ecg_changed": true
+      },
+      "commands": [
+        {
+          "manifest": "proof-commands.json",
+          "sha256": "3d4dd0f562f9330f241ccc3fcea1216438911a2557f3495951320078f7bc4e98",
+          "owners": 21,
+          "executions": 112,
+          "all_exit_zero_and_saved_stream_hashes_match": true,
+          "all_rows_match_original_declared_tuples_and_temporal_source_digests": true
+        },
+        {
+          "manifest": "final-proof-commands.json",
+          "sha256": "18e43eedd5211c1008e8dadd388fc92797dbefbef7d392f2996a1878170485bd",
+          "owners": 4,
+          "executions": 25,
+          "all_exit_zero_and_saved_stream_hashes_match": true,
+          "all_rows_match_original_declared_tuples_and_temporal_source_digests": true
+        }
+      ],
+      "adapted_source_review": {
+        "decision": "PASS",
+        "restored_server_lib_exact_base": true,
+        "new_integration_test": "Actual Web offline fixtures for two URLs sharing bytes; fixture/network0 assertions; maintained Engine.call route; repeated run ID; one price point per source.",
+        "production_change": "Unambiguous serialized seven-element context key covers run/hash/provider/source_type/external_source/capture time/full recorded extraction input. Existing raw verification/failure behavior retained.",
+        "saved_checks": [
+          {
+            "name": "integration",
+            "exit": 0,
+            "log_sha256": "440059d0ab6b4e6bf541f88474351640c5b5c89e724ad83d6310c352425f0c9e",
+            "readback_only": true
+          },
+          {
+            "name": "clippy",
+            "exit": 0,
+            "log_sha256": "a821c5e745bbb822800b03c5e5e6b691c5f6a5d9a87d766832f30107a18d5c84",
+            "readback_only": true
+          },
+          {
+            "name": "rustfmt",
+            "exit": 0,
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback_only": true
+          },
+          {
+            "name": "rustfmt-check",
+            "exit": 0,
+            "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "readback_only": true
+          }
+        ]
+      },
+      "price_switch": {
+        "saved_command_sha256": "3281ca2ad4212c9843f67cebf1f02172cc6a7f595fa64d0bc388ac3196f02a6b",
+        "tests_passed": 10,
+        "exit": 0,
+        "stderr_sha256": "44278891606bd0767847b653ce0e2c40bfd25bf40c455b4630e3098b9afa1249",
+        "all_five_fixed_caller_bytes_match": true,
+        "all83_embedded_material_bytes_match": true,
+        "all_six_obligations": "OPEN",
+        "source_adapter_cutover": false,
+        "guard_pins_or_contracts_regenerated": false
+      },
+      "preservation": {
+        "base_declared_evidence_history_knowledge_and_price_package_files": 880,
+        "all_original_bytes_preserved": true,
+        "historical_intermediate_ecg_retained": true,
+        "source_changes": [
+          "apps/server/tests/reextract_context.rs",
+          "domain/commerce/src/research.rs"
+        ]
+      },
+      "records": [
+        {
+          "path": ".ecdev/evidence/0144787be0cb26c076d8a6f803bacc44.ecg",
+          "sha256": "0144787be0cb26c076d8a6f803bacc44a6b9066610b037d1b36633f502b6646f",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "substrate/net/src/server.rs::requests_are_served_and_connections_persist",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/024682b75a8cadbd4fc8cf5edddc07a0.ecg",
+          "sha256": "024682b75a8cadbd4fc8cf5edddc07a0ea78adada785ff75d5cddd4a734e7fbf",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/054dde674b0b12dde67867f3b255146f.ecg",
+          "sha256": "054dde674b0b12dde67867f3b255146f3dcc7cfd7ee0d3b0be7fab7a92e3863f",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::routes_methods_and_paths_answer_with_the_right_status",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/078eb8d464d43fc4bc1d874901f3962d.ecg",
+          "sha256": "078eb8d464d43fc4bc1d874901f3962db05d97efa8dc43bde93e970432fe25f7",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/graphiti_memory.rs::graphiti_name_resolution_oracle_with_deterministic_ties",
+          "passed": true,
+          "proof_digest": "sha256:a3f042c2123b9747aee6f2fab32863408bf2a9881863279286c72f564b65d0c1",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/09cc7d4fa27de6cf6ca1bcecaab1d0b6.ecg",
+          "sha256": "09cc7d4fa27de6cf6ca1bcecaab1d0b6ac0af5ada67ce6fe04f11e1fd6270964",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/sha256.rs::fips_vectors",
+          "passed": true,
+          "proof_digest": "sha256:b4be9a80caac0ebe890c568c744dc786b51b4ec94ff408ce77080632cb34460e",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/0bc2b222c707df110faed390eb04a92a.ecg",
+          "sha256": "0bc2b222c707df110faed390eb04a92aa158161615e032be48b602893dfafffc",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::the_session_table_is_bounded",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/0f03489c1656dbf91c82c8ba6dfa44e4.ecg",
+          "sha256": "0f03489c1656dbf91c82c8ba6dfa44e4dfb895c1a7fc8c5037e5983159d8a298",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::generated_documents_reproduce_the_frozen_results",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/1287622e3a24ba46b9b8e8fd003c98d0.ecg",
+          "sha256": "1287622e3a24ba46b9b8e8fd003c98d0991988c4e1334a9126f262d0b594828f",
+          "subject": "technology/commerce.supplier-leads",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::supplier_offer_terms_persist_without_becoming_product_cost",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:38de748cb02f9e24181cb7d4f0ea072aa377c0adb8f18f503d962c04837c586c",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/1765341d5a04475cdfe4a88bd9800996.ecg",
+          "sha256": "1765341d5a04475cdfe4a88bd98009963e3e695a78672b58912b35c4db1e56b8",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/mod.rs::values_index_compare_and_convert",
+          "passed": true,
+          "proof_digest": "sha256:88f288a913c553c0dcfdd30d727e53abac690d2d73eed3b68e66ea9ada6ce09c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/1a8e1bbd525a111dbe9d5edec4525d56.ecg",
+          "sha256": "1a8e1bbd525a111dbe9d5edec4525d562c757521d557de741e85d7871536eaf6",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::only_the_loopback_host_and_its_own_origin_are_served",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/1db2117170591b4326dc57ad09c139ec.ecg",
+          "sha256": "1db2117170591b4326dc57ad09c139ec306105100d0f0e0f2ff8c8b7bef436f6",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/service.rs::paid_product_failure_modes_counts_and_budget_are_durable",
+          "passed": true,
+          "proof_digest": "sha256:accfdfa7c26068d058a761f9d4d342813806147fede7090edf1a43e898184f9c",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/2189a71a0b290b540e8d6bf35ad31717.ecg",
+          "sha256": "2189a71a0b290b540e8d6bf35ad31717facfd330860263051a671d10ed55ceb8",
+          "subject": "technology/commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:2d9e8bfa4c4f1e09289bd13e5dd89f5363e37061f5de95dec85d3839f4f9ec98",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/257b430ff6795c2ae4b20a45ddafacfe.ecg",
+          "sha256": "257b430ff6795c2ae4b20a45ddafacfe3b4c2dc887220e6677b83315fbfa001c",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::zero_paid_research_e2e",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/2810991906af901ba58c88b64a302967.ecg",
+          "sha256": "2810991906af901ba58c88b64a3029670caddedb1d4c1284b0d672b5351586f1",
+          "subject": "technology/commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:2d9e8bfa4c4f1e09289bd13e5dd89f5363e37061f5de95dec85d3839f4f9ec98",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/2a24e2c38e1c8d9125fcda1b35dcd42e.ecg",
+          "sha256": "2a24e2c38e1c8d9125fcda1b35dcd42edcec02da22c5c72b9d90f9ae960c23f9",
+          "subject": "technology/commerce.page-product",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::open_graph_products_reach_candidates_with_inspectable_unknowns",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:0c766b7327f37725a2023d99fad514726d49402198e886aa225157f8330268d1",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/2b3011e81993ea2ffc29fb597e58ae3e.ecg",
+          "sha256": "2b3011e81993ea2ffc29fb597e58ae3ebb22dd923f1d6f555e5a30fef6addd13",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/2c8d14219598993a1c8641f822d64167.ecg",
+          "sha256": "2c8d14219598993a1c8641f822d64167e0bb5c0ba9f8faa6136bdc27ba6b3afc",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/number.rs::floats_print_as_the_shortest_round_trip_text",
+          "passed": true,
+          "proof_digest": "sha256:d079d29d72fecdc007768090f91f0ebd4eeeb18ca404bd9e089db6b54e4229f1",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/30bc532b041f505cace1c964a54abfc1.ecg",
+          "sha256": "30bc532b041f505cace1c964a54abfc1f6411745d1f273cc32ef7f41d408839d",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::only_the_loopback_host_and_its_own_origin_are_served",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/32d2067c984662198a74ca6ef50b9a75.ecg",
+          "sha256": "32d2067c984662198a74ca6ef50b9a75e0daac1cb491e82f175a7711bff1d581",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/frontier.rs::retries_obey_backoff_retry_after_and_exhaustion",
+          "passed": true,
+          "proof_digest": "sha256:23e20b0968ab33eaa32d9845b6e1af19e98aa6fc3dc8cad0bf1d1127f8bfd90c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/33035e670cd027933e782567789ca187.ecg",
+          "sha256": "33035e670cd027933e782567789ca187e59fc800a313efab7d2d919bceaafa80",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::supplier_research_plans_public_follow_up_without_invented_terms",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/3361d95685991b19c52077a3528db9d4.ecg",
+          "sha256": "3361d95685991b19c52077a3528db9d43b53a6332101c1b053b014b6336c1490",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/monitor.rs::watch_restart_fencing_and_changes_persist",
+          "passed": true,
+          "proof_digest": "sha256:1bd10444eef6cebae11892632af4d7f57dd53e993d741fde82563d5eece5f8c5",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/35e3b36f6a80501392ad4dc9068a9f13.ecg",
+          "sha256": "35e3b36f6a80501392ad4dc9068a9f13bd7498a3344eb409939b7efb995193ee",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/mod.rs::typed_decoding_reports_the_field",
+          "passed": true,
+          "proof_digest": "sha256:88f288a913c553c0dcfdd30d727e53abac690d2d73eed3b68e66ea9ada6ce09c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/36772165132461a05e37e3d22c12a41d.ecg",
+          "sha256": "36772165132461a05e37e3d22c12a41de21ffaade4ea07269d66114cb05e7798",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::corrupted_commerce_captures_cannot_be_replayed_compared_or_cached",
+          "passed": true,
+          "proof_digest": "sha256:ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/3909eeaaf4ee927db1d1d305c81c0621.ecg",
+          "sha256": "3909eeaaf4ee927db1d1d305c81c062139e3b9b3f73c46053338514ab1cc1184",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/research.rs::public_research_mode_comes_from_known_io_not_failed_intent",
+          "passed": true,
+          "proof_digest": "sha256:435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/3a82df6bb13049644fc0a46f88c4539c.ecg",
+          "sha256": "3a82df6bb13049644fc0a46f88c4539c5619e10f0633c9d8c17d3fe0e6a58f9b",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::derived_types_reproduce_the_frozen_serde_results",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/3ac30905ac7c86f04157a722c5614ae1.ecg",
+          "sha256": "3ac30905ac7c86f04157a722c5614ae16e4cba744000c9cd942c0cc5a13a8a3e",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::nesting_limit_reproduces_the_frozen_results",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/4221b5e1622d8da429cbcb79898d96ec.ecg",
+          "sha256": "4221b5e1622d8da429cbcb79898d96ec40013e3660ebef2487fbd2b462abb766",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::routes_methods_and_paths_answer_with_the_right_status",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/423dcb3ddd4120894d201016b8b724d0.ecg",
+          "sha256": "423dcb3ddd4120894d201016b8b724d04b0c108b6e613537e0c24f34a59726fc",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/mod.rs::text_round_trips_and_pretty_prints",
+          "passed": true,
+          "proof_digest": "sha256:88f288a913c553c0dcfdd30d727e53abac690d2d73eed3b68e66ea9ada6ce09c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/457982e8ba0a5cbe71881eca3360dac1.ecg",
+          "sha256": "457982e8ba0a5cbe71881eca3360dac128ff3a0358069684502552b9c1da21e3",
+          "subject": "technology/commerce.official-marketplace",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::official_product_fixture_isolated_from_public_keepa_and_historical_corruption",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:80fa2576194420a137f9470ed245ccce7aae699c50a98950fe055c5a6e161e78",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/46e8a7805a034299f47e60ff49ae792f.ecg",
+          "sha256": "46e8a7805a034299f47e60ff49ae792ff35e506ef1797800420182767be62bf6",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/48b23d303fc5b51f2e22dcd325b130c9.ecg",
+          "sha256": "48b23d303fc5b51f2e22dcd325b130c91e5b053760ba35e9e44f01ae41dd1120",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::floats_print_as_the_frozen_text",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/4f6b7753cb2425cb9c4fc0b9accfc4a3.ecg",
+          "sha256": "4f6b7753cb2425cb9c4fc0b9accfc4a312aca2971e710158f8932c7d01cdc64a",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "substrate/net/src/server.rs::many_clients_are_served_at_once_and_excess_is_refused",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/5361e843e9ba87439ebe4eed25713737.ecg",
+          "sha256": "5361e843e9ba87439ebe4eed25713737a2b54763e68102cffcfcba4aed05a2b9",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::microdata_products_and_cross_format_conflicts_retain_evidence",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/57303426eaddaa97e809e5a33d57b4f0.ecg",
+          "sha256": "57303426eaddaa97e809e5a33d57b4f03aa739d3e3e6115924dc940f432c9036",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::the_jsontestsuite_reproduces_the_frozen_results",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/59c62b547b5aaadf4142b30f56d61c6b.ecg",
+          "sha256": "59c62b547b5aaadf4142b30f56d61c6bc8afa5f40572cd7e9db249b9a8887f74",
+          "subject": "technology/commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:2d9e8bfa4c4f1e09289bd13e5dd89f5363e37061f5de95dec85d3839f4f9ec98",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/5adf4b54883bc43a423d0420c885d027.ecg",
+          "sha256": "5adf4b54883bc43a423d0420c885d027476a8d248c98b64b3602d376c371a78e",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/resolution.rs::near_duplicate_titles_are_uncertain_links_never_merges",
+          "passed": true,
+          "proof_digest": "sha256:96c93e63cc6e736216602d33bd8719783ffad34ab5965c34a480cbb6c9abbde7",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/5c1250c677887ab160f0142af96708db.ecg",
+          "sha256": "5c1250c677887ab160f0142af96708db6f63abaca5b853a67126a4cf2e5d25d0",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/mod.rs::errors_say_what_and_where",
+          "passed": true,
+          "proof_digest": "sha256:88f288a913c553c0dcfdd30d727e53abac690d2d73eed3b68e66ea9ada6ce09c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/6035281059b443f705531ca473bc279b.ecg",
+          "sha256": "6035281059b443f705531ca473bc279b6847138cbf4d70a7749319ca24ff2a29",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/international_domain.rs::punycode_matches_the_rfc_3492_samples",
+          "passed": true,
+          "proof_digest": "sha256:0564cf639b978a674a11444c0fee9ffe7830fa48921e6bb806c3ec429190cc93",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/62433159238d1d627f02e02621f90c67.ecg",
+          "sha256": "62433159238d1d627f02e02621f90c6796e0bc57bd76f31b3f3d9484aca108cd",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/6327e06916763e2f9c582e9d11a2ecf4.ecg",
+          "sha256": "6327e06916763e2f9c582e9d11a2ecf492fa2441c36d302d7be2dd5007fcd0c3",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/63c0d10b9b59c32cf254f8b5bf6edb10.ecg",
+          "sha256": "63c0d10b9b59c32cf254f8b5bf6edb10d442b7ddd05c3d54be96d957302a0ded",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/6b8ace3a6bd50780311c16653b72631b.ecg",
+          "sha256": "6b8ace3a6bd50780311c16653b72631b17dee8fcfb708a7dc87a6161bccae772",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/tests/protocol.rs::the_console_the_api_and_mcp_over_http_conform",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/6bb8da01b64f44a0f3d5115af571a793.ecg",
+          "sha256": "6bb8da01b64f44a0f3d5115af571a793ee8d52bc5c749dabc40066470bea8a1c",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::microdata_products_and_cross_format_conflicts_retain_evidence",
+          "passed": true,
+          "proof_digest": "sha256:ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/6de3b1b041a7657225b5694311dcbede.ecg",
+          "sha256": "6de3b1b041a7657225b5694311dcbedea441ed2f5cdc4358cbbcd1ed8a4023d5",
+          "subject": "technology/commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:2d9e8bfa4c4f1e09289bd13e5dd89f5363e37061f5de95dec85d3839f4f9ec98",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7088d0f9df4e471a2bdc2424accf06e3.ecg",
+          "sha256": "7088d0f9df4e471a2bdc2424accf06e392f7c3a36a69229e31997f667a776d7c",
+          "subject": "technology/commerce.http-retry",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/research.rs::response_retry_after_reaches_durable_frontier_and_known_request_accounting",
+          "passed": true,
+          "proof_digest": "sha256:435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46",
+          "subject_digest": "sha256:ae9e6213d787937b02317baf49ba7b0b0ba4cab8a6cabefbdb5ae2b9920af401",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7189bd05d36d9c1637aa9f6058b456be.ecg",
+          "sha256": "7189bd05d36d9c1637aa9f6058b456be66df157c8bcd86e43b3a36c454a06f65",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/src/social.rs::independent_social_donor_oracles",
+          "passed": true,
+          "proof_digest": "sha256:2f5f4753b8ee6aab4c35b41c12fe42db52e1092bfa6a2300ed7c28ac408569c4",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/72afaac328fb6dc87969c67b2c74336f.ecg",
+          "sha256": "72afaac328fb6dc87969c67b2c74336f4505c7b8110bd0fbf9a0ebe5516ae907",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_macro.rs::macro_invocations_build_the_frozen_values",
+          "passed": true,
+          "proof_digest": "sha256:26eccdf906e8807698b2f5b235d62d626e5020bf4b048ddf045de73560f7039c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/77fd572639411584349de09d8bddd6ba.ecg",
+          "sha256": "77fd572639411584349de09d8bddd6ba5fa8e17cd4594ebb3b74fc2a97ccc54d",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::zero_paid_research_e2e",
+          "passed": true,
+          "proof_digest": "sha256:ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/78c3451630c031c3b4d4df5a9dcc1496.ecg",
+          "sha256": "78c3451630c031c3b4d4df5a9dcc1496ac55a8faa3edc2bf07114a253fbea87a",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "adapter/keepa/tests/native_json.rs::native_macro_preserves_exact_money_and_unknowns",
+          "passed": true,
+          "proof_digest": "sha256:0aa2bdf522bac2b54b0745855135cdde1e9f95c22446cea99cbda9f9b145419b",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7b43b227107edeef9b5651cc5dcc34b4.ecg",
+          "sha256": "7b43b227107edeef9b5651cc5dcc34b43e6801d57b0e707d1914fb67c59a815e",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/frontier.rs::reclaim_is_fenced_and_cannot_evade_retry_exhaustion",
+          "passed": true,
+          "proof_digest": "sha256:23e20b0968ab33eaa32d9845b6e1af19e98aa6fc3dc8cad0bf1d1127f8bfd90c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7c68f1e340bb5ef2ea80df04e6ac16cf.ecg",
+          "sha256": "7c68f1e340bb5ef2ea80df04e6ac16cf94fb0a30cd9abfb5854f45b4f1c387d8",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/graphiti_memory.rs::memory_semantics_regressions",
+          "passed": true,
+          "proof_digest": "sha256:a3f042c2123b9747aee6f2fab32863408bf2a9881863279286c72f564b65d0c1",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7c8ed8dce68b7c4428b476aeab01bc45.ecg",
+          "sha256": "7c8ed8dce68b7c4428b476aeab01bc456c65041c822e39a8bb6acedc773e971d",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7eacf42429462b512cb84a195b834f22.ecg",
+          "sha256": "7eacf42429462b512cb84a195b834f22e16d09ec56c5d963e7afca46b1d2ae05",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "substrate/net/src/server.rs::streams_are_chunked_and_end_the_connection",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7ece499f43ebd8fb9db1f4b6718c99b4.ecg",
+          "sha256": "7ece499f43ebd8fb9db1f4b6718c99b4a581a9ce1c6ab2f85a82bb285ae0c04b",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/web_address_parity.rs::reference_cases_reproduce_the_frozen_digest",
+          "passed": true,
+          "proof_digest": "sha256:b2eb0c7a7c097a35ab39e094258e1295fbf9fd1d8511198227b4dda757b72090",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7f13ea0464e9f3f5a2b1071f37cbdbeb.ecg",
+          "sha256": "7f13ea0464e9f3f5a2b1071f37cbdbebafd28ffad038c09cc8c222edf73a4419",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/frontier.rs::locked_crawlee_queue_oracle",
+          "passed": true,
+          "proof_digest": "sha256:23e20b0968ab33eaa32d9845b6e1af19e98aa6fc3dc8cad0bf1d1127f8bfd90c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/7f5bbbfa1bd2ac7314d2c0ad1a31b14f.ecg",
+          "sha256": "7f5bbbfa1bd2ac7314d2c0ad1a31b14f34741ebd4652b258f4181caeef9fd8e9",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/web_address.rs::query_pairs_decode_and_encode_as_forms",
+          "passed": true,
+          "proof_digest": "sha256:6233dfeaeb091991bac552426608d883d614c96e11703dd038a2d0eb58e92976",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/85f57ccb90d0008df050f018a6fc8e9c.ecg",
+          "sha256": "85f57ccb90d0008df050f018a6fc8e9cab10b20b3e22eefc2e42eb9f4e6121c9",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/web_address.rs::origins_compare_by_scheme_host_and_effective_port",
+          "passed": true,
+          "proof_digest": "sha256:6233dfeaeb091991bac552426608d883d614c96e11703dd038a2d0eb58e92976",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/903ed91a367d9a6d7db1bfb0674d5633.ecg",
+          "sha256": "903ed91a367d9a6d7db1bfb0674d563316d48d86dee4a9f98f79e0f9dd1a69e4",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/json/number.rs::numbers_keep_their_text_and_convert_exactly",
+          "passed": true,
+          "proof_digest": "sha256:d079d29d72fecdc007768090f91f0ebd4eeeb18ca404bd9e089db6b54e4229f1",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/94e3c188b7a07694fd9b46c674116144.ecg",
+          "sha256": "94e3c188b7a07694fd9b46c6741161448bd3832c90230529bc11d85a18ebdae8",
+          "subject": "technology/commerce.evidence-decisions",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::multi_origin_identifier_evidence_reaches_research_shortlist",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:429abab045d12dd1ac4aa7f744fdbde2b60eb78cd6c0794cc958a946b832d0db",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/94e853a7c6f860976661829e8812f6e1.ecg",
+          "sha256": "94e853a7c6f860976661829e8812f6e12a3fe941b5a731caecadc028284691c3",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "adapter/keepa/src/client.rs::native_json_http_keeps_exact_money_raw_evidence_and_unknown_costs",
+          "passed": true,
+          "proof_digest": "sha256:b2aeadfd6791934dfc5a2754a42a2871df4a1491ca217e1c78483b480d689717",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/95ed504669efc9236b56400ef82810c4.ecg",
+          "sha256": "95ed504669efc9236b56400ef82810c41981ab48defc4e3cd483068cb7f778f0",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::notifications_and_client_responses_get_no_reply_and_batches_answer_requests_only",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/97b50c5d4687d066e0568d035fbfa781.ecg",
+          "sha256": "97b50c5d4687d066e0568d035fbfa7810e7e1b0db036469d815f21df49e183af",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::percent_decoding_and_query_lookup_are_strict",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/9adaac335d36dc0ecede5a186cf391be.ecg",
+          "sha256": "9adaac335d36dc0ecede5a186cf391be447f6fa647fcbf6a8726d3d36b58c18d",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::envelope_errors_are_json_rpc_errors_with_the_right_ids",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/9bd2dd7a30f95e3fa02e17af6eb266dd.ecg",
+          "sha256": "9bd2dd7a30f95e3fa02e17af6eb266ddfcfbf7ae4a3e7f1edadf7d7853502998",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/web_address_parity.rs::international_hosts_reproduce_the_frozen_digest",
+          "passed": true,
+          "proof_digest": "sha256:b2eb0c7a7c097a35ab39e094258e1295fbf9fd1d8511198227b4dda757b72090",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/9d870b80c1a607032eef28e9a9ebe66d.ecg",
+          "sha256": "9d870b80c1a607032eef28e9a9ebe66d8a68ac33afe45fb33ff4e40d6797a23f",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/web_address.rs::relative_references_resolve_as_the_standard_says",
+          "passed": true,
+          "proof_digest": "sha256:6233dfeaeb091991bac552426608d883d614c96e11703dd038a2d0eb58e92976",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/a13dacb7dc3402c4d0cc982fe8a6aeb2.ecg",
+          "sha256": "a13dacb7dc3402c4d0cc982fe8a6aeb239d5cf4bd4c327e16c911d80c31d0dab",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/service.rs::live_status_requires_network_witnesses_and_capture_hashes",
+          "passed": true,
+          "proof_digest": "sha256:accfdfa7c26068d058a761f9d4d342813806147fede7090edf1a43e898184f9c",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/a26dc1bb660663f55ddd6e7ea1a57f5a.ecg",
+          "sha256": "a26dc1bb660663f55ddd6e7ea1a57f5a289f2b99a6b734a16583c95bb6283d26",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "substrate/net/src/server.rs::streams_are_chunked_and_end_the_connection",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/a54d7ee9e1e15bde4c806048391dcb93.ecg",
+          "sha256": "a54d7ee9e1e15bde4c806048391dcb93eefd5f2838606962758abff8d8450ca1",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/web_address_wpt.rs::native_urls_match_the_web_platform_tests_except_the_documented_refusals",
+          "passed": true,
+          "proof_digest": "sha256:8bd04129f46307cf874294748bc1fda4028817e2395897a8a28a4629efa4d58d",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/ade6986270f4bc01041fab44bbd7d7c1.ecg",
+          "sha256": "ade6986270f4bc01041fab44bbd7d7c11b22f6f64da47f673c479cbe060209e2",
+          "subject": "technology/commerce.http-retry",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/provider.rs::retry_after_formats_preserve_not_before_and_reject_invalid_dates",
+          "passed": true,
+          "proof_digest": "sha256:7f69100ef261a7b0522c20f8073a7a88ca3662a5c4b917f55761cbd4d259c81e",
+          "subject_digest": "sha256:ae9e6213d787937b02317baf49ba7b0b0ba4cab8a6cabefbdb5ae2b9920af401",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/ae9805e44b62baa0ac6c94d8e0909cb7.ecg",
+          "sha256": "ae9805e44b62baa0ac6c94d8e0909cb77af79a6e90e2160a36de35dfeb918932",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/cachetools_ttl.rs::cachetools_ttl_freshness_oracle",
+          "passed": true,
+          "proof_digest": "sha256:161c2c0cc3e2425fbc060beb5b2973814627cafe5a49b366da1a2c1095b1c370",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/af1165297a4e45aae77a86509a720892.ecg",
+          "sha256": "af1165297a4e45aae77a86509a7208929a41dcb6b64cb97eca81648081405870",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/frontier.rs::persistence_priority_handled_and_deduplication",
+          "passed": true,
+          "proof_digest": "sha256:23e20b0968ab33eaa32d9845b6e1af19e98aa6fc3dc8cad0bf1d1127f8bfd90c",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/b525d7f6108c9b4484f6e574c27fcab5.ecg",
+          "sha256": "b525d7f6108c9b4484f6e574c27fcab560aa7dc815c40fd6be73522decd62170",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/web_address.rs::credentials_and_backslashes_cannot_disguise_the_host",
+          "passed": true,
+          "proof_digest": "sha256:6233dfeaeb091991bac552426608d883d614c96e11703dd038a2d0eb58e92976",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/b56682143fd273315e0424ccfc336c98.ecg",
+          "sha256": "b56682143fd273315e0424ccfc336c981fd882af0a780becf1d39054bda05b52",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::percent_decoding_and_query_lookup_are_strict",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/b73850f3c9c51acdc66adc41ea2a9734.ecg",
+          "sha256": "b73850f3c9c51acdc66adc41ea2a9734444d46e0be84602b419f546dbff4c534",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::streamable_http_enforces_headers_sessions_and_the_notification_status",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/b746e2fddb773a2010d839bf8f4aab1b.ecg",
+          "sha256": "b746e2fddb773a2010d839bf8f4aab1b2fced084c915588e7a9f2565821dc1b8",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "substrate/net/src/server.rs::many_clients_are_served_at_once_and_excess_is_refused",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/ba55c006a3d2b9b2b7e4825cda454e9a.ecg",
+          "sha256": "ba55c006a3d2b9b2b7e4825cda454e9accbbf48e55978f2c5eb166395be7dc5f",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "substrate/net/src/server.rs::requests_are_served_and_connections_persist",
+          "passed": true,
+          "proof_digest": "sha256:35ce5a802026ea0b81e83d86f2201eb01d34896842e72cc7f0e4f1aa9c51dd5e",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/bc22e87da8c8f197350fab03b581f63b.ecg",
+          "sha256": "bc22e87da8c8f197350fab03b581f63b38f8b2448040ee2e8c8ec6a2f70c4aa4",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/cachetools_ttl.rs::freshness_and_stale_window_regressions",
+          "passed": true,
+          "proof_digest": "sha256:161c2c0cc3e2425fbc060beb5b2973814627cafe5a49b366da1a2c1095b1c370",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/c0297bd559ebfefcbad1179790f9713f.ecg",
+          "sha256": "c0297bd559ebfefcbad1179790f9713f4366b7d0a44c6d293d9039436303da4e",
+          "subject": "technology/commerce.fetch-cache-ttl",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/cachetools_ttl.rs::cachetools_ttl_freshness_oracle",
+          "passed": true,
+          "proof_digest": "sha256:161c2c0cc3e2425fbc060beb5b2973814627cafe5a49b366da1a2c1095b1c370",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/c0df0bcf9232008a233e3044f39de5e8.ecg",
+          "sha256": "c0df0bcf9232008a233e3044f39de5e8306979938c39a62be658002d2dcb3eee",
+          "subject": "technology/commerce.fetch-cache-ttl",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/cachetools_ttl.rs::freshness_and_stale_window_regressions",
+          "passed": true,
+          "proof_digest": "sha256:161c2c0cc3e2425fbc060beb5b2973814627cafe5a49b366da1a2c1095b1c370",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/cfd16e794f7ce172f85617d13e6f0ee7.ecg",
+          "sha256": "cfd16e794f7ce172f85617d13e6f0ee71ccd58e36c6950e839d4a328d1c7ec53",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/daa316e902db65f898bfa30acbe325a4.ecg",
+          "sha256": "daa316e902db65f898bfa30acbe325a4670a14867c90ca1f073120eb5b5b8a95",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/service.rs::durable_runs_replay_without_network",
+          "passed": true,
+          "proof_digest": "sha256:accfdfa7c26068d058a761f9d4d342813806147fede7090edf1a43e898184f9c",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/ddfe12ce3c8754818eb34773ec1df7c5.ecg",
+          "sha256": "ddfe12ce3c8754818eb34773ec1df7c548ac879df788a5c3de36e21b8e9193b9",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/capture.rs::captures_require_matching_bytes_in_the_declared_source_boundary",
+          "passed": true,
+          "proof_digest": "sha256:fe581094ba2f169e0ab90dd81916159966d2941a43b542e3f0224fb01719d07d",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/e1d61c27101ab2dbb5260eda57b094fd.ecg",
+          "sha256": "e1d61c27101ab2dbb5260eda57b094fd5827bf083e0bf3c1e2a20ce168d5c6dd",
+          "subject": "technology/commerce.storage",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::corrupted_commerce_captures_cannot_be_replayed_compared_or_cached",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:c55b2c6cac9ac7ba7add4e0fddfe0661cee954af46924ab97f08ad571a5c26e1",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/e38cea15d9c494e1183af74b2274ad14.ecg",
+          "sha256": "e38cea15d9c494e1183af74b2274ad14ade89a8fefe52079d076e8830612b1bf",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/graphiti_memory.rs::graphiti_fact_invalidation_oracle",
+          "passed": true,
+          "proof_digest": "sha256:a3f042c2123b9747aee6f2fab32863408bf2a9881863279286c72f564b65d0c1",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/e5d440cd479b365f794a426e520a5fd9.ecg",
+          "sha256": "e5d440cd479b365f794a426e520a5fd9ea8f0820bb99a6c502468819ce47047b",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::initialize_negotiates_a_supported_revision_and_offers_the_newest_otherwise",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/e818bf4518ea127256e9a2b984b96e79.ecg",
+          "sha256": "e818bf4518ea127256e9a2b984b96e7921f4d24137744d4d1332d75442d76ae4",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/src/web_address.rs::international_hosts_become_punycode_and_refuse_confusables_the_standard_refuses",
+          "passed": true,
+          "proof_digest": "sha256:6233dfeaeb091991bac552426608d883d614c96e11703dd038a2d0eb58e92976",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/e93468830a63cd1990e0520e95b38f80.ecg",
+          "sha256": "e93468830a63cd1990e0520e95b38f80974b890126c1939e8cfb50ed5b51560a",
+          "subject": "technology/commerce.public-amazon",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::public_amazon_blocked_route_preserves_provider_identity_and_public_fallback",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:6d4c321ebfff77f6bf4344703dbe96e0de0d917717d9c8c110338bfbb5463706",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/eb277b1f550546dd13cd24da53df7f50.ecg",
+          "sha256": "eb277b1f550546dd13cd24da53df7f50430f0e00bf6e70afc7516a9b85a517a2",
+          "subject": "commerce",
+          "kind": "Regression",
+          "locator": "domain/commerce/tests/social.rs::volume_spike_and_sentiment_drop_follow_harken_thresholds",
+          "passed": true,
+          "proof_digest": "sha256:3c2cf551f9316a5ad883458089057dba9adb411988e6124dd9e5d94af148ef0f",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/ed016435be8a6d8a010f54a1ab1e70e5.ecg",
+          "sha256": "ed016435be8a6d8a010f54a1ab1e70e5a16724b0fc73dac13c8c7dfd2537f678",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/sha256_parity.rs::native_digests_reproduce_the_frozen_sha2_digest_of_digests",
+          "passed": true,
+          "proof_digest": "sha256:e6af22bd341b4e2bbd9b68ccdd5b938cc33dd1cf3a806aa1700d1301bc748d0b",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/eee97e9e69b335ebf3d50ea0627129bb.ecg",
+          "sha256": "eee97e9e69b335ebf3d50ea0627129bb38d83591b067474f20c5878ca9321a51",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/web.rs::the_session_table_is_bounded",
+          "passed": true,
+          "proof_digest": "sha256:bc82ce081038c814769fea63cf35916804de36baabf847a45f22c58cea062558",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/efa1ef6eda30d0e3a674b4cda5ac7da5.ecg",
+          "sha256": "efa1ef6eda30d0e3a674b4cda5ac7da5a348f9cbfeadeec2739fa29904910ae8",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/json_parity.rs::mutated_documents_reproduce_the_frozen_results",
+          "passed": true,
+          "proof_digest": "sha256:5659dde6fc191ae82e52bfac6ebaa7c5b551aee651b75a0340d4bfbe5987ac31",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/f794f18cc7814e4d4b9b15cd446d5aea.ecg",
+          "sha256": "f794f18cc7814e4d4b9b15cd446d5aeaff353678ff56b1086b9188832ba8ee8d",
+          "subject": "technology/commerce.zero-paid-research",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::supplier_research_plans_public_follow_up_without_invented_terms",
+          "passed": true,
+          "proof_digest": "sha256:ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+          "subject_digest": "sha256:9142b8f9061862a5231b1598ae65d35824dae56be30eec7eb5352db1c819cd0b",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/f799e85dd18633b3527bdd1d05ee6578.ecg",
+          "sha256": "f799e85dd18633b3527bdd1d05ee65787b67b132a4d70979a037834598533a1a",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/f7d4fa74f6b2c3a5bb4e58eaff1c9f99.ecg",
+          "sha256": "f7d4fa74f6b2c3a5bb4e58eaff1c9f99044f81b5ec40bd3f658e6ea11a73c22d",
+          "subject": "commerce.server",
+          "kind": "Parity",
+          "locator": "apps/server/tests/protocol.rs::mcp_over_standard_input_answers_one_line_per_request",
+          "passed": true,
+          "proof_digest": "sha256:83a5f70f05f28382cfb383640fdd80c81946836d5fd0837b350fabbc69637cc3",
+          "subject_digest": "sha256:fb571811b67b863ccec3da326dafee725bb2525e67518095b47c753ad40142cc",
+          "current_binding": true,
+          "phase": "final_adapted_sources"
+        },
+        {
+          "path": ".ecdev/evidence/f7dd46f111a65763996048c8c11e5ac9.ecg",
+          "sha256": "f7dd46f111a65763996048c8c11e5ac910921dd4d1a5aabb8d8fa2e919455e0e",
+          "subject": "technology/commerce.social-domain",
+          "kind": "Regression",
+          "locator": "apps/server/src/lib.rs::social_snapshot_mcp_projection_and_scenario_isolation",
+          "passed": true,
+          "proof_digest": "sha256:63cb08f703ce1b60058b3ec080500a600ce1db6b875f553bd167e36b8f368bf3",
+          "subject_digest": "sha256:771e000fc37b83ca66826dd3d4822376c9b183c6e2dd169a5163ef2d812abc8b",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/f9805dba3ec9b943c80f12dcf5c3a438.ecg",
+          "sha256": "f9805dba3ec9b943c80f12dcf5c3a43835ddfbc36a99c9dfbdd18e456e715601",
+          "subject": "commerce.server",
+          "kind": "Regression",
+          "locator": "apps/server/src/mcp.rs::tools_and_resources_follow_the_specification_shapes",
+          "passed": true,
+          "proof_digest": "sha256:95ffbaee17e1355244e5fda770bda273aaddfb4104c656f046eeff0b768807ae",
+          "subject_digest": "sha256:fd6f81a605b4d25a6fbdc50141c76bb126b2545204716c69778183de828fb958",
+          "current_binding": false,
+          "phase": "first_intermediate_candidate"
+        },
+        {
+          "path": ".ecdev/evidence/fb24d7902247c7d420d623d6c9f51914.ecg",
+          "sha256": "fb24d7902247c7d420d623d6c9f51914963495f86aa3a52c5085a4c0f3297c6d",
+          "subject": "commerce",
+          "kind": "Parity",
+          "locator": "domain/commerce/tests/web_address_parity.rs::mutator_scenarios_reproduce_the_frozen_digest",
+          "passed": true,
+          "proof_digest": "sha256:b2eb0c7a7c097a35ab39e094258e1295fbf9fd1d8511198227b4dda757b72090",
+          "subject_digest": "sha256:484cd392ae74be2c5f26a3a406be908deb413068ea3909910836511cd569058f",
+          "current_binding": true,
+          "phase": "first_intermediate_candidate"
+        }
+      ],
+      "limits": [
+        "Source-only hosted/offline implementation and proof refresh. No screened native harness, Fi-game qualification or Esellios operation.",
+        "Publication and final conformance owned by parent; no production acceptance or canonical capability change claimed."
+      ]
+    }
+  },
+  "gates": {
+    "before_refresh": {
+      "observed_at_utc": "2026-10-17T11:31:59.685120+00:00",
+      "argv": [
+        "/tmp/ecdev-source-light-target/release/ecdev-gov",
+        "conformance",
+        "--json"
+      ],
+      "exit": 1,
+      "stdout_bytes": 14772,
+      "stdout_sha256": "8ea9aedeecdeabbed2f51bf49b90088a9615c2d9ec039aa0fb00609365263872",
+      "stderr_bytes": 0,
+      "checks": 31,
+      "passed": 30,
+      "failed_checks": [
+        {
+          "id": "lifecycle.claims_within_evidence",
+          "pass": false,
+          "detail": "12: CLAIM_EXCEEDS_EVIDENCE dependency--github-com-modelcontextprotocol-rust-sdk; CLAIM_EXCEEDS_EVIDENCE dependency--github-com-rustcrypto-hashes; CLAIM_EXCEEDS_EVIDENCE dependency--github-com-serde-rs-json; CLAIM_EXCEEDS_EVIDENCE dependency--github-com-serde-rs-serde; CLAIM_EXCEEDS_EVIDENCE dependency--github-com-servo-rust-url"
+        }
+      ],
+      "errors": [
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-modelcontextprotocol-rust-sdk",
+          "detail": "claims EXTINCT but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: rmcp.server-handler, rmcp.json-rpc-and-model, rmcp.streamable-http-transport, rmcp.stdio-transport"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-rustcrypto-hashes",
+          "detail": "claims EXTINCT but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: sha2.sha256"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-serde-rs-json",
+          "detail": "claims PARITY_PROVEN but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: serde_json.value-model, serde_json.number-text, serde_json.parse-text, serde_json.write-text, serde_json.typed-conversion, serde_json.json-macro"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-serde-rs-serde",
+          "detail": "claims PARITY_PROVEN but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: serde.derive-struct-and-enum, serde.std-type-impls"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-servo-rust-url",
+          "detail": "claims PARITY_PROVEN but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: url.parse-and-join, url.accessors-and-origin, url.mutators, url.idna-domain-to-ascii, url.punycode, url.percent-encoding-and-forms"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "dependency--github-com-tokio-rs-axum",
+          "detail": "claims EXTINCT but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: axum.routing-and-handlers, axum.extractors-and-responses, axum.sse, axum.middleware, axum.serve"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "getzep--graphiti",
+          "detail": "claims CUTOVER but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: memory.name-similarity, memory.fact-supersession"
+        },
+        {
+          "severity": "ERROR",
+          "code": "CLAIM_EXCEEDS_EVIDENCE",
+          "subject": "tkem--cachetools",
+          "detail": "claims CAPABILITY_RELEVANCE_RESOLVED but evidence supports NATIVE_SHADOW; stopped at PARITY_PROVEN: capabilities not natively replaced with fresh passing parity proofs: cache.ttl"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "dependency--github-com-modelcontextprotocol-rust-sdk",
+          "detail": "claims EXTINCT without native replacements with fresh passing parity proofs for: rmcp.server-handler, rmcp.json-rpc-and-model, rmcp.streamable-http-transport, rmcp.stdio-transport"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "dependency--github-com-rustcrypto-hashes",
+          "detail": "claims EXTINCT without native replacements with fresh passing parity proofs for: sha2.sha256"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "dependency--github-com-tokio-rs-axum",
+          "detail": "claims EXTINCT without native replacements with fresh passing parity proofs for: axum.routing-and-handlers, axum.extractors-and-responses, axum.sse, axum.middleware, axum.serve"
+        },
+        {
+          "severity": "ERROR",
+          "code": "EXTINCTION_WITHOUT_PARITY",
+          "subject": "getzep--graphiti",
+          "detail": "claims CUTOVER without native replacements with fresh passing parity proofs for: memory.name-similarity, memory.fact-supersession"
+        }
+      ],
+      "metrics": {
+        "schema": "sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140",
+        "donors_discovered": 68,
+        "donors_registered": 56,
+        "donors_censused": 21,
+        "donors_specified": 21,
+        "donors_native_shadow": 21,
+        "donors_parity_proven": 11,
+        "donors_cutover": 7,
+        "donors_extinct": 7,
+        "donors_blocked": 0,
+        "donors_rejected": 8,
+        "donors_superseded": 0,
+        "donors_active": 48,
+        "production_capabilities_required": 73,
+        "production_capabilities_native": 73,
+        "production_capabilities_proven": 43,
+        "production_capabilities_remaining": 30,
+        "known_donor_capabilities": 408,
+        "unreviewed_capabilities": 0,
+        "capabilities_withdrawn": 0,
+        "semantic_censused_capabilities": 408,
+        "study_candidates": 40,
+        "benchmark_candidates": 30,
+        "algorithm_candidates": 4,
+        "reference_only": 85,
+        "study_complete_capabilities": 210,
+        "not_relevant_after_review": 39,
+        "research_questions_open": 74,
+        "knowledge_coverage_ratio": 0.818627,
+        "donors_knowledge_unreviewed": 29,
+        "donors_structural_census": 0,
+        "donors_semantic_census": 3,
+        "donors_active_study": 21,
+        "donors_study_complete": 15,
+        "donors_with_open_research": 53,
+        "donors_structurally_censused": 39,
+        "donors_semantically_censused": 26,
+        "donors_with_open_candidates": 21,
+        "technologies_total": 47,
+        "technologies_native": 29,
+        "technologies_proven": 19,
+        "technologies_canonical": 0,
+        "runtime_external_edges": 3,
+        "build_external_edges": 0,
+        "linked_external_edges": 10,
+        "test_external_edges": 0,
+        "external_technology_edges": 8,
+        "external_closure_packages": 132,
+        "canonical_nodes_total": 12,
+        "canonical_nodes_conformant": 12,
+        "legacy_nodes_remaining": 0,
+        "unmapped_nodes": 0,
+        "documents_total": 3,
+        "documents_over_budget": 0,
+        "repository_shape_conformance": 1.0,
+        "ecdev_repository_conformance": 0.967742,
+        "production_native_ratio": 1.0,
+        "production_proof_ratio": 0.589041,
+        "technology_native_ratio": 0.617021,
+        "extinction_ratio": 0.145833,
+        "donors_technology_mapped": 21,
+        "donors_relevance_resolved": 11,
+        "orphan_capabilities": 0,
+        "orphan_technologies": 0,
+        "sharing_shared_implementation": 0,
+        "sharing_independent_implementation": 0,
+        "sharing_domain_specialization": 1,
+        "sharing_shared_concept": 0,
+        "sharing_unrelated_duplicate": 0,
+        "donors_native_targeted": 21,
+        "known_universe_total": 77,
+        "known_oss_repositories": 77,
+        "known_information_sources": 0,
+        "known_official_authorities": 0,
+        "known_protocol_specs": 0,
+        "known_academic_references": 0,
+        "known_benchmarks": 0,
+        "known_datasets": 0,
+        "known_simulators": 0,
+        "known_standards": 0,
+        "known_reference_architectures": 0,
+        "known_papers": 0,
+        "registered_universe_total": 68,
+        "unique_global_donors": 68,
+        "repository_donor_references": 68,
+        "selected_for_census": 48,
+        "censused": 21,
+        "technology_mapped": 21,
+        "native_targeted": 21,
+        "native_shadow": 21,
+        "parity_proven": 11,
+        "cutover": 7,
+        "extinct": 7,
+        "unknown_identity": 9,
+        "unverified_origin": 43,
+        "unverified_license": 68,
+        "unresolved_relevance": 21,
+        "ambiguous_donor_identities": 0,
+        "universe_sources_unreconciled": 0
+      },
+      "v1_gate": [
+        {
+          "metric": "extinction_ratio",
+          "required": "1.000000",
+          "actual": "0.145833",
+          "pass": false
+        },
+        {
+          "metric": "runtime_external_edges",
+          "required": "0",
+          "actual": "3",
+          "pass": false
+        },
+        {
+          "metric": "build_external_edges",
+          "required": "0",
+          "actual": "0",
+          "pass": true
+        },
+        {
+          "metric": "linked_external_edges",
+          "required": "0",
+          "actual": "10",
+          "pass": false
+        },
+        {
+          "metric": "external_technology_edges",
+          "required": "0",
+          "actual": "8",
+          "pass": false
+        },
+        {
+          "metric": "production_native_ratio",
+          "required": "1.000000",
+          "actual": "1.000000",
+          "pass": true
+        },
+        {
+          "metric": "production_proof_ratio",
+          "required": "1.000000",
+          "actual": "0.589041",
+          "pass": false
+        },
+        {
+          "metric": "repository_shape_conformance",
+          "required": "1.000000",
+          "actual": "1.000000",
+          "pass": true
+        },
+        {
+          "metric": "documents_over_budget",
+          "required": "0",
+          "actual": "0",
+          "pass": true
+        },
+        {
+          "metric": "ecdev_repository_conformance",
+          "required": "1.000000",
+          "actual": "0.967742",
+          "pass": false
+        }
+      ]
+    },
+    "after_final_refresh": {
+      "observed_at_utc": "2026-10-17T11:37:37.574433+00:00",
+      "argv": [
+        "/tmp/ecdev-source-light-target/release/ecdev-gov",
+        "conformance",
+        "--json"
+      ],
+      "exit": 0,
+      "checks": 31,
+      "passed": 31,
+      "stdout_bytes": 10972,
+      "stdout_sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+      "stderr_bytes": 0,
+      "metrics_exact_baseline": true,
+      "V1_gate_exact_baseline": true,
+      "failed_checks": []
+    },
+    "final_conformance_log": {
+      "path": "/workspace/scratch/ecdev-reextract-root-20261017/after-final-refresh.stdout",
+      "bytes": 10972,
+      "sha256": "7445f83044243abb8f8a38b1b0c60d415d922bcd32d6332d425142219a56a1ea",
+      "utf8": "{\n  \"schema\": \"sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140\",\n  \"suite\": \"ECDEV REPOSITORY CONFORMANCE\",\n  \"governance_version\": 1,\n  \"repository\": \"ecdev\",\n  \"origin\": \"llgtrn/ECDEV\",\n  \"checks\": [\n    {\n      \"id\": \"governance.single_authority\",\n      \"pass\": true,\n      \"detail\": \".ecdev/declared holds the complete declaration set of repository `ecdev`\"\n    },\n    {\n      \"id\": \"governance.no_external_authority\",\n      \"pass\": true,\n      \"detail\": \"no executable/configuration file couples this source to external governance; informational references grant no authority\"\n    },\n    {\n      \"id\": \"governance.source_migration_boundary\",\n      \"pass\": true,\n      \"detail\": \"SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed\"\n    },\n    {\n      \"id\": \"declarations.typed_roundtrip\",\n      \"pass\": true,\n      \"detail\": \"declarations render and re-read identically\"\n    },\n    {\n      \"id\": \"graph.schema\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"graph.identity\",\n      \"pass\": true,\n      \"detail\": \"every id = H(ecdev | oss | external, semantic_key)\"\n    },\n    {\n      \"id\": \"graph.roundtrip\",\n      \"pass\": true,\n      \"detail\": \"834 nodes, 1136 edges, 204532 bytes\"\n    },\n    {\n      \"id\": \"lifecycle.claims_within_evidence\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.lineage_and_proofs\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.relevance_justified\",\n      \"pass\": true,\n      \"detail\": \"every resolved capability relevance agrees with `required` and cites its review\"\n    },\n    {\n      \"id\": \"knowledge.irrelevance_admissible\",\n      \"pass\": true,\n      \"detail\": \"no capability is declared without research value on adoption grounds (no caller, a different implementation, a licence, not evidence)\"\n    },\n    {\n      \"id\": \"knowledge.denominator_preserved\",\n      \"pass\": true,\n      \"detail\": \"every capability known to an earlier census is still declared or absorbed; nothing left the knowledge denominator\"\n    },\n    {\n      \"id\": \"licence.derivation_admissible\",\n      \"pass\": true,\n      \"detail\": \"no capability is DERIVED_NATIVE from a donor whose licence allows only clean-room reimplementation\"\n    },\n    {\n      \"id\": \"repository.builds_alone\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"structure.compatible_root\",\n      \"pass\": true,\n      \"detail\": \"canonical roles, full .ecdev/declared set, no non-canonical code root, no crate buckets\"\n    },\n    {\n      \"id\": \"shape.graph_owned_source\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.exceptions_legal\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"lifecycle.no_vanished_donor\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"donors.every_external_registered\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"state.integrity\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"universe.lossless_identity\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"migration.shims_expire\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"migration.waves_consistent\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"metrics.schema\",\n      \"pass\": true,\n      \"detail\": \"98 metrics in schema order\"\n    },\n    {\n      \"id\": \"governance.zero_dependency\",\n      \"pass\": true,\n      \"detail\": \"manifest dependency-free: true; foreign references from .ecdev: 0\"\n    },\n    {\n      \"id\": \"generated.untracked\",\n      \"pass\": true,\n      \"detail\": \"none\"\n    },\n    {\n      \"id\": \"output.deterministic\",\n      \"pass\": true,\n      \"detail\": \"metrics, graph bytes and findings are identical on re-assessment\"\n    },\n    {\n      \"id\": \"probe.identity_survives_moves\",\n      \"pass\": true,\n      \"detail\": \"ec1:f2c95589852bedd0b739cde20566392a\"\n    },\n    {\n      \"id\": \"probe.no_false_extinction\",\n      \"pass\": true,\n      \"detail\": \"one BUILD edge blocks EXTINCT\"\n    },\n    {\n      \"id\": \"probe.compaction\",\n      \"pass\": true,\n      \"detail\": \"fold is order-independent; newer supersedes\"\n    },\n    {\n      \"id\": \"probe.migration_pathmap\",\n      \"pass\": true,\n      \"detail\": \"core = { path = \\\"../../core\\\" }\"\n    }\n  ],\n  \"metrics\": {\n    \"schema\": \"sha256:541d3f2aa4f8dbe3460f815f1a403c6cb4091298bf2e82ef7736c428dbdef140\",\n    \"donors_discovered\": 68,\n    \"donors_registered\": 56,\n    \"donors_censused\": 21,\n    \"donors_specified\": 21,\n    \"donors_native_shadow\": 21,\n    \"donors_parity_proven\": 21,\n    \"donors_cutover\": 11,\n    \"donors_extinct\": 10,\n    \"donors_blocked\": 0,\n    \"donors_rejected\": 8,\n    \"donors_superseded\": 0,\n    \"donors_active\": 48,\n    \"production_capabilities_required\": 73,\n    \"production_capabilities_native\": 73,\n    \"production_capabilities_proven\": 73,\n    \"production_capabilities_remaining\": 0,\n    \"known_donor_capabilities\": 408,\n    \"unreviewed_capabilities\": 0,\n    \"capabilities_withdrawn\": 0,\n    \"semantic_censused_capabilities\": 408,\n    \"study_candidates\": 40,\n    \"benchmark_candidates\": 30,\n    \"algorithm_candidates\": 4,\n    \"reference_only\": 85,\n    \"study_complete_capabilities\": 210,\n    \"not_relevant_after_review\": 39,\n    \"research_questions_open\": 74,\n    \"knowledge_coverage_ratio\": 0.818627,\n    \"donors_knowledge_unreviewed\": 29,\n    \"donors_structural_census\": 0,\n    \"donors_semantic_census\": 3,\n    \"donors_active_study\": 21,\n    \"donors_study_complete\": 15,\n    \"donors_with_open_research\": 53,\n    \"donors_structurally_censused\": 39,\n    \"donors_semantically_censused\": 26,\n    \"donors_with_open_candidates\": 21,\n    \"technologies_total\": 47,\n    \"technologies_native\": 29,\n    \"technologies_proven\": 26,\n    \"technologies_canonical\": 0,\n    \"runtime_external_edges\": 3,\n    \"build_external_edges\": 0,\n    \"linked_external_edges\": 10,\n    \"test_external_edges\": 0,\n    \"external_technology_edges\": 8,\n    \"external_closure_packages\": 132,\n    \"canonical_nodes_total\": 12,\n    \"canonical_nodes_conformant\": 12,\n    \"legacy_nodes_remaining\": 0,\n    \"unmapped_nodes\": 0,\n    \"documents_total\": 3,\n    \"documents_over_budget\": 0,\n    \"repository_shape_conformance\": 1.000000,\n    \"ecdev_repository_conformance\": 1.000000,\n    \"production_native_ratio\": 1.000000,\n    \"production_proof_ratio\": 1.000000,\n    \"technology_native_ratio\": 0.617021,\n    \"extinction_ratio\": 0.208333,\n    \"donors_technology_mapped\": 21,\n    \"donors_relevance_resolved\": 20,\n    \"orphan_capabilities\": 0,\n    \"orphan_technologies\": 0,\n    \"sharing_shared_implementation\": 0,\n    \"sharing_independent_implementation\": 0,\n    \"sharing_domain_specialization\": 1,\n    \"sharing_shared_concept\": 0,\n    \"sharing_unrelated_duplicate\": 0,\n    \"donors_native_targeted\": 21,\n    \"known_universe_total\": 77,\n    \"known_oss_repositories\": 77,\n    \"known_information_sources\": 0,\n    \"known_official_authorities\": 0,\n    \"known_protocol_specs\": 0,\n    \"known_academic_references\": 0,\n    \"known_benchmarks\": 0,\n    \"known_datasets\": 0,\n    \"known_simulators\": 0,\n    \"known_standards\": 0,\n    \"known_reference_architectures\": 0,\n    \"known_papers\": 0,\n    \"registered_universe_total\": 68,\n    \"unique_global_donors\": 68,\n    \"repository_donor_references\": 68,\n    \"selected_for_census\": 48,\n    \"censused\": 21,\n    \"technology_mapped\": 21,\n    \"native_targeted\": 21,\n    \"native_shadow\": 21,\n    \"parity_proven\": 21,\n    \"cutover\": 11,\n    \"extinct\": 10,\n    \"unknown_identity\": 9,\n    \"unverified_origin\": 43,\n    \"unverified_license\": 68,\n    \"unresolved_relevance\": 21,\n    \"ambiguous_donor_identities\": 0,\n    \"universe_sources_unreconciled\": 0\n  },\n  \"v1_gate\": [\n    {\n      \"metric\": \"extinction_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"0.208333\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"runtime_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"3\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"build_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"0\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"linked_external_edges\",\n      \"required\": \"0\",\n      \"actual\": \"10\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"external_technology_edges\",\n      \"required\": \"0\",\n      \"actual\": \"8\",\n      \"pass\": false\n    },\n    {\n      \"metric\": \"production_native_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"production_proof_ratio\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"repository_shape_conformance\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"documents_over_budget\",\n      \"required\": \"0\",\n      \"actual\": \"0\",\n      \"pass\": true\n    },\n    {\n      \"metric\": \"ecdev_repository_conformance\",\n      \"required\": \"1.000000\",\n      \"actual\": \"1.000000\",\n      \"pass\": true\n    }\n  ],\n  \"findings\": [\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"VladUZH--harken\",\n      \"detail\": \"claims REGISTERED but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"amzn--selling-partner-api-models\",\n      \"detail\": \"claims REGISTERED but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"apify--crawlee\",\n      \"detail\": \"claims REGISTERED but evidence supports PARITY_PROVEN; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-rust-lang-futures-rs\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-serde-rs-json\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-serde-rs-serde\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-servo-rust-url\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    },\n    {\n      \"severity\": \"INFO\",\n      \"code\": \"CLAIM_BELOW_EVIDENCE\",\n      \"subject\": \"dependency--github-com-tokio-rs-tokio\",\n      \"detail\": \"claims PARITY_PROVEN but evidence supports CAPABILITY_RELEVANCE_RESOLVED; the claim may be raised\"\n    }\n  ]\n}\n"
+    },
+    "conformance_checks_passed": 31,
+    "all_baseline_metrics_restored": true,
+    "proven_technologies_restored": 26,
+    "V1_failures_retained": [
+      {
+        "metric": "extinction_ratio",
+        "required": "1.000000",
+        "actual": "0.208333",
+        "pass": false
+      },
+      {
+        "metric": "runtime_external_edges",
+        "required": "0",
+        "actual": "3",
+        "pass": false
+      },
+      {
+        "metric": "linked_external_edges",
+        "required": "0",
+        "actual": "10",
+        "pass": false
+      },
+      {
+        "metric": "external_technology_edges",
+        "required": "0",
+        "actual": "8",
+        "pass": false
+      }
+    ],
+    "V1_status": "INCOMPLETE",
+    "donors_discovered": 68,
+    "donors_registered": 56,
+    "donors_active": 48,
+    "donors_extinct": 10,
+    "new_verified_extinction": 0,
+    "new_assimilation": 0,
+    "global_audited_OSS_total": null,
+    "global_verified_extinct_total": null
+  },
+  "source_safety": {
+    "saved_executor_reused": true,
+    "shell": "/usr/bin/bash5.2.37",
+    "exclusive_writable_maintained_source": "llgtrn/ECDEV",
+    "saved_engine": "READ_ONLY;d66313834c6d584b259650033bcf72f16c4e34f7 unchanged",
+    "existing_target_symlink": "PRESERVED;notstaged",
+    "build_outputs": "Existing separate disposable target/tmp/ecdev-stream-closure-target",
+    "credentials_spending_other_clones": false,
+    "schema_UI_price_parser_corpus_paid_ceilings_WAL_transactions": "UNCHANGED",
+    "source828_identities_mappings_history": "UNCHANGED;0 admitted mappings",
+    "source_enrollment": "BLOCKED",
+    "target_acceptance_or_runtime_authority": "NOT_ESTABLISHED",
+    "source_adapter_cutover": false,
+    "all_six_production_obligations": "OPEN",
+    "Chronica_native_harness": "NOT_EXECUTED_OR_REPRODUCED",
+    "Fi_game_qualification": "NOT_EXECUTED_OR_REPRODUCED",
+    "Esellios_operation": "NOT_EXECUTED_OR_REPRODUCED",
+    "native_N01_N12_J1_J9_P0_P3": "All25NOT_RUN",
+    "screened_operation_alternative_route": false
+  },
+  "independent_code_review_initial_frozen_research": {
+    "scratch_path": "/workspace/scratch/sol-reextract-review-20261017/final-code-review.json",
+    "sha256": "62571e22e35bc7dcf188a60ad731732b9b11bcd667b8316bd40e3e63133430fd",
+    "temporal_scope": "Earlier candidate before regression relocation; production research.rs unchanged. Final adapted code review below supersedes test-placement scope."
+  },
+  "models": {
+    "writer_worker": "ExplicitGPT6.1Sol",
+    "independent_reviewer_worker": "ExplicitGPT6.1Sol"
+  },
+  "publication": "Containing coherent normal-main commit after independent review; exact remoteSHA and full byte/mode membership checked after push. No force or branch.",
+  "independent_adapted_code_review": {
+    "format": "independent-readonly-reextract-adapted-code-review-v1",
+    "observed_at_utc": "2026-10-17T11:38:47.432615+00:00",
+    "base": "2076d554d404d8f3ef9ad0eea883ebba99ca0fda",
+    "decision": "PASS_NO_BLOCKING_FINDINGS",
+    "findings": [],
+    "method": "Read-only source/control-flow inspection; standalone stdlib hash comparisons; saved execution log readback. No project source/module/test/proof/build execution or maintained writes.",
+    "sources": {
+      "domain/commerce/src/research.rs": "435e0362a2b17dfa99944d724e29eaa4d5bb1a3330210480769ac0d70f5aad46",
+      "apps/server/src/lib.rs": "ab736974c95f03224a2ae372344090139325f6afa292d7d3733b7215bb1d9d7f",
+      "apps/server/tests/reextract_context.rs": "4c7aa1bbd9527dd11b41a2e7ca6ae87347e36ab6836f8d746b9d83a25b66719a"
+    },
+    "change": {
+      "decision": "PASS",
+      "restored_server_lib_exact_base": true,
+      "new_integration_test": "Actual Web offline fixtures for two URLs sharing bytes; fixture/network0 assertions; maintained Engine.call route; repeated run ID; one price point per source.",
+      "production_change": "Unambiguous serialized seven-element context key covers run/hash/provider/source_type/external_source/capture time/full recorded extraction input. Existing raw verification/failure behavior retained.",
+      "saved_checks": [
+        {
+          "name": "integration",
+          "exit": 0,
+          "log_sha256": "440059d0ab6b4e6bf541f88474351640c5b5c89e724ad83d6310c352425f0c9e",
+          "readback_only": true
+        },
+        {
+          "name": "clippy",
+          "exit": 0,
+          "log_sha256": "a821c5e745bbb822800b03c5e5e6b691c5f6a5d9a87d766832f30107a18d5c84",
+          "readback_only": true
+        },
+        {
+          "name": "rustfmt",
+          "exit": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "readback_only": true
+        },
+        {
+          "name": "rustfmt-check",
+          "exit": 0,
+          "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "readback_only": true
+        }
+      ]
+    },
+    "identity_fields": [
+      "run_id",
+      "raw_hash",
+      "provider",
+      "source_type",
+      "external_source",
+      "retrieved_at",
+      "normalized_value"
+    ],
+    "guard_preservation": {
+      "reason": "price_selected_switch.build_contract binds five caller files through price_custody.committed_file at fixed CURRENT_COMMIT. Moving added actual-Web assertions to the integration test preserves those caller bytes without modifying guard pins.",
+      "server_library_original_restored": true,
+      "five_fixed_caller_files_unchanged": true,
+      "immutable_price_package_all83_materials_unchanged": true
+    },
+    "saved_original_red": {
+      "exit": 101,
+      "log_sha256": "d4f0f02e2a66a10c82169290fd243e12cc0a1460e783ba5fc78368a713bd2394",
+      "scope": "Original production handler with actual-Web two-source fixture regression in server-library test: actual1 capture vs expected2. Retained temporal evidence; current regression moved to integration test and adds maintained Engine.call route."
+    },
+    "new_integration_test": {
+      "path": "apps/server/tests/reextract_context.rs",
+      "assertions": [
+        "fixture acquisition mode",
+        "zero network calls",
+        "two observations with equal raw hashes and distinct source URLs",
+        "maintained Engine.call ecdev.research.reextract route",
+        "repeated run ID deduplicates",
+        "two capture reports and exactly one price point2980 per source"
+      ]
+    },
+    "old_controls_preserved": [
+      "altered and missing raw capture contributes no products",
+      "missing provider reports explicit refusal",
+      "current extractor discrepancies retained",
+      "run limits and missing-run behavior retained"
+    ],
+    "proof_review": {
+      "path": "/workspace/scratch/sol-reextract-review-20261017/final-proof-review.json",
+      "sha256": "4d18b80521557773d5ef8180afe5a57cb407e8593e189d9f0d2f565990695d8b"
+    },
+    "limits": [
+      "All six obligations OPEN; cutover false; hosted/offline source fix only.",
+      "No canonical capabilities, guard pins, package snapshots or historical evidence rewritten."
+    ]
+  }
+}

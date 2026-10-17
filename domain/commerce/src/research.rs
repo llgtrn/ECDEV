@@ -1125,7 +1125,19 @@ impl Engine {
             let run: Value = crate::json::from_str(&payload).map_err(err)?;
             for o in run["observations"].as_array().into_iter().flatten() {
                 let hash = o["raw_hash"].as_str().unwrap_or("").to_string();
-                if !seen.insert((run_id.clone(), hash.clone())) {
+                // Bytes can be shared by distinct sources and decoding recipes. Collapse only
+                // repeated captures with the same extraction inputs and series provenance.
+                let context = json!([
+                    run_id,
+                    hash,
+                    o["provider"],
+                    o["source_type"],
+                    o["external_source"],
+                    o["retrieved_at"],
+                    o["normalized_value"]
+                ])
+                .to_string();
+                if !seen.insert(context) {
                     continue;
                 }
                 let base = json!({"run_id":run_id,"raw_hash":hash,"source":o["external_source"],"captured_at_ms":o["retrieved_at"],"source_type":o["source_type"]});
@@ -1434,6 +1446,84 @@ mod budget_storage_tests {
         }
         drop(e);
         let _ = std::fs::remove_dir_all(root);
+    }
+    #[test]
+    fn reextraction_preserves_context_for_identical_capture_bytes() {
+        use crate::provider::{AcquireError, AcquireResult, Provider};
+        struct Recorded(&'static str);
+        impl Provider for Recorded {
+            fn id(&self) -> &str {
+                self.0
+            }
+            fn metadata(&self) -> Value {
+                json!({"id":self.id()})
+            }
+            fn acquire(&self, _: &AcquireRequest) -> Result<AcquireResult, AcquireError> {
+                panic!("Reextraction must not acquire")
+            }
+            fn reextract(
+                &self,
+                _: &[u8],
+                _: &str,
+                recorded: &Value,
+            ) -> Option<Result<Value, String>> {
+                Some(Ok(recorded.clone()))
+            }
+        }
+        let root = std::env::temp_dir().join(format!("ecdev-reextract-context-{}", Uuid::new_v4()));
+        let e = Engine::open(&root)
+            .unwrap()
+            .with_provider(std::sync::Arc::new(Recorded("native-web")))
+            .with_provider(std::sync::Arc::new(Recorded("other-web")));
+        let raw = b"identical capture bytes";
+        let hash = format!("{:x}", Sha256::digest(raw));
+        let directory = root.join(".ecdev-data/raw");
+        std::fs::create_dir_all(&directory).unwrap();
+        for extension in ["html", "json"] {
+            std::fs::write(directory.join(format!("{hash}.{extension}")), raw).unwrap();
+        }
+        let base = json!({"id":"base","mode":"FIXTURE","source_type":"PUBLIC_HTML","provider":"native-web","external_source":"https://example.org/a","market":"PUBLIC_WEB","query":{},"timestamp":"1000","retrieved_at":"1000","raw_hash":hash,"normalized_value":{"source":"https://example.org/a","document_decoding":{"declared_label":"utf-8","source":"HTTP_CONTENT_TYPE"},"products":[{"sku":"S1","title":"Cup","price_minor":100,"currency":"JPY"}]},"unit":"MOCK_NOT_LIVE_PROOF","currency":null,"confidence":null,"freshness_seconds":null,"cost_minor":0,"run_id":"context-run"});
+        let mut observations = vec![base.clone()];
+        for (field, value) in [
+            ("provider", "other-web"),
+            ("source_type", "API"),
+            ("external_source", "https://example.org/b"),
+            ("retrieved_at", "2000"),
+        ] {
+            let mut observation = base.clone();
+            observation["id"] = json!(field);
+            observation[field] = json!(value);
+            observations.push(observation);
+        }
+        let mut recipe = base.clone();
+        recipe["id"] = json!("recipe");
+        recipe["normalized_value"]["document_decoding"]["declared_label"] = json!("windows-1252");
+        observations.push(recipe);
+        let mut duplicate = base;
+        duplicate["id"] = json!("duplicate-logical-observation");
+        observations.push(duplicate);
+        let run = e.persist(json!({"acquisition_run_id":"context-run","research_run":true,"mode":"FIXTURE","observations":observations,"candidates":[]})).unwrap();
+        let id = run["run_id"].as_str().unwrap().to_string();
+        let out = e.research_reextract(&[id.clone(), id]).unwrap();
+        assert_eq!(out["network"], "NONE");
+        assert_eq!(out["captures"].as_array().unwrap().len(), 6);
+        assert!(
+            out["captures"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|c| c["state"] == "SAME_AS_RECORDED")
+        );
+        let price = out["series"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|s| s["source"] == "https://example.org/a" && s["field"] == "price_minor")
+            .unwrap();
+        assert_eq!(price["points"].as_array().unwrap().len(), 5);
+        assert_eq!(price["points"][4]["captured_at_ms"], "2000");
+        drop(e);
+        std::fs::remove_dir_all(root).unwrap();
     }
     #[test]
     fn reextraction_reports_where_the_current_extractor_disagrees_with_the_record() {
