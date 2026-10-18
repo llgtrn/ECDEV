@@ -1,0 +1,33 @@
+# Receiver-owned finite source component contract
+
+Receiver baseline Chronica 7599848245f65855785ba5c46aadf769ea0d92b5. Contract owned by the existing capability-kernels price and price_text semantic owners. This specification is supplied before independent manufacture; it does not certify delivery, rights, current admission or receiver use. New original source is requested; no old ECDEV heuristic parser equivalence or clearance is implied.
+
+## Scope and integration boundary
+
+Two independent std-only Rust source leaves, no imports of Chronica, ECDEV, third-party crates, filesystem, network, clock, environment, device, canonical stores or authority. They perform deterministic bounded interpretation only, allocate at most O(input length), and have no mutable global state or external effects. Hosted Rust source portability, not a stable binary ABI or native-OS qualification. Source-side `rustc --edition=2021 --test` must work without the Chronica workspace. Manufacturer source `domain/commerce/src/price_explicit.rs` maps byte-for-byte to `physiology/capability/kernels/src/price/price_explicit.rs`; `price_ascii.rs` maps byte-for-byte to `physiology/capability/kernels/src/price_text/price_ascii.rs`. Existing receiver modules own private child imports and public request/output adapters; no new public alias/crate/root. Existing capability/implementation IDs and source-bound declaration behavior are preserved, with all actual compiled source included in exact implementation provenance.
+
+## Exact numeric price: contract commerce.price.parse-exact / price.parse-explicit.v1
+
+API: `pub fn parse(input: &[u8], currency: &str, locale: &str) -> Result<i64, u8>`.
+
+Success is exact nonnegative minor units, no rounding, inference, float conversion, economic effect, canonical money or financial permission. Currency names exact/case-sensitive: USD/EUR scale2, JPY/VND scale0, KWD scale3. Locale names exact/case-sensitive en-US decimal dot/group comma; de-DE and vi-VN decimal comma/group dot. Metadata is not trimmed. Input at most4096 bytes, each metadata at most32bytes.
+
+Refusal precedence: (1) input bytes length>4096 =>6; (2) emptycurrency=>1, unsupported or >32bytecurrency=>2; (3) emptylocale=>3, unsupported or >32bytelocale=>4; (4) invalidUTF8=>7; (5) trim ONLY outer ASCII U+0020; empty=>5; (6) any byte other than ASCII digit or chosen decimal/group character=>8; (7) decimal separator optional, at mostone, fraction if present nonempty digits only, whole nonempty, otherwise8; (8) grouping optional only within whole: first group1..3digits, subsequent groups exactly3, otherwise9; (9) fraction digits beyondcurrency scale=>10 even extra zeroes; (10) amount after exact scaling not representable nonnegative i64=>11. Errorcodes stable1..11 as described, no other code. No signs, exponents, Unicode digits/whitespace, currency tokens, controls, markup, text extraction or heuristic grouping. All ungrouped leading zeroes within4096bytebound are accepted; their spelling does not create overflow. i64MAX is allowed; next minorunit refused.
+
+## Derived ASCII text: contract commerce.price.parse-text / price.parse-text.ascii.v1
+
+API: `pub fn parse(input: Option<&str>, currency_hint: Option<&str>, decimal_separator: Option<&str>, digit_group_separator: Option<&str>) -> Result<(Option<String>, Option<String>, Option<String>, Option<f64>), u8>`.
+
+Tuple order amount exact normalized decimal text, currency raw selected token, amount_text original outer-U+0020-trimmed spelling, amount_float finite approximate f64 image of amount. Nullable input/presence in the existing receiver request binding must remain unnormalized. Currency tokens are not inferred ISO identities or canonical money.
+
+Precedence: input present byte-length>4096=>1; hint byte-length>4096=>2; groupingselector byte-length>64=>3; hint byte-length>64=>4; currencyhint must absent/empty(nulloutput) or exact `$`,`USD`,`EUR`(retain token), otherwise5; decimalselector must absent/empty(auto),`.` or`,` otherwise6; groupingselector must absent/empty otherwise7. These checks happen even if input absent/empty. Input absent or outerASCIIspace-trimmed empty returns (None,token,None,None).
+
+Nonempty text first and last bytes must ASCII digits, otherwise8. Scan remaining bytes lefttoright: digits increment count, the19thdigit=>9; at mostone dotORcomma separator, any second separator/otherbyte=>8; track digits afterseparator. After fullscan: fraction>6=>10; explicit selector mismatching actual separator=>12; auto with fraction>2=>11. Explicit selector on integer remains allowed. Preserve distinct errors in combined malformed cases according to this order.
+
+On success normalize integer leadingzeroes, zero result as`0`, decimalpoint`.` and strip fractional trailingzeroes. Retain exact decimal representation independently of approximate f64; e.g. 9007199254741017 remains exact text even though its f64 rounds. amount_text retains original spelling after outerASCIIspaces only; currency retains raw supported token; amount_float must equal standard finite f64 parse of normalized decimal text. Error13 nonfinite/conversionfailure is reserved;14invalidUTF8/15invalidabsentinput/16unsupportedinputselector belong to the existing byte/caller boundary and are never emitted by this str-based leaf. No locale guessing, grouping, textsalvage, signs, scientificnotation, Unicode or implicitcurrency conversion. At most18digits and6fractiondigits.
+
+## Evidence / rights / isolation / execution
+
+These pure source functions require no process, ambient authority, filesystem, network or external services. Development compilation is not execution admission. Source delivery must bind exact file bytes, this contract, rust target/toolchain assumptions, no runtime dependencies, source revision plus actual dirty-content snapshot, receiver owner/consumer, owner-authorized original authorship and continuing notice if applicable. Shared conformance results prove only bounded behavior for the tested exact bytes. Contract identity or signature alone gives no rights. Intake and actual consumer invocation remain separate gates; receiver cannot promote SOURCE_ONLY_SELECTED_MEMBERSHIP.
+
+Maintained receiver is Codara KernelTable::production -> ProgramWork -> existing PriceResult/PriceTextResult. Existing authority, metadata binding, custody, result codec, unknown-effect/restart/reconciliation/readback behavior remain in their actual owners. Pure refusals are known semantic outcomes after admission, not unknown effects or selection denial. No request/authority/recovery semantics are changed by the source leaves. Native hardware/whole-donor parity are excluded.
