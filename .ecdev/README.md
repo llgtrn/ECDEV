@@ -37,7 +37,7 @@ ECDEV is the mandatory eighth checkout. Its current `.ecdev` engine and donor/kn
 Use Chronica's current Latin-inspired concept names: Codara typed semantics; Ontogen pathways; Myelion mathematical evaluation with capabilities, no separate module; Thymora/Porion grants and admission; Metabion executed work; Lineara evidence; Phenora observable views. The Rust acquisition/MCP/data store remains a native capability source. Current `apps/web` must be integrated as one of MANY Phenora views under the ONE `Chronica/phenora/` UI implementation ([current residence at `cf677cb`](https://github.com/llgtrn/Chronica/commit/cf677cb9fe9435777cfbec4accf950aa586bf093)), with consumer cutover and old frontend retirement. It may not remain a standalone dashboard. Historical source locators and digest keys remain unchanged.
 
 Registry: https://github.com/llgtrn/Chronica/blob/main/.ynventa/declared/nomenclature/concepts.jsonl
-Repository Protocol: https://github.com/llgtrn/.Ynventa-/blob/main/REPOSITORY-PROTOCOL-V1.md
+Repository Protocol: https://github.com/llgtrn/.Ynventa-/blob/main/.ynventa/architecture/contracts/source-residence.md#source-grammar
 
 
 **Current implementation, pending migration:** The checked-in governor provides: repository graph, node ownership, donor registry and
