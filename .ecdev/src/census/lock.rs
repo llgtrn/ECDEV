@@ -681,6 +681,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
             paths: Default::default(),
             gitlinks: Default::default(),
             from_index: false,
+            projection: Default::default(),
         };
         let lock = r#"{"name":"web","lockfileVersion":3,"packages":{
             "":{"name":"web","dependencies":{"a":"^1"},"devDependencies":{"t":"^2"}},

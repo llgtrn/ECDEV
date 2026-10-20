@@ -4,6 +4,7 @@
 //! `crates/`.
 
 pub mod files;
+pub mod projection;
 pub mod shape;
 
 use crate::schema::{NodeKind, Role};

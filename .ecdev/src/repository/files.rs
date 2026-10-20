@@ -13,6 +13,9 @@ pub struct Files {
     /// Gitlinks (submodule entries), which are foreign code by construction.
     pub gitlinks: BTreeSet<String>,
     pub from_index: bool,
+    /// The engine-installed projection directory, when one exists: recognised (and then left
+    /// out of `paths`) only if it passes every condition of [`super::projection`].
+    pub projection: super::projection::Outcome,
 }
 
 impl Files {
@@ -20,23 +23,49 @@ impl Files {
         if let Some(index) = git_index_path(root) {
             if let Ok(bytes) = std::fs::read(&index) {
                 if let Ok((paths, gitlinks)) = parse_index(&bytes) {
-                    return Ok(Files {
+                    return Ok(Files::with_projection(Files {
                         root: root.to_path_buf(),
                         paths,
                         gitlinks,
                         from_index: true,
-                    });
+                        projection: Default::default(),
+                    }));
                 }
             }
         }
         let mut paths = BTreeSet::new();
         walk(root, root, &mut paths)?;
-        Ok(Files {
+        Ok(Files::with_projection(Files {
             root: root.to_path_buf(),
             paths,
             gitlinks: BTreeSet::new(),
             from_index: false,
-        })
+            projection: Default::default(),
+        }))
+    }
+
+    /// Verifies the projection directory (if any) and, only when it is the sanctioned one and
+    /// the tracked paths agree with it, removes its files from the file universe.
+    fn with_projection(mut self) -> Files {
+        let dir = super::projection::dir_name();
+        let prefix = format!("{dir}/");
+        self.projection = super::projection::verify(&self.root);
+        if let super::projection::Outcome::Sanctioned(s) = &self.projection {
+            let tracked: BTreeSet<String> = self
+                .paths
+                .iter()
+                .filter(|p| p.starts_with(&prefix))
+                .cloned()
+                .collect();
+            if self.from_index && !tracked.is_empty() && tracked != s.files {
+                self.projection = super::projection::Outcome::Rejected(vec![format!(
+                    "{dir}: the tracked files are not the verified projection files"
+                )]);
+            } else {
+                self.paths.retain(|p| !p.starts_with(&prefix));
+            }
+        }
+        self
     }
 
     /// Builds a universe from an explicit path list (tests, dry runs).
@@ -46,6 +75,7 @@ impl Files {
             paths: paths.into_iter().collect(),
             gitlinks: BTreeSet::new(),
             from_index: false,
+            projection: Default::default(),
         }
     }
 

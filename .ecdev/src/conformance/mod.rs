@@ -98,14 +98,29 @@ fn governs(a: &Assessment, path: &str, text: Option<&str>) -> bool {
 /// Filesystem metadata catches empty/untracked roots and dangling links that the Git index
 /// cannot see. This detects named control artifacts, not arbitrarily renamed embedded code.
 pub fn source_migration_violations(a: &Assessment) -> Vec<String> {
+    use crate::repository::projection::Outcome;
     let shared = [".", "ynventa"].concat();
     let mut out = Vec::new();
-    match std::fs::symlink_metadata(a.root.join(&shared)) {
-        Ok(_) => out.push(format!(
-            "{shared}: shared projection is not admitted for this source"
-        )),
-        Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
-        Err(e) => out.push(format!("{shared}: cannot establish source boundary: {e}")),
+    match &a.files.projection {
+        // The one sanctioned exception: the engine-installed projection, verified against pins
+        // held in this crate and the custody of `.ecdev`; it is left out of the file universe.
+        Outcome::Sanctioned(_) => {}
+        Outcome::Rejected(why) => {
+            out.push(format!(
+                "{shared}: shared projection is not admitted for this source"
+            ));
+            out.extend(
+                why.iter()
+                    .map(|w| format!("{w} (projection not sanctioned)")),
+            );
+        }
+        Outcome::Absent => match std::fs::symlink_metadata(a.root.join(&shared)) {
+            Ok(_) => out.push(format!(
+                "{shared}: shared projection is not admitted for this source"
+            )),
+            Err(e) if e.kind() == std::io::ErrorKind::NotFound => (),
+            Err(e) => out.push(format!("{shared}: cannot establish source boundary: {e}")),
+        },
     }
     for path in &a.files.paths {
         let structural = path.split('/').any(|p| p.eq_ignore_ascii_case(&shared));
@@ -340,10 +355,18 @@ pub fn checks(a: &Assessment) -> Vec<Check> {
         external_governance_references(a),
         "no executable/configuration file couples this source to external governance; informational references grant no authority",
     ));
+    let boundary_ok = match &a.files.projection {
+        crate::repository::projection::Outcome::Sanctioned(s) => format!(
+            "SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; the engine-installed projection ({} files) matches its pins and the custody of {} .ecdev record files; no other protocol control artifacts installed",
+            s.files.len(),
+            s.custody_files
+        ),
+        _ => "SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed".to_string(),
+    };
     v.push(list_check(
         "governance.source_migration_boundary",
         source_migration_violations(a),
-        "SOURCE_ONLY; ENROLLMENT_NOT_ESTABLISHED; no shared projection or protocol control artifacts installed",
+        &boundary_ok,
     ));
     let fixed = declare::parse_repository(&declare::render_repository(&d.repository)).ok()
         == Some(d.repository.clone())
